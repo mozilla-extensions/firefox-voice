@@ -1,0 +1,28 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#stm-popup {
+    background-color: white;
+    display:none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 3px solid gray;
+    border-radius: 5px;
+    padding: 2em;
+    z-index: 1000
+}
+
+#stm-stop.hidden, #stm-list.hidden {
+    display: none;
+}
+
+.stm-list li {
+    padding: 0.25em;
+    cursor: pointer;
+}
+
+.stm-list li:nth-child(odd)	{
+    background-color: lightgray;
+}

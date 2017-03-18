@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "speak-to-me",
+  "version": "1.0",
+  "developer": {
+    "name": "Fabrice Desré",
+    "url": "https://github.com/fabricedesre"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["main.css"]
+    }
+  ],
+
+  "permissions": ["<all_urls>"]
+}
