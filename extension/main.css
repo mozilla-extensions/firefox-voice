@@ -11,11 +11,15 @@
     border: 3px solid gray;
     border-radius: 5px;
     padding: 2em;
-    z-index: 1000
+    z-index: 2000;
 }
 
-#stm-stop.hidden, #stm-list.hidden {
+#stm-stop.hidden, #stm-list.hidden, .stm-icon.hidden {
     display: none;
+}
+
+ul.stm-list {
+    list-style: none;
 }
 
 .stm-list li {
@@ -25,4 +29,9 @@
 
 .stm-list li:nth-child(odd)	{
     background-color: lightgray;
+}
+
+.stm-icon {
+    z-index: 1000;
+    position: absolute;
 }
