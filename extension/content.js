@@ -120,7 +120,9 @@ const SpeakToMeIcon = {
         console.log(`SpeakToMeIcon anchor_to ${target}`);
         let bcr = target.getBoundingClientRect();
         let icon = SpeakToMeIcon.icon;
-        icon.style.left = (bcr.left + window.scrollX) + "px";
+        let bcr2 = icon.getBoundingClientRect();
+        console.log(`bcr: ${bcr.width}x${bcr.height} at ${bcr.left},${bcr.top}`);
+        icon.style.left = (bcr.width + bcr.left + window.scrollX - bcr2.width) + "px";
         icon.style.top = (bcr.top + window.scrollY) + "px";
         icon.classList.remove("hidden");
         SpeakToMeIcon._input_field = target;
