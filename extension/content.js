@@ -110,7 +110,7 @@ const SpeakToMeIcon = {
             let target = event.target;
             // TODO: refine input field detection.
             if (target instanceof HTMLInputElement &&
-                ["text", "email"].indexOf(target.type) >= 0) {
+                ["text", "email", "search"].indexOf(target.type) >= 0) {
                 SpeakToMeIcon.anchor_to(target);
             }
         });
@@ -126,9 +126,9 @@ const SpeakToMeIcon = {
         let bcr = target.getBoundingClientRect();
         let icon = SpeakToMeIcon.icon;
         let bcr2 = icon.getBoundingClientRect();
-        console.log(`bcr: ${bcr.width}x${bcr.height} at ${bcr.left},${bcr.top}`);
+        // Position the mic at the end of the input field.
         icon.style.left = (bcr.width + bcr.left + window.scrollX - bcr2.width) + "px";
-        icon.style.top = (bcr.top + window.scrollY) + "px";
+        icon.style.top = (bcr.top + window.scrollY + (bcr.height - bcr2.height) / 2) + "px";
         icon.classList.remove("hidden");
         SpeakToMeIcon._input_field = target;
     },
