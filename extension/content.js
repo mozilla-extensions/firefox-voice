@@ -114,6 +114,11 @@ const SpeakToMeIcon = {
                 SpeakToMeIcon.anchor_to(target);
             }
         });
+
+        // Check if an element is already focused in the document.
+        if (document.hasFocus() && document.activeElement) {
+            SpeakToMeIcon.anchor_to(document.activeElement);
+        }
     },
 
     anchor_to: (target) => {
