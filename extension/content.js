@@ -163,7 +163,7 @@ const on_spm_icon_click = (event) => {
             chunks = [];
 
             if (LOCAL_TEST) {
-                let json = JSON.parse('{"status":"ok","data":[{"confidence":0.907493,"text":"PLEASE ADD MILK TO MY SHOPPING LIST"},{"confidence":0.906263,"text":"PLEASE AT MILK TO MY SHOPPING LIST"},{"confidence":0.904414,"text":"PLEASE ET MILK TO MY SHOPPING LIST"}]}');
+                let json = JSON.parse('{"status":"ok","data":[{"confidence":0.807493,"text":"PLEASE ADD MILK TO MY SHOPPING LIST"},{"confidence":0.906263,"text":"PLEASE AT MILK TO MY SHOPPING LIST"},{"confidence":0.904414,"text":"PLEASE ET MILK TO MY SHOPPING LIST"}]}');
                 if (json.status == "ok") {
                     display_options(json.data);
                 }
@@ -217,7 +217,7 @@ const display_options = (items) => {
     }
 
     SpeakToMePopup.choose_item(data).then((text) => {
-        input_field.value = text;
+        SpeakToMeIcon.input_field.value = text;
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
     });
