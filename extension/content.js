@@ -133,9 +133,10 @@ const SpeakToMeIcon = {
         SpeakToMeIcon._input_field = target;
     },
 
-    get input_field() {
-        console.log(`SpeakToMeIcon get::input_field ${SpeakToMeIcon._input_field}`);
-        return SpeakToMeIcon._input_field;
+    set_input: (text) => {
+        console.log(`SpeakToMeIcon set_input ${text}`);
+        SpeakToMeIcon._input_field.value = text;
+        SpeakToMeIcon._input_field.focus();
     }
 }
 
@@ -218,13 +219,13 @@ const display_options = (items) => {
     // if the first result has a high enough confidence, just
     // use it directly.
     if (data[0].confidence > 0.90) {
-        SpeakToMeIcon.input_field.value = data[0].text;
+        SpeakToMeIcon.set_input(data[0].text);
         SpeakToMePopup.hide();
         return;
     }
 
     SpeakToMePopup.choose_item(data).then((text) => {
-        SpeakToMeIcon.input_field.value = text;
+        SpeakToMeIcon.set_input(text);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
     });
