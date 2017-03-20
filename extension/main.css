@@ -8,8 +8,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    border: 3px solid gray;
-    border-radius: 5px;
+    box-shadow: 0 0 1em gold;
+    border: 1px solid gray;
     padding: 2em;
     z-index: 2000;
 }
