@@ -37,11 +37,11 @@ const SpeakToMePopup = {
     showAt: (x, y) => {
         console.log(`SpeakToMePopup showAt ${x},${y}`);
         this.list.classList.add("hidden");
-
         let style = this.popup.style;
-        style.left = (x + window.scrollX) + "px";
-        style.top = (y + window.scrollY) + "px";
         style.display = "block";
+        let bcr = this.popup.getBoundingClientRect();
+        style.left = (x + window.scrollX - bcr.width / 2) + "px";
+        style.top = (y + window.scrollY - bcr.width / 2) + "px";
     },
 
     hide: () => {
