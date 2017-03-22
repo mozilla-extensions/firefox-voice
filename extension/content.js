@@ -15,11 +15,59 @@ const LOCAL_TEST = false;
 
 const stt_server_url = "http://10.252.24.90:9001/asr";
 
+function visualize(analyzerNode) {
+    const MIN_DB_LEVEL = -85;      // The dB level that is 0 in the levels display
+    const MAX_DB_LEVEL = -30;      // The dB level that is 100% in the levels display
+
+    // Set up the analyzer node, and allocate an array for its data
+    // FFT size 64 gives us 32 bins. But those bins hold frequencies up to
+    // 22kHz or more, and we only care about visualizing lower frequencies
+    // which is where most human voice lies, so we use fewer bins
+    analyzerNode.fftSize = 64;
+    let frequencyBins = new Float32Array(14);
+
+    // Clear the canvas
+    let levels = document.getElementById("stm-levels");
+    let context = levels.getContext("2d");
+    context.clearRect(0, 0, levels.width, levels.height);
+
+    if (levels.hidden) {
+        // If we've been hidden, return right away without calling rAF again.
+        return;
+    }
+
+    // Get the FFT data
+    analyzerNode.getFloatFrequencyData(frequencyBins);
+
+    // Display it as a barchart.
+    // Drop bottom few bins, since they are often misleadingly high
+    let skip = 2;
+    let n = frequencyBins.length - skip;
+    let barwidth = levels.width / n;
+    let dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
+
+    // Loop through the values and draw the bars
+    context.fillStyle = "black";
+    for (let i = 0; i < n; i++) {
+        let value = frequencyBins[i + skip];
+        let height = levels.height * (value - MIN_DB_LEVEL) / dbRange;
+        if (height < 0) {
+            continue;
+        }
+        // Display a bar for this value.
+        context.fillRect(i * barwidth, (levels.height - height) / 2, barwidth / 2, height);
+    }
+
+    // Update the visualization the next time we can
+    requestAnimationFrame(function() { visualize(analyzerNode); });
+}
+
 // Encapsulation of the popup we use to provide our UI.
 const popup_markup =
 `
 <div id="stm-popup">
   <button id="stm-stop">Stop</button>
+  <div id="stm-divlevels"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
   <div id="stm-list"></div>
 </div>
 `;
@@ -146,12 +194,25 @@ const on_spm_icon_click = (event) => {
 
     navigator.mediaDevices.getUserMedia(constraints)
     .then(function(stream) {
+        // Build the WebAudio graph we'll be using
+        let audioContext = new AudioContext();
+        let sourceNode = audioContext.createMediaStreamSource(stream);
+        let analyzerNode = audioContext.createAnalyser();
+        let outputNode = audioContext.createMediaStreamDestination();
+        // make sure we're doing mono everywhere
+        sourceNode.channelCount = 1;
+        analyzerNode.channelCount = 1;
+        outputNode.channelCount = 1;
+        // connect the nodes together
+        sourceNode.connect(analyzerNode);
+        analyzerNode.connect(outputNode);
+        // and set up the recorder
         let options = {
             audioBitsPerSecond : 16000,
             mimeType : "audio/ogg"
         }
 
-        let mediaRecorder = new MediaRecorder(stream, options);
+        let mediaRecorder = new MediaRecorder(outputNode.stream, options);
 
         SpeakToMePopup.showAt(event.clientX, event.clientY);
 
@@ -159,14 +220,22 @@ const on_spm_icon_click = (event) => {
             mediaRecorder.stop();
         });
 
-        // TODO: Would be nice to have a wave or fft display.
-        // visualize(stream);
+        document.getElementById("stm-levels").hidden = false;
+        visualize(analyzerNode);
 
         mediaRecorder.start();
 
         mediaRecorder.onstop = (e) => {
+            document.getElementById("stm-levels").hidden = true;
+
             // We stopped the recording, send the content to the STT server.
             mediaRecorder = null;
+            audioContext = null;
+            sourceNode = null;
+            analyzerNode = null;
+            outputNode = null;
+            stream = null;
+
             let blob = new Blob(chunks, { "type" : "audio/ogg; codecs=opus" });
             chunks = [];
 
