@@ -143,68 +143,75 @@ const mic_icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQA
 const mic_icon_width = 36;
 const mic_icon_height = 36;
 
-const SpeakToMeIcon = {
-    init: () => {
-        console.log(`SpeakToMeIcon init`);
-        SpeakToMeIcon.icon = document.createElement("div");
+class SpeakToMeIcon {
+    constructor() {
+        console.log(`SpeakToMeIcon constructor ${this}`);
+        this.icon = document.createElement("div");
         let mic = document.createElement("img");
         mic.src = mic_icon_url;
-        SpeakToMeIcon.icon.appendChild(mic);
-        SpeakToMeIcon.icon.classList.add("stm-icon");
-        SpeakToMeIcon.icon.classList.add("hidden");
-        document.body.appendChild(SpeakToMeIcon.icon);
+        this.icon.appendChild(mic);
+        this.icon.classList.add("stm-icon");
+        this.icon.classList.add("hidden");
+        document.body.appendChild(this.icon);
 
-        SpeakToMeIcon.icon.addEventListener("click", on_spm_icon_click);
+        this.icon.addEventListener("click", on_spm_icon_click);
 
+        let self = this;
         document.body.addEventListener("focusin", (event) => {
             let target = event.target;
             // TODO: refine input field detection.
             if (target instanceof HTMLInputElement &&
                 ["text", "email", "search"].indexOf(target.type) >= 0) {
-                SpeakToMeIcon.anchor_to(target);
+                console.log(`focusin ${self}`);
+                try {
+                self.anchor_to(target);
+                } catch(e) { console.error(e); }
             }
         });
 
         // Check if an element is already focused in the document.
         if (document.hasFocus() && document.activeElement) {
-            SpeakToMeIcon.anchor_to(document.activeElement);
+            console.log(`active element ${self}`);
+            self.anchor_to(document.activeElement);
         }
-    },
+    }
 
     // Checks if the input field moved around and if we need to
     // reposition the icon.
-    update_pos: () => {
-        let bcr = SpeakToMeIcon._input_field.getBoundingClientRect();
-        let icon = SpeakToMeIcon.icon;
+    update_pos() {
+        console.log(`SpeakToMeIcon update_pos`);
+        let bcr = this._input_field.getBoundingClientRect();
         // Position the mic at the end of the input field.
         let left = (bcr.width + bcr.left + window.scrollX - mic_icon_width) + "px";
-        if (left != icon.style.left) {
-            icon.style.left = left;
+        if (left != this.icon.style.left) {
+            this.icon.style.left = left;
         }
         let top = (bcr.top + window.scrollY + (bcr.height - mic_icon_height) / 2) + "px";
-        if (top != icon.style.top) {
-            icon.style.top = top;
+        if (top != this.icon.style.top) {
+            this.icon.style.top = top;
         }
-        requestAnimationFrame(SpeakToMeIcon.update_pos);
-    },
+        requestAnimationFrame(this.update_pos.bind(this));
+    }
 
-    anchor_to: (target) => {
+    anchor_to(target) {
         console.log(`SpeakToMeIcon anchor_to ${target}`);
-         if (SpeakToMeIcon._input_field) {
-            SpeakToMeIcon._input_field.classList.remove("stm-focused");
+        try {
+         if (this._input_field) {
+            this._input_field.classList.remove("stm-focused");
         }
 
-        SpeakToMeIcon.icon.classList.remove("hidden");
-        SpeakToMeIcon._input_field = target;
-        SpeakToMeIcon._input_field.classList.add("stm-focused");
+        this.icon.classList.remove("hidden");
+        this._input_field = target;
+        this._input_field.classList.add("stm-focused");
 
-        requestAnimationFrame(SpeakToMeIcon.update_pos);
-    },
+        requestAnimationFrame(this.update_pos.bind(this));
+        } catch(e) { console.log(e); }
+    }
 
-    set_input: (text) => {
+    set_input(text) {
         console.log(`SpeakToMeIcon set_input ${text}`);
-        SpeakToMeIcon._input_field.value = text;
-        SpeakToMeIcon._input_field.focus();
+        this._input_field.value = text;
+        this._input_field.focus();
     }
 }
 
@@ -308,19 +315,20 @@ const display_options = (items) => {
     // if the first result has a high enough confidence, just
     // use it directly.
     if (data[0].confidence > 0.90) {
-        SpeakToMeIcon.set_input(data[0].text);
+        stm_icon.set_input(data[0].text);
         SpeakToMePopup.hide();
         return;
     }
 
     SpeakToMePopup.choose_item(data).then((text) => {
-        SpeakToMeIcon.set_input(text);
+        stm_icon.set_input(text);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
     });
 }
 
 SpeakToMePopup.init();
-SpeakToMeIcon.init();
+
+let stm_icon = new SpeakToMeIcon();
 
 })();
