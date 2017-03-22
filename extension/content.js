@@ -104,10 +104,11 @@ const SpeakToMePopup = {
         return new Promise((resolve, reject) => {
             console.log(`SpeakToMePopup set popup stop listener`);
             let button = document.getElementById("stm-stop");
+            let popup = document.getElementById("stm-popup");
             button.classList.remove("hidden");
-            button.addEventListener("click", function _mic_stop() {
+            popup.addEventListener("click", function _mic_stop() {
                 button.classList.add("hidden");
-                button.removeEventListener("click", _mic_stop);
+                popup.removeEventListener("click", _mic_stop);
                 resolve();
             });
         });
