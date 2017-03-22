@@ -140,6 +140,8 @@ const SpeakToMePopup = {
 
 // TODO: figure out why using a resource in the extensions with browser.extension.getURL() fails.
 const mic_icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAABW0lEQVR4Ad2VJXQDMRyHU1Ljzeu6+tnKeTM7NmPUu9CYSQ38ewVXWd/5t7qaoRrz/kkuNyoz/b5cOF+vjMoS7tqY2ohuPG9EZevIW7Ph2AhuwA/BvFXrQ+vwj6F8RZE4USRf0VOc6DlP0RrEUzeiVYij4qIViKPiomWII1/REsRTadEixFNp0QLEk8vhO3WAu8z+RZzoQs2yRrP/mkHEzzhwYG6zf8LhH0dqlnrMHbFMIr+5bUT1mZs//NE8aD0bN0f+DCLWy0AS4y5z5GU35hhk69V/ByxmjnsziRrZDQXJoh7TZtpN5+TVbI0X1arUNqJMYSMUFGw8ydq4tTaCMofYSYiASUC/KpbETQLWfIjYUTahzSRMwOKUHBiUHMgWLMK0OYd/WLyDIQkfeIe7UG7BnSSAP/5KSIB6UH7B7bhLa2TbgQqLAYq4yYqK8IchX59i3BGdfzAoqsEI9//IsA+uNg0AAAAASUVORK5CYII=";
+const mic_icon_width = 36;
+const mic_icon_height = 36;
 
 const SpeakToMeIcon = {
     init: () => {
@@ -171,14 +173,18 @@ const SpeakToMeIcon = {
 
     anchor_to: (target) => {
         console.log(`SpeakToMeIcon anchor_to ${target}`);
+         if (SpeakToMeIcon._input_field) {
+            SpeakToMeIcon._input_field.classList.remove("stm-focused");
+        }
+
         let bcr = target.getBoundingClientRect();
         let icon = SpeakToMeIcon.icon;
-        let bcr2 = icon.getBoundingClientRect();
         // Position the mic at the end of the input field.
-        icon.style.left = (bcr.width + bcr.left + window.scrollX - bcr2.width) + "px";
-        icon.style.top = (bcr.top + window.scrollY + (bcr.height - bcr2.height) / 2) + "px";
+        icon.style.left = (bcr.width + bcr.left + window.scrollX - mic_icon_width) + "px";
+        icon.style.top = (bcr.top + window.scrollY + (bcr.height - mic_icon_height) / 2) + "px";
         icon.classList.remove("hidden");
         SpeakToMeIcon._input_field = target;
+        SpeakToMeIcon._input_field.classList.add("stm-focused");
     },
 
     set_input: (text) => {
