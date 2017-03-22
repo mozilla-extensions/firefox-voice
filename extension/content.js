@@ -232,6 +232,18 @@ const on_spm_icon_click = (event) => {
             mimeType : "audio/ogg"
         }
 
+        let harkoptions = {};
+        let speechEvents = HarkLoader.init(outputNode.stream, harkoptions);
+        console.log('speechEvents', speechEvents);
+        speechEvents.on('speaking', function() {
+            console.log('speaking');
+        });
+
+        speechEvents.on('stopped_speaking', function() {
+            console.log('stopped_speaking');
+            mediaRecorder.stop();
+        });
+
         let mediaRecorder = new MediaRecorder(outputNode.stream, options);
 
         SpeakToMePopup.showAt(event.clientX, event.clientY);
