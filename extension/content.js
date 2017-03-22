@@ -162,16 +162,12 @@ class SpeakToMeIcon {
             // TODO: refine input field detection.
             if (target instanceof HTMLInputElement &&
                 ["text", "email", "search"].indexOf(target.type) >= 0) {
-                console.log(`focusin ${self}`);
-                try {
                 self.anchor_to(target);
-                } catch(e) { console.error(e); }
             }
         });
 
         // Check if an element is already focused in the document.
         if (document.hasFocus() && document.activeElement) {
-            console.log(`active element ${self}`);
             self.anchor_to(document.activeElement);
         }
     }
