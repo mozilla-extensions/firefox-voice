@@ -66,7 +66,7 @@ function visualize(analyzerNode) {
 const popup_markup =
 `
 <div id="stm-popup">
-  <button id="stm-stop">Stop</button>
+  <span id="stm-stop">Speak To Me…</span>
   <div id="stm-divlevels"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
   <div id="stm-list"></div>
 </div>
