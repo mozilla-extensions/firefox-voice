@@ -171,20 +171,34 @@ const SpeakToMeIcon = {
         }
     },
 
+    // Checks if the input field moved around and if we need to
+    // reposition the icon.
+    update_pos: () => {
+        let bcr = SpeakToMeIcon._input_field.getBoundingClientRect();
+        let icon = SpeakToMeIcon.icon;
+        // Position the mic at the end of the input field.
+        let left = (bcr.width + bcr.left + window.scrollX - mic_icon_width) + "px";
+        if (left != icon.style.left) {
+            icon.style.left = left;
+        }
+        let top = (bcr.top + window.scrollY + (bcr.height - mic_icon_height) / 2) + "px";
+        if (top != icon.style.top) {
+            icon.style.top = top;
+        }
+        requestAnimationFrame(SpeakToMeIcon.update_pos);
+    },
+
     anchor_to: (target) => {
         console.log(`SpeakToMeIcon anchor_to ${target}`);
          if (SpeakToMeIcon._input_field) {
             SpeakToMeIcon._input_field.classList.remove("stm-focused");
         }
 
-        let bcr = target.getBoundingClientRect();
-        let icon = SpeakToMeIcon.icon;
-        // Position the mic at the end of the input field.
-        icon.style.left = (bcr.width + bcr.left + window.scrollX - mic_icon_width) + "px";
-        icon.style.top = (bcr.top + window.scrollY + (bcr.height - mic_icon_height) / 2) + "px";
-        icon.classList.remove("hidden");
+        SpeakToMeIcon.icon.classList.remove("hidden");
         SpeakToMeIcon._input_field = target;
         SpeakToMeIcon._input_field.classList.add("stm-focused");
+
+        requestAnimationFrame(SpeakToMeIcon.update_pos);
     },
 
     set_input: (text) => {
