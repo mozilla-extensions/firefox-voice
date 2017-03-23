@@ -7,6 +7,12 @@
     "url": "https://github.com/fabricedesre"
   },
 
+  "applications": {
+    "gecko": {
+      "id": "speaktome@desre.org"
+    }
+  },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
