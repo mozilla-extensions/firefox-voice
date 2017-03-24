@@ -13,7 +13,7 @@ if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
 
 const LOCAL_TEST = false;
 
-const stt_server_url = "http://10.252.24.90:9001/asr";
+const stt_server_url = "http://54.183.226.82:9001/asr";
 
 function visualize(analyzerNode) {
     const MIN_DB_LEVEL = -85;      // The dB level that is 0 in the levels display
