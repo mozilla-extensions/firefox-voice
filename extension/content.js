@@ -159,12 +159,7 @@ class SpeakToMeIcon {
 
         let self = this;
         document.body.addEventListener("focusin", (event) => {
-            let target = event.target;
-            // TODO: refine input field detection.
-            if (target instanceof HTMLInputElement &&
-                ["text", "email", "search"].indexOf(target.type) >= 0) {
-                self.anchor_to(target);
-            }
+            self.anchor_to(event.target);
         });
 
         // Check if an element is already focused in the document.
@@ -192,7 +187,12 @@ class SpeakToMeIcon {
 
     anchor_to(target) {
         console.log(`SpeakToMeIcon anchor_to ${target}`);
-        try {
+
+        if (!(target instanceof HTMLInputElement &&
+            ["text", "email", "search"].indexOf(target.type) >= 0)) {
+            return;
+        }
+
          if (this._input_field) {
             this._input_field.classList.remove("stm-focused");
         }
@@ -202,7 +202,6 @@ class SpeakToMeIcon {
         this._input_field.classList.add("stm-focused");
 
         requestAnimationFrame(this.update_pos.bind(this));
-        } catch(e) { console.log(e); }
     }
 
     set_input(text) {
