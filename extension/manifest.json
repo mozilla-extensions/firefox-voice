@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["hark.bundle.js","content.js"],
+      "js": ["content.js", "webrtc_vad.js"],
       "css": ["main.css"]
     }
   ],
