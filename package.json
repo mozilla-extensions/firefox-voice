@@ -1,0 +1,31 @@
+{
+  "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
+  "name": "speak-to-me",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fabrice Desré",
+    "url": "https://github.com/fabricedesre"
+  },
+  "bugs": {
+    "url": "https://github.com/fabricedesre/speaktome/issues"
+  },
+  "devDependencies": {
+    "eslint": "3.19.0",
+    "prettier": "1.2.2",
+    "web-ext": "1.9.0"
+  },
+  "homepage": "https://github.com/fabricedesre/speaktome#readme",
+  "keywords": [],
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabricedesre/speaktome.git"
+  },
+  "scripts": {
+    "build": "web-ext build -s extension",
+    "format:js": "prettier 'extension/content.js' --tab-width=4 --write",
+    "lint:extension": "web-ext lint -s extension",
+    "lint:js": "eslint extension",
+    "once": "web-ext run -s extension"
+  }
+}
