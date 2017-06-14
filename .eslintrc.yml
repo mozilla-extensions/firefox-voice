@@ -5,6 +5,7 @@ env:
 
 extends:
   - eslint:recommended
+  - plugin:mozilla/recommended
 
 rules:
   eqeqeq: error

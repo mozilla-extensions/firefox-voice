@@ -1,6 +1,6 @@
 {
-  "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
   "name": "speak-to-me",
+  "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
   "version": "1.0.0",
   "author": {
     "name": "Fabrice Desré",
@@ -10,10 +10,11 @@
     "url": "https://github.com/mozilla/speaktome/issues"
   },
   "devDependencies": {
-    "eslint": "3.19.0",
+    "eslint": "4.1.1",
     "eslint-plugin-mozilla": "0.3.2",
-    "prettier": "1.2.2",
-    "web-ext": "1.9.1"
+    "npm-run-all": "4.0.2",
+    "prettier": "1.5.2",
+    "web-ext": "1.10.0"
   },
   "homepage": "https://github.com/mozilla/speaktome#readme",
   "keywords": [],
@@ -24,7 +25,8 @@
   },
   "scripts": {
     "build": "web-ext build -s extension",
-    "format:js": "prettier 'extension/content.js' --tab-width=4 --write",
+    "format": "prettier 'extension/!(webrtc_vad).{js,css}' --tab-width=4 --write",
+    "lint": "npm-run-all lint:*",
     "lint:extension": "web-ext lint -s extension --ignore-files webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension"
