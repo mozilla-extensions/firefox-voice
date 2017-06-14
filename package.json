@@ -7,19 +7,20 @@
     "url": "https://github.com/fabricedesre"
   },
   "bugs": {
-    "url": "https://github.com/fabricedesre/speaktome/issues"
+    "url": "https://github.com/mozilla/speaktome/issues"
   },
   "devDependencies": {
     "eslint": "3.19.0",
+    "eslint-plugin-mozilla": "0.3.2",
     "prettier": "1.2.2",
     "web-ext": "1.9.1"
   },
-  "homepage": "https://github.com/fabricedesre/speaktome#readme",
+  "homepage": "https://github.com/mozilla/speaktome#readme",
   "keywords": [],
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fabricedesre/speaktome.git"
+    "url": "git+https://github.com/mozilla/speaktome.git"
   },
   "scripts": {
     "build": "web-ext build -s extension",
