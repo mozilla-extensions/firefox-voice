@@ -24,7 +24,7 @@
   "scripts": {
     "build": "web-ext build -s extension",
     "format:js": "prettier 'extension/content.js' --tab-width=4 --write",
-    "lint:extension": "web-ext lint -s extension --ignore-files webrtc_vad.js",
+    "lint:extension": "web-ext lint -s extension --ignore-files webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension"
   }
