@@ -9,7 +9,8 @@
 
   "applications": {
     "gecko": {
-      "id": "speaktome@mozilla.com"
+      "id": "speaktome@mozilla.com",
+      "update_url": "https://testpilot.firefox.com/files/speaktome@mozilla.com/updates.json"
     }
   },
 
