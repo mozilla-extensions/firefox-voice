@@ -13,7 +13,7 @@ Data collected by Voice Fill will be used to answer the following high-level que
 	- How often do users reject suggestions and try again?
 	- How often do users accept and modify suggestions?
 	- What are users’ tolerance for inaccuracy?
-- Where to users use Voice Fill?
+- Where do users use Voice Fill?
 	- In what contexts are they most likely to initiate?
 	- What methods do users use to initiate?
 	- Might users be better-served by different or additional controls?
