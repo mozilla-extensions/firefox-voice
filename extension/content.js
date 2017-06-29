@@ -25,11 +25,11 @@
         // 22kHz or more, and we only care about visualizing lower frequencies
         // which is where most human voice lies, so we use fewer bins
         analyzerNode.fftSize = 64;
-        let frequencyBins = new Float32Array(14);
+        const frequencyBins = new Float32Array(14);
 
         // Clear the canvas
-        let levels = document.getElementById("stm-levels");
-        let context = levels.getContext("2d");
+        const levels = document.getElementById("stm-levels");
+        const context = levels.getContext("2d");
         context.clearRect(0, 0, levels.width, levels.height);
 
         if (levels.hidden) {
@@ -42,16 +42,16 @@
 
         // Display it as a barchart.
         // Drop bottom few bins, since they are often misleadingly high
-        let skip = 2;
-        let n = frequencyBins.length - skip;
-        let barwidth = levels.width / n;
-        let dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
+        const skip = 2;
+        const n = frequencyBins.length - skip;
+        const barwidth = levels.width / n;
+        const dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
 
         // Loop through the values and draw the bars
         context.fillStyle = "black";
         for (let i = 0; i < n; i++) {
-            let value = frequencyBins[i + skip];
-            let height = levels.height * (value - MIN_DB_LEVEL) / dbRange;
+            const value = frequencyBins[i + skip];
+            const height = levels.height * (value - MIN_DB_LEVEL) / dbRange;
             if (height < 0) {
                 continue;
             }
@@ -82,7 +82,7 @@
     const SpeakToMePopup = {
         init: () => {
             console.log(`SpeakToMePopup init`);
-            let popup = document.createElement("div");
+            const popup = document.createElement("div");
             popup.innerHTML = popup_markup;
             document.body.appendChild(popup);
             this.popup = document.getElementById("stm-popup");
@@ -92,9 +92,9 @@
         showAt: (x, y) => {
             console.log(`SpeakToMePopup showAt ${x},${y}`);
             this.list.classList.add("hidden");
-            let style = this.popup.style;
+            const style = this.popup.style;
             style.display = "block";
-            let bcr = this.popup.getBoundingClientRect();
+            const bcr = this.popup.getBoundingClientRect();
             style.left = x + window.scrollX - bcr.width / 2 + "px";
             style.top = y + window.scrollY - bcr.width / 2 + "px";
         },
@@ -110,8 +110,8 @@
             console.log(`SpeakToMePopup wait_for_stop`);
             return new Promise((resolve, reject) => {
                 console.log(`SpeakToMePopup set popup stop listener`);
-                let button = document.getElementById("stm-stop");
-                let popup = document.getElementById("stm-popup");
+                const button = document.getElementById("stm-stop");
+                const popup = document.getElementById("stm-popup");
                 button.classList.remove("hidden");
                 popup.addEventListener("click", function _mic_stop() {
                     button.classList.add("hidden");
@@ -130,7 +130,7 @@
                     html += `<li>${item.text}</li>`;
                 });
                 html += "</ul>";
-                let list = this.list;
+                const list = this.list;
                 list.innerHTML = html;
                 list.classList.remove("hidden");
 
@@ -156,7 +156,7 @@
         constructor() {
             console.log(`SpeakToMeIcon constructor ${this}`);
             this.icon = document.createElement("div");
-            let mic = document.createElement("img");
+            const mic = document.createElement("img");
             mic.src = mic_icon_url;
             this.icon.appendChild(mic);
             this.icon.classList.add("stm-icon");
@@ -165,7 +165,7 @@
 
             this.icon.addEventListener("click", on_spm_icon_click);
 
-            let self = this;
+            const self = this;
             document.body.addEventListener("focusin", event => {
                 self.anchor_to(event.target);
             });
@@ -179,14 +179,14 @@
         // Checks if the input field moved around and if we need to
         // reposition the icon.
         update_pos() {
-            let bcr = this._input_field.getBoundingClientRect();
+            const bcr = this._input_field.getBoundingClientRect();
             // Position the mic at the end of the input field.
-            let left =
+            const left =
                 bcr.width + bcr.left + window.scrollX - mic_icon_width + "px";
             if (left !== this.icon.style.left) {
                 this.icon.style.left = left;
             }
-            let top =
+            const top =
                 bcr.top +
                 window.scrollY +
                 (bcr.height - mic_icon_height) / 2 +
@@ -228,7 +228,7 @@
     }
 
     const on_spm_icon_click = event => {
-        let constraints = { audio: true };
+        const constraints = { audio: true };
         let chunks = [];
 
         navigator.mediaDevices
@@ -247,14 +247,14 @@
                 sourceNode.connect(analyzerNode);
                 analyzerNode.connect(outputNode);
                 // and set up the recorder
-                let options = {
+                const options = {
                     audioBitsPerSecond: 16000,
                     mimeType: "audio/ogg"
                 };
 
                 // VAD initializations
                 // console.log("Sample rate: ", audioContext.sampleRate);
-                let bufferSize = 2048;
+                const bufferSize = 2048;
                 // create a javascript node
                 let scriptprocessor = audioContext.createScriptProcessor(
                     bufferSize,
@@ -302,13 +302,13 @@
                     stream = null;
                     scriptprocessor = null;
 
-                    let blob = new Blob(chunks, {
+                    const blob = new Blob(chunks, {
                         type: "audio/ogg; codecs=opus"
                     });
                     chunks = [];
 
                     if (LOCAL_TEST) {
-                        let json = JSON.parse(
+                        const json = JSON.parse(
                             '{"status":"ok","data":[{"confidence":0.807493,"text":"PLEASE ADD MILK TO MY SHOPPING LIST"},{"confidence":0.906263,"text":"PLEASE AT MILK TO MY SHOPPING LIST"},{"confidence":0.904414,"text":"PLEASE ET MILK TO MY SHOPPING LIST"}]}'
                         );
                         if (json.status === "ok") {
@@ -348,7 +348,7 @@
 
     const display_options = items => {
         // Filter the array for empty items and normalize the text.
-        let data = items
+        const data = items
             .filter(item => {
                 return item.text !== "";
             })
@@ -382,7 +382,7 @@
 
     SpeakToMePopup.init();
 
-    let stm_icon = new SpeakToMeIcon();
+    const stm_icon = new SpeakToMeIcon();
 
     // Webrtc_Vad integration
     SpeakToMeVad = function SpeakToMeVad() {
@@ -426,17 +426,17 @@
         // function that returns if the specified buffer has silence of speech
         this.isSilence = function(buffer_pcm) {
             // Get data byte size, allocate memory on Emscripten heap, and get pointer
-            let nDataBytes = buffer_pcm.length * buffer_pcm.BYTES_PER_ELEMENT;
-            let dataPtr = Module._malloc(nDataBytes);
+            const nDataBytes = buffer_pcm.length * buffer_pcm.BYTES_PER_ELEMENT;
+            const dataPtr = Module._malloc(nDataBytes);
             // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
-            let dataHeap = new Uint8Array(
+            const dataHeap = new Uint8Array(
                 Module.HEAPU8.buffer,
                 dataPtr,
                 nDataBytes
             );
             dataHeap.set(new Uint8Array(buffer_pcm.buffer));
             // Call function and get result
-            let result = this.webrtc_process_data(
+            const result = this.webrtc_process_data(
                 dataHeap.byteOffset,
                 buffer_pcm.length,
                 48000,
@@ -451,13 +451,13 @@
 
         this.floatTo16BitPCM = function(output, input) {
             for (let i = 0; i < input.length; i++) {
-                let s = Math.max(-1, Math.min(1, input[i]));
+                const s = Math.max(-1, Math.min(1, input[i]));
                 output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
             }
         };
 
         this.recorderProcess = function(e) {
-            let buffer_pcm = new Int16Array(
+            const buffer_pcm = new Int16Array(
                 e.inputBuffer.getChannelData(0).length
             );
             stm_vad.floatTo16BitPCM(
@@ -471,7 +471,7 @@
                 !stm_vad.done;
                 i++
             ) {
-                let start = i * stm_vad.sizeBufferVad;
+                const start = i * stm_vad.sizeBufferVad;
                 let end = start + stm_vad.sizeBufferVad;
                 if (start + stm_vad.sizeBufferVad > buffer_pcm.length) {
                     // store to the next buffer
@@ -490,9 +490,9 @@
                         // send to the vad
                         stm_vad.buffer_vad.set(buffer_pcm.slice(start, end));
                     }
-                    let vad = stm_vad.isSilence(stm_vad.buffer_vad);
+                    const vad = stm_vad.isSilence(stm_vad.buffer_vad);
                     stm_vad.buffer_vad = new Int16Array(stm_vad.sizeBufferVad);
-                    let dtdepois = Date.now();
+                    const dtdepois = Date.now();
                     if (vad === 0) {
                         if (stm_vad.touchedvoice) {
                             stm_vad.samplessilence +=
@@ -567,7 +567,7 @@ var Module = {
         );
     }
 };
-var stm_vad;
+let stm_vad;
 Module.setStatus("Loading webrtc_vad...");
 window.onerror = function(event) {
     // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
