@@ -5,9 +5,12 @@ env:
 
 extends:
   - eslint:recommended
+  - plugin:mozilla/recommended
 
 rules:
   eqeqeq: error
-  no-console: warn
+  no-console: off # TODO: Set back to "warn"
   no-unused-vars: [error, {vars: all, args: none, ignoreRestSiblings: false}]
+  no-var: error
   no-warning-comments: warn
+  prefer-const: error

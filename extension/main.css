@@ -4,7 +4,7 @@
 
 #stm-popup {
     background-color: white;
-    display:none;
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -17,7 +17,9 @@
     box-shadow: 0 0 2em orange !important;
 }
 
-#stm-stop.hidden, #stm-list.hidden, .stm-icon.hidden {
+#stm-stop.hidden,
+#stm-list.hidden,
+.stm-icon.hidden {
     display: none;
 }
 
@@ -30,7 +32,7 @@ ul.stm-list {
     cursor: pointer;
 }
 
-.stm-list li:nth-child(odd)	{
+.stm-list li:nth-child(odd) {
     background-color: lightgray;
 }
 
