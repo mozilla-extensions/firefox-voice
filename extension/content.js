@@ -14,7 +14,7 @@
 
     const LOCAL_TEST = false;
 
-    const stt_server_url = "http://54.183.226.82:9001/asr";
+    const stt_server_url = "https://speaktome.stage.mozaws.net/asr";
 
     function visualize(analyzerNode) {
         const MIN_DB_LEVEL = -85; // The dB level that is 0 in the levels display
