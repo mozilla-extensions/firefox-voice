@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mozilla/speaktome.svg?branch=master)](https://travis-ci.org/mozilla/speaktome)
+
 # Speak To Me
 
 This is a simple WebExtension that adds support to use Speech To Text
