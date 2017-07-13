@@ -24,7 +24,7 @@
     "url": "git+https://github.com/mozilla/speaktome.git"
   },
   "scripts": {
-    "build": "web-ext build -s extension",
+    "build": "web-ext build -s extension --overwrite-dest",
     "format": "prettier 'extension/!(webrtc_vad).{js,css}' --tab-width=4 --write",
     "lint": "npm-run-all lint:*",
     "lint:extension": "web-ext lint -s extension --ignore-files webrtc_vad.js --self-hosted",
