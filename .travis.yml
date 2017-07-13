@@ -5,7 +5,6 @@ dist: trusty
 script:
 - npm install
 - npm run build
-- mv web-ext-artifacts/speak-to-me-1.0.zip web-ext-artifacts/speak-to-me-1.0.xpi
 deploy:
   provider: releases
   api_key:
