@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "speak-to-me",
-  "version": "1.1",
+  "version": "1.2",
   "developer": {
     "name": "Fabrice Desré",
     "url": "https://github.com/fabricedesre"
