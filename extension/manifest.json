@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "speak-to-me",
-  "version": "1.2",
+  "version": "1.2.1",
   "developer": {
     "name": "Fabrice Desré",
     "url": "https://github.com/fabricedesre"
@@ -10,7 +10,7 @@
   "applications": {
     "gecko": {
       "id": "speaktome@mozilla.com",
-      "update_url": "https://testpilot.firefox.com/files/speaktome@mozilla.com/updates.json"
+      "update_url": "https://testpilot.firefox.com/files/@speak-to-me/updates.json"
     }
   },
 
