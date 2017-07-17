@@ -71,13 +71,12 @@
     }
 
     // Encapsulation of the popup we use to provide our UI.
-    const popup_markup = `
-<div id="stm-popup">
-  <span id="stm-stop">Speak To Me…</span>
-  <div id="stm-divlevels"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
-  <div id="stm-list"></div>
-</div>
-`;
+    const popup_markup = `<div id="stm-popup">
+      <div id="box"></div>
+      <span id="stm-label">Listening …</span>
+      <div id="stm-divlevels"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
+      <div id="stm-list"></div>
+    </div>`;
 
     const SpeakToMePopup = {
         init: () => {
@@ -95,8 +94,13 @@
             const style = this.popup.style;
             style.display = "block";
             const bcr = this.popup.getBoundingClientRect();
-            style.left = x + window.scrollX - bcr.width / 2 + "px";
-            style.top = y + window.scrollY - bcr.width / 2 + "px";
+            style.width = document.documentElement.clientWidth - 65;
+            style.height = Math.max(
+                document.body.scrollHeight, document.documentElement.scrollHeight,
+                document.body.offsetHeight, document.documentElement.offsetHeight,
+                document.body.clientHeight, document.documentElement.clientHeight
+            ) * 0.8;
+            loadAnimation(startAnimation);
         },
 
         hide: () => {
@@ -110,7 +114,7 @@
             console.log(`SpeakToMePopup wait_for_stop`);
             return new Promise((resolve, reject) => {
                 console.log(`SpeakToMePopup set popup stop listener`);
-                const button = document.getElementById("stm-stop");
+                const button = document.getElementById("stm-label");
                 const popup = document.getElementById("stm-popup");
                 button.classList.remove("hidden");
                 popup.addEventListener("click", function _mic_stop() {
@@ -121,7 +125,7 @@
             });
         },
 
-        // Returns a Promise that resolves to the choosen text.
+        // Returns a Promise that resolves to the chosen text.
         choose_item: data => {
             console.log(`SpeakToMePopup choose_item`);
             return new Promise((resolve, reject) => {
@@ -531,9 +535,30 @@
         this.goCloud = function(why) {
             console.log(why);
             this.stopGum();
+            loadAnimation(spinningAnimation);
         };
         console.log("speakToMeVad created()");
     };
+
+    var doneAnimation = browser.extension.getURL("Done.json");
+    var spinningAnimation = browser.extension.getURL("Spinning.json");
+    var startAnimation = browser.extension.getURL("Start.json");
+    let animation;
+
+    function loadAnimation(animationType) {
+        if (!animation){
+            animation = window.bodymovin.loadAnimation({
+                container: document.getElementById('box'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationType // the path to the animation json
+            });
+            window.onresize = animation.resize.bind(animation); // not working
+        } else {
+            animation.path = animationType;
+        }
+    }
 })();
 
 // Creation of the configuration object

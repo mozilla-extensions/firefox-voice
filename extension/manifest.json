@@ -17,10 +17,12 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js", "webrtc_vad.js"],
+      "js": ["bodymovin.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]
     }
   ],
-
+  "web_accessible_resources": [
+    "Done.json", "Start.json", "Spinning.json", "assets/font/SF-UI-Text-Light.otf"
+  ],
   "permissions": ["<all_urls>"]
 }

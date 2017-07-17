@@ -8,19 +8,26 @@
     position: absolute;
     top: 0;
     left: 0;
-    box-shadow: 0 0 2em orange;
+    box-shadow: 0 0 2em gray;
     padding: 2em;
     z-index: 2000;
+    font-family: 'SFUIText-Light';
 }
 
 .stm-focused {
-    box-shadow: 0 0 2em orange !important;
+    box-shadow: 0 0 2em gray !important;
 }
 
-#stm-stop.hidden,
+#stm-label.hidden,
 #stm-list.hidden,
 .stm-icon.hidden {
     display: none;
+}
+
+#stm-label {
+    position: relative;
+    font-size: 22px;
+    color: #737373;
 }
 
 ul.stm-list {
@@ -39,4 +46,12 @@ ul.stm-list {
 .stm-icon {
     z-index: 1000;
     position: absolute;
+}
+
+@font-face{
+    font-family: 'SFUIText-Light';
+    src: url('assets/font/SF-UI-Text-Light.otf') format('truetype');
+    src: url('assets/font/SF-UI-Text-Light.otf');
+    font-weight: 100;
+    font-style: normal;
 }
