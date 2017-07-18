@@ -22,7 +22,8 @@
     }
   ],
   "web_accessible_resources": [
-    "Done.json", "Start.json", "Spinning.json", "assets/font/SF-UI-Text-Light.otf"
+    "assets/Done.json", "assets/Start.json", "assets/Spinning.json",
+    "assets/font/SF-UI-Text-Light.otf", "assets/icon-mic.svg"
   ],
   "permissions": ["<all_urls>"]
 }
