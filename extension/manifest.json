@@ -16,13 +16,30 @@
 
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "https://www.google.com/*",
+        "https://www.google.com/",
+        "https://www.google.co.uk/*",
+        "https://www.google.co.uk/",
+        "https://duckduckgo.com/",
+        "https://duckduckgo.com/*",
+        "https://yahoo.com/",
+        "https://yahoo.com/*",
+        "https://uk.yahoo.com/",
+        "https://uk.yahoo.com/*"
+      ],
       "js": ["bodymovin.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]
     }
   ],
   "web_accessible_resources": [
-    "Done.json", "Start.json", "Spinning.json", "assets/font/SF-UI-Text-Light.otf"
+    "Done.json", 
+    "Start.json", 
+    "Spinning.json", 
+    "assets/icon-close.svg",
+    "assets/icon-mic.svg",
+    "assets/icon-redo.svg",
+    "assets/icon-done.svg"
   ],
   "permissions": ["<all_urls>"]
 }

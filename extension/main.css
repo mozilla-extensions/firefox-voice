@@ -3,55 +3,247 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #stm-popup {
+    align-items: stretch;
+    animation-fill-mode: forwards;
     background-color: white;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
     box-shadow: 0 0 2em gray;
-    padding: 2em;
-    z-index: 2000;
-    font-family: 'SFUIText-Light';
-}
-
-.stm-focused {
-    box-shadow: 0 0 2em gray !important;
-}
-
-#stm-label.hidden,
-#stm-list.hidden,
-.stm-icon.hidden {
+    box-sizing: border-box;
     display: none;
+    flex-direction: column;
+    font: message-box;
+    height: 310px;
+    justify-content: center;
+    left: 0;
+    opacity: 0;
+    padding: 2em 2em 4em;
+    position: fixed;
+    right: 0;
+    top: -999px;
+    transition: height 500ms;
+    will-change: left, opacity;
+    z-index: 9999999;
+
+
 }
 
-#stm-label {
+#stm-popup:not(.stm-drop-out) {
+    animation-name: stm-drop-in;
+    animation-duration: 250ms;
+    animation-timing-function: ease-out;
+}
+
+#stm-popup.stm-drop-out {
+   animation-name: stm-drop-out; 
+   animation-duration: 500ms;
+   animation-timing-function: ease-in;
+}
+
+#stm-inject {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
-    font-size: 22px;
-    color: #737373;
+    width: 100%;
+    flex: 1 0;
 }
 
-ul.stm-list {
-    list-style: none;
+.stm-done-animation {
+    opacity: 0;
+    transition: opacity 2s;
 }
 
-.stm-list li {
-    padding: 0.25em;
+@keyframes stm-drop-in {
+    100% {
+        opacity: 1;
+        top: 0;
+    }
+}
+
+@keyframes stm-drop-out {
+    0% {
+        opacity: 1;
+        top: 0;
+    }
+    100% {
+        opacity: 0;
+        top: -999px;
+    }
+}
+
+#stm-header {
+    width: 100%;
+    flex: 20px auto;
+}
+
+#stm-close {
+    background: url('assets/icon-close.svg');
+    background-size: 20px 20px;
+    float: right;
+    height: 20px;
+    width: 20px;
     cursor: pointer;
 }
 
-.stm-list li:nth-child(odd) {
-    background-color: lightgray;
+#stm-animation-wrapper {
+    width: 400px;
+    height: 200px;
+    position: relative;
 }
 
-.stm-icon {
-    z-index: 1000;
+#stm-levels-wrapper {
     position: absolute;
 }
 
-@font-face{
-    font-family: 'SFUIText-Light';
-    src: url('assets/font/SF-UI-Text-Light.otf') format('truetype');
-    src: url('assets/font/SF-UI-Text-Light.otf');
-    font-weight: 100;
-    font-style: normal;
+#stm-box {
+    width: 400px;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+#stm-label.stm-hidden,
+#stm-list.stm-hidden,
+.stm-icon.stm-hidden {
+    display: none;
+}
+
+#stm-content {
+    position: relative;
+    font-size: 22px;
+    color: #737373;
+    height: 24px;
+    display: block;
+}
+
+#stm-intro-text {
+    color: #0C0C0D;
+}
+
+#stm-listening-text {
+    opacity: .4;
+    animation: fade-in 1000ms alternate infinite linear;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: .4;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#stm-selection-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 40px;
+}
+
+#stm-list-wrapper {
+    position: relative;
+    flex: 1;
+} 
+
+#stm-input {
+    background: #99FB85;
+    border: none;
+    box-sizing: border-box;
+    color: #0C0C0D;
+    display: block;
+    font-size: 28px;
+    height: 40px;
+    padding: 4px 8px;
+    position: relative;
+    transition: background 75ms, box-shadow 75ms;
+    width: 100%;
+    min-width: 320px;
+    display: block;
+}
+
+#stm-input:focus {
+    background: #f9f9fa;
+    box-shadow: 0 -2px 0 #99FB85 inset;
+}
+
+
+#stm-list {
+    background: #fff;
+    border-radius: 1px;
+    border-top: 0;
+    border: 1px solid #f2f2fa;
+    box-sizing: border-box;
+    color: #737373;
+    display: block;
+    font-size: 16px;
+    line-height: 16px;
+    min-width: 320px;
+    position: absolute;
+}
+
+.stm-list {
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+}
+
+.stm-list li {
+    cursor: pointer;
+    opacity: .8;
+    padding: 5px 2px;
+}
+
+.stm-icon {
+    background-color: #00C8D7;
+    background-image: url('assets/icon-mic.svg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 32px 32px;
+    border-radius: 50%;
+    border: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 64px;
+    position: absolute;
+    right: -72px;
+    top: -9px;
+    transition: background-color 50ms;
+    width: 64px;
+    z-index: 9999999;
+}
+
+#stm-reset-button {
+    background-color: none;
+    background-image: url('assets/icon-redo.svg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    border-radius: 50%;
+    border: 1px solid #F0F0F0;
+    border: none;
+    height: 40px;
+    margin: 0 40px;
+    width: 40px;
+}
+
+#stm-submit-button {
+    background-color: #00C8D7;
+    background-image: url('assets/icon-done.svg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    border-radius: 50%;
+    border: none;
+    height: 64px;
+    top: -12px;
+    transform: rotate(180deg);
+    width: 64px;
+}
+
+.stm-icon:hover,
+.stm-icon:focus,
+#stm-submit-button:hover,
+#stm-submit-button:focus, {
+    background-color: #00b8c7;
 }
