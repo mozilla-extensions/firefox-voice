@@ -55,3 +55,12 @@ ul.stm-list {
     font-weight: 100;
     font-style: normal;
 }
+
+#boxDone, #boxSpinning, #boxStart {
+    display: none;
+}
+
+.animmove {
+    transition: transform 0.5s;
+    transform: translateY(-400px);
+}
