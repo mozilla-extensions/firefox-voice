@@ -72,10 +72,7 @@
 
     // Encapsulation of the popup we use to provide our UI.
     const popup_markup = `<div id="stm-popup">
-      <div id="boxDone"></div>
-      <div id="boxSpinning"></div>
-      <div id="boxStart"></div>
-
+      <div id="box"></div>
       <span id="stm-label">Listening …</span>
       <div id="stm-divlevels"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
       <div id="stm-list"></div>
@@ -89,7 +86,6 @@
             document.body.appendChild(popup);
             this.popup = document.getElementById("stm-popup");
             this.list = document.getElementById("stm-list");
-            loadAnimations();
         },
 
         showAt: (x, y) => {
@@ -104,7 +100,7 @@
                 document.body.offsetHeight, document.documentElement.offsetHeight,
                 document.body.clientHeight, document.documentElement.clientHeight
             ) * 0.8;
-            showAnimation('boxStart');
+            loadAnimation(startAnimation);
         },
 
         hide: () => {
@@ -354,8 +350,7 @@
             });
     };
 
-    let _items;
-    const displayitems = function(items) {
+    const display_options = items => {
         // Filter the array for empty items and normalize the text.
         const data = items
             .filter(item => {
@@ -387,10 +382,6 @@
             // Once a choice is made, close the popup.
             SpeakToMePopup.hide();
         });
-    }
-    const display_options = items => {
-        _items = items;
-        showAnimation('boxDone');
     };
 
     SpeakToMePopup.init();
@@ -544,63 +535,30 @@
         this.goCloud = function(why) {
             console.log(why);
             this.stopGum();
-            showAnimation('boxSpinning');
+            loadAnimation(spinningAnimation);
         };
         console.log("speakToMeVad created()");
     };
 
-    var doneAnimation;
-    var spinningAnimation;
-    var startAnimation;
+    var doneAnimation = browser.extension.getURL("Done.json");
+    var spinningAnimation = browser.extension.getURL("Spinning.json");
+    var startAnimation = browser.extension.getURL("Start.json");
+    let animation;
 
-    function loadAnimations() {
-        doneAnimation = window.bodymovin.loadAnimation({
-            container: document.getElementById('boxDone'),
-            renderer: 'svg',
-            loop: false,
-            autoplay: false,
-            path: browser.extension.getURL("assets/Done.json") // the path to the animation json
-        });
-        spinningAnimation = window.bodymovin.loadAnimation({
-            container: document.getElementById('boxSpinning'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: browser.extension.getURL("assets/Spinning.json") // the path to the animation json
-        });
-        startAnimation = window.bodymovin.loadAnimation({
-            container: document.getElementById('boxStart'),
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: browser.extension.getURL("assets/Start.json") // the path to the animation json
-        });
-        doneAnimation.addEventListener("complete", function(){
-            console.log("Done animation svg!");
-            document.getElementById("boxDone").className += " animmove";
-        });
-        document.getElementById("boxDone").addEventListener("transitionend", function(event) {
-            console.log("Done animation transition!");
-            displayitems(_items);
-        }, false);
-        //window.onresize = animation.resize.bind(animation); // not working
-    }
-
-    function showAnimation(box){
-        document.getElementById("boxStart").style.display = 'none';
-        document.getElementById("boxDone").style.display = 'none';
-        document.getElementById("boxSpinning").style.display = 'none';
-        document.getElementById(box).style.display = 'block';
-        if (box === 'boxDone') {
-            // start the animation again
-            document.getElementById("boxDone").className = "";
-            document.getElementById("boxDone").style.top = "39px";
-             setTimeout(function(){
-                doneAnimation.goToAndPlay(0,true);
-             }, 100);
+    function loadAnimation(animationType) {
+        if (!animation){
+            animation = window.bodymovin.loadAnimation({
+                container: document.getElementById('box'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationType // the path to the animation json
+            });
+            window.onresize = animation.resize.bind(animation); // not working
+        } else {
+            animation.path = animationType;
         }
     }
-
 })();
 
 // Creation of the configuration object
