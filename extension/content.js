@@ -23,7 +23,7 @@
     // In current order they are: google, ddg home, ddg search page, yahoo home, yahoo search page
     const ACCEPTABLE_ANCHORS = [
         "sfdiv",
-        "search_form_homepage", 
+        "search_form_homepage",
         "seach_form",
         "uh-search-form",
         "sf"
@@ -31,17 +31,20 @@
 
     // Encapsulation of the popup we use to provide our UI.
     const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
-        <div id="stm-header"><div id="stm-close"></div></div>
+        <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
         <div id="stm-inject"></div>
     </div>`;
 
     // When submitting, this markup is passed in
-    const SUBMISSION_MARKUP = `<div id="stm-animation-wrapper">
-            <div id="stm-levels-wrapper"> <canvas hidden id="stm-levels" width=150 height=50></canvas></div>
+    const SUBMISSION_MARKUP = `
+        <div id="stm-levels-wrapper">
+            <canvas hidden id="stm-levels" width=720 height=310></canvas>
+        </div>
+        <div id="stm-animation-wrapper">
             <div id="stm-box"></div>
         </div>
         <div id="stm-content">
-            <div id="stm-startup-text">Speak to me</div>
+            <div id="stm-startup-text">Warming up...</div>
         </div>`;
 
     // When Selecting, this markup is passed in
@@ -55,6 +58,8 @@
     </form>`
 
     const SpeakToMePopup = {
+        // closeClicked used to skip out of media recording handling
+        closeClicked: false,
         init: () => {
             console.log(`SpeakToMePopup init`);
             const popup = document.createElement("div");
@@ -62,7 +67,7 @@
             document.body.appendChild(popup);
             this.inject = document.getElementById("stm-inject");
             this.popup = document.getElementById("stm-popup");
-            this.button = document.getElementsByClassName("stm-icon");
+            this.icon = document.getElementsByClassName("stm-icon")[0];
             this.inject.innerHTML = SUBMISSION_MARKUP;
         },
 
@@ -75,13 +80,17 @@
         hide: () => {
             console.log(`SpeakToMePopup hide`);
             this.popup.classList.add("stm-drop-out");
-            this.button.classList.remove("stm-hidden");
+            this.icon.classList.remove("stm-hidden");
 
             setTimeout(() => {
                 this.popup.classList.remove("stm-drop-out");
                 this.popup.style.display = "none";
                 this.inject.innerHTML = SUBMISSION_MARKUP;
             }, 500);
+        },
+
+        reset: () => {
+            this.inject.innerHTML = SUBMISSION_MARKUP;
         },
 
         // Returns a Promise that resolves once the "Stop" button is clicked.
@@ -92,9 +101,15 @@
             return new Promise((resolve, reject) => {
                 console.log(`SpeakToMePopup set popup stop listener`);
                 const popup = document.getElementById("stm-popup");
+                const close = document.getElementById("stm-close");
                 popup.addEventListener("click", function _mic_stop() {
                     popup.removeEventListener("click", _mic_stop);
                     resolve();
+                });
+                close.addEventListener("click", function _close_click(e) {
+                    e.stopPropagation();
+                    close.removeEventListener("click", _close_click);
+                    reject();
                 });
             });
         },
@@ -102,38 +117,64 @@
         // Returns a Promise that resolves to the chosen text.
         choose_item: data => {
             console.log(`SpeakToMePopup choose_item`);
+            this.inject.innerHTML = SELECTION_MARKUP;
+            const close = document.getElementById("stm-close");
+            const form = document.getElementById("stm-selection-wrapper");
+            const input = document.getElementById("stm-input");
+            const list = document.getElementById("stm-list");
+            const listWrapper = document.getElementById("stm-list-wrapper");
+            const reset = document.getElementById("stm-reset-button");
+            let firstChoice;
+
             return new Promise((resolve, reject) => {
-                this.inject.innerHTML = SELECTION_MARKUP;
-                let firstChoice;
-                let html = "<ul class='stm-list'>";
-                data.forEach((item, index) => {
-                    if (index === 0) {
-                        firstChoice = item;
-                    } else {
-                       html += `<li>${item.text}</li>`;
-                    }
-                });
-                html += "</ul>";
-                const content = document.getElementById("stm-list");
-                const input = document.getElementById("stm-input");
-                const form = document.getElementById("stm-selection-wrapper");
-                content.innerHTML = html;
+                if (data.length === 1) {
+                    firstChoice = data[0];
+                    listWrapper.removeChild(list);
+                } else {
+                    let html = "<ul class='stm-list-inner'>";
+                    data.forEach((item, index) => {
+                        if (index === 0) {
+                            firstChoice = item;
+                        } else {
+                        html += `<li role="button" tabindex="0">${item.text}</li>`;
+                        }
+                    });
+                    html += "</ul>";
+                    list.innerHTML = html;
+                }
+                
                 input.value = firstChoice.text;
+                input.size = input.value.length;
+
+                if (list) {
+                    list.style.width = `${input.offsetWidth}px`;
+                }
+                
                 input.focus();
 
                 form.addEventListener("submit", function _submit_form(e) {
                     e.preventDefault();
-                    console.log(input.value);
                     form.removeEventListener("submit", _submit_form);
                     resolve(input.value);
                 });
 
-                content.addEventListener("click", function _choose_item(e) {
-                    content.removeEventListener("click", _choose_item);
+                list.addEventListener("click", function _choose_item(e) {
+                    list.removeEventListener("click", _choose_item);
                     if (e.target instanceof HTMLLIElement) {
                         resolve(e.target.textContent);
                     }
                 });
+
+                reset.addEventListener("click", function _reset_click(e) {
+                    close.removeEventListener("click", _reset_click);
+                    reject(e.target.id);
+                });
+
+                close.addEventListener("click", function _close_click(e) {
+                    close.removeEventListener("click", _close_click);
+                    reject(e.target.id);
+                });
+
             });
         }
     };
@@ -155,7 +196,9 @@
 
             // Note: remove the event so and toggle has anchor to ensure the anchor doesn't move around
             document.body.addEventListener("focusin", function _set_anchor(event) {
-                document.body.removeEventListener("focusin", _set_anchor);
+                if (event.target.id === "stm-input") {
+                    return;
+                }
                 self.anchor_to(event.target);
                 self.hasAnchor = true;
             });
@@ -174,7 +217,6 @@
 
 
             const currentNotAcceptable = (item, index, array) => {
-                console.log(item + "..." + el.id);
                 return item !== el.id;
             }
 
@@ -272,7 +314,13 @@
 
                 SpeakToMePopup.wait_for_stop().then(() => {
                     mediaRecorder.stop();
-                });
+                }, () => {
+                    mediaRecorder.stop();
+                    SpeakToMePopup.closeClicked = true;
+                    SpeakToMePopup.hide();
+                }
+
+                );
 
                 document.getElementById("stm-levels").hidden = false;
                 visualize(analyzerNode);
@@ -280,6 +328,13 @@
                 mediaRecorder.start();
 
                 mediaRecorder.onstop = e => {
+                    // handle clicking on close element by dumping recording data
+                    if (SpeakToMePopup.closeClicked) {
+                        SpeakToMePopup.closeClicked = false;
+                        return;
+                    }
+
+                    console.log(e.target);
                     document.getElementById("stm-levels").hidden = true;
                     console.log("mediaRecorder onStop");
                     // We stopped the recording, send the content to the STT server.
@@ -337,14 +392,14 @@
 
     // Helper for animation startup
     const stm_init = () => {
-       loadAnimation(START_ANIMATION, false);
+       loadAnimation(START_ANIMATION, false, "stm-start-animation");
 
         setTimeout(() => {
             const copy = document.getElementById("stm-content");
             loadAnimation(SPINNING_ANIMATION, true);
             copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`
             stm_start();
-        }, 750);
+        }, 1000);
     };
 
     // Click handler for stm icon
@@ -354,6 +409,10 @@
         SpeakToMePopup.showAt(event.clientX, event.clientY);
         stm_init();
     };
+
+    const on_stm_close_click = event => {
+        SpeakToMePopup.hide();
+    }
 
     // Helper to handle background visualization
     const visualize = (analyzerNode) => {
@@ -369,6 +428,8 @@
 
         // Clear the canvas
         const levels = document.getElementById("stm-levels");
+        const xPos = levels.offsetWidth * .5;
+        const yPos = levels.offsetHeight * .5;
         const context = levels.getContext("2d");
         context.clearRect(0, 0, levels.width, levels.height);
 
@@ -384,26 +445,31 @@
         // Drop bottom few bins, since they are often misleadingly high
         const skip = 2;
         const n = frequencyBins.length - skip;
-        const barwidth = levels.width / n;
         const dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
 
         // Loop through the values and draw the bars
-        context.fillStyle = "black";
+        context.strokeStyle = "#000";
+        context.lineWidth = 10;
+        context.globalAlpha = .05
         for (let i = 0; i < n; i++) {
             const value = frequencyBins[i + skip];
-            const height = levels.height * (value - MIN_DB_LEVEL) / dbRange;
-            if (height < 0) {
+            const diameter = (levels.height * (value - MIN_DB_LEVEL) / dbRange) * .50;
+            if (diameter < 0) {
                 continue;
             }
             // Display a bar for this value.
-            context.fillRect(
-                i * barwidth,
-                (levels.height - height) / 2,
-                barwidth / 2,
-                height
+            context.beginPath();
+            context.ellipse(
+                xPos,
+                yPos,
+                diameter,
+                diameter,
+                0,
+                0,
+                2 * Math.PI
             );
+            context.stroke();
         }
-
         // Update the visualization the next time we can
         requestAnimationFrame(function() {
             visualize(analyzerNode);
@@ -411,9 +477,12 @@
     }
 
     // Helper to handle bodymobin
-    const loadAnimation = (animationType, loop) => {
+    const loadAnimation = (animationType, loop, className) => {
         const container = document.getElementById("stm-box");
-
+        container.className = "";
+        if (className) {
+            container.classList.add(className);
+        }
         if (window.bodymovin) {
             window.bodymovin.destroy();
         }
@@ -457,6 +526,13 @@
             stm_icon.set_input(text);
             // Once a choice is made, close the popup.
             SpeakToMePopup.hide();
+        }, id => {
+            if (id === "stm-reset-button") {
+                SpeakToMePopup.reset();
+                stm_init();
+            } else {
+                SpeakToMePopup.hide();
+            }
         });
     };
 
