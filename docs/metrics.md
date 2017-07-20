@@ -25,7 +25,7 @@ Data will be collected with Google Analytics and follow [Test Pilot standards](h
 
 ### Custom Metrics
 - `cm1` - the number of attempts made in a session.
-- `cm2` - the confidence level of the accepted suggestion, if one was accepted; otherwise omitted.
+- `cm2` - the confidence level of the accepted suggestion, if one was accepted; otherwise omitted. Integer between `1` and `100`, inclusive.
 - `cm3` - the index of an accepted suggestion, if one was accepted; otherwise omitted.
 - `cm4` - the elapsed time in ms spent recording an attempt.
 - `cm5` - the elapsed time in ms waiting for a response from the speech-to-text engine.
