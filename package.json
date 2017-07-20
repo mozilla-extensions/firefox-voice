@@ -3,8 +3,8 @@
   "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
   "version": "1.0.0",
   "author": {
-    "name": "Fabrice Desré",
-    "url": "https://github.com/fabricedesre"
+    "name": "Andre Natal & Fabrice Desré",
+    "url": "https://github.com/mozilla/speaktome"
   },
   "bugs": {
     "url": "https://github.com/mozilla/speaktome/issues"
