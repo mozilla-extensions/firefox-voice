@@ -4,7 +4,7 @@
   "version": "1.2.1",
   "description": "Adds voice input to popular search pages in Firefox. Learn more about Voice Fill at https://testpilot.firefox.com",
   "developer": {
-    "name": "Fabrice Desré",
+    "name": "Emerging Technologies Advanced Dev Team",
     "url": "https://github.com/mozilla/speaktome"
   },
   "icons": {
