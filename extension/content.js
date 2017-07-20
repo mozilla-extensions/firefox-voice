@@ -19,25 +19,49 @@
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
     const START_ANIMATION = browser.extension.getURL("Start.json");
 
-    // This is a list of anchors on pages we are running stm on. 
-    // In current order they are: google, ddg home, ddg search page, yahoo home, yahoo search page
-    const ACCEPTABLE_ANCHORS = [
-        "sfdiv",
-        "search_form_homepage",
-        "seach_form",
-        "uh-search-form",
-        "sf"
-    ];
+
+    const getSTMAnchors = documentDomain => {
+        switch (documentDomain) {
+            case "www.google.com":
+            case "www.google.ca":
+            case "www.google.co.uk":
+                return {
+                    input: "lst-ib",
+                    anchor: "sfdiv"
+                }
+            case "duckduckgo.com":
+                if (document.body.classList.contains("body--serp")) {
+                    return {
+                        input: "search_form_input",
+                        anchor: "search_form"
+                    };
+                }
+                return {
+                    input: "search_form_input_homepage",
+                    anchor: "search_form_homepage"
+                };
+            case "ca.yahoo.com":
+            case "uk.yahoo.com":
+            case "www.yahoo.com":
+                return {
+                    input: "uh-search-box",
+                    anchor: "uh-search-form"
+                };
+            default:
+                return null;
+        }
+    }
+
 
     // Encapsulation of the popup we use to provide our UI.
     const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
-        <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
-        <div id="stm-inject"></div>
-    </div>`;
+            <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
+            <div id="stm-inject"></div>
+            <a href="https://qsurvey.mozilla.com/s3/voice-fill" id="stm-feedback" role="button" tabindex="2">Feedback</a>
+        </div>`;
 
     // When submitting, this markup is passed in
-    const SUBMISSION_MARKUP = `
-        <div id="stm-levels-wrapper">
+    const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
             <canvas hidden id="stm-levels" width=720 height=310></canvas>
         </div>
         <div id="stm-animation-wrapper">
@@ -49,13 +73,13 @@
 
     // When Selecting, this markup is passed in
     const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
-        <div id="stm-list-wrapper">
-            <input id="stm-input" type="text" />
-            <div id="stm-list"></div>
-        </div>
-        <button id="stm-reset-button" title="reset"></button>
-        <input id="stm-submit-button" type="submit" title="sumbit" value=""/>
-    </form>`
+            <div id="stm-list-wrapper">
+                <input id="stm-input" type="text" />
+                <div id="stm-list"></div>
+            </div>
+            <button id="stm-reset-button" title="reset" type="button"></button>
+            <input id="stm-submit-button" type="submit" title="sumbit" value=""/>
+        </form>`;
 
     const SpeakToMePopup = {
         // closeClicked used to skip out of media recording handling
@@ -142,35 +166,52 @@
                     html += "</ul>";
                     list.innerHTML = html;
                 }
-                
+
                 input.value = firstChoice.text;
                 input.size = input.value.length;
 
                 if (list) {
                     list.style.width = `${input.offsetWidth}px`;
                 }
-                
+
                 input.focus();
 
                 form.addEventListener("submit", function _submit_form(e) {
+                    console.log('!!!!!!!!');
                     e.preventDefault();
+                    e.stopPropagation();
                     form.removeEventListener("submit", _submit_form);
                     resolve(input.value);
                 });
 
                 list.addEventListener("click", function _choose_item(e) {
+                    e.preventDefault();
                     list.removeEventListener("click", _choose_item);
                     if (e.target instanceof HTMLLIElement) {
                         resolve(e.target.textContent);
                     }
                 });
 
+                list.addEventListener("keypress", function _choose_item(e) {
+                    e.preventDefault();
+                    const key = e.which || e.keyCode;
+                    if (key === 13) {
+                        list.removeEventListener("click", _choose_item);
+                        if (e.target instanceof HTMLLIElement) {
+                            resolve(e.target.textContent);
+                        }
+                    }
+                });
+
                 reset.addEventListener("click", function _reset_click(e) {
+                    console.log('reject');
+                    e.preventDefault();
                     close.removeEventListener("click", _reset_click);
                     reject(e.target.id);
                 });
 
                 close.addEventListener("click", function _close_click(e) {
+                    e.preventDefault();
                     close.removeEventListener("click", _close_click);
                     reject(e.target.id);
                 });
@@ -184,77 +225,33 @@
     class SpeakToMeIcon {
         constructor() {
             console.log(`SpeakToMeIcon constructor ${this}`);
+            const register = getSTMAnchors(document.domain);
             this.icon = document.createElement("button");
             this.icon.classList.add("stm-icon");
             this.icon.classList.add("stm-hidden");
             this.hasAnchor = false;
+            this.input = document.getElementById(register.input);
+            this.anchor = document.getElementById(register.anchor);
+
+            if (this.input.ownerDocument !== document) {
+                return null;
+            }
+
             document.body.appendChild(this.icon);
-
             this.icon.addEventListener("click", on_stm_icon_click);
-
-            const self = this;
-
-            // Note: remove the event so and toggle has anchor to ensure the anchor doesn't move around
-            document.body.addEventListener("focusin", function _set_anchor(event) {
-                if (event.target.id === "stm-input") {
-                    return;
-                }
-                self.anchor_to(event.target);
-                self.hasAnchor = true;
-            });
-
-            // Check if an element is already focused in the document.
-            if (document.hasFocus() && document.activeElement && !this.hasAnchor) {
-                self.anchor_to(document.activeElement);
-            }
-        }
-
-        // util finding the right parent element for any given acceptable page
-        // to add additional pages, review ACCEPTABLE_ANCHORS const above, and add appropriate pages to the manifest
-        // TODO: this whole thing feels like a hack!
-        find_ancestor(root_el) {
-            let el = root_el;
-
-
-            const currentNotAcceptable = (item, index, array) => {
-                return item !== el.id;
-            }
-
-            //traverse up the Dom Tree until it finds the right acceptable anchor
-            // Dead end when we hit the body
-            while (ACCEPTABLE_ANCHORS.every(currentNotAcceptable) && el !== document.body) {
-                el = el.parentElement;
-            }
-
-            return el;
-        }
-
-        // this anchors the speak to me button to the closest acceptable DOM element (ui_anchor) and then unhides the button
-        anchor_to(target) {
-            console.log(`SpeakToMeIcon anchor_to ${target}`);
-
-
-            if (
-                !(
-                    target instanceof HTMLInputElement &&
-                    ["text", "email", "search"].indexOf(target.type) >= 0
-                )
-            ) {
-                return;
-            }
-
-            const ui_anchor = this.find_ancestor(target);
-            this._input_field = target;
-            ui_anchor.style.position = "relative";
-            ui_anchor.append(this.icon);
+            this.input.focus();
+            this.anchor.style.position = "relative";
+            this.anchor.style.overflow = "visible";
+            this.anchor.append(this.icon);
             this.icon.classList.remove("stm-hidden");
         }
 
+
         set_input(text) {
             console.log(`SpeakToMeIcon set_input ${text}`);
-            this._input_field.value = text;
-            this._input_field.focus();
-            this._input_field.form.submit();
+            this.input.value = text;
+            this.input.focus();
+            this.input.form.submit();
         }
     }
 
@@ -537,7 +534,6 @@
     };
 
     const stm_icon = new SpeakToMeIcon();
-
     SpeakToMePopup.init();
 
 

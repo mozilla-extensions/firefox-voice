@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="15px" height="13px" viewBox="0 0 15 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-5.3%" y="-13.2%" width="110.6%" height="136.8%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Feedback" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.0-Feedback-button-for-doorhanger_final" transform="translate(-690.000000, -401.000000)" fill="#FFFFFF">
+            <g id="Feedback-icon" transform="translate(688.000000, 397.000000)">
+                <g id="Group" filter="url(#filter-1)">
+                    <path d="M12.2740682,13.1932944 C11.4252321,13.6839061 10.3992412,13.9707584 9.29417141,13.9707584 C6.37028128,13.9707584 4,11.9625858 4,9.48537922 C4,7.00817268 6.37028128,5 9.29417141,5 C12.2180615,5 14.5883428,7.00817268 14.5883428,9.48537922 C14.5883428,10.3282478 14.3139358,11.1168163 13.8366818,11.7904573 L14.4143683,14 L12.2740682,13.1932944 Z M6.29074724,10.2329424 C6.71246217,10.2329424 7.05432966,9.89824697 7.05432966,9.48537922 C7.05432966,9.07251146 6.71246217,8.73781601 6.29074724,8.73781601 C5.86903232,8.73781601 5.52716483,9.07251146 5.52716483,9.48537922 C5.52716483,9.89824697 5.86903232,10.2329424 6.29074724,10.2329424 Z M9.3450769,10.2329424 C9.76679182,10.2329424 10.1086593,9.89824697 10.1086593,9.48537922 C10.1086593,9.07251146 9.76679182,8.73781601 9.3450769,8.73781601 C8.92336198,8.73781601 8.58149449,9.07251146 8.58149449,9.48537922 C8.58149449,9.89824697 8.92336198,10.2329424 9.3450769,10.2329424 Z M12.3994066,10.2329424 C12.8211215,10.2329424 13.162989,9.89824697 13.162989,9.48537922 C13.162989,9.07251146 12.8211215,8.73781601 12.3994066,8.73781601 C11.9776916,8.73781601 11.6358241,9.07251146 11.6358241,9.48537922 C11.6358241,9.89824697 11.9776916,10.2329424 12.3994066,10.2329424 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

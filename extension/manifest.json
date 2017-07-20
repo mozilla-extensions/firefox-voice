@@ -1,19 +1,22 @@
 {
   "manifest_version": 2,
-  "name": "speak-to-me",
+  "name": "Voice Fill",
   "version": "1.2.1",
+  "description": "Adds voice input to popular search pages in Firefox. Learn more about Voice Fill at https://testpilot.firefox.com",
   "developer": {
     "name": "Fabrice Desré",
-    "url": "https://github.com/fabricedesre"
+    "url": "https://github.com/mozilla/speaktome"
   },
-
+  "icons": {
+    "48": "assets/icon-48.png",
+    "96": "assets/icon-96.png"
+  },
   "applications": {
     "gecko": {
       "id": "speaktome@mozilla.com",
       "update_url": "https://testpilot.firefox.com/files/@speak-to-me/updates.json"
     }
   },
-
   "content_scripts": [
     {
       "matches": [
@@ -21,12 +24,17 @@
         "https://www.google.com/",
         "https://www.google.co.uk/*",
         "https://www.google.co.uk/",
+        "https://www.google.ca/*",
+        "https://www.google.ca/",
         "https://duckduckgo.com/",
         "https://duckduckgo.com/*",
-        "https://yahoo.com/",
-        "https://yahoo.com/*",
+        "https://www.yahoo.com/",
+        "https://www.yahoo.com/*",
+        "https://search.yahoo.com/*",
         "https://uk.yahoo.com/",
-        "https://uk.yahoo.com/*"
+        "https://uk.yahoo.com/*",
+        "https://ca.yahoo.com/",
+        "https://ca.yahoo.com/*"
       ],
       "js": ["bodymovin.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]
@@ -39,7 +47,9 @@
     "assets/icon-close.svg",
     "assets/icon-mic.svg",
     "assets/icon-redo.svg",
-    "assets/icon-done.svg"
+    "assets/icon-done.svg",
+    "assets/ff-logo.png",
+    "assets/feedback.svg"
   ],
   "permissions": ["<all_urls>"]
 }
