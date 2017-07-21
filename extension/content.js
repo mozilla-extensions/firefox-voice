@@ -193,7 +193,6 @@
                 });
 
                 list.addEventListener("keypress", function _choose_item(e) {
-                    e.preventDefault();
                     const key = e.which || e.keyCode;
                     if (key === 13) {
                         list.removeEventListener("click", _choose_item);
@@ -204,7 +203,6 @@
                 });
 
                 reset.addEventListener("click", function _reset_click(e) {
-                    console.log('reject');
                     e.preventDefault();
                     close.removeEventListener("click", _reset_click);
                     reject(e.target.id);
