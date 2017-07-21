@@ -77,8 +77,8 @@
                 <input id="stm-input" type="text" />
                 <div id="stm-list"></div>
             </div>
-            <button id="stm-reset-button" title="reset" type="button"></button>
-            <input id="stm-submit-button" type="submit" title="sumbit" value=""/>
+            <button id="stm-reset-button" title="Reset" type="button"></button>
+            <input id="stm-submit-button" type="submit" title="Submit" value=""/>
         </form>`;
 
     const SpeakToMePopup = {
