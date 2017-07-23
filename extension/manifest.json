@@ -36,10 +36,13 @@
         "https://ca.yahoo.com/",
         "https://ca.yahoo.com/*"
       ],
-      "js": ["bodymovin.js", "content.js", "webrtc_vad.js"],
+      "js": ["bodymovin.js", "metrics.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]
     }
   ],
+  "background": {
+    "scripts": ["testpilot-qa.js", "background.js"]
+  },
   "web_accessible_resources": [
     "Done.json", 
     "Start.json", 

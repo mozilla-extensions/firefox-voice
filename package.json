@@ -16,6 +16,9 @@
     "prettier": "1.5.2",
     "web-ext": "1.10.0"
   },
+  "dependencies": {
+    "testpilot-ga": "^0.2.1"
+  },
   "homepage": "https://github.com/mozilla/speaktome#readme",
   "keywords": [],
   "license": "MPL-2.0",
@@ -30,6 +33,7 @@
     "lint:extension": "web-ext lint -s extension --ignore-files webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
-    "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi"
+    "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",
+    "postinstall": "cp node_modules/testpilot-ga/dist/index.js extension/testpilot-qa.js"
   }
 }

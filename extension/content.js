@@ -86,6 +86,7 @@
         closeClicked: false,
         init: () => {
             console.log(`SpeakToMePopup init`);
+            Metrics.attempt();
             const popup = document.createElement("div");
             popup.innerHTML = POPUP_WRAPPER_MARKUP;
             document.body.appendChild(popup);
