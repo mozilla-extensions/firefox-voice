@@ -33,6 +33,8 @@
         "https://search.yahoo.com/*",
         "https://uk.yahoo.com/",
         "https://uk.yahoo.com/*",
+        "https://us.yahoo.com/",
+        "https://us.yahoo.com/*",
         "https://ca.yahoo.com/",
         "https://ca.yahoo.com/*"
       ],
