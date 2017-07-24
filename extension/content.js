@@ -43,10 +43,16 @@
                 };
             case "ca.yahoo.com":
             case "uk.yahoo.com":
+            case "us.yahoo.com":
             case "www.yahoo.com":
                 return {
                     input: "uh-search-box",
                     anchor: "uh-search-form"
+                };
+            case "search.yahoo.com":
+                return {
+                    input: "yschsp",
+                    anchor: "sf"
                 };
             default:
                 return null;
