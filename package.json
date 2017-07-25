@@ -17,7 +17,7 @@
     "web-ext": "1.10.0"
   },
   "dependencies": {
-    "testpilot-ga": "^0.2.1"
+    "testpilot-ga": "latest"
   },
   "homepage": "https://github.com/mozilla/speaktome#readme",
   "keywords": [],
