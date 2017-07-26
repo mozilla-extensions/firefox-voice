@@ -189,7 +189,7 @@
                 input.focus();
 
                 form.addEventListener("submit", function _submit_form(e) {
-                    console.log('!!!!!!!!');
+                    console.log("!!!!!!!!");
                     e.preventDefault();
                     e.stopPropagation();
                     form.removeEventListener("submit", _submit_form);
