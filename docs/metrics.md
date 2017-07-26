@@ -66,3 +66,10 @@ Triggered whenever an attempt is acted upon. Includes:
 - `cm5`
 - `cd1` (for this attempt)
 - `cd5`
+
+## Additional Collection
+The uploaded voice samples and the JSON response containing the suggestions are
+saved together and identified by a random UUID.  We do not collect any
+identifying information or the selected search suggestion.  This information is
+used to improve the voice recognition software and is kept as long as it is
+useful for that purpose.
