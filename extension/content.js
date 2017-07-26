@@ -12,8 +12,9 @@
         return;
     }
 
+    const metrics = new Metrics();
     const LOCAL_TEST = false;
-    const STT_SERVER_URL = "https://speaktome.stage.mozaws.net";
+    const STT_SERVER_URL = "https://speaktome.services.mozilla.com";
 
     const DONE_ANIMATION = browser.extension.getURL("Done.json");
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
@@ -42,10 +43,18 @@
                 };
             case "ca.yahoo.com":
             case "uk.yahoo.com":
+            case "us.yahoo.com":
             case "www.yahoo.com":
                 return {
                     input: "uh-search-box",
                     anchor: "uh-search-form"
+                };
+            case "search.yahoo.com":
+            case "ca.search.yahoo.com":
+            case "uk.search.yahoo.com":
+                return {
+                    input: "yschsp",
+                    anchor: "sf"
                 };
             default:
                 return null;
@@ -77,8 +86,8 @@
                 <input id="stm-input" type="text" />
                 <div id="stm-list"></div>
             </div>
-            <button id="stm-reset-button" title="reset" type="button"></button>
-            <input id="stm-submit-button" type="submit" title="sumbit" value=""/>
+            <button id="stm-reset-button" title="Reset" type="button"></button>
+            <input id="stm-submit-button" type="submit" title="Submit" value=""/>
         </form>`;
 
     const SpeakToMePopup = {
@@ -105,6 +114,7 @@
             console.log(`SpeakToMePopup hide`);
             this.popup.classList.add("stm-drop-out");
             this.icon.classList.remove("stm-hidden");
+            this.icon.disabled = false;
 
             setTimeout(() => {
                 this.popup.classList.remove("stm-drop-out");
@@ -160,15 +170,17 @@
                         if (index === 0) {
                             firstChoice = item;
                         } else {
-                        html += `<li role="button" tabindex="0">${item.text}</li>`;
+                            html += `<li idx_suggestion="${index}" confidence="${item.confidence}" role="button" tabindex="0">${item.text}</li>`;
                         }
                     });
                     html += "</ul>";
                     list.innerHTML = html;
                 }
 
+                input.confidence = firstChoice.confidence;
                 input.value = firstChoice.text;
                 input.size = input.value.length;
+                input.idx_suggestion = 0;
 
                 if (list) {
                     list.style.width = `${input.offsetWidth}px`;
@@ -181,30 +193,36 @@
                     e.preventDefault();
                     e.stopPropagation();
                     form.removeEventListener("submit", _submit_form);
-                    resolve(input.value);
+                    resolve(input);
                 });
 
                 list.addEventListener("click", function _choose_item(e) {
                     e.preventDefault();
                     list.removeEventListener("click", _choose_item);
                     if (e.target instanceof HTMLLIElement) {
-                        resolve(e.target.textContent);
+                        let result = [];
+                        result.confidence = e.target.getAttribute("confidence");
+                        result.value = e.target.textContent;
+                        result.idx_suggestion = e.target.getAttribute("idx_suggestion");
+                        resolve(result);
                     }
                 });
 
                 list.addEventListener("keypress", function _choose_item(e) {
-                    e.preventDefault();
                     const key = e.which || e.keyCode;
                     if (key === 13) {
                         list.removeEventListener("click", _choose_item);
                         if (e.target instanceof HTMLLIElement) {
-                            resolve(e.target.textContent);
+                            let result = [];
+                            result.confidence = e.target.getAttribute("confidence");
+                            result.value = e.target.textContent;
+                            result.idx_suggestion = e.target.getAttribute("idx_suggestion");
+                            resolve(result);
                         }
                     }
                 });
 
                 reset.addEventListener("click", function _reset_click(e) {
-                    console.log("reject");
                     e.preventDefault();
                     close.removeEventListener("click", _reset_click);
                     reject(e.target.id);
@@ -229,6 +247,7 @@
             this.icon = document.createElement("button");
             this.icon.classList.add("stm-icon");
             this.icon.classList.add("stm-hidden");
+            this.icon.disabled = true;
             this.hasAnchor = false;
             this.input = document.getElementById(register.input);
             this.anchor = document.getElementById(register.anchor);
@@ -244,6 +263,7 @@
             this.anchor.style.overflow = "visible";
             this.anchor.append(this.icon);
             this.icon.classList.remove("stm-hidden");
+            this.icon.disabled = false;
         }
 
 
@@ -322,9 +342,12 @@
                 document.getElementById("stm-levels").hidden = false;
                 visualize(analyzerNode);
 
+                metrics.start_attempt();
                 mediaRecorder.start();
+                metrics.start_recording();
 
                 mediaRecorder.onstop = e => {
+                     metrics.stop_recording();
                     // handle clicking on close element by dumping recording data
                     if (SpeakToMePopup.closeClicked) {
                         SpeakToMePopup.closeClicked = false;
@@ -358,11 +381,13 @@
                         return;
                     }
 
+                    metrics.start_stt();
                     fetch(STT_SERVER_URL, {
                         method: "POST",
                         body: blob
                     })
                         .then(response => {
+                            metrics.end_stt();
                             return response.json();
                         })
                         .then(json => {
@@ -402,7 +427,9 @@
     // Click handler for stm icon
     const on_stm_icon_click = event => {
         event.preventDefault();
+        metrics.start_session();
         event.target.classList.add("stm-hidden");
+        event.target.disabled = true;
         SpeakToMePopup.showAt(event.clientX, event.clientY);
         stm_init();
     };
@@ -514,20 +541,27 @@
         // if the first result has a high enough confidence, just
         // use it directly.
         if (data[0].confidence > 0.9) {
+            metrics.end_attempt(data[0].confidence, "accepted", 0);
+            metrics.end_session();
             stm_icon.set_input(data[0].text);
             SpeakToMePopup.hide();
             return;
         }
 
-        SpeakToMePopup.choose_item(data).then(text => {
-            stm_icon.set_input(text);
+        metrics.set_options_displayed();
+        SpeakToMePopup.choose_item(data).then(input => {
+            metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
+            metrics.end_session();
+            stm_icon.set_input(input.value);
             // Once a choice is made, close the popup.
             SpeakToMePopup.hide();
         }, id => {
+            metrics.end_attempt(-1, "rejected", -1);
             if (id === "stm-reset-button") {
                 SpeakToMePopup.reset();
                 stm_init();
             } else {
+                metrics.end_session();
                 SpeakToMePopup.hide();
             }
         });

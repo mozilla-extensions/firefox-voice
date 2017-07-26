@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Voice Fill",
-  "version": "1.2.2",
+  "version": "1.2.8",
   "description": "Adds voice input to popular search pages in Firefox. Learn more about Voice Fill at https://testpilot.firefox.com",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
@@ -14,7 +14,7 @@
   "applications": {
     "gecko": {
       "id": "speaktome@mozilla.com",
-      "update_url": "https://testpilot.firefox.com/files/@speak-to-me/updates.json"
+      "update_url": "https://testpilot.firefox.com/files/speaktome@mozilla.com/updates.json"
     }
   },
   "content_scripts": [
@@ -33,17 +33,26 @@
         "https://search.yahoo.com/*",
         "https://uk.yahoo.com/",
         "https://uk.yahoo.com/*",
+        "https://us.yahoo.com/",
+        "https://us.yahoo.com/*",
         "https://ca.yahoo.com/",
-        "https://ca.yahoo.com/*"
+        "https://ca.yahoo.com/*",
+        "https://ca.search.yahoo.com/",
+        "https://ca.search.yahoo.com/*",
+        "https://uk.search.yahoo.com/",
+        "https://uk.search.yahoo.com/*"
       ],
-      "js": ["bodymovin.js", "content.js", "webrtc_vad.js"],
+      "js": ["bodymovin.js", "metrics.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]
     }
   ],
+  "background": {
+    "scripts": ["testpilot-qa.js", "background.js"]
+  },
   "web_accessible_resources": [
-    "Done.json", 
-    "Start.json", 
-    "Spinning.json", 
+    "Done.json",
+    "Start.json",
+    "Spinning.json",
     "assets/icon-close.svg",
     "assets/icon-mic.svg",
     "assets/icon-redo.svg",

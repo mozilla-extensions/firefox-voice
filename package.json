@@ -1,7 +1,8 @@
 {
   "name": "speak-to-me",
+  "id": "speaktome@mozilla.com",
   "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
-  "version": "1.0.0",
+  "version": "1.2.8",
   "author": {
     "name": "Andre Natal & Fabrice Desré",
     "url": "https://github.com/mozilla/speaktome"
@@ -15,6 +16,9 @@
     "npm-run-all": "4.0.2",
     "prettier": "1.5.2",
     "web-ext": "1.10.0"
+  },
+  "dependencies": {
+    "testpilot-ga": "latest"
   },
   "homepage": "https://github.com/mozilla/speaktome#readme",
   "keywords": [],
@@ -30,6 +34,7 @@
     "lint:extension": "web-ext lint -s extension --ignore-files bodymovin.js webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
-    "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi"
+    "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",
+    "postinstall": "cp node_modules/testpilot-ga/dist/index.js extension/testpilot-qa.js"
   }
 }
