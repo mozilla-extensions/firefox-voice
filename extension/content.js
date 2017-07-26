@@ -50,6 +50,8 @@
                     anchor: "uh-search-form"
                 };
             case "search.yahoo.com":
+            case "ca.search.yahoo.com":
+            case "uk.search.yahoo.com":
                 return {
                     input: "yschsp",
                     anchor: "sf"
@@ -112,6 +114,7 @@
             console.log(`SpeakToMePopup hide`);
             this.popup.classList.add("stm-drop-out");
             this.icon.classList.remove("stm-hidden");
+            this.icon.disabled = false;
 
             setTimeout(() => {
                 this.popup.classList.remove("stm-drop-out");
@@ -244,6 +247,7 @@
             this.icon = document.createElement("button");
             this.icon.classList.add("stm-icon");
             this.icon.classList.add("stm-hidden");
+            this.icon.disabled = true;
             this.hasAnchor = false;
             this.input = document.getElementById(register.input);
             this.anchor = document.getElementById(register.anchor);
@@ -259,6 +263,7 @@
             this.anchor.style.overflow = "visible";
             this.anchor.append(this.icon);
             this.icon.classList.remove("stm-hidden");
+            this.icon.disabled = false;
         }
 
 
@@ -424,6 +429,7 @@
         event.preventDefault();
         metrics.start_session();
         event.target.classList.add("stm-hidden");
+        event.target.disabled = true;
         SpeakToMePopup.showAt(event.clientX, event.clientY);
         stm_init();
     };
