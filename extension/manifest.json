@@ -36,7 +36,11 @@
         "https://us.yahoo.com/",
         "https://us.yahoo.com/*",
         "https://ca.yahoo.com/",
-        "https://ca.yahoo.com/*"
+        "https://ca.yahoo.com/*",
+        "https://ca.search.yahoo.com/",
+        "https://ca.search.yahoo.com/*",
+        "https://uk.search.yahoo.com/",
+        "https://uk.search.yahoo.com/*"
       ],
       "js": ["bodymovin.js", "metrics.js", "content.js", "webrtc_vad.js"],
       "css": ["main.css"]

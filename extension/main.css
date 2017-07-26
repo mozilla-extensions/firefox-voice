@@ -292,7 +292,6 @@
     border: none;
     box-shadow: transparent;
     box-sizing: border-box;
-    cursor: pointer;
     height: 64px;
     position: absolute;
     right: -72px;
@@ -303,6 +302,7 @@
 }
 
 .stm-icon:not(.stm-hidden) {
+    cursor: pointer;
     opacity: 0;
     animation: pop 300ms forwards ease-out;
 }
@@ -312,14 +312,14 @@
 }
 
 
-.stm-icon:hover,
-.stm-icon:focus,
+.stm-icon:hover:not(.stm-hidden),
+.stm-icon:focus:not(.stm-hidden),
 #stm-submit-button:hover,
 #stm-submit-button:focus {
     background-color: #00b8c7;
 }
 
-.stm-icon:active,
+.stm-icon:active:not(.stm-hidden),
 #stm-submit-button:active {
     background-color: #00a8b7;
     box-shadow: 0 0 0 2px #00a8b7;
