@@ -14,7 +14,7 @@
     "eslint": "4.1.1",
     "eslint-plugin-mozilla": "0.3.2",
     "npm-run-all": "4.0.2",
-    "prettier": "1.5.2",
+    "prettier": "1.5.3",
     "web-ext": "1.10.0"
   },
   "dependencies": {
@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build": "web-ext build -s extension --overwrite-dest",
-    "format": "prettier 'extension/!(bodymovin,purify.min,testpilot-ga,webrtc_vad).{js,css}' --tab-width=4 --write",
+    "format": "prettier 'extension/!(bodymovin|purify.min|testpilot-ga|webrtc_vad).{js,css}' --tab-width=4 --write",
     "lint": "npm-run-all lint:*",
     "lint:extension": "web-ext lint -s extension --ignore-files bodymovin.js purify.min.js testpilot-ga.js webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
