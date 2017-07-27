@@ -19,7 +19,7 @@
     const DONE_ANIMATION = browser.extension.getURL("Done.json");
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
     const START_ANIMATION = browser.extension.getURL("Start.json");
-
+    const ERROR_ANIMATION = browser.extension.getURL("Error.json");
 
     const getSTMAnchors = documentDomain => {
         switch (documentDomain) {
@@ -83,7 +83,7 @@
     // When Selecting, this markup is passed in
     const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
             <div id="stm-list-wrapper">
-                <input id="stm-input" type="text" />
+                <input id="stm-input" type="text" autocomplete="off" />
                 <div id="stm-list"></div>
             </div>
             <button id="stm-reset-button" title="Reset" type="button"></button>
@@ -169,7 +169,7 @@
                     data.forEach((item, index) => {
                         if (index === 0) {
                             firstChoice = item;
-                        } else {
+                        } else if(index < 5) {
                             html += `<li idx_suggestion="${index}" confidence="${item.confidence}" role="button" tabindex="0">${item.text}</li>`;
                         }
                     });
@@ -188,10 +188,27 @@
 
                 input.focus();
 
+                input.addEventListener("keypress", function _expand_input(e) {
+                    // e.preventDefault();
+                    if(e.keyCode === 13) {
+                        e.preventDefault();
+                        list.classList.add('close');
+                        resolve(input);
+                    }
+                    else if(e.keyCode === 8) {
+                        input.size--;
+                        list.style.width = `${input.offsetWidth}px`;
+                    }
+                    else if(e.keyCode < 37 || e.keyCode > 40) {
+                        input.size = input.value.length;
+                        list.style.width = `${input.offsetWidth}px`;
+                    }
+                });
+
                 form.addEventListener("submit", function _submit_form(e) {
-                    console.log("!!!!!!!!");
                     e.preventDefault();
                     e.stopPropagation();
+                    list.classList.add('close');
                     form.removeEventListener("submit", _submit_form);
                     resolve(input);
                 });
@@ -204,6 +221,11 @@
                         result.confidence = e.target.getAttribute("confidence");
                         result.value = e.target.textContent;
                         result.idx_suggestion = e.target.getAttribute("idx_suggestion");
+                        list.classList.add('close');
+                        input.value = e.target.textContent;
+                        input.size = input.value.length;
+                        list.style.width = `${input.offsetWidth}px`;
+
                         resolve(result);
                     }
                 });
@@ -217,6 +239,11 @@
                             result.confidence = e.target.getAttribute("confidence");
                             result.value = e.target.textContent;
                             result.idx_suggestion = e.target.getAttribute("idx_suggestion");
+                            list.classList.add('close');
+                            input.value = e.target.textContent;
+                            input.size = input.value.length;
+                            list.style.width = `${input.offsetWidth}px`;
+
                             resolve(result);
                         }
                     }
@@ -346,6 +373,10 @@
                 mediaRecorder.start();
                 metrics.start_recording();
 
+                const copy = document.getElementById("stm-content");
+                loadAnimation(SPINNING_ANIMATION, true);
+                copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`
+
                 mediaRecorder.onstop = e => {
                      metrics.stop_recording();
                     // handle clicking on close element by dumping recording data
@@ -394,9 +425,13 @@
                             console.log(
                                 `Got STT result: ${JSON.stringify(json)}`
                             );
-                            if (json.status === "ok") {
-                                display_options(json.data);
-                            }
+                            const container = document.getElementById("stm-box");
+                            container.classList.add('stm-done-animation');
+                            setTimeout(() => {
+                                if (json.status === "ok") {
+                                    display_options(json.data);
+                                }
+                            }, 500);
                         })
                         .catch(error => {
                             console.error(`Fetch error: ${error}`);
@@ -408,6 +443,13 @@
                 };
             })
             .catch(function(err) {
+                loadAnimation(ERROR_ANIMATION, false);
+                const copy = document.getElementById("stm-content");
+                copy.innerHTML = `<div id="stm-listening-text">Microphone access error</div>`
+                setTimeout(() => {
+                    SpeakToMePopup.hide();
+                }, 1500);
+
                 console.log(`Recording error: ${err}`);
             });
     };
@@ -417,9 +459,6 @@
        loadAnimation(START_ANIMATION, false, "stm-start-animation");
 
         setTimeout(() => {
-            const copy = document.getElementById("stm-content");
-            loadAnimation(SPINNING_ANIMATION, true);
-            copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`
             stm_start();
         }, 1000);
     };
@@ -451,8 +490,11 @@
         const frequencyBins = new Float32Array(14);
 
         // Clear the canvas
+
+        var popupWidth = document.getElementById("stm-popup").offsetWidth;
+
         const levels = document.getElementById("stm-levels");
-        const xPos = levels.offsetWidth * .5;
+        const xPos = (popupWidth < levels.offsetWidth ? popupWidth * .5 - 22 : levels.offsetWidth * .5);
         const yPos = levels.offsetHeight * .5;
         const context = levels.getContext("2d");
         context.clearRect(0, 0, levels.width, levels.height);
@@ -472,16 +514,21 @@
         const dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
 
         // Loop through the values and draw the bars
-        context.strokeStyle = "#000";
-        context.lineWidth = 10;
-        context.globalAlpha = .05
+        context.strokeStyle = "#d1d2d3";
+        
         for (let i = 0; i < n; i++) {
             const value = frequencyBins[i + skip];
-            const diameter = (levels.height * (value - MIN_DB_LEVEL) / dbRange) * .50;
+            const diameter = (levels.height * (value - MIN_DB_LEVEL) / dbRange) * 10;
             if (diameter < 0) {
                 continue;
             }
             // Display a bar for this value.
+            var alpha = diameter/500;
+            if(alpha > .2) alpha = .2;
+            else if (alpha < .1) alpha = .1;
+            
+            context.lineWidth = alpha*alpha*150;
+            context.globalAlpha = alpha*alpha*5;
             context.beginPath();
             context.ellipse(
                 xPos,
@@ -492,7 +539,7 @@
                 0,
                 2 * Math.PI
             );
-            context.stroke();
+            if(diameter > 90 && diameter < 360) context.stroke();
         }
         // Update the visualization the next time we can
         requestAnimationFrame(function() {
@@ -719,6 +766,8 @@
         this.goCloud = function(why) {
             console.log(why);
             this.stopGum();
+            const copy = document.getElementById("stm-content");
+            copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`
             loadAnimation(DONE_ANIMATION, false);
         };
         console.log("speakToMeVad created()");
