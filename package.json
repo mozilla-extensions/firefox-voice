@@ -35,6 +35,6 @@
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
     "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",
-    "postinstall": "cp node_modules/testpilot-ga/dist/index.js extension/testpilot-qa.js"
+    "postinstall": "cp node_modules/testpilot-ga/dist/index.js extension/testpilot-ga.js"
   }
 }

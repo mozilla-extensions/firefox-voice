@@ -361,6 +361,7 @@
                 }, () => {
                     mediaRecorder.stop();
                     SpeakToMePopup.closeClicked = true;
+                    metrics.end_session();
                     SpeakToMePopup.hide();
                 }
 
@@ -588,7 +589,7 @@
         // if the first result has a high enough confidence, just
         // use it directly.
         if (data[0].confidence > 0.9) {
-            metrics.end_attempt(data[0].confidence, "accepted", 0);
+            metrics.end_attempt(data[0].confidence, "default accepted", 0);
             metrics.end_session();
             stm_icon.set_input(data[0].text);
             SpeakToMePopup.hide();
@@ -603,11 +604,12 @@
             // Once a choice is made, close the popup.
             SpeakToMePopup.hide();
         }, id => {
-            metrics.end_attempt(-1, "rejected", -1);
             if (id === "stm-reset-button") {
+                metrics.end_attempt(-1, "reset", -1);
                 SpeakToMePopup.reset();
                 stm_init();
             } else {
+                metrics.end_attempt(-1, "rejected", -1);
                 metrics.end_session();
                 SpeakToMePopup.hide();
             }

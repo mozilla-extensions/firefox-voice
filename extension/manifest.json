@@ -47,7 +47,7 @@
     }
   ],
   "background": {
-    "scripts": ["testpilot-qa.js", "background.js"]
+    "scripts": ["testpilot-ga.js", "background.js"]
   },
   "web_accessible_resources": [
     "Done.json",
