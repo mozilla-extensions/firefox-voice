@@ -1,3 +1,4 @@
-extension/webrtc_vad.js
 extension/bodymovin.js
-extension/testpilot-qa.js
+extension/purify.min.js
+extension/testpilot-ga.js
+extension/webrtc_vad.js
