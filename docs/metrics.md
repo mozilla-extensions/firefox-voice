@@ -31,7 +31,7 @@ Data will be collected with Google Analytics and follow [Test Pilot standards](h
 - `cm5` - the elapsed time in ms waiting for a response from the speech-to-text engine.
 
 ### Custom Dimensions
-- `cd1` - the outcome of a session or attempt. One of `accepted`, `rejected`, and `aborted`.
+- `cd1` - the outcome of a session or attempt. One of `default accepted`,`accepted`, `rejected`, and `reset`.
 - `cd2` - the location from which a session is initiated. One of `google`, `duckduckgo`, `Yahoo`, `generic`.
 - `cd3` - the UI element from which the session was initiated. One of `button`, `context menu`, `keyboard`.
 - `cd4` - whether the accepted submission was modified before being submitted. One of `true`, `false`.
