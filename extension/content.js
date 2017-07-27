@@ -399,7 +399,7 @@
                             }
                         })
                         .catch(error => {
-                            console.error(`Fetch error: ${error}`);
+                            fail_gracefully(`Fetch error: ${error}`);
                         });
                 };
 
@@ -570,6 +570,9 @@
     const stm_icon = new SpeakToMeIcon();
     SpeakToMePopup.init();
 
+    const fail_gracefully = (errorMsg) => {
+        console.log('ERROR ERROR ERROR!!', errorMsg);
+    }
 
     // Webrtc_Vad integration
     SpeakToMeVad = function SpeakToMeVad() {
