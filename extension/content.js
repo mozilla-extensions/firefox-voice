@@ -419,6 +419,9 @@
                         body: blob
                     })
                         .then(response => {
+                            if (!response.ok) {
+                                fail_gracefully(`Fetch error: ${response.statusText}`);
+                            }
                             metrics.end_stt();
                             return response.json();
                         })
@@ -444,14 +447,7 @@
                 };
             })
             .catch(function(err) {
-                loadAnimation(ERROR_ANIMATION, false);
-                const copy = document.getElementById("stm-content");
-                copy.innerHTML = `<div id="stm-listening-text">Microphone access error</div>`
-                setTimeout(() => {
-                    SpeakToMePopup.hide();
-                }, 1500);
-
-                console.log(`Recording error: ${err}`);
+                fail_gracefully(`Fetch error: ${err}`);
             });
     };
 
@@ -620,6 +616,12 @@
     SpeakToMePopup.init();
 
     const fail_gracefully = (errorMsg) => {
+        loadAnimation(ERROR_ANIMATION, false);
+        const copy = document.getElementById("stm-content");
+        copy.innerHTML = `<div id="stm-listening-text">Sorry, we encountered an error</div>`
+        setTimeout(() => {
+            SpeakToMePopup.hide();
+        }, 1500);
         console.log('ERROR ERROR ERROR!!', errorMsg);
     }
 
@@ -790,7 +792,7 @@ var Module = {
         };
     })(),
     printErr(text) {
-        console.error("[webrtc_vad.js error]", text);
+        fail_gracefully("[webrtc_vad.js error]", text);
     },
     canvas: (function() {})(),
     setStatus(text) {
