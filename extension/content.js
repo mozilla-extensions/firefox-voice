@@ -419,6 +419,9 @@
                         body: blob
                     })
                         .then(response => {
+                            if (!response.ok) {
+                                fail_gracefully(`Fetch error: ${response.statusText}`);
+                            }
                             metrics.end_stt();
                             return response.json();
                         })
