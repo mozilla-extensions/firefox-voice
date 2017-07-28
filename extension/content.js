@@ -170,15 +170,17 @@
                         if (index === 0) {
                             firstChoice = item;
                         } else if(index < 5) {
-                            html += `<li idx_suggestion="${index}" confidence="${item.confidence}" role="button" tabindex="0">${item.text}</li>`;
+                            let confidence = DOMPurify.sanitize(item.confidence);
+                            let text = DOMPurify.sanitize(item.text);
+                            html += `<li idx_suggestion="${index}" confidence="${confidence}" role="button" tabindex="0">${text}</li>`;
                         }
                     });
                     html += "</ul>";
                     list.innerHTML = html;
                 }
 
-                input.confidence = firstChoice.confidence;
-                input.value = firstChoice.text;
+                input.confidence = DOMPurify.sanitize(firstChoice.confidence);
+                input.value = DOMPurify.sanitize(firstChoice.text);
                 input.size = input.value.length;
                 input.idx_suggestion = 0;
 
