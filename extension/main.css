@@ -207,7 +207,7 @@
     padding: 4px 8px;
     position: relative;
     transition: background 75ms, box-shadow 75ms;
-    max-width: 20vw;
+    max-width: 600px;
 }
 
 #stm-input:focus {

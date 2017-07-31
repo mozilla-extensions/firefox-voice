@@ -181,7 +181,7 @@
 
                 input.confidence = DOMPurify.sanitize(firstChoice.confidence);
                 input.value = DOMPurify.sanitize(firstChoice.text);
-                input.size = input.value.length;
+                input.size = Math.max(input.value.length, 10);
                 input.idx_suggestion = 0;
 
                 if (list) {
@@ -197,12 +197,14 @@
                         list.classList.add('close');
                         resolve(input);
                     }
-                    else if(e.keyCode === 8) {
-                        input.size--;
-                        list.style.width = `${input.offsetWidth}px`;
+                    else if(e.keyCode === 8 || e.keyCode === 46) {
+                        if (input.size > 10) {
+                            input.size--;
+                            list.style.width = `${input.offsetWidth}px`;
+                        }
                     }
                     else if(e.keyCode < 37 || e.keyCode > 40) {
-                        input.size = input.value.length;
+                        input.size = Math.max(10, input.value.length);
                         list.style.width = `${input.offsetWidth}px`;
                     }
                 });
@@ -464,8 +466,9 @@
 
     // Click handler for stm icon
     const on_stm_icon_click = event => {
+        const type = event.detail ? "button" : "keyboard";
         event.preventDefault();
-        metrics.start_session();
+        metrics.start_session(type);
         event.target.classList.add("stm-hidden");
         event.target.disabled = true;
         SpeakToMePopup.showAt(event.clientX, event.clientY);
