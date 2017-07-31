@@ -1,6 +1,6 @@
 {
-  "name": "speak-to-me",
-  "id": "speaktome@mozilla.com",
+  "name": "voicefill",
+  "id": "voicefill@mozilla.com",
   "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
   "version": "1.2.9",
   "author": {
