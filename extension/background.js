@@ -12,11 +12,11 @@ const analytics = new TestPilotGA({
   av: '1.2.9'
 });
 
-browser.runtime.onMessage.addListener((event, content) => {
+browser.runtime.onMessage.addListener(event => {
     console.log('[metrics] Event successfully sent. Calling analytics');
 
     analytics
-    .sendEvent('voice fill', event, content)
+    .sendEvent('voice fill', event.type, event.content)
     .then(response => {
       console.log('[metrics] Event successfully sent', response);
     })
