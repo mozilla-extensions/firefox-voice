@@ -190,23 +190,18 @@
 
                 input.focus();
 
-                input.addEventListener("keypress", function _expand_input(e) {
+                input.addEventListener("keypress", e => {
                     // e.preventDefault();
                     if(e.keyCode === 13) {
                         e.preventDefault();
                         list.classList.add('close');
                         resolve(input);
                     }
-                    else if(e.keyCode === 8 || e.keyCode === 46) {
-                        if (input.size > 10) {
-                            input.size--;
-                            list.style.width = `${input.offsetWidth}px`;
-                        }
-                    }
-                    else if(e.keyCode < 37 || e.keyCode > 40) {
-                        input.size = Math.max(10, input.value.length);
-                        list.style.width = `${input.offsetWidth}px`;
-                    }
+                });
+
+                input.addEventListener("input", () => {
+                    input.size = Math.max(10, input.value.length);
+                    list.style.width = `${input.offsetWidth}px`;
                 });
 
                 form.addEventListener("submit", function _submit_form(e) {
