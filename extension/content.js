@@ -247,6 +247,11 @@
                     input: "yschsp",
                     anchor: "sf"
                 };
+            case "www.bing.com":
+                return {
+                    input: "sb_form_q",
+                    anchor: "sb_form_go"
+                };
             default:
                 return null;
         }

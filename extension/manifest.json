@@ -424,7 +424,11 @@
         "https://ca.search.yahoo.com/",
         "https://ca.search.yahoo.com/*",
         "https://uk.search.yahoo.com/",
-        "https://uk.search.yahoo.com/*"
+        "https://uk.search.yahoo.com/*",
+        "https://www.bing.com/*",
+        "https://www.bing.com/"
+        
+        
       ],
       "js": ["purify.min.js", "bodymovin.js", "metrics.js", "content.js",
         "webrtc_vad.js"],
