@@ -410,6 +410,8 @@
         "https://www.google.co.zw/*",
         "https://duckduckgo.com/",
         "https://duckduckgo.com/*",
+        "https://start.duckduckgo.com/",
+        "https://start.duckduckgo.com/*",
         "https://www.yahoo.com/",
         "https://www.yahoo.com/*",
         "https://search.yahoo.com/*",
