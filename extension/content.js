@@ -150,6 +150,7 @@
             case "www.google.co.mz":
             case "www.google.com.na":
             case "www.google.ne":
+            case "www.google.ng":
             case "www.google.com.ng":
             case "www.google.com.ni":
             case "www.google.nl":
