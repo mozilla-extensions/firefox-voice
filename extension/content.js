@@ -223,6 +223,7 @@
                     anchor: "sfdiv"
                 }
             case "duckduckgo.com":
+            case "start.duckduckgo.com":
                 if (document.body.classList.contains("body--serp")) {
                     return {
                         input: "search_form_input",
