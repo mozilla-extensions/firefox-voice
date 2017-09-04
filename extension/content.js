@@ -159,7 +159,6 @@
             case "www.google.nr":
             case "www.google.nu":
             case "www.google.co.nz":
-            case "www.google.com.on":
             case "www.google.com.pk":
             case "www.google.com.pa":
             case "www.google.com.pe":
