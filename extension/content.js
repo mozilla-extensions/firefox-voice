@@ -204,7 +204,6 @@
             case "www.google.co.tz":
             case "www.google.com.ua":
             case "www.google.co.ug":
-            case "www.google.us":
             case "www.google.com.uy":
             case "www.google.co.uz":
             case "www.google.com.vc":
