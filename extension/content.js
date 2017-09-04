@@ -236,6 +236,13 @@
             case "ca.yahoo.com":
             case "uk.yahoo.com":
             case "us.yahoo.com":
+            case "fr.yahoo.com":
+            case "de.yahoo.com":
+            case "ie.yahoo.com":
+            case "in.yahoo.com":
+            case "it.yahoo.com":
+            case "se.yahoo.com":
+            case "tw.yahoo.com":
             case "www.yahoo.com":
                 return {
                     input: "uh-search-box",
@@ -244,6 +251,16 @@
             case "search.yahoo.com":
             case "ca.search.yahoo.com":
             case "uk.search.yahoo.com":
+            case "fr.search.yahoo.com":
+            case "au.search.yahoo.com":
+            case "de.search.yahoo.com":
+            case "dk.search.yahoo.com":
+            case "ie.search.yahoo.com":
+            case "in.search.yahoo.com":
+            case "it.search.yahoo.com":
+            case "no.search.yahoo.com":
+            case "se.search.yahoo.com":
+            case "tw.search.yahoo.com":
                 return {
                     input: "yschsp",
                     anchor: "sf"
