@@ -68,7 +68,7 @@
             case "www.google.cm":
             case "www.google.cn":
             case "www.google.com.co":
-	    case "www.google.co.ck":
+	        case "www.google.co.ck":
             case "www.google.co.cr":
             case "www.google.com.cu":
             case "www.google.cv":
