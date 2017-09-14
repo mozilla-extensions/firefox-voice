@@ -474,6 +474,15 @@
                     reject(e.target.id);
                 });
 
+                close.addEventListener("keypress", function _close_click(e) {
+                    const key = e.which || e.keyCode;
+                    if (key === 13) {
+                        e.preventDefault();
+                        close.removeEventListener("click", _close_click);
+                        reject(e.target.id);
+                    }
+                });
+
             });
         }
     };
