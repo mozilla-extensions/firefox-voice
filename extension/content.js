@@ -676,7 +676,7 @@
                 };
             })
             .catch(function(err) {
-                fail_gracefully(`Fetch error: ${err}`);
+                fail_gracefully(`GUM error: ${err}`);
             });
     };
 
@@ -846,9 +846,10 @@
     SpeakToMePopup.init();
 
     const fail_gracefully = (errorMsg) => {
+        errorMsg = errorMsg.indexOf("GUM") === 0 ? "Please enable your microphone to use Voice Fill" : "Sorry, we encountered an error";
         loadAnimation(ERROR_ANIMATION, false);
         const copy = document.getElementById("stm-content");
-        copy.innerHTML = `<div id="stm-listening-text">Sorry, we encountered an error</div>`
+        copy.innerHTML = `<div id="stm-listening-text">${errorMsg}</div>`
         setTimeout(() => {
             SpeakToMePopup.hide();
         }, 1500);
