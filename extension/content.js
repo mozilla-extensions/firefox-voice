@@ -807,8 +807,7 @@
             });
 
         if (data.length === 0) {
-            // TODO: display some failure notification to the user?
-            SpeakToMePopup.hide();
+            fail_gracefully(`Fetch error: ${error}`);
             return;
         }
 
