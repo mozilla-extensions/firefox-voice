@@ -322,10 +322,20 @@
             console.log(`SpeakToMePopup showAt ${x},${y}`);
             const style = this.popup.style;
             style.display = "flex";
+            this.dismissPopup = function (e) {
+                const key = e.which || e.keyCode;
+                if (key === 27) {
+                    e.preventDefault();
+                    SpeakToMePopup.closeClicked = true;
+                    SpeakToMePopup.hide();
+                }
+            }
+            this.addEventListener("keypress", this.dismissPopup);
         },
 
         hide: () => {
             console.log(`SpeakToMePopup hide`);
+            this.removeEventListener("keypress", this.dismissPopup);
             this.popup.classList.add("stm-drop-out");
             this.icon.classList.remove("stm-hidden");
             this.icon.disabled = false;
@@ -342,8 +352,6 @@
         },
 
         // Returns a Promise that resolves once the "Stop" button is clicked.
-        // TODO: replace with silence detection.
-        // TODO: make stop button clickable
         wait_for_stop: () => {
             console.log(`SpeakToMePopup wait_for_stop`);
             return new Promise((resolve, reject) => {
@@ -464,7 +472,7 @@
 
                 reset.addEventListener("click", function _reset_click(e) {
                     e.preventDefault();
-                    close.removeEventListener("click", _reset_click);
+                    reset.removeEventListener("click", _reset_click);
                     reject(e.target.id);
                 });
 
@@ -478,11 +486,10 @@
                     const key = e.which || e.keyCode;
                     if (key === 13) {
                         e.preventDefault();
-                        close.removeEventListener("click", _close_click);
+                        close.removeEventListener("keypress", _close_click);
                         reject(e.target.id);
                     }
                 });
-
             });
         }
     };
@@ -845,7 +852,7 @@
         setTimeout(() => {
             SpeakToMePopup.hide();
         }, 1500);
-        console.log('ERROR ERROR ERROR!!', errorMsg);
+        console.log('ERROR: ', errorMsg);
     }
 
     // Webrtc_Vad integration
