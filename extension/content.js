@@ -811,9 +811,27 @@
             return;
         }
 
-        // if the first result has a high enough confidence, just
+        const validate_results = function(data) {
+            if (data.length === 1) {
+                return true;
+            }
+
+            const val0 = String(data[0].confidence).substring(0, 4);
+            const val1 = String(data[1].confidence).substring(0, 4);
+
+            if ((val0 - val1) > 0.2) {
+                return true;
+            }
+            return false;
+        }
+
+        // if the first result has a high enough confidence, or the distance
+        // to the second large enough just
         // use it directly.
-        if (data[0].confidence > 0.9) {
+        data.sort(function(a, b) {
+              return b.confidence - a.confidence;
+        });
+        if (validate_results(data)) {
             metrics.end_attempt(data[0].confidence, "default accepted", 0);
             metrics.end_session();
             stm_icon.set_input(data[0].text);
