@@ -514,7 +514,6 @@
 
             document.body.appendChild(this.icon);
             this.icon.addEventListener("click", on_stm_icon_click);
-            this.input.focus();
             this.anchor.style.position = "relative";
             this.anchor.style.overflow = "visible";
             this.anchor.append(this.icon);
