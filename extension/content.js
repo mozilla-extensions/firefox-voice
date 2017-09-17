@@ -694,7 +694,6 @@
         event.preventDefault();
         metrics.start_session(type);
         event.target.classList.add("stm-hidden");
-        event.target.disabled = true;
         SpeakToMePopup.showAt(event.clientX, event.clientY);
         stm_init();
     };
