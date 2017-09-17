@@ -805,7 +805,7 @@
             });
 
         if (data.length === 0) {
-            fail_gracefully(`Fetch error: ${error}`);
+            fail_gracefully(`EMPTYRESULTS`);
             return;
         }
 
@@ -861,14 +861,20 @@
     SpeakToMePopup.init();
 
     const fail_gracefully = (errorMsg) => {
-        errorMsg = errorMsg.indexOf("GUM") === 0 ? "Please enable your microphone to use Voice Fill" : "Sorry, we encountered an error";
-        loadAnimation(ERROR_ANIMATION, false);
-        const copy = document.getElementById("stm-content");
-        copy.innerHTML = `<div id="stm-listening-text">${errorMsg}</div>`
-        setTimeout(() => {
-            SpeakToMePopup.hide();
-        }, 1500);
-        console.log('ERROR: ', errorMsg);
+      if (errorMsg.indexOf("GUM") === 0) {
+        errorMsg =  "Please enable your microphone to use Voice Fill";
+      } else if (errorMsg.indexOf("EMPTYRESULTS") === 0) {
+        errorMsg = "No results found";  
+      } else {
+        errorMsg = "Sorry, we encountered an error";
+      }
+      loadAnimation(ERROR_ANIMATION, false);
+      const copy = document.getElementById("stm-content");
+      copy.innerHTML = `<div id="stm-listening-text">${errorMsg}</div>`
+      setTimeout(() => {
+          SpeakToMePopup.hide();
+      }, 1500);
+      console.log('ERROR: ', errorMsg);
     }
 
     // Webrtc_Vad integration
