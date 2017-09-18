@@ -12,6 +12,7 @@
         return;
     }
 
+    let mediaRecorder = null;
     const metrics = new Metrics();
     const LOCAL_TEST = false;
     const STT_SERVER_URL = "https://speaktome.services.mozilla.com";
@@ -326,8 +327,10 @@
                 const key = e.which || e.keyCode;
                 if (key === 27) {
                     e.preventDefault();
-                    SpeakToMePopup.closeClicked = true;
+                    metrics.end_session();
                     SpeakToMePopup.hide();
+                    mediaRecorder.stop();
+                    SpeakToMePopup.closeClicked = true;
                 }
             }
             this.addEventListener("keypress", this.dismissPopup);
@@ -579,7 +582,7 @@
                 sourceNode.connect(scriptprocessor);
 
                 // MediaRecorder initialization
-                let mediaRecorder = new MediaRecorder(
+                mediaRecorder = new MediaRecorder(
                     outputNode.stream,
                     options
                 );
@@ -697,10 +700,6 @@
         SpeakToMePopup.showAt(event.clientX, event.clientY);
         stm_init();
     };
-
-    const on_stm_close_click = event => {
-        SpeakToMePopup.hide();
-    }
 
     // Helper to handle background visualization
     const visualize = (analyzerNode) => {
