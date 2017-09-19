@@ -69,7 +69,6 @@
             case "www.google.cm":
             case "www.google.cn":
             case "www.google.com.co":
-	        case "www.google.co.ck":
             case "www.google.co.cr":
             case "www.google.com.cu":
             case "www.google.cv":
@@ -243,7 +242,6 @@
             case "in.yahoo.com":
             case "it.yahoo.com":
             case "se.yahoo.com":
-            case "tw.yahoo.com":
             case "www.yahoo.com":
                 return {
                     input: "uh-search-box",
@@ -270,6 +268,11 @@
                 return {
                     input: "sb_form_q",
                     anchor: "sb_form_go"
+                };
+            case "tw.yahoo.com":
+                return {
+                    input: "UHSearchBox",
+                    anchor: "UHSearch"
                 };
             default:
                 return null;
