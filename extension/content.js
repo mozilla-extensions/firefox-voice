@@ -329,6 +329,7 @@
             this.dismissPopup = function (e) {
                 const key = e.which || e.keyCode;
                 if (key === 27) {
+                    SpeakToMePopup.cancelFetch = true;
                     e.preventDefault();
                     metrics.end_session();
                     SpeakToMePopup.hide();
@@ -613,7 +614,7 @@
                 copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`
 
                 mediaRecorder.onstop = e => {
-                     metrics.stop_recording();
+                    metrics.stop_recording();
                     // handle clicking on close element by dumping recording data
                     if (SpeakToMePopup.closeClicked) {
                         SpeakToMePopup.closeClicked = false;
@@ -660,6 +661,10 @@
                             return response.json();
                         })
                         .then(json => {
+                            if (SpeakToMePopup.cancelFetch) {
+                                SpeakToMePopup.cancelFetch = false;
+                                return;
+                            }
                             console.log(
                                 `Got STT result: ${JSON.stringify(json)}`
                             );
@@ -696,6 +701,9 @@
 
     // Click handler for stm icon
     const on_stm_icon_click = event => {
+        if (SpeakToMePopup.cancelFetch) {
+            SpeakToMePopup.cancelFetch = false;
+        }
         const type = event.detail ? "button" : "keyboard";
         event.preventDefault();
         metrics.start_session(type);
