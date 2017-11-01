@@ -483,5 +483,13 @@
     "assets/ff-logo.png",
     "assets/feedback.svg"
   ],
-  "permissions": ["<all_urls>"]
+  "permissions": ["<all_urls>"],
+
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": {
+      "16": "mic.svg",
+      "32": "mic.svg"
+    }
+  }
 }

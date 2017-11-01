@@ -278,7 +278,11 @@
                 return null;
         }
     }
-
+    browser.runtime.onMessage.addListener(request => {
+      SpeakToMePopup.showAt(0, 0);
+      stm_init();
+      return Promise.resolve({response: "content script ack"});
+    });
 
     // Encapsulation of the popup we use to provide our UI.
     const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">

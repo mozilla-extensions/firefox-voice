@@ -24,3 +24,30 @@ browser.runtime.onMessage.addListener(event => {
       console.error('[metrics] Event failed while sending', response, err);
     });
 });
+
+browser.browserAction.onClicked.addListener(function() {
+
+  var creating = browser.tabs.create({
+    url:"https://www.google.com"
+  });
+  creating.
+  then(tab => {
+            console.log(`Created new tab: ${tab.id}`);
+            setTimeout( function() {
+
+                browser.tabs.sendMessage(
+                    tab.id,
+                    {msg: "background script syn"}
+                ).then(response => {
+                    console.log("Message from the content script", response.response);
+                }).catch(error => {
+                    console.error(`Error: ${error}`);
+                });
+
+            }, 2000);
+
+        },
+          error => {
+            console.log(`Error: ${error}`);
+        });
+});
