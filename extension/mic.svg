@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="16px" viewBox="0 0 13 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47 (45396) - http://www.bohemiancoding.com/sketch -->
+    <title>Favicon / VF</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Visual-2.0" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.8">
+        <g id="2.2.0-AS" transform="translate(-999.000000, -50.000000)" fill="#0C0C0D">
+            <g id="Favicon-/-VF" transform="translate(997.230469, 50.039062)">
+                <path d="M8,2 C7.44771525,2 7,2.44771525 7,3 L7,7 C7,7.55228475 7.44771525,8 8,8 C8.55228475,8 9,7.55228475 9,7 L9,3 C9,2.44771525 8.55228475,2 8,2 Z M8,0 C9.65685425,-3.04359188e-16 11,1.34314575 11,3 L11,7 C11,8.65685425 9.65685425,10 8,10 C6.34314575,10 5,8.65685425 5,7 L5,3 C5,1.34314575 6.34314575,3.04359188e-16 8,0 Z" id="Rectangle-2" fill-rule="nonzero"></path>
+                <path d="M8.99665391,12.917602 C8.99887013,12.9447751 9,12.9722556 9,13 L9,15 C9,15.5522847 8.55228475,16 8,16 C7.44771525,16 7,15.5522847 7,15 L7,13 C7,12.9722556 7.00112987,12.9447751 7.00334609,12.917602 C4.16398661,12.4429033 2,9.97416472 2,7 C2,6.44771525 2.44771525,6 3,6 C3.55228475,6 4,6.44771525 4,7 C4,9.209139 5.790861,11 8,11 C10.209139,11 12,9.209139 12,7 C12,6.44771525 12.4477153,6 13,6 C13.5522847,6 14,6.44771525 14,7 C14,9.97416472 11.8360134,12.4429033 8.99665391,12.917602 Z" id="Combined-Shape" fill-rule="evenodd"></path>
+            </g>
+        </g>
+    </g>
+</svg>
