@@ -279,6 +279,7 @@
         }
     }
     browser.runtime.onMessage.addListener(request => {
+      metrics.start_session('toolbar');
       SpeakToMePopup.showAt(0, 0);
       stm_init();
       return Promise.resolve({response: "content script ack"});

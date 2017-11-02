@@ -32,19 +32,17 @@ browser.browserAction.onClicked.addListener(function() {
   });
   creating.
   then(tab => {
-            console.log(`Created new tab: ${tab.id}`);
-            setTimeout( function() {
-
+            const intervalConnection = setInterval( function() {
                 browser.tabs.sendMessage(
                     tab.id,
                     {msg: "background script syn"}
                 ).then(response => {
-                    console.log("Message from the content script", response.response);
+                    clearInterval(intervalConnection);
                 }).catch(error => {
-                    console.error(`Error: ${error}`);
+                    //console.error(`Not connected yet. Retrying ${error}`);
                 });
 
-            }, 2000);
+            }, 100);
 
         },
           error => {
