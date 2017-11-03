@@ -279,7 +279,9 @@
         }
     }
     browser.runtime.onMessage.addListener(request => {
-      metrics.start_session('toolbar');
+      this.icon.classList.add("stm-hidden");
+      document.getElementsByClassName("stm-icon")[0].disabled = true;
+      metrics.start_session("toolbar");
       SpeakToMePopup.showAt(0, 0);
       stm_init();
       return Promise.resolve({response: "content script ack"});
