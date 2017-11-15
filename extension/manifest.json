@@ -490,6 +490,12 @@
     "default_icon": {
       "16": "mic.svg",
       "32": "mic.svg"
-    }
+    },
+    "default_title": "Voice Fill",
+    "theme_icons": [{
+        "light": "mic-dark.svg",
+        "dark": "mic-dark.svg",
+        "size": 32
+    }]
   }
 }
