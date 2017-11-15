@@ -291,7 +291,7 @@
     const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
             <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
             <div id="stm-inject"></div>
-            <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product" id="stm-feedback" role="button" tabindex="2">Feedback</a>
+            <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2" id="stm-feedback" role="button" tabindex="2">Feedback</a>
         </div>`;
 
     // When submitting, this markup is passed in
