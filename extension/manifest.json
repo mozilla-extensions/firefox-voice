@@ -487,20 +487,9 @@
 
   "browser_action": {
     "browser_style": true,
-    "default_icon": {
-      "16": "mic.svg",
-      "32": "mic.svg"
-    },
     "default_title": "Voice Fill",
-    "theme_icons": [{
-        "light": "mic-dark.svg",
-        "dark": "mic.svg",
-        "size": 16
-    },
-    {
-        "light": "mic-dark.svg",
-        "dark": "mic.svg",
-        "size": 32
-    }]
+    "default_icon": {
+      "32": "mic.svg"
+    }
   }
 }
