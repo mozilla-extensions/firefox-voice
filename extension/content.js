@@ -217,6 +217,7 @@
             case "www.google.co.zm":
             case "www.google.co.zw":
             case "www.google.co.uk":
+            case "encrypted.google.com":
                 return {
                     input: "lst-ib",
                     anchor: "sfdiv"

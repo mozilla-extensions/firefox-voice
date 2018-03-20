@@ -407,6 +407,8 @@
         "https://www.google.co.zm/*",
         "https://www.google.co.zw/",
         "https://www.google.co.zw/*",
+        "https://encrypted.google.com/*",
+        "https://encrypted.google.com/",
         "https://duckduckgo.com/",
         "https://duckduckgo.com/*",
         "https://start.duckduckgo.com/",
@@ -460,8 +462,6 @@
         "https://tw.search.yahoo.com/*",
         "https://www.bing.com/*",
         "https://www.bing.com/"
-        
-        
       ],
       "js": ["purify.min.js", "bodymovin.js", "metrics.js", "content.js",
         "webrtc_vad.js"],
