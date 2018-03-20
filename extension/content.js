@@ -881,13 +881,14 @@
       if (errorMsg.indexOf("GUM") === 0) {
         errorMsg =  "Please enable your microphone to use Voice Fill";
       } else if (errorMsg.indexOf("EMPTYRESULTS") === 0) {
-        errorMsg = "No results found";  
+        errorMsg = "No results found";
       } else {
         errorMsg = "Sorry, we encountered an error";
       }
       loadAnimation(ERROR_ANIMATION, false);
       const copy = document.getElementById("stm-content");
-      copy.innerHTML = `<div id="stm-listening-text">${errorMsg}</div>`
+      const error = DOMPurify.sanitize(errorMsg);
+      copy.innerHTML = `<div id="stm-listening-text">${error}</div>`
       setTimeout(() => {
           SpeakToMePopup.hide();
       }, 1500);
