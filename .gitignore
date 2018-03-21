@@ -2,5 +2,4 @@ node_modules
 web-ext-artifacts
 npm-debug.log
 extension/bodymovin.js
-extension/purify.min.js
 extension/testpilot-ga.js

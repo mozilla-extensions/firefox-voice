@@ -463,7 +463,7 @@
         "https://www.bing.com/*",
         "https://www.bing.com/"
       ],
-      "js": ["purify.min.js", "bodymovin.js", "metrics.js", "content.js",
+      "js": ["bodymovin.js", "metrics.js", "content.js",
         "webrtc_vad.js"],
       "css": ["main.css"]
     }

@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "bodymovin": "4.9.0",
-    "dompurify": "0.9.0",
     "testpilot-ga": "0.3.0"
   },
   "homepage": "https://github.com/mozilla/speaktome#readme",
@@ -31,9 +30,9 @@
   },
   "scripts": {
     "build": "web-ext build -s extension --overwrite-dest",
-    "format": "prettier 'extension/!(bodymovin|purify.min|testpilot-ga|webrtc_vad).{js,css}' --tab-width=4 --write",
+    "format": "prettier 'extension/!(bodymovin|testpilot-ga|webrtc_vad).{js,css}' --tab-width=4 --write",
     "lint": "npm-run-all lint:*",
-    "lint:extension": "web-ext lint -s extension --ignore-files bodymovin.js purify.min.js testpilot-ga.js webrtc_vad.js --self-hosted",
+    "lint:extension": "web-ext lint -s extension --ignore-files bodymovin.js testpilot-ga.js webrtc_vad.js --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
     "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",
