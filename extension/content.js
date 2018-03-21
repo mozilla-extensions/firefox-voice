@@ -22,6 +22,18 @@
     const START_ANIMATION = browser.extension.getURL("Start.json");
     const ERROR_ANIMATION = browser.extension.getURL("Error.json");
 
+    // https://gist.github.com/Rob--W/ec23b9d6db9e56b7e4563f1544e0d546
+    // slightly modified per https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
+    const escapeHTML = (str) => {
+      // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
+      // Most often this is not the case though.
+      return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
+          .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/\//g, '&#x2F;');
+    };
+
     const getSTMAnchors = documentDomain => {
         switch (documentDomain) {
             case "www.google.com":
@@ -407,8 +419,8 @@
                         if (index === 0) {
                             firstChoice = item;
                         } else if(index < 5) {
-                            let confidence = DOMPurify.sanitize(item.confidence);
-                            let text = DOMPurify.sanitize(item.text);
+                            let confidence = escapeHTML(item.confidence);
+                            let text = escapeHTML(item.text);
                             html += `<li idx_suggestion="${index}" confidence="${confidence}" role="button" tabindex="0">${text}</li>`;
                         }
                     });
@@ -416,8 +428,8 @@
                     list.innerHTML = html;
                 }
 
-                input.confidence = DOMPurify.sanitize(firstChoice.confidence);
-                input.value = DOMPurify.sanitize(firstChoice.text);
+                input.confidence = escapeHTML(firstChoice.confidence);
+                input.value = escapeHTML(firstChoice.text);
                 input.size = Math.max(input.value.length, 10);
                 input.idx_suggestion = 0;
 
@@ -888,8 +900,9 @@
       }
       loadAnimation(ERROR_ANIMATION, false);
       const copy = document.getElementById("stm-content");
-      const error = DOMPurify.sanitize(errorMsg);
-      copy.innerHTML = `<div id="stm-listening-text">${error}</div>`
+      copy.innerHTML = "<div id=\"stm-listening-text\"></div>";
+      let errorDiv = document.getElementById("stm-listening-text");
+      errorDiv.textContent = escapeHTML(errorMsg);
       setTimeout(() => {
           SpeakToMePopup.hide();
       }, 1500);
