@@ -22,16 +22,13 @@
     const START_ANIMATION = browser.extension.getURL("Start.json");
     const ERROR_ANIMATION = browser.extension.getURL("Error.json");
 
-    // https://gist.github.com/Rob--W/ec23b9d6db9e56b7e4563f1544e0d546
-    // slightly modified per https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.231_-_HTML_Escape_Before_Inserting_Untrusted_Data_into_HTML_Element_Content
     const escapeHTML = (str) => {
       // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
       // Most often this is not the case though.
       return String(str)
           .replace(/&/g, '&amp;')
           .replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
-          .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-          .replace(/\//g, '&#x2F;');
+          .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };
 
     const getSTMAnchors = documentDomain => {
@@ -770,7 +767,7 @@
 
         // Loop through the values and draw the bars
         context.strokeStyle = "#d1d2d3";
-        
+
         for (let i = 0; i < n; i++) {
             const value = frequencyBins[i + skip];
             const diameter = (levels.height * (value - MIN_DB_LEVEL) / dbRange) * 10;
@@ -781,7 +778,7 @@
             var alpha = diameter/500;
             if(alpha > .2) alpha = .2;
             else if (alpha < .1) alpha = .1;
-            
+
             context.lineWidth = alpha*alpha*150;
             context.globalAlpha = alpha*alpha*5;
             context.beginPath();
@@ -902,7 +899,7 @@
       const copy = document.getElementById("stm-content");
       copy.innerHTML = "<div id=\"stm-listening-text\"></div>";
       let errorDiv = document.getElementById("stm-listening-text");
-      errorDiv.textContent = escapeHTML(errorMsg);
+      errorDiv.textContent = errorMsg;
       setTimeout(() => {
           SpeakToMePopup.hide();
       }, 1500);
