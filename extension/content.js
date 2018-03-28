@@ -15,7 +15,7 @@
     let mediaRecorder = null;
     const metrics = new Metrics();
     const LOCAL_TEST = false;
-    const STT_SERVER_URL = "https://speaktome.services.mozilla.com";
+    const STT_SERVER_URL = "https://speaktome-2.services.mozilla.com";
 
     const DONE_ANIMATION = browser.extension.getURL("Done.json");
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
