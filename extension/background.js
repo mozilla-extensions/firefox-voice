@@ -9,7 +9,7 @@ const analytics = new TestPilotGA({
   ds: 'addon',
   an: 'Voice Fill',
   aid: 'voicefill@mozilla.com',
-  av: '1.4.0'
+  av: '1.4.1'
 });
 
 browser.runtime.onMessage.addListener(event => {

@@ -721,6 +721,9 @@
 
     // Click handler for stm icon
     const on_stm_icon_click = event => {
+        if (event.explicitOriginalTarget !== event.currentTarget) {
+            return;
+        }
         if (SpeakToMePopup.cancelFetch) {
             SpeakToMePopup.cancelFetch = false;
         }
