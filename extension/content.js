@@ -21,7 +21,7 @@
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
     const START_ANIMATION = browser.extension.getURL("Start.json");
     const ERROR_ANIMATION = browser.extension.getURL("Error.json");
-
+    const LANGUAGE = navigator.language;
     const escapeHTML = (str) => {
       // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
       // Most often this is not the case though.
@@ -228,8 +228,8 @@
             case "www.google.co.uk":
             case "encrypted.google.com":
                 return {
-                    input: "lst-ib",
-                    anchor: "sfdiv"
+                    input: "q",
+                    anchor: "RNNXgb"
                 }
             case "duckduckgo.com":
             case "start.duckduckgo.com":
@@ -529,8 +529,8 @@
             this.icon.classList.add("stm-hidden");
             this.icon.disabled = true;
             this.hasAnchor = false;
-            this.input = document.getElementById(register.input);
-            this.anchor = document.getElementById(register.anchor);
+            this.input = document.getElementById(register.input) || document.getElementsByName(register.input)[0];
+            this.anchor = document.getElementById(register.anchor) || document.getElementsByClassName(register.anchor)[0];
 
             if (this.input.ownerDocument !== document) {
                 return null;
@@ -668,7 +668,10 @@
                     metrics.start_stt();
                     fetch(STT_SERVER_URL, {
                         method: "POST",
-                        body: blob
+                        body: blob,
+                        headers: {
+                            "Language": LANGUAGE
+                        }
                     })
                         .then(response => {
                             if (!response.ok) {

@@ -2,7 +2,7 @@
   "name": "voicefill",
   "id": "voicefill@mozilla.com",
   "description": "This is a simple WebExtension that adds support to use Speech To Text as an input method in web pages.",
-  "version": "1.3.8",
+  "version": "1.4.0",
   "author": {
     "name": "Andre Natal & Fabrice Desré",
     "url": "https://github.com/mozilla/speaktome"
