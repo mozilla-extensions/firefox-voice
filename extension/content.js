@@ -227,10 +227,16 @@
             case "www.google.co.zw":
             case "www.google.co.uk":
             case "encrypted.google.com":
+                if (document.getElementById("sfdiv")) {
+                    return {
+                        input: "lst-ib",
+                        anchor: "sfdiv"
+                    };
+                }
                 return {
                     input: "q",
                     anchor: "RNNXgb"
-                }
+                };
             case "duckduckgo.com":
             case "start.duckduckgo.com":
                 if (document.body.classList.contains("body--serp")) {
