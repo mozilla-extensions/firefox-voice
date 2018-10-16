@@ -21,7 +21,6 @@
     const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
     const START_ANIMATION = browser.extension.getURL("Start.json");
     const ERROR_ANIMATION = browser.extension.getURL("Error.json");
-    const LANGUAGE = navigator.language;
     const escapeHTML = (str) => {
       // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
       // Most often this is not the case though.
@@ -672,39 +671,40 @@
                     }
 
                     metrics.start_stt();
-                    fetch(STT_SERVER_URL, {
-                        method: "POST",
-                        body: blob,
-                        headers: {
-                            "Language": LANGUAGE
-                        }
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                fail_gracefully(`Fetch error: ${response.statusText}`);
+                    browser.storage.sync.get("language").then((item) => {
+                        const language = item.language || navigator.language;
+
+                        return fetch(STT_SERVER_URL, {
+                            method: "POST",
+                            body: blob,
+                            headers: {
+                                "Accept-Language-STT": language,
                             }
-                            metrics.end_stt();
-                            return response.json();
-                        })
-                        .then(json => {
-                            if (SpeakToMePopup.cancelFetch) {
-                                SpeakToMePopup.cancelFetch = false;
-                                return;
-                            }
-                            console.log(
-                                `Got STT result: ${JSON.stringify(json)}`
-                            );
-                            const container = document.getElementById("stm-box");
-                            container.classList.add('stm-done-animation');
-                            setTimeout(() => {
-                                if (json.status === "ok") {
-                                    display_options(json.data);
-                                }
-                            }, 500);
-                        })
-                        .catch(error => {
-                            fail_gracefully(`Fetch error: ${error}`);
                         });
+                    }).then(response => {
+                        if (!response.ok) {
+                            fail_gracefully(`Fetch error: ${response.statusText}`);
+                        }
+                        metrics.end_stt();
+                        return response.json();
+                    }).then(json => {
+                        if (SpeakToMePopup.cancelFetch) {
+                            SpeakToMePopup.cancelFetch = false;
+                            return;
+                        }
+                        console.log(
+                            `Got STT result: ${JSON.stringify(json)}`
+                        );
+                        const container = document.getElementById("stm-box");
+                        container.classList.add('stm-done-animation');
+                        setTimeout(() => {
+                            if (json.status === "ok") {
+                                display_options(json.data);
+                            }
+                        }, 500);
+                    }).catch(error => {
+                        fail_gracefully(`Fetch error: ${error}`);
+                    });
                 };
 
                 mediaRecorder.ondataavailable = e => {

@@ -113,8 +113,8 @@
         "https://www.google.com.co/*",
         "https://www.google.co.cr/",
         "https://www.google.co.cr/*",
-	    "https://www.google.co.ck/",
-	    "https://www.google.co.ck/*",
+        "https://www.google.co.ck/",
+        "https://www.google.co.ck/*",
         "https://www.google.com.cu/",
         "https://www.google.com.cu/*",
         "https://www.google.cv/",
@@ -471,6 +471,9 @@
   "background": {
     "scripts": ["testpilot-ga.js", "background.js"]
   },
+  "options_ui": {
+    "page": "options.html"
+  },
   "web_accessible_resources": [
     "Done.json",
     "Start.json",
@@ -482,8 +485,10 @@
     "assets/ff-logo.png",
     "assets/feedback.svg"
   ],
-  "permissions": ["<all_urls>"],
-
+  "permissions": [
+    "<all_urls>",
+    "storage"
+  ],
   "browser_action": {
     "browser_style": true,
     "default_title": "Voice Fill",

@@ -1,5 +1,6 @@
-node_modules
-web-ext-artifacts
-npm-debug.log
 extension/bodymovin.js
 extension/testpilot-ga.js
+node_modules
+npm-debug.log
+package-lock.json
+web-ext-artifacts

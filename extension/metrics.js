@@ -28,7 +28,7 @@ class Metrics {
              cd1: this.accepted_outcome, //  the outcome of a session or attempt. One of accepted, rejected, and aborted.
              cd2: document.domain, //  the location from which a session is initiated. Will contain google, duckduckgo, Yahoo, generic.
              cd3: this.triggered_by_uielement, //  the UI element from which the session was initiated. One of button, context menu, keyboard.
-             cd4: this.was_result_modified  //   whether the accepted submission was modified before being submitted. One of true, false.
+             cd4: this.was_result_modified, //   whether the accepted submission was modified before being submitted. One of true, false.
          });
      }
 
@@ -70,7 +70,7 @@ class Metrics {
              cm4: this.dt_recording_time, //  the elapsed time in ms spent recording an attempt.
              cm5: this.dt_response_time, // the elapsed time in ms waiting for a response from the speech-to-text engine.
              cd1: attempt_outcome, //  the outcome of a session or attempt. One of accepted, rejected, and aborted.
-             cd5: this.options_were_displayed //  whether the user viewed additional suggestions.
+             cd5: this.options_were_displayed, //  whether the user viewed additional suggestions.
          });
     }
 
