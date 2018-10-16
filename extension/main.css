@@ -182,6 +182,11 @@
     animation: fade-in 1000ms alternate infinite linear;
 }
 
+#stm-listening-language {
+    font-size: 10px;
+    color: #888;
+}
+
 #stm-selection-wrapper {
     align-items: center;
     display: flex;

@@ -2,6 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+let LANGUAGES = {};
+let LANGUAGE;
+
 (function speak_to_me() {
     console.log("Speak To Me starting up...");
 
@@ -671,16 +674,12 @@
                     }
 
                     metrics.start_stt();
-                    browser.storage.sync.get("language").then((item) => {
-                        const language = item.language || navigator.language;
-
-                        return fetch(STT_SERVER_URL, {
-                            method: "POST",
-                            body: blob,
-                            headers: {
-                                "Accept-Language-STT": language,
-                            }
-                        });
+                    fetch(STT_SERVER_URL, {
+                        method: "POST",
+                        body: blob,
+                        headers: {
+                            "Accept-Language-STT": LANGUAGE,
+                        }
                     }).then(response => {
                         if (!response.ok) {
                             fail_gracefully(`Fetch error: ${response.statusText}`);
@@ -1067,7 +1066,16 @@
             console.log(why);
             this.stopGum();
             const copy = document.getElementById("stm-content");
-            copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`
+            copy.innerHTML =
+                `<div id="stm-listening-text">
+                    Processing as ${LANGUAGES[LANGUAGE]}...
+                    <br>
+                    <span id="stm-listening-language">
+                        To change language, navigate to
+                        <a href="about:addons">about:addons</a>, then click
+                        the Preferences button next to Voice Fill.
+                    </span>
+                </div>`
             loadAnimation(DONE_ANIMATION, false);
         };
         console.log("speakToMeVad created()");
@@ -1121,3 +1129,21 @@ Module["onRuntimeInitialized"] = function() {
     stm_vad = new SpeakToMeVad();
     Module.setStatus("Webrtc_vad and SpeakToMeVad loaded");
 };
+
+fetch(browser.extension.getURL('languages.json')).then((response) => {
+    return response.json();
+}).then((l) => {
+    LANGUAGES = l;
+    return browser.storage.sync.get("language");
+}).then((item) => {
+    if (!item.language) {
+        throw new Error('Language not set');
+    }
+
+    LANGUAGE = item.language;
+}).catch(() => {
+    LANGUAGE =
+      LANGUAGES.hasOwnProperty(navigator.language) ?
+        navigator.language :
+        "en-US";
+});
