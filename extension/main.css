@@ -61,6 +61,15 @@
     flex: 20px auto;
 }
 
+#stm-footer {
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+    width: 100%;
+    position: absolute;
+    bottom: 2em;
+}
+
 #stm-close {
     background: url('assets/icon-close.svg');
     background-position: center center;
@@ -180,11 +189,6 @@
 #stm-listening-text {
     opacity: .4;
     animation: fade-in 1000ms alternate infinite linear;
-}
-
-#stm-listening-language {
-    font-size: 10px;
-    color: #888;
 }
 
 #stm-selection-wrapper {

@@ -5,6 +5,26 @@
 let LANGUAGES = {};
 let LANGUAGE;
 
+const languagePromise = fetch(
+    browser.extension.getURL('languages.json')
+).then((response) => {
+    return response.json();
+}).then((l) => {
+    LANGUAGES = l;
+    return browser.storage.sync.get("language");
+}).then((item) => {
+    if (!item.language) {
+        throw new Error('Language not set');
+    }
+
+    LANGUAGE = item.language;
+}).catch(() => {
+    LANGUAGE =
+      LANGUAGES.hasOwnProperty(navigator.language) ?
+        navigator.language :
+        "en-US";
+});
+
 (function speak_to_me() {
     console.log("Speak To Me starting up...");
 
@@ -309,6 +329,13 @@ let LANGUAGE;
     const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
             <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
             <div id="stm-inject"></div>
+            <div id="stm-footer">
+                Processing as {language}.
+                <br>
+                To change language, navigate to
+                <a href="about:addons">about:addons</a>, then click the
+                Preferences button next to Voice Fill.
+            </div>
             <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2" id="stm-feedback" role="button" tabindex="2">Feedback</a>
         </div>`;
 
@@ -341,6 +368,13 @@ let LANGUAGE;
             const popup = document.createElement("div");
             popup.innerHTML = POPUP_WRAPPER_MARKUP;
             document.body.appendChild(popup);
+
+            languagePromise.then(() => {
+                const footer = document.getElementById('stm-footer');
+                footer.innerHTML = footer.innerHTML.replace(
+                    '{language}', LANGUAGES[LANGUAGE]);
+            });
+
             this.inject = document.getElementById("stm-inject");
             this.popup = document.getElementById("stm-popup");
             this.icon = document.getElementsByClassName("stm-icon")[0];
@@ -1066,16 +1100,7 @@ let LANGUAGE;
             console.log(why);
             this.stopGum();
             const copy = document.getElementById("stm-content");
-            copy.innerHTML =
-                `<div id="stm-listening-text">
-                    Processing as ${LANGUAGES[LANGUAGE]}...
-                    <br>
-                    <span id="stm-listening-language">
-                        To change language, navigate to
-                        <a href="about:addons">about:addons</a>, then click
-                        the Preferences button next to Voice Fill.
-                    </span>
-                </div>`
+            copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`;
             loadAnimation(DONE_ANIMATION, false);
         };
         console.log("speakToMeVad created()");
@@ -1129,21 +1154,3 @@ Module["onRuntimeInitialized"] = function() {
     stm_vad = new SpeakToMeVad();
     Module.setStatus("Webrtc_vad and SpeakToMeVad loaded");
 };
-
-fetch(browser.extension.getURL('languages.json')).then((response) => {
-    return response.json();
-}).then((l) => {
-    LANGUAGES = l;
-    return browser.storage.sync.get("language");
-}).then((item) => {
-    if (!item.language) {
-        throw new Error('Language not set');
-    }
-
-    LANGUAGE = item.language;
-}).catch(() => {
-    LANGUAGE =
-      LANGUAGES.hasOwnProperty(navigator.language) ?
-        navigator.language :
-        "en-US";
-});
