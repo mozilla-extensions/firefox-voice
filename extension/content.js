@@ -713,6 +713,7 @@ const languagePromise = fetch(
                         body: blob,
                         headers: {
                             "Accept-Language-STT": LANGUAGE,
+                            "Product-Tag": "vf",
                         }
                     }).then(response => {
                         if (!response.ok) {
