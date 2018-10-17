@@ -2,11 +2,13 @@ function saveOptions(e) {
   e.preventDefault();
   browser.storage.sync.set({
     language: document.querySelector("#language").value,
+    searchProvider: document.querySelector("#search-provider").value,
   });
 }
 
 function restoreOptions() {
-  const select = document.querySelector("#language");
+  const languageSelect = document.querySelector("#language");
+  const providerSelect = document.querySelector("#search-provider");
   let languages;
 
   fetch(browser.extension.getURL("languages.json")).then((response) => {
@@ -20,7 +22,7 @@ function restoreOptions() {
       const option = document.createElement("option");
       option.value = code;
       option.innerText = language;
-      select.appendChild(option);
+      languageSelect.appendChild(option);
     });
 
     return browser.storage.sync.get("language");
@@ -30,7 +32,7 @@ function restoreOptions() {
         navigator.language :
         "en-US";
 
-    select.value = result.language || defaultLanguage;
+    languageSelect.value = result.language || defaultLanguage;
   }).catch((error) => {
     console.log(`Error: ${error}`);
   });
@@ -43,18 +45,40 @@ function restoreOptions() {
 
     return browser.storage.sync.get("lastVersion");
   }).then((result) => {
-    if (result.version !== manifest.version) {
-      browser.storage.sync.set({
+    if (result.lastVersion !== manifest.version) {
+      return browser.storage.sync.set({
         lastVersion: manifest.version,
-      });
-      browser.tabs.create({
-        active: true,
-        url: browser.extension.getURL('CHANGELOG.html'),
+      }).then(() => {
+        browser.tabs.create({
+          active: true,
+          url: browser.extension.getURL('CHANGELOG.html'),
+        });
       });
     }
+
+    return Promise.resolve();
+  }).then(() => {
+    manifest.content_scripts[0].matches
+      .sort()
+      .map((d) => {
+        const domain = d.replace(/\/\*$/, '');
+
+        const option = document.createElement("option");
+        option.value = domain;
+        option.innerText = domain;
+        providerSelect.appendChild(option);
+      });
+
+    return browser.storage.sync.get("searchProvider");
+  }).then((result) => {
+    const defaultProvider = "https://www.google.com";
+    providerSelect.value = result.searchProvider|| defaultProvider;
+  }).catch((error) => {
+    console.log(`Error: ${error}`);
   });
 
-  document.querySelector("form").addEventListener("submit", saveOptions);
+  languageSelect.addEventListener("change", saveOptions);
+  providerSelect.addEventListener("change", saveOptions);
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions);

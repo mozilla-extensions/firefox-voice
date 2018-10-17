@@ -3,12 +3,27 @@
   <head>
     <meta charset="utf-8">
     <script src="options.js"></script>
+    <style type="text/css">
+      form {
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: 10rem 20rem;
+      }
+      label {
+        grid-column: 1 / 2;
+      }
+      select {
+        grid-column: 2 / 3;
+        height: 2rem;
+      }
+    </style>
   </head>
   <body>
     <form>
-      <label for="language">Language</label>
+      <label for="language">Language:</label>
       <select id="language"></select>
-      <button type="submit">Save</button>
+      <label for="search-provider">Search Provider:</label>
+      <select id="search-provider"></select>
     </form>
   </body>
 </html>

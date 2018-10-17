@@ -13,39 +13,40 @@ const analytics = new TestPilotGA({
 });
 
 browser.runtime.onMessage.addListener(event => {
-    console.log('[metrics] Event successfully sent. Calling analytics');
+  console.log('[metrics] Event successfully sent. Calling analytics.');
 
-    analytics
-    .sendEvent('voice fill', event.type, event.content)
-    .then(response => {
-      console.log('[metrics] Event successfully sent', response);
-    })
-    .catch((response, err) => {
-      console.error('[metrics] Event failed while sending', response, err);
-    });
+  analytics.sendEvent(
+    'voice fill',
+    event.type,
+    event.content
+  ).then((response) => {
+    console.log('[metrics] Event successfully sent', response);
+  }).catch((response, err) => {
+    console.error('[metrics] Event failed while sending', response, err);
+  });
 });
 
 browser.browserAction.onClicked.addListener(function() {
+  browser.storage.sync.get(
+    "searchProvider"
+  ).then((result) => {
+    const url = result.searchProvider || "https://www.google.com";
 
-  var creating = browser.tabs.create({
-    url:"https://www.google.com"
+    return browser.tabs.create({url});
+  }).then((tab) => {
+    const intervalConnection = setInterval(() => {
+      browser.tabs.sendMessage(
+        tab.id,
+        {
+          msg: "background script syn"
+        }
+      ).then((response) => {
+        clearInterval(intervalConnection);
+      }).catch((error) => {
+        // console.error(`Not connected yet. Retrying ${error}`);
+      });
+    }, 100);
+  }).catch((error) => {
+    console.log(`Error: ${error}`);
   });
-  creating.
-  then(tab => {
-            const intervalConnection = setInterval( function() {
-                browser.tabs.sendMessage(
-                    tab.id,
-                    {msg: "background script syn"}
-                ).then(response => {
-                    clearInterval(intervalConnection);
-                }).catch(error => {
-                    //console.error(`Not connected yet. Retrying ${error}`);
-                });
-
-            }, 100);
-
-        },
-          error => {
-            console.log(`Error: ${error}`);
-        });
 });
