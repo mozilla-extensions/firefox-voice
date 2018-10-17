@@ -7,7 +7,7 @@ npm install
 
 # Generate changelog for extension
 "${scriptdir}/../node_modules/.bin/md2html" \
-  "${scriptdir}/../CHANGELOG" > "${scriptdir}/../extension/CHANGELOG.html"
+  "${scriptdir}/../CHANGELOG.md" > "${scriptdir}/../extension/CHANGELOG.html"
 
 if [[ -z $TESTPILOT_AMO_USER || -z $TESTPILOT_AMO_SECRET ]]; then
   echo "No vars set. skipping build..."

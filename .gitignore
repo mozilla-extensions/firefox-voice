@@ -1,3 +1,6 @@
+*.swp
+*.tgz
+*~
 extension/CHANGELOG.html
 extension/bodymovin.js
 extension/testpilot-ga.js
