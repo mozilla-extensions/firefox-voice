@@ -475,6 +475,7 @@
     "page": "options.html"
   },
   "web_accessible_resources": [
+    "CHANGELOG.html",
     "languages.json",
     "Done.json",
     "Start.json",

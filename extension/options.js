@@ -35,6 +35,25 @@ function restoreOptions() {
     console.log(`Error: ${error}`);
   });
 
+  let manifest;
+  fetch(browser.extension.getURL("manifest.json")).then((response) => {
+    return response.json();
+  }).then((m) => {
+    manifest = m;
+
+    return browser.storage.sync.get("lastVersion");
+  }).then((result) => {
+    if (result.version !== manifest.version) {
+      browser.storage.sync.set({
+        lastVersion: manifest.version,
+      });
+      browser.tabs.create({
+        active: true,
+        url: browser.extension.getURL('CHANGELOG.html'),
+      });
+    }
+  });
+
   document.querySelector("form").addEventListener("submit", saveOptions);
 }
 
