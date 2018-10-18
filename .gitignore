@@ -4,6 +4,7 @@
 extension/CHANGELOG.html
 extension/bodymovin.js
 extension/testpilot-ga.js
+extension/webrtc_vad.js
 node_modules
 npm-debug.log
 package-lock.json

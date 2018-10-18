@@ -242,8 +242,12 @@
         "https://tw.search.yahoo.com/*",
         "https://www.bing.com/*"
       ],
-      "js": ["bodymovin.js", "metrics.js", "content.js",
-        "webrtc_vad.js"],
+      "js": [
+        "bodymovin.js",
+        "metrics.js",
+        "content.js",
+        "webrtc_vad.js"
+      ],
       "css": ["main.css"]
     }
   ],

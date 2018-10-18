@@ -1,12 +1,11 @@
-language: node
+language: node_js
 node_js:
-- '7'
-dist: trusty
+  - 8
 script:
-- npm install
-- npm run build
+  - npm install
+  - npm run build
 before_deploy:
-- npm run package
+  - npm run package
 deploy:
   provider: releases
   api_key:
