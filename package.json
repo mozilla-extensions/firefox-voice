@@ -33,9 +33,9 @@
   },
   "scripts": {
     "build": "web-ext build -s extension --overwrite-dest",
-    "format": "prettier 'extension/!(bodymovin|testpilot-ga|webrtc_vad).{js,css}' --tab-width=4 --write",
+    "format": "prettier 'extension/*.{js,css}' --tab-width=4 --write",
     "lint": "npm-run-all lint:*",
-    "lint:extension": "web-ext lint -s extension --ignore-files bodymovin.js testpilot-ga.js webrtc_vad.js --self-hosted",
+    "lint:extension": "web-ext lint -s extension --ignore-files vendor/* --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
     "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",

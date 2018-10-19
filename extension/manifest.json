@@ -243,16 +243,21 @@
         "https://www.bing.com/*"
       ],
       "js": [
-        "bodymovin.js",
+        "vendor/bodymovin.js",
         "metrics.js",
         "content.js",
-        "webrtc_vad.js"
+        "vendor/webrtc_vad.js"
       ],
-      "css": ["main.css"]
+      "css": [
+        "main.css"
+      ]
     }
   ],
   "background": {
-    "scripts": ["testpilot-ga.js", "background.js"]
+    "scripts": [
+      "vendor/testpilot-ga.js",
+      "background.js"
+    ]
   },
   "options_ui": {
     "page": "options.html"

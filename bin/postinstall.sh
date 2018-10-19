@@ -8,12 +8,13 @@ scriptdir=$(dirname $(readlink -f "$0"))
   "${scriptdir}/../CHANGELOG.md" > "${scriptdir}/../extension/CHANGELOG.html"
 
 # Copy in scripts from node modules
+mkdir -p "${scriptdir}/../extension/vendor"
 cp \
   "${scriptdir}/../node_modules/bodymovin/build/player/bodymovin.min.js" \
-  "${scriptdir}/../extension/bodymovin.js"
+  "${scriptdir}/../extension/vendor/bodymovin.js"
 cp \
   "${scriptdir}/../node_modules/testpilot-ga/dist/index.js" \
-  "${scriptdir}/../extension/testpilot-ga.js"
+  "${scriptdir}/../extension/vendor/testpilot-ga.js"
 cp \
   "${scriptdir}/../node_modules/webrtcvad_js/webrtc_vad.js" \
-  "${scriptdir}/../extension/webrtc_vad.js"
+  "${scriptdir}/../extension/vendor/webrtc_vad.js"

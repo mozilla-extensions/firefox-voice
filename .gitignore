@@ -2,9 +2,7 @@
 *.tgz
 *~
 extension/CHANGELOG.html
-extension/bodymovin.js
-extension/testpilot-ga.js
-extension/webrtc_vad.js
+extension/vendor/
 node_modules
 npm-debug.log
 package-lock.json
