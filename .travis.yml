@@ -13,7 +13,7 @@ deploy:
   file: addon.xpi
   skip_cleanup: true
   on:
-    repo: mozilla/speaktome
+    repo: mozilla/voicefill
     tags: true
     branch: master
 notifications:
