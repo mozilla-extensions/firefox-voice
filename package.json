@@ -5,10 +5,10 @@
   "version": "1.4.2",
   "author": {
     "name": "Andre Natal & Fabrice Desré",
-    "url": "https://github.com/mozilla/speaktome"
+    "url": "https://github.com/mozilla/voicefill"
   },
   "bugs": {
-    "url": "https://github.com/mozilla/speaktome/issues"
+    "url": "https://github.com/mozilla/voicefill/issues"
   },
   "devDependencies": {
     "eslint": "^5.7.0",
@@ -24,12 +24,12 @@
     "testpilot-ga": "^0.3.0",
     "webrtcvad_js": "^1.0.0"
   },
-  "homepage": "https://github.com/mozilla/speaktome#readme",
+  "homepage": "https://github.com/mozilla/voicefill#readme",
   "keywords": [],
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla/speaktome.git"
+    "url": "git+https://github.com/mozilla/voicefill.git"
   },
   "scripts": {
     "build": "web-ext build -s extension --overwrite-dest",
