@@ -3,7 +3,7 @@
 set -ex
 
 # Generate changelog for extension
-scriptdir=$(dirname $(readlink -f "$0"))
+scriptdir=$(dirname "$0")
 "${scriptdir}/../node_modules/.bin/md2html" \
   "${scriptdir}/../CHANGELOG.md" > "${scriptdir}/../extension/CHANGELOG.html"
 
