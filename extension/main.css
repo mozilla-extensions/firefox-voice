@@ -241,6 +241,7 @@
     position: absolute;
     transform-origin: top;
     transform: scaleY(0);
+    width: 100%;
 }
 
 #stm-list.close {

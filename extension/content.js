@@ -472,10 +472,6 @@ const languagePromise = fetch(
                 input.size = Math.max(input.value.length, 10);
                 input.idx_suggestion = 0;
 
-                if (list) {
-                    list.style.width = `${input.offsetWidth}px`;
-                }
-
                 input.focus();
 
                 input.addEventListener("keypress", e => {
@@ -489,7 +485,6 @@ const languagePromise = fetch(
 
                 input.addEventListener("input", () => {
                     input.size = Math.max(10, input.value.length);
-                    list.style.width = `${input.offsetWidth}px`;
                 });
 
                 form.addEventListener("submit", function _submit_form(e) {
@@ -511,7 +506,6 @@ const languagePromise = fetch(
                         list.classList.add('close');
                         input.value = e.target.textContent;
                         input.size = input.value.length;
-                        list.style.width = `${input.offsetWidth}px`;
 
                         resolve(result);
                     }
@@ -529,7 +523,6 @@ const languagePromise = fetch(
                             list.classList.add('close');
                             input.value = e.target.textContent;
                             input.size = input.value.length;
-                            list.style.width = `${input.offsetWidth}px`;
 
                             resolve(result);
                         }
