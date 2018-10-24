@@ -7,7 +7,6 @@
   animation-fill-mode: forwards;
   background-color: white;
   background-image: url("assets/ff-logo.png");
-  background-position: bottom 2em left 2em;
   background-repeat: no-repeat;
   background-size: 102px 38px;
   box-shadow: 0 0 1rem #979797;
@@ -26,6 +25,14 @@
   transition: height 500ms;
   will-change: left, opacity;
   z-index: 9999999;
+}
+
+#stm-popup.rtl {
+  background-position: bottom 2em right 2em;
+}
+
+#stm-popup:not(.rtl) {
+  background-position: bottom 2em left 2em;
 }
 
 #stm-popup:not(.stm-drop-out) {
@@ -77,13 +84,20 @@
   background-size: 20px 20px;
   border-radius: 50%;
   cursor: pointer;
-  float: right;
   height: 40px;
   margin-top: -10;
   position: relative;
   transition: background-color 50ms;
   width: 40px;
   z-index: 10;
+}
+
+#stm-close.rtl {
+  float: left;
+}
+
+#stm-close:not(.rtl) {
+  float: right;
 }
 
 #stm-close:hover {
@@ -108,7 +122,6 @@
   padding: 5px;
   position: absolute;
   bottom: 2em;
-  right: 2em;
   z-index: 11;
   opacity: 0.7;
   overflow: hidden;
@@ -116,6 +129,14 @@
   text-indent: 17px;
   transition: all 150ms ease-in-out;
   box-sizing: content-box;
+}
+
+#stm-feedback.rtl {
+  left: 2em;
+}
+
+#stm-feedback:not(.rtl) {
+  right: 2em;
 }
 
 #stm-feedback:hover,
@@ -298,7 +319,6 @@
   animation: pop forwards 300ms ease-in;
   animation-delay: 300ms;
   background-color: #00c8d7;
-  background-image: url("assets/icon-done.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 32px 28px;
@@ -313,6 +333,14 @@
   width: 64px;
 }
 
+#stm-submit-button.rtl {
+  background-image: url("assets/icon-done-rtl.svg");
+}
+
+#stm-submit-button:not(.rtl) {
+  background-image: url("assets/icon-done.svg");
+}
+
 .stm-icon {
   background-color: #00c8d7;
   background-image: url("assets/icon-mic.svg");
@@ -325,11 +353,18 @@
   box-sizing: border-box;
   height: 48px;
   position: absolute;
-  right: -64px;
   top: -1px;
   transition: background-color 50ms, opacity 50ms, box-shadow 100ms;
   width: 48px;
   z-index: 9999999;
+}
+
+.stm-icon.rtl {
+  left: -64px;
+}
+
+.stm-icon:not(.rtl) {
+  right: -64px;
 }
 
 .stm-icon:not(.stm-hidden) {

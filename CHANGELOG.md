@@ -8,6 +8,7 @@
 ### Fixed
 - Bing support
 - search.yahoo.com subdomain support
+- Element positioning on RTL pages
 
 ## [1.4.3] - 2018-10-22
 ### Added

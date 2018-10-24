@@ -374,6 +374,12 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       popup.innerHTML = POPUP_WRAPPER_MARKUP;
       document.body.appendChild(popup);
 
+      if (document.dir === "rtl") {
+        document.getElementById("stm-close").classList.add("rtl");
+        document.getElementById("stm-popup").classList.add("rtl");
+        document.getElementById("stm-feedback").classList.add("rtl");
+      }
+
       languagePromise.then(() => {
         const footer = document.getElementById("stm-footer");
         // eslint-disable-next-line no-unsanitized/property
@@ -458,6 +464,11 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       const list = document.getElementById("stm-list");
       const listWrapper = document.getElementById("stm-list-wrapper");
       const reset = document.getElementById("stm-reset-button");
+
+      if (document.dir === "rtl") {
+        document.getElementById("stm-submit-button").classList.add("rtl");
+      }
+
       let firstChoice;
 
       return new Promise((resolve, reject) => {
@@ -577,6 +588,9 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       this.icon.classList.add("stm-hidden");
       this.icon.disabled = true;
       this.icon.title = "Start listening";
+      if (document.dir === "rtl") {
+        this.icon.classList.add("rtl");
+      }
       this.hasAnchor = false;
       this.input =
         document.getElementById(register.input) ||
