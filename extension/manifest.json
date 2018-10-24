@@ -274,7 +274,7 @@
     "browser_style": true,
     "default_title": "Voice Fill",
     "default_icon": {
-      "32": "assets/mic.svg"
+      "32": "assets/images/mic.svg"
     }
   }
 }

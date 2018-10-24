@@ -429,6 +429,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
         this.popup.style.display = "none";
         // eslint-disable-next-line no-unsanitized/property
         this.inject.innerHTML = SUBMISSION_MARKUP;
+        this.icon.blur();
         this.icon.classList.remove("stm-hidden");
         this.icon.disabled = false;
       }, 500);
