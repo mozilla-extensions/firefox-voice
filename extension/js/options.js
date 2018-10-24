@@ -11,7 +11,7 @@ function restoreOptions() {
   const providerSelect = document.querySelector("#search-provider");
   let languages;
 
-  fetch(browser.extension.getURL("languages.json"))
+  fetch(browser.extension.getURL("/js/languages.json"))
     .then((response) => {
       return response.json();
     })
@@ -43,7 +43,7 @@ function restoreOptions() {
     });
 
   let manifest;
-  fetch(browser.extension.getURL("manifest.json"))
+  fetch(browser.extension.getURL("/manifest.json"))
     .then((response) => {
       return response.json();
     })
@@ -61,7 +61,7 @@ function restoreOptions() {
           .then(() => {
             browser.tabs.create({
               active: true,
-              url: browser.extension.getURL("CHANGELOG.html"),
+              url: browser.extension.getURL("/views/CHANGELOG.html"),
             });
           });
       }

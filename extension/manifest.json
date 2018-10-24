@@ -8,8 +8,8 @@
     "url": "https://github.com/mozilla/voicefill"
   },
   "icons": {
-    "48": "assets/icon-48.png",
-    "96": "assets/icon-96.png"
+    "48": "assets/images/icon-48.png",
+    "96": "assets/images/icon-96.png"
   },
   "applications": {
     "gecko": {
@@ -232,38 +232,39 @@
         "https://www.bing.com/*"
       ],
       "js": [
-        "vendor/bodymovin.js",
-        "metrics.js",
-        "content.js",
-        "vendor/webrtc_vad.js"
+        "js/vendor/bodymovin.js",
+        "js/metrics.js",
+        "js/content.js",
+        "js/vendor/webrtc_vad.js"
       ],
       "css": [
-        "main.css"
+        "css/main.css"
       ]
     }
   ],
   "background": {
     "scripts": [
-      "vendor/testpilot-ga.js",
-      "background.js"
+      "js/vendor/testpilot-ga.js",
+      "js/background.js"
     ]
   },
   "options_ui": {
-    "page": "options.html"
+    "page": "views/options.html"
   },
   "web_accessible_resources": [
-    "CHANGELOG.html",
-    "languages.json",
-    "Done.json",
-    "Start.json",
-    "Spinning.json",
-    "assets/icon-close.svg",
-    "assets/icon-mic.svg",
-    "assets/icon-redo.svg",
-    "assets/icon-done.svg",
-    "assets/icon-done-rtl.svg",
-    "assets/ff-logo.png",
-    "assets/feedback.svg"
+    "views/CHANGELOG.html",
+    "js/languages.json",
+    "assets/animations/Done.json",
+    "assets/animations/Error.json",
+    "assets/animations/Start.json",
+    "assets/animations/Spinning.json",
+    "assets/images/icon-close.svg",
+    "assets/images/icon-mic.svg",
+    "assets/images/icon-redo.svg",
+    "assets/images/icon-done.svg",
+    "assets/images/icon-done-rtl.svg",
+    "assets/images/ff-logo.png",
+    "assets/images/feedback.svg"
   ],
   "permissions": [
     "<all_urls>",
@@ -273,7 +274,7 @@
     "browser_style": true,
     "default_title": "Voice Fill",
     "default_icon": {
-      "32": "mic.svg"
+      "32": "assets/mic.svg"
     }
   }
 }

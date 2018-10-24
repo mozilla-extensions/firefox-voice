@@ -35,7 +35,7 @@
     "build": "web-ext build -s extension --overwrite-dest",
     "format": "prettier 'extension/*.{js,css}' --tab-width=2 --arrow-parens=always --trailing-comma=es5 --no-bracket-spacing --write",
     "lint": "npm-run-all lint:*",
-    "lint:extension": "web-ext lint -s extension --ignore-files vendor/* --self-hosted",
+    "lint:extension": "web-ext lint -s extension --ignore-files js/vendor/* --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
     "package": "npm run build && mv web-ext-artifacts/*.zip addon.xpi",

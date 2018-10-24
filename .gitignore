@@ -1,8 +1,8 @@
 *.swp
 *.tgz
 *~
-extension/CHANGELOG.html
-extension/vendor/
+extension/js/vendor/
+extension/views/CHANGELOG.html
 node_modules
 npm-debug.log
 package-lock.json

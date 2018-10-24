@@ -6,7 +6,7 @@ let LANGUAGES = {};
 let LANGUAGE;
 let failGracefully;
 
-const languagePromise = fetch(browser.extension.getURL("languages.json"))
+const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
   .then((response) => {
     return response.json();
   })
@@ -42,10 +42,15 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
   const LOCAL_TEST = false;
   const STT_SERVER_URL = "https://speaktome-2.services.mozilla.com";
 
-  const DONE_ANIMATION = browser.extension.getURL("Done.json");
-  const SPINNING_ANIMATION = browser.extension.getURL("Spinning.json");
-  const START_ANIMATION = browser.extension.getURL("Start.json");
-  const ERROR_ANIMATION = browser.extension.getURL("Error.json");
+  const DONE_ANIMATION =
+    browser.extension.getURL("/assets/animations/Done.json");
+  const SPINNING_ANIMATION =
+    browser.extension.getURL("/assets/animations/Spinning.json");
+  const START_ANIMATION =
+    browser.extension.getURL("/assets/animations/Start.json");
+  const ERROR_ANIMATION =
+    browser.extension.getURL("/assets/animations/Error.json");
+
   const escapeHTML = (str) => {
     // Note: string cast using String; may throw if `str` is non-serializable,
     // e.g. a Symbol. Most often this is not the case though.
