@@ -64,7 +64,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
 
   // eslint-disable-next-line complexity
   const getSTMAnchors = (documentDomain) => {
-    if (documentDomain.endsWith("search.yahoo.com")) {
+    if (documentDomain.endsWith(".search.yahoo.com")) {
       return {
         input: "yschsp",
         anchor: "sbx",
@@ -423,14 +423,14 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
       console.log(`SpeakToMePopup hide`);
       this.removeEventListener("keypress", this.dismissPopup);
       this.popup.classList.add("stm-drop-out");
-      this.icon.classList.remove("stm-hidden");
-      this.icon.disabled = false;
 
       setTimeout(() => {
         this.popup.classList.remove("stm-drop-out");
         this.popup.style.display = "none";
         // eslint-disable-next-line no-unsanitized/property
         this.inject.innerHTML = SUBMISSION_MARKUP;
+        this.icon.classList.remove("stm-hidden");
+        this.icon.disabled = false;
       }, 500);
     },
 

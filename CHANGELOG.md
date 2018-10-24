@@ -9,6 +9,7 @@
 - Bing support
 - search.yahoo.com subdomain support
 - Element positioning on RTL pages
+- Issue where microphone button could be erroneously disabled temporarily
 
 ## [1.4.3] - 2018-10-22
 ### Added
