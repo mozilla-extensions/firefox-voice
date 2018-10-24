@@ -6,6 +6,7 @@
 ### Removed
 ### Fixed
 - Bing support
+- search.yahoo.com subdomain support
 
 ## [1.4.3] - 2018-10-22
 ### Added

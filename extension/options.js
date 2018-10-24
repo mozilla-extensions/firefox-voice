@@ -69,9 +69,15 @@ function restoreOptions() {
       return Promise.resolve();
     })
     .then(() => {
-      manifest.content_scripts[0].matches.sort().map((d) => {
-        const domain = d.replace(/\/\*$/, "");
+      const domains = Array.from(
+        new Set(
+          manifest.content_scripts[0].matches.map((d) => {
+            return d.replace(/\/\*$/, "").replace(/\*\./, "");
+          })
+        ).values()
+      ).sort();
 
+      domains.map((domain) => {
         const option = document.createElement("option");
         option.value = domain;
         option.innerText = domain;

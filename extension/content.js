@@ -59,6 +59,13 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
 
   // eslint-disable-next-line complexity
   const getSTMAnchors = (documentDomain) => {
+    if (documentDomain.endsWith("search.yahoo.com")) {
+      return {
+        input: "yschsp",
+        anchor: "sbx",
+      };
+    }
+
     switch (documentDomain) {
       case "www.google.com":
       case "www.google.ca":
@@ -291,18 +298,6 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
           anchor: "uh-search-form",
         };
       case "search.yahoo.com":
-      case "ca.search.yahoo.com":
-      case "uk.search.yahoo.com":
-      case "fr.search.yahoo.com":
-      case "au.search.yahoo.com":
-      case "de.search.yahoo.com":
-      case "dk.search.yahoo.com":
-      case "ie.search.yahoo.com":
-      case "in.search.yahoo.com":
-      case "it.search.yahoo.com":
-      case "no.search.yahoo.com":
-      case "se.search.yahoo.com":
-      case "tw.search.yahoo.com":
         return {
           input: "yschsp",
           anchor: "sf",
