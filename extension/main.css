@@ -3,446 +3,443 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #stm-popup {
-    align-items: stretch;
-    animation-fill-mode: forwards;
-    background-color: white;
-    background-image: url('assets/ff-logo.png');
-    background-position: bottom 2em left 2em;
-    background-repeat: no-repeat;
-    background-size: 102px 38px;
-    box-shadow: 0 0 1rem #979797;
-    box-sizing: border-box;
-    display: none;
-    flex-direction: column;
-    font: message-box;
-    height: 310px;
-    justify-content: center;
-    left: 0;
-    opacity: 0;
-    padding: 2em 2em 4em;
-    position: fixed;
-    right: 0;
-    top: -999px;
-    transition: height 500ms;
-    will-change: left, opacity;
-    z-index: 9999999;
+  align-items: stretch;
+  animation-fill-mode: forwards;
+  background-color: white;
+  background-image: url("assets/ff-logo.png");
+  background-position: bottom 2em left 2em;
+  background-repeat: no-repeat;
+  background-size: 102px 38px;
+  box-shadow: 0 0 1rem #979797;
+  box-sizing: border-box;
+  display: none;
+  flex-direction: column;
+  font: message-box;
+  height: 310px;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  padding: 2em 2em 4em;
+  position: fixed;
+  right: 0;
+  top: -999px;
+  transition: height 500ms;
+  will-change: left, opacity;
+  z-index: 9999999;
 }
 
 #stm-popup:not(.stm-drop-out) {
-    animation-duration: 250ms;
-    animation-name: stm-drop-in;
-    animation-timing-function: ease-out;
+  animation-duration: 250ms;
+  animation-name: stm-drop-in;
+  animation-timing-function: ease-out;
 }
 
 #stm-popup.stm-drop-out {
-   animation-duration: 500ms;
-   animation-name: stm-drop-out; 
-   animation-timing-function: ease-in;
+  animation-duration: 500ms;
+  animation-name: stm-drop-out;
+  animation-timing-function: ease-in;
 }
 
 #stm-inject {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    top: -9px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  top: -9px;
 }
 
 .stm-done-animation {
-    transform-origin: center 100%;
-    animation: leave 450ms forwards;
+  transform-origin: center 100%;
+  animation: leave 450ms forwards;
 }
 
 #stm-header {
-    width: 100%;
-    flex: 20px auto;
+  width: 100%;
+  flex: 20px auto;
 }
 
 #stm-footer {
-    text-align: center;
-    font-size: 10px;
-    color: #888;
-    width: 100%;
-    position: absolute;
-    bottom: 2em;
+  text-align: center;
+  font-size: 10px;
+  color: #888;
+  width: 100%;
+  position: absolute;
+  bottom: 2em;
 }
 
 #stm-close {
-    background: url('assets/icon-close.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 20px 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    float: right;
-    height: 40px;
-    margin-top: -10;
-    position: relative;
-    transition: background-color 50ms;
-    width: 40px;
-    z-index: 10;
+  background: url("assets/icon-close.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  float: right;
+  height: 40px;
+  margin-top: -10;
+  position: relative;
+  transition: background-color 50ms;
+  width: 40px;
+  z-index: 10;
 }
 
 #stm-close:hover {
-    background-color: #F0F0F0;;
+  background-color: #f0f0f0;
 }
 
 #stm-feedback {
-    background-color: #00C8D7;
-    background-image: url('assets/feedback.svg');
-    background-position: 2px 4px;
-    background-repeat: no-repeat;
-    background-size: 18px;
-    border: 1px solid  #00C8D7;
-    border-radius: 3px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.1);
-    color: #fff;
-    cursor: pointer;
-    display: block;
-    float: right;
-    font-size: 12px;
-    line-height: 12px;
-    padding: 5px;
-    position: absolute;
-    bottom: 2em;
-    right: 2em;
-    z-index: 11;
-    opacity: .7;
-    overflow: hidden;
-    width: 12px;
-    text-indent: 17px;
-    transition: all 150ms ease-in-out;
-    box-sizing: content-box;
+  background-color: #00c8d7;
+  background-image: url("assets/feedback.svg");
+  background-position: 2px 4px;
+  background-repeat: no-repeat;
+  background-size: 18px;
+  border: 1px solid #00c8d7;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  float: right;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 5px;
+  position: absolute;
+  bottom: 2em;
+  right: 2em;
+  z-index: 11;
+  opacity: 0.7;
+  overflow: hidden;
+  width: 12px;
+  text-indent: 17px;
+  transition: all 150ms ease-in-out;
+  box-sizing: content-box;
 }
 
 #stm-feedback:hover,
 #stm-feedback:focus {
-    background-color: #00b8c7;
-    text-decoration: none;
-    width: 57px;
-    text-indent: 2px;
-    padding: 5px 5px 5px 20px;
-    transition: all 150ms ease-in-out;
+  background-color: #00b8c7;
+  text-decoration: none;
+  width: 57px;
+  text-indent: 2px;
+  padding: 5px 5px 5px 20px;
+  transition: all 150ms ease-in-out;
 }
 
 #stm-feedback:active {
-    background-color: #00b8c7;
-    text-decoration: none;
+  background-color: #00b8c7;
+  text-decoration: none;
 }
 
 #stm-animation-wrapper {
-    background: transparent;
-    height: 150px;
-    position: relative;
-    width: 400px;
-    top: -15px;
+  background: transparent;
+  height: 150px;
+  position: relative;
+  width: 400px;
+  top: -15px;
 }
 
 .stm-start-animation {
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: drop 500ms forwards 250ms;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: drop 500ms forwards 250ms;
 }
 
 #stm-levels-wrapper {
-    box-sizing: border-box;
-    height: 310px;
-    position: absolute;
-    top: -52px;
-    width: 100%;
-    z-index: 2;
+  box-sizing: border-box;
+  height: 310px;
+  position: absolute;
+  top: -52px;
+  width: 100%;
+  z-index: 2;
 }
 
 #stm-levels {
-    display: block;
-    height: 310px;
-    margin: 0 auto;
-    width: 720px;
+  display: block;
+  height: 310px;
+  margin: 0 auto;
+  width: 720px;
 }
 
 #stm-box {
-    background: none;
-    height: 150px;
-    overflow: hidden;
-    position: relative;
-    width: 400px;
+  background: none;
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  width: 400px;
 }
 
 #stm-content {
-    color: #737373;
-    display: block;
-    font-size: 22px;
-    height: 24px;
-    position: relative;
-    font-weight: 300;
-    letter-spacing: .5px;
-    top: -15px;
+  color: #737373;
+  display: block;
+  font-size: 22px;
+  height: 24px;
+  position: relative;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  top: -15px;
 }
 
 #stm-intro-text {
-    color: #0C0C0D;
+  color: #0c0c0d;
 }
 
 #stm-listening-text {
-    opacity: .4;
-    animation: fade-in 1000ms alternate infinite linear;
+  opacity: 0.4;
+  animation: fade-in 1000ms alternate infinite linear;
 }
 
 #stm-selection-wrapper {
-    align-items: center;
-    display: flex;
-    height: 40px;
-    justify-content: space-around;
+  align-items: center;
+  display: flex;
+  height: 40px;
+  justify-content: space-around;
 }
 
 #stm-list-wrapper {
-    position: relative;
-    flex: 1;
+  position: relative;
+  flex: 1;
 }
 
 #stm-input {
-    animation: pop forwards 300ms ease-in;
-    background: #99FB85;
-    border: none;
-    box-sizing: border-box;
-    color: #0C0C0D;
-    display: block;
-    font-size: 28px;
-    height: 40px;
-    opacity: 0;
-    padding: 4px 8px;
-    position: relative;
-    transition: background 75ms, box-shadow 75ms;
-    max-width: 600px;
+  animation: pop forwards 300ms ease-in;
+  background: #99fb85;
+  border: none;
+  box-sizing: border-box;
+  color: #0c0c0d;
+  display: block;
+  font-size: 28px;
+  height: 40px;
+  opacity: 0;
+  padding: 4px 8px;
+  position: relative;
+  transition: background 75ms, box-shadow 75ms;
+  max-width: 600px;
 }
 
 #stm-input:focus {
-    background: #f9f9fa;
-    box-shadow: 0 -2px 0 #33F70C inset;
+  background: #f9f9fa;
+  box-shadow: 0 -2px 0 #33f70c inset;
 }
- 
 
 #stm-list {
-    animation: scale 150ms forwards ease-in-out;
-    animation-delay: 450ms;
-    background: #fff;
-    border-radius: 1px;
-    border: 1px solid #e1e1e5;
-    border-top: 0;
-    box-sizing: border-box;
-    color: #737373;
-    display: block;
-    font-size: 16px;
-    line-height: 16px;
-    opacity: 0;
-    position: absolute;
-    transform-origin: top;
-    transform: scaleY(0);
-    width: 100%;
+  animation: scale 150ms forwards ease-in-out;
+  animation-delay: 450ms;
+  background: #fff;
+  border-radius: 1px;
+  border: 1px solid #e1e1e5;
+  border-top: 0;
+  box-sizing: border-box;
+  color: #737373;
+  display: block;
+  font-size: 16px;
+  line-height: 16px;
+  opacity: 0;
+  position: absolute;
+  transform-origin: top;
+  transform: scaleY(0);
+  width: 100%;
 }
 
 #stm-list.close {
-    animation: scale 150ms backwards ease-in-out;
+  animation: scale 150ms backwards ease-in-out;
 }
 
 .stm-list-inner {
-    box-sizing: border-box;
-    list-style: none;
-    margin: 0;
-    padding: 0px;
-    width: 100%;
+  box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  padding: 0px;
+  width: 100%;
 }
 
 .stm-list-inner li {
-    cursor: pointer;
-    opacity: .8;
-    padding: 10px 7px;
-    transition: background 50ms, opacity 50ms;
+  cursor: pointer;
+  opacity: 0.8;
+  padding: 10px 7px;
+  transition: background 50ms, opacity 50ms;
 }
 
 .stm-list-inner li:hover,
 .stm-list-inner li:focus {
-    background: #e1e1e5;
-    opacity: 1;
+  background: #e1e1e5;
+  opacity: 1;
 }
 
 #stm-reset-button {
-    animation: pop forwards 300ms ease-in;
-    animation-delay: 150ms;
-    background-color: transparent;
-    background-image: url('assets/icon-redo.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 16px 16px;
-    border-radius: 50%;
-    border: 1px solid #F0F0F0;
-    cursor: pointer;
-    height: 40px;
-    margin: 0 24px 0 40px;
-    opacity: 0;
-    transition: background-color 50ms;
-    width: 40px;
+  animation: pop forwards 300ms ease-in;
+  animation-delay: 150ms;
+  background-color: transparent;
+  background-image: url("assets/icon-redo.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  border-radius: 50%;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  height: 40px;
+  margin: 0 24px 0 40px;
+  opacity: 0;
+  transition: background-color 50ms;
+  width: 40px;
 }
 
 #stm-reset-button:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 #stm-reset-button:hover {
-    background-color: #eaeaea;
+  background-color: #eaeaea;
 }
 
 #stm-submit-button {
-    animation: pop forwards 300ms ease-in;
-    animation-delay: 300ms;
-    background-color: #00C8D7;
-    background-image: url('assets/icon-done.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 32px 28px;
-    border-radius: 50%;
-    border: none;
-    box-shadow: transparent;
-    cursor: pointer;
-    height: 64px;
-    opacity: 0;
-    top: -12px;
-    transition: background-color 50ms, opacity 50ms, box-shadow 100ms;
-    width: 64px;
+  animation: pop forwards 300ms ease-in;
+  animation-delay: 300ms;
+  background-color: #00c8d7;
+  background-image: url("assets/icon-done.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 32px 28px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: transparent;
+  cursor: pointer;
+  height: 64px;
+  opacity: 0;
+  top: -12px;
+  transition: background-color 50ms, opacity 50ms, box-shadow 100ms;
+  width: 64px;
 }
 
 .stm-icon {
-    background-color: #00C8D7;
-    background-image: url('assets/icon-mic.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 24px 24px;
-    border-radius: 50%;
-    border: none;
-    box-shadow: transparent;
-    box-sizing: border-box;
-    height: 48px;
-    position: absolute;
-    right: -64px;
-    top: -1px;
-    transition: background-color 50ms, opacity 50ms, box-shadow 100ms;
-    width: 48px;
-    z-index: 9999999;
+  background-color: #00c8d7;
+  background-image: url("assets/icon-mic.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: transparent;
+  box-sizing: border-box;
+  height: 48px;
+  position: absolute;
+  right: -64px;
+  top: -1px;
+  transition: background-color 50ms, opacity 50ms, box-shadow 100ms;
+  width: 48px;
+  z-index: 9999999;
 }
 
 .stm-icon:not(.stm-hidden) {
-    cursor: pointer;
-    opacity: 0;
-    animation: pop 300ms forwards ease-out;
+  cursor: pointer;
+  opacity: 0;
+  animation: pop 300ms forwards ease-out;
 }
 
 .stm-icon.stm-hidden {
-    opacity: .1;
-    pointer-events: none;
+  opacity: 0.1;
+  pointer-events: none;
 }
-
 
 .stm-icon:hover:not(.stm-hidden),
 .stm-icon:focus:not(.stm-hidden),
 #stm-submit-button:hover,
 #stm-submit-button:focus {
-    background-color: #00b8c7;
+  background-color: #00b8c7;
 }
 
 .stm-icon:active:not(.stm-hidden),
 #stm-submit-button:active {
-    background-color: #00a8b7;
-    box-shadow: 0 0 0 2px #00a8b7;
+  background-color: #00a8b7;
+  box-shadow: 0 0 0 2px #00a8b7;
 }
 
-
 @keyframes fade-in {
-    0% {
-        opacity: .4;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes stm-drop-in {
-    100% {
-        opacity: 1;
-        top: 0;
-    }
+  100% {
+    opacity: 1;
+    top: 0;
+  }
 }
 
 @keyframes stm-drop-out {
-    0% {
-        opacity: 1;
-        top: 0;
-    }
-    100% {
-        opacity: 0;
-        top: -999px;
-    }
+  0% {
+    opacity: 1;
+    top: 0;
+  }
+  100% {
+    opacity: 0;
+    top: -999px;
+  }
 }
 
 @keyframes pop {
-    0% {
-        opacity: 0;
-        transform: scale(1);
-    }
-    66% {
-        opacity: 1;
-        transform: scale(1.04);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  66% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes scale {
-    0% {
-        opacity: 0;
-        transform: scaleY(0);
-    }
-    100% {
-        opacity: 1;
-        transform: scaleY(1);
-    }
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 @keyframes drop {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0px);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
 
 @keyframes leave {
-    0% {
-        opacity: 1;
-        transform: scaleY(1);
-    }
-    30% {
-        opacity: 1;
-        transform: scaleY(1);
-    }
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 
-    80% {
-        opacity: 1;
-        transform: scaleY(.9);
-    }
-    100% {
-        opacity: 0;
-        transform: scaleY(1.1);
-        transform: translateY(-100px);
-    }
+  80% {
+    opacity: 1;
+    transform: scaleY(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1.1);
+    transform: translateY(-100px);
+  }
 }
