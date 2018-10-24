@@ -3,6 +3,7 @@ node_js:
   - 8
 script:
   - npm install
+  - npm run lint:js
   - npm run build
 before_deploy:
   - npm run package

@@ -310,7 +310,7 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       case "www.bing.com":
         return {
           input: "sb_form_q",
-          anchor: "sb_form_go",
+          anchor: "b_searchboxForm",
         };
       case "tw.yahoo.com":
         return {
