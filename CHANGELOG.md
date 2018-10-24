@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Buttons now have tooltips
 ### Changed
 ### Removed
 ### Fixed

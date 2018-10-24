@@ -47,8 +47,8 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
   const START_ANIMATION = browser.extension.getURL("Start.json");
   const ERROR_ANIMATION = browser.extension.getURL("Error.json");
   const escapeHTML = (str) => {
-    // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
-    // Most often this is not the case though.
+    // Note: string cast using String; may throw if `str` is non-serializable,
+    // e.g. a Symbol. Most often this is not the case though.
     return String(str)
       .replace(/&/g, "&amp;")
       .replace(/"/g, "&quot;")
@@ -327,38 +327,42 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
 
   // Encapsulation of the popup we use to provide our UI.
   const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
-            <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
-            <div id="stm-inject"></div>
-            <div id="stm-footer">
-                Processing as {language}.
-                <br>
-                To change language, navigate to
-                <a href="about:addons">about:addons</a>, then click the
-                Preferences button next to Voice Fill.
-            </div>
-            <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2" id="stm-feedback" role="button" tabindex="2">Feedback</a>
-        </div>`;
+      <div id="stm-header">
+        <div role="button" tabindex="1" id="stm-close" title="Close"></div>
+      </div>
+      <div id="stm-inject"></div>
+      <div id="stm-footer">
+        Processing as {language}.
+        <br>
+        To change language, navigate to <a href="about:addons">about:addons</a>,
+        then click the Preferences button next to Voice Fill.
+      </div>
+      <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2"
+         id="stm-feedback" role="button" tabindex="2">
+        Feedback
+      </a>
+    </div>`;
 
   // When submitting, this markup is passed in
   const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
-            <canvas hidden id="stm-levels" width=720 height=310></canvas>
-        </div>
-        <div id="stm-animation-wrapper">
-            <div id="stm-box"></div>
-        </div>
-        <div id="stm-content">
-            <div id="stm-startup-text">Warming up...</div>
-        </div>`;
+      <canvas hidden id="stm-levels" width=720 height=310></canvas>
+    </div>
+    <div id="stm-animation-wrapper">
+      <div id="stm-box"></div>
+    </div>
+    <div id="stm-content">
+      <div id="stm-startup-text">Warming up...</div>
+    </div>`;
 
   // When Selecting, this markup is passed in
   const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
-            <div id="stm-list-wrapper">
-                <input id="stm-input" type="text" autocomplete="off" />
-                <div id="stm-list"></div>
-            </div>
-            <button id="stm-reset-button" title="Reset" type="button"></button>
-            <input id="stm-submit-button" type="submit" title="Submit" value=""/>
-        </form>`;
+      <div id="stm-list-wrapper">
+        <input id="stm-input" type="text" autocomplete="off">
+        <div id="stm-list"></div>
+      </div>
+      <button id="stm-reset-button" title="Reset" type="button"></button>
+      <input id="stm-submit-button" type="submit" title="Submit" value="">
+    </form>`;
 
   const SpeakToMePopup = {
     // closeClicked used to skip out of media recording handling
@@ -468,7 +472,8 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
             } else if (index < 5) {
               const confidence = escapeHTML(item.confidence);
               const text = escapeHTML(item.text);
-              html += `<li idx_suggestion="${index}" confidence="${confidence}" role="button" tabindex="0">${text}</li>`;
+              html += `<li idx_suggestion="${index}" confidence="${confidence}"
+                role="button" tabindex="0">${text}</li>`;
             }
           });
           html += "</ul>";
@@ -571,6 +576,7 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       this.icon.classList.add("stm-icon");
       this.icon.classList.add("stm-hidden");
       this.icon.disabled = true;
+      this.icon.title = "Start listening";
       this.hasAnchor = false;
       this.input =
         document.getElementById(register.input) ||
@@ -700,12 +706,28 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
           chunks = [];
 
           if (LOCAL_TEST) {
-            const json = JSON.parse(
-              '{"status":"ok","data":[{"confidence":0.807493,"text":"PLEASE ADD MILK TO MY SHOPPING LIST"},{"confidence":0.906263,"text":"PLEASE AT MILK TO MY SHOPPING LIST"},{"confidence":0.904414,"text":"PLEASE ET MILK TO MY SHOPPING LIST"}]}'
-            );
+            const json = {
+              status: "ok",
+              data: [
+                {
+                  confidence: 0.807493,
+                  text: "PLEASE ADD MILK TO MY SHOPPING LIST",
+                },
+                {
+                  confidence: 0.906263,
+                  text: "PLEASE AT MILK TO MY SHOPPING LIST",
+                },
+                {
+                  confidence: 0.904414,
+                  text: "PLEASE ET MILK TO MY SHOPPING LIST",
+                },
+              ],
+            };
+
             if (json.status === "ok") {
               display_options(json.data);
             }
+
             return;
           }
 
@@ -959,8 +981,9 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
     this.webrtc_main = Module.cwrap("main");
     this.webrtc_main();
     this.webrtc_setmode = Module.cwrap("setmode", "number", ["number"]);
-    // set_mode defines the aggressiveness degree of the voice activity detection algorithm
-    // for more info see: https://github.com/mozilla/gecko/blob/central/media/webrtc/trunk/webrtc/common_audio/vad/vad_core.h#L68
+    // set_mode defines the aggressiveness degree of the voice activity
+    // detection algorithm. for more info, see:
+    // https://github.com/mozilla/gecko/blob/central/media/webrtc/trunk/webrtc/common_audio/vad/vad_core.h#L68
     this.webrtc_setmode(3);
     this.webrtc_process_data = Module.cwrap("process_data", "number", [
       "number",
@@ -970,12 +993,15 @@ const languagePromise = fetch(browser.extension.getURL("languages.json"))
       "number",
       "number",
     ]);
-    // frame length that should be passed to the vad engine. Depends on audio sample rate
+    // frame length that should be passed to the vad engine. Depends on audio
+    // sample rate. See:
     // https://github.com/mozilla/gecko/blob/central/media/webrtc/trunk/webrtc/common_audio/vad/vad_core.h#L106
     this.sizeBufferVad = 480;
-    // minimum of voice (in milliseconds) that should be captured to be considered voice
+    // minimum of voice (in milliseconds) that should be captured to be
+    // considered voice
     this.minvoice = 250;
-    // max amount of silence (in milliseconds) that should be captured to be considered end-of-speech
+    // max amount of silence (in milliseconds) that should be captured to be
+    // considered end-of-speech
     this.maxsilence = 1500;
     // max amount of capturing time (in seconds)
     this.maxtime = 6;
