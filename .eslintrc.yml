@@ -11,6 +11,12 @@ extends:
 plugins:
   - mozilla
 
+globals:
+  Metrics: true
+  SpeakToMe: true
+  TestPilotGA: true
+  bodymovin: true
+
 rules:
   eqeqeq: error
   no-console: off # TODO: Set back to "warn"

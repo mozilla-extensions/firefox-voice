@@ -11,10 +11,10 @@ scriptdir=$(dirname "$0")
 mkdir -p "${scriptdir}/../extension/js/vendor"
 cp \
   "${scriptdir}/../node_modules/bodymovin/build/player/bodymovin.min.js" \
-  "${scriptdir}/../extension/js/vendor/bodymovin.js"
+  "${scriptdir}/../extension/js/vendor/"
 cp \
   "${scriptdir}/../node_modules/testpilot-ga/dist/index.js" \
   "${scriptdir}/../extension/js/vendor/testpilot-ga.js"
 cp \
-  "${scriptdir}/../node_modules/webrtcvad_js/webrtc_vad.js" \
-  "${scriptdir}/../extension/js/vendor/webrtc_vad.js"
+  "${scriptdir}/../node_modules/speaktome-api/build/stm_web.min.js" \
+  "${scriptdir}/../extension/js/vendor/"

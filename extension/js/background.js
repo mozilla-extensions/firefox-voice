@@ -4,7 +4,7 @@
 
 const TRACKING_ID = "UA-35433268-80";
 
-const analytics = new window.TestPilotGA({
+const analytics = new TestPilotGA({
   tid: TRACKING_ID,
   ds: "addon",
   an: "Voice Fill",

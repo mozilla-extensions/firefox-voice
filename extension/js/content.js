@@ -2,45 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-let LANGUAGES = {};
-let LANGUAGE;
-let failGracefully;
-
-const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
-  .then((response) => {
-    return response.json();
-  })
-  .then((l) => {
-    LANGUAGES = l;
-    return browser.storage.sync.get("language");
-  })
-  .then((item) => {
-    if (!item.language) {
-      throw new Error("Language not set");
-    }
-
-    LANGUAGE = item.language;
-  })
-  .catch(() => {
-    LANGUAGE = LANGUAGES.hasOwnProperty(navigator.language)
-      ? navigator.language
-      : "en-US";
-  });
-
-(function speak_to_me() {
+(function() {
   console.log("Speak To Me starting up...");
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    console.error(
-      "You need a browser with getUserMedia support to use Speak To Me, sorry!"
-    );
-    return;
-  }
-
-  let mediaRecorder = null;
-  const metrics = new window.Metrics();
   const LOCAL_TEST = false;
-  const STT_SERVER_URL = "https://speaktome-2.services.mozilla.com";
 
   const DONE_ANIMATION =
     browser.extension.getURL("/assets/animations/Done.json");
@@ -50,6 +15,96 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     browser.extension.getURL("/assets/animations/Start.json");
   const ERROR_ANIMATION =
     browser.extension.getURL("/assets/animations/Error.json");
+
+  // Encapsulation of the popup we use to provide our UI.
+  const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
+      <div id="stm-header">
+        <div role="button" tabindex="1" id="stm-close" title="Close"></div>
+      </div>
+      <div id="stm-inject"></div>
+      <div id="stm-footer">
+        Processing as {language}.
+        <br>
+        To change language, navigate to <a href="about:addons">about:addons</a>,
+        then click the Preferences button next to Voice Fill.
+      </div>
+      <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2"
+         id="stm-feedback" role="button" tabindex="2">
+        Feedback
+      </a>
+    </div>`;
+
+  // When submitting, this markup is passed in
+  const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
+      <canvas hidden id="stm-levels" width=720 height=310></canvas>
+    </div>
+    <div id="stm-animation-wrapper">
+      <div id="stm-box"></div>
+    </div>
+    <div id="stm-content">
+      <div id="stm-startup-text">Warming up...</div>
+    </div>`;
+
+  // When Selecting, this markup is passed in
+  const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
+      <div id="stm-list-wrapper">
+        <input id="stm-input" type="text" autocomplete="off">
+        <div id="stm-list"></div>
+      </div>
+      <button id="stm-reset-button" title="Reset" type="button"></button>
+      <input id="stm-submit-button" type="submit" title="Submit" value="">
+    </form>`;
+
+  const metrics = new Metrics();
+  let languages = {};
+  let language;
+  let stm;
+  let audioContext;
+  let sourceNode;
+  let analyzerNode;
+  let outputNode;
+  let listening = false;
+
+  const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
+    .then((response) => {
+      return response.json();
+    })
+    .then((l) => {
+      languages = l;
+      return browser.storage.sync.get("language");
+    })
+    .then((item) => {
+      if (!item.language) {
+        throw new Error("Language not set");
+      }
+
+      language = item.language;
+    })
+    .catch(() => {
+      language = languages.hasOwnProperty(navigator.language)
+        ? navigator.language
+        : "en-US";
+    })
+    .then(() => {
+      stm = SpeakToMe({
+        listener,
+        serverURL: "https://speaktome-2.services.mozilla.com",
+        timeout: 6000,
+        language,
+        productTag: "vf",
+        // maxsilence: 1500,
+      });
+    });
+
+  if (!navigator.mediaDevices ||
+      !(navigator.mediaDevices.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia)) {
+    console.error(
+      "You need a browser with getUserMedia support to use Speak To Me, sorry!"
+    );
+    return;
+  }
 
   const escapeHTML = (str) => {
     // Note: string cast using String; may throw if `str` is non-serializable,
@@ -326,54 +381,15 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     document.getElementsByClassName("stm-icon")[0].disabled = true;
     metrics.start_session("toolbar");
     SpeakToMePopup.showAt(0, 0);
-    stm_init();
+    stmInit();
     return Promise.resolve({response: "content script ack"});
   });
-
-  // Encapsulation of the popup we use to provide our UI.
-  const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
-      <div id="stm-header">
-        <div role="button" tabindex="1" id="stm-close" title="Close"></div>
-      </div>
-      <div id="stm-inject"></div>
-      <div id="stm-footer">
-        Processing as {language}.
-        <br>
-        To change language, navigate to <a href="about:addons">about:addons</a>,
-        then click the Preferences button next to Voice Fill.
-      </div>
-      <a href="https://qsurvey.mozilla.com/s3/voice-fill?ref=product&ver=2"
-         id="stm-feedback" role="button" tabindex="2">
-        Feedback
-      </a>
-    </div>`;
-
-  // When submitting, this markup is passed in
-  const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
-      <canvas hidden id="stm-levels" width=720 height=310></canvas>
-    </div>
-    <div id="stm-animation-wrapper">
-      <div id="stm-box"></div>
-    </div>
-    <div id="stm-content">
-      <div id="stm-startup-text">Warming up...</div>
-    </div>`;
-
-  // When Selecting, this markup is passed in
-  const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
-      <div id="stm-list-wrapper">
-        <input id="stm-input" type="text" autocomplete="off">
-        <div id="stm-list"></div>
-      </div>
-      <button id="stm-reset-button" title="Reset" type="button"></button>
-      <input id="stm-submit-button" type="submit" title="Submit" value="">
-    </form>`;
 
   const SpeakToMePopup = {
     // closeClicked used to skip out of media recording handling
     closeClicked: false,
     init: () => {
-      console.log(`SpeakToMePopup init`);
+      console.log("SpeakToMePopup init");
       const popup = document.createElement("div");
       // eslint-disable-next-line no-unsanitized/property
       popup.innerHTML = POPUP_WRAPPER_MARKUP;
@@ -390,7 +406,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
         // eslint-disable-next-line no-unsanitized/property
         footer.innerHTML = footer.innerHTML.replace(
           "{language}",
-          LANGUAGES[LANGUAGE]
+          languages[language]
         );
       });
 
@@ -412,7 +428,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
           e.preventDefault();
           metrics.end_session();
           SpeakToMePopup.hide();
-          mediaRecorder.stop();
+          stm.stop();
           SpeakToMePopup.closeClicked = true;
         }
       };
@@ -420,7 +436,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     },
 
     hide: () => {
-      console.log(`SpeakToMePopup hide`);
+      console.log("SpeakToMePopup hide");
       this.removeEventListener("keypress", this.dismissPopup);
       this.popup.classList.add("stm-drop-out");
 
@@ -441,10 +457,9 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     },
 
     // Returns a Promise that resolves once the "Stop" button is clicked.
-    wait_for_stop: () => {
-      console.log(`SpeakToMePopup wait_for_stop`);
+    waitForStop: () => {
+      console.log("SpeakToMePopup waitForStop");
       return new Promise((resolve, reject) => {
-        console.log(`SpeakToMePopup set popup stop listener`);
         const popup = document.getElementById("stm-popup");
         const close = document.getElementById("stm-close");
         popup.addEventListener("click", () => resolve(), {once: true});
@@ -460,8 +475,8 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     },
 
     // Returns a Promise that resolves to the chosen text.
-    choose_item: (data) => {
-      console.log(`SpeakToMePopup choose_item`);
+    chooseItem: (data) => {
+      console.log("SpeakToMePopup chooseItem");
       // eslint-disable-next-line no-unsanitized/property
       this.inject.innerHTML = SELECTION_MARKUP;
       const close = document.getElementById("stm-close");
@@ -587,7 +602,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
 
   class SpeakToMeIcon {
     constructor() {
-      console.log(`SpeakToMeIcon constructor ${this}`);
+      console.log("SpeakToMeIcon constructor");
       const register = getSTMAnchors(document.domain);
       this.icon = document.createElement("button");
       this.icon.classList.add("stm-icon");
@@ -610,7 +625,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
       }
 
       document.body.appendChild(this.icon);
-      this.icon.addEventListener("click", on_stm_icon_click);
+      this.icon.addEventListener("click", onStmIconClick);
       this.anchor.style.position = "relative";
       this.anchor.style.overflow = "visible";
       this.anchor.append(this.icon);
@@ -618,71 +633,53 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
       this.icon.disabled = false;
     }
 
-    set_input(text) {
-      console.log(`SpeakToMeIcon set_input ${text}`);
+    setInput(text) {
+      console.log(`SpeakToMeIcon setInput: ${text}`);
       this.input.value = text;
       this.input.focus();
       this.input.form.submit();
     }
   }
 
-  // Main startup for STM voice stuff
-  const stm_start = () => {
-    const constraints = {audio: true};
-    let chunks = [];
+  const listener = (msg) => {
+    switch (msg.state) {
+      case "ready": {
+        listening = false;
+        break;
+      }
+      case "error": {
+        listening = false;
+        console.error(msg.error);
+        failGracefully(msg.error.toString());
+        break;
+      }
+      case "listening": {
+        const stream = stm.getmediaStream();
+        if (!stream) {
+          return;
+        }
 
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(function(stream) {
         // Build the WebAudio graph we'll be using
-        let audioContext = new AudioContext();
-        let sourceNode = audioContext.createMediaStreamSource(stream);
-        let analyzerNode = audioContext.createAnalyser();
-        let outputNode = audioContext.createMediaStreamDestination();
+        audioContext = new AudioContext();
+        sourceNode = audioContext.createMediaStreamSource(stream);
+        analyzerNode = audioContext.createAnalyser();
+        outputNode = audioContext.createMediaStreamDestination();
+
         // make sure we're doing mono everywhere
         sourceNode.channelCount = 1;
         analyzerNode.channelCount = 1;
         outputNode.channelCount = 1;
+
         // connect the nodes together
         sourceNode.connect(analyzerNode);
         analyzerNode.connect(outputNode);
-        // and set up the recorder
-        const options = {
-          audioBitsPerSecond: 16000,
-          mimeType: "audio/ogg",
-        };
 
-        // VAD initializations
-        // console.log("Sample rate: ", audioContext.sampleRate);
-        const bufferSize = 2048;
-        // create a javascript node
-        let scriptprocessor = audioContext.createScriptProcessor(
-          bufferSize,
-          1,
-          1
-        );
-        // specify the processing function
-        stm_vad.reset();
-        scriptprocessor.onaudioprocess = stm_vad.recorderProcess;
-        stm_vad.stopGum = () => {
-          console.log("stopGum");
-          mediaRecorder.stop();
-          sourceNode.disconnect(scriptprocessor);
-          sourceNode.disconnect(analyzerNode);
-          analyzerNode.disconnect(outputNode);
-        };
-        // connect stream to our recorder
-        sourceNode.connect(scriptprocessor);
-
-        // MediaRecorder initialization
-        mediaRecorder = new MediaRecorder(outputNode.stream, options);
-
-        SpeakToMePopup.wait_for_stop().then(
+        SpeakToMePopup.waitForStop().then(
           () => {
-            mediaRecorder.stop();
+            stm.stop();
           },
           () => {
-            mediaRecorder.stop();
+            stm.stop();
             SpeakToMePopup.closeClicked = true;
             metrics.end_session();
             SpeakToMePopup.hide();
@@ -693,119 +690,93 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
         visualize(analyzerNode);
 
         metrics.start_attempt();
-        mediaRecorder.start();
         metrics.start_recording();
 
         const copy = document.getElementById("stm-content");
         loadAnimation(SPINNING_ANIMATION, true);
         copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`;
+        break;
+      }
+      case "processing": {
+        analyzerNode.disconnect(outputNode);
+        sourceNode.disconnect(analyzerNode);
+        audioContext.close();
 
-        mediaRecorder.onstop = (e) => {
-          metrics.stop_recording();
-          // handle clicking on close element by dumping recording data
-          if (SpeakToMePopup.closeClicked) {
-            SpeakToMePopup.closeClicked = false;
-            return;
-          }
+        const copy = document.getElementById("stm-content");
+        copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`;
+        loadAnimation(DONE_ANIMATION, false);
+        break;
+      }
+      case "result": {
+        metrics.stop_recording();
 
-          console.log(e.target);
-          document.getElementById("stm-levels").hidden = true;
-          console.log("mediaRecorder onStop");
-          // We stopped the recording, send the content to the STT server.
-          mediaRecorder = null;
-          audioContext = null;
-          sourceNode = null;
-          analyzerNode = null;
-          outputNode = null;
-          stream = null;
-          scriptprocessor = null;
+        // We stopped the recording, send the content to the STT server.
+        audioContext = null;
+        sourceNode = null;
+        analyzerNode = null;
+        outputNode = null;
 
-          const blob = new Blob(chunks, {
-            type: "audio/ogg; codecs=opus",
-          });
-          chunks = [];
+        document.getElementById("stm-levels").hidden = true;
 
-          if (LOCAL_TEST) {
-            const json = {
-              status: "ok",
-              data: [
-                {
-                  confidence: 0.807493,
-                  text: "PLEASE ADD MILK TO MY SHOPPING LIST",
-                },
-                {
-                  confidence: 0.906263,
-                  text: "PLEASE AT MILK TO MY SHOPPING LIST",
-                },
-                {
-                  confidence: 0.904414,
-                  text: "PLEASE ET MILK TO MY SHOPPING LIST",
-                },
-              ],
-            };
+        // handle clicking on close element by dumping recording data
+        if (SpeakToMePopup.closeClicked) {
+          SpeakToMePopup.closeClicked = false;
+          return;
+        }
 
-            if (json.status === "ok") {
-              display_options(json.data);
-            }
+        if (SpeakToMePopup.cancelFetch) {
+          SpeakToMePopup.cancelFetch = false;
+          return;
+        }
 
-            return;
-          }
+        if (LOCAL_TEST) {
+          const json = {
+            data: [
+              {
+                confidence: 0.807493,
+                text: "PLEASE ADD MILK TO MY SHOPPING LIST",
+              },
+              {
+                confidence: 0.906263,
+                text: "PLEASE AT MILK TO MY SHOPPING LIST",
+              },
+              {
+                confidence: 0.904414,
+                text: "PLEASE ET MILK TO MY SHOPPING LIST",
+              },
+            ],
+          };
 
-          metrics.start_stt();
-          fetch(STT_SERVER_URL, {
-            method: "POST",
-            body: blob,
-            headers: {
-              "Accept-Language-STT": LANGUAGE,
-              "Product-Tag": "vf",
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                failGracefully(`Fetch error: ${response.statusText}`);
-              }
-              metrics.end_stt();
-              return response.json();
-            })
-            .then((json) => {
-              if (SpeakToMePopup.cancelFetch) {
-                SpeakToMePopup.cancelFetch = false;
-                return;
-              }
-              console.log(`Got STT result: ${JSON.stringify(json)}`);
-              const container = document.getElementById("stm-box");
-              container.classList.add("stm-done-animation");
-              setTimeout(() => {
-                if (json.status === "ok") {
-                  display_options(json.data);
-                }
-              }, 500);
-            })
-            .catch((error) => {
-              failGracefully(`Fetch error: ${error}`);
-            });
-        };
+          displayOptions(json.data);
+          return;
+        }
 
-        mediaRecorder.ondataavailable = (e) => {
-          chunks.push(e.data);
-        };
-      })
-      .catch(function(err) {
-        failGracefully(`GUM error: ${err}`);
-      });
+        console.log(`Got STT result: ${JSON.stringify(msg)}`);
+        const container = document.getElementById("stm-box");
+        container.classList.add("stm-done-animation");
+        setTimeout(() => {
+          displayOptions(msg.data);
+        }, 500);
+        break;
+      }
+    }
   };
 
   // Helper for animation startup
-  const stm_init = () => {
+  const stmInit = () => {
     loadAnimation(START_ANIMATION, false, "stm-start-animation");
 
-    setTimeout(() => {
-      stm_start();
-    }, 1000);
+    if (listening) {
+      stm.stop();
+      listening = false;
+    }
+
+    stm.listen();
+    listening = true;
   };
 
   // Click handler for stm icon
-  const on_stm_icon_click = (event) => {
+  const onStmIconClick = (event) => {
     if (event.explicitOriginalTarget !== event.currentTarget) {
       return;
     }
@@ -817,7 +788,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     metrics.start_session(type);
     event.target.classList.add("stm-hidden");
     SpeakToMePopup.showAt(event.clientX, event.clientY);
-    stm_init();
+    stmInit();
   };
 
   // Helper to handle background visualization
@@ -893,10 +864,10 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     if (className) {
       container.classList.add(className);
     }
-    if (window.bodymovin) {
-      window.bodymovin.destroy();
+    if (bodymovin) {
+      bodymovin.destroy();
     }
-    window.bodymovin.loadAnimation({
+    bodymovin.loadAnimation({
       container,
       loop,
       renderer: "svg",
@@ -905,7 +876,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     });
   };
 
-  const display_options = (items) => {
+  const displayOptions = (items) => {
     // Filter the array for empty items and normalize the text.
     const data = items
       .filter((item) => {
@@ -919,11 +890,11 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
       });
 
     if (data.length === 0) {
-      failGracefully(`EMPTYRESULTS`);
+      failGracefully("EMPTYRESULTS");
       return;
     }
 
-    const validate_results = function(data) {
+    const validateResults = function(data) {
       if (data.length === 1) {
         return true;
       }
@@ -943,20 +914,20 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     data.sort(function(a, b) {
       return b.confidence - a.confidence;
     });
-    if (validate_results(data)) {
+    if (validateResults(data)) {
       metrics.end_attempt(data[0].confidence, "default accepted", 0);
       metrics.end_session();
-      stm_icon.set_input(data[0].text);
+      stmIcon.setInput(data[0].text);
       SpeakToMePopup.hide();
       return;
     }
 
     metrics.set_options_displayed();
-    SpeakToMePopup.choose_item(data).then(
+    SpeakToMePopup.chooseItem(data).then(
       (input) => {
         metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
         metrics.end_session();
-        stm_icon.set_input(input.value);
+        stmIcon.setInput(input.value);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
       },
@@ -964,7 +935,7 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
         if (id === "stm-reset-button") {
           metrics.end_attempt(-1, "reset", -1);
           SpeakToMePopup.reset();
-          stm_init();
+          stmInit();
         } else {
           metrics.end_attempt(-1, "rejected", -1);
           metrics.end_session();
@@ -974,10 +945,10 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     );
   };
 
-  const stm_icon = new SpeakToMeIcon();
+  const stmIcon = new SpeakToMeIcon();
   SpeakToMePopup.init();
 
-  failGracefully = (errorMsg) => {
+  const failGracefully = (errorMsg) => {
     if (errorMsg.indexOf("GUM") === 0) {
       errorMsg = "Please enable your microphone to use Voice Fill";
     } else if (errorMsg.indexOf("EMPTYRESULTS") === 0) {
@@ -995,209 +966,4 @@ const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     }, 1500);
     console.log("ERROR: ", errorMsg);
   };
-
-  // Webrtc_Vad integration
-  window.SpeakToMeVad = function() {
-    this.webrtc_main = Module.cwrap("main");
-    this.webrtc_main();
-    this.webrtc_setmode = Module.cwrap("setmode", "number", ["number"]);
-    // set_mode defines the aggressiveness degree of the voice activity
-    // detection algorithm. for more info, see:
-    // https://github.com/mozilla/gecko/blob/central/media/webrtc/trunk/webrtc/common_audio/vad/vad_core.h#L68
-    this.webrtc_setmode(3);
-    this.webrtc_process_data = Module.cwrap("process_data", "number", [
-      "number",
-      "number",
-      "number",
-      "number",
-      "number",
-      "number",
-    ]);
-    // frame length that should be passed to the vad engine. Depends on audio
-    // sample rate. See:
-    // https://github.com/mozilla/gecko/blob/central/media/webrtc/trunk/webrtc/common_audio/vad/vad_core.h#L106
-    this.sizeBufferVad = 480;
-    // minimum of voice (in milliseconds) that should be captured to be
-    // considered voice
-    this.minvoice = 250;
-    // max amount of silence (in milliseconds) that should be captured to be
-    // considered end-of-speech
-    this.maxsilence = 1500;
-    // max amount of capturing time (in seconds)
-    this.maxtime = 6;
-
-    this.reset = function() {
-      this.buffer_vad = new Int16Array(this.sizeBufferVad);
-      this.leftovers = 0;
-      this.finishedvoice = false;
-      this.samplesvoice = 0;
-      this.samplessilence = 0;
-      this.touchedvoice = false;
-      this.touchedsilence = false;
-      this.dtantes = Date.now();
-      this.dtantesmili = Date.now();
-      this.raisenovoice = false;
-      this.done = false;
-    };
-
-    // function that returns if the specified buffer has silence of speech
-    this.isSilence = function(buffer_pcm) {
-      // Get data byte size, allocate memory on Emscripten heap, and get pointer
-      const nDataBytes = buffer_pcm.length * buffer_pcm.BYTES_PER_ELEMENT;
-      const dataPtr = Module._malloc(nDataBytes);
-      // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
-      const dataHeap = new Uint8Array(
-        Module.HEAPU8.buffer,
-        dataPtr,
-        nDataBytes
-      );
-      dataHeap.set(new Uint8Array(buffer_pcm.buffer));
-      // Call function and get result
-      const result = this.webrtc_process_data(
-        dataHeap.byteOffset,
-        buffer_pcm.length,
-        48000,
-        buffer_pcm[0],
-        buffer_pcm[100],
-        buffer_pcm[2000]
-      );
-      // Free memory
-      Module._free(dataHeap.byteOffset);
-      return result;
-    };
-
-    this.floatTo16BitPCM = function(output, input) {
-      for (let i = 0; i < input.length; i++) {
-        const s = Math.max(-1, Math.min(1, input[i]));
-        output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-      }
-    };
-
-    this.recorderProcess = function(e) {
-      const buffer_pcm = new Int16Array(e.inputBuffer.getChannelData(0).length);
-      stm_vad.floatTo16BitPCM(buffer_pcm, e.inputBuffer.getChannelData(0));
-      // algorithm used to determine if the user stopped speaking or not
-      for (
-        let i = 0;
-        i < Math.ceil(buffer_pcm.length / stm_vad.sizeBufferVad) &&
-        !stm_vad.done;
-        i++
-      ) {
-        const start = i * stm_vad.sizeBufferVad;
-        let end = start + stm_vad.sizeBufferVad;
-        if (start + stm_vad.sizeBufferVad > buffer_pcm.length) {
-          // store to the next buffer
-          stm_vad.buffer_vad.set(buffer_pcm.slice(start));
-          stm_vad.leftovers = buffer_pcm.length - start;
-        } else {
-          if (stm_vad.leftovers > 0) {
-            // we have this.leftovers from previous array
-            end = end - this.leftovers;
-            stm_vad.buffer_vad.set(
-              buffer_pcm.slice(start, end),
-              stm_vad.leftovers
-            );
-            stm_vad.leftovers = 0;
-          } else {
-            // send to the vad
-            stm_vad.buffer_vad.set(buffer_pcm.slice(start, end));
-          }
-          const vad = stm_vad.isSilence(stm_vad.buffer_vad);
-          stm_vad.buffer_vad = new Int16Array(stm_vad.sizeBufferVad);
-          const dtdepois = Date.now();
-          if (vad === 0) {
-            if (stm_vad.touchedvoice) {
-              stm_vad.samplessilence += dtdepois - stm_vad.dtantesmili;
-              if (stm_vad.samplessilence > stm_vad.maxsilence) {
-                stm_vad.touchedsilence = true;
-              }
-            }
-          } else {
-            stm_vad.samplesvoice += dtdepois - stm_vad.dtantesmili;
-            if (stm_vad.samplesvoice > stm_vad.minvoice) {
-              stm_vad.touchedvoice = true;
-            }
-          }
-          stm_vad.dtantesmili = dtdepois;
-          if (stm_vad.touchedvoice && stm_vad.touchedsilence) {
-            stm_vad.finishedvoice = true;
-          }
-          if (stm_vad.finishedvoice) {
-            stm_vad.done = true;
-            stm_vad.goCloud("GoCloud finishedvoice");
-          }
-          if ((dtdepois - stm_vad.dtantes) / 1000 > stm_vad.maxtime) {
-            stm_vad.done = true;
-            if (stm_vad.touchedvoice) {
-              stm_vad.goCloud("GoCloud timeout");
-            } else {
-              stm_vad.goCloud("Raise novoice");
-              stm_vad.raisenovoice = true;
-            }
-          }
-        }
-      }
-    };
-
-    this.goCloud = function(why) {
-      console.log(why);
-      this.stopGum();
-      const copy = document.getElementById("stm-content");
-      copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`;
-      loadAnimation(DONE_ANIMATION, false);
-    };
-    console.log("speakToMeVad created()");
-  };
 })();
-
-// Creation of the configuration object
-// that will be pick by emscripten module
-// eslint-disable-next-line no-var
-var Module = {
-  preRun: [],
-  postRun: [],
-  print: (function() {
-    return function(text) {
-      console.log("[webrtc_vad.js print]", text);
-    };
-  })(),
-  printErr(text) {
-    if (failGracefully) {
-      failGracefully("[webrtc_vad.js error]", text);
-    }
-  },
-  canvas: (function() {})(),
-  setStatus(text) {
-    console.log("[webrtc_vad.js status] ", text);
-  },
-  totalDependencies: 0,
-  monitorRunDependencies(left) {
-    this.totalDependencies = Math.max(this.totalDependencies, left);
-    Module.setStatus(
-      left
-        ? "Preparing... (" +
-          (this.totalDependencies - left) +
-          "/" +
-          this.totalDependencies +
-          ")"
-        : "All downloads complete."
-    );
-  },
-};
-let stm_vad;
-Module.setStatus("Loading webrtc_vad...");
-window.onerror = function(event) {
-  // TODO: do not warn on ok events like simulating an infinite loop or
-  // exitStatus
-  Module.setStatus("Exception thrown, see JavaScript console");
-  Module.setStatus = function(text) {
-    if (text) {
-      Module.printErr("[post-exception status] " + text);
-    }
-  };
-};
-Module.noInitialRun = true;
-Module.onRuntimeInitialized = function() {
-  stm_vad = new window.SpeakToMeVad();
-  Module.setStatus("Webrtc_vad and SpeakToMeVad loaded");
-};

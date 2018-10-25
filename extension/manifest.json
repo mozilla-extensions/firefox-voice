@@ -232,10 +232,10 @@
         "https://www.bing.com/*"
       ],
       "js": [
-        "js/vendor/bodymovin.js",
+        "js/vendor/bodymovin.min.js",
+        "js/vendor/stm_web.min.js",
         "js/metrics.js",
-        "js/content.js",
-        "js/vendor/webrtc_vad.js"
+        "js/content.js"
       ],
       "css": [
         "css/main.css"

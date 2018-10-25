@@ -22,7 +22,7 @@
   "dependencies": {
     "bodymovin": "^4.13.0",
     "testpilot-ga": "^0.3.0",
-    "webrtcvad_js": "^1.0.0"
+    "speaktome-api": "^0.2.0"
   },
   "homepage": "https://github.com/mozilla/voicefill#readme",
   "keywords": [],
