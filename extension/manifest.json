@@ -232,6 +232,7 @@
         "https://www.bing.com/*"
       ],
       "js": [
+        "js/vendor/browser-polyfill.min.js",
         "js/vendor/bodymovin.min.js",
         "js/vendor/stm_web.min.js",
         "js/metrics.js",
@@ -244,6 +245,7 @@
   ],
   "background": {
     "scripts": [
+      "js/vendor/browser-polyfill.min.js",
       "js/vendor/testpilot-ga.js",
       "js/background.js"
     ]
@@ -273,8 +275,6 @@
   "browser_action": {
     "browser_style": true,
     "default_title": "Voice Fill",
-    "default_icon": {
-      "32": "assets/images/mic.svg"
-    }
+    "default_icon": "assets/images/mic.svg"
   }
 }

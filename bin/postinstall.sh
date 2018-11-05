@@ -18,3 +18,6 @@ cp \
 cp \
   "${scriptdir}/../node_modules/speaktome-api/build/stm_web.min.js" \
   "${scriptdir}/../extension/js/vendor/"
+cp \
+  "${scriptdir}/../node_modules/webextension-polyfill/dist/browser-polyfill.min.js" \
+  "${scriptdir}/../extension/js/vendor/"

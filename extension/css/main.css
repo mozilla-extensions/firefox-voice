@@ -6,7 +6,6 @@
   align-items: stretch;
   animation-fill-mode: forwards;
   background-color: white;
-  background-image: url("/assets/images/ff-logo.png");
   background-repeat: no-repeat;
   background-size: 102px 38px;
   box-shadow: 0 0 1rem #979797;
@@ -78,7 +77,6 @@
 }
 
 #stm-close {
-  background: url("/assets/images/icon-close.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 20px 20px;
@@ -106,7 +104,6 @@
 
 #stm-feedback {
   background-color: #00c8d7;
-  background-image: url("/assets/images/feedback.svg");
   background-position: 2px 4px;
   background-repeat: no-repeat;
   background-size: 18px;
@@ -293,7 +290,6 @@
   animation: pop forwards 300ms ease-in;
   animation-delay: 150ms;
   background-color: transparent;
-  background-image: url("/assets/images/icon-redo.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 16px 16px;
@@ -333,17 +329,8 @@
   width: 64px;
 }
 
-#stm-submit-button.rtl {
-  background-image: url("/assets/images/icon-done-rtl.svg");
-}
-
-#stm-submit-button:not(.rtl) {
-  background-image: url("/assets/images/icon-done.svg");
-}
-
 .stm-icon {
   background-color: #00c8d7;
-  background-image: url("/assets/images/icon-mic.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 24px 24px;

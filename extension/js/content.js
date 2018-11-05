@@ -395,6 +395,13 @@
       popup.innerHTML = POPUP_WRAPPER_MARKUP;
       document.body.appendChild(popup);
 
+      document.getElementById("stm-popup").style.backgroundImage =
+        `url("${browser.extension.getURL("/assets/images/ff-logo.png")}")`;
+      document.getElementById("stm-close").style.backgroundImage =
+        `url("${browser.extension.getURL("/assets/images/icon-close.svg")}")`;
+      document.getElementById("stm-feedback").style.backgroundImage =
+        `url("${browser.extension.getURL("/assets/images/feedback.svg")}")`;
+
       if (document.dir === "rtl") {
         document.getElementById("stm-close").classList.add("rtl");
         document.getElementById("stm-popup").classList.add("rtl");
@@ -486,8 +493,17 @@
       const listWrapper = document.getElementById("stm-list-wrapper");
       const reset = document.getElementById("stm-reset-button");
 
+      reset.style.backgroundImage =
+        `url("${browser.extension.getURL("/assets/images/icon-redo.svg")}")`;
+
+      const submitButton = document.getElementById("stm-submit-button");
       if (document.dir === "rtl") {
-        document.getElementById("stm-submit-button").classList.add("rtl");
+        submitButton.classList.add("rtl");
+        submitButton.style.backgroundImage =
+          `url("${browser.extension.getURL("/assets/images/icon-done-rtl.svg")}")`;
+      } else {
+        submitButton.style.backgroundImage =
+          `url("${browser.extension.getURL("/assets/images/icon-done.svg")}")`;
       }
 
       let firstChoice;
@@ -609,6 +625,8 @@
       this.icon.classList.add("stm-hidden");
       this.icon.disabled = true;
       this.icon.title = "Start listening";
+      this.icon.style.backgroundImage =
+        `url("${browser.extension.getURL("/assets/images/icon-mic.svg")}")`;
       if (document.dir === "rtl") {
         this.icon.classList.add("rtl");
       }
@@ -777,9 +795,6 @@
 
   // Click handler for stm icon
   const onStmIconClick = (event) => {
-    if (event.explicitOriginalTarget !== event.currentTarget) {
-      return;
-    }
     if (SpeakToMePopup.cancelFetch) {
       SpeakToMePopup.cancelFetch = false;
     }
