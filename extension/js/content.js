@@ -5,6 +5,8 @@
 (function() {
   console.log("Speak To Me starting up...");
 
+  var port = browser.runtime.connect({name:"cs-port"});
+
   const LOCAL_TEST = false;
 
   const DONE_ANIMATION =
@@ -377,9 +379,9 @@
     }
   };
   browser.runtime.onMessage.addListener((request) => {
-    this.icon.classList.add("stm-hidden");
-    document.getElementsByClassName("stm-icon")[0].disabled = true;
-    metrics.start_session("toolbar");
+    // this.icon.classList.add("stm-hidden");
+    // document.getElementsByClassName("stm-icon")[0].disabled = true;
+    // metrics.start_session("toolbar");
     SpeakToMePopup.showAt(0, 0);
     stmInit();
     return Promise.resolve({response: "content script ack"});
@@ -452,9 +454,9 @@
         this.popup.style.display = "none";
         // eslint-disable-next-line no-unsanitized/property
         this.inject.innerHTML = SUBMISSION_MARKUP;
-        this.icon.blur();
-        this.icon.classList.remove("stm-hidden");
-        this.icon.disabled = false;
+        // this.icon.blur();
+        // this.icon.classList.remove("stm-hidden");
+        // this.icon.disabled = false;
       }, 500);
     },
 
@@ -655,7 +657,7 @@
       console.log(`SpeakToMeIcon setInput: ${text}`);
       this.input.value = text;
       this.input.focus();
-      this.input.form.submit();
+      // this.input.form.submit();
     }
   }
 
@@ -767,6 +769,18 @@
 
           displayOptions(json.data);
           return;
+        }
+
+        // complex parsing logic goes somewhere around here
+        if (msg.data[0].text.toLowerCase().includes("mute")) {
+          port.postMessage({
+            action: "mute"
+          });
+        } else {
+          port.postMessage({
+            action: "find",
+            content: msg.data
+          });
         }
 
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
@@ -932,7 +946,7 @@
     if (validateResults(data)) {
       metrics.end_attempt(data[0].confidence, "default accepted", 0);
       metrics.end_session();
-      stmIcon.setInput(data[0].text);
+      // stmIcon.setInput(data[0].text);
       SpeakToMePopup.hide();
       return;
     }
@@ -960,7 +974,7 @@
     );
   };
 
-  const stmIcon = new SpeakToMeIcon();
+  // const stmIcon = new SpeakToMeIcon();
   SpeakToMePopup.init();
 
   const failGracefully = (errorMsg) => {

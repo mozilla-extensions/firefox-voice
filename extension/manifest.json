@@ -229,7 +229,8 @@
         "https://se.yahoo.com/*",
         "https://tw.yahoo.com/*",
         "https://*.search.yahoo.com/*",
-        "https://www.bing.com/*"
+        "https://www.bing.com/*",
+        "http://juliacambre.com/*"
       ],
       "js": [
         "js/vendor/browser-polyfill.min.js",
@@ -247,7 +248,8 @@
     "scripts": [
       "js/vendor/browser-polyfill.min.js",
       "js/vendor/testpilot-ga.js",
-      "js/background.js"
+      "js/background.js",
+      "js/browserService.js"
     ]
   },
   "options_ui": {
@@ -270,7 +272,9 @@
   ],
   "permissions": [
     "<all_urls>",
-    "storage"
+    "storage",
+    "find",
+    "tabs"
   ],
   "browser_action": {
     "browser_style": true,
