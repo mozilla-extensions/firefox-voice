@@ -2,10 +2,30 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//  var mqtt = require('mqtt');
+
+//  var hostname = "mqtt://localhost:1883";
+//  var client  = mqtt.connect(hostname);
+
 (function() {
   console.log("Speak To Me starting up...");
 
   var port = browser.runtime.connect({name:"cs-port"});
+
+  // client.on('connect', function () {
+  //     console.log("[Snips Log] Connected to MQTT broker " + hostname);
+  //     client.subscribe('hermes/#');
+  // });
+
+  // client.on('message', function (topic, message) {
+  //     if (topic.match(/hermes\/intent\/.+/g) !== null) {
+  //         onIntentDetected(JSON.parse(message));
+  //     }
+  // });
+
+  // function onIntentDetected(intent) {
+  //     console.log("[Snips Log] Intent detected: " + JSON.stringify(intent));
+  // }
 
   const LOCAL_TEST = false;
 
@@ -57,7 +77,7 @@
       <input id="stm-submit-button" type="submit" title="Submit" value="">
     </form>`;
 
-  const metrics = new Metrics();
+  // const metrics = new Metrics();
   let languages = {};
   let language;
   let stm;
@@ -435,7 +455,7 @@
         if (key === 27) {
           SpeakToMePopup.cancelFetch = true;
           e.preventDefault();
-          metrics.end_session();
+          // metrics.end_session();
           SpeakToMePopup.hide();
           stm.stop();
           SpeakToMePopup.closeClicked = true;
@@ -701,7 +721,7 @@
           () => {
             stm.stop();
             SpeakToMePopup.closeClicked = true;
-            metrics.end_session();
+            // metrics.end_session();
             SpeakToMePopup.hide();
           }
         );
@@ -709,11 +729,11 @@
         document.getElementById("stm-levels").hidden = false;
         visualize(analyzerNode);
 
-        metrics.start_attempt();
-        metrics.start_recording();
+        // metrics.start_attempt();
+        // metrics.start_recording();
 
         const copy = document.getElementById("stm-content");
-        loadAnimation(SPINNING_ANIMATION, true);
+        // loadAnimation(SPINNING_ANIMATION, true);
         copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`;
         break;
       }
@@ -724,11 +744,11 @@
 
         const copy = document.getElementById("stm-content");
         copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`;
-        loadAnimation(DONE_ANIMATION, false);
+        // loadAnimation(DONE_ANIMATION, false);
         break;
       }
       case "result": {
-        metrics.stop_recording();
+        // metrics.stop_recording();
 
         // We stopped the recording, send the content to the STT server.
         audioContext = null;
@@ -796,7 +816,7 @@
 
   // Helper for animation startup
   const stmInit = () => {
-    loadAnimation(START_ANIMATION, false, "stm-start-animation");
+    // loadAnimation(START_ANIMATION, false, "stm-start-animation");
 
     if (listening) {
       stm.stop();
@@ -814,7 +834,7 @@
     }
     const type = event.detail ? "button" : "keyboard";
     event.preventDefault();
-    metrics.start_session(type);
+    // metrics.start_session(type);
     event.target.classList.add("stm-hidden");
     SpeakToMePopup.showAt(event.clientX, event.clientY);
     stmInit();
@@ -944,30 +964,30 @@
       return b.confidence - a.confidence;
     });
     if (validateResults(data)) {
-      metrics.end_attempt(data[0].confidence, "default accepted", 0);
-      metrics.end_session();
+      // metrics.end_attempt(data[0].confidence, "default accepted", 0);
+      // metrics.end_session();
       // stmIcon.setInput(data[0].text);
       SpeakToMePopup.hide();
       return;
     }
 
-    metrics.set_options_displayed();
+    // metrics.set_options_displayed();
     SpeakToMePopup.chooseItem(data).then(
       (input) => {
-        metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
-        metrics.end_session();
+        // metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
+        // metrics.end_session();
         stmIcon.setInput(input.value);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
       },
       (id) => {
         if (id === "stm-reset-button") {
-          metrics.end_attempt(-1, "reset", -1);
+          // metrics.end_attempt(-1, "reset", -1);
           SpeakToMePopup.reset();
           stmInit();
         } else {
-          metrics.end_attempt(-1, "rejected", -1);
-          metrics.end_session();
+          // metrics.end_attempt(-1, "rejected", -1);
+          // metrics.end_session();
           SpeakToMePopup.hide();
         }
       }
@@ -985,7 +1005,7 @@
     } else {
       errorMsg = "Sorry, we encountered an error";
     }
-    loadAnimation(ERROR_ANIMATION, false);
+    // loadAnimation(ERROR_ANIMATION, false);
     const copy = document.getElementById("stm-content");
     copy.innerHTML = '<div id="stm-listening-text"></div>';
     const errorDiv = document.getElementById("stm-listening-text");

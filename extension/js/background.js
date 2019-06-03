@@ -5,13 +5,13 @@
 if (typeof browser.runtime.getBrowserInfo === "function") {
   const TRACKING_ID = "UA-35433268-80";
 
-  const analytics = new TestPilotGA({
-    tid: TRACKING_ID,
-    ds: "addon",
-    an: "Voice Fill",
-    aid: "voicefill@mozilla.com",
-    av: "1.4.3",
-  });
+  // const analytics = new TestPilotGA({
+  //   tid: TRACKING_ID,
+  //   ds: "addon",
+  //   an: "Voice Fill",
+  //   aid: "voicefill@mozilla.com",
+  //   av: "1.4.3",
+  // });
 
   browser.runtime.onMessage.addListener((event) => {
     console.log("[metrics] Event successfully sent. Calling analytics.");
