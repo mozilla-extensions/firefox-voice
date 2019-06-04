@@ -7,10 +7,20 @@
 //  var hostname = "mqtt://localhost:1883";
 //  var client  = mqtt.connect(hostname);
 
-(function() {
+(async function() {
   console.log("Speak To Me starting up...");
 
   var port = browser.runtime.connect({name:"cs-port"});
+
+  port.onMessage.addListener(function(m) {
+    console.log("In content script, received message from background script: ");
+    console.log(m.type);
+    if (m.type == "noAudibleTabs") {
+
+    } else if (m.type == "muting") {
+      onMute();
+    }
+  });
 
   // client.on('connect', function () {
   //     console.log("[Snips Log] Connected to MQTT broker " + hostname);
@@ -23,9 +33,9 @@
   //     }
   // });
 
-  // function onIntentDetected(intent) {
-  //     console.log("[Snips Log] Intent detected: " + JSON.stringify(intent));
-  // }
+  function onIntentDetected(intent) {
+      console.log("[Snips Log] Intent detected: " + JSON.stringify(intent));
+  }
 
   const LOCAL_TEST = false;
 
@@ -792,15 +802,33 @@
         }
 
         // complex parsing logic goes somewhere around here
-        if (msg.data[0].text.toLowerCase().includes("mute")) {
+        const downcasedQuery = msg.data[0].text.toLowerCase();
+
+        if (downcasedQuery.includes("unmute")) {
+          port.postMessage({
+            action: "unmute"
+          });          
+        } else if (downcasedQuery.includes("mute")) {
           port.postMessage({
             action: "mute"
           });
-        } else {
+        } else if (downcasedQuery.includes("find")) {
           port.postMessage({
             action: "find",
             content: msg.data
           });
+        } else if (downcasedQuery.includes("play")) {
+          port.postMessage({
+            action: "play"
+          })
+        }  else if (downcasedQuery.includes("pause")) {
+          port.postMessage({
+            action: "pause"
+          })
+        } else {
+          port.postMessage({
+            action: "search"
+          })
         }
 
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
@@ -1015,4 +1043,20 @@
     }, 1500);
     console.log("ERROR: ", errorMsg);
   };
+
+  // Handler for successful mute action
+  const onMute = (event) => {
+    // change icon to a "sound off" icon
+    // update transcript text to reflect what was said
+    // set timeout to auto-close the speech tab after 1 second
+
+  };
+
+    // Handler for unsuccesful mute action (because there were no audio tabs playing)
+    const onMuteFailure = (event) => {
+      // change icon to a "sound off" icon
+      // update transcript text to reflect what was said
+      // set timeout to auto-close the speech tab after 1 second
+
+    };
 })();

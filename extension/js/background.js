@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+let extensionTabId;
+
 if (typeof browser.runtime.getBrowserInfo === "function") {
   const TRACKING_ID = "UA-35433268-80";
 
@@ -34,7 +36,7 @@ browser.browserAction.onClicked.addListener(function() {
       const url = result.searchProvider || "https://www.google.com";
       // console.log("here i am!");
       // return browser.tabs.create({url: '/views/voice_landing.html'});
-      return browser.tabs.create({url})
+      return browser.tabs.create({url});
       // return browser.tabs.create({url:'http://juliacambre.com'});
     })
     .then((tab) => {
@@ -50,6 +52,8 @@ browser.browserAction.onClicked.addListener(function() {
             // console.error(`Not connected yet. Retrying ${error}`);
           });
       }, 100);
+      extensionTabId = tab.id;
+      console.log(extensionTabId);
     })
     .catch((error) => {
       console.log(`Error: ${error}`);

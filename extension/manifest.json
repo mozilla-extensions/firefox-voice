@@ -249,7 +249,8 @@
       // "js/vendor/browser-polyfill.min.js",
       // "js/vendor/testpilot-ga.js",
       "js/background.js",
-      "js/browserService.js"
+      "js/browserService.js",
+      "js/vendor/fuse.min.js"
     ]
   },
   "options_ui": {
