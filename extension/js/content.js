@@ -808,6 +808,11 @@
           port.postMessage({
             action: "unmute"
           });          
+        } if (/open|go to|navigate/.test(downcasedQuery)) {
+          port.postMessage({
+            action: "navigate",
+            content: msg.data
+          });          
         } else if (downcasedQuery.includes("mute")) {
           port.postMessage({
             action: "mute"
@@ -821,7 +826,7 @@
           port.postMessage({
             action: "play"
           })
-        }  else if (downcasedQuery.includes("pause")) {
+        } else if (downcasedQuery.includes("pause")) {
           port.postMessage({
             action: "pause"
           })

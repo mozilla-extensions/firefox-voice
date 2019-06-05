@@ -17,11 +17,21 @@ const connected = (p) => {
             play();
         } else if (data.action === "pause") {
             pause();
+        } else if (data.action === "navigate") {
+            navigate(data.content);
         }
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
+
+const navigate = (query) => {
+    // extract out navigation slot from full query
+    query = query[0].text; // fix
+    const term = query.replace(/open |go to |navigate (?:to )?/gi, "");
+    const searchURL = constructFeelingLuckyQuery(term);
+    navigateToTopSearchResultAfterTimeout(searchURL);
+}
 
 const find = (query) => {
     query = query[0].text; // fix
@@ -86,10 +96,8 @@ const find = (query) => {
             return combinedTabContent.flat();
         }, error => {
             console.error(error);
-            console.log("whyyy");
         })
         .then((tabContent) => {
-            console.log("ilskdjf am here");
             console.log(combinedTabContent);
             console.log(options);
             // use Fuse.js to parse the most probable response?
@@ -234,4 +242,20 @@ const dismissExtensionTab = () => {
     let dismissMuteTab = setTimeout(function() {
         browser.tabs.remove(extensionTabId);
     }, 2000);
+}
+
+// Returns an href for an "I'm feeling lucky" type search
+const constructFeelingLuckyQuery = (query) => {
+    let searchURL = new URL('https://www.google.com/search');
+    searchURL.searchParams.set( 'q', query );
+    searchURL.searchParams.set( 'btnI', '' );
+    return searchURL.href;
+}
+
+const navigateToTopSearchResultAfterTimeout = (searchURL) => {
+    let dismissMuteTab = setTimeout(function() {
+        browser.tabs.update({
+            url: searchURL
+        });
+    }, 1000);
 }
