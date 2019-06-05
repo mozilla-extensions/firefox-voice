@@ -378,6 +378,29 @@
   box-shadow: 0 0 0 2px #00a8b7;
 }
 
+.centerFlex {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  margin-top: 100px;
+}
+
+.textContent {
+  text-align: center;
+  display: inline;
+  font-family: 'Zilla Slab';
+}
+
+.textContent > h1 {
+  font-weight: 700;
+}
+
+.textContent > h2, h3, h4, h5 {
+  font-family: 'Open Sans';
+  font-weight: 200;
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0.4;

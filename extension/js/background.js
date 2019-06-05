@@ -35,8 +35,8 @@ browser.browserAction.onClicked.addListener(function() {
     .then((result) => {
       const url = result.searchProvider || "https://www.google.com";
       // console.log("here i am!");
-      // return browser.tabs.create({url: '/views/voice_landing.html'});
-      return browser.tabs.create({url});
+      return browser.tabs.create({url: '/views/voice_landing.html'});
+      // return browser.tabs.create({url});
       // return browser.tabs.create({url:'http://juliacambre.com'});
     })
     .then((tab) => {
