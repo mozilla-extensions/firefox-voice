@@ -19,18 +19,27 @@ const connected = (p) => {
             pause();
         } else if (data.action === "navigate") {
             navigate(data.content);
+        } else if (data.action === "search") {
+            search(data.content);
         }
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
 
+const search = (query) => {
+    query = query[0].text; // fix
+    const term = query.replace(/search (?:for )?|google (?:for )|look up /gi, "");
+    const searchURL = constructGoogleQuery(term);
+    navigateToURLAfterTimeout(searchURL);
+}
+
 const navigate = (query) => {
     // extract out navigation slot from full query
     query = query[0].text; // fix
     const term = query.replace(/open |go to |navigate (?:to )?/gi, "");
-    const searchURL = constructFeelingLuckyQuery(term);
-    navigateToTopSearchResultAfterTimeout(searchURL);
+    const searchURL = constructGoogleQuery(term, true);
+    navigateToURLAfterTimeout(searchURL);
 }
 
 const find = (query) => {
@@ -244,15 +253,14 @@ const dismissExtensionTab = () => {
     }, 2000);
 }
 
-// Returns an href for an "I'm feeling lucky" type search
-const constructFeelingLuckyQuery = (query) => {
+const constructGoogleQuery = (query, feelingLucky = false) => {
     let searchURL = new URL('https://www.google.com/search');
     searchURL.searchParams.set( 'q', query );
-    searchURL.searchParams.set( 'btnI', '' );
+    if (feelingLucky) searchURL.searchParams.set( 'btnI', '' );
     return searchURL.href;
 }
 
-const navigateToTopSearchResultAfterTimeout = (searchURL) => {
+const navigateToURLAfterTimeout = (searchURL) => {
     let dismissMuteTab = setTimeout(function() {
         browser.tabs.update({
             url: searchURL
