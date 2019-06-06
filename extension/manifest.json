@@ -233,8 +233,8 @@
         "http://juliacambre.com/*"
       ],
       "js": [
-        // "js/vendor/browser-polyfill.min.js",
-        // "js/vendor/bodymovin.min.js",
+        "js/vendor/browser-polyfill.min.js",
+        "js/vendor/bodymovin.min.js",
         "js/vendor/stm_web.min.js",
         // "js/metrics.js",
         "js/content.js"
@@ -246,7 +246,7 @@
   ],
   "background": {
     "scripts": [
-      // "js/vendor/browser-polyfill.min.js",
+      "js/vendor/browser-polyfill.min.js",
       // "js/vendor/testpilot-ga.js",
       "js/background.js",
       "js/browserService.js",

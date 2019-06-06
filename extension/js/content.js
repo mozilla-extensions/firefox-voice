@@ -1071,20 +1071,4 @@
     }, 1500);
     console.log("ERROR: ", errorMsg);
   };
-
-  // Handler for successful mute action
-  const onMute = (event) => {
-    // change icon to a "sound off" icon
-    // update transcript text to reflect what was said
-    // set timeout to auto-close the speech tab after 1 second
-
-  };
-
-    // Handler for unsuccesful mute action (because there were no audio tabs playing)
-    const onMuteFailure = (event) => {
-      // change icon to a "sound off" icon
-      // update transcript text to reflect what was said
-      // set timeout to auto-close the speech tab after 1 second
-
-    };
 })();
