@@ -200,6 +200,21 @@
   top: -15px;
 }
 
+#transcription {
+  color: #0c0c0d;
+  display: block;
+  font-size: 22px;
+  height: 24px;
+  position: relative;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  top: -15px;
+}
+
+#transcription.hidden {
+  display: none;
+}
+
 #stm-intro-text {
   color: #0c0c0d;
 }

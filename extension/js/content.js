@@ -73,6 +73,8 @@
     <div id="stm-animation-wrapper">
       <div id="stm-box"></div>
     </div>
+    <div id="transcription" class="hidden">
+    </div>
     <div id="stm-content">
       <div id="stm-startup-text">Warming up...</div>
     </div>`;
@@ -802,15 +804,26 @@
         }
 
         // complex parsing logic goes somewhere around here
-        const downcasedQuery = msg.data[0].text.toLowerCase();
+        const query = msg.data[0].text;
+        const downcasedQuery = query.toLowerCase();
 
         if (downcasedQuery.includes("unmute")) {
           port.postMessage({
             action: "unmute"
           });          
-        } if (/open|go to|navigate/.test(downcasedQuery)) {
+        } else if (/open|go to|navigate/.test(downcasedQuery)) {
           port.postMessage({
             action: "navigate",
+            content: msg.data
+          });          
+        } else if (/\btimer\b/i.test(downcasedQuery)) {
+          port.postMessage({
+            action: "search",
+            content: msg.data
+          });          
+        } else if (/\bweather\b/i.test(downcasedQuery)) {
+          port.postMessage({
+            action: "search",
             content: msg.data
           });          
         } else if (downcasedQuery.includes("mute")) {
@@ -832,16 +845,23 @@
           })
         } else {
           port.postMessage({
-            action: "search"
+            action: "search",
+            content: msg.data
           })
         }
 
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
         const container = document.getElementById("stm-box");
         container.classList.add("stm-done-animation");
+        
+        // Show transcription result
+        const transcription = document.getElementById("transcription");
+        transcription.innerText(query);
+        transcription.classList.remove("hidden");
+
         setTimeout(() => {
           displayOptions(msg.data);
-        }, 500);
+        }, 6000);
         break;
       }
     }

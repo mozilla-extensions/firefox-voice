@@ -281,5 +281,13 @@
     "browser_style": true,
     "default_title": "Voice Fill",
     "default_icon": "assets/images/mic.svg"
+  },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "MacCtrl+V"
+      },
+      "description": "Opens Voice Fill by sending a 'listen' event"
+    }
   }
 }
