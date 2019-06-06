@@ -807,61 +807,64 @@
         const query = msg.data[0].text;
         const downcasedQuery = query.toLowerCase();
 
-        if (downcasedQuery.includes("unmute")) {
-          port.postMessage({
-            action: "unmute"
-          });          
-        } else if (/open|go to|navigate/.test(downcasedQuery)) {
-          port.postMessage({
-            action: "navigate",
-            content: msg.data
-          });          
-        } else if (/\btimer\b/i.test(downcasedQuery)) {
-          port.postMessage({
-            action: "search",
-            content: msg.data
-          });          
-        } else if (/\bweather\b/i.test(downcasedQuery)) {
-          port.postMessage({
-            action: "search",
-            content: msg.data
-          });          
-        } else if (downcasedQuery.includes("mute")) {
-          port.postMessage({
-            action: "mute"
-          });
-        } else if (downcasedQuery.includes("find")) {
-          port.postMessage({
-            action: "find",
-            content: msg.data
-          });
-        } else if (downcasedQuery.includes("play")) {
-          port.postMessage({
-            action: "play"
-          })
-        } else if (downcasedQuery.includes("pause")) {
-          port.postMessage({
-            action: "pause"
-          })
-        } else {
-          port.postMessage({
-            action: "search",
-            content: msg.data
-          })
-        }
+        // Show transcription result
+        const transcription = document.getElementById("transcription");
+        console.debug("transcription class list is " + transcription.classList.toString());
+        transcription.innerHTML = `<div id="transcription-text">${query}</div>`;
+        transcription.classList.remove("hidden");
+
+        setTimeout(() => {
+          if (downcasedQuery.includes("unmute")) {
+            port.postMessage({
+              action: "unmute"
+            });          
+          } else if (/open|go to|navigate/.test(downcasedQuery)) {
+            port.postMessage({
+              action: "navigate",
+              content: msg.data
+            });          
+          } else if (/\btimer\b/i.test(downcasedQuery)) {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            });          
+          } else if (/\bweather\b/i.test(downcasedQuery)) {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            });          
+          } else if (downcasedQuery.includes("mute")) {
+            port.postMessage({
+              action: "mute"
+            });
+          } else if (downcasedQuery.includes("find")) {
+            port.postMessage({
+              action: "find",
+              content: msg.data
+            });
+          } else if (downcasedQuery.includes("play")) {
+            port.postMessage({
+              action: "play"
+            })
+          } else if (downcasedQuery.includes("pause")) {
+            port.postMessage({
+              action: "pause"
+            })
+          } else {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            })
+          }
+        }, 1000);
 
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
         const container = document.getElementById("stm-box");
         container.classList.add("stm-done-animation");
-        
-        // Show transcription result
-        const transcription = document.getElementById("transcription");
-        transcription.innerText(query);
-        transcription.classList.remove("hidden");
 
         setTimeout(() => {
           displayOptions(msg.data);
-        }, 6000);
+        }, 500);
         break;
       }
     }
