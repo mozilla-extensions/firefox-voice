@@ -178,14 +178,29 @@ const unmute = () => {
     dismissExtensionTab();
 }
 
+// Plays the first(?) video or audio element on the current tab. Video given higher precedence than audio
 const play = () => {
     const playingContent = findPlayingContent();
-    // loop through each(?) item and play it
+    // find the first media item and play it
+    if (playingContent.video.length) {
+        let firstVideo = playingContent.video.first;
+        firstVideo.play();
+    } else if (playingContent.audio.length) {
+        let firstAudio = playingContent.audio.first;
+        firstAudio.play();
+    } else {
+        console.log("no media elements on the tab to play!");
+    }
 }
 
 const pause = () => {
     const playingContent = findPlayingContent();
+    // flatten audio and video content
+    const combinedPlayingContent = playingContent.video.concat(playingContent.audio);
     // loop through each item and pause it
+    for (let playingItem of combinedPlayingContent) {
+        playingItem.pause();
+    }
 }
 
 const findPlayingContent = () => {
@@ -194,38 +209,44 @@ const findPlayingContent = () => {
     let videos = [];
     let audios = [];
 
-    var gettingAllTabs = browser.tabs.query({});
+    console.debug(`HERE I AM ${triggeringTabId} ...!`);
+
+    var getCurrentTab = browser.tabs.get(triggeringTabId);
  
-    gettingAllTabs.then((tabs) => {
-        for (let tab of tabs) {
-            // get video content for the current tab
-            browser.tabs.executeScript(tab.id, {
-                code: getVideo
-            })
-            .then((response) => {
-                console.log("videos for tab " + tab.id);
-                console.log(response);
-                if (response[0]) {
-                    videos.push(tab.id);
-                }
-            });
-            
-            // get audio content for the current tab
-            browser.tabs.executeScript(tab.id, {
-                code: getAudio
-            })
-            .then((response) => {
-                console.log("audios for tab " + tab.id);
-                if (response[0]) {
-                    audios.push(tab.id);
-                }
-            });
-        }
+    getCurrentTab.then((tab) => {
+        // get video content for the current tab
+        browser.tabs.executeScript(tab.id, {
+            code: getVideo
+        })
+        .then((response) => {
+            console.log("videos for tab " + tab.id);
+            console.log(response);
+            if (response[0]) {
+                videos.push(tab.id);
+            }
+        });
+        
+        // get audio content for the current tab
+        browser.tabs.executeScript(tab.id, {
+            code: getAudio
+        })
+        .then((response) => {
+            console.log("audios for tab " + tab.id);
+            if (response[0]) {
+                audios.push(tab.id);
+            }
+        });
     })
     .then((response) => {
         console.log("here are the audio and video elems on the page");
         console.log(videos);
         console.log(audios);
+
+        const mediaElems = {
+            audio: audios,
+            video: videos
+        }
+        return mediaElems;
     });
 }
 

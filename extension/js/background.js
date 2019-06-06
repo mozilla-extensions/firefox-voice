@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 let extensionTabId;
+let triggeringTabId;
 
 if (typeof browser.runtime.getBrowserInfo === "function") {
   const TRACKING_ID = "UA-35433268-80";
@@ -18,25 +19,29 @@ if (typeof browser.runtime.getBrowserInfo === "function") {
   browser.runtime.onMessage.addListener((event) => {
     console.log("[metrics] Event successfully sent. Calling analytics.");
 
-    analytics
-      .sendEvent("voice fill", event.type, event.content)
-      .then((response) => {
-        console.log("[metrics] Event successfully sent", response);
-      })
-      .catch((response, err) => {
-        console.error("[metrics] Event failed while sending", response, err);
-      });
+    // analytics
+    //   .sendEvent("voice fill", event.type, event.content)
+    //   .then((response) => {
+    //     console.log("[metrics] Event successfully sent", response);
+    //   })
+    //   .catch((response, err) => {
+    //     console.error("[metrics] Event failed while sending", response, err);
+    //   });
   });
 }
 
-browser.browserAction.onClicked.addListener(function() {
+browser.browserAction.onClicked.addListener((tab) => {
+  // set triggeringTabId
+  triggeringTabId = tab.id;
+  console.debug(`the tab that the user was on when triggering this action has ID ${triggeringTabId}`);
+
   browser.storage.sync
     .get("searchProvider")
     .then((result) => {
       const url = result.searchProvider || "https://www.google.com";
       // console.log("here i am!");
-      return browser.tabs.create({url: '/views/voice_landing.html'});
-      // return browser.tabs.create({url});
+      // return browser.tabs.create({url: '/views/voice_landing.html'});
+      return browser.tabs.create({url});
       // return browser.tabs.create({url:'http://juliacambre.com'});
     })
     .then((tab) => {

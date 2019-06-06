@@ -6,8 +6,7 @@
 
 //  var hostname = "mqtt://localhost:1883";
 //  var client  = mqtt.connect(hostname);
-
-(async function() {
+(function() {
   console.log("Speak To Me starting up...");
 
   var port = browser.runtime.connect({name:"cs-port"});
@@ -73,7 +72,10 @@
     <div id="stm-animation-wrapper">
       <div id="stm-box"></div>
     </div>
-    <div id="transcription" class="hidden">
+    <div id="transcription">
+      <div id="transcription-content" class="hidden">
+        <div id="transcription-text"></div>
+      </div>
     </div>
     <div id="stm-content">
       <div id="stm-startup-text">Warming up...</div>
@@ -808,10 +810,10 @@
         const downcasedQuery = query.toLowerCase();
 
         // Show transcription result
-        const transcription = document.getElementById("transcription");
-        console.debug("transcription class list is " + transcription.classList.toString());
-        transcription.innerHTML = `<div id="transcription-text">${query}</div>`;
+        const transcription = document.getElementById("transcription-content");
         transcription.classList.remove("hidden");
+        const transcriptionText = document.getElementById("transcription-text");
+        transcriptionText.innerHTML = query;
 
         setTimeout(() => {
           if (downcasedQuery.includes("unmute")) {

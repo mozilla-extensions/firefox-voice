@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+@import url('https://fonts.googleapis.com/css?family=Oswald:700');
+
 #stm-popup {
   align-items: stretch;
   animation-fill-mode: forwards;
@@ -13,7 +15,7 @@
   display: none;
   flex-direction: column;
   font: message-box;
-  height: 310px;
+  height: 360px;
   justify-content: center;
   left: 0;
   opacity: 0;
@@ -197,7 +199,7 @@
   position: relative;
   font-weight: 300;
   letter-spacing: 0.5px;
-  top: -15px;
+  /* top: -15px; */
 }
 
 #transcription {
@@ -208,11 +210,34 @@
   position: relative;
   font-weight: 300;
   letter-spacing: 0.5px;
-  top: -15px;
+  margin-bottom: 15px;
 }
 
-#transcription.hidden {
+#transcription-content {
+  line-height: 22px;
+}
+
+#transcription-content.hidden {
   display: none;
+}
+
+#transcription-text::before {
+  content: open-quote;
+  margin-right: 10px;
+}
+
+#transcription-text::after {
+  content: close-quote;
+  margin-left: 10px;
+}
+
+#transcription-text::before, #transcription-text::after {
+  font-family: "Oswald";
+  font-size: 70px;
+  vertical-align: bottom;
+  position: relative;
+  top: 5px;
+  color: #15da0263;
 }
 
 #stm-intro-text {
@@ -401,19 +426,15 @@
   margin-top: 100px;
 }
 
-.textContent {
+.suggestionText {
   text-align: center;
   display: inline;
   font-family: 'Zilla Slab';
-}
-
-.textContent > h1 {
-  font-weight: 700;
-}
-
-.textContent > h2, h3, h4, h5 {
-  font-family: 'Open Sans';
   font-weight: 200;
+}
+
+.suggestionText > h1 {
+  font-weight: 700;
 }
 
 @keyframes fade-in {

@@ -98,4 +98,4 @@ function restoreOptions() {
   providerSelect.addEventListener("change", saveOptions);
 }
 
-// document.addEventListener("DOMContentLoaded", restoreOptions);
+document.addEventListener("DOMContentLoaded", restoreOptions);
