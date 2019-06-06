@@ -745,7 +745,7 @@
         // metrics.start_recording();
 
         const copy = document.getElementById("stm-content");
-        // loadAnimation(SPINNING_ANIMATION, true);
+        loadAnimation(SPINNING_ANIMATION, true);
         copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`;
         break;
       }
@@ -756,7 +756,7 @@
 
         const copy = document.getElementById("stm-content");
         copy.innerHTML = `<div id="stm-listening-text">Processing...</div>`;
-        // loadAnimation(DONE_ANIMATION, false);
+        loadAnimation(DONE_ANIMATION, false);
         break;
       }
       case "result": {
@@ -872,7 +872,7 @@
 
   // Helper for animation startup
   const stmInit = () => {
-    // loadAnimation(START_ANIMATION, false, "stm-start-animation");
+    loadAnimation(START_ANIMATION, false, "stm-start-animation");
 
     if (listening) {
       stm.stop();
@@ -1061,7 +1061,7 @@
     } else {
       errorMsg = "Sorry, we encountered an error";
     }
-    // loadAnimation(ERROR_ANIMATION, false);
+    loadAnimation(ERROR_ANIMATION, false);
     const copy = document.getElementById("stm-content");
     copy.innerHTML = '<div id="stm-listening-text"></div>';
     const errorDiv = document.getElementById("stm-listening-text");
