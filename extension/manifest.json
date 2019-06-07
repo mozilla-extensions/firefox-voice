@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Voice Fill",
+  "name": "Voice Fox",
   "version": "1.4.3",
-  "description": "Adds voice input to popular search pages in Firefox. Learn more about Voice Fill at https://testpilot.firefox.com",
+  "description": "A fork of Voice Fill for voice controlling the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
     "url": "https://github.com/mozilla/voicefill"
@@ -13,7 +13,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "speaktome@mozilla.com"
+      "id": "voicefox@juliacambre.com"
     }
   },
   "content_scripts": [
