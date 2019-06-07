@@ -180,36 +180,54 @@ const unmute = () => {
 
 // Plays the first(?) video or audio element on the current tab. Video given higher precedence than audio
 const play = () => {
-    const playingContent = findPlayingContent();
-    // find the first media item and play it
-    if (playingContent.video.length) {
-        let firstVideo = playingContent.video.first;
-        firstVideo.play();
-    } else if (playingContent.audio.length) {
-        let firstAudio = playingContent.audio.first;
-        firstAudio.play();
-    } else {
-        console.log("no media elements on the tab to play!");
-    }
+    var getCurrentTab = browser.tabs.get(triggeringTabId);
+ 
+    getCurrentTab.then((tab) => {
+        console.log("argh here");
+        // get video content for the current tab
+        browser.tabs.executeScript(tab.id, {
+            file: "/js/playMedia.js"
+        })
+        .then((result) => {
+            console.log(result);
+        });
+    })
+    .then(() => {
+        dismissExtensionTab();
+    });
+    // const mediaContent = findMediaContent();
+    // // find the first media item and play it
+    // if (mediaContent.video.length) {
+    //     let firstVideo = mediaContent.video.first;
+    //     firstVideo.play();
+    // } else if (mediaContent.audio.length) {
+    //     let firstAudio = mediaContent.audio.first;
+    //     firstAudio.play();
+    // } else {
+    //     console.log("no media elements on the tab to play!");
+    // }
 }
 
 const pause = () => {
-    const playingContent = findPlayingContent();
-    // flatten audio and video content
-    const combinedPlayingContent = playingContent.video.concat(playingContent.audio);
-    // loop through each item and pause it
-    for (let playingItem of combinedPlayingContent) {
-        playingItem.pause();
-    }
+    var getCurrentTab = browser.tabs.get(triggeringTabId);
+ 
+    getCurrentTab.then((tab) => {
+        console.log("argh here");
+        // get video content for the current tab
+        browser.tabs.executeScript(tab.id, {
+            file: "/js/pauseMedia.js"
+        })
+        .then((result) => {
+            console.log(result);
+        });
+    });
 }
 
-const findPlayingContent = () => {
+const findMediaContent = () => {
     const getVideo = 'document.getElementsByTagName("video").length > 0';
     const getAudio = 'document.getElementsByTagName("audio").length > 0';
     let videos = [];
     let audios = [];
-
-    console.debug(`HERE I AM ${triggeringTabId} ...!`);
 
     var getCurrentTab = browser.tabs.get(triggeringTabId);
  

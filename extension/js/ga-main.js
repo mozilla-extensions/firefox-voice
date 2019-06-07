@@ -1,12 +1,13 @@
 // ga-main.js
-console.log("i am heeere");
+console.log("no waaaay");
+const path = require('path');
 const GoogleAssistant = require('google-assistant');
 const config = {
   auth: {
-    keyFilePath: '../credentials/client_secret.json',
+    keyFilePath: path.resolve(__dirname, '/credentials/client_secret.json'),
     // where you want the tokens to be saved
     // will create the directory if not already there
-    savedTokensPath: '../credentials/tokens.json',
+    savedTokensPath: path.resolve(__dirname, '/credentials/tokens.json'),
   },
   conversation: {
     lang: 'en-US', // language code for input/output (defaults to en-US)
@@ -17,9 +18,9 @@ const config = {
   },
 };
 
-const assistant = new GoogleAssistant(config.auth);
+// const assistant = new GoogleAssistant(config.auth);
 
-// starts a new conversation with the assistant
+// // starts a new conversation with the assistant
 // const startConversation = (conversation) => {
 //   // setup the conversation and send data to it
 //   // for a full example, see `examples/mic-speaker.js`

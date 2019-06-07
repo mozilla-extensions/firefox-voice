@@ -23,7 +23,6 @@
   "dependencies": {
     "bodymovin": "^4.13.0",
     "google-assistant": "^0.5.4",
-    "mqtt": "^3.0.0",
     "speaktome-api": "^0.2.1",
     "testpilot-ga": "^0.3.0",
     "webextension-polyfill": "^0.3.1"

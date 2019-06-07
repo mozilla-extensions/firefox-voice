@@ -250,7 +250,7 @@
       // "js/vendor/testpilot-ga.js",
       "js/background.js",
       "js/browserService.js",
-      "js/ga-bundle.js",
+      // "js/ga-bundle.js",
       "js/vendor/fuse.min.js"
     ]
   },
