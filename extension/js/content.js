@@ -2,8 +2,39 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//  var mqtt = require('mqtt');
+
+//  var hostname = "mqtt://localhost:1883";
+//  var client  = mqtt.connect(hostname);
 (function() {
   console.log("Speak To Me starting up...");
+
+  var port = browser.runtime.connect({name:"cs-port"});
+
+  port.onMessage.addListener(function(m) {
+    console.log("In content script, received message from background script: ");
+    console.log(m.type);
+    if (m.type == "noAudibleTabs") {
+
+    } else if (m.type == "muting") {
+      onMute();
+    }
+  });
+
+  // client.on('connect', function () {
+  //     console.log("[Snips Log] Connected to MQTT broker " + hostname);
+  //     client.subscribe('hermes/#');
+  // });
+
+  // client.on('message', function (topic, message) {
+  //     if (topic.match(/hermes\/intent\/.+/g) !== null) {
+  //         onIntentDetected(JSON.parse(message));
+  //     }
+  // });
+
+  function onIntentDetected(intent) {
+      console.log("[Snips Log] Intent detected: " + JSON.stringify(intent));
+  }
 
   const LOCAL_TEST = false;
 
@@ -41,6 +72,11 @@
     <div id="stm-animation-wrapper">
       <div id="stm-box"></div>
     </div>
+    <div id="transcription">
+      <div id="transcription-content" class="hidden">
+        <div id="transcription-text"></div>
+      </div>
+    </div>
     <div id="stm-content">
       <div id="stm-startup-text">Warming up...</div>
     </div>`;
@@ -55,7 +91,7 @@
       <input id="stm-submit-button" type="submit" title="Submit" value="">
     </form>`;
 
-  const metrics = new Metrics();
+  // const metrics = new Metrics();
   let languages = {};
   let language;
   let stm;
@@ -377,9 +413,9 @@
     }
   };
   browser.runtime.onMessage.addListener((request) => {
-    this.icon.classList.add("stm-hidden");
-    document.getElementsByClassName("stm-icon")[0].disabled = true;
-    metrics.start_session("toolbar");
+    // this.icon.classList.add("stm-hidden");
+    // document.getElementsByClassName("stm-icon")[0].disabled = true;
+    // metrics.start_session("toolbar");
     SpeakToMePopup.showAt(0, 0);
     stmInit();
     return Promise.resolve({response: "content script ack"});
@@ -433,7 +469,7 @@
         if (key === 27) {
           SpeakToMePopup.cancelFetch = true;
           e.preventDefault();
-          metrics.end_session();
+          // metrics.end_session();
           SpeakToMePopup.hide();
           stm.stop();
           SpeakToMePopup.closeClicked = true;
@@ -452,9 +488,9 @@
         this.popup.style.display = "none";
         // eslint-disable-next-line no-unsanitized/property
         this.inject.innerHTML = SUBMISSION_MARKUP;
-        this.icon.blur();
-        this.icon.classList.remove("stm-hidden");
-        this.icon.disabled = false;
+        // this.icon.blur();
+        // this.icon.classList.remove("stm-hidden");
+        // this.icon.disabled = false;
       }, 500);
     },
 
@@ -655,7 +691,7 @@
       console.log(`SpeakToMeIcon setInput: ${text}`);
       this.input.value = text;
       this.input.focus();
-      this.input.form.submit();
+      // this.input.form.submit();
     }
   }
 
@@ -699,7 +735,7 @@
           () => {
             stm.stop();
             SpeakToMePopup.closeClicked = true;
-            metrics.end_session();
+            // metrics.end_session();
             SpeakToMePopup.hide();
           }
         );
@@ -707,8 +743,8 @@
         document.getElementById("stm-levels").hidden = false;
         visualize(analyzerNode);
 
-        metrics.start_attempt();
-        metrics.start_recording();
+        // metrics.start_attempt();
+        // metrics.start_recording();
 
         const copy = document.getElementById("stm-content");
         loadAnimation(SPINNING_ANIMATION, true);
@@ -726,7 +762,7 @@
         break;
       }
       case "result": {
-        metrics.stop_recording();
+        // metrics.stop_recording();
 
         // We stopped the recording, send the content to the STT server.
         audioContext = null;
@@ -769,9 +805,65 @@
           return;
         }
 
+        // complex parsing logic goes somewhere around here
+        const query = msg.data[0].text;
+        const downcasedQuery = query.toLowerCase();
+
+        // Show transcription result
+        const transcription = document.getElementById("transcription-content");
+        transcription.classList.remove("hidden");
+        const transcriptionText = document.getElementById("transcription-text");
+        transcriptionText.innerHTML = query;
+
+        setTimeout(() => {
+          if (downcasedQuery.includes("unmute")) {
+            port.postMessage({
+              action: "unmute"
+            });          
+          } else if (/open|go to|navigate/.test(downcasedQuery)) {
+            port.postMessage({
+              action: "navigate",
+              content: msg.data
+            });          
+          } else if (/\btimer\b/i.test(downcasedQuery)) {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            });          
+          } else if (/\bweather\b/i.test(downcasedQuery)) {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            });          
+          } else if (downcasedQuery.includes("mute")) {
+            port.postMessage({
+              action: "mute"
+            });
+          } else if (downcasedQuery.includes("find")) {
+            port.postMessage({
+              action: "find",
+              content: msg.data
+            });
+          } else if (downcasedQuery.includes("play")) {
+            port.postMessage({
+              action: "play"
+            })
+          } else if (downcasedQuery.includes("pause")) {
+            port.postMessage({
+              action: "pause"
+            })
+          } else {
+            port.postMessage({
+              action: "search",
+              content: msg.data
+            })
+          }
+        }, 1000);
+
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
         const container = document.getElementById("stm-box");
         container.classList.add("stm-done-animation");
+
         setTimeout(() => {
           displayOptions(msg.data);
         }, 500);
@@ -800,7 +892,7 @@
     }
     const type = event.detail ? "button" : "keyboard";
     event.preventDefault();
-    metrics.start_session(type);
+    // metrics.start_session(type);
     event.target.classList.add("stm-hidden");
     SpeakToMePopup.showAt(event.clientX, event.clientY);
     stmInit();
@@ -930,37 +1022,37 @@
       return b.confidence - a.confidence;
     });
     if (validateResults(data)) {
-      metrics.end_attempt(data[0].confidence, "default accepted", 0);
-      metrics.end_session();
-      stmIcon.setInput(data[0].text);
+      // metrics.end_attempt(data[0].confidence, "default accepted", 0);
+      // metrics.end_session();
+      // stmIcon.setInput(data[0].text);
       SpeakToMePopup.hide();
       return;
     }
 
-    metrics.set_options_displayed();
+    // metrics.set_options_displayed();
     SpeakToMePopup.chooseItem(data).then(
       (input) => {
-        metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
-        metrics.end_session();
+        // metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
+        // metrics.end_session();
         stmIcon.setInput(input.value);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
       },
       (id) => {
         if (id === "stm-reset-button") {
-          metrics.end_attempt(-1, "reset", -1);
+          // metrics.end_attempt(-1, "reset", -1);
           SpeakToMePopup.reset();
           stmInit();
         } else {
-          metrics.end_attempt(-1, "rejected", -1);
-          metrics.end_session();
+          // metrics.end_attempt(-1, "rejected", -1);
+          // metrics.end_session();
           SpeakToMePopup.hide();
         }
       }
     );
   };
 
-  const stmIcon = new SpeakToMeIcon();
+  // const stmIcon = new SpeakToMeIcon();
   SpeakToMePopup.init();
 
   const failGracefully = (errorMsg) => {
