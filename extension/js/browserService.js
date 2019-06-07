@@ -21,6 +21,8 @@ const connected = (p) => {
             navigate(data.content);
         } else if (data.action === "search") {
             search(data.content);
+        } else if (data.action === "amazonSearch") {
+            amazonSearch(data.content);
         }
     });
 }
@@ -31,6 +33,11 @@ const search = (query) => {
     query = query[0].text; // fix
     const term = query.replace(/search (?:for )?|google (?:for )|look up /gi, "");
     const searchURL = constructGoogleQuery(term);
+    navigateToURLAfterTimeout(searchURL);
+}
+
+const amazonSearch = (query) => {
+    const searchURL = constructAmazonQuery(query);
     navigateToURLAfterTimeout(searchURL);
 }
 
@@ -296,6 +303,12 @@ const constructGoogleQuery = (query, feelingLucky = false) => {
     let searchURL = new URL('https://www.google.com/search');
     searchURL.searchParams.set( 'q', query );
     if (feelingLucky) searchURL.searchParams.set( 'btnI', '' );
+    return searchURL.href;
+}
+
+const constructAmazonQuery = (query) => {
+    let searchURL = new URL('https://www.amazon.com/s');
+    searchURL.searchParams.set( 'k', query );
     return searchURL.href;
 }
 

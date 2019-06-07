@@ -852,6 +852,12 @@
             port.postMessage({
               action: "pause"
             })
+          } else if (/search (?:for )?(?:a |an )?(.*) on amazon/i.test(downcasedQuery)) {
+            const amazonQuery = downcasedQuery.match(/search (?:for )?(?:a |an )?(.*) on amazon/i);
+            port.postMessage({
+              action: "amazonSearch",
+              content: amazonQuery[1]
+            })
           } else {
             port.postMessage({
               action: "search",
