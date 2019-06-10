@@ -1,5 +1,6 @@
 // browserService.js delegates the various browser-level actions that the extension needs to handle, like finding content within tabs, muting, etc.
 var port;
+// var googleAssistantPort = browser.runtime.connectNative("google_assistant_foxvoice");
 
 const connected = (p) => {
     port = p;
@@ -23,11 +24,45 @@ const connected = (p) => {
             search(data.content);
         } else if (data.action === "amazonSearch") {
             amazonSearch(data.content);
+        } else if (data.action === "googleAssistant") {
+            googleAssistant(data.content);
         }
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
+
+const googleAssistant = (query) => {
+    console.log(`Sending query to Google Assistant service:  ${query}`);
+    var sending = browser.runtime.sendNativeMessage(
+      "google_assistant_foxvoice",
+      query
+    );
+    
+    // Send a message back to the content script to add a fancy little animation
+    port.postMessage({
+        type: "googleAssistant",
+        event: "PROCESSING",
+    });
+
+    sending.then(results => {
+        console.log(`Assistant response!!!`);
+        console.log(results);
+
+        port.postMessage({
+            type: "googleAssistant",
+            event: "GOOGLE_RESPONSE",
+            content: results,
+        });
+        // var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // audioCtx.decodeAudioData(results).then(function(decodedData) {
+        //     // use the decoded data here
+        // });
+    }, error => {
+        console.error(error);
+    });
+}
 
 const search = (query) => {
     query = query[0].text; // fix

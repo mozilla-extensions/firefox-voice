@@ -240,7 +240,8 @@
         "js/content.js"
       ],
       "css": [
-        "css/main.css"
+        "css/main.css",
+        "css/animate.min.css"
       ]
     }
   ],
@@ -270,13 +271,15 @@
     "assets/images/icon-done.svg",
     "assets/images/icon-done-rtl.svg",
     "assets/images/ff-logo.png",
-    "assets/images/feedback.svg"
+    "assets/images/feedback.svg",
+    "assets/images/Google_Assistant_logo.svg"
   ],
   "permissions": [
     "<all_urls>",
     "storage",
     "find",
-    "tabs"
+    "tabs",
+    "nativeMessaging"
   ],
   "browser_action": {
     "browser_style": true,
