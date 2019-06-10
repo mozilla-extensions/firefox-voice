@@ -26,6 +26,8 @@ const connected = (p) => {
             amazonSearch(data.content);
         } else if (data.action === "googleAssistant") {
             googleAssistant(data.content);
+        } else if (data.action === "alexa") {
+            alexa(data.content);
         }
     });
 }
@@ -59,6 +61,34 @@ const googleAssistant = (query) => {
         // audioCtx.decodeAudioData(results).then(function(decodedData) {
         //     // use the decoded data here
         // });
+    }, error => {
+        console.error(error);
+    });
+}
+
+const alexa = (query) => {
+    console.log(`Sending query to Alexa service:  ${query}`);
+    var sending = browser.runtime.sendNativeMessage(
+      "alexa_foxvoice",
+      query
+    );
+    
+    // Send a message back to the content script to add a fancy little animation
+    port.postMessage({
+        type: "alexa",
+        event: "PROCESSING",
+    });
+
+    sending.then(results => {
+        console.log(`Assistant response!!!`);
+        console.log(results);
+
+        port.postMessage({
+            type: "alexa",
+            event: "ALEXA_RESPONSE",
+            content: results,
+        });
+
     }, error => {
         console.error(error);
     });

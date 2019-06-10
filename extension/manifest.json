@@ -272,7 +272,8 @@
     "assets/images/icon-done-rtl.svg",
     "assets/images/ff-logo.png",
     "assets/images/feedback.svg",
-    "assets/images/Google_Assistant_logo.svg"
+    "assets/images/googleAssistant_logo.svg",
+    "assets/images/alexa_logo.svg"
   ],
   "permissions": [
     "<all_urls>",

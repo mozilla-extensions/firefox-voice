@@ -22,8 +22,16 @@
       console.log("THE EVENT TYPE IS....");
       console.log(m.event);
       if (m.event == "PROCESSING") {
-        googleProcessingState();
+        externalAssistantProcessingState(m.type);
       } else if (m.event == "GOOGLE_RESPONSE") {
+        displayGoogleResults(m.content);
+      }
+    } else if (m.type == "alexa") {
+      console.log("THE EVENT TYPE IS....");
+      console.log(m.event);
+      if (m.event == "PROCESSING") {
+        externalAssistantProcessingState(m.type);
+      } else if (m.event == "ALEXA_RESPONSE") {
         displayGoogleResults(m.content);
       }
     }
@@ -875,6 +883,12 @@
               action: "googleAssistant",
               content: googleAssistantQuery[1]
             })
+          } else if (/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i.test(downcasedQuery)) {
+            const alexaQuery = downcasedQuery.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i);
+            port.postMessage({
+              action: "alexa",
+              content: alexaQuery[1]
+            })
           } else {
             port.postMessage({
               action: "search",
@@ -1097,18 +1111,18 @@
     console.log("ERROR: ", errorMsg);
   };
 
-  const googleProcessingState = () => {
+  const externalAssistantProcessingState = (assistant) => {
     // Make a div that shows a google assistant logo that pulses
     const container = document.getElementById("stm-animation-wrapper");
     container.innerHTML = '';
-    const googleAssistantLogo = document.createElement("div");
+    const assistantLogo = document.createElement("div");
     // eslint-disable-next-line no-unsanitized/property
-    googleAssistantLogo.style.backgroundImage =
-      `url("${browser.extension.getURL("/assets/images/Google_Assistant_logo.svg")}")`;
+    assistantLogo.style.backgroundImage =
+      `url("${browser.extension.getURL(`/assets/images/${assistant}_logo.svg`)}")`;
     container.style.textAlign = "center";
-    googleAssistantLogo.id = "google-assistant-logo";
-    googleAssistantLogo.classList = "gaLogo animated infinite pulse";
-    container.appendChild(googleAssistantLogo);
+    assistantLogo.id = "google-assistant-logo";
+    assistantLogo.classList = "gaLogo animated infinite pulse";
+    container.appendChild(assistantLogo);
   };
 
   const displayGoogleResults = (googleTextResponse) => {
