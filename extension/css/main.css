@@ -437,6 +437,15 @@
   font-weight: 700;
 }
 
+.gaLogo {
+  height: 100px;
+  position: relative;
+  background-size: 100px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 100px;
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0.4;

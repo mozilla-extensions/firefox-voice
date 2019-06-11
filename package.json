@@ -21,6 +21,7 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
+    "animate.css": "^3.7.2",
     "bodymovin": "^4.13.0",
     "google-assistant": "^0.5.4",
     "speaktome-api": "^0.2.1",

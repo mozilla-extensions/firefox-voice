@@ -1,49 +1,125 @@
 // browserService.js delegates the various browser-level actions that the extension needs to handle, like finding content within tabs, muting, etc.
 var port;
-
 const connected = (p) => {
     port = p;
     port.onMessage.addListener(function(data) {
         console.log("In background script, received message from content script");
         console.log(data);
 
-        if (data.action === "mute") {
-            mute();
-        } else if (data.action === "unmute") {
-            unmute();
-        } else if (data.action === "find") {
-            find(data.content);
-        } else if (data.action === "play") {
-            play();
-        } else if (data.action === "pause") {
-            pause();
-        } else if (data.action === "navigate") {
-            navigate(data.content);
-        } else if (data.action === "search") {
-            search(data.content);
+        const action = data.action;
+        const content = data.content;
+
+        switch (action) {
+            case "mute":
+                mute();
+                break;
+            case "unmute":
+                unmute();
+                break;
+            case "find":
+                find(content);
+            case "play":
+                play();
+                break;
+            case "pause":
+                pause();
+                break;
+            case "navigate":
+                navigate(content);
+                break;
+            case "search":
+                search(content);
+                break;
+            case "amazonSearch":
+                amazonSearch(content);
+                break;
+            case "googleAssistant":
+                googleAssistant(content);
+                break;
+            case "alexa":
+                alexa(content);
+                break;
+            default:
+                search(content);
+                break;
         }
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
 
+const googleAssistant = (query) => {
+    console.log(`Sending query to Google Assistant service:  ${query}`);
+    var sending = browser.runtime.sendNativeMessage(
+      "google_assistant_foxvoice",
+      query
+    );
+    
+    // Send a message back to the content script to add a fancy little animation
+    port.postMessage({
+        type: "googleAssistant",
+        event: "PROCESSING",
+    });
+
+    sending.then(results => {
+        console.log(`Assistant response!!!`);
+        console.log(results);
+
+        port.postMessage({
+            type: "googleAssistant",
+            event: "GOOGLE_RESPONSE",
+            content: results,
+        });
+
+    }, error => {
+        console.error(error);
+    });
+}
+
+const alexa = (query) => {
+    console.log(`Sending query to Alexa service:  ${query}`);
+    var sending = browser.runtime.sendNativeMessage(
+      "alexa_foxvoice",
+      query
+    );
+    
+    // Send a message back to the content script to add a fancy little animation
+    port.postMessage({
+        type: "alexa",
+        event: "PROCESSING",
+    });
+
+    sending.then(results => {
+        console.log(`Assistant response!!!`);
+        console.log(results);
+
+        port.postMessage({
+            type: "alexa",
+            event: "ALEXA_RESPONSE",
+            content: results,
+        });
+
+    }, error => {
+        console.error(error);
+    });
+}
+
 const search = (query) => {
-    query = query[0].text; // fix
-    const term = query.replace(/search (?:for )?|google (?:for )|look up /gi, "");
-    const searchURL = constructGoogleQuery(term);
+    const searchURL = constructGoogleQuery(query);
+    navigateToURLAfterTimeout(searchURL);
+}
+
+const amazonSearch = (query) => {
+    const searchURL = constructAmazonQuery(query);
     navigateToURLAfterTimeout(searchURL);
 }
 
 const navigate = (query) => {
-    // extract out navigation slot from full query
-    query = query[0].text; // fix
-    const term = query.replace(/open |go to |navigate (?:to )?/gi, "");
-    const searchURL = constructGoogleQuery(term, true);
+    const searchURL = constructGoogleQuery(query, true);
     navigateToURLAfterTimeout(searchURL);
 }
 
 const find = (query) => {
-    query = query[0].text; // fix
     console.log("the most likely query text is " + query);
 
     // Fuse options
@@ -97,9 +173,6 @@ const find = (query) => {
             tabPromises.push(browserCapture);
         }
 
-        console.log("promises");
-        console.log(tabPromises);
-
         // very unsure about whether this is the appropriate syntax
         Promise.all(tabPromises).then(results => {
             return combinedTabContent.flat();
@@ -107,12 +180,9 @@ const find = (query) => {
             console.error(error);
         })
         .then((tabContent) => {
-            console.log(combinedTabContent);
-            console.log(options);
             // use Fuse.js to parse the most probable response?
             let fuse = new Fuse(tabContent, options);
-            const term = query.replace(/find /gi, "")
-            const matches = fuse.search(term);
+            const matches = fuse.search(query);
             console.log(matches);
             // account for multiple matches
             return matches;
@@ -132,7 +202,6 @@ const find = (query) => {
 }
 
 const mute = () => {
-    console.log("i am muting!!!");
     browser.tabs.query({
         audible: true
     }).then((audibleTabs) => {
@@ -156,7 +225,6 @@ const mute = () => {
 }
 
 const unmute = () => {
-    console.log("i am UN-muting!!!");
     browser.tabs.query({
         audible: false
     }).then((mutedTabs) => {
@@ -164,8 +232,6 @@ const unmute = () => {
             // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
         } else {
             // pass a message back to indicate that the tabs are currently being un-muted
-            console.log("these are the muted tabs");
-            console.log(mutedTabs);
             // unmute each muted tab
             for (let tab of mutedTabs) {
                 browser.tabs.update(tab.id, {
@@ -195,17 +261,6 @@ const play = () => {
     .then(() => {
         dismissExtensionTab();
     });
-    // const mediaContent = findMediaContent();
-    // // find the first media item and play it
-    // if (mediaContent.video.length) {
-    //     let firstVideo = mediaContent.video.first;
-    //     firstVideo.play();
-    // } else if (mediaContent.audio.length) {
-    //     let firstAudio = mediaContent.audio.first;
-    //     firstAudio.play();
-    // } else {
-    //     console.log("no media elements on the tab to play!");
-    // }
 }
 
 const pause = () => {
@@ -296,6 +351,12 @@ const constructGoogleQuery = (query, feelingLucky = false) => {
     let searchURL = new URL('https://www.google.com/search');
     searchURL.searchParams.set( 'q', query );
     if (feelingLucky) searchURL.searchParams.set( 'btnI', '' );
+    return searchURL.href;
+}
+
+const constructAmazonQuery = (query) => {
+    let searchURL = new URL('https://www.amazon.com/s');
+    searchURL.searchParams.set( 'k', query );
     return searchURL.href;
 }
 
