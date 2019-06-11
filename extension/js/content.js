@@ -854,7 +854,7 @@
           action = "timer";
         } else {
           action = "search";
-          content = [,query]; // a hack to put this in the expected format of the next matches line
+          matches = [,query]; // a hack to put this in the expected format of the next matches line
         }
         
         matches = matches.slice(1).join(' '); // extract only the captured groups, flatten them into a single string
