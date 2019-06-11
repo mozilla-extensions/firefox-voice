@@ -840,7 +840,7 @@
         // } else 
         if (matches = query.match(/(?:(?:bring me|go|navigate) to|open)\s(.*)/i)) {
           action = "navigate";
-        } else if (matches = query.match(/(?:mute|turn off)\s(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i)) {
+        } else if (matches = query.match(/(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i)) {
           action = "mute";
         } else if (matches = query.match(/\bunmute\b/i)) {
           action = "unmute";
