@@ -8,5 +8,7 @@ as an input method in web pages.
 
 ## Usage
 
-Install the `web-ext` npm module: `npm install --global web-ext` and
-run `web-ext run` from the `extension` subdirectory.
+Install the `web-ext` npm module: `npm install --global web-ext`
+Navigate to the `extension` subdirectory
+Run `npm install`
+Run `web-ext run` from the `extension` subdirectory.
