@@ -832,11 +832,13 @@
 
         let matches;
 
-        if (matches = query.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i)) {
-          action = "alexa";
-        } else if (matches = query.match(/(?:ok|okay|o.k.|hey) google (.*)/i)) {
-          action = "googleAssistant";
-        } else if (matches = query.match(/(?:(?:bring me|go|navigate) to|open)\s(.*)/i)) {
+        // TEMPORARILY DISABLE GOOGLE ASSISTANT + ALEXA INVOCATIONS FOR USER TESTING
+        // if (matches = query.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i)) {
+        //   action = "alexa";
+        // } else if (matches = query.match(/(?:ok|okay|o.k.|hey) google (.*)/i)) {
+        //   action = "googleAssistant";
+        // } else 
+        if (matches = query.match(/(?:(?:bring me|go|navigate) to|open)\s(.*)/i)) {
           action = "navigate";
         } else if (matches = query.match(/(?:mute|turn off)\s(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i)) {
           action = "mute";
