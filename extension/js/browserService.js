@@ -105,9 +105,7 @@ const alexa = (query) => {
 }
 
 const search = (query) => {
-    query = query[0].text; // fix
-    const term = query.replace(/search (?:for )?|google (?:for )|look up /gi, "");
-    const searchURL = constructGoogleQuery(term);
+    const searchURL = constructGoogleQuery(query);
     navigateToURLAfterTimeout(searchURL);
 }
 
@@ -117,15 +115,11 @@ const amazonSearch = (query) => {
 }
 
 const navigate = (query) => {
-    // extract out navigation slot from full query
-    query = query[0].text; // fix
-    const term = query.replace(/open |go to |navigate (?:to )?/gi, "");
-    const searchURL = constructGoogleQuery(term, true);
+    const searchURL = constructGoogleQuery(query, true);
     navigateToURLAfterTimeout(searchURL);
 }
 
 const find = (query) => {
-    query = query[0].text; // fix
     console.log("the most likely query text is " + query);
 
     // Fuse options
@@ -186,12 +180,9 @@ const find = (query) => {
             console.error(error);
         })
         .then((tabContent) => {
-            console.log(combinedTabContent);
-            console.log(options);
             // use Fuse.js to parse the most probable response?
             let fuse = new Fuse(tabContent, options);
-            const term = query.replace(/find /gi, "")
-            const matches = fuse.search(term);
+            const matches = fuse.search(query);
             console.log(matches);
             // account for multiple matches
             return matches;
@@ -241,8 +232,6 @@ const unmute = () => {
             // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
         } else {
             // pass a message back to indicate that the tabs are currently being un-muted
-            console.log("these are the muted tabs");
-            console.log(mutedTabs);
             // unmute each muted tab
             for (let tab of mutedTabs) {
                 browser.tabs.update(tab.id, {
