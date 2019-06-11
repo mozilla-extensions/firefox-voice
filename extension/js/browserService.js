@@ -1,33 +1,47 @@
 // browserService.js delegates the various browser-level actions that the extension needs to handle, like finding content within tabs, muting, etc.
 var port;
-// var googleAssistantPort = browser.runtime.connectNative("google_assistant_foxvoice");
-
 const connected = (p) => {
     port = p;
     port.onMessage.addListener(function(data) {
         console.log("In background script, received message from content script");
         console.log(data);
 
-        if (data.action === "mute") {
-            mute();
-        } else if (data.action === "unmute") {
-            unmute();
-        } else if (data.action === "find") {
-            find(data.content);
-        } else if (data.action === "play") {
-            play();
-        } else if (data.action === "pause") {
-            pause();
-        } else if (data.action === "navigate") {
-            navigate(data.content);
-        } else if (data.action === "search") {
-            search(data.content);
-        } else if (data.action === "amazonSearch") {
-            amazonSearch(data.content);
-        } else if (data.action === "googleAssistant") {
-            googleAssistant(data.content);
-        } else if (data.action === "alexa") {
-            alexa(data.content);
+        const action = data.action;
+        const content = data.content;
+
+        switch (action) {
+            case "mute":
+                mute();
+                break;
+            case "unmute":
+                unmute();
+                break;
+            case "find":
+                find(content);
+            case "play":
+                play();
+                break;
+            case "pause":
+                pause();
+                break;
+            case "navigate":
+                navigate(content);
+                break;
+            case "search":
+                search(content);
+                break;
+            case "amazonSearch":
+                amazonSearch(content);
+                break;
+            case "googleAssistant":
+                googleAssistant(content);
+                break;
+            case "alexa":
+                alexa(content);
+                break;
+            default:
+                search(content);
+                break;
         }
     });
 }
@@ -56,11 +70,7 @@ const googleAssistant = (query) => {
             event: "GOOGLE_RESPONSE",
             content: results,
         });
-        // var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // audioCtx.decodeAudioData(results).then(function(decodedData) {
-        //     // use the decoded data here
-        // });
     }, error => {
         console.error(error);
     });
@@ -169,9 +179,6 @@ const find = (query) => {
             tabPromises.push(browserCapture);
         }
 
-        console.log("promises");
-        console.log(tabPromises);
-
         // very unsure about whether this is the appropriate syntax
         Promise.all(tabPromises).then(results => {
             return combinedTabContent.flat();
@@ -204,7 +211,6 @@ const find = (query) => {
 }
 
 const mute = () => {
-    console.log("i am muting!!!");
     browser.tabs.query({
         audible: true
     }).then((audibleTabs) => {
@@ -228,7 +234,6 @@ const mute = () => {
 }
 
 const unmute = () => {
-    console.log("i am UN-muting!!!");
     browser.tabs.query({
         audible: false
     }).then((mutedTabs) => {
@@ -267,17 +272,6 @@ const play = () => {
     .then(() => {
         dismissExtensionTab();
     });
-    // const mediaContent = findMediaContent();
-    // // find the first media item and play it
-    // if (mediaContent.video.length) {
-    //     let firstVideo = mediaContent.video.first;
-    //     firstVideo.play();
-    // } else if (mediaContent.audio.length) {
-    //     let firstAudio = mediaContent.audio.first;
-    //     firstAudio.play();
-    // } else {
-    //     console.log("no media elements on the tab to play!");
-    // }
 }
 
 const pause = () => {

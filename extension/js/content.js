@@ -821,9 +821,6 @@
           return;
         }
 
-        console.log("the full contents of msg are:");
-        console.log(msg);
-
         // complex parsing logic goes somewhere around here
         const query = msg.data[0].text;
         const downcasedQuery = query.toLowerCase();
@@ -834,68 +831,66 @@
         const transcriptionText = document.getElementById("transcription-text");
         transcriptionText.innerHTML = query;
 
-        setTimeout(() => {
-          if (downcasedQuery.includes("unmute")) {
-            port.postMessage({
-              action: "unmute"
-            });          
-          } else if (/open|go to|navigate/.test(downcasedQuery)) {
-            port.postMessage({
-              action: "navigate",
-              content: msg.data
-            });          
-          } else if (/\btimer\b/i.test(downcasedQuery)) {
-            port.postMessage({
-              action: "search",
-              content: msg.data
-            });          
-          // } else if (/\bweather\b/i.test(downcasedQuery)) {
-          //   port.postMessage({
-          //     action: "search",
-          //     content: msg.data
-          //   });          
-          } else if (downcasedQuery.includes("mute")) {
-            port.postMessage({
-              action: "mute"
-            });
-          } else if (downcasedQuery.includes("find")) {
-            port.postMessage({
-              action: "find",
-              content: msg.data
-            });
-          } else if (downcasedQuery.includes("play")) {
-            port.postMessage({
-              action: "play"
-            })
-          } else if (downcasedQuery.includes("pause")) {
-            port.postMessage({
-              action: "pause"
-            })
-          } else if (/search (?:for )?(?:a |an )?(.*) on amazon/i.test(downcasedQuery)) {
-            const amazonQuery = downcasedQuery.match(/search (?:for )?(?:a |an )?(.*) on amazon/i);
-            port.postMessage({
-              action: "amazonSearch",
-              content: amazonQuery[1]
-            })
-          } else if (/(?:ok|okay|o.k.|hey) google (.*)/i.test(downcasedQuery)) {
-            const googleAssistantQuery = downcasedQuery.match(/(?:ok|okay|o.k.|hey) google (.*)/i);
-            port.postMessage({
-              action: "googleAssistant",
-              content: googleAssistantQuery[1]
-            })
-          } else if (/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i.test(downcasedQuery)) {
-            const alexaQuery = downcasedQuery.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i);
-            port.postMessage({
-              action: "alexa",
-              content: alexaQuery[1]
-            })
-          } else {
-            port.postMessage({
-              action: "search",
-              content: msg.data
-            })
-          }
-        }, 1000);
+        if (downcasedQuery.includes("unmute")) {
+          port.postMessage({
+            action: "unmute"
+          });          
+        } else if (/open|go to|navigate/.test(downcasedQuery)) {
+          port.postMessage({
+            action: "navigate",
+            content: msg.data
+          });          
+        } else if (/\btimer\b/i.test(downcasedQuery)) {
+          port.postMessage({
+            action: "search",
+            content: msg.data
+          });          
+        // } else if (/\bweather\b/i.test(downcasedQuery)) {
+        //   port.postMessage({
+        //     action: "search",
+        //     content: msg.data
+        //   });          
+        } else if (downcasedQuery.includes("mute")) {
+          port.postMessage({
+            action: "mute"
+          });
+        } else if (downcasedQuery.includes("find")) {
+          port.postMessage({
+            action: "find",
+            content: msg.data
+          });
+        } else if (downcasedQuery.includes("play")) {
+          port.postMessage({
+            action: "play"
+          })
+        } else if (downcasedQuery.includes("pause")) {
+          port.postMessage({
+            action: "pause"
+          })
+        } else if (/search (?:for )?(?:a |an )?(.*) on amazon/i.test(downcasedQuery)) {
+          const amazonQuery = downcasedQuery.match(/search (?:for )?(?:a |an )?(.*) on amazon/i);
+          port.postMessage({
+            action: "amazonSearch",
+            content: amazonQuery[1]
+          })
+        } else if (/(?:ok|okay|o.k.|hey) google (.*)/i.test(downcasedQuery)) {
+          const googleAssistantQuery = downcasedQuery.match(/(?:ok|okay|o.k.|hey) google (.*)/i);
+          port.postMessage({
+            action: "googleAssistant",
+            content: googleAssistantQuery[1]
+          })
+        } else if (/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i.test(downcasedQuery)) {
+          const alexaQuery = downcasedQuery.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i);
+          port.postMessage({
+            action: "alexa",
+            content: alexaQuery[1]
+          })
+        } else {
+          port.postMessage({
+            action: "search",
+            content: msg.data
+          })
+        }
 
         console.log(`Got STT result: ${JSON.stringify(msg)}`);
         const container = document.getElementById("stm-box");
