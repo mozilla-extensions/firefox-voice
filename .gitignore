@@ -1,7 +1,6 @@
 *.swp
 *.tgz
 *~
-extension/js/vendor/*
 !extension/js/vendor/fuse.min.js
 extension/views/CHANGELOG.html
 node_modules
