@@ -852,6 +852,8 @@
           action = "weather";
         } else if (matches = query.match(/(?:(?:set |start )(?:a )?(timer .*))|(.* timer)/i)) {
           action = "timer";
+        } else if (matches = query.match(/(?:play(.*))/i)) {
+          action = "play";
         } else {
           action = "search";
           matches = [,query]; // a hack to put this in the expected format of the next matches line
@@ -1093,6 +1095,9 @@
     errorDiv.textContent = errorMsg;
     setTimeout(() => {
       SpeakToMePopup.hide();
+      port.postMessage({
+        action: "dismissCurrentTab",
+      });
     }, 1500);
     console.log("ERROR: ", errorMsg);
   };

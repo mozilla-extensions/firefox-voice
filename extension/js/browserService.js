@@ -19,7 +19,7 @@ const connected = (p) => {
             case "find":
                 find(content);
             case "play":
-                play();
+                play(content);
                 break;
             case "pause":
                 pause();
@@ -38,6 +38,9 @@ const connected = (p) => {
                 break;
             case "alexa":
                 alexa(content);
+                break;
+            case "dismissCurrentTab":
+                dismissExtensionTab(0);
                 break;
             default:
                 search(content);
@@ -245,10 +248,19 @@ const unmute = () => {
 }
 
 // Plays the first(?) video or audio element on the current tab. Video given higher precedence than audio
-const play = () => {
-    var getCurrentTab = browser.tabs.get(triggeringTabId);
- 
-    getCurrentTab.then((tab) => {
+const play = (query) => {
+    let playerTab;
+    if (query.length) {
+        // Multi-part execution task: will do magical IFL Google Search, then execute play once the page loads
+        const googleQueryURL = constructGoogleQuery(query, true);
+        playerTab = browser.tabs.update({
+            url: googleQueryURL
+        });
+    } else {
+        playerTab = browser.tabs.get(triggeringTabId);
+    }
+    
+    playerTab.then((tab) => {
         console.log("argh here");
         // get video content for the current tab
         browser.tabs.executeScript(tab.id, {
@@ -259,7 +271,7 @@ const play = () => {
         });
     })
     .then(() => {
-        dismissExtensionTab();
+        if (!query.length) dismissExtensionTab();
     });
 }
 
@@ -341,10 +353,10 @@ const getAllContent = () => {
     return tabContent;
 }
 
-const dismissExtensionTab = () => {
+const dismissExtensionTab = (timeout = 2000) => {
     let dismissMuteTab = setTimeout(function() {
         browser.tabs.remove(extensionTabId);
-    }, 2000);
+    }, timeout);
 }
 
 const constructGoogleQuery = (query, feelingLucky = false) => {
