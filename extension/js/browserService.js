@@ -42,6 +42,9 @@ const connected = (p) => {
             case "dismissCurrentTab":
                 dismissExtensionTab(0);
                 break;
+            // case "read":
+            //     read();
+            //     break;
             default:
                 search(content);
                 break;
@@ -107,6 +110,17 @@ const alexa = (query) => {
     });
 }
 
+// const read = () => {
+//     browser.tabs.toggleReaderMode(triggeringTabId).then(() => {
+//         browser.tabs.executeScript(triggeringTabId, {
+//             code: `document.getElementsByClassName("narrate-start-stop")[0].click();`
+//         });
+//         dismissExtensionTab();
+//     }, error => {
+//         console.error(error);
+//     });
+// }
+
 const search = (query) => {
     const searchURL = constructGoogleQuery(query);
     navigateToURLAfterTimeout(searchURL);
@@ -139,13 +153,10 @@ const find = (query) => {
         minMatchCharLength: 3,
         keys: [{
             name: 'title',
-            weight: 0.5
+            weight: 0.8
           }, {
             name: 'url',
-            weight: 0.3
-          }, {
-              name: 'body',
-              weight: 0.2
+            weight: 0.2
           }]
       };
 
@@ -263,12 +274,16 @@ const play = (query) => {
     playerTab.then((tab) => {
         console.log("argh here");
         // get video content for the current tab
-        browser.tabs.executeScript(tab.id, {
-            file: "/js/playMedia.js"
-        })
-        .then((result) => {
-            console.log(result);
-        });
+        let waitForLoad = setTimeout(function() {
+            console.log("now??");
+            browser.tabs.executeScript(tab.id, {
+                file: "/js/playMedia.js"
+            })
+            .then((result) => {
+                console.log(result);
+            });
+        }, 3000);
+
     })
     .then(() => {
         if (!query.length) dismissExtensionTab();
