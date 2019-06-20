@@ -2,83 +2,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-let extensionTabId;
 let triggeringTabId;
 
-if (typeof browser.runtime.getBrowserInfo === "function") {
-  const TRACKING_ID = "UA-35433268-80";
-
-  // const analytics = new TestPilotGA({
-  //   tid: TRACKING_ID,
-  //   ds: "addon",
-  //   an: "Voice Fill",
-  //   aid: "voicefill@mozilla.com",
-  //   av: "1.4.3",
-  // });
-
-  browser.runtime.onMessage.addListener((event) => {
-    console.log("[metrics] Event successfully sent. Calling analytics.");
-
-    // analytics
-    //   .sendEvent("voice fill", event.type, event.content)
-    //   .then((response) => {
-    //     console.log("[metrics] Event successfully sent", response);
-    //   })
-    //   .catch((response, err) => {
-    //     console.error("[metrics] Event failed while sending", response, err);
-    //   });
-  });
-}
-
-browser.browserAction.onClicked.addListener((tab) => {
+browser.browserAction.onClicked.addListener(async (triggeringTab) => {
   // set triggeringTabId
-  triggeringTabId = tab.id;
+  triggeringTabId = triggeringTab.id;
   console.debug(`the tab that the user was on when triggering this action has ID ${triggeringTabId}`);
 
-  browser.storage.sync
-    .get("searchProvider")
-    .then((result) => {
-      const url = result.searchProvider || "https://www.google.com";
-      // console.log("here i am!");
-      // return browser.tabs.create({url: '/views/voice_landing.html'});
-      return browser.tabs.create({url});
-      // return browser.tabs.create({url:'http://juliacambre.com'});
-    })
-    .then((tab) => {
-      const intervalConnection = setInterval(() => {
-        browser.tabs
-          .sendMessage(tab.id, {
-            msg: "background script syn",
-          })
-          .then((response) => {
-            clearInterval(intervalConnection);
-          })
-          .catch((error) => {
-            // console.error(`Not connected yet. Retrying ${error}`);
-          });
-      }, 100);
-      extensionTabId = tab.id;
-      console.log(extensionTabId);
-    })
-    .catch((error) => {
-      console.log(`Error: ${error}`);
-    });
+  const url = "https://www.google.com";
+  let tab = await browser.tabs.create({url});
+  const intervalConnection = setInterval(() => {
+    browser.tabs
+      .sendMessage(tab.id, {
+        msg: "background script syn",
+      })
+      .then((response) => {
+        clearInterval(intervalConnection);
+      })
+      .catch((error) => {
+        // console.error(`Not connected yet. Retrying ${error}`);
+      });
+  }, 100);
 });
-
-// Chrome won't accept an SVG as the toolbar icon, so we'll just draw it
-// manually.
-(function() {
-  const canvas = document.createElement("canvas");
-  canvas.height = 16;
-  canvas.width = 16;
-
-  const image = new Image(16, 16);
-  image.onload = () => {
-    const context = canvas.getContext("2d");
-    context.drawImage(image, 0, 0, 16, 16);
-    chrome.browserAction.setIcon({
-      imageData: context.getImageData(0, 0, 16, 16),
-    });
-  };
-  image.src = "/assets/images/mic.svg";
-})();
