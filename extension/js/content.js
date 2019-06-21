@@ -511,24 +511,6 @@
         
         matches = matches.slice(1).join(' '); // extract only the captured groups, flatten them into a single string
 
-        // TODO: Currently disabled / not fully functional matches
-        
-        // else if (downcasedQuery.includes("play")) {
-        //   port.postMessage({
-        //     action: "play"
-        //   })
-        // } else if (downcasedQuery.includes("pause")) {
-        //   port.postMessage({
-        //     action: "pause"
-        //   })
-        // } else if (/search (?:for )?(?:a |an )?(.*) on amazon/i.test(downcasedQuery)) {
-        //   const amazonQuery = downcasedQuery.match(/search (?:for )?(?:a |an )?(.*) on amazon/i);
-        //   port.postMessage({
-        //     action: "amazonSearch",
-        //     content: amazonQuery[1]
-        //   })
-        // }
-
         // Tell the background script which action to execute
         port.postMessage({
           action: action,
