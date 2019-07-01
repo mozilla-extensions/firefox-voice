@@ -3,56 +3,57 @@ var port;
 const connected = (p) => {
     port = p;
     port.onMessage.addListener(function(data) {
-        console.log("In background script, received message from content script");
-        console.log(data);
-
-        const action = data.action;
-        const content = data.content;
-
-        switch (action) {
-            case "mute":
-                mute();
-                break;
-            case "unmute":
-                unmute();
-                break;
-            case "find":
-                find(content);
-            case "play":
-                play(content);
-                break;
-            case "pause":
-                pause();
-                break;
-            case "navigate":
-                navigate(content);
-                break;
-            case "search":
-                search(content);
-                break;
-            case "amazonSearch":
-                amazonSearch(content);
-                break;
-            case "googleAssistant":
-                googleAssistant(content);
-                break;
-            case "alexa":
-                alexa(content);
-                break;
-            case "dismissCurrentTab":
-                dismissExtensionTab(0);
-                break;
-            // case "read":
-            //     read();
-            //     break;
-            default:
-                search(content);
-                break;
-        }
+        executeIntentForAction(data);
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
+
+const executeIntentForAction = (data) => {
+    const action = data.action;
+    const content = data.content;
+
+    switch (action) {
+        case "mute":
+            mute();
+            break;
+        case "unmute":
+            unmute();
+            break;
+        case "find":
+            find(content);
+        case "play":
+            play(content);
+            break;
+        case "pause":
+            pause();
+            break;
+        case "navigate":
+            navigate(content);
+            break;
+        case "search":
+            search(content);
+            break;
+        case "amazonSearch":
+            amazonSearch(content);
+            break;
+        case "googleAssistant":
+            googleAssistant(content);
+            break;
+        case "alexa":
+            alexa(content);
+            break;
+        case "dismissCurrentTab":
+            dismissExtensionTab(0);
+            break;
+        // case "read":
+        //     read();
+        //     break;
+        default:
+            search(content);
+            break;
+    }
+}
 
 const googleAssistant = (query) => {
     console.log(`Sending query to Google Assistant service:  ${query}`);
@@ -272,10 +273,8 @@ const play = (query) => {
     }
     
     playerTab.then((tab) => {
-        console.log("argh here");
         // get video content for the current tab
         let waitForLoad = setTimeout(function() {
-            console.log("now??");
             browser.tabs.executeScript(tab.id, {
                 file: "/js/playMedia.js"
             })
@@ -303,69 +302,6 @@ const pause = () => {
             console.log(result);
         });
     });
-}
-
-const findMediaContent = () => {
-    const getVideo = 'document.getElementsByTagName("video").length > 0';
-    const getAudio = 'document.getElementsByTagName("audio").length > 0';
-    let videos = [];
-    let audios = [];
-
-    var getCurrentTab = browser.tabs.get(triggeringTabId);
- 
-    getCurrentTab.then((tab) => {
-        // get video content for the current tab
-        browser.tabs.executeScript(tab.id, {
-            code: getVideo
-        })
-        .then((response) => {
-            console.log("videos for tab " + tab.id);
-            console.log(response);
-            if (response[0]) {
-                videos.push(tab.id);
-            }
-        });
-        
-        // get audio content for the current tab
-        browser.tabs.executeScript(tab.id, {
-            code: getAudio
-        })
-        .then((response) => {
-            console.log("audios for tab " + tab.id);
-            if (response[0]) {
-                audios.push(tab.id);
-            }
-        });
-    })
-    .then((response) => {
-        console.log("here are the audio and video elems on the page");
-        console.log(videos);
-        console.log(audios);
-
-        const mediaElems = {
-            audio: audios,
-            video: videos
-        }
-        return mediaElems;
-    });
-}
-
-// Retrieves the content of all browser tabs
-// returns an object containing the title, keywords, url and sanitized page text?
-const getAllContent = () => {
-    let tabContent = [];
-    // get all browser tabs
-    browser.tabs.query({})
-    .then((tabs) => {
-        for (let tab of tabs) {
-            tabContent.push(getTabContent(tab.id));
-        }
-        console.log(matchingTabs);
-    })
-    .catch((error) => {
-        console.log(`Error: ${error}`);
-    });
-    return tabContent;
 }
 
 const dismissExtensionTab = (timeout = 2000) => {

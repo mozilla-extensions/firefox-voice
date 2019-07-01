@@ -38,6 +38,7 @@
       "js/vendor/browser-polyfill.min.js",
       "js/background.js",
       "js/browserService.js",
+      "js/intentParser.js",
       "js/vendor/fuse.min.js"
     ]
   },
@@ -80,5 +81,8 @@
       },
       "description": "Opens Voice Fill by sending a 'listen' event"
     }
+  },
+  "omnibox": {
+    "keyword": "vf"
   }
 }

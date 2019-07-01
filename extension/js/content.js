@@ -2,10 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-//  var mqtt = require('mqtt');
-
-//  var hostname = "mqtt://localhost:1883";
-//  var client  = mqtt.connect(hostname);
 (function() {
   console.log("Speak To Me starting up...");
 
@@ -36,23 +32,6 @@
       }
     }
   });
-
-  // client.on('connect', function () {
-  //     console.log("[Snips Log] Connected to MQTT broker " + hostname);
-  //     client.subscribe('hermes/#');
-  // });
-
-  // client.on('message', function (topic, message) {
-  //     if (topic.match(/hermes\/intent\/.+/g) !== null) {
-  //         onIntentDetected(JSON.parse(message));
-  //     }
-  // });
-
-  function onIntentDetected(intent) {
-      console.log("[Snips Log] Intent detected: " + JSON.stringify(intent));
-  }
-
-  const LOCAL_TEST = false;
 
   const DONE_ANIMATION =
     browser.extension.getURL("/assets/animations/Done.json");
@@ -169,269 +148,7 @@
       .replace(/>/g, "&gt;");
   };
 
-  // eslint-disable-next-line complexity
-  const getSTMAnchors = (documentDomain) => {
-    if (documentDomain.endsWith(".search.yahoo.com")) {
-      return {
-        input: "yschsp",
-        anchor: "sbx",
-      };
-    }
-
-    switch (documentDomain) {
-      case "www.google.com":
-      case "www.google.ca":
-      case "www.google.tn":
-      case "www.google.fr":
-      case "www.google.ad":
-      case "www.google.ae":
-      case "www.google.com.af":
-      case "www.google.com.ag":
-      case "www.google.com.ai":
-      case "www.google.al":
-      case "www.google.am":
-      case "www.google.co.ao":
-      case "www.google.com.ar":
-      case "www.google.as":
-      case "www.google.at":
-      case "www.google.com.au":
-      case "www.google.az":
-      case "www.google.ba":
-      case "www.google.com.bd":
-      case "www.google.be":
-      case "www.google.bf":
-      case "www.google.bg":
-      case "www.google.com.bh":
-      case "www.google.bi":
-      case "www.google.bj":
-      case "www.google.com.bn":
-      case "www.google.com.bo":
-      case "www.google.com.br":
-      case "www.google.bs":
-      case "www.google.bt":
-      case "www.google.co.bw":
-      case "www.google.by":
-      case "www.google.com.bz":
-      case "www.google.com.kh":
-      case "www.google.cc":
-      case "www.google.cd":
-      case "www.google.cf":
-      case "www.google.cg":
-      case "www.google.ch":
-      case "www.google.ci":
-      case "www.google.co.ck":
-      case "www.google.cl":
-      case "www.google.cm":
-      case "www.google.cn":
-      case "www.google.com.co":
-      case "www.google.co.cr":
-      case "www.google.com.cu":
-      case "www.google.cv":
-      case "www.google.com.cy":
-      case "www.google.cz":
-      case "www.google.de":
-      case "www.google.dj":
-      case "www.google.dk":
-      case "www.google.dm":
-      case "www.google.com.do":
-      case "www.google.dz":
-      case "www.google.com.ec":
-      case "www.google.ee":
-      case "www.google.com.eg":
-      case "www.google.es":
-      case "www.google.com.et":
-      case "www.google.fi":
-      case "www.google.com.fj":
-      case "www.google.fm":
-      case "www.google.ga":
-      case "www.google.ge":
-      case "www.google.gf":
-      case "www.google.gg":
-      case "www.google.com.gh":
-      case "www.google.com.gi":
-      case "www.google.gl":
-      case "www.google.gm":
-      case "www.google.gp":
-      case "www.google.gr":
-      case "www.google.com.gt":
-      case "www.google.gy":
-      case "www.google.com.hk":
-      case "www.google.hn":
-      case "www.google.hr":
-      case "www.google.ht":
-      case "www.google.hu":
-      case "www.google.co.id":
-      case "www.google.iq":
-      case "www.google.ie":
-      case "www.google.co.il":
-      case "www.google.im":
-      case "www.google.co.in":
-      case "www.google.is":
-      case "www.google.it":
-      case "www.google.je":
-      case "www.google.com.jm":
-      case "www.google.jo":
-      case "www.google.co.jp":
-      case "www.google.co.ke":
-      case "www.google.ki":
-      case "www.google.kg":
-      case "www.google.co.kr":
-      case "www.google.com.kw":
-      case "www.google.kz":
-      case "www.google.la":
-      case "www.google.com.lb":
-      case "www.google.li":
-      case "www.google.lk":
-      case "www.google.co.ls":
-      case "www.google.lt":
-      case "www.google.lu":
-      case "www.google.lv":
-      case "www.google.com.ly":
-      case "www.google.co.ma":
-      case "www.google.md":
-      case "www.google.me":
-      case "www.google.mg":
-      case "www.google.mk":
-      case "www.google.ml":
-      case "www.google.com.mm":
-      case "www.google.mn":
-      case "www.google.ms":
-      case "www.google.com.mt":
-      case "www.google.mu":
-      case "www.google.mv":
-      case "www.google.mw":
-      case "www.google.com.mx":
-      case "www.google.com.my":
-      case "www.google.co.mz":
-      case "www.google.com.na":
-      case "www.google.ne":
-      case "www.google.ng":
-      case "www.google.com.ng":
-      case "www.google.com.ni":
-      case "www.google.nl":
-      case "www.google.no":
-      case "www.google.com.np":
-      case "www.google.nr":
-      case "www.google.nu":
-      case "www.google.co.nz":
-      case "www.google.com.pk":
-      case "www.google.com.pa":
-      case "www.google.com.pe":
-      case "www.google.com.ph":
-      case "www.google.pl":
-      case "www.google.com.pg":
-      case "www.google.pn":
-      case "www.google.com.pr":
-      case "www.google.ps":
-      case "www.google.pt":
-      case "www.google.com.py":
-      case "www.google.com.qa":
-      case "www.google.ro":
-      case "www.google.rs":
-      case "www.google.ru":
-      case "www.google.rw":
-      case "www.google.com.sa":
-      case "www.google.com.sb":
-      case "www.google.sc":
-      case "www.google.se":
-      case "www.google.com.sg":
-      case "www.google.sh":
-      case "www.google.si":
-      case "www.google.sk":
-      case "www.google.com.sl":
-      case "www.google.sn":
-      case "www.google.sm":
-      case "www.google.so":
-      case "www.google.st":
-      case "www.google.sr":
-      case "www.google.com.sv":
-      case "www.google.td":
-      case "www.google.tg":
-      case "www.google.co.th":
-      case "www.google.com.tj":
-      case "www.google.tk":
-      case "www.google.tl":
-      case "www.google.tm":
-      case "www.google.to":
-      case "www.google.com.tr":
-      case "www.google.tt":
-      case "www.google.com.tw":
-      case "www.google.co.tz":
-      case "www.google.com.ua":
-      case "www.google.co.ug":
-      case "www.google.com.uy":
-      case "www.google.co.uz":
-      case "www.google.com.vc":
-      case "www.google.co.ve":
-      case "www.google.vg":
-      case "www.google.co.vi":
-      case "www.google.com.vn":
-      case "www.google.vu":
-      case "www.google.ws":
-      case "www.google.co.za":
-      case "www.google.co.zm":
-      case "www.google.co.zw":
-      case "www.google.co.uk":
-      case "encrypted.google.com":
-        if (document.getElementById("sfdiv")) {
-          return {
-            input: "lst-ib",
-            anchor: "sfdiv",
-          };
-        }
-        return {
-          input: "q",
-          anchor: "RNNXgb",
-        };
-      case "duckduckgo.com":
-      case "start.duckduckgo.com":
-        if (document.body.classList.contains("body--serp")) {
-          return {
-            input: "search_form_input",
-            anchor: "search_form",
-          };
-        }
-        return {
-          input: "search_form_input_homepage",
-          anchor: "search_form_homepage",
-        };
-      case "ca.yahoo.com":
-      case "uk.yahoo.com":
-      case "us.yahoo.com":
-      case "fr.yahoo.com":
-      case "de.yahoo.com":
-      case "ie.yahoo.com":
-      case "in.yahoo.com":
-      case "it.yahoo.com":
-      case "se.yahoo.com":
-      case "www.yahoo.com":
-        return {
-          input: "uh-search-box",
-          anchor: "uh-search-form",
-        };
-      case "search.yahoo.com":
-        return {
-          input: "yschsp",
-          anchor: "sf",
-        };
-      case "www.bing.com":
-        return {
-          input: "sb_form_q",
-          anchor: "b_searchboxForm",
-        };
-      case "tw.yahoo.com":
-        return {
-          input: "UHSearchBox",
-          anchor: "UHSearch",
-        };
-      default:
-        return null;
-    }
-  };
   browser.runtime.onMessage.addListener((request) => {
-    // this.icon.classList.add("stm-hidden");
-    // document.getElementsByClassName("stm-icon")[0].disabled = true;
-    // metrics.start_session("toolbar");
     SpeakToMePopup.showAt(0, 0);
     stmInit();
     return Promise.resolve({response: "content script ack"});
@@ -668,51 +385,6 @@
     },
   };
 
-  // The icon that we anchor to the currently focused input element.
-
-  class SpeakToMeIcon {
-    constructor() {
-      console.log("SpeakToMeIcon constructor");
-      const register = getSTMAnchors(document.domain);
-      this.icon = document.createElement("button");
-      this.icon.classList.add("stm-icon");
-      this.icon.classList.add("stm-hidden");
-      this.icon.disabled = true;
-      this.icon.title = "Start listening";
-      this.icon.style.backgroundImage =
-        `url("${browser.extension.getURL("/assets/images/icon-mic.svg")}")`;
-      if (document.dir === "rtl") {
-        this.icon.classList.add("rtl");
-      }
-      this.hasAnchor = false;
-      this.input =
-        document.getElementById(register.input) ||
-        document.getElementsByName(register.input)[0];
-      this.anchor =
-        document.getElementById(register.anchor) ||
-        document.getElementsByClassName(register.anchor)[0];
-
-      if (this.input.ownerDocument !== document) {
-        return null;
-      }
-
-      document.body.appendChild(this.icon);
-      this.icon.addEventListener("click", onStmIconClick);
-      this.anchor.style.position = "relative";
-      this.anchor.style.overflow = "visible";
-      this.anchor.append(this.icon);
-      this.icon.classList.remove("stm-hidden");
-      this.icon.disabled = false;
-    }
-
-    setInput(text) {
-      console.log(`SpeakToMeIcon setInput: ${text}`);
-      this.input.value = text;
-      this.input.focus();
-      // this.input.form.submit();
-    }
-  }
-
   const listener = (msg) => {
     switch (msg.state) {
       case "ready": {
@@ -753,16 +425,12 @@
           () => {
             stm.stop();
             SpeakToMePopup.closeClicked = true;
-            // metrics.end_session();
             SpeakToMePopup.hide();
           }
         );
 
         document.getElementById("stm-levels").hidden = false;
         visualize(analyzerNode);
-
-        // metrics.start_attempt();
-        // metrics.start_recording();
 
         const copy = document.getElementById("stm-content");
         loadAnimation(SPINNING_ANIMATION, true);
@@ -798,28 +466,6 @@
 
         if (SpeakToMePopup.cancelFetch) {
           SpeakToMePopup.cancelFetch = false;
-          return;
-        }
-
-        if (LOCAL_TEST) {
-          const json = {
-            data: [
-              {
-                confidence: 0.807493,
-                text: "PLEASE ADD MILK TO MY SHOPPING LIST",
-              },
-              {
-                confidence: 0.906263,
-                text: "PLEASE AT MILK TO MY SHOPPING LIST",
-              },
-              {
-                confidence: 0.904414,
-                text: "PLEASE ET MILK TO MY SHOPPING LIST",
-              },
-            ],
-          };
-
-          displayOptions(json.data);
           return;
         }
 
@@ -865,24 +511,6 @@
         
         matches = matches.slice(1).join(' '); // extract only the captured groups, flatten them into a single string
 
-        // TODO: Currently disabled / not fully functional matches
-        
-        // else if (downcasedQuery.includes("play")) {
-        //   port.postMessage({
-        //     action: "play"
-        //   })
-        // } else if (downcasedQuery.includes("pause")) {
-        //   port.postMessage({
-        //     action: "pause"
-        //   })
-        // } else if (/search (?:for )?(?:a |an )?(.*) on amazon/i.test(downcasedQuery)) {
-        //   const amazonQuery = downcasedQuery.match(/search (?:for )?(?:a |an )?(.*) on amazon/i);
-        //   port.postMessage({
-        //     action: "amazonSearch",
-        //     content: amazonQuery[1]
-        //   })
-        // }
-
         // Tell the background script which action to execute
         port.postMessage({
           action: action,
@@ -912,19 +540,6 @@
 
     stm.listen();
     listening = true;
-  };
-
-  // Click handler for stm icon
-  const onStmIconClick = (event) => {
-    if (SpeakToMePopup.cancelFetch) {
-      SpeakToMePopup.cancelFetch = false;
-    }
-    const type = event.detail ? "button" : "keyboard";
-    event.preventDefault();
-    // metrics.start_session(type);
-    event.target.classList.add("stm-hidden");
-    SpeakToMePopup.showAt(event.clientX, event.clientY);
-    stmInit();
   };
 
   // Helper to handle background visualization
