@@ -432,6 +432,9 @@
           return;
         }
 
+        const micOpen = new Audio(browser.runtime.getURL('/assets/audio/mic_open_chime.ogg'));
+        micOpen.play();
+
         // Build the WebAudio graph we'll be using
         audioContext = new AudioContext();
         sourceNode = audioContext.createMediaStreamSource(stream);
