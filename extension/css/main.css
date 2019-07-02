@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-@import url('https://fonts.googleapis.com/css?family=Oswald:700');
+@import url('https://fonts.googleapis.com/css?family=Oswald:700|Zilla+Slab');
 
 #stm-popup {
   align-items: stretch;
@@ -444,6 +444,39 @@
   background-repeat: no-repeat;
   display: inline-block;
   width: 100px;
+}
+
+#text-input {
+  color: transparent;
+  text-shadow: 0 0 0 #000000;
+  font-family: 'Zilla Slab';
+  font-size: 20px;
+  text-align: center;
+}
+
+#text-input:focus {
+  outline: transparent;
+}
+
+#send-text-input {
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06) !important;
+  padding: .5rem 1rem;
+  border: 1px solid #cbd5e0;
+  border-radius: .25rem;
+  background: none;
+  font-weight: 700;
+}
+
+#stm-text-input-wrapper {
+  text-align: center;
+  z-index: 100;
+  margin-bottom: 20px;
+}
+
+#send-btn-wrapper {
+  display: none;
+  text-align: center;
+  margin-top: 10px;
 }
 
 @keyframes fade-in {

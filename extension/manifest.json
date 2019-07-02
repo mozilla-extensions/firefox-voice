@@ -26,7 +26,8 @@
         "js/vendor/bodymovin.min.js",
         "js/vendor/stm_web.min.js",
         // "js/metrics.js",
-        "js/content.js"
+        "js/content.js",
+        "js/intentParser.js"
       ],
       "css": [
         "css/main.css",

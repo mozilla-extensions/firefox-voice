@@ -48,6 +48,12 @@
         <div role="button" tabindex="1" id="stm-close" title="Close"></div>
       </div>
       <div id="stm-inject"></div>
+      <div id="stm-text-input-wrapper">
+        <span id="text-input" contenteditable="true"></span>
+        <div id="send-btn-wrapper">
+          <button id="send-text-input">GO</button>
+        </div>
+      </div>
       <div id="stm-footer">
         Processing as {language}.
         <br>
@@ -204,13 +210,36 @@
         if (key === 27) {
           SpeakToMePopup.cancelFetch = true;
           e.preventDefault();
-          // metrics.end_session();
           SpeakToMePopup.hide();
           stm.stop();
           SpeakToMePopup.closeClicked = true;
         }
       };
-      this.addEventListener("keypress", this.dismissPopup);
+
+      this.sendText = function(e) {
+        SpeakToMePopup.cancelFetch = true;
+          stm.stop();
+          console.log("process this text!");
+          const textContent = textInput.innerText;
+          const intentData = parseIntent(textContent);
+          console.log(intentData);
+          port.postMessage(intentData);
+      }
+
+      this.detectText = function(e) {
+        document.getElementById("send-btn-wrapper").style.display = "block";
+        if (e.keyCode == 13) {
+          this.sendText();
+        }
+      };
+      const textInput = document.getElementById("text-input");
+      textInput.focus();
+      textInput.addEventListener("keyup", this.detectText);
+
+      const sendText = document.getElementById("send-text-input");
+      sendText.addEventListener("click", () => {
+        this.sendText();
+      });
     },
 
     hide: () => {
