@@ -216,20 +216,20 @@
         }
       };
 
-      this.sendText = function(e) {
-        SpeakToMePopup.cancelFetch = true;
-          stm.stop();
-          console.log("process this text!");
-          const textContent = textInput.innerText;
-          const intentData = parseIntent(textContent);
-          console.log(intentData);
-          port.postMessage(intentData);
+      processTextQuery = function(e) {
+        // SpeakToMePopup.cancelFetch = true;
+        stm.stop();
+        console.log("process this text!");
+        const textContent = textInput.innerText;
+        const intentData = parseIntent(textContent);
+        console.log(intentData);
+        port.postMessage(intentData);
       }
 
       this.detectText = function(e) {
         document.getElementById("send-btn-wrapper").style.display = "block";
         if (e.keyCode == 13) {
-          this.sendText();
+          processTextQuery();
         }
       };
       const textInput = document.getElementById("text-input");
@@ -238,7 +238,7 @@
 
       const sendText = document.getElementById("send-text-input");
       sendText.addEventListener("click", () => {
-        this.sendText();
+        processTextQuery();
       });
     },
 
@@ -504,6 +504,9 @@
         // complex parsing logic goes somewhere around here
         const query = msg.data[0].text;
 
+        console.debug("CONFIDENCE OF TRANSCRIPTIONS");
+        console.debug(JSON.stringify(msg.data));
+
         // Show transcription result
         const transcription = document.getElementById("transcription-content");
         transcription.classList.remove("hidden");
@@ -520,7 +523,6 @@
         } else if (matches = query.match(/(?!.*tab.*)(?:(?:bring me|go|navigate) to|open|find|show me)\s(.*)/i)) {
           action = "navigate";
         } else if (matches = query.match(/\bunmute\b/i)) {
-          console.debug("HEEERE");
           action = "unmute";
         } else if (matches = query.match(/(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i)) {
           action = "mute";
@@ -553,9 +555,6 @@
         const container = document.getElementById("stm-box");
         container.classList.add("stm-done-animation");
 
-        // setTimeout(() => {
-        //   displayOptions(msg.data);
-        // }, 500);
         break;
       }
     }
