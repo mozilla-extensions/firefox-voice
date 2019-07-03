@@ -86,7 +86,6 @@
       <input id="stm-submit-button" type="submit" title="Submit" value="">
     </form>`;
 
-  // const metrics = new Metrics();
   let languages = {};
   let language;
   let stm;
@@ -190,7 +189,6 @@
 
       this.inject = document.getElementById("stm-inject");
       this.popup = document.getElementById("stm-popup");
-      this.icon = document.getElementsByClassName("stm-icon")[0];
       // eslint-disable-next-line no-unsanitized/property
       this.inject.innerHTML = SUBMISSION_MARKUP;
     },
@@ -204,7 +202,6 @@
         if (key === 27) {
           SpeakToMePopup.cancelFetch = true;
           e.preventDefault();
-          // metrics.end_session();
           SpeakToMePopup.hide();
           stm.stop();
           SpeakToMePopup.closeClicked = true;
@@ -223,9 +220,6 @@
         this.popup.style.display = "none";
         // eslint-disable-next-line no-unsanitized/property
         this.inject.innerHTML = SUBMISSION_MARKUP;
-        // this.icon.blur();
-        // this.icon.classList.remove("stm-hidden");
-        // this.icon.disabled = false;
       }, 500);
     },
 
@@ -448,8 +442,6 @@
         break;
       }
       case "result": {
-        // metrics.stop_recording();
-
         // We stopped the recording, send the content to the STT server.
         audioContext = null;
         sourceNode = null;
@@ -666,30 +658,21 @@
       return b.confidence - a.confidence;
     });
     if (validateResults(data)) {
-      // metrics.end_attempt(data[0].confidence, "default accepted", 0);
-      // metrics.end_session();
-      // stmIcon.setInput(data[0].text);
       SpeakToMePopup.hide();
       return;
     }
 
-    // metrics.set_options_displayed();
     SpeakToMePopup.chooseItem(data).then(
       (input) => {
-        // metrics.end_attempt(input.confidence, "accepted", input.idx_suggestion);
-        // metrics.end_session();
         stmIcon.setInput(input.value);
         // Once a choice is made, close the popup.
         SpeakToMePopup.hide();
       },
       (id) => {
         if (id === "stm-reset-button") {
-          // metrics.end_attempt(-1, "reset", -1);
           SpeakToMePopup.reset();
           stmInit();
         } else {
-          // metrics.end_attempt(-1, "rejected", -1);
-          // metrics.end_session();
           SpeakToMePopup.hide();
         }
       }
