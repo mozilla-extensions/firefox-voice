@@ -503,6 +503,24 @@
         
         matches = matches.slice(1).join(' '); // extract only the captured groups, flatten them into a single string
 
+        // Store latest invocation in localStorage
+        browser.storage.local.get("queryHistory").then((items) => {
+          let queryHistory = items;
+          console.log("QUERYING HISTORY");
+          console.log(JSON.stringify(queryHistory));
+          queryHistory = queryHistory.queryHistory || [];
+          queryHistory.push({
+            transcription: query,
+            action: action,
+            timestamp: Date.now()
+          });
+          // queryHistory.splice(1);
+
+          browser.storage.local.set({
+            queryHistory: queryHistory
+          });
+        });
+
         // Tell the background script which action to execute
         port.postMessage({
           action: action,

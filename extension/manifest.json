@@ -19,7 +19,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "https://jcambre.github.io/vf/*"
       ],
       "js": [
         "js/vendor/browser-polyfill.min.js",
