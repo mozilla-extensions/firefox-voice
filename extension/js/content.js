@@ -514,7 +514,7 @@
             action: action,
             timestamp: Date.now()
           });
-          // queryHistory.splice(1);
+          if (queryHistory.length > 5) queryHistory.shift();
 
           browser.storage.local.set({
             queryHistory: queryHistory
