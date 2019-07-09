@@ -100,6 +100,7 @@
   let analyzerNode;
   let outputNode;
   let listening = false;
+  let textInputDetected = false;
 
   const languagePromise = fetch(browser.extension.getURL("/js/languages.json"))
     .then((response) => {
@@ -216,7 +217,6 @@
 
       processTextQuery = function(e) {
         // SpeakToMePopup.cancelFetch = true;
-        stm.stop();
         console.log("process this text!");
         const textContent = textInput.innerText;
         const intentData = parseIntent(textContent);
@@ -225,6 +225,10 @@
       }
 
       this.detectText = function(e) {
+        if (textInputDetected == false) {
+          console.log("STOPPING BECAUSE OF TEXT");
+          textInputDetected = true;
+        }
         document.getElementById("send-btn-wrapper").style.display = "block";
         if (e.keyCode == 13) {
           processTextQuery();
@@ -264,6 +268,8 @@
       return new Promise((resolve, reject) => {
         const popup = document.getElementById("stm-popup");
         const close = document.getElementById("stm-close");
+        const textInput = document.getElementById("text-input");
+        textInput.addEventListener("input", () => resolve(), {once: true});
         popup.addEventListener("click", () => resolve(), {once: true});
         close.addEventListener(
           "click",
@@ -422,6 +428,12 @@
         break;
       }
       case "listening": {
+        console.log("how many times am i here??");
+        if (textInputDetected) {
+          console.debug("stopping from here???");
+          stm.stop();
+        }
+
         const stream = stm.getmediaStream();
         if (!stream) {
           return;
