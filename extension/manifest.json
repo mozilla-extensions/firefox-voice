@@ -24,7 +24,8 @@
       "js": [
         "js/vendor/browser-polyfill.min.js",
         "js/vendor/bodymovin.min.js",
-        "js/vendor/stm_web.min.js",
+        // "js/vendor/stm_web.min.js",
+        "js/vendor/webrtc_vad.js",
         "js/content.js"
       ],
       "css": [
@@ -61,7 +62,7 @@
     "assets/images/feedback.svg",
     "assets/images/googleAssistant_logo.svg",
     "assets/images/alexa_logo.svg",
-    "vendor/webrtc_vad.wasm"
+    "js/vendor/webrtc_vad.wasm"
   ],
   "permissions": [
     "<all_urls>",
