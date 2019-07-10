@@ -93,7 +93,7 @@
              <div id="stm-inject" class="stm-content-wrapper"></div>
              <div id="stm-text-input-wrapper">
                 <div class="stm-status">Type your request</div>
-                <span id="text-input" contenteditable="true"></span>
+                <span id="text-input" contenteditable="true">&nbsp;</span>
                 <div id="send-btn-wrapper">
                     <button id="send-text-input">GO</button>
                 </div>
@@ -110,7 +110,7 @@
  
      // When submitting, this markup is passed in
      const SUBMISSION_MARKUP = `<div class="stm-wrapper" id="stm-levels-wrapper">
-             <canvas hidden id="stm-levels" width=720 height=310></canvas>
+             <canvas hidden id="stm-levels" width=720 height=180></canvas>
          </div>
          <div id="stm-animation-wrapper">
              <div id="stm-box"></div>
@@ -512,10 +512,12 @@
                              if (json.status === "ok") {
                                  const query = json.data[0].text;
                                  // Show transcription result
-                                 const transcription = document.getElementById("transcription-content");
-                                 transcription.classList.remove("hidden");
-                                 const transcriptionText = document.getElementById("transcription-text");
-                                 transcriptionText.innerHTML = query;
+                                 const suggestionContent = document.getElementById("suggestionContent");
+                                 suggestionContent.style.display = "none";
+
+                                 const transcription = document.getElementById("transcription");
+                                 transcription.innerHTML = query;
+                                 transcription.style.display = "block";
  
                                  let matches;
  
