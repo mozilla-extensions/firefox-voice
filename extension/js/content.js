@@ -6,7 +6,7 @@
  let LANGUAGE;
  
  const languagePromise = fetch(
-     browser.extension.getURL('languages.json')
+     browser.extension.getURL('js/languages.json')
  ).then((response) => {
      return response.json();
  }).then((l) => {
@@ -143,6 +143,19 @@
              popup.innerHTML = POPUP_WRAPPER_MARKUP;
              document.body.appendChild(popup);
  
+             document.getElementById("stm-popup").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/ff-logo.png")}")`;
+             document.getElementById("stm-close").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/icon-close.svg")}")`;
+             document.getElementById("stm-feedback").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/feedback.svg")}")`;
+
+             if (document.dir === "rtl") {
+                 document.getElementById("stm-close").classList.add("rtl");
+                 document.getElementById("stm-popup").classList.add("rtl");
+                 document.getElementById("stm-feedback").classList.add("rtl");
+             }
+
              languagePromise.then(() => {
                  const footer = document.getElementById('stm-footer');
                  footer.innerHTML = footer.innerHTML.replace(
@@ -179,9 +192,10 @@
               }
         
              this.detectText = function (e) {
-                 if (!textInputDetected) {
+                 if (!SpeakToMePopup.textInputDetected) {
                      console.log("STOPPING BECAUSE OF TEXT");
-                     textInputDetected = true;
+                     SpeakToMePopup.textInputDetected = true;
+                     stm_vad.stopGum();
                  }
                  document.getElementById("send-btn-wrapper").style.display = "block";
                  if (e.keyCode == 13) {
@@ -425,6 +439,7 @@
 
                  // play chime
                  const micOpen = new Audio(browser.runtime.getURL('/assets/audio/mic_open_chime.ogg'));
+                 micOpen.type = "audio/ogg";
                  micOpen.play();
  
                  document.getElementById("stm-levels").hidden = false;
@@ -459,6 +474,11 @@
                          type: "audio/ogg; codecs=opus"
                      });
                      chunks = [];
+
+                     if (SpeakToMePopup.textInputDetected) {
+                         console.log("muahaha stopping");
+                         return;
+                     }
  
                      fetch(STT_SERVER_URL, {
                          method: "POST",
@@ -798,7 +818,7 @@
                      }
                      if (stm_vad.finishedvoice) {
                          stm_vad.done = true;
-                         stm_vad.goCloud("GoCloud finishedvoice");
+                         if (!SpeakToMePopup.textInputDetected) stm_vad.goCloud("GoCloud finishedvoice");
                      }
                      if ((dtdepois - stm_vad.dtantes) / 1000 > stm_vad.maxtime) {
                          stm_vad.done = true;
