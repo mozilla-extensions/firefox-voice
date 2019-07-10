@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Voice Fox",
-  "version": "1.4.3",
+  "version": "1.4.5",
   "description": "A fork of Voice Fill for voice controlling the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
