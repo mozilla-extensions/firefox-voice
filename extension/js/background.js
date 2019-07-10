@@ -23,7 +23,7 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 });
 
 const triggerExtension = async () => {
-  const url = "https://www.google.com";
+  const url = "https://jcambre.github.io/vf/";
   let tab = await browser.tabs.create({url});
   const intervalConnection = setInterval(() => {
     browser.tabs
@@ -37,4 +37,13 @@ const triggerExtension = async () => {
         // console.error(`Not connected yet. Retrying ${error}`);
       });
   }, 100);
+  // TODO: find a better way of loading moment.js onto the splash page?
+  await browser.tabs.executeScript(
+    tab.id, {
+      file: "/js/vendor/moment.min.js"
+  });
+  await browser.tabs.executeScript(
+    tab.id, {
+      file: "/js/display-history.js"
+  });
 }
