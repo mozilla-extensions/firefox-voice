@@ -306,7 +306,7 @@ const pause = () => {
 
 const dismissExtensionTab = (timeout = 2000) => {
     let dismissMuteTab = setTimeout(function() {
-        browser.tabs.remove(extensionTabId);
+        browser.tabs.remove(triggeringTabId);
     }, timeout);
 }
 
