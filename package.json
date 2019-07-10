@@ -26,7 +26,8 @@
     "google-assistant": "^0.5.4",
     "speaktome-api": "^0.2.1",
     "testpilot-ga": "^0.3.0",
-    "webextension-polyfill": "^0.3.1"
+    "webextension-polyfill": "^0.3.1",
+    "webrtcvad_js": "^1.0.0"
   },
   "homepage": "https://github.com/mozilla/voicefill#readme",
   "keywords": [],
