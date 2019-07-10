@@ -17,13 +17,9 @@ browser.omnibox.setDefaultSuggestion({
 });
 
 browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
-  // Figure out if the new text thing is empty
   const intentData = parseIntent(text);
   console.log(intentData);
   executeIntentForAction(intentData);
-  // triggerExtension();
-  // browser.tabs.update({url});
-
 });
 
 const triggerExtension = async () => {

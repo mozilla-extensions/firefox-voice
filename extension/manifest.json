@@ -26,7 +26,8 @@
         "js/vendor/bodymovin.min.js",
         // "js/vendor/stm_web.min.js",
         "js/content.js",
-        "js/vendor/webrtc_vad.js"
+        "js/vendor/webrtc_vad.js",
+        "js/intentParser.js"
       ],
       "css": [
         "css/main.css",
@@ -62,6 +63,7 @@
     "assets/images/feedback.svg",
     "assets/images/googleAssistant_logo.svg",
     "assets/images/alexa_logo.svg",
+    "assets/audio/mic_open_chime.ogg",
     "js/vendor/webrtc_vad.wasm"
   ],
   "permissions": [

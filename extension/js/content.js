@@ -6,7 +6,7 @@
  let LANGUAGE;
  
  const languagePromise = fetch(
-     browser.extension.getURL('languages.json')
+     browser.extension.getURL('js/languages.json')
  ).then((response) => {
      return response.json();
  }).then((l) => {
@@ -71,6 +71,7 @@
      const SPINNING_ANIMATION = browser.extension.getURL("assets/animations/Spinning.json");
      const START_ANIMATION = browser.extension.getURL("assets/animations/Start.json");
      const ERROR_ANIMATION = browser.extension.getURL("assets/animations/Error.json");
+     
      const escapeHTML = (str) => {
        // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
        // Most often this is not the case though.
@@ -89,7 +90,14 @@
      // Encapsulation of the popup we use to provide our UI.
      const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
              <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
-             <div id="stm-inject"></div>
+             <div id="stm-inject" class="stm-content-wrapper"></div>
+             <div id="stm-text-input-wrapper">
+                <div class="stm-status">Type your request</div>
+                <span id="text-input" contenteditable="true"></span>
+                <div id="send-btn-wrapper">
+                    <button id="send-text-input">GO</button>
+                </div>
+             </div>
              <div id="stm-footer">
                  Processing as {language}.
                  <br>
@@ -101,7 +109,7 @@
          </div>`;
  
      // When submitting, this markup is passed in
-     const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
+     const SUBMISSION_MARKUP = `<div class="stm-wrapper" id="stm-levels-wrapper">
              <canvas hidden id="stm-levels" width=720 height=310></canvas>
          </div>
          <div id="stm-animation-wrapper">
@@ -112,7 +120,7 @@
                  <div id="transcription-text"></div>
              </div>
          </div>
-         <div id="stm-content">
+         <div class="stm-status" id="stm-content">
              <div id="stm-startup-text">Warming up...</div>
          </div>`;
  
@@ -129,12 +137,26 @@
      const SpeakToMePopup = {
          // closeClicked used to skip out of media recording handling
          closeClicked: false,
+         textInputDetected: false,
          init: () => {
              console.log(`SpeakToMePopup init`);
              const popup = document.createElement("div");
              popup.innerHTML = POPUP_WRAPPER_MARKUP;
              document.body.appendChild(popup);
  
+             document.getElementById("stm-popup").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/ff-logo.png")}")`;
+             document.getElementById("stm-close").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/icon-close.svg")}")`;
+             document.getElementById("stm-feedback").style.backgroundImage =
+                 `url("${browser.extension.getURL("/assets/images/feedback.svg")}")`;
+
+             if (document.dir === "rtl") {
+                 document.getElementById("stm-close").classList.add("rtl");
+                 document.getElementById("stm-popup").classList.add("rtl");
+                 document.getElementById("stm-feedback").classList.add("rtl");
+             }
+
              languagePromise.then(() => {
                  const footer = document.getElementById('stm-footer');
                  footer.innerHTML = footer.innerHTML.replace(
@@ -161,7 +183,38 @@
                      SpeakToMePopup.closeClicked = true;
                  }
              }
-             this.addEventListener("keypress", this.dismissPopup);
+             processTextQuery = function(e) {
+                // SpeakToMePopup.cancelFetch = true;
+                console.log("process this text!");
+                const textContent = textInput.innerText;
+                const intentData = parseIntent(textContent);
+                console.log(intentData);
+                port.postMessage(intentData);
+              }
+        
+             this.detectText = function (e) {
+                 if (!SpeakToMePopup.textInputDetected) {
+                    const textInputWrapper = document.getElementById("stm-text-input-wrapper");
+                    textInputWrapper.classList.add("stm-content-wrapper"); 
+                    textInput.classList.add("active");
+                     document.getElementById("stm-inject").style.display = "none";
+                     console.log("STOPPING BECAUSE OF TEXT");
+                     SpeakToMePopup.textInputDetected = true;
+                     stm_vad.stopGum();
+                 }
+                 document.getElementById("send-btn-wrapper").style.display = "block";
+                 if (e.keyCode == 13) {
+                     processTextQuery();
+                 }
+             };
+             const textInput = document.getElementById("text-input");
+             textInput.focus();
+             textInput.addEventListener("keyup", this.detectText);
+
+             const sendText = document.getElementById("send-text-input");
+             sendText.addEventListener("click", () => {
+                 processTextQuery();
+             });
          },
  
          hide: () => {
@@ -388,6 +441,11 @@
                  }
  
                  );
+
+                 // play chime
+                 const micOpen = new Audio(browser.runtime.getURL('/assets/audio/mic_open_chime.ogg'));
+                 micOpen.type = "audio/ogg";
+                 micOpen.play();
  
                  document.getElementById("stm-levels").hidden = false;
                  visualize(analyzerNode);
@@ -421,6 +479,11 @@
                          type: "audio/ogg; codecs=opus"
                      });
                      chunks = [];
+
+                     if (SpeakToMePopup.textInputDetected) {
+                         console.log("muahaha stopping");
+                         return;
+                     }
  
                      fetch(STT_SERVER_URL, {
                          method: "POST",
@@ -760,7 +823,7 @@
                      }
                      if (stm_vad.finishedvoice) {
                          stm_vad.done = true;
-                         stm_vad.goCloud("GoCloud finishedvoice");
+                         if (!SpeakToMePopup.textInputDetected) stm_vad.goCloud("GoCloud finishedvoice");
                      }
                      if ((dtdepois - stm_vad.dtantes) / 1000 > stm_vad.maxtime) {
                          stm_vad.done = true;
