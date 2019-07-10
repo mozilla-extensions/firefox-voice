@@ -90,11 +90,12 @@
      // Encapsulation of the popup we use to provide our UI.
      const POPUP_WRAPPER_MARKUP = `<div id="stm-popup">
              <div id="stm-header"><div role="button" tabindex="1" id="stm-close"></div></div>
-             <div id="stm-inject"></div>
+             <div id="stm-inject" class="stm-content-wrapper"></div>
              <div id="stm-text-input-wrapper">
+                <div class="stm-status">Type your request</div>
                 <span id="text-input" contenteditable="true"></span>
                 <div id="send-btn-wrapper">
-                <button id="send-text-input">GO</button>
+                    <button id="send-text-input">GO</button>
                 </div>
              </div>
              <div id="stm-footer">
@@ -108,7 +109,7 @@
          </div>`;
  
      // When submitting, this markup is passed in
-     const SUBMISSION_MARKUP = `<div id="stm-levels-wrapper">
+     const SUBMISSION_MARKUP = `<div class="stm-wrapper" id="stm-levels-wrapper">
              <canvas hidden id="stm-levels" width=720 height=310></canvas>
          </div>
          <div id="stm-animation-wrapper">
@@ -119,7 +120,7 @@
                  <div id="transcription-text"></div>
              </div>
          </div>
-         <div id="stm-content">
+         <div class="stm-status" id="stm-content">
              <div id="stm-startup-text">Warming up...</div>
          </div>`;
  
@@ -193,6 +194,10 @@
         
              this.detectText = function (e) {
                  if (!SpeakToMePopup.textInputDetected) {
+                    const textInputWrapper = document.getElementById("stm-text-input-wrapper");
+                    textInputWrapper.classList.add("stm-content-wrapper"); 
+                    textInput.classList.add("active");
+                     document.getElementById("stm-inject").style.display = "none";
                      console.log("STOPPING BECAUSE OF TEXT");
                      SpeakToMePopup.textInputDetected = true;
                      stm_vad.stopGum();
