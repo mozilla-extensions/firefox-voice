@@ -24,9 +24,9 @@
       "js": [
         "js/vendor/browser-polyfill.min.js",
         "js/vendor/bodymovin.min.js",
-        "js/vendor/stm_web.min.js",
-        // "js/metrics.js",
+        // "js/vendor/stm_web.min.js",
         "js/content.js",
+        "js/vendor/webrtc_vad.js",
         "js/intentParser.js"
       ],
       "css": [
@@ -63,7 +63,8 @@
     "assets/images/feedback.svg",
     "assets/images/googleAssistant_logo.svg",
     "assets/images/alexa_logo.svg",
-    "assets/audio/mic_open_chime.ogg"
+    "assets/audio/mic_open_chime.ogg",
+    "js/vendor/webrtc_vad.wasm"
   ],
   "permissions": [
     "<all_urls>",
