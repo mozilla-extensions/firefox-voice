@@ -25,8 +25,8 @@
         "js/vendor/browser-polyfill.min.js",
         "js/vendor/bodymovin.min.js",
         // "js/vendor/stm_web.min.js",
-        "js/vendor/webrtc_vad.js",
-        "js/content.js"
+        "js/content.js",
+        "js/vendor/webrtc_vad.js"
       ],
       "css": [
         "css/main.css",

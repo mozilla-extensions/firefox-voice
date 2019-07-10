@@ -78,7 +78,7 @@ function locateFile(path) {
     return Module['locateFile'](path, scriptDirectory);
   } else {
     console.log('scriptdir + path');
-    return browser.extension.getURL("vendor/webrtc_vad.wasm");
+    return browser.extension.getURL("js/vendor/webrtc_vad.wasm");
     //return scriptDirectory + path;
   }
 }
@@ -1538,7 +1538,7 @@ function createWasm(env) {
         typeof WebAssembly.instantiateStreaming === 'function' &&
         !isDataURI(wasmBinaryFile) &&
         typeof fetch === 'function') {
-      fetch(browser.extension.getURL("vendor/webrtc_vad.wasm"), { credentials: 'same-origin' }).then(function (response) {
+      fetch(browser.extension.getURL("js/vendor/webrtc_vad.wasm"), { credentials: 'same-origin' }).then(function (response) {
         return WebAssembly.instantiateStreaming(response, info)
           .then(receiveInstantiatedSource, function(reason) {
             // We expect the most common failure cause to be a bad MIME type for the binary,
