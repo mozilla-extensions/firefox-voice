@@ -36,7 +36,7 @@
          );
          return;
      }
- 
+
      // Initialize NativeMessaging port for Google Assistant + Alexa
      var port = browser.runtime.connect({name:"cs-port"});
  
@@ -448,11 +448,30 @@
                  }
  
                  );
+ 
+                 
+                // ready chime sound
+                const chimeFile = browser.runtime.getURL('/assets/audio/mic_open_chime_ORIG.ogg')
+                const micOpen = new Audio(chimeFile);
+                micOpen.type = "audio/ogg";
 
-                 // play chime
-                 const micOpen = new Audio(browser.runtime.getURL('/assets/audio/mic_open_chime.ogg'));
-                 micOpen.type = "audio/ogg";
-                 micOpen.play();
+                micOpen.addEventListener("loadeddata", function () {
+                    if (micOpen.readyState >= 2) {
+                        micOpen.play();
+                    }
+                })
+
+                // setTimeout(() => {
+                //     if (micOpen.readyState === 4) {
+                //         micOpen.play();
+                //     } else {
+                //         console.error("still not ready");
+                //         console.log(`in ready state ${micOpen.readyState}`);
+                //         console.log(micOpen);
+                //         console.log(micOpen.src);
+                //     }
+                //  }, 1000);
+
  
                  document.getElementById("stm-levels").hidden = false;
                  visualize(analyzerNode);

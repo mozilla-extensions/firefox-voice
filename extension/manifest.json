@@ -64,6 +64,9 @@
     "assets/images/googleAssistant_logo.svg",
     "assets/images/alexa_logo.svg",
     "assets/audio/mic_open_chime.ogg",
+    "assets/audio/mic_open_chime_ORIG.ogg",
+    "assets/audio/canoa-ptbr.opus",
+    "assets/audio/mic_chime.mp3",
     "js/vendor/webrtc_vad.wasm"
   ],
   "permissions": [
