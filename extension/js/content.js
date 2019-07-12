@@ -27,6 +27,8 @@
  
  (function speak_to_me() {
      console.log("Speak To Me starting up...");
+
+     let initialized = false;
  
      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
          console.error(
@@ -82,9 +84,14 @@
      };
  
      browser.runtime.onMessage.addListener(request => {
-       SpeakToMePopup.showAt(0, 0);
-       stm_init();
-       return Promise.resolve({response: "content script ack"});
+         console.log("HERE IN MSGA INITIALIZER");
+         if (!initialized) {
+             initialized = true;
+             SpeakToMePopup.showAt(0, 0);
+             stm_init();
+         }
+
+         return Promise.resolve({ response: "content script ack" });
      });
  
      // Encapsulation of the popup we use to provide our UI.
