@@ -450,27 +450,9 @@
                  );
  
                  
-                // ready chime sound
-                const chimeFile = browser.runtime.getURL('/assets/audio/mic_open_chime_ORIG.ogg')
-                const micOpen = new Audio(chimeFile);
+                let micOpen = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
                 micOpen.type = "audio/ogg";
-
-                micOpen.addEventListener("loadeddata", function () {
-                    if (micOpen.readyState >= 2) {
-                        micOpen.play();
-                    }
-                })
-
-                // setTimeout(() => {
-                //     if (micOpen.readyState === 4) {
-                //         micOpen.play();
-                //     } else {
-                //         console.error("still not ready");
-                //         console.log(`in ready state ${micOpen.readyState}`);
-                //         console.log(micOpen);
-                //         console.log(micOpen.src);
-                //     }
-                //  }, 1000);
+                micOpen.play();
 
  
                  document.getElementById("stm-levels").hidden = false;
