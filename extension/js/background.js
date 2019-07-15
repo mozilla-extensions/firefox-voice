@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 let triggeringTabId;
+let extensionTabId;
 
 browser.browserAction.onClicked.addListener(async (triggeringTab) => {
   // set triggeringTabId
@@ -25,6 +26,7 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 const triggerExtension = async () => {
   const url = "https://jcambre.github.io/vf/";
   let tab = await browser.tabs.create({url});
+  extensionTabId = tab.id;
   const intervalConnection = setInterval(() => {
     browser.tabs
       .sendMessage(tab.id, {

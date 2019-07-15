@@ -46,9 +46,9 @@ const executeIntentForAction = (data) => {
         case "dismissCurrentTab":
             dismissExtensionTab(0);
             break;
-        // case "read":
-        //     read();
-        //     break;
+        case "read":
+            read();
+            break;
         default:
             search(content);
             break;
@@ -111,16 +111,17 @@ const alexa = (query) => {
     });
 }
 
-// const read = () => {
-//     browser.tabs.toggleReaderMode(triggeringTabId).then(() => {
-//         browser.tabs.executeScript(triggeringTabId, {
-//             code: `document.getElementsByClassName("narrate-start-stop")[0].click();`
-//         });
-//         dismissExtensionTab();
-//     }, error => {
-//         console.error(error);
-//     });
-// }
+const read = () => {
+    browser.tabs.toggleReaderMode(triggeringTabId).then(() => {
+        console.log("I GOT HEEERE");
+        browser.tabs.executeScript(triggeringTabId, {
+            code: `setTimeout(function(){ console.log("why notttt"); document.getElementsByClassName("narrate-start-stop")[0].click(); }, 1000);`
+        });
+        dismissExtensionTab();
+    }, error => {
+        console.error(error);
+    });
+}
 
 const search = (query) => {
     const searchURL = constructGoogleQuery(query);
@@ -306,7 +307,7 @@ const pause = () => {
 
 const dismissExtensionTab = (timeout = 2000) => {
     let dismissMuteTab = setTimeout(function() {
-        browser.tabs.remove(triggeringTabId);
+        browser.tabs.remove(extensionTabId);
     }, timeout);
 }
 

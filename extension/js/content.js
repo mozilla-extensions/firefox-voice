@@ -553,6 +553,8 @@
                                  action = "timer";
                                  } else if (matches = query.match(/(?:play(.*))/i)) {
                                  action = "play";
+                                 } else if (matches = query.match(/(?:read(.*))/i)) {
+                                 action = "read";
                                  } else {
                                  action = "search";
                                  matches = [,query]; // a hack to put this in the expected format of the next matches line
@@ -646,7 +648,7 @@
          const dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
  
          // Loop through the values and draw the bars
-         context.strokeStyle = "#d1d2d3";
+         context.strokeStyle = "#999999";
  
          for (let i = 0; i < n; i++) {
              const value = frequencyBins[i + skip];
