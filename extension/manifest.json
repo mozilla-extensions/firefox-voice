@@ -80,7 +80,9 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "MacCtrl+V"
+        "default": "Command+Period",
+        "windows": "Ctrl+Period",
+        "linux": "Ctrl+Period"
       },
       "description": "Opens Voice Fill by sending a 'listen' event"
     }
