@@ -15,11 +15,10 @@
   display: none;
   flex-direction: column;
   font: message-box;
-  height: 200px;
+  height: 230px;
   justify-content: center;
   left: 0;
   opacity: 0;
-  padding: 2em 2em 4em;
   position: fixed;
   right: 0;
   top: -999px;
