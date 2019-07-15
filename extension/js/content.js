@@ -27,6 +27,8 @@
  
  (function speak_to_me() {
      console.log("Speak To Me starting up...");
+
+     let initialized = false;
  
      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
          console.error(
@@ -34,7 +36,7 @@
          );
          return;
      }
- 
+
      // Initialize NativeMessaging port for Google Assistant + Alexa
      var port = browser.runtime.connect({name:"cs-port"});
  
@@ -82,9 +84,13 @@
      };
  
      browser.runtime.onMessage.addListener(request => {
-       SpeakToMePopup.showAt(0, 0);
-       stm_init();
-       return Promise.resolve({response: "content script ack"});
+         if (!initialized) {
+             initialized = true;
+             SpeakToMePopup.showAt(0, 0);
+             stm_init();
+         }
+
+         return Promise.resolve({ response: "content script ack" });
      });
  
      // Encapsulation of the popup we use to provide our UI.
@@ -441,11 +447,10 @@
                  }
  
                  );
-
-                 // play chime
-                 const micOpen = new Audio(browser.runtime.getURL('/assets/audio/mic_open_chime.ogg'));
-                 micOpen.type = "audio/ogg";
-                 micOpen.play();
+ 
+                let micOpen = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
+                micOpen.type = "audio/ogg";
+                micOpen.play();
  
                  document.getElementById("stm-levels").hidden = false;
                  visualize(analyzerNode);
@@ -545,6 +550,8 @@
                                  action = "timer";
                                  } else if (matches = query.match(/(?:play(.*))/i)) {
                                  action = "play";
+                                 } else if (matches = query.match(/(?:read(.*))/i)) {
+                                 action = "read";
                                  } else {
                                  action = "search";
                                  matches = [,query]; // a hack to put this in the expected format of the next matches line
@@ -638,7 +645,7 @@
          const dbRange = MAX_DB_LEVEL - MIN_DB_LEVEL;
  
          // Loop through the values and draw the bars
-         context.strokeStyle = "#d1d2d3";
+         context.strokeStyle = "#999999";
  
          for (let i = 0; i < n; i++) {
              const value = frequencyBins[i + skip];
