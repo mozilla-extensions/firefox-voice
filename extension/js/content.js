@@ -84,7 +84,6 @@
      };
  
      browser.runtime.onMessage.addListener(request => {
-         console.log("HERE IN MSGA INITIALIZER");
          if (!initialized) {
              initialized = true;
              SpeakToMePopup.showAt(0, 0);
@@ -449,11 +448,9 @@
  
                  );
  
-                 
                 let micOpen = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
                 micOpen.type = "audio/ogg";
                 micOpen.play();
-
  
                  document.getElementById("stm-levels").hidden = false;
                  visualize(analyzerNode);

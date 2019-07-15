@@ -63,7 +63,6 @@
     "assets/images/feedback.svg",
     "assets/images/googleAssistant_logo.svg",
     "assets/images/alexa_logo.svg",
-    "assets/audio/mic_chime.opus",
     "js/vendor/webrtc_vad.wasm"
   ],
   "permissions": [
