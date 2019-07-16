@@ -87,7 +87,7 @@
          if (!initialized) {
              initialized = true;
              SpeakToMePopup.showAt(0, 0);
-             stm_init();
+            stm_init();
          }
 
          return Promise.resolve({ response: "content script ack" });
@@ -450,7 +450,11 @@
  
                 let micOpen = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
                 micOpen.type = "audio/ogg";
-                micOpen.play();
+                if (SpeakToMePopup.textInputDetected === false) {
+                    micOpen.play();
+                } else {
+                    return;
+                }
  
                  document.getElementById("stm-levels").hidden = false;
                  visualize(analyzerNode);
