@@ -609,7 +609,7 @@
  
          setTimeout(() => {
              stm_start();
-         }, 1000);
+         }, 500);
      };
  
      // Helper to handle background visualization
