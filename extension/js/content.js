@@ -29,7 +29,8 @@
      console.log("Speak To Me starting up...");
 
      let initialized = false;
- 
+    let dismissTabTimeout;
+
      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
          console.error(
              "You need a browser with getUserMedia support to use Speak To Me, sorry!"
@@ -200,6 +201,7 @@
         
              this.detectText = function (e) {
                  if (!SpeakToMePopup.textInputDetected) {
+                    clearTimeout(dismissTabTimeout);
                     const textInputWrapper = document.getElementById("stm-text-input-wrapper");
                     textInputWrapper.classList.add("stm-content-wrapper"); 
                     textInput.classList.add("active");
@@ -424,7 +426,9 @@
                  scriptprocessor.onaudioprocess = stm_vad.recorderProcess;
                  stm_vad.stopGum = () => {
                      console.log("stopGum");
-                     mediaRecorder.stop();
+                     if (mediaRecorder) {
+                         mediaRecorder.stop();
+                     }
                      sourceNode.disconnect(scriptprocessor);
                      sourceNode.disconnect(analyzerNode);
                      analyzerNode.disconnect(outputNode);
@@ -716,7 +720,7 @@
        copy.innerHTML = "<div id=\"stm-listening-text\"></div>";
        let errorDiv = document.getElementById("stm-listening-text");
        errorDiv.textContent = errorMsg;
-       setTimeout(() => {
+       dismissTabTimeout = setTimeout(() => {
            SpeakToMePopup.hide();
            port.postMessage({
              action: "dismissCurrentTab",
