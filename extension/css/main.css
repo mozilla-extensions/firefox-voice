@@ -22,7 +22,7 @@
   position: fixed;
   right: 0;
   top: -999px;
-  transition: height 500ms;
+  transition: height 200ms;
   will-change: left, opacity;
   z-index: 9999999;
 }

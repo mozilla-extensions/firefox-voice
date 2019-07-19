@@ -22,7 +22,7 @@
         "https://jcambre.github.io/vf/*"
       ],
       "js": [
-        "js/vendor/browser-polyfill.min.js",
+        //"js/vendor/browser-polyfill.min.js",
         "js/vendor/bodymovin.min.js",
         // "js/vendor/stm_web.min.js",
         "js/content.js",
@@ -37,7 +37,7 @@
   ],
   "background": {
     "scripts": [
-      "js/vendor/browser-polyfill.min.js",
+      //"js/vendor/browser-polyfill.min.js",
       "js/background.js",
       "js/browserService.js",
       "js/intentParser.js",
