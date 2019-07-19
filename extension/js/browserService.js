@@ -22,6 +22,7 @@ const executeIntentForAction = (data) => {
             break;
         case "find":
             find(content);
+            break;
         case "play":
             play(content);
             break;
