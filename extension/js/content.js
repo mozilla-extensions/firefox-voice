@@ -2,28 +2,28 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
- let LANGUAGES = {};
- let LANGUAGE;
+//  let LANGUAGES = {};
+ const LANGUAGE = "en-US";
  
- const languagePromise = fetch(
-     browser.extension.getURL('js/languages.json')
- ).then((response) => {
-     return response.json();
- }).then((l) => {
-     LANGUAGES = l;
-     return browser.storage.sync.get("language");
- }).then((item) => {
-     if (!item.language) {
-         throw new Error('Language not set');
-     }
+//  const languagePromise = fetch(
+//      browser.extension.getURL('js/languages.json')
+//  ).then((response) => {
+//      return response.json();
+//  }).then((l) => {
+//      LANGUAGES = l;
+//      return browser.storage.sync.get("language");
+//  }).then((item) => {
+//      if (!item.language) {
+//          throw new Error('Language not set');
+//      }
  
-     LANGUAGE = item.language;
- }).catch(() => {
-     LANGUAGE =
-       LANGUAGES.hasOwnProperty(navigator.language) ?
-         navigator.language :
-         "en-US";
- });
+//      LANGUAGE = item.language;
+//  }).catch(() => {
+//      LANGUAGE =
+//        LANGUAGES.hasOwnProperty(navigator.language) ?
+//          navigator.language :
+//          "en-US";
+//  });
  
  (function speak_to_me() {
      console.log("Speak To Me starting up...");
@@ -74,15 +74,6 @@
      const SPINNING_ANIMATION = browser.extension.getURL("assets/animations/Spinning.json");
      const START_ANIMATION = browser.extension.getURL("assets/animations/Start.json");
      const ERROR_ANIMATION = browser.extension.getURL("assets/animations/Error.json");
-     
-     const escapeHTML = (str) => {
-       // Note: string cast using String; may throw if `str` is non-serializable, e.g. a Symbol.
-       // Most often this is not the case though.
-       return String(str)
-           .replace(/&/g, '&amp;')
-           .replace(/"/g, '&quot;').replace(/'/g, '&#x27;')
-           .replace(/</g, '&lt;').replace(/>/g, '&gt;');
-     };
  
      browser.runtime.onMessage.addListener(request => {
          if (!initialized) {
@@ -131,16 +122,6 @@
              <div id="stm-startup-text">Warming up...</div>
          </div>`;
  
-     // When Selecting, this markup is passed in
-     const SELECTION_MARKUP = `<form id="stm-selection-wrapper">
-             <div id="stm-list-wrapper">
-                 <input id="stm-input" type="text" autocomplete="off" />
-                 <div id="stm-list"></div>
-             </div>
-             <button id="stm-reset-button" title="Reset" type="button"></button>
-             <input id="stm-submit-button" type="submit" title="Submit" value=""/>
-         </form>`;
- 
      const SpeakToMePopup = {
          // closeClicked used to skip out of media recording handling
          closeClicked: false,
@@ -164,11 +145,11 @@
                  document.getElementById("stm-feedback").classList.add("rtl");
              }
 
-             languagePromise.then(() => {
-                 const footer = document.getElementById('stm-footer');
-                 footer.innerHTML = footer.innerHTML.replace(
-                     '{language}', LANGUAGES[LANGUAGE]);
-             });
+            //  languagePromise.then(() => {
+            //      const footer = document.getElementById('stm-footer');
+            //      footer.innerHTML = footer.innerHTML.replace(
+            //          '{language}', LANGUAGES[LANGUAGE]);
+            //  });
  
              this.inject = document.getElementById("stm-inject");
              this.popup = document.getElementById("stm-popup");
@@ -258,129 +239,6 @@
                      e.stopPropagation();
                      close.removeEventListener("click", _close_click);
                      reject();
-                 });
-             });
-         },
- 
-         // Returns a Promise that resolves to the chosen text.
-         choose_item: data => {
-             console.log(`SpeakToMePopup choose_item`);
-             this.inject.innerHTML = SELECTION_MARKUP;
-             const close = document.getElementById("stm-close");
-             const form = document.getElementById("stm-selection-wrapper");
-             const input = document.getElementById("stm-input");
-             const list = document.getElementById("stm-list");
-             const listWrapper = document.getElementById("stm-list-wrapper");
-             const reset = document.getElementById("stm-reset-button");
-             let firstChoice;
- 
-             return new Promise((resolve, reject) => {
-                 if (data.length === 1) {
-                     firstChoice = data[0];
-                     listWrapper.removeChild(list);
-                 } else {
-                     let html = "<ul class='stm-list-inner'>";
-                     data.forEach((item, index) => {
-                         if (index === 0) {
-                             firstChoice = item;
-                         } else if(index < 5) {
-                             let confidence = escapeHTML(item.confidence);
-                             let text = escapeHTML(item.text);
-                             html += `<li idx_suggestion="${index}" confidence="${confidence}" role="button" tabindex="0">${text}</li>`;
-                         }
-                     });
-                     html += "</ul>";
-                     list.innerHTML = html;
-                 }
- 
-                 input.confidence = escapeHTML(firstChoice.confidence);
-                 input.value = escapeHTML(firstChoice.text);
-                 input.size = Math.max(input.value.length, 10);
-                 input.idx_suggestion = 0;
- 
-                 if (list) {
-                     list.style.width = `${input.offsetWidth}px`;
-                 }
- 
-                 input.focus();
- 
-                 input.addEventListener("keypress", e => {
-                     // e.preventDefault();
-                     if(e.keyCode === 13) {
-                         e.preventDefault();
-                         list.classList.add('close');
-                         resolve(input);
-                     }
-                 });
- 
-                 input.addEventListener("input", () => {
-                     input.size = Math.max(10, input.value.length);
-                     list.style.width = `${input.offsetWidth}px`;
-                 });
- 
-                 form.addEventListener("submit", function _submit_form(e) {
-                     e.preventDefault();
-                     e.stopPropagation();
-                     list.classList.add('close');
-                     form.removeEventListener("submit", _submit_form);
-                     resolve(input);
-                 });
- 
-                 list.addEventListener("click", function _choose_item(e) {
-                     e.preventDefault();
-                     list.removeEventListener("click", _choose_item);
-                     if (e.target instanceof HTMLLIElement) {
-                         let result = [];
-                         result.confidence = e.target.getAttribute("confidence");
-                         result.value = e.target.textContent;
-                         result.idx_suggestion = e.target.getAttribute("idx_suggestion");
-                         list.classList.add('close');
-                         input.value = e.target.textContent;
-                         input.size = input.value.length;
-                         list.style.width = `${input.offsetWidth}px`;
- 
-                         resolve(result);
-                     }
-                 });
- 
-                 list.addEventListener("keypress", function _choose_item(e) {
-                     const key = e.which || e.keyCode;
-                     if (key === 13) {
-                         list.removeEventListener("click", _choose_item);
-                         if (e.target instanceof HTMLLIElement) {
-                             let result = [];
-                             result.confidence = e.target.getAttribute("confidence");
-                             result.value = e.target.textContent;
-                             result.idx_suggestion = e.target.getAttribute("idx_suggestion");
-                             list.classList.add('close');
-                             input.value = e.target.textContent;
-                             input.size = input.value.length;
-                             list.style.width = `${input.offsetWidth}px`;
- 
-                             resolve(result);
-                         }
-                     }
-                 });
- 
-                 reset.addEventListener("click", function _reset_click(e) {
-                     e.preventDefault();
-                     reset.removeEventListener("click", _reset_click);
-                     reject(e.target.id);
-                 });
- 
-                 close.addEventListener("click", function _close_click(e) {
-                     e.preventDefault();
-                     close.removeEventListener("click", _close_click);
-                     reject(e.target.id);
-                 });
- 
-                 close.addEventListener("keypress", function _close_click(e) {
-                     const key = e.which || e.keyCode;
-                     if (key === 13) {
-                         e.preventDefault();
-                         close.removeEventListener("keypress", _close_click);
-                         reject(e.target.id);
-                     }
                  });
              });
          }
@@ -613,7 +471,7 @@
  
          setTimeout(() => {
              stm_start();
-         }, 500);
+         }, 100);
      };
  
      // Helper to handle background visualization
