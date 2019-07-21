@@ -2,14 +2,14 @@
 var port;
 const connected = (p) => {
     port = p;
-    port.onMessage.addListener(function(data) {
-        executeIntentForAction(data);
+    port.onMessage.addListener(async function(data) {
+        await executeIntentForAction(data);
     });
 }
 
 browser.runtime.onConnect.addListener(connected);
 
-const executeIntentForAction = (data) => {
+const executeIntentForAction = async (data) => {
     const action = data.action;
     const content = data.content;
 
@@ -21,7 +21,7 @@ const executeIntentForAction = (data) => {
             unmute();
             break;
         case "find":
-            find(content);
+            await find(content);
             break;
         case "play":
             play(content);
@@ -139,7 +139,7 @@ const navigate = (query) => {
     navigateToURLAfterTimeout(searchURL);
 }
 
-const find = (query) => {
+const find = async (query) => {
     console.log("the most likely query text is " + query);
 
     // Fuse options
@@ -165,57 +165,35 @@ const find = (query) => {
 
     let combinedTabContent = [];
 
-    const gettingAllTabs = browser.tabs.query({});
+    const tabs = await browser.tabs.query({});
  
-    gettingAllTabs.then((tabs) => {
-        let tabPromises = [];
-
-        for (let tab of tabs) {
-            // get video content for the current tab
-            const browserCapture = browser.tabs.executeScript(tab.id, {
-                file: "/js/tabContent.js"
-            }).then((result) => {
-                console.log("printing promise results");
-                
-                // let tabContents = result;
-                result = result[0];
-                result.tabId = tab.id;
-                console.log(result);
-                console.log(tab.id);
-                combinedTabContent.push(result);
-            });
-            console.log("i am on tab " + tab.id);
-            
-
-            tabPromises.push(browserCapture);
+    for (let tab of tabs) {
+        if (tab.id === extensionTabId) {
+            continue;
         }
 
-        // very unsure about whether this is the appropriate syntax
-        Promise.all(tabPromises).then(results => {
-            return combinedTabContent.flat();
-        }, error => {
-            console.error(error);
-        })
-        .then((tabContent) => {
-            // use Fuse.js to parse the most probable response?
-            let fuse = new Fuse(tabContent, options);
-            const matches = fuse.search(query);
-            console.log(matches);
-            // account for multiple matches
-            return matches;
-        })
-        .then((matchingTabs) => {
-            // redirect to top tab match
-            // may need to account for multiple windows
-            const topMatch = parseInt(matchingTabs[0].item);
-            browser.tabs.update(topMatch, {
-                active: true
-            });
-        })
-        .then(() => {
-            dismissExtensionTab();
-        });
+        const result = {
+            tabId: tab.id,
+            title: tab.title,
+            url: tab.url
+        }
+        
+        combinedTabContent.push(result);
+        console.log("i am on tab " + tab.id);
+    }
+
+    combinedTabContent = combinedTabContent.flat();
+
+    // use Fuse.js to parse the most probable response?
+    let fuse = new Fuse(combinedTabContent, options);
+    const matches = fuse.search(query);
+    console.log(matches);
+    // TODO account for multiple matches
+    const topMatch = parseInt(matches[0].item);
+    await browser.tabs.update(topMatch, {
+        active: true
     });
+    dismissExtensionTab();
 }
 
 const mute = () => {
