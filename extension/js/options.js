@@ -12,10 +12,10 @@ function restoreOptions() {
   let languages;
 
   fetch(browser.extension.getURL("/js/languages.json"))
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .then((l) => {
+    .then(l => {
       languages = l;
 
       Object.entries(languages)
@@ -31,28 +31,28 @@ function restoreOptions() {
 
       return browser.storage.sync.get("language");
     })
-    .then((result) => {
+    .then(result => {
       const defaultLanguage = languages.hasOwnProperty(navigator.language)
         ? navigator.language
         : "en-US";
 
       languageSelect.value = result.language || defaultLanguage;
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(`Error: ${error}`);
     });
 
   let manifest;
   fetch(browser.extension.getURL("/manifest.json"))
-    .then((response) => {
+    .then(response => {
       return response.json();
     })
-    .then((m) => {
+    .then(m => {
       manifest = m;
 
       return browser.storage.sync.get("lastVersion");
     })
-    .then((result) => {
+    .then(result => {
       if (result.lastVersion !== manifest.version) {
         return browser.storage.sync
           .set({
@@ -71,13 +71,13 @@ function restoreOptions() {
     .then(() => {
       const domains = Array.from(
         new Set(
-          manifest.content_scripts[0].matches.map((d) => {
+          manifest.content_scripts[0].matches.map(d => {
             return d.replace(/\/\*$/, "").replace(/\*\./, "");
           })
         ).values()
       ).sort();
 
-      domains.map((domain) => {
+      domains.map(domain => {
         const option = document.createElement("option");
         option.value = domain;
         option.innerText = domain;
@@ -86,11 +86,11 @@ function restoreOptions() {
 
       return browser.storage.sync.get("searchProvider");
     })
-    .then((result) => {
+    .then(result => {
       const defaultProvider = "https://www.google.com";
       providerSelect.value = result.searchProvider || defaultProvider;
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(`Error: ${error}`);
     });
 

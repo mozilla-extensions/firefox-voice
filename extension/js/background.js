@@ -5,16 +5,18 @@
 let triggeringTabId;
 let extensionTabId;
 
-browser.browserAction.onClicked.addListener(async (triggeringTab) => {
+browser.browserAction.onClicked.addListener(async triggeringTab => {
   // set triggeringTabId
   triggeringTabId = triggeringTab.id;
-  console.debug(`the tab that the user was on when triggering this action has ID ${triggeringTabId}`);
+  console.debug(
+    `the tab that the user was on when triggering this action has ID ${triggeringTabId}`
+  );
 
   triggerExtension();
 });
 
 browser.omnibox.setDefaultSuggestion({
-  description: `Control Firefox through a text command (e.g. Play Hamilton on YouTube)`
+  description: `Control Firefox through a text command (e.g. Play Hamilton on YouTube)`,
 });
 
 browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
@@ -25,27 +27,25 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 
 const triggerExtension = async () => {
   const url = "https://jcambre.github.io/vf/";
-  let tab = await browser.tabs.create({url});
+  let tab = await browser.tabs.create({ url });
   extensionTabId = tab.id;
   const intervalConnection = setInterval(() => {
     browser.tabs
       .sendMessage(tab.id, {
         msg: "background script syn",
       })
-      .then((response) => {
+      .then(response => {
         clearInterval(intervalConnection);
       })
-      .catch((error) => {
+      .catch(error => {
         // console.error(`Not connected yet. Retrying ${error}`);
       });
   }, 100);
   // TODO: find a better way of loading moment.js onto the splash page?
-  await browser.tabs.executeScript(
-    tab.id, {
-      file: "/js/vendor/moment.min.js"
+  await browser.tabs.executeScript(tab.id, {
+    file: "/js/vendor/moment.min.js",
   });
-  await browser.tabs.executeScript(
-    tab.id, {
-      file: "/js/display-history.js"
+  await browser.tabs.executeScript(tab.id, {
+    file: "/js/display-history.js",
   });
-}
+};
