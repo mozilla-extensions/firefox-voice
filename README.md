@@ -1,17 +1,22 @@
-# Speak To Me
+# VoiceFox
 
-[![Travis](https://img.shields.io/travis/mozilla/voicefill.svg)](https://travis-ci.org/mozilla/voicefill)
-[![Available on Test Pilot](https://img.shields.io/badge/available_on-Test_Pilot-0996F8.svg)](https://testpilot.firefox.com/experiments/voice-fill)
+VoiceFox is a an experiment from [Mozilla Research](https://research.mozilla.org/).
 
-This is a simple WebExtension that adds support to use Speech To Text
-as an input method in web pages.
+VoiceFox is a browser extension that allows you to give voice commands to your browser, such as "what is the weather?" or "find the gmail tab". Ultimately the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions. Initially the goal is to provide *any* useful interactions.
 
-## Usage
+## Developing
 
-Install the `web-ext` npm module: `npm install --global web-ext`
+Simple developer installation is:
 
-Navigate to the `extension` subdirectory
+```sh
+npm install
+npm start
+```
 
-Run `npm install`
+This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
-Run `web-ext run` from the `extension` subdirectory.
+## Contribution
+
+If you have an idea, the best way to start is to open an issue in this repository. 
+
+We do plan to allow extensions to add functionality (like a new voice command).
