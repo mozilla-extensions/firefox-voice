@@ -17,6 +17,6 @@ This will launch a new Firefox browser with the extension installed. You should 
 
 ## Contribution
 
-If you have an idea, the best way to start is to open an issue in this repository. 
+If you have an idea, the best way to start is to open an issue in this repository.
 
 We do plan to allow extensions to add functionality (like a new voice command).
