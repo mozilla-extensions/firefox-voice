@@ -26,7 +26,7 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 });
 
 const triggerExtension = async () => {
-  const url = "https://jcambre.github.io/vf/";
+  const url = browser.extension.getURL("mic.html");
   const tab = await browser.tabs.create({ url });
   const intervalConnection = setInterval(() => {
     browser.tabs
