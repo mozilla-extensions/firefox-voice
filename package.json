@@ -34,7 +34,7 @@
     "url": "git+https://github.com/mozilla/voicefox.git"
   },
   "scripts": {
-    "start": "mkdir -p Profile && web-ext run --firefox-profile Profile/ --keep-profile-changes --firefox nightly --source-dir extension/ --browser-console",
+    "start": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "build:changelog": "md2html CHANGELOG.md > extension/views/CHANGELOG.html",
     "build:deps": "for file in bodymovin/build/player/bodymovin.min.js speaktome-api/build/stm_web.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js ; do cp node_modules/$file extension/js/vendor/ ; done",
     "format": "prettier 'extension/**/*.{js,css}' --write",

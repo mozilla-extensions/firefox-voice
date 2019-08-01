@@ -10,5 +10,5 @@ package-lock.json
 web-ext-artifacts
 .DS_Store
 credentials
-/Profile
+/Profile*
 
