@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* globals parseIntent, executeIntentForAction */
 
 let triggeringTabId;
-let extensionTabId;
 
 browser.browserAction.onClicked.addListener(async triggeringTab => {
   // set triggeringTabId
@@ -27,8 +27,7 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 
 const triggerExtension = async () => {
   const url = "https://jcambre.github.io/vf/";
-  let tab = await browser.tabs.create({ url });
-  extensionTabId = tab.id;
+  const tab = await browser.tabs.create({ url });
   const intervalConnection = setInterval(() => {
     browser.tabs
       .sendMessage(tab.id, {

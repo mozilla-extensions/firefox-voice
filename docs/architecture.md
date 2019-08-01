@@ -2,6 +2,8 @@
 
 As of August 1st 2019, these are notes on a proposed architecture (not yet implemented).
 
+## Components
+
 The basic components:
 
 - The background process, which acts as a hub
@@ -39,14 +41,15 @@ The basic components:
   - Pretty minimal
   - Actual options stored in the background process
 
-Data flow:
+## Data flow:
 
 - When one component "owns" some data, it will typically send a complete or subset of that data to another component. When there is any update, it resends the entire thing
   - Updates happen via messages into the component
 - Messages try to be directed to the right process
 - Every message has a "type" property. Ideally these types will be globally unique (i.e., *don't* rely on sending the message to the right location, if it might be treated incorrectly as a valid message to a different receiver)
 
-Intent parsing:
+## Intent parsing:
+
 - The hard part is we need to know all the intents in order to create the model
 - We should include the example utterances with the intents somehow
 - Maybe each intent should be a subdirectory, and there should be a .yaml file
@@ -55,3 +58,22 @@ Intent parsing:
 - We'll need to "deploy" these somewhere. That might be locally for local development of a new intent.
 - Maybe we should allow uploading some single JSON file. The JSON file could be sha-hashed, and then we could put the hash in the add-on, and then the server will use the appropriate one. There's security issues here, of course, though it's not terrible due to the add-on having the hash.
 - Local JavaScript intent parsing would be really nice, but probably not available anytime soon.
+
+## Modules:
+
+- While we can use modern modules some places, we can't use them everywhere (e.g., content scripts)
+- We could use Webpack, but then we'd be using Webpack.
+- So instead, old school modules, like:
+
+```js
+// In moduleName.js
+// *Using* an external module is done like:
+/* globals someOtherModule */
+this.moduleName = (function() {
+  let exports = {};
+  exports.foo = function() {
+    return someOtherModule.func();
+  };
+  return exports;
+})();
+```

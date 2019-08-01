@@ -1,5 +1,6 @@
-const parseIntent = query => {
+this.parseIntent = query => {
   let matches;
+  let action;
 
   // TEMPORARILY DISABLE GOOGLE ASSISTANT + ALEXA INVOCATIONS FOR USER TESTING
   if ((matches = query.match(/(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i))) {
@@ -51,13 +52,13 @@ const parseIntent = query => {
     action = "play";
   } else {
     action = "search";
-    matches = [, query]; // a hack to put this in the expected format of the next matches line
+    matches = [null, query]; // a hack to put this in the expected format of the next matches line
   }
 
   matches = matches.slice(1).join(" "); // extract only the captured groups, flatten them into a single string
 
   return {
-    action: action,
+    action,
     content: matches,
   };
 };

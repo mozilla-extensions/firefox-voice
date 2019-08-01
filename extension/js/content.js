@@ -1,9 +1,11 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* globals onMute, externalAssistantProcessingState, displayGoogleResults, fail_gracefully, parseIntent */
 
 //  let LANGUAGES = {};
 const LANGUAGE = "en-US";
+this.SpeakToMeVad = null;
 
 //  const languagePromise = fetch(
 //      browser.extension.getURL('js/languages.json')
@@ -39,28 +41,29 @@ const LANGUAGE = "en-US";
   }
 
   // Initialize NativeMessaging port for Google Assistant + Alexa
-  var port = browser.runtime.connect({ name: "cs-port" });
+  const port = browser.runtime.connect({ name: "cs-port" });
 
   port.onMessage.addListener(function(m) {
     console.log("In content script, received message from background script: ");
     console.log(m.type);
-    if (m.type == "noAudibleTabs") {
-    } else if (m.type == "muting") {
+    if (m.type === "noAudibleTabs") {
+      //
+    } else if (m.type === "muting") {
       onMute();
-    } else if (m.type == "googleAssistant") {
+    } else if (m.type === "googleAssistant") {
       console.log("THE EVENT TYPE IS....");
       console.log(m.event);
-      if (m.event == "PROCESSING") {
+      if (m.event === "PROCESSING") {
         externalAssistantProcessingState(m.type);
-      } else if (m.event == "GOOGLE_RESPONSE") {
+      } else if (m.event === "GOOGLE_RESPONSE") {
         displayGoogleResults(m.content);
       }
-    } else if (m.type == "alexa") {
+    } else if (m.type === "alexa") {
       console.log("THE EVENT TYPE IS....");
       console.log(m.event);
-      if (m.event == "PROCESSING") {
+      if (m.event === "PROCESSING") {
         externalAssistantProcessingState(m.type);
-      } else if (m.event == "ALEXA_RESPONSE") {
+      } else if (m.event === "ALEXA_RESPONSE") {
         displayGoogleResults(m.content);
       }
     }
@@ -187,7 +190,7 @@ const LANGUAGE = "en-US";
           SpeakToMePopup.closeClicked = true;
         }
       };
-      processTextQuery = function(e) {
+      const processTextQuery = function(e) {
         // SpeakToMePopup.cancelFetch = true;
         console.log("process this text!");
         const textContent = textInput.innerText;
@@ -210,7 +213,7 @@ const LANGUAGE = "en-US";
           stm_vad.stopGum();
         }
         document.getElementById("send-btn-wrapper").style.display = "block";
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
           processTextQuery();
         }
       };
@@ -250,9 +253,8 @@ const LANGUAGE = "en-US";
         const popup = document.getElementById("stm-popup");
         const close = document.getElementById("stm-close");
         popup.addEventListener("click", function _mic_stop() {
-          popup.removeEventListener("click", _mic_stop);
           resolve();
-        });
+        }, {once: true});
         close.addEventListener("click", function _close_click(e) {
           e.stopPropagation();
           close.removeEventListener("click", _close_click);
@@ -326,7 +328,7 @@ const LANGUAGE = "en-US";
           }
         );
 
-        let micOpen = new Audio(
+        const micOpen = new Audio(
           "https://jcambre.github.io/vf/mic_open_chime.ogg"
         );
         micOpen.type = "audio/ogg";
@@ -413,6 +415,7 @@ const LANGUAGE = "en-US";
                   transcription.style.display = "block";
 
                   let matches;
+                  let action;
 
                   // TEMPORARILY DISABLE GOOGLE ASSISTANT + ALEXA INVOCATIONS FOR USER TESTING
                   if (
@@ -476,7 +479,7 @@ const LANGUAGE = "en-US";
                     action = "read";
                   } else {
                     action = "search";
-                    matches = [, query]; // a hack to put this in the expected format of the next matches line
+                    matches = [null, query]; // a hack to put this in the expected format of the next matches line
                   }
 
                   matches = matches.slice(1).join(" "); // extract only the captured groups, flatten them into a single string
@@ -489,19 +492,19 @@ const LANGUAGE = "en-US";
                     queryHistory = queryHistory.queryHistory || [];
                     queryHistory.push({
                       transcription: query,
-                      action: action,
+                      action,
                       timestamp: Date.now(),
                     });
                     if (queryHistory.length > 5) queryHistory.shift();
 
                     browser.storage.local.set({
-                      queryHistory: queryHistory,
+                      queryHistory,
                     });
                   });
 
                   // Tell the background script which action to execute
                   port.postMessage({
-                    action: action,
+                    action,
                     content: matches,
                   });
                 }
@@ -544,7 +547,7 @@ const LANGUAGE = "en-US";
 
     // Clear the canvas
 
-    var popupWidth = document.getElementById("stm-popup").offsetWidth;
+    const popupWidth = document.getElementById("stm-popup").offsetWidth;
 
     const levels = document.getElementById("stm-levels");
     const xPos =
@@ -580,7 +583,7 @@ const LANGUAGE = "en-US";
         continue;
       }
       // Display a bar for this value.
-      var alpha = diameter / 500;
+      let alpha = diameter / 500;
       if (alpha > 0.2) alpha = 0.2;
       else if (alpha < 0.1) alpha = 0.1;
 
@@ -628,7 +631,7 @@ const LANGUAGE = "en-US";
     loadAnimation(ERROR_ANIMATION, false);
     const copy = document.getElementById("stm-content");
     copy.innerHTML = '<div id="stm-listening-text"></div>';
-    let errorDiv = document.getElementById("stm-listening-text");
+    const errorDiv = document.getElementById("stm-listening-text");
     errorDiv.textContent = errorMsg;
     dismissTabTimeout = setTimeout(() => {
       SpeakToMePopup.hide();
@@ -640,6 +643,7 @@ const LANGUAGE = "en-US";
   };
 
   // Webrtc_Vad integration
+  // TODO: what is this about?
   SpeakToMeVad = function SpeakToMeVad() {
     this.webrtc_main = Module.cwrap("main");
     this.webrtc_main();
@@ -792,6 +796,7 @@ const LANGUAGE = "en-US";
 
 // Creation of the configuration object
 // that will be pick by emscripten module
+// eslint-disable-next-line no-var
 var Module = {
   preRun: [],
   postRun: [],
@@ -833,7 +838,7 @@ window.onerror = function(event) {
   };
 };
 Module.noInitialRun = true;
-Module["onRuntimeInitialized"] = function() {
+Module.onRuntimeInitialized = function() {
   stm_vad = new SpeakToMeVad();
   Module.setStatus("Webrtc_vad and SpeakToMeVad loaded");
 };
