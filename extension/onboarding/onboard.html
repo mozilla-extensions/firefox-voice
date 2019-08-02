@@ -4,26 +4,48 @@
     <meta charset="UTF-8">
     <title>Start using VoiceFox!</title>
     <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="onboarding.css">
   </head>
   <body>
     <h1>Welcome to VoiceFox!</h1>
 
-    <p>To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".</p>
+    <div id="getting-started" class="instruction">
+      <p>
+        To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".
+      </p>
 
-    <p id="must-allow" style="display: none">
-      You must <strong>allow</strong> microphone permission to use VoiceFox.
-      <button onclick="location.reload()">Reload the page</button>
-    </p>
+      <div><center><img src="security-popup.png" style="width: 360px; height: 193px"></center></div>
+    </div>
 
-    <p id="generic-error" style="display: none">There was an error trying to get microphone access: <span id="error-message"></span></p>
+    <div id="must-allow" class="instruction">
+      <p>
+        You must <strong>allow</strong> microphone permission to use VoiceFox.
+      </p>
 
-    <p id="success">
-      The microphone is enabled, and you are ready to use VoiceFox!
-    </p>
+      <p>First click on <img src="security-button.png" style="width: 187px; height: 29px"> in the URL bar.</p>
+
+      <p>Next remove the permission denial:</p>
+
+      <div><center><img src="security-panel.png" style="width: 369px; height: 188px"></center></div>
+
+      <p>
+        After that
+        <button class="reload">Reload the page</button>
+      </p>
+    </div>
+
+    <p id="generic-error" class="instruction">There was an error trying to get microphone access: <span id="error-message"></span></p>
+
+    <div id="success" class="instruction" >
+      <p>
+        The microphone is enabled, and you are ready to use VoiceFox!
+      </p>
+
+      <p>
+        If you want to change which microphone you use, you can revisit this page, remove the permission (click <img src="security-button.png" style="width: 187px; height: 29px">) and then give permission with a new microphone.
+      </p>
+    </div>
 
     <script src="onboarding.js"></script>
-    <script>
-      onboarding.launchPermission();
-    </script>
   </body>
 </html>

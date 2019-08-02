@@ -10,7 +10,7 @@ this.popup = (function() {
   async function init() {
     document.addEventListener("beforeunload", () => {
       if (isWaitingForPermission && Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE) {
-        onboarding.startOnboarding();
+        startOnboarding();
       }
     });
     try {
@@ -20,7 +20,7 @@ this.popup = (function() {
     } catch (e) {
       isWaitingForPermission = false;
       if (e.name === "NotAllowedError" || e.name === "TimeoutError") {
-        onboarding.startOnboarding();
+        startOnboarding();
         window.close();
         return;
       }
@@ -41,6 +41,12 @@ this.popup = (function() {
       throw exc;
     });
     await Promise.race([requestMicrophone(), sleeper]);
+  }
+
+  async function startOnboarding() {
+    await browser.tabs.create({
+      url: browser.extension.getURL("onboarding/onboard.html"),
+    });
   }
 
   init();
