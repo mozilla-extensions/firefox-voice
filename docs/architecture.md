@@ -21,6 +21,10 @@ The basic components:
   - It records or allows for typing input
   - It is responsible for sending this information to any external service
   - It handles any microphone permission issues
+- Onboarding / permissions
+  - Part of the listener, but we need some special logic around this
+  - This handles getUserMedia, since that's how we'll notice that we need permissions
+  - We should probably also have an onboarding flag, since we know we'll need something on first run before we even call getUserMedia
 - Intents
   - It receives a parsed intent from the listener
     - The listener will probably be open at this stage

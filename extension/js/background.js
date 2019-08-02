@@ -28,6 +28,7 @@ browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
 const triggerExtension = async () => {
   const url = "https://jcambre.github.io/vf/";
   const tab = await browser.tabs.create({ url });
+  extensionTabId = tab.id;
   const intervalConnection = setInterval(() => {
     browser.tabs
       .sendMessage(tab.id, {
