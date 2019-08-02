@@ -24,3 +24,4 @@ rules:
   no-var: error
   no-warning-comments: warn
   prefer-const: error
+  mozilla/no-import-into-var-and-global: off

@@ -43,12 +43,9 @@ function restoreOptions() {
     });
 
   let manifest;
-  fetch(browser.extension.getURL("/manifest.json"))
-    .then(response => {
-      return response.json();
-    })
-    .then(m => {
-      manifest = m;
+  Promise.resolve()
+    .then(() => {
+      manifest = browser.runtime.getManifest();
 
       return browser.storage.sync.get("lastVersion");
     })
