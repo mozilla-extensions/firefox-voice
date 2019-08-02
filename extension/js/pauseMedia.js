@@ -8,6 +8,7 @@
   console.log("the first media item is this");
   console.log(firstMediaItem);
   if (firstMediaItem) {
+    // TODO: this is probably intended to return "playing?" but instead it's resolving a promise that is thrown away
     firstMediaItem.pause().then(result => {
       return "playing?";
     });

@@ -41,7 +41,7 @@
       "js/background.js",
       "js/browserService.js",
       "js/intentParser.js",
-      "js/vendor/fuse.min.js"
+      "js/vendor/fuse.js"
     ]
   },
   "options_ui": {

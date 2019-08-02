@@ -2,6 +2,7 @@
 *.tgz
 *~
 !extension/js/vendor/fuse.min.js
+extension/js/vendor/
 extension/views/CHANGELOG.html
 node_modules
 npm-debug.log
@@ -9,5 +10,5 @@ package-lock.json
 web-ext-artifacts
 .DS_Store
 credentials
-/Profile
+/Profile*
 
