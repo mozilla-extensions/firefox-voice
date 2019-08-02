@@ -1,40 +1,33 @@
 this.onboarding = (function() {
-  const exports = {};
-
-  exports.startOnboarding = async function startOnboarding() {
-    await browser.tabs.create({
-      url: browser.extension.getURL("onboarding/onboard.html"),
-    });
-  };
 
   async function launchPermission() {
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-      displaySuccess();
+      await navigator.mediaDevices.getUserMedia({audio: true});
+      displaySection("#success");
     } catch (e) {
       if (e.name === "NotAllowedError") {
-        displayMustAllow();
+        displaySection("#must-allow");
       } else {
-        displayGenericError(String(e));
+        displaySection("#generic-error");
+        document.querySelector("#error-message").textContent = String(e) || "Unknown error";
       }
     }
   }
 
-  function displayMustAllow() {
-    document.querySelector("#must-allow").style.display = "";
-  }
-
-  function displayGenericError(error) {
-    document.querySelector("#generic-error").style.display = "";
-    document.querySelector("#error-message").textContent =
-      error || "Unknown error";
-  }
-
-  function displaySuccess() {
-    document.querySelector("#success").style.display = "";
+  function displaySection(selector) {
+    for (const el of document.querySelectorAll(`.instruction:not(${selector})`)) {
+      el.style.display = "none";
+    }
+    for (const el of document.querySelectorAll(selector)) {
+      el.style.display = "";
+    }
   }
 
   function init() {
+    displaySection("#getting-started");
+    for (const el of document.querySelectorAll(".reload")) {
+      el.addEventListener("click", () => location.reload());
+    }
     if (location.pathname.endsWith("onboard.html")) {
       launchPermission();
     }
@@ -65,6 +58,4 @@ this.onboarding = (function() {
   }
 
   init();
-
-  return exports;
 })();
