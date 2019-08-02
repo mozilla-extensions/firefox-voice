@@ -3,18 +3,18 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Start using VoiceFox!</title>
+  <title>Welcome to Firefox Voice</title>
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="onboarding.css">
   <link rel="stylesheet" href="../css/vendor/tailwind.min.css">
 </head>
 
 <body>
-  <div id="wrapper" class="h-full text-left font-light">
+  <div id="wrapper" class="h-full text-left font-light lg:flex">
     <div class="relative">
       <div id="welcome-text-content" class="text-white p-10 lg:p-20 text-2xl xl:text-4xl tracking-tight leading-snug">
         <div class="align-middle">
-          <h1 id="welcome" class="inline-block tracking-normal font-semibold text-4xl lg:text-4xl">Welcome
+          <h1 id="welcome" class="pt-20 inline-block tracking-normal font-semibold text-4xl lg:text-4xl">Welcome
             to Firefox&nbsp;Voice</h1>
           <div
             class="hidden inline-block text-base text-white rounded-full py-2 px-4 border-solid border-2 border-white">
@@ -34,84 +34,87 @@
       </div>
     </div>
 
-    <div id="instructions" class="flex-grow flex items-center justify-center mt-20">
-      <div id="instructions-sub" class="object-center w-400 xl:w-600">
-        <img id="toolbar-large" class="w-full lg:max-w-xl hidden lg:block" />
-        <img id="toolbar-small" class="w-full lg:max-w-xl lg:hidden" />
-        <ol class="list-decimal text-3xl xl:text-4xl font-bold">
-          <li>
-            <h5 class="instruction-step">Start by clicking the mic</h5>
-            <p class="text-2xl font-light">Or try using the keyboard shortcut</p>
-            <div class="mt-3 text-lg font-light">
-              <span id="action-key" class="action-key bg-gray-800 text-white px-3 py-2 mx-2"></span>+<span
-                class="space-key bg-gray-800 text-white px-6 py-2 ml-2">Space</span>
-            </div>
-          </li>
-          <li class="mt-10">
-            <h5 class="instruction-step">Speak when you see the line</h5>
-            <img id="zap-onboarding" class="mt-3" />
-          </li>
-          <li class="mt-10">
-            <h5 class="instruction-step">Try saying things like:</h5>
-            <h6 class="text-2xl font-light italic">
-              Go to the New York Times
-            </h6>
-            <h6 class="text-2xl font-light italic">
-              Search for hiking in Denver
-            </h6>
-            <h6 class="text-2xl font-light italic">
-              Find my calendar tab
-            </h6>
-            <h6 class="text-2xl font-light italic">
-              Show me 49ers scores on ESPN
-            </h6>
-            <h6 class="text-2xl font-light italic">
-              Play Green Day on YouTube
-            </h6>
-          </li>
-        </ol>
+    <div id="instruction-wrapper" class="flex-grow flex items-center justify-center mt-20 mx-10 lg:w-1/2">
+      <div id="installation-instructions">
+        <div id="getting-started" class="instruction">
+            <h5 class="text-3xl xl:text-4xl font-bold">
+              To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".
+            </h5>
+        
+            <img src="security-popup.png" style="width: 360px; height: 193px" class="center">
+          </div>
+        
+          <div id="must-allow" class="instruction">
+            <p>
+              You must <strong>allow</strong> microphone permission to use VoiceFox.
+            </p>
+        
+            <p>First click on <img src="security-button.png" style="width: 187px; height: 29px"> in the URL bar.</p>
+        
+            <p>Next remove the permission denial:</p>
+        
+            <img src="security-panel.png" style="width: 369px; height: 188px" class="center">
+        
+            <p>
+              After that
+              <button class="reload">Reload the page</button>
+            </p>
+          </div>
+        
+          <p id="generic-error" class="instruction">There was an error trying to get microphone access: <span id="error-message"></span></p>
+        
+
+          <div id="success" class="instruction bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-10" role="alert">
+            <strong class="font-bold">Microphone enabled successfully</strong>
+            <span class="block sm:inline">The microphone is enabled, and you are ready to use Firefox Voice!</span>
+            <p class="block sm:inline">
+                If you want to change which microphone you use, you can revisit this page, remove the permission (click <img src="security-button.png" style="width: 187px; height: 29px">) and then give permission with a new microphone.
+              </p>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+            </span>
+          </div>
+      </div>
+      <div id="usage-instructions" class="hidden">
+          <div id="instructions-sub" class="object-center w-400 xl:w-600">
+            <img id="toolbar-large" class="w-full lg:max-w-xl hidden lg:block" />
+            <img id="toolbar-small" class="w-full lg:max-w-xl lg:hidden" />
+            <ol class="list-decimal text-3xl xl:text-4xl font-bold">
+              <li>
+                <h5 class="instruction-step">Start by clicking the mic</h5>
+                <p class="text-2xl font-light">Or try using the keyboard shortcut</p>
+                <div class="mt-3 text-lg font-light">
+                  <span id="action-key" class="action-key bg-gray-800 text-white px-3 py-2 mx-2"></span>+<span
+                    class="space-key bg-gray-800 text-white px-6 py-2 ml-2">Space</span>
+                </div>
+              </li>
+              <li class="mt-10">
+                <h5 class="instruction-step">Speak when you see the line</h5>
+                <img id="zap-onboarding" class="mt-3" />
+              </li>
+              <li class="mt-10">
+                <h5 class="instruction-step">Try saying things like:</h5>
+                <h6 class="text-2xl font-light italic">
+                  Go to the New York Times
+                </h6>
+                <h6 class="text-2xl font-light italic">
+                  Search for hiking in Denver
+                </h6>
+                <h6 class="text-2xl font-light italic">
+                  Find my calendar tab
+                </h6>
+                <h6 class="text-2xl font-light italic">
+                  Show me 49ers scores on ESPN
+                </h6>
+                <h6 class="text-2xl font-light italic">
+                  Play Green Day on YouTube
+                </h6>
+              </li>
+            </ol>
+          </div>
       </div>
     </div>
-  </div>
 
-
-  
-    <h1>Welcome to VoiceFox!</h1>
-    <div id="getting-started" class="instruction">
-    <p>
-      To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".
-    </p>
-
-    <div><center><img src="security-popup.png" style="width: 360px; height: 193px"></center></div>
-  </div>
-
-  <div id="must-allow" class="instruction">
-    <p>
-      You must <strong>allow</strong> microphone permission to use VoiceFox.
-    </p>
-
-    <p>First click on <img src="security-button.png" style="width: 187px; height: 29px"> in the URL bar.</p>
-
-    <p>Next remove the permission denial:</p>
-
-    <div><center><img src="security-panel.png" style="width: 369px; height: 188px"></center></div>
-
-    <p>
-      After that
-      <button class="reload">Reload the page</button>
-    </p>
-  </div>
-
-  <p id="generic-error" class="instruction">There was an error trying to get microphone access: <span id="error-message"></span></p>
-
-  <div id="success" class="instruction" >
-    <p>
-      The microphone is enabled, and you are ready to use VoiceFox!
-    </p>
-
-    <p>
-      If you want to change which microphone you use, you can revisit this page, remove the permission (click <img src="security-button.png" style="width: 187px; height: 29px">) and then give permission with a new microphone.
-    </p>
   </div>
 
   <script src="onboarding.js"></script>

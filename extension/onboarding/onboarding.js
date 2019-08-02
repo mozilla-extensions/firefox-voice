@@ -4,6 +4,10 @@ this.onboarding = (function() {
     try {
       await navigator.mediaDevices.getUserMedia({audio: true});
       displaySection("#success");
+      // TODO change the following into CSS "success" class declarations?
+      document.querySelector("#usage-instructions").style.display = "block";
+      document.querySelector("#welcome").style.paddingTop = "0rem";
+      document.querySelector("#instruction-wrapper").style.flexDirection = "column";
     } catch (e) {
       if (e.name === "NotAllowedError") {
         displaySection("#must-allow");

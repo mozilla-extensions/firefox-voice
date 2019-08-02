@@ -27,12 +27,13 @@ a {
   }
 }
 
-@media (min-width: 880px) {
+@media (min-width: 880px)
+and (max-width: 1024px) {
     #wrapper {
         display: flex;
     }
 
-    #instructions {
+    #usage-instructions {
         margin-left: 5rem;
     }
 
