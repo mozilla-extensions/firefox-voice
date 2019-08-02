@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Start using VoiceFox!</title>
+    <link rel="stylesheet" href="../main.css">
+  </head>
+  <body>
+    <h1>Welcome to VoiceFox!</h1>
+
+    <p>To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".</p>
+
+    <p id="must-allow" style="display: none">
+      You must <strong>allow</strong> microphone permission to use VoiceFox.
+      <button onclick="location.reload()">Reload the page</button>
+    </p>
+
+    <p id="generic-error" style="display: none">There was an error trying to get microphone access: <span id="error-message"></span></p>
+
+    <p id="success">
+      The microphone is enabled, and you are ready to use VoiceFox!
+    </p>
+
+    <script src="onboarding.js"></script>
+    <script>
+      onboarding.launchPermission();
+    </script>
+  </body>
+</html>
