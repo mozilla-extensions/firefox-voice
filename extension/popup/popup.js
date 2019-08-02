@@ -1,7 +1,6 @@
 /* globals onboarding, util */
 
 this.popup = (function() {
-
   const PERMISSION_REQUEST_TIME = 500;
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
@@ -9,7 +8,10 @@ this.popup = (function() {
 
   async function init() {
     document.addEventListener("beforeunload", () => {
-      if (isWaitingForPermission && Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE) {
+      if (
+        isWaitingForPermission &&
+        Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
+      ) {
         onboarding.startOnboarding();
       }
     });
@@ -30,7 +32,7 @@ this.popup = (function() {
   }
 
   async function requestMicrophone() {
-    stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     return stream;
   }
 
@@ -44,5 +46,4 @@ this.popup = (function() {
   }
 
   init();
-
 })();

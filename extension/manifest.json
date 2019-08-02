@@ -31,7 +31,8 @@
       ],
       "css": [
         "css/main.css",
-        "css/animate.min.css"
+        "css/animate.min.css",
+        "css/vendor/tailwind.min.css"
       ]
     }
   ],

@@ -1,12 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Start using VoiceFox!</title>
-    <link rel="stylesheet" href="../main.css">
-  </head>
-  <body>
-    <h1>Welcome to VoiceFox!</h1>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Start using VoiceFox!</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="onboarding.css">
+  <link rel="stylesheet" href="../css/vendor/tailwind.min.css">
+</head>
+
+<body>
+  <div id="wrapper" class="h-full text-left font-light">
+    <div class="relative">
+      <div id="welcome-text-content" class="text-white p-10 lg:p-20 text-2xl xl:text-4xl tracking-tight leading-snug">
+        <div class="align-middle">
+          <h1 id="welcome" class="inline-block tracking-normal font-semibold text-4xl lg:text-4xl">Welcome
+            to Firefox&nbsp;Voice</h1>
+          <div
+            class="hidden inline-block text-base text-white rounded-full py-2 px-4 border-solid border-2 border-white">
+            Beta</div>
+        </div>
+        <p>Search, open a webpage, find a tab, play music, mute audio, and more <span
+            class="highlight font-bold tracking-tight">with just your voice</span>.</p>
+
+        <h3 id="privacy-promise" class="mt-10 text-2xl text-4xl lg:text-4xl">Privacy is our promise.</h3>
+        <p class="privacy-promise-explanations text-2xl xl:text-2xl tracking-normal font-light pr-20">The mic is only active when you
+          trigger it with a button press or hot key.</p>
+        <p class="text-2xl xl:text-2xl tracking-normal mt-5 font-light pr-20">After processing your voice
+          isn't stored on any servers.</p>
+
+        <h5 id="learn-more-about-data" class="text-xl tracking-normal mt-5 font-light pr-20 pb-10"><a href="">How Mozilla protects
+            your voice data</a></h5>
+      </div>
+    </div>
+
+    <div id="instructions" class="flex-grow flex items-center justify-center mt-20">
+      <div id="instructions-sub" class="object-center w-400 xl:w-600">
+        <img id="toolbar-large" class="w-full lg:max-w-xl hidden lg:block" />
+        <img id="toolbar-small" class="w-full lg:max-w-xl lg:hidden" />
+        <ol class="list-decimal text-3xl xl:text-4xl font-bold">
+          <li>
+            <h5 class="instruction-step">Start by clicking the mic</h5>
+            <p class="text-2xl font-light">Or try using the keyboard shortcut</p>
+            <div class="mt-3 text-lg font-light">
+              <span id="action-key" class="action-key bg-gray-800 text-white px-3 py-2 mx-2"></span>+<span
+                class="space-key bg-gray-800 text-white px-6 py-2 ml-2">Space</span>
+            </div>
+          </li>
+          <li class="mt-10">
+            <h5 class="instruction-step">Speak when you see the line</h5>
+            <img id="zap-onboarding" class="mt-3" />
+          </li>
+          <li class="mt-10">
+            <h5 class="instruction-step">Try saying things like:</h5>
+            <h6 class="text-2xl font-light italic">
+              Go to the New York Times
+            </h6>
+            <h6 class="text-2xl font-light italic">
+              Search for hiking in Denver
+            </h6>
+            <h6 class="text-2xl font-light italic">
+              Find my calendar tab
+            </h6>
+            <h6 class="text-2xl font-light italic">
+              Show me 49ers scores on ESPN
+            </h6>
+            <h6 class="text-2xl font-light italic">
+              Play Green Day on YouTube
+            </h6>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- <h1>Welcome to VoiceFox!</h1>
 
     <p>To get started with VoiceFox, you have to allow microphone access <em>and</em> check "Remember my choice".</p>
 
@@ -19,11 +87,12 @@
 
     <p id="success">
       The microphone is enabled, and you are ready to use VoiceFox!
-    </p>
+    </p> -->
 
-    <script src="onboarding.js"></script>
-    <script>
-      onboarding.launchPermission();
-    </script>
-  </body>
+  <script src="onboarding.js"></script>
+  <script>
+    onboarding.launchPermission();
+  </script>
+</body>
+
 </html>

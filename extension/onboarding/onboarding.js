@@ -9,7 +9,7 @@ this.onboarding = (function() {
 
   async function launchPermission() {
     try {
-      await navigator.mediaDevices.getUserMedia({audio: true});
+      await navigator.mediaDevices.getUserMedia({ audio: true });
       displaySuccess();
     } catch (e) {
       if (e.name === "NotAllowedError") {
@@ -26,7 +26,8 @@ this.onboarding = (function() {
 
   function displayGenericError(error) {
     document.querySelector("#generic-error").style.display = "";
-    document.querySelector("#error-message").textContent = error || "Unknown error";
+    document.querySelector("#error-message").textContent =
+      error || "Unknown error";
   }
 
   function displaySuccess() {
@@ -37,6 +38,30 @@ this.onboarding = (function() {
     if (location.pathname.endsWith("onboard.html")) {
       launchPermission();
     }
+
+    // Set hotkey suggestion based on navigator
+    document.querySelector("#action-key").textContent =
+      navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
+    document.querySelector(
+      "#welcome-text-content"
+    ).style.backgroundImage = `url("${browser.extension.getURL(
+      "/assets/images/onboarding/supergraphic-large.svg"
+    )}")`;
+    document.querySelector(
+      "#toolbar-large"
+    ).src = browser.extension.getURL(
+      "/assets/images/onboarding/toolbar-arrow-2.png"
+    );
+    document.querySelector(
+      "#toolbar-small"
+    ).src = browser.extension.getURL(
+      "/assets/images/onboarding/toolbar-arrow-3.png"
+    );
+    document.querySelector(
+      "#zap-onboarding"
+    ).src = browser.extension.getURL(
+      "/assets/images/onboarding/zap.svg"
+    );
   }
 
   init();
