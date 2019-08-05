@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Voice Fox",
   "version": "1.4.5.2",
-  "description": "A fork of Voice Fill for voice controlling the web",
+  "description": "Voice control the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
     "url": "https://github.com/mozilla/voicefill"
@@ -75,7 +75,8 @@
   "browser_action": {
     "browser_style": true,
     "default_title": "Voice Fill",
-    "default_icon": "assets/images/mic.svg"
+    "default_icon": "assets/images/mic.svg",
+    "default_popup": "popup/popup.html"
   },
   "commands": {
     "_execute_browser_action": {
