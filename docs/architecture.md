@@ -1,4 +1,4 @@
-# VoiceFox architecture
+# Firefox Voice architecture
 
 As of August 1st 2019, these are notes on a proposed architecture (not yet implemented).
 
