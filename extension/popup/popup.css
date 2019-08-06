@@ -1,16 +1,16 @@
-@import url('https://rsms.me/inter/inter.css');
-html { 
-  font-family: 'Inter', sans-serif; 
-
+@import url("https://rsms.me/inter/inter.css");
+html {
+  font-family: "Inter", sans-serif;
 }
 @supports (font-variation-settings: normal) {
-  html { 
-    font-family: 'Inter var', sans-serif; 
+  html {
+    font-family: "Inter var", sans-serif;
   }
 }
 
-body, .cls-1 {
-  font-family: 'Inter' !important;
+body,
+.cls-1 {
+  font-family: "Inter" !important;
 }
 
 .listening #voice-input {
@@ -21,7 +21,7 @@ body, .cls-1 {
   display: none;
 }
 
-.listening #text-input>:not(span) {
+.listening #text-input > :not(span) {
   display: none;
 }
 
@@ -37,7 +37,7 @@ body, .cls-1 {
   display: block;
 }
 
-.typing #text-input>:not(span) {
+.typing #text-input > :not(span) {
   display: block !important;
 }
 
@@ -67,7 +67,8 @@ body, .cls-1 {
   max-width: 350px;
 }
 
-#popup-header, #popup-footer {
+#popup-header,
+#popup-footer {
   display: flex;
   flex: 1;
   justify-content: space-between;
@@ -75,7 +76,7 @@ body, .cls-1 {
 
 #header-title {
   font-size: 1.125rrem;
-  letter-spacing: .05rem;
+  letter-spacing: 0.05rem;
   font-weight: 700;
 }
 
