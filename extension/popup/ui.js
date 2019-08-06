@@ -5,13 +5,24 @@ this.ui = (function () {
 	let currentState = "listening";
 	let textInputDetected = false;
 
+	let animationSegmentTimes = {
+		reveal: [0, 14],
+		base: [14, 30],
+		low: [30, 46],
+		medium: [46, 62],
+		high: [62, 78],
+		processing: [78, 134],
+		error: [134, 153], 
+		success: [184, 203]
+	}
+
 	function playAnimation(animationName, loop) {
 		const container = document.getElementById("zap");
 		const anim = lottie.loadAnimation({
 			container, // the dom element that will contain the animation
-			loop,
+			loop: true,
 			renderer: 'svg',
-			autoplay: true,
+			autoplay: false,
 			path: `animations/${animationName}.json` // the path to the animation json
 		});
 		return anim;
@@ -19,6 +30,10 @@ this.ui = (function () {
 
 	exports.animateByMicVolume = function animateByMicVolume(stream) {
 		animation = playAnimation('Firefox_Voice_Full', true);
+		const revealAndBase = [animationSegmentTimes.reveal, animationSegmentTimes.base];
+		animation.addEventListener('DOMLoaded',function(){
+			animation.playSegments(revealAndBase, true);
+		});
 		getMicVolume(stream, animation);
 	};
 
@@ -51,6 +66,7 @@ this.ui = (function () {
 
 			if (updatePoll > 5) {
 				updatePoll = 0;
+				// console.log("this is how frequently i'm updating");
 				setAnimationForVolume(average, animation);
 			} else {
 				updatePoll++;
@@ -59,19 +75,17 @@ this.ui = (function () {
 	};
 
 	function setAnimationForVolume(avgVolume, animation) {
-		console.log("updating");
+		console.log(`updating: volume at ${avgVolume}`);
 		animation.onLoopComplete = function () { // code here
-			animation.stop();
-			// TODO: Adjust animations using playSegment when we receive the combined file
-			// if (avgVolume < 10) {
-			// 	animation = playAnimation('base', true);
-			// } else if (avgVolume < 20) {
-			// 	animation = playAnimation('low', true);
-			// } else if (avgVolume < 30) {
-			// 	animation = playAnimation('medium', true);
-			// } else {
-			// 	animation = playAnimation('high', true);
-			// }
+			if (avgVolume < 5) {
+				animation.playSegments(animationSegmentTimes.base, true);
+			} else if (avgVolume < 10) {
+				animation.playSegments(animationSegmentTimes.low, true);
+			} else if (avgVolume < 20) {
+				animation.playSegments(animationSegmentTimes.medium, true);
+			} else {
+				animation.playSegments(animationSegmentTimes.high, true);
+			}
 		}
 	};
 

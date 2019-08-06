@@ -31,10 +31,10 @@ this.popup = (function() {
     ui.setState('listening');
     ui.playListeningChime();
     ui.animateByMicVolume(stream);
-    setTimeout(() => {
-      stream.getTracks().forEach(track => track.stop());
-      ui.setState('processing');
-    }, 8000);
+    // setTimeout(() => {
+    //   stream.getTracks().forEach(track => track.stop());
+    //   ui.setState('processing');
+    // }, 8000);
   }
 
   async function requestMicrophone() {
