@@ -2,10 +2,10 @@ this.ui = (function () {
 	const exports = {};
 
 	let animation;
-	let currentState = "loading";
+	let currentState = "listening";
 	let textInputDetected = false;
 
-	const playAnimation = function playAnimation(animationName, loop) {
+	function playAnimation(animationName, loop) {
 		const container = document.getElementById("zap");
 		const anim = lottie.loadAnimation({
 			container, // the dom element that will contain the animation
@@ -18,11 +18,11 @@ this.ui = (function () {
 	};
 
 	exports.animateByMicVolume = function animateByMicVolume(stream) {
-		animation = playAnimation('processing', true);
+		animation = playAnimation('Firefox_Voice_Full', true);
 		getMicVolume(stream, animation);
 	};
 
-	const getMicVolume = function getMicVolume(stream, animation) {
+	function getMicVolume(stream, animation) {
 		// Inspired by code from https://stackoverflow.com/a/52952907
 		audioContext = new AudioContext();
 		analyser = audioContext.createAnalyser();
@@ -58,7 +58,7 @@ this.ui = (function () {
 		}
 	};
 
-	const setAnimationForVolume = function setAnimationForVolume(avgVolume, animation) {
+	function setAnimationForVolume(avgVolume, animation) {
 		console.log("updating");
 		animation.onLoopComplete = function () { // code here
 			animation.stop();
@@ -76,7 +76,7 @@ this.ui = (function () {
 	};
 
 	// Event handler for when we detect the user has started typing
-	const detectText = function detectText(e) {
+	function detectText(e) {
 		if (!textInputDetected) {
 			exports.setState('typing'); // TODO: is this the right place to set the state? or should that all be handled by popup.js
 			textInputDetected = true;
@@ -88,8 +88,8 @@ this.ui = (function () {
 	}
 
 	// Event handler for processing a text query
-	const processTextQuery = function processTextQuery(e) {
-
+	function processTextQuery(e) {
+		// TODO: Finish
 	}
 
 	exports.listenForText = function listenForText() {
@@ -103,10 +103,10 @@ this.ui = (function () {
 
 	const STATES = {};
 
-	STATES.loading = {
-		header: "Warming up...",
-		bodyClass: "loading"
-	};
+	// STATES.loading = {
+	// 	header: "Warming up...",
+	// 	bodyClass: "loading"
+	// };
 
 	STATES.listening = {
 		header: "Listening",
@@ -123,16 +123,55 @@ this.ui = (function () {
 		bodyClass: "typing"
 	};
 
+	STATES.settings = {
+		header: "Settings",
+		bodyClass: "settings"
+	}
+
 	exports.setState = function setState(newState) {
 		document.querySelector("#header-title").textContent = STATES[newState].header;
-		document.body.classList.remove(STATES[currentState].bodyClass);
-		document.body.classList.add(STATES[newState].bodyClass);
+		document.querySelector("#popup").classList.remove(STATES[currentState].bodyClass);
+		document.querySelector("#popup").classList.add(STATES[newState].bodyClass);
+		currentState = newState;
 	};
 
 	exports.playListeningChime = function playListeningChime() {
 		var audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
 		audio.play();
 	};
+
+	function showPreviousState() {
+		// TODO: May need to make this a bit more sophisticated and save the previous state (e.g. if they were typing)
+		exports.setState('listening');
+	}
+
+	function listenForBack() {
+		const backIcon = document.getElementById("back-icon");
+		backIcon.addEventListener("click", showPreviousState);
+	}
+	
+	function showSettings() {
+		exports.setState('settings');
+	}
+
+	function listenForSettings() {
+		const settingsIcon = document.getElementById("settings-icon");
+		settingsIcon.addEventListener("click", showSettings);
+	}
+
+	function closePopup() {
+		// TODO: offload mic and other resources before closing?
+		window.close();
+	}
+
+	function listenForClose() {
+		const closeIcon = document.getElementById("close-icon");
+		closeIcon.addEventListener("click", closePopup);
+	}
+	
+	listenForClose();
+	listenForSettings();
+	listenForBack();
 
 	return exports;
 })();

@@ -34,7 +34,7 @@ this.popup = (function() {
     setTimeout(() => {
       stream.getTracks().forEach(track => track.stop());
       ui.setState('processing');
-    }, 5000);
+    }, 8000);
   }
 
   async function requestMicrophone() {
