@@ -1,4 +1,85 @@
-#content {
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
+body, .cls-1 {
+  font-family: 'Inter' !important;
+}
+
+.listening :-moz-any(#text-input, #transcript) {
+  display: none;
+}
+
+.processing :-moz-any(#suggestions, #feedback) {
+  display: none;
+}
+
+.processing #transcript {
+  display: block;
+}
+
+.typing #text-input {
+  display: block;
+}
+
+#popup {
   min-height: 200px;
   min-width: 350px;
+  padding: 1em;
+}
+
+#popup-header, #popup-footer {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+#header-title {
+  font-size: 1.125rem;
+  letter-spacing: .05em;
+  font-weight: 700;
+}
+
+#popup-footer {
+  align-items: flex-end;
+}
+
+#ff-monitor-icon {
+  max-height: 60px;
+}
+
+#suggestions {
+  padding: 2em 0em;
+}
+
+.suggestion {
+  font-weight: 600;
+  line-height: 1em;
+  font-style: italic;
+}
+
+#feedback {
+  color: #737373;
+}
+
+#feedback-prompt {
+  margin-bottom: 0.75em;
+}
+
+#most-recent-query {
+  font-weight: 600;
+  font-style: italic;
+}
+
+#voice-input {
+  text-align: center;
+}
+
+#transcript {
+  font-weight: 600;
+  font-style: italic;
+  font-size: 2em;
+  padding: 1.5em 0em;
 }

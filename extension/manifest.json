@@ -30,8 +30,7 @@
         "js/intentParser.js"
       ],
       "css": [
-        "css/main.css",
-        "css/animate.min.css"
+        "css/main.css"
       ]
     }
   ],
