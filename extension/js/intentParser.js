@@ -1,3 +1,4 @@
+// TODO: probably this file is not needed (the same code is in content.js)
 this.parseIntent = query => {
   let matches;
   let action;
