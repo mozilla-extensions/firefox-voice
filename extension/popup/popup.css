@@ -1,7 +1,12 @@
 @import url('https://rsms.me/inter/inter.css');
-html { font-family: 'Inter', sans-serif; }
+html { 
+  font-family: 'Inter', sans-serif; 
+
+}
 @supports (font-variation-settings: normal) {
-  html { font-family: 'Inter var', sans-serif; }
+  html { 
+    font-family: 'Inter var', sans-serif; 
+  }
 }
 
 body, .cls-1 {
@@ -27,7 +32,11 @@ body, .cls-1 {
 #popup {
   min-height: 200px;
   min-width: 350px;
-  padding: 1em;
+  padding: 1rem;
+}
+
+#zap-wrapper {
+  max-width: 350px;
 }
 
 #popup-header, #popup-footer {
@@ -37,13 +46,13 @@ body, .cls-1 {
 }
 
 #header-title {
-  font-size: 1.125rem;
-  letter-spacing: .05em;
+  font-size: 1.125rrem;
+  letter-spacing: .05rem;
   font-weight: 700;
 }
 
 #popup-footer {
-  align-items: flex-end;
+  align-itrems: flex-end;
 }
 
 #ff-monitor-icon {
@@ -51,12 +60,12 @@ body, .cls-1 {
 }
 
 #suggestions {
-  padding: 2em 0em;
+  padding: 2rem 0rem;
 }
 
 .suggestion {
   font-weight: 600;
-  line-height: 1em;
+  line-height: 1rem;
   font-style: italic;
 }
 
@@ -65,7 +74,7 @@ body, .cls-1 {
 }
 
 #feedback-prompt {
-  margin-bottom: 0.75em;
+  margin-bottom: 0.75rem;
 }
 
 #most-recent-query {
@@ -80,6 +89,6 @@ body, .cls-1 {
 #transcript {
   font-weight: 600;
   font-style: italic;
-  font-size: 2em;
-  padding: 1.5em 0em;
+  font-size: 2rem;
+  padding: 1.5rem 0rem;
 }

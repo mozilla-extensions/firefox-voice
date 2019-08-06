@@ -27,7 +27,13 @@ this.popup = (function() {
       throw e;
     }
     document.querySelector("#transcript").textContent = `I got it! ${stream}`;
-    ui.playAnimation('', true);
+    ui.setState('listening');
+    ui.playListeningChime();
+    ui.animateByMicVolume(stream);
+    setTimeout(() => {
+      stream.getTracks().forEach(track => track.stop());
+      ui.setState('processing');
+    }, 5000);
   }
 
   async function requestMicrophone() {

@@ -71,7 +71,7 @@
     "nativeMessaging"
   ],
   "browser_action": {
-    "browser_style": true,
+    "browser_style": false,
     "default_title": "Voice Fill",
     "default_icon": "assets/images/mic.svg",
     "default_popup": "popup/popup.html"
