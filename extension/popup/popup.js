@@ -27,6 +27,7 @@ this.popup = (function() {
       throw e;
     }
     document.querySelector("#transcript").textContent = `I got it! ${stream}`;
+    ui.listenForText();
     ui.setState('listening');
     ui.playListeningChime();
     ui.animateByMicVolume(stream);

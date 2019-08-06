@@ -3,9 +3,9 @@ this.ui = (function () {
 
 	let animation;
 	let currentState = "loading";
+	let textInputDetected = false;
 
 	const playAnimation = function playAnimation(animationName, loop) {
-		console.log("am i back here");
 		const container = document.getElementById("zap");
 		const anim = lottie.loadAnimation({
 			container, // the dom element that will contain the animation
@@ -20,7 +20,7 @@ this.ui = (function () {
 	exports.animateByMicVolume = function animateByMicVolume(stream) {
 		animation = playAnimation('processing', true);
 		getMicVolume(stream, animation);
-	}
+	};
 
 	const getMicVolume = function getMicVolume(stream, animation) {
 		// Inspired by code from https://stackoverflow.com/a/52952907
@@ -36,7 +36,8 @@ this.ui = (function () {
 		analyser.connect(javascriptNode);
 		javascriptNode.connect(audioContext.destination);
 		let updatePoll = 0;
-		javascriptNode.onaudioprocess = function() {
+		// TODO figure out how to stop this update process once we've disabled getUserMedia
+		javascriptNode.onaudioprocess = function () {
 			var array = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteFrequencyData(array);
 			let values = 0;
@@ -48,8 +49,6 @@ this.ui = (function () {
 
 			const average = values / length;
 
-			console.log(Math.round(average));
-			console.log(`UPDATE POLL IS ${updatePoll}`);
 			if (updatePoll > 5) {
 				updatePoll = 0;
 				setAnimationForVolume(average, animation);
@@ -57,12 +56,13 @@ this.ui = (function () {
 				updatePoll++;
 			}
 		}
-	}
+	};
 
 	const setAnimationForVolume = function setAnimationForVolume(avgVolume, animation) {
 		console.log("updating");
-		animation.onLoopComplete = function(){ // code here
+		animation.onLoopComplete = function () { // code here
 			animation.stop();
+			// TODO: Adjust animations using playSegment when we receive the combined file
 			// if (avgVolume < 10) {
 			// 	animation = playAnimation('base', true);
 			// } else if (avgVolume < 20) {
@@ -73,37 +73,66 @@ this.ui = (function () {
 			// 	animation = playAnimation('high', true);
 			// }
 		}
+	};
+
+	// Event handler for when we detect the user has started typing
+	const detectText = function detectText(e) {
+		if (!textInputDetected) {
+			exports.setState('typing'); // TODO: is this the right place to set the state? or should that all be handled by popup.js
+			textInputDetected = true;
+			// TODO: SEND MESSAGE TO STOP MIC INPUT
+		}
+		if (e.keyCode === 13) {
+			processTextQuery();
+		}
 	}
 
-	const STATES = {}
+	// Event handler for processing a text query
+	const processTextQuery = function processTextQuery(e) {
+
+	}
+
+	exports.listenForText = function listenForText() {
+		const textInput = document.getElementById("text-input-field");
+		textInput.focus();
+		textInput.addEventListener("keyup", detectText);
+
+		const sendText = document.getElementById("send-text-input");
+		sendText.addEventListener("click", processTextQuery);
+	}
+
+	const STATES = {};
 
 	STATES.loading = {
 		header: "Warming up...",
 		bodyClass: "loading"
-	}
+	};
 
 	STATES.listening = {
 		header: "Listening",
 		bodyClass: "listening"
-	}
+	};
 
 	STATES.processing = {
 		header: "One second...",
 		bodyClass: "processing"
-	}
+	};
 
+	STATES.typing = {
+		header: "Type your request",
+		bodyClass: "typing"
+	};
 
 	exports.setState = function setState(newState) {
 		document.querySelector("#header-title").textContent = STATES[newState].header;
 		document.body.classList.remove(STATES[currentState].bodyClass);
 		document.body.classList.add(STATES[newState].bodyClass);
-	}
+	};
 
 	exports.playListeningChime = function playListeningChime() {
 		var audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
 		audio.play();
-	}
-
+	};
 
 	return exports;
 })();
