@@ -1,15 +1,15 @@
 {
-  "name": "voicefox",
-  "id": "voicefox@mozilla.com",
+  "name": "firefox-voice",
+  "id": "firefox-voice@mozilla.org",
   "description": "This is a WebExtension that allows the browser to be voice-controlled.",
   "private": true,
   "version": "0.1.0",
   "author": {
     "name": "Mozilla Emerging Technologies",
-    "url": "https://github.com/mozilla/voicefox"
+    "url": "https://github.com/mozilla/firefox-voice"
   },
   "bugs": {
-    "url": "https://github.com/mozilla/voicefox/issues"
+    "url": "https://github.com/mozilla/firefox-voice/issues"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
@@ -27,11 +27,11 @@
     "webextension-polyfill": "^0.3.1",
     "webrtcvad_js": "^1.0.0"
   },
-  "homepage": "https://github.com/mozilla/voicefox",
+  "homepage": "https://github.com/mozilla/firefox-voice",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mozilla/voicefox.git"
+    "url": "git+https://github.com/mozilla/firefox-voice.git"
   },
   "scripts": {
     "start": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",

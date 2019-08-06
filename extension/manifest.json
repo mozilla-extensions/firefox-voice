@@ -13,7 +13,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "voicefox@juliacambre.com"
+      "id": "firefox-voice@mozilla.org"
     }
   },
   "content_scripts": [
@@ -42,6 +42,7 @@
       "js/browserService.js",
       "js/intentParser.js",
       "js/vendor/fuse.js"
+      // TODO: generate a list of all the intents during a build process
     ]
   },
   "options_ui": {
