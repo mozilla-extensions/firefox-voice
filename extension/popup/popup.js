@@ -26,7 +26,8 @@ this.popup = (function() {
       }
       throw e;
     }
-    document.querySelector("#content").textContent = `I got it! ${stream}`;
+    document.querySelector("#transcript").textContent = `I got it! ${stream}`;
+    ui.playAnimation('', true);
   }
 
   async function requestMicrophone() {
