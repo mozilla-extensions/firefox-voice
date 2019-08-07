@@ -45,6 +45,10 @@ body,
   display: none;
 }
 
+:-moz-any(.success, .error) :-moz-any(#suggestions, #feedback, #popup-settings) {
+  display: none;
+}
+
 .settings :-moz-any(#popup-settings, #back-icon) {
   display: block;
 }
@@ -89,7 +93,7 @@ body,
 }
 
 #suggestions {
-  padding: 2rem 0rem;
+  padding: 1.2rem 0rem;
 }
 
 .suggestion {
@@ -100,6 +104,15 @@ body,
 
 #feedback {
   color: #737373;
+}
+
+#moz-voice-privacy {
+  margin-top: 1.2em;
+}
+
+#moz-voice-privacy > a {
+  color: #0a84ff;
+  font-weight: 400;
 }
 
 #feedback-prompt {
@@ -172,4 +185,29 @@ body,
   margin-top: 2em;
   padding-top: 1em;
   border-top: 1px solid #0c0c0d10;
+}
+
+#settings-about-label {
+  color: #737373;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.about-item {
+  margin: 0.6em 0em;
+}
+
+.about-item > span {
+  font-size: 0.8em;
+  font-weight: 400;
+  letter-spacing: -0.1px;
+}
+
+.expand-arrow {
+  float: right;
+  max-height: 0.8em;
+}
+
+.expand-arrow > path {
+  fill: #b3b3b3;
 }

@@ -14,22 +14,27 @@ this.ui = (function() {
     processing: [78, 134],
     error: [134, 153],
     success: [184, 203],
-  };
-
-  function playAnimation(animationName, loop) {
+	};
+	
+  function loadAnimation(animationName, loop) {
     const container = document.getElementById("zap");
     const anim = lottie.loadAnimation({
       container, // the dom element that will contain the animation
-      loop: true,
+      loop,
       renderer: "svg",
       autoplay: false,
       path: `animations/${animationName}.json`, // the path to the animation json
     });
     return anim;
-  }
+	}
+	
+	function playAnimation(segment, interruptCurrentAnimation, loop) {
+		animation.loop = loop;
+		animation.playSegments(segment, interruptCurrentAnimation);
+	}
 
   exports.animateByMicVolume = function animateByMicVolume(stream) {
-    animation = playAnimation("Firefox_Voice_Full", true);
+    animation = loadAnimation("Firefox_Voice_Full", true);
     const revealAndBase = [
       animationSegmentTimes.reveal,
       animationSegmentTimes.base,
@@ -82,13 +87,13 @@ this.ui = (function() {
     animation.onLoopComplete = function() {
       // code here
       if (avgVolume < 5) {
-        animation.playSegments(animationSegmentTimes.base, true);
+				playAnimation(animationSegmentTimes.base, true, true)
       } else if (avgVolume < 10) {
-        animation.playSegments(animationSegmentTimes.low, true);
+				playAnimation(animationSegmentTimes.low, true, true)
       } else if (avgVolume < 20) {
-        animation.playSegments(animationSegmentTimes.medium, true);
+				playAnimation(animationSegmentTimes.medium, true, true)
       } else {
-        animation.playSegments(animationSegmentTimes.high, true);
+				playAnimation(animationSegmentTimes.high, true, true)
       }
     };
   }
@@ -128,22 +133,44 @@ this.ui = (function() {
 
   STATES.listening = {
     header: "Listening",
-    bodyClass: "listening",
+		bodyClass: "listening",
+		show(){}
   };
 
   STATES.processing = {
     header: "One second...",
-    bodyClass: "processing",
+		bodyClass: "processing",
+		show() {
+			playAnimation(animationSegmentTimes.processing, false, false);
+		}
+	};
+	
+	STATES.success = {
+    header: "Got it!",
+		bodyClass: "success",
+		show() {
+			playAnimation(animationSegmentTimes.success, false, false);
+		}
+	};
+	
+	STATES.error = {
+    header: "Sorry, there was an issue",
+		bodyClass: "error",
+		show() {
+			playAnimation(animationSegmentTimes.error, false, false);
+		}
   };
 
   STATES.typing = {
     header: "Type your request",
-    bodyClass: "typing",
+		bodyClass: "typing",
+		show(){}
   };
 
   STATES.settings = {
     header: "Settings",
-    bodyClass: "settings",
+		bodyClass: "settings",
+		show(){}
   };
 
   exports.setState = function setState(newState) {
@@ -153,8 +180,18 @@ this.ui = (function() {
       .querySelector("#popup")
       .classList.remove(STATES[currentState].bodyClass);
     document.querySelector("#popup").classList.add(STATES[newState].bodyClass);
-    currentState = newState;
-  };
+		currentState = newState;
+		STATES[currentState].show();
+	};
+	
+	exports.setIcon = function setIcon(state) {
+		browser.browserAction.setIcon(
+			{
+				16: `${state}-16.svg`,
+				32: `${state}-32.svg`
+			}
+		)
+	}
 
   exports.playListeningChime = function playListeningChime() {
     var audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
