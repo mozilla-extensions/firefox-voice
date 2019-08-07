@@ -1,4 +1,4 @@
-/* globals util, voice */
+/* globals util, voice, vad */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 500;
@@ -26,6 +26,8 @@ this.popup = (function() {
       throw e;
     }
     console.info("starting...");
+    await vad.stm_vad_ready;
+    console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
     document.querySelector("#content").textContent = `I got it! ${stream}`;
@@ -60,7 +62,7 @@ this.popup = (function() {
       console.info("started recording");
     };
     recorder.onEnd = (json) => {
-      console.info("Got a response:", json);
+      console.info("Got a response:", json && json.data);
       if (json === null) {
         // It was cancelled
       }
@@ -70,9 +72,6 @@ this.popup = (function() {
       console.error("Got error:", String(error), error);
       clearInterval(intervalId);
     };
-    setTimeout(() => {
-      recorder.stop();
-    }, 5000);
     recorder.startRecording();
   }
 

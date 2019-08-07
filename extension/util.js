@@ -7,5 +7,18 @@ this.util = (function() {
     });
   };
 
+  /** Creates a Promise with .resolve and .reject attributes, so you can pre-create it and then
+   * resolve it somewhere else (like after initialization has run) */
+  exports.makeNakedPromise = function() {
+    let _resolve, _reject;
+    const promise = new Promise((resolve, reject) => {
+      _resolve = resolve;
+      _reject = reject;
+    });
+    promise.resolve = _resolve;
+    promise.reject = _reject;
+    return promise;
+  };
+
   return exports;
 })();

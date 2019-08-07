@@ -13,7 +13,7 @@ const context = {
 
 // ejs options:
 const options = {
-  escape: JSON.stringify
+  escape: JSON.stringify,
 };
 
 ejs.renderFile(TEMPLATE, context, options, function(err, str) {

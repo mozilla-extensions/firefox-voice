@@ -1,4 +1,4 @@
-/* globals stm_vad */
+/* globals vad */
 
 this.voice = (function() {
   const exports = {};
@@ -42,19 +42,17 @@ this.voice = (function() {
         1,
         1
       );
-      if (typeof stm_vad !== "undefined") {
-        // specify the processing function
-        stm_vad.reset();
-        this.scriptprocessor.onaudioprocess = stm_vad.recorderProcess;
-        stm_vad.stopGum = () => {
-          if (this.mediaRecorder) {
-            this.mediaRecorder.stop();
-          }
-          this.sourceNode.disconnect(this.scriptprocessor);
-          this.sourceNode.disconnect(this.analyzerNode);
-          this.analyzerNode.disconnect(this.outputNode);
-        };
-      }
+      // specify the processing function
+      vad.stm_vad.reset();
+      this.scriptprocessor.onaudioprocess = vad.stm_vad.recorderProcess;
+      vad.stm_vad.stopGum = () => {
+        if (this.mediaRecorder) {
+          this.mediaRecorder.stop();
+        }
+        this.sourceNode.disconnect(this.scriptprocessor);
+        this.sourceNode.disconnect(this.analyzerNode);
+        this.analyzerNode.disconnect(this.outputNode);
+      };
       // connect stream to our recorder
       this.sourceNode.connect(this.scriptprocessor);
       // MediaRecorder initialization
