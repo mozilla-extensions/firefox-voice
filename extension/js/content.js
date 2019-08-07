@@ -273,6 +273,7 @@ this.SpeakToMeVad = null;
     const constraints = { audio: true };
     let chunks = [];
 
+    // TODO: replace with something like popup.js's init() or requestMicrophone()
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(function(stream) {
@@ -332,6 +333,8 @@ this.SpeakToMeVad = null;
           }
         );
 
+        // Note: we've had problems using a locally (moz-extension) hosted audio file
+        // TODO: make this an event
         const micOpen = new Audio(
           "https://jcambre.github.io/vf/mic_open_chime.ogg"
         );
@@ -342,11 +345,13 @@ this.SpeakToMeVad = null;
           return;
         }
 
+        // TODO: make this an event
         document.getElementById("stm-levels").hidden = false;
         visualize(analyzerNode);
 
         mediaRecorder.start();
 
+        // TODO: make this an event
         const copy = document.getElementById("stm-content");
         loadAnimation(SPINNING_ANIMATION, true);
         copy.innerHTML = `<div id="stm-listening-text">Listening...</div>`;
@@ -359,6 +364,7 @@ this.SpeakToMeVad = null;
           }
 
           console.log(e.target);
+          // TODO: make this an event
           document.getElementById("stm-levels").hidden = true;
           console.log("mediaRecorder onStop");
           // We stopped the recording, send the content to the STT server.
@@ -405,6 +411,7 @@ this.SpeakToMeVad = null;
 
               setTimeout(() => {
                 if (json.status === "ok") {
+                  // TODO: move this all into a new function
                   const query = json.data[0].text;
                   // Show transcription result
                   const suggestionContent = document.getElementById(
@@ -489,6 +496,8 @@ this.SpeakToMeVad = null;
                   matches = matches.slice(1).join(" "); // extract only the captured groups, flatten them into a single string
 
                   // Store latest invocation in localStorage
+                  // TODO: separate this into a function
+                  // TODO: use IndexedDB instead of browser.storage.local
                   browser.storage.local.get("queryHistory").then(items => {
                     let queryHistory = items;
                     console.log("QUERYING HISTORY");
@@ -622,6 +631,7 @@ this.SpeakToMeVad = null;
     });
   };
 
+  // TODO: popup.js should call this init
   SpeakToMePopup.init();
 
   const fail_gracefully = errorMsg => {

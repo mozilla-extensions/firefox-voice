@@ -1,4 +1,4 @@
-/* globals onboarding, util */
+/* globals util, voice, vad */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 500;
@@ -28,7 +28,13 @@ this.popup = (function() {
       }
       throw e;
     }
-    document.querySelector("#transcript").textContent = `I got it! ${stream}`;
+    
+    console.info("starting...");
+    await vad.stm_vad_ready;
+    console.info("stm_vad is ready");
+    startRecorder(stream);
+    console.info("finished startRecorder...");
+    document.querySelector("#content").textContent = `I got it! ${stream}`;
     ui.listenForText();
     ui.setState("listening");
     ui.playListeningChime();
@@ -37,7 +43,6 @@ this.popup = (function() {
       stream.getTracks().forEach(track => track.stop());
       ui.setState('success');
     }, 2000);
-    
   }
 
   async function requestMicrophone() {
@@ -58,6 +63,28 @@ this.popup = (function() {
     await browser.tabs.create({
       url: browser.extension.getURL("onboarding/onboard.html"),
     });
+  }
+
+  function startRecorder(stream) {
+    const recorder = new voice.Recorder(stream);
+    const intervalId = setInterval(() => {
+      console.info("Volume level:", recorder.getVolumeLevel());
+    }, 500);
+    recorder.onBeginRecording = () => {
+      console.info("started recording");
+    };
+    recorder.onEnd = (json) => {
+      console.info("Got a response:", json && json.data);
+      if (json === null) {
+        // It was cancelled
+      }
+      clearInterval(intervalId);
+    };
+    recorder.onError = (error) => {
+      console.error("Got error:", String(error), error);
+      clearInterval(intervalId);
+    };
+    recorder.startRecording();
   }
 
   init();
