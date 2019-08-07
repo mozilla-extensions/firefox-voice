@@ -45,7 +45,8 @@ body,
   display: none;
 }
 
-:-moz-any(.success, .error) :-moz-any(#suggestions, #feedback, #popup-settings) {
+:-moz-any(.success, .error)
+  :-moz-any(#suggestions, #feedback, #popup-settings) {
   display: none;
 }
 

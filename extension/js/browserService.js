@@ -15,7 +15,6 @@ browser.runtime.onConnect.addListener(connected);
 // TODO: make this a registry
 // const INTENT_REGISTRY = {};
 
-
 const executeIntentForAction = async data => {
   const action = data.action;
   const content = data.content;
@@ -234,7 +233,7 @@ const mute = () => {
         }
       }
     });
-    // TODO: tell the user if no audible tabs were found
+  // TODO: tell the user if no audible tabs were found
 
   // dismiss mute tab after delay
   dismissExtensionTab();
@@ -286,7 +285,7 @@ const play = query => {
           .then(result => {
             console.log(result);
           });
-      // TODO: poll for playing, instead of timeout
+        // TODO: poll for playing, instead of timeout
       }, 3000);
     })
     .then(() => {

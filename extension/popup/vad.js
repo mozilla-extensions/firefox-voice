@@ -196,7 +196,7 @@ this.vad = (function() {
     Module.setStatus("Loading webrtc_vad...");
     // FIXME: a global onerror will catch too much:
     window.onerror = function(event) {
-    // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+      // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
       Module.setStatus("Exception thrown, see JavaScript console", event);
       Module.setStatus = function(text) {
         if (text) {

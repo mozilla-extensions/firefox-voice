@@ -28,21 +28,12 @@ this.popup = (function() {
       }
       throw e;
     }
-    
+
     console.info("starting...");
     await vad.stm_vad_ready;
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
-    document.querySelector("#content").textContent = `I got it! ${stream}`;
-    ui.listenForText();
-    ui.setState("listening");
-    ui.playListeningChime();
-    ui.animateByMicVolume(stream);
-    setTimeout(() => {
-      stream.getTracks().forEach(track => track.stop());
-      ui.setState('success');
-    }, 2000);
   }
 
   async function requestMicrophone() {
@@ -65,22 +56,37 @@ this.popup = (function() {
     });
   }
 
+  function startListeningUI() {
+    ui.setState("listening");
+    ui.onStartTextInput = () => {
+      console.log("detected text from the popup");
+    };
+    ui.onTextInput = () => {
+      console.log("received text from popup");
+    };
+  }
+
   function startRecorder(stream) {
     const recorder = new voice.Recorder(stream);
     const intervalId = setInterval(() => {
-      console.info("Volume level:", recorder.getVolumeLevel());
+      const volumeLevel = recorder.getVolumeLevel();
+      console.info("Volume level:", volumeLevel);
+      ui.setAnimationForVolume(volumeLevel);
     }, 500);
     recorder.onBeginRecording = () => {
       console.info("started recording");
+      startListeningUI();
     };
-    recorder.onEnd = (json) => {
+    recorder.onEnd = json => {
       console.info("Got a response:", json && json.data);
       if (json === null) {
         // It was cancelled
       }
       clearInterval(intervalId);
+      ui.setState("success");
+      ui.setTranscript(json.data[0].text);
     };
-    recorder.onError = (error) => {
+    recorder.onError = error => {
       console.error("Got error:", String(error), error);
       clearInterval(intervalId);
     };
