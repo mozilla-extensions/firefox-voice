@@ -9,9 +9,18 @@ const connected = p => {
 
 browser.runtime.onConnect.addListener(connected);
 
+// TODO: I don't think we need a live port, we can just listen to one-off messages like:
+// browser.runtime.onMessage(executeIntentForAction);
+
+// TODO: make this a registry
+// const INTENT_REGISTRY = {};
+
+
 const executeIntentForAction = async data => {
   const action = data.action;
   const content = data.content;
+  // Then call like:
+  //INTENT_REGISTERY[action](content);
 
   switch (action) {
     case "mute":
@@ -115,6 +124,7 @@ const alexa = query => {
 
 const read = () => {
   browser.tabs.toggleReaderMode(triggeringTabId).then(
+    // TODO: see if we can get this narrate to work, maybe as Irakli
     () => {
       console.log("I GOT HEEERE");
       browser.tabs.executeScript(triggeringTabId, {
@@ -130,6 +140,7 @@ const read = () => {
 
 const search = query => {
   const searchURL = constructGoogleQuery(query);
+  // TODO: remove the timeout (not needed for the popup)
   navigateToURLAfterTimeout(searchURL);
 };
 
@@ -223,6 +234,7 @@ const mute = () => {
         }
       }
     });
+    // TODO: tell the user if no audible tabs were found
 
   // dismiss mute tab after delay
   dismissExtensionTab();
@@ -274,6 +286,7 @@ const play = query => {
           .then(result => {
             console.log(result);
           });
+      // TODO: poll for playing, instead of timeout
       }, 3000);
     })
     .then(() => {

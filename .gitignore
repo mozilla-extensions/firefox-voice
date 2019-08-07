@@ -11,4 +11,4 @@ web-ext-artifacts
 .DS_Store
 credentials
 /Profile*
-
+manifest.json
