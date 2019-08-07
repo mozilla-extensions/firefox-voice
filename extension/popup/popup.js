@@ -56,16 +56,6 @@ this.popup = (function() {
     });
   }
 
-  function startListeningUI() {
-    ui.setState("listening");
-    ui.onStartTextInput = () => {
-      console.log("detected text from the popup");
-    };
-    ui.onTextInput = () => {
-      console.log("received text from popup");
-    };
-  }
-
   function startRecorder(stream) {
     const recorder = new voice.Recorder(stream);
     const intervalId = setInterval(() => {
@@ -75,7 +65,15 @@ this.popup = (function() {
     }, 500);
     recorder.onBeginRecording = () => {
       console.info("started recording");
-      startListeningUI();
+      ui.setState("listening");
+      ui.onStartTextInput = () => {
+        console.log("detected text from the popup");
+        recorder.stop(); // not sure if this is working as expected?
+      };
+      ui.onTextInput = text => {
+        console.log("received text from popup");
+        console.log(text);
+      };
     };
     recorder.onEnd = json => {
       console.info("Got a response:", json && json.data);

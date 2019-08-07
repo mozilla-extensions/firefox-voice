@@ -48,28 +48,38 @@ this.ui = (function() {
     };
   };
 
-  // Event handler for when we detect the user has started typing
-  exports.onStartTextInput = function detectText(e) {
+  function detectText(e) {
     if (!textInputDetected) {
       exports.setState("typing"); // TODO: is this the right place to set the state? or should that all be handled by popup.js
       textInputDetected = true;
+      exports.onStartTextInput();
     }
     if (e.keyCode === 13) {
       exports.onTextInput();
     }
+  }
+
+  function processTextQuery() {
+    const textQuery = document.getElementById("text-input-field").innerText;
+    exports.onTextInput(textQuery);
+    return textQuery;
+  }
+
+  exports.onStartTextInput = function onStartTextInput() {
+    // can be overridden
   };
 
-  exports.onTextInput = function onTextInput() {
-    return document.getElementById("text-input-field").innerText;
+  exports.onTextInput = function onTextInput(text) {
+    // can be overridden
   };
 
   function listenForText() {
     const textInput = document.getElementById("text-input-field");
     textInput.focus();
-    textInput.addEventListener("keyup", exports.onStartTextInput);
+    textInput.addEventListener("keyup", detectText);
 
     const sendText = document.getElementById("send-text-input");
-    sendText.addEventListener("click", exports.onTextInput);
+    sendText.addEventListener("click", processTextQuery);
   }
 
   const STATES = {};
