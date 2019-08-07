@@ -8,7 +8,10 @@ this.popup = (function() {
 
   async function init() {
     document.addEventListener("beforeunload", () => {
-      if (isWaitingForPermission && Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE) {
+      if (
+        isWaitingForPermission &&
+        Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
+      ) {
         startOnboarding();
       }
     });
@@ -25,16 +28,16 @@ this.popup = (function() {
       }
       throw e;
     }
+
     console.info("starting...");
     await vad.stm_vad_ready;
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
-    document.querySelector("#content").textContent = `I got it! ${stream}`;
   }
 
   async function requestMicrophone() {
-    stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     return stream;
   }
 
@@ -56,19 +59,32 @@ this.popup = (function() {
   function startRecorder(stream) {
     const recorder = new voice.Recorder(stream);
     const intervalId = setInterval(() => {
-      console.info("Volume level:", recorder.getVolumeLevel());
+      const volumeLevel = recorder.getVolumeLevel();
+      console.info("Volume level:", volumeLevel);
+      ui.setAnimationForVolume(volumeLevel);
     }, 500);
     recorder.onBeginRecording = () => {
       console.info("started recording");
+      ui.setState("listening");
+      ui.onStartTextInput = () => {
+        console.log("detected text from the popup");
+        recorder.stop(); // not sure if this is working as expected?
+      };
+      ui.onTextInput = text => {
+        console.log("received text from popup");
+        console.log(text);
+      };
     };
-    recorder.onEnd = (json) => {
+    recorder.onEnd = json => {
       console.info("Got a response:", json && json.data);
       if (json === null) {
         // It was cancelled
       }
       clearInterval(intervalId);
+      ui.setState("success");
+      ui.setTranscript(json.data[0].text);
     };
-    recorder.onError = (error) => {
+    recorder.onError = error => {
       console.error("Got error:", String(error), error);
       clearInterval(intervalId);
     };

@@ -252,9 +252,13 @@ this.SpeakToMeVad = null;
         console.log(`SpeakToMePopup set popup stop listener`);
         const popup = document.getElementById("stm-popup");
         const close = document.getElementById("stm-close");
-        popup.addEventListener("click", function _mic_stop() {
-          resolve();
-        }, {once: true});
+        popup.addEventListener(
+          "click",
+          function _mic_stop() {
+            resolve();
+          },
+          { once: true }
+        );
         close.addEventListener("click", function _close_click(e) {
           e.stopPropagation();
           close.removeEventListener("click", _close_click);
