@@ -6,23 +6,18 @@ this.onboarding = (function() {
       // TODO change the following into CSS "success" class declarations?
       document.querySelector("#usage-instructions").style.display = "block";
       document.querySelector("#welcome").style.paddingTop = "0rem";
-      document.querySelector("#instruction-wrapper").style.flexDirection = "column";
+      document.querySelector("#instruction-wrapper").style.flexDirection =
+        "column";
       // Set hotkey suggestion based on navigator
       document.querySelector("#action-key").textContent =
         navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
-      document.querySelector(
-        "#toolbar-large"
-      ).src = browser.extension.getURL(
+      document.querySelector("#toolbar-large").src = browser.extension.getURL(
         "/assets/images/onboarding/toolbar-arrow-2.png"
       );
-      document.querySelector(
-        "#toolbar-small"
-      ).src = browser.extension.getURL(
+      document.querySelector("#toolbar-small").src = browser.extension.getURL(
         "/assets/images/onboarding/toolbar-arrow-3.png"
       );
-      document.querySelector(
-        "#zap-onboarding"
-      ).src = browser.extension.getURL(
+      document.querySelector("#zap-onboarding").src = browser.extension.getURL(
         "/assets/images/onboarding/zap.svg"
       );
     } catch (e) {

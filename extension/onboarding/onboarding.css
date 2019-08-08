@@ -27,31 +27,30 @@ a {
   }
 }
 
-@media (min-width: 880px)
-and (max-width: 1024px) {
-    #wrapper {
-        display: flex;
-    }
+@media (min-width: 880px) and (max-width: 1024px) {
+  #wrapper {
+    display: flex;
+  }
 
-    #usage-instructions {
-        margin-left: 5rem;
-    }
+  #usage-instructions {
+    margin-left: 5rem;
+  }
 
-    #welcome {
-        font-size: 1.875rem;
-    }
+  #welcome {
+    font-size: 1.875rem;
+  }
 
-    #privacy-promise {
-        font-size: 1.5rem;
-    }
+  #privacy-promise {
+    font-size: 1.5rem;
+  }
 
-    .privacy-promise-explanations {
-        font-size: 1.5rem;
-    }
+  .privacy-promise-explanations {
+    font-size: 1.5rem;
+  }
 
-    .learn-more-about-data {
-        font-size: 1rem;
-    }
+  .learn-more-about-data {
+    font-size: 1rem;
+  }
 }
 
 @media (min-width: 1023px) {

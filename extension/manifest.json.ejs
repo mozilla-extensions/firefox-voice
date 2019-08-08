@@ -16,61 +16,16 @@
       "id": "firefox-voice@mozilla.org"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://jcambre.github.io/vf/*"
-      ],
-      "js": [
-        //"js/vendor/browser-polyfill.min.js",
-        "js/vendor/lottie.min.js",
-        "js/content.js",
-        "js/vendor/webrtc_vad.js",
-        "js/intentParser.js"
-      ],
-      "css": [
-        "css/main.css",
-        "css/vendor/tailwind.min.css"
-      ]
-    }
-  ],
-  "background": {
-    "scripts": [
-      //"js/vendor/browser-polyfill.min.js",
-      "js/background.js",
-      "js/browserService.js",
-      "js/intentParser.js",
-      "js/vendor/fuse.js"
-      // TODO: generate a list of all the intents during a build process
-    ]
-  },
   "options_ui": {
     "page": "views/options.html"
   },
   "web_accessible_resources": [
-    "views/CHANGELOG.html",
-    "js/languages.json",
-    "assets/animations/Done.json",
-    "assets/animations/Error.json",
-    "assets/animations/Start.json",
-    "assets/animations/Spinning.json",
-    "assets/images/icon-close.svg",
-    "assets/images/icon-mic.svg",
-    "assets/images/icon-redo.svg",
-    "assets/images/icon-done.svg",
-    "assets/images/icon-done-rtl.svg",
-    "assets/images/ff-logo.png",
-    "assets/images/feedback.svg",
-    "assets/images/googleAssistant_logo.svg",
-    "assets/images/alexa_logo.svg",
-    "js/vendor/webrtc_vad.wasm"
+    "views/CHANGELOG.html"
   ],
   "permissions": [
     "<all_urls>",
     "storage",
-    "find",
-    "tabs",
-    "nativeMessaging"
+    "tabs"
   ],
   "browser_action": {
     "browser_style": false,
