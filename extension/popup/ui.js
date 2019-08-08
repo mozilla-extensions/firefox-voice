@@ -55,7 +55,8 @@ this.ui = (function() {
       exports.onStartTextInput();
     }
     if (e.keyCode === 13) {
-      exports.onTextInput();
+      const textQuery = document.getElementById("text-input-field").innerText;
+      exports.onTextInput(textQuery);
     }
   }
 

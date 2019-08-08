@@ -71,8 +71,10 @@ this.popup = (function() {
         recorder.stop(); // not sure if this is working as expected?
       };
       ui.onTextInput = text => {
-        console.log("received text from popup");
-        console.log(text);
+        browser.runtime.sendMessage({
+          type: "runIntent",
+          text,
+        });
       };
     };
     recorder.onEnd = json => {
