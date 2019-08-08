@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Voice Fox",
+  "name": "Firefox Voice Beta",
   "version": <%= package_json.version %>,
   "description": "Voice control the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
-    "url": "https://github.com/mozilla/voicefill"
+    "url": "https://github.com/mozilla/firefox-voice"
   },
   "icons": {
     "48": "assets/images/icon-48.png",
@@ -34,33 +34,16 @@
     "page": "views/options.html"
   },
   "web_accessible_resources": [
-    "views/CHANGELOG.html",
-    "js/languages.json",
-    "assets/animations/Done.json",
-    "assets/animations/Error.json",
-    "assets/animations/Start.json",
-    "assets/animations/Spinning.json",
-    "assets/images/icon-close.svg",
-    "assets/images/icon-mic.svg",
-    "assets/images/icon-redo.svg",
-    "assets/images/icon-done.svg",
-    "assets/images/icon-done-rtl.svg",
-    "assets/images/ff-logo.png",
-    "assets/images/feedback.svg",
-    "assets/images/googleAssistant_logo.svg",
-    "assets/images/alexa_logo.svg",
-    "js/vendor/webrtc_vad.wasm"
+    "views/CHANGELOG.html"
   ],
   "permissions": [
     "<all_urls>",
     "storage",
-    "find",
-    "tabs",
-    "nativeMessaging"
+    "tabs"
   ],
   "browser_action": {
     "browser_style": false,
-    "default_title": "Voice Fill",
+    "default_title": "Firefox Voice",
     "default_icon": "assets/images/mic.svg",
     "default_popup": "popup/popup.html"
   },
@@ -71,10 +54,7 @@
         "windows": "Ctrl+Period",
         "linux": "Ctrl+Period"
       },
-      "description": "Opens Voice Fill by sending a 'listen' event"
+      "description": "Opens Firefox Voice"
     }
-  },
-  "omnibox": {
-    "keyword": "vf"
   }
 }

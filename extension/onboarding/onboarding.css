@@ -1,0 +1,68 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+h1 {
+  color: #e31587;
+}
+
+.highlight {
+  color: #ee7a49;
+}
+
+a {
+  color: #548adc;
+}
+
+#welcome-text-content {
+  max-width: 660px;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+@media (max-width: 880px) {
+  #welcome-text-content {
+    max-width: unset;
+    background-size: 120% 100% !important;
+  }
+}
+
+@media (min-width: 880px) and (max-width: 1024px) {
+  #wrapper {
+    display: flex;
+  }
+
+  #usage-instructions {
+    margin-left: 5rem;
+  }
+
+  #welcome {
+    font-size: 1.875rem;
+  }
+
+  #privacy-promise {
+    font-size: 1.5rem;
+  }
+
+  .privacy-promise-explanations {
+    font-size: 1.5rem;
+  }
+
+  .learn-more-about-data {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1023px) {
+  #instructions-sub {
+    width: 600px !important;
+  }
+}
+
+#instructions-sub {
+  width: 400px;
+}
+
+.instruction-step {
+  color: #20123a;
+}
