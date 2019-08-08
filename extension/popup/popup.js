@@ -1,7 +1,7 @@
 /* globals util, voice, vad, ui */
 
 this.popup = (function() {
-  const PERMISSION_REQUEST_TIME = 500;
+  const PERMISSION_REQUEST_TIME = 2000;
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
   let isWaitingForPermission = null;
