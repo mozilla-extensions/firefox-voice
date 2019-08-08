@@ -1,4 +1,4 @@
-/* globals util, voice, vad */
+/* globals util, voice, vad, ui */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 500;
@@ -83,6 +83,10 @@ this.popup = (function() {
       clearInterval(intervalId);
       ui.setState("success");
       ui.setTranscript(json.data[0].text);
+      browser.runtime.sendMessage({
+        type: "runIntent",
+        text: json.data[0].text,
+      });
     };
     recorder.onError = error => {
       console.error("Got error:", String(error), error);

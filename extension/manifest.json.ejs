@@ -16,6 +16,20 @@
       "id": "firefox-voice@mozilla.org"
     }
   },
+  "background": {
+    "scripts": [
+      "js/vendor/fuse.js",
+      "background/main.js",
+      "background/intentParser.js",
+      "background/intentRunner.js",
+      // Note: these intent listings are generated from extension/intents/*
+      <% for (let intentName of intentNames) { %>
+        "intents/<%- intentName %>/<%- intentName %>.js",
+      <% } %>
+      // End of intent list
+      "searching.js"
+    ]
+  },
   "options_ui": {
     "page": "views/options.html"
   },
