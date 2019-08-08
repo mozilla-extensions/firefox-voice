@@ -1,5 +1,4 @@
-this.onboarding = (function () {
-
+this.onboarding = (function() {
   async function launchPermission() {
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -31,13 +30,16 @@ this.onboarding = (function () {
         displaySection("#must-allow");
       } else {
         displaySection("#generic-error");
-        document.querySelector("#error-message").textContent = String(e) || "Unknown error";
+        document.querySelector("#error-message").textContent =
+          String(e) || "Unknown error";
       }
     }
   }
 
   function displaySection(selector) {
-    for (const el of document.querySelectorAll(`.instruction:not(${selector})`)) {
+    for (const el of document.querySelectorAll(
+      `.instruction:not(${selector})`
+    )) {
       el.style.display = "none";
     }
     for (const el of document.querySelectorAll(selector)) {

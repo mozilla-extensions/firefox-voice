@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 /* globals parseIntent, executeIntentForAction */
+// TODO: delete entire file? manifest.json handles all this in the popup
 
 let triggeringTabId;
 
@@ -15,6 +16,7 @@ browser.browserAction.onClicked.addListener(async triggeringTab => {
   triggerExtension();
 });
 
+// TODO: do we want to get rid of this?
 browser.omnibox.setDefaultSuggestion({
   description: `Control Firefox through a text command (e.g. Play Hamilton on YouTube)`,
 });

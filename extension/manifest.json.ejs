@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Voice Fox",
-  "version": "1.4.5.2",
+  "version": <%= package_json.version %>,
   "description": "Voice control the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
@@ -13,7 +13,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "voicefox@juliacambre.com"
+      "id": "firefox-voice@mozilla.org"
     }
   },
   "content_scripts": [
@@ -23,15 +23,13 @@
       ],
       "js": [
         //"js/vendor/browser-polyfill.min.js",
-        "js/vendor/bodymovin.min.js",
-        // "js/vendor/stm_web.min.js",
+        "js/vendor/lottie.min.js",
         "js/content.js",
         "js/vendor/webrtc_vad.js",
         "js/intentParser.js"
       ],
       "css": [
         "css/main.css",
-        "css/animate.min.css",
         "css/vendor/tailwind.min.css"
       ]
     }
@@ -43,6 +41,7 @@
       "js/browserService.js",
       "js/intentParser.js",
       "js/vendor/fuse.js"
+      // TODO: generate a list of all the intents during a build process
     ]
   },
   "options_ui": {
@@ -74,7 +73,7 @@
     "nativeMessaging"
   ],
   "browser_action": {
-    "browser_style": true,
+    "browser_style": false,
     "default_title": "Voice Fill",
     "default_icon": "assets/images/mic.svg",
     "default_popup": "popup/popup.html"
