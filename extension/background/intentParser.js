@@ -4,6 +4,7 @@ this.intentParser = (function() {
   const DEFAULT_INTENT = "search";
   const DEFAULT_SLOT = "query";
 
+  // TODO: make these part of intent registration
   const INTENTS = {
     alexa: {
       matches: [

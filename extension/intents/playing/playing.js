@@ -16,7 +16,7 @@ this.intents.playing = (function() {
     // get video content for the current tab
     setTimeout(async () => {
       await browser.tabs.executeScript(playerTab.id, {
-        file: "/extension/intents/playing/playMedia.js",
+        file: "/intents/playing/playMedia.js",
       });
       // TODO: poll for playing, instead of timeout
     }, 3000);
@@ -26,7 +26,7 @@ this.intents.playing = (function() {
     const currentTab = await browser.tabs.getCurrent();
     // get video content for the current tab
     const result = await browser.tabs.executeScript(currentTab.id, {
-      file: "/extension/intents/playing/pauseMedia.js",
+      file: "/intents/playing/pauseMedia.js",
     });
     console.log(result);
   });
