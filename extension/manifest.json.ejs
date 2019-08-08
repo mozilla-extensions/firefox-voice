@@ -16,31 +16,18 @@
       "id": "firefox-voice@mozilla.org"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://jcambre.github.io/vf/*"
-      ],
-      "js": [
-        //"js/vendor/browser-polyfill.min.js",
-        "js/vendor/lottie.min.js",
-        "js/content.js",
-        "js/vendor/webrtc_vad.js",
-        "js/intentParser.js"
-      ],
-      "css": [
-        "css/main.css"
-      ]
-    }
-  ],
   "background": {
     "scripts": [
-      //"js/vendor/browser-polyfill.min.js",
-      "js/background.js",
-      "js/browserService.js",
-      "js/intentParser.js",
-      "js/vendor/fuse.js"
-      // TODO: generate a list of all the intents during a build process
+      "js/vendor/fuse.js",
+      "background/main.js",
+      "background/intentParser.js",
+      "background/intentRunner.js",
+      // Note: these intent listings are generated from extension/intents/*
+      <% for (let intentName of intentNames) { %>
+        "intents/<%- intentName %>/<%- intentName %>.js",
+      <% } %>
+      // End of intent list
+      "searching.js"
     ]
   },
   "options_ui": {

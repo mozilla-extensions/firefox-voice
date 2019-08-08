@@ -38,11 +38,12 @@
     "url": "git+https://github.com/mozilla/firefox-voice.git"
   },
   "scripts": {
-    "start": "npm-run-all build:manifest start-extension",
+    "start": "npm-run-all maybeinstall build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "build:changelog": "md2html CHANGELOG.md > extension/views/CHANGELOG.html",
     "build:deps": "for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js ; do cp node_modules/$file extension/js/vendor/ ; done",
     "build:manifest": "node bin/substitute-manifest.js",
+    "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "format": "prettier 'extension/**/*.{js,css}' --write",
     "lint": "npm-run-all lint:*",
     "lint:extension": "web-ext lint -s extension --ignore-files js/vendor/* --self-hosted",
