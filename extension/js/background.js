@@ -4,50 +4,15 @@
 /* globals parseIntent, executeIntentForAction */
 // TODO: delete entire file? manifest.json handles all this in the popup
 
-let triggeringTabId;
+// browser.browserAction.onClicked.addListener(async triggeringTab => {
+//   // set triggeringTabId
+//   // triggeringTabId = triggeringTab.id;
 
-browser.browserAction.onClicked.addListener(async triggeringTab => {
-  // set triggeringTabId
-  triggeringTabId = triggeringTab.id;
-  console.debug(
-    `the tab that the user was on when triggering this action has ID ${triggeringTabId}`
-  );
+//   browser.browserAction.openPopup();
+// });
 
-  triggerExtension();
+browser.commands.onCommand.addListener(function(command) {
+  if (command === "open-popup") {
+    browser.browserAction.openPopup();
+  }
 });
-
-// TODO: do we want to get rid of this?
-browser.omnibox.setDefaultSuggestion({
-  description: `Control Firefox through a text command (e.g. Play Hamilton on YouTube)`,
-});
-
-browser.omnibox.onInputEntered.addListener(async (text, disposition) => {
-  const intentData = parseIntent(text);
-  console.log(intentData);
-  executeIntentForAction(intentData);
-});
-
-const triggerExtension = async () => {
-  const url = "https://jcambre.github.io/vf/";
-  const tab = await browser.tabs.create({ url });
-  extensionTabId = tab.id;
-  const intervalConnection = setInterval(() => {
-    browser.tabs
-      .sendMessage(tab.id, {
-        msg: "background script syn",
-      })
-      .then(response => {
-        clearInterval(intervalConnection);
-      })
-      .catch(error => {
-        // console.error(`Not connected yet. Retrying ${error}`);
-      });
-  }, 100);
-  // TODO: find a better way of loading moment.js onto the splash page?
-  await browser.tabs.executeScript(tab.id, {
-    file: "/js/vendor/moment.min.js",
-  });
-  await browser.tabs.executeScript(tab.id, {
-    file: "/js/display-history.js",
-  });
-};
