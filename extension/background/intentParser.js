@@ -6,6 +6,7 @@ this.intentParser = (function() {
 
   // TODO: make these part of intent registration
   const INTENTS = {
+    /*
     alexa: {
       matches: [
         /(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i,
@@ -15,6 +16,13 @@ this.intentParser = (function() {
       matches: [
         /(?:ok|okay|o.k.|hey) google (.*)/i,
       ],
+    },
+    */
+    find: {
+      matches: [
+        /(?:find (?:the )?(?:tab|tap|tad|todd) (?:about|with) (.*))|(?:(?:(?:bring me to|find) (?:the|my)? )?(.*) (?:tab|tap|tad|todd))/i,
+      ],
+      slots: ["query", "query"],
     },
     navigate: {
       matches: [
@@ -31,12 +39,6 @@ this.intentParser = (function() {
       matches: [
         /(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i,
       ],
-    },
-    find: {
-      matches: [
-        /(?:find the (?:tab|tap|tad|todd) (?:about|with) (.*))|(?:(?:(?:bring me to|find) (?:the|my)? )?(.*) (?:tab|tap|tad|todd))/i,
-      ],
-      slots: ["query"],
     },
     amazonSearch: {
       matches: [
@@ -71,6 +73,11 @@ this.intentParser = (function() {
         /(?:play(.*))/i,
       ],
       slots: ["query"],
+    },
+    pause: {
+      matches: [
+        /^pause$/i,
+      ],
     },
   };
 
