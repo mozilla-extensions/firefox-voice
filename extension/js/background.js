@@ -4,13 +4,6 @@
 /* globals parseIntent, executeIntentForAction */
 // TODO: delete entire file? manifest.json handles all this in the popup
 
-// browser.browserAction.onClicked.addListener(async triggeringTab => {
-//   // set triggeringTabId
-//   // triggeringTabId = triggeringTab.id;
-
-//   browser.browserAction.openPopup();
-// });
-
 browser.commands.onCommand.addListener(function(command) {
   if (command === "open-popup") {
     browser.browserAction.openPopup();
