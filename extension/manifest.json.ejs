@@ -41,14 +41,6 @@
     "storage",
     "tabs"
   ],
-  "background": {
-    "scripts": [
-      //"js/vendor/browser-polyfill.min.js",
-      "js/background.js",
-      "js/vendor/fuse.js"
-      // TODO: generate a list of all the intents during a build process
-    ]
-  },
   "browser_action": {
     "browser_style": false,
     "default_title": "Firefox Voice",
@@ -56,7 +48,7 @@
     "default_popup": "popup/popup.html"
   },
   "commands": {
-    "open-popup": {
+    "_execute_browser_action": {
       "suggested_key": {
         "default": "Command+Period",
         "windows": "Ctrl+Period",
