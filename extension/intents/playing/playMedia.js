@@ -1,4 +1,4 @@
-// pauseMedia.js
+// playMedia.js
 
 (function() {
   const videos = document.getElementsByTagName("video");
@@ -9,10 +9,10 @@
   console.log(firstMediaItem);
   if (firstMediaItem) {
     // TODO: this is probably intended to return "playing?" but instead it's resolving a promise that is thrown away
-    firstMediaItem.pause().then(result => {
-      return "playing?";
+    firstMediaItem.play().then(result => {
+      console.log("playing?");
     });
   } else {
-    return "no media found";
+    console.log("no media found");
   }
 })();
