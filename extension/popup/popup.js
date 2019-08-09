@@ -1,12 +1,16 @@
 /* globals util, voice, vad, ui */
 
 this.popup = (function() {
+  LOCAL_TESTING = false;
   const PERMISSION_REQUEST_TIME = 2000;
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
   let isWaitingForPermission = null;
 
   async function init() {
+    if (LOCAL_TESTING) {
+      return;
+    }
     document.addEventListener("beforeunload", () => {
       if (
         isWaitingForPermission &&
@@ -34,6 +38,7 @@ this.popup = (function() {
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
+    browser.runtime.onMessage.addListener(handleMessage);
   }
 
   async function requestMicrophone() {
@@ -95,6 +100,14 @@ this.popup = (function() {
       clearInterval(intervalId);
     };
     recorder.startRecording();
+  }
+
+  function handleMessage(message) {
+    console.log("OMG I GOT A MESSAGE!!!");
+    console.log(JSON.stringify(message));
+    if (message.action === "showCard") {
+      ui.showCard(message.cardData);
+    }
   }
 
   init();

@@ -48,9 +48,15 @@ this.intentParser = (function() {
     },
     bangSearch: {
       matches: [
-        /(?:do a )?(?:search (?:my |on )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera)(?:for )?(.*)/i,
+        /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i,
       ],
       slots: ["service", "query"],
+    },
+    bangSearchAlt: {
+      matches: [
+        /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
+      ],
+      slots: ["query", "service"],
     },
     search: {
       matches: [

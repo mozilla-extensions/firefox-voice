@@ -1,0 +1,309 @@
+{
+   "ImageWidth" : 0,
+   "meta" : {
+      "src_options" : {
+         "is_fanon" : 0,
+         "skip_image_name" : 0,
+         "skip_qr" : "",
+         "skip_abstract" : 0,
+         "source_skip" : "",
+         "skip_icon" : 0,
+         "skip_end" : "0",
+         "min_abstract_length" : "20",
+         "skip_abstract_paren" : 0,
+         "language" : "en",
+         "is_mediawiki" : 1,
+         "directory" : "",
+         "is_wikipedia" : 1,
+         "src_info" : ""
+      },
+      "maintainer" : {
+         "github" : "duckduckgo"
+      },
+      "src_domain" : "en.wikipedia.org",
+      "example_query" : "nikola tesla",
+      "dev_date" : null,
+      "tab" : "About",
+      "repo" : "fathead",
+      "dev_milestone" : "live",
+      "is_stackexchange" : null,
+      "live_date" : null,
+      "src_url" : null,
+      "js_callback_name" : "wikipedia",
+      "description" : "Wikipedia",
+      "topic" : [
+         "productivity"
+      ],
+      "status" : "live",
+      "developer" : [
+         {
+            "type" : "ddg",
+            "url" : "http://www.duckduckhack.com",
+            "name" : "DDG Team"
+         }
+      ],
+      "attribution" : null,
+      "src_name" : "Wikipedia",
+      "src_id" : 1,
+      "blockgroup" : null,
+      "producer" : null,
+      "designer" : null,
+      "id" : "wikipedia_fathead",
+      "perl_module" : "DDG::Fathead::Wikipedia",
+      "unsafe" : 0,
+      "signal_from" : "wikipedia_fathead",
+      "production_state" : "online",
+      "created_date" : null,
+      "name" : "Wikipedia"
+   },
+   "AnswerType" : "",
+   "DefinitionSource" : "",
+   "Abstract" : "",
+   "DefinitionURL" : "",
+   "Entity" : "",
+   "Infobox" : "",
+   "ImageIsLogo" : 0,
+   "AbstractSource" : "Wikipedia",
+   "Results" : [],
+   "RelatedTopics" : [
+      {
+         "Icon" : {
+            "URL" : "https://duckduckgo.com/i/88142d70.jpg",
+            "Width" : "",
+            "Height" : ""
+         },
+         "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls\">Niagara Falls</a> The collective name for three waterfalls that straddle the international border between the...",
+         "FirstURL" : "https://duckduckgo.com/Niagara_Falls",
+         "Text" : "Niagara Falls The collective name for three waterfalls that straddle the international border between the..."
+      },
+      {
+         "FirstURL" : "https://duckduckgo.com/Niagara_Falls%2C_Ontario",
+         "Text" : "Niagara Falls, Ontario A city in Ontario, Canada.",
+         "Icon" : {
+            "Width" : "",
+            "Height" : "",
+            "URL" : "https://duckduckgo.com/i/c3a05327.png"
+         },
+         "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls%2C_Ontario\">Niagara Falls, Ontario</a>A city in Ontario, Canada."
+      },
+      {
+         "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls%2C_New_York\">Niagara Falls, New York</a>A city in Niagara County, New York, United States.",
+         "Icon" : {
+            "URL" : "https://duckduckgo.com/i/fec122f3.jpg",
+            "Width" : "",
+            "Height" : ""
+         },
+         "Text" : "Niagara Falls, New York A city in Niagara County, New York, United States.",
+         "FirstURL" : "https://duckduckgo.com/Niagara_Falls%2C_New_York"
+      },
+      {
+         "Name" : "Places",
+         "Topics" : [
+            {
+               "Text" : "Niagara Falls (electoral district) A federal electoral district in Ontario, Canada, that has been represented in the House of...",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(electoral_district)",
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(electoral_district)\">Niagara Falls (electoral district)</a>A federal electoral district in Ontario, Canada, that has been represented in the House of...",
+               "Icon" : {
+                  "Width" : "",
+                  "Height" : "",
+                  "URL" : "https://duckduckgo.com/i/7414678f.png"
+               }
+            },
+            {
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(provincial_electoral_district)",
+               "Text" : "Niagara Falls (provincial electoral district) A provincial electoral division in Ontario, Canada.",
+               "Icon" : {
+                  "URL" : "https://duckduckgo.com/i/7414678f.png",
+                  "Width" : "",
+                  "Height" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(provincial_electoral_district)\">Niagara Falls (provincial electoral district)</a>A provincial electoral division in Ontario, Canada."
+            },
+            {
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_State_Park",
+               "Text" : "Niagara Falls State Park A state park in the City of Niagara Falls in Niagara County, New York, United States.",
+               "Icon" : {
+                  "URL" : "https://duckduckgo.com/i/8eb37b48.jpg",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_State_Park\">Niagara Falls State Park</a>A state park in the City of Niagara Falls in Niagara County, New York, United States."
+            }
+         ]
+      },
+      {
+         "Topics" : [
+            {
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(R%C3%A9union)\">Niagara Falls (R\u00e9union)</a> A waterfall in the commune of Sainte-Suzanne on the island of R\u00e9union. Its height is approximately.",
+               "Icon" : {
+                  "Height" : "",
+                  "Width" : "",
+                  "URL" : "https://duckduckgo.com/i/19283037.jpg"
+               },
+               "Text" : "Niagara Falls (R\u00e9union) A waterfall in the commune of Sainte-Suzanne on the island of R\u00e9union. Its height is approximately.",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(R%C3%A9union)"
+            }
+         ],
+         "Name" : "Places"
+      },
+      {
+         "Name" : "Films",
+         "Topics" : [
+            {
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(1926_film)\">Niagara Falls (1926 film)</a> Produced by <a href=\"https://duckduckgo.com/?q=George%20Kirke%20Spoor\">George Kirke Spoor</a>.",
+               "Icon" : {
+                  "Width" : "",
+                  "Height" : "",
+                  "URL" : ""
+               },
+               "Text" : "Niagara Falls (1926 film) Produced by George Kirke Spoor .",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(1926_film)"
+            },
+            {
+               "Text" : "Niagara Falls (1932 film) A 1932 American Pre-Code comedy film directed by Fatty Arbuckle.",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(1932_film)",
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(1932_film)\">Niagara Falls (1932 film)</a>A 1932 American Pre-Code comedy film directed by Fatty Arbuckle.",
+               "Icon" : {
+                  "URL" : "",
+                  "Width" : "",
+                  "Height" : ""
+               }
+            },
+            {
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(1941_film)",
+               "Text" : "Niagara Falls (1941 film) A 1941 American comedy of errors film directed by Gordon Douglas that was one of Hal Roach's...",
+               "Icon" : {
+                  "URL" : "https://duckduckgo.com/i/bf9c82b7.jpg",
+                  "Width" : "",
+                  "Height" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(1941_film)\">Niagara Falls (1941 film)</a>A 1941 American comedy of errors film directed by Gordon Douglas that was one of Hal Roach's..."
+            }
+         ]
+      },
+      {
+         "Name" : "Music",
+         "Topics" : [
+            {
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(band)\">Niagara Falls (band)</a>An experimental band from Philadelphia, PA that has ties to the recent psychedelic folk...",
+               "Icon" : {
+                  "URL" : "https://duckduckgo.com/i/bdcf832c.jpg",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Text" : "Niagara Falls (band) An experimental band from Philadelphia, PA that has ties to the recent psychedelic folk...",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(band)"
+            },
+            {
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(Greg_Hawkes_album)",
+               "Text" : "Niagara Falls (Greg Hawkes album) The first solo album released by Greg Hawkes, best known as an original member of the Cars.",
+               "Icon" : {
+                  "URL" : "",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(Greg_Hawkes_album)\">Niagara Falls (Greg Hawkes album)</a>The first solo album released by Greg Hawkes, best known as an original member of the Cars."
+            },
+            {
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(Phish_album)\">Niagara Falls (Phish album)</a>A three-CD live album by the rock band Phish.",
+               "Icon" : {
+                  "URL" : "",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Text" : "Niagara Falls (Phish album) A three-CD live album by the rock band Phish.",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(Phish_album)"
+            },
+            {
+               "Icon" : {
+                  "Height" : "",
+                  "Width" : "",
+                  "URL" : "https://duckduckgo.com/i/444282f7.jpg"
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(EP)\">Niagara Falls (EP)</a> A EP by Boxhead Ensemble, released on November 15, 1999 through Atavistic Records.",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(EP)",
+               "Text" : "Niagara Falls (EP) A EP by Boxhead Ensemble, released on November 15, 1999 through Atavistic Records."
+            },
+            {
+               "Icon" : {
+                  "Height" : "",
+                  "Width" : "",
+                  "URL" : "https://duckduckgo.com/i/ece9e4a5.jpg"
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(Chicago_song)\">\"Niagara Falls\" (Chicago song)</a>The fourth single released by the American rock band, Chicago, from their 1986 album, Chicago 18.",
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(Chicago_song)",
+               "Text" : "\"Niagara Falls\" (Chicago song) The fourth single released by the American rock band, Chicago, from their 1986 album, Chicago 18."
+            },
+            {
+               "FirstURL" : "https://duckduckgo.com/Niagara_Falls_(composition)",
+               "Text" : "\"Niagara Falls\" (composition) Niagara Falls for Symphonic Band by American composer Michael Daugherty, is his first composition...",
+               "Icon" : {
+                  "Height" : "",
+                  "Width" : "",
+                  "URL" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/Niagara_Falls_(composition)\">\"Niagara Falls\" (composition)</a>Niagara Falls for Symphonic Band by American composer Michael Daugherty, is his first composition..."
+            }
+         ]
+      },
+      {
+         "Topics" : [
+            {
+               "Result" : "\"<a href=\"https://duckduckgo.com/Slowly_I_Turned\">Slowly I Turned</a>\" A popular vaudeville sketch wherein a character is relating a story and is triggered into...",
+               "Icon" : {
+                  "Width" : "",
+                  "Height" : "",
+                  "URL" : ""
+               },
+               "Text" : "\"Slowly I Turned \" A popular vaudeville sketch wherein a character is relating a story and is triggered into...",
+               "FirstURL" : "https://duckduckgo.com/Slowly_I_Turned"
+            }
+         ],
+         "Name" : "Other uses"
+      },
+      {
+         "Topics" : [
+            {
+               "Text" : "Bushkill Falls A series of eight privately owned waterfalls, the tallest of which cascades over 100 feet...",
+               "FirstURL" : "https://duckduckgo.com/Bushkill_Falls",
+               "Result" : "<a href=\"https://duckduckgo.com/Bushkill_Falls\">Bushkill Falls</a>A series of eight privately owned waterfalls, the tallest of which cascades over 100 feet...",
+               "Icon" : {
+                  "URL" : "https://duckduckgo.com/i/78bd77dc.jpg",
+                  "Height" : "",
+                  "Width" : ""
+               }
+            },
+            {
+               "Icon" : {
+                  "URL" : "",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/d/Niagara_Falls_station\">Niagara Falls station Meanings</a>  Stations of that name.",
+               "FirstURL" : "https://duckduckgo.com/d/Niagara_Falls_station",
+               "Text" : "Niagara Falls station Meanings Stations of that name."
+            },
+            {
+               "Icon" : {
+                  "URL" : "",
+                  "Height" : "",
+                  "Width" : ""
+               },
+               "Result" : "<a href=\"https://duckduckgo.com/d/Niagara\">Niagara Meanings</a>  See related meanings for the word 'Niagara'.",
+               "FirstURL" : "https://duckduckgo.com/d/Niagara",
+               "Text" : "Niagara Meanings See related meanings for the word 'Niagara'."
+            }
+         ],
+         "Name" : "See also"
+      }
+   ],
+   "Redirect" : "",
+   "ImageHeight" : 0,
+   "Definition" : "",
+   "Type" : "D",
+   "Image" : "",
+   "AbstractURL" : "https://en.wikipedia.org/wiki/Niagara_Falls_(disambiguation)",
+   "Answer" : "",
+   "AbstractText" : "",
+   "Heading" : "Niagara Falls"
+}
