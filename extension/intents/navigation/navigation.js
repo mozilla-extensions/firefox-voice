@@ -8,7 +8,13 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent("search", async (desc) => {
     const url = searching.googleSearchUrl(desc.slots.query, false);
-    await browser.tabs.create({url});
+    await browser.tabs.create({url: url});
+  });
+
+  this.intentRunner.registerIntent("bangSearch", async (desc) => {
+    const myurl = await searching.ddgBangSearchUrl(desc.slots.query, desc.slots.service);
+    console.log("THE URL THAT I HAVE IS ", myurl);
+    await browser.tabs.update({url: myurl});
   });
 
   this.intentRunner.registerIntent("amazonSearch", async (desc) => {

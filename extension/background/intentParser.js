@@ -46,9 +46,15 @@ this.intentParser = (function() {
       ],
       slots: ["query"],
     },
+    bangSearch: {
+      matches: [
+        /(?:do a )?(?:search (?:my |on )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera)(?:for )?(.*)/i,
+      ],
+      slots: ["service", "query"],
+    },
     search: {
       matches: [
-        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
+        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
       ],
       slots: ["query"],
     },
