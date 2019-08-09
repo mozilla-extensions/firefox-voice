@@ -159,7 +159,7 @@ this.ui = (function() {
     document.querySelector("#card-summary").innerText = data.AbstractText;
     document.querySelector("#card-source-link").innerText = data.AbstractSource;
     document.querySelector("#card-source-link").href = data.AbstractURL;
-  }
+  };
 
   function playListeningChime() {
     var audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback

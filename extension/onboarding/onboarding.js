@@ -12,13 +12,13 @@ this.onboarding = (function() {
       document.querySelector("#action-key").textContent =
         navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
       document.querySelector("#toolbar-large").src = browser.extension.getURL(
-        "/assets/images/onboarding/toolbar-arrow-2.png"
+        "/onboarding/images/toolbar-arrow-2.png"
       );
       document.querySelector("#toolbar-small").src = browser.extension.getURL(
-        "/assets/images/onboarding/toolbar-arrow-3.png"
+        "/onboarding/images/toolbar-arrow-3.png"
       );
       document.querySelector("#zap-onboarding").src = browser.extension.getURL(
-        "/assets/images/onboarding/zap.svg"
+        "/onboarding/images/zap.svg"
       );
     } catch (e) {
       if (e.name === "NotAllowedError") {
@@ -46,7 +46,7 @@ this.onboarding = (function() {
     // FIX: Don't understand why querySelectorAll works, yet querySelector does not.
     for (const el of document.querySelectorAll("#welcome-text-content")) {
       el.style.backgroundImage = `url("${browser.extension.getURL(
-        "/assets/images/onboarding/supergraphic-large.svg"
+        "/onboarding/images/supergraphic-large.svg"
       )}")`;
     }
   }

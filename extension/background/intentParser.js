@@ -31,9 +31,7 @@ this.intentParser = (function() {
       slots: ["query"],
     },
     unmute: {
-      matches: [
-        /\bunmute\b/i,
-      ],
+      matches: [/\bunmute\b/i],
     },
     mute: {
       matches: [
@@ -41,9 +39,7 @@ this.intentParser = (function() {
       ],
     },
     amazonSearch: {
-      matches: [
-        /search (?:for )?(?:a |an )?(.*) on amazon/i,
-      ],
+      matches: [/search (?:for )?(?:a |an )?(.*) on amazon/i],
       slots: ["query"],
     },
     bangSearch: {
@@ -72,7 +68,7 @@ this.intentParser = (function() {
       slots: ["place"],
     },
     */
-   /*
+    /*
     timer: {
       matches: [
         /(?:(?:set |start )(?:a )?timer (.*))|(.*) timer/i,
@@ -81,15 +77,11 @@ this.intentParser = (function() {
     },
     */
     play: {
-      matches: [
-        /(?:play(.*))/i,
-      ],
+      matches: [/(?:play(.*))/i],
       slots: ["query"],
     },
     pause: {
-      matches: [
-        /^pause$/i,
-      ],
+      matches: [/^pause$/i],
     },
   };
 
@@ -116,7 +108,7 @@ this.intentParser = (function() {
     }
     return {
       name: DEFAULT_INTENT,
-      slots: {[DEFAULT_SLOT]: text},
+      slots: { [DEFAULT_SLOT]: text },
       text,
     };
   };

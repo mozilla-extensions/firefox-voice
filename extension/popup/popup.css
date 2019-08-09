@@ -25,7 +25,8 @@ body,
   display: none;
 }
 
-.processing :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
+.processing
+  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
   display: none;
 }
 
@@ -254,7 +255,8 @@ body,
   font-size: 0.7em;
 }
 
-#ddg-ack, #source-ack {
+#ddg-ack,
+#source-ack {
   margin-bottom: 0.8em;
   display: flex;
 }
@@ -283,4 +285,3 @@ body,
 #ddg-logo {
   max-width: 1.2em;
 }
- 

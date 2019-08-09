@@ -1,5 +1,5 @@
 this.intents.muting = (function() {
-  this.intentRunner.registerIntent("mute", async (desc) => {
+  this.intentRunner.registerIntent("mute", async desc => {
     const audibleTabs = await browser.tabs.query({ audible: true });
     if (audibleTabs.empty) {
       // TODO: pass a message back to the content script to update the UI and indicate that we don't have any audible tabs
@@ -14,11 +14,11 @@ this.intents.muting = (function() {
         });
       }
     }
-  // TODO: tell the user if no audible tabs were found
-  // TODO: show confirmation
+    // TODO: tell the user if no audible tabs were found
+    // TODO: show confirmation
   });
 
-  this.intentRunner.registerIntent("unmute", async (desc) => {
+  this.intentRunner.registerIntent("unmute", async desc => {
     const mutedTabs = await browser.tabs.query({ audible: false });
     if (mutedTabs.empty) {
       // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
