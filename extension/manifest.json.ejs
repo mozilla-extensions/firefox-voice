@@ -18,6 +18,8 @@
   },
   "background": {
     "scripts": [
+      "log.js",
+      "js/vendor/fuse.js",
       "background/main.js",
       "background/intentParser.js",
       "background/intentRunner.js",
@@ -55,5 +57,9 @@
       },
       "description": "Opens Firefox Voice"
     }
+  },
+  // These are actually internal settings for the extension:
+  "settings": {
+    "logLevel": "debug"
   }
 }

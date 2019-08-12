@@ -48,7 +48,7 @@
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "format": "prettier 'extension/**/*.{js,css}' --write",
     "lint": "npm-run-all lint:*",
-    "lint:extension": "web-ext lint -s extension --ignore-files js/vendor/* --self-hosted",
+    "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
     "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest && mv web-ext-artifacts/*.zip addon.xpi",

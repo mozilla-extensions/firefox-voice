@@ -1,4 +1,4 @@
-/* globals lottie */
+/* globals lottie, log */
 
 this.ui = (function() {
   const exports = {};
@@ -36,7 +36,7 @@ this.ui = (function() {
   }
 
   exports.setAnimationForVolume = function setAnimationForVolume(avgVolume) {
-    console.log(`updating: volume at ${avgVolume}`);
+    log.debug(`updating: volume at ${avgVolume}`);
     animation.onLoopComplete = function() {
       if (avgVolume < 0.1) {
         playAnimation(animationSegmentTimes.base, true, true);
