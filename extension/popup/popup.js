@@ -76,6 +76,7 @@ this.popup = (function() {
         recorder.stop(); // not sure if this is working as expected?
       };
       ui.onTextInput = text => {
+        ui.setState("success");
         browser.runtime.sendMessage({
           type: "runIntent",
           text,

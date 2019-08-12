@@ -161,6 +161,7 @@ this.ui = (function() {
     document.querySelector("#card-summary").innerText = data.AbstractText;
     document.querySelector("#card-source-link").innerText = data.AbstractSource;
     document.querySelector("#card-source-link").href = data.AbstractURL;
+    console.log("THE BODY HEIGHT IS ", document.querySelector("body").clientHeight);
   };
 
   function playListeningChime() {
