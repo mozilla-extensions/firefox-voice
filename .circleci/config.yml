@@ -14,7 +14,7 @@ jobs:
           command: npm install
       - run:
           name: Build XPI
-          command: make package
+          command: npm run package
       - persist_to_workspace:
           root: .
           paths:
@@ -24,6 +24,9 @@ jobs:
           paths:
             - node_modules
   test:
+    executor: docker
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
     environment:
       - NODE_ENV: dev
     steps:
@@ -34,6 +37,9 @@ jobs:
           command: |
             npm test
   selenium_test:
+    executor: docker
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
     environment:
       - NODE_ENV: dev
       - GECKODRIVER: 0.23.0
