@@ -32,7 +32,7 @@ function restoreOptions() {
       return browser.storage.sync.get("language");
     })
     .then(result => {
-      const defaultLanguage = languages.hasOwnProperty(navigator.language)
+      const defaultLanguage = navigator.language in languages
         ? navigator.language
         : "en-US";
 

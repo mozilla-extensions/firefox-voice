@@ -1,3 +1,5 @@
+/* globals lottie */
+
 this.ui = (function() {
   const exports = {};
 
@@ -5,7 +7,7 @@ this.ui = (function() {
   let currentState = "listening";
   let textInputDetected = false;
 
-  let animationSegmentTimes = {
+  const animationSegmentTimes = {
     reveal: [0, 14],
     base: [14, 30],
     low: [30, 46],
@@ -153,7 +155,7 @@ this.ui = (function() {
   };
 
   function playListeningChime() {
-    var audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
+    const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
     audio.play();
   }
 
