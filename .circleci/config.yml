@@ -1,0 +1,108 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    working_directory: ~/firefox-voice
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-modules-{{ checksum "package.json" }}
+      - run:
+          name: Install Node Modules
+          command: npm install
+      - run:
+          name: Build XPI
+          command: npm run package
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./*
+      - save_cache:
+          key: node-modules-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  test:
+    executor: docker
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    environment:
+      - NODE_ENV: dev
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run lint tests
+          command: |
+            npm test
+  selenium_test:
+    executor: docker
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    environment:
+      - NODE_ENV: dev
+      - GECKODRIVER: 0.23.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install Firefox
+          command: |
+            . "$NVM_DIR/nvm.sh"
+            nvm use 8.10.0
+            npm i -g get-firefox
+            get-firefox --branch nightly --platform linux --extract --target ~/
+            ~/firefox/firefox -v
+            firefox --version
+      - run:
+          name: Run Selenium test
+          command: |
+            export PATH=~/firefox:$PATH
+            FIREFOX_CHANNEL=NIGHTLY MOZ_HEADLESS=1 npm run functional-test
+  deploy_dev:
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build XPI
+          command: |
+            npm run package
+            # FIXME: upload xpi
+      - store_artifacts:
+          path: ./addon.xpi
+  deploy_stage:
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy to Stage
+          command: |
+            npm run package
+            # FIXME: sign and upload
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build
+      - deploy_stage:
+          requires:
+            - build
+          filters:
+            branches:
+              only: stage
+      - test:
+          requires:
+            - build
+      - deploy_dev:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

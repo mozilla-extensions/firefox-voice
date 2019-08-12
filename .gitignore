@@ -13,3 +13,4 @@ web-ext-artifacts
 credentials
 /Profile*
 manifest.json
+/addon.xpi
