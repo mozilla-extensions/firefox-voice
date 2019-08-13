@@ -55,6 +55,26 @@ body,
   display: block;
 }
 
+.success.hasCard #zap-wrapper {
+  transition-property: max-height;
+  max-height: 0;
+  overflow: hidden;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  transition-delay: 2s;
+}
+
+.success.hasCard #transcript {
+  transition-property: font-size padding;
+  font-size: 1.5rem;
+  text-align: left;
+  padding: 0.5rem 0rem;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  transition-delay: 2s;
+}
+
+
 .settings :-moz-any(#popup-settings, #back-icon) {
   display: block;
 }
@@ -75,6 +95,7 @@ body,
 
 #zap-wrapper {
   max-width: 350px;
+  max-height: 100px;
 }
 
 #popup-header,
@@ -221,12 +242,13 @@ body,
 
 /* CARD INTERFACE */
 #card {
-  border-top: 1px solid #0c0c0d10;
+  /* border-top: 1px solid #0c0c0d10; */
   border-bottom: 1px solid #0c0c0d10;
-  padding-top: 0.8em;
+  /* padding-top: 0.8em; */
 }
 
 #card-header {
+  display: none;
   font-weight: 300;
   font-size: 1.7em;
   letter-spacing: 0.3px;
@@ -235,17 +257,19 @@ body,
 }
 
 #card-image {
-  display: flex;
+  display: inline-block;
 }
 
 #card-image > img {
-  border-radius: 10px;
+  border-radius: 5px;
+  max-width: 50%;
 }
 
 #card-summary {
   font-size: 0.85em;
   margin-top: 1em;
   line-height: 1.3em;
+  display: inline-block;
 }
 
 #card-ack {

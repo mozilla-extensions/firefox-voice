@@ -156,6 +156,9 @@ this.vad = (function() {
       log.debug("goCloud, why:", why);
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
+      if (why === "GoCloud finishedvoice") {
+        ui.setState("processing");
+      }
     }
   };
 
