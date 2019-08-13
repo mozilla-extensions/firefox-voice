@@ -17,7 +17,7 @@ this.searching = (function() {
       `https://api.duckduckgo.com/?q=${query}&format=json&pretty=1&skip_disambig=1`
     );
     const ddgData = await response.json();
-    if (!ddgData.Type) {
+    if (!ddgData.AbstractText) {
       // the response from DDG was null, and there was no matching Instant Answer result
       return;
     }

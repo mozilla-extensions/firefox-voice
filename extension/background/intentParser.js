@@ -38,28 +38,6 @@ this.intentParser = (function() {
         /(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i,
       ],
     },
-    amazonSearch: {
-      matches: [/search (?:for )?(?:a |an )?(.*) on amazon/i],
-      slots: ["query"],
-    },
-    bangSearch: {
-      matches: [
-        /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i,
-      ],
-      slots: ["service", "query"],
-    },
-    bangSearchAlt: {
-      matches: [
-        /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
-      ],
-      slots: ["query", "service"],
-    },
-    search: {
-      matches: [
-        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
-      ],
-      slots: ["query"],
-    },
     /*
     weather: {
       matches: [
@@ -88,6 +66,28 @@ this.intentParser = (function() {
         /^read$/i,
         /^read(?:this )tab$/i,
       ],
+    },
+    amazonSearch: {
+      matches: [/search (?:for )?(?:a |an )?(.*) on amazon/i],
+      slots: ["query"],
+    },
+    bangSearch: {
+      matches: [
+        /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i,
+      ],
+      slots: ["service", "query"],
+    },
+    bangSearchAlt: {
+      matches: [
+        /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
+      ],
+      slots: ["query", "service"],
+    },
+    search: {
+      matches: [
+        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
+      ],
+      slots: ["query"],
     },
   };
 
