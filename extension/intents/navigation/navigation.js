@@ -24,7 +24,7 @@ this.intents.navigation = (function() {
       console.log("sending data to content script");
       browser.runtime.sendMessage({
         sender: "navigation",
-        action: "showCard",
+        type: "showCard",
         cardData,
       });
     }
