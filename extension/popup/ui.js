@@ -154,6 +154,16 @@ this.ui = (function() {
     });
   };
 
+  exports.showCard = function showCard(data) {
+    document.querySelector("#popup").classList.add("hasCard");
+    document.querySelector("#card-header").innerText = data.Heading;
+    document.querySelector("#card-image > img").src = data.Image;
+    document.querySelector("#card-summary").innerText = data.AbstractText;
+    document.querySelector("#card-source-link").innerText = data.AbstractSource;
+    document.querySelector("#card-source-link").href = data.AbstractURL;
+    console.log("THE BODY HEIGHT IS ", document.querySelector("body").clientHeight);
+  };
+
   function playListeningChime() {
     const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
     audio.play();

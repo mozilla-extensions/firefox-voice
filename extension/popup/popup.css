@@ -17,7 +17,7 @@ body,
   display: block;
 }
 
-.listening :-moz-any(#transcript, #popup-settings, #back-icon) {
+.listening :-moz-any(#transcript, #popup-settings, #back-icon, #card) {
   display: none;
 }
 
@@ -25,7 +25,8 @@ body,
   display: none;
 }
 
-.processing :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon) {
+.processing
+  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
   display: none;
 }
 
@@ -41,13 +42,17 @@ body,
   display: block !important;
 }
 
-.typing #voice-input {
+.typing :-moz-any(#voice-input, #card) {
   display: none;
 }
 
 :-moz-any(.success, .error)
-  :-moz-any(#suggestions, #feedback, #popup-settings) {
+  :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
   display: none;
+}
+
+.success.hasCard #card {
+  display: block;
 }
 
 .settings :-moz-any(#popup-settings, #back-icon) {
@@ -114,6 +119,7 @@ body,
 #moz-voice-privacy > a {
   color: #0a84ff;
   font-weight: 400;
+  font-size: 0.85em;
 }
 
 #feedback-prompt {
@@ -211,4 +217,71 @@ body,
 
 .expand-arrow > path {
   fill: #b3b3b3;
+}
+
+/* CARD INTERFACE */
+#card {
+  border-top: 1px solid #0c0c0d10;
+  border-bottom: 1px solid #0c0c0d10;
+  padding-top: 0.8em;
+}
+
+#card-header {
+  font-weight: 300;
+  font-size: 1.7em;
+  letter-spacing: 0.3px;
+  color: #000;
+  margin-bottom: 0.4em;
+}
+
+#card-image {
+  display: flex;
+}
+
+#card-image > img {
+  border-radius: 10px;
+}
+
+#card-summary {
+  font-size: 0.85em;
+  margin-top: 1em;
+  line-height: 1.3em;
+}
+
+#card-ack {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2em;
+  font-size: 0.7em;
+}
+
+#ddg-ack,
+#source-ack {
+  margin-bottom: 0.8em;
+  display: flex;
+}
+
+#source-ack {
+  display: flex;
+}
+
+#source-ack > span {
+  margin-right: 0.7em;
+}
+
+#card-source > a {
+  color: #0a84ff;
+}
+
+.sep {
+  /* border-left: 1px solid #0c0c0d10; */
+}
+
+#ddg-ack > a {
+  color: #aaa;
+  margin-left: 0.7em;
+}
+
+#ddg-logo {
+  max-width: 1.2em;
 }

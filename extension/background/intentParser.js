@@ -31,9 +31,7 @@ this.intentParser = (function() {
       slots: ["query"],
     },
     unmute: {
-      matches: [
-        /\bunmute\b/i,
-      ],
+      matches: [/\bunmute\b/i],
     },
     mute: {
       matches: [
@@ -41,14 +39,24 @@ this.intentParser = (function() {
       ],
     },
     amazonSearch: {
-      matches: [
-        /search (?:for )?(?:a |an )?(.*) on amazon/i,
-      ],
+      matches: [/search (?:for )?(?:a |an )?(.*) on amazon/i],
       slots: ["query"],
+    },
+    bangSearch: {
+      matches: [
+        /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i,
+      ],
+      slots: ["service", "query"],
+    },
+    bangSearchAlt: {
+      matches: [
+        /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
+      ],
+      slots: ["query", "service"],
     },
     search: {
       matches: [
-        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
+        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
       ],
       slots: ["query"],
     },
@@ -60,7 +68,7 @@ this.intentParser = (function() {
       slots: ["place"],
     },
     */
-   /*
+    /*
     timer: {
       matches: [
         /(?:(?:set |start )(?:a )?timer (.*))|(.*) timer/i,
@@ -69,15 +77,11 @@ this.intentParser = (function() {
     },
     */
     play: {
-      matches: [
-        /(?:play(.*))/i,
-      ],
+      matches: [/(?:play(.*))/i],
       slots: ["query"],
     },
     pause: {
-      matches: [
-        /^pause$/i,
-      ],
+      matches: [/^pause$/i],
     },
     read: {
       matches: [
@@ -111,7 +115,7 @@ this.intentParser = (function() {
     }
     return {
       name: DEFAULT_INTENT,
-      slots: {[DEFAULT_SLOT]: text},
+      slots: { [DEFAULT_SLOT]: text },
       text,
     };
   };

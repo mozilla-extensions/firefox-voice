@@ -1,12 +1,16 @@
 /* globals util, voice, vad, ui, log */
 
 this.popup = (function() {
+  LOCAL_TESTING = false;
   const PERMISSION_REQUEST_TIME = 2000;
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
   let isWaitingForPermission = null;
 
   async function init() {
+    if (LOCAL_TESTING) {
+      return;
+    }
     document.addEventListener("beforeunload", () => {
       if (
         isWaitingForPermission &&
@@ -73,6 +77,7 @@ this.popup = (function() {
         recorder.cancel(); // not sure if this is working as expected?
       };
       ui.onTextInput = text => {
+        ui.setState("success");
         browser.runtime.sendMessage({
           type: "runIntent",
           text,
@@ -103,6 +108,8 @@ this.popup = (function() {
     log.debug(JSON.stringify(message));
     if (message.type == "closePopup") {
       ui.closePopup();
+    } else if (message.type == "showCard") {
+      ui.showCard(message.cardData);
     }
   }
 

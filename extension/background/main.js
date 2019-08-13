@@ -7,7 +7,10 @@ this.main = (function() {
       console.info("Executing intent:", desc);
       return intentRunner.runIntent(desc);
     }
-    console.error("Received message with unexpected type (${message.type}):", message);
+    console.error(
+      "Received message with unexpected type (${message.type}):",
+      message
+    );
     return null;
   });
 })();
