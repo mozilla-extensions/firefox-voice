@@ -178,14 +178,18 @@ this.ui = (function() {
     settingsIcon.addEventListener("click", showSettings);
   }
 
-  function closePopup() {
+  exports.closePopup = function closePopup(ms = 2500) {
     // TODO: offload mic and other resources before closing?
-    window.close();
+    setTimeout(() => {
+      window.close();
+    }, ms);
   }
 
   function listenForClose() {
     const closeIcon = document.getElementById("close-icon");
-    closeIcon.addEventListener("click", closePopup);
+    closeIcon.addEventListener("click", () => {
+      exports.closePopup(0); // close immediately
+    });
   }
 
   listenForClose();

@@ -55,5 +55,9 @@ this.intents.find = (function() {
       active: true,
     });
     // TODO: close the popup for show status
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "find"
+    });
   });
 })();

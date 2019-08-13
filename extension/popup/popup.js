@@ -34,6 +34,8 @@ this.popup = (function() {
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
+    // Listen for messages from the background scripts
+    browser.runtime.onMessage.addListener(handleMessage);
   }
 
   async function requestMicrophone() {
@@ -95,6 +97,13 @@ this.popup = (function() {
       clearInterval(intervalId);
     };
     recorder.startRecording();
+  }
+
+  function handleMessage(message) {
+    log.debug(JSON.stringify(message));
+    if (message.type == "closePopup") {
+      ui.closePopup();
+    }
   }
 
   init();
