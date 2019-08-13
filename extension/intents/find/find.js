@@ -1,9 +1,9 @@
-/* globals Fuse */
+/* globals Fuse, log */
 
 this.intents.find = (function() {
   this.intentRunner.registerIntent("find", async (desc) => {
     const query = desc.slots.query;
-    console.log("the most likely query text is", query);
+    log.info("the most likely query text is:", query);
 
     // Fuse options
     const options = {
@@ -41,7 +41,6 @@ this.intents.find = (function() {
       };
 
       combinedTabContent.push(result);
-      console.log("i am on tab " + tab.id);
     }
 
     combinedTabContent = combinedTabContent.flat();
@@ -49,7 +48,7 @@ this.intents.find = (function() {
     // use Fuse.js to parse the most probable response?
     const fuse = new Fuse(combinedTabContent, options);
     const matches = fuse.search(query);
-    console.log(matches);
+    log.debug("find matches:", matches);
     // TODO account for multiple matches
     const topMatch = parseInt(matches[0].item);
     await browser.tabs.update(topMatch, {

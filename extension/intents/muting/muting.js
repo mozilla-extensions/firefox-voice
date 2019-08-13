@@ -1,3 +1,5 @@
+/* globals log */
+
 this.intents.muting = (function() {
   this.intentRunner.registerIntent("mute", async (desc) => {
     const audibleTabs = await browser.tabs.query({ audible: true });
@@ -5,8 +7,7 @@ this.intents.muting = (function() {
       // TODO: pass a message back to the content script to update the UI and indicate that we don't have any audible tabs
     } else {
       // pass a message back to indicate that the tabs are currently being muted
-      console.log("these are the audible tabs");
-      console.log(audibleTabs);
+      log.debug("these are the audible tabs:", audibleTabs);
       // mute each audible tab
       for (const tab of audibleTabs) {
         browser.tabs.update(tab.id, {
