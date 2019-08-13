@@ -49,14 +49,10 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent("amazonSearch", async desc => {
     const url = searching.amazonSearchUrl(desc.slots.query);
-<<<<<<< HEAD
     await browser.tabs.create({url});
     browser.runtime.sendMessage({
       type: "closePopup",
       sender: "amazonSearch"
     });
-=======
-    await browser.tabs.create({ url });
->>>>>>> 63891aa5fd65b4682bbac8c27ed4451d7c92c555
   });
 })();
