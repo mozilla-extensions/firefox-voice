@@ -79,9 +79,16 @@ this.intentParser = (function() {
         /^pause$/i,
       ],
     },
+    read: {
+      matches: [
+        /^read$/i,
+        /^read(?:this )tab$/i,
+      ],
+    },
   };
 
   exports.parse = function parse(text) {
+    text = text.trim().toLowerCase();
     for (const name in INTENTS) {
       for (const regexp of INTENTS[name].matches) {
         const match = regexp.exec(text);

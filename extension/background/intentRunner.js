@@ -8,7 +8,7 @@ this.intentRunner = (function() {
 
   exports.registerIntent = function(name, handler) {
     if (INTENTS[name]) {
-      throw new Error("Attempt to reregister intent");
+      throw new Error(`Attempt to reregister intent: ${name}`);
     }
     INTENTS[name] = handler;
   };

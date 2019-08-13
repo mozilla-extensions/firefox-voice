@@ -18,6 +18,7 @@
   },
   "background": {
     "scripts": [
+      "util.js",
       "log.js",
       "js/vendor/fuse.js",
       "background/main.js",
@@ -40,7 +41,9 @@
   "permissions": [
     "<all_urls>",
     "storage",
-    "tabs"
+    "tabs",
+    "mozillaAddons",
+    "about:reader*"
   ],
   "browser_action": {
     "browser_style": false,
