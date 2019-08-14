@@ -20,9 +20,9 @@ this.intentParser = (function() {
     */
     find: {
       matches: [
-        /(?:find (?:the )?(?:tab|tap|tad|todd) (?:about|with) (.*))|(?:(?:(?:bring me to|find) (?:the|my)? )?(.*) (?:tab|tap|tad|todd))/i,
+        /(?:(?:find|bring me to)\s?(?:my|the)?)\s?((?:(?=tab).*)|(?:.*(?=tab)))/i,
       ],
-      slots: ["query", "query"],
+      slots: ["query"],
     },
     navigate: {
       matches: [
@@ -63,7 +63,7 @@ this.intentParser = (function() {
     },
     read: {
       matches: [
-        /^read$/i,
+        /^read(?:.*)$/i,
         /^read(?:this )tab$/i,
       ],
     },

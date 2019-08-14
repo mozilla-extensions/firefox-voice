@@ -37,6 +37,10 @@ this.intents.navigation = (function() {
     );
     console.log("THE URL THAT I HAVE IS ", myurl);
     await browser.tabs.update({ url: myurl });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "find"
+    });
   }
 
   this.intentRunner.registerIntent("bangSearch", async desc => {

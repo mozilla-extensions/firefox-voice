@@ -131,6 +131,7 @@ body,
 
 #feedback {
   color: #737373;
+  display: none;
 }
 
 #moz-voice-privacy {
