@@ -1,4 +1,4 @@
-/* globals util, voice, vad, ui */
+/* globals util, voice, vad, ui, log */
 
 this.popup = (function() {
   LOCAL_TESTING = false;
@@ -72,8 +72,8 @@ this.popup = (function() {
       console.info("started recording");
       ui.setState("listening");
       ui.onStartTextInput = () => {
-        console.log("detected text from the popup");
-        recorder.stop(); // not sure if this is working as expected?
+        log.debug("detected text from the popup");
+        recorder.cancel(); // not sure if this is working as expected?
       };
       ui.onTextInput = text => {
         ui.setState("success");

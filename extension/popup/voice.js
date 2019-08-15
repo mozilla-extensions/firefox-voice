@@ -34,7 +34,7 @@ this.voice = (function() {
         mimeType: "audio/ogg",
       };
       // VAD initializations
-      // console.log("Sample rate: ", audioContext.sampleRate);
+      // log.debug("Sample rate: ", audioContext.sampleRate);
       const bufferSize = 2048;
       // create a javascript node
       this.scriptprocessor = this.audioContext.createScriptProcessor(

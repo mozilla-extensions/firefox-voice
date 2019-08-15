@@ -25,9 +25,8 @@ this.intents.playing = (function() {
   this.intentRunner.registerIntent("pause", async desc => {
     const currentTab = (await browser.tabs.query({ active: true }))[0];
     // get video content for the current tab
-    const result = await browser.tabs.executeScript(currentTab.id, {
+    await browser.tabs.executeScript(currentTab.id, {
       file: "/intents/playing/pauseMedia.js",
     });
-    console.log(result);
   });
 })();

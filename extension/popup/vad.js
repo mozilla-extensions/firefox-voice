@@ -1,4 +1,4 @@
-/* globals util */
+/* globals util, log */
 
 // This is part of the WASM integration:
 // eslint-disable-next-line no-var
@@ -153,7 +153,7 @@ this.vad = (function() {
     }
 
     goCloud(why) {
-      console.log(why);
+      log.debug("goCloud, why:", why);
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
     }
@@ -168,15 +168,15 @@ this.vad = (function() {
       postRun: [],
       print: (function() {
         return function(text) {
-          console.log("[webrtc_vad.js print]", text);
+          log.info("[webrtc_vad.js print]", text);
         };
       })(),
       printErr(text) {
-        console.error("[webrtc_vad.js error]", text);
+        log.error("[webrtc_vad.js error]", text);
       },
       canvas: (function() {})(),
       setStatus(text) {
-        console.log("[webrtc_vad.js status] ", text);
+        log.info("[webrtc_vad.js status] ", text);
       },
       totalDependencies: 0,
       monitorRunDependencies(left) {

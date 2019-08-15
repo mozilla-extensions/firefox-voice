@@ -14,6 +14,9 @@
   },
   "background": {
     "scripts": [
+      "util.js",
+      "log.js",
+      "js/vendor/fuse.js",
       "background/main.js",
       "background/intentParser.js",
       "background/intentRunner.js",
@@ -35,7 +38,12 @@
     "<all_urls>",
     "storage",
     "tabs",
+<<<<<<< HEAD
     "https://api.duckduckgo.com/*"
+=======
+    "mozillaAddons",
+    "about:reader*"
+>>>>>>> a6fc5c7b6a518d5bfde14d827339dd17bbff3c81
   ],
   "browser_action": {
     "browser_style": false,
@@ -52,5 +60,9 @@
       },
       "description": "Opens Firefox Voice"
     }
+  },
+  // These are actually internal settings for the extension:
+  "settings": {
+    "logLevel": "debug"
   }
 }
