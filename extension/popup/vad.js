@@ -157,7 +157,7 @@ this.vad = (function() {
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
       if (why === "GoCloud finishedvoice") {
-        ui.setState("processing"); // REVIEW: not sure if this should send a message to popup.js or emit an event some other way?
+        ui.setState("processing"); // TODO: send a message through voice.js to popup.js to ui.js to set the processing state
       }
     }
   };

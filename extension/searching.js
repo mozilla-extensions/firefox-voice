@@ -14,12 +14,14 @@ this.searching = (function() {
 
   exports.ddgEntitySearch = async function(query) {
     const response = await fetch(
-      `https://api.duckduckgo.com/?q=${query}&format=json&pretty=1&skip_disambig=1`
+      `https://api.duckduckgo.com/?q=${encodeURIComponent(
+        query
+      )}&format=json&pretty=1&skip_disambig=1`
     );
     const ddgData = await response.json();
     if (!ddgData.AbstractText) {
       // the response from DDG was null, and there was no matching Instant Answer result
-      return {};
+      return null;
     }
     const cardData = (({
       Heading,
@@ -48,7 +50,9 @@ this.searching = (function() {
     };
     const bang = SERVICE_BANG_MAP[service.toLowerCase()];
     const response = await fetch(
-      `https://api.duckduckgo.com/?q=!${bang}+${query}&format=json&pretty=1&no_redirect=1`
+      `https://api.duckduckgo.com/?q=!${encodeURIComponent(
+        bang
+      )}+${encodeURIComponent(query)}&format=json&pretty=1&no_redirect=1`
     );
     const json = await response.json();
 

@@ -7,6 +7,9 @@ this.ui = (function() {
   let currentState = "listening";
   let textInputDetected = false;
 
+  // Default amount of time (in milliseconds) before the action is automatically dismissed after we perform certain actions (e.g. successfully switching to a different open tab). This value should give users enough time to read the content on the popup before it closes.
+  const DEFAULT_TIMEOUT = 2500;
+
   const animationSegmentTimes = {
     reveal: [0, 14],
     base: [14, 30],
@@ -156,10 +159,11 @@ this.ui = (function() {
 
   exports.showCard = function showCard(data) {
     document.querySelector("#popup").classList.add("hasCard");
-    document.querySelector("#card-header").innerText = data.Heading;
+    document.querySelector("#card-header").textContent = data.Heading;
     document.querySelector("#card-image > img").src = data.Image;
-    document.querySelector("#card-summary").innerText = data.AbstractText;
-    document.querySelector("#card-source-link").innerText = data.AbstractSource;
+    document.querySelector("#card-summary").textContent = data.AbstractText;
+    document.querySelector("#card-source-link").textContent =
+      data.AbstractSource;
     document.querySelector("#card-source-link").href = data.AbstractURL;
   };
 
@@ -187,7 +191,7 @@ this.ui = (function() {
     settingsIcon.addEventListener("click", showSettings);
   }
 
-  exports.closePopup = function closePopup(ms = 2500) {
+  exports.closePopup = function closePopup(ms = DEFAULT_TIMEOUT) {
     // TODO: offload mic and other resources before closing?
     setTimeout(() => {
       window.close();
