@@ -14,3 +14,6 @@ credentials
 /Profile*
 manifest.json
 /addon.xpi
+intentParser/*
+!intentParser/README.md
+!intentParser/firefox_voice_training.yaml

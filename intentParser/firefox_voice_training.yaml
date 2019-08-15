@@ -1,0 +1,1431 @@
+## intent:media_play
+---
+type: intent
+name: media_play
+slots:
+  - name: contentTerm
+    entity: contentTerm
+  - name: contentPlatform
+    entity: contentPlatform
+utterances:
+  - turn on [contentTerm](Old Town Road)​
+  - turn on [contentTerm](Bad Guy)​
+  - turn on [contentTerm](Senorita)​
+  - turn on [contentTerm](Talk)​
+  - turn on [contentTerm](Truth Hurts)​
+  - turn on [contentTerm](I Don't Care​)
+  - turn on [contentTerm](Goodbyes)​
+  - turn on [contentTerm](Sucker)​
+  - turn on [contentTerm](Sunflower)​
+  - turn on [contentTerm](If I Can't Have You)​
+  - turn on [contentTerm](Suge)​
+  - turn on [contentTerm](Money In The Grave)​
+  - turn on [contentTerm](The Git Up)​
+  - turn on [contentTerm](You Need To Calm Down)​
+  - turn on [contentTerm](Hey Look Ma, I Made It)​
+  - turn on [contentTerm](Dancing With A Stranger)​
+  - turn on [contentTerm](Wow.)​
+  - turn on [contentTerm](Ran$om)​
+  - turn on [contentTerm](Someone You Loved)​
+  - turn on [contentTerm](God's Country)​
+  - turn on [contentTerm](Without Me)​
+  - turn on [contentTerm](The London)​
+  - turn on [contentTerm](Beer Never Broke My Heart)​
+  - turn on [contentTerm](Beautiful People)​
+  - turn on [contentTerm](Pop Out)​
+  - turn on [contentTerm](Happier)​
+  - turn on [contentTerm](Panini)​
+  - turn on [contentTerm](How Do You Sleep?)​
+  - turn on [contentTerm](Speechless)​
+  - put on [contentTerm](Sweet But Psycho)​
+  - put on [contentTerm](Never Really Over)​
+  - put on [contentTerm](7 Rings)​
+  - put on [contentTerm](High Hopes)​
+  - put on [contentTerm](Whiskey Glasses)​
+  - put on [contentTerm](Shotta Flow)​
+  - put on [contentTerm](My Type)​
+  - put on [contentTerm](Knockin' Boots)​
+  - put on [contentTerm](Rumor)​
+  - put on [contentTerm](Act Up)​
+  - put on [contentTerm](All To Myself)​
+  - put on [contentTerm](Baby)​
+  - put on [contentTerm](Better)​
+  - put on [contentTerm](GIRL)​
+  - put on [contentTerm](Going Bad)​
+  - put on [contentTerm](Sicko Mode)​
+  - put on [contentTerm](Shallow)​
+  - put on [contentTerm](Con Calma)​
+  - put on [contentTerm](Middle Child)​
+  - put on [contentTerm](Clout)​
+  - put on [contentTerm](Cash Shit)​
+  - put on [contentTerm](China)​
+  - put on [contentTerm](Worth It)​
+  - put on [contentTerm](Rearview Town)​
+  - put on [contentTerm](Callaita)​
+  - put on [contentTerm](Go Loko)​
+  - put on [contentTerm](Just Us)​
+  - put on [contentTerm](ME!)​
+  - put on [contentTerm](Some Of It)​
+  - put on [contentTerm](One Thing Right)​
+  - start playing [contentTerm](Cross Me)​
+  - start playing [contentTerm](Antisocial)​
+  - start playing [contentTerm](Press)​
+  - start playing [contentTerm](Easier)​
+  - start playing [contentTerm](Talk You Out Of It)​
+  - start playing [contentTerm](Call You Mine)​
+  - start playing [contentTerm](Trampoline)​
+  - start playing [contentTerm](The Ones That Didn't Make It Back Home)​
+  - start playing [contentTerm](The Archer)​
+  - start playing [contentTerm](Earfquake)​
+  - start playing [contentTerm](Raised On Country)​
+  - start playing [contentTerm](It's You)​
+  - start playing [contentTerm](Rodeo)​
+  - start playing [contentTerm](Soltera)​
+  - start playing [contentTerm](La La Land)​
+  - start playing [contentTerm](Brown Skin Girl)​
+  - start playing [contentTerm](Lalala)​
+  - start playing [contentTerm](Only Human)​
+  - start playing [contentTerm](Otro Trago)​
+  - start playing [contentTerm](24/7)​
+  - start playing [contentTerm](Nightmare)​
+  - start playing [contentTerm](Hate Me)​
+  - start playing [contentTerm](No Me Conoce)​
+  - start playing [contentTerm](Cool)​
+  - start playing [contentTerm](Before I Let Go)​
+  - start playing [contentTerm](I Don't Know About You)​
+  - start playing [contentTerm](Tap)​
+  - start playing [contentTerm](Under The Sun)​
+  - start playing [contentTerm](Southbound)​
+  - start playing [contentTerm](Mood 4 Eva)​
+  - start playing [contentTerm](Wish Wish)​
+  - start playing [contentTerm](Love Ain't)​
+  - start playing [contentTerm](Baguettes In The Face)​
+  - start playing [contentTerm](Ballin')​
+  - start playing [contentTerm](Calma)​
+  - start playing [contentTerm](Que Pretendes)​
+  - start playing [contentTerm](Sanguine Paradise)​
+  - start playing [contentTerm](Tip Of My Tongue)​
+  - start playing [contentTerm](South Of The Border)​
+  - start playing [contentTerm](MEGATRON)
+  - Play [contentTerm](The Dark Knight)
+  - Play [contentTerm](Fight Club)
+  - Play [contentTerm](The Lord of the Rings)
+  - Play [contentTerm](The Fellowship of the Ring)
+  - Play [contentTerm](Inception)
+  - Play [contentTerm](Star Wars Episode V - The Empire Strikes Back)
+  - Play [contentTerm](The Lord of the Rings The Two Towers)
+  - Play [contentTerm](The Matrix)
+  - Play [contentTerm](Seven Samurai)
+  - Play [contentTerm](Avengers Endgame)
+  - Play [contentTerm](Se7en)
+  - Play [contentTerm](City of God)
+  - Play [contentTerm](Life Is Beautiful)
+  - Play [contentTerm](Spirited Away)
+  - Play [contentTerm](The Usual Suspects)
+  - Play [contentTerm](Léon The Professional)
+  - Play [contentTerm](Interstellar)
+  - Play [contentTerm](American History X)
+  - Play [contentTerm](Once Upon a Time in the West)
+  - Play [contentTerm](Modern Times)
+  - Play [contentTerm](The Intouchables)
+  - Play [contentTerm](The Departed)
+  - Play [contentTerm](Back to the Future)
+  - Play [contentTerm](Terminator 2 Judgment Day)
+  - Play [contentTerm](The Lion King)
+  - Play [contentTerm](Whiplash)
+  - Play [contentTerm](The Prestige)
+  - Play [contentTerm](Memento)
+  - Play [contentTerm](Alien)
+  - Play [contentTerm](Grave of the Fireflies)
+  - Play [contentTerm](Cinema Paradiso)
+  - Play [contentTerm](Spider-Man Into the Spider-Verse)
+  - Play [contentTerm](The Lives of Others)
+  - Play [contentTerm](Avengers Infinity War)
+  - Play [contentTerm](Paths of Glory)
+  - Play [contentTerm](Django Unchained)
+  - Play [contentTerm](The Shining)
+  - Play [contentTerm](WALL·E)
+  - Play [contentTerm](Princess Mononoke)
+  - Play [contentTerm](Witness for the Prosecution)
+  - Play [contentTerm](Oldboy)
+  - Play [contentTerm](The Dark Knight Rises)
+  - Play [contentTerm](Aliens)
+  - Play [contentTerm](American Beauty)
+  - Play [contentTerm](Once Upon a Time in America)
+  - Play [contentTerm](Coco)
+  - Play [contentTerm](Das Boot)
+  - Play [contentTerm](Your Name.)
+  - Play [contentTerm](Reservoir Dogs)
+  - Play [contentTerm](Star Wars Episode VI - Return of the Jedi)
+  - Play [contentTerm](M)
+  - Play [contentTerm](Requiem for a Dream)
+  - Play [contentTerm](Toy Story)
+  - Play [contentTerm](3 Idiots)
+  - Play [contentTerm](Dangal)
+  - Play [contentTerm](Eternal Sunshine of the Spotless Mind)
+  - Play [contentTerm](Like Stars on Earth)
+  - Play [contentTerm](Inglourious Basterds)
+  - Play [contentTerm](Amélie)
+  - Play [contentTerm](Full Metal Jacket)
+  - Play [contentTerm](Bicycle Thieves)
+  - Play [contentTerm](The Kid)
+  - Play [contentTerm](The Sting)
+  - Play [contentTerm](Toy Story 3)
+  - Play [contentTerm](The Hunt)
+  - Play [contentTerm](Snatch)
+  - Play [contentTerm](Scarface)
+  - Play [contentTerm](For a Few Dollars More)
+  - Play [contentTerm](Metropolis)
+  - Play [contentTerm](Monty Python and the Holy Grail)
+  - Play [contentTerm](L.A. Confidential)
+  - Stream [contentTerm](A Separation)
+  - Stream [contentTerm](Indiana Jones and the Last Crusade)
+  - Stream [contentTerm](Up)
+  - Stream [contentTerm](Rashomon)
+  - Stream [contentTerm](All About Eve)
+  - Stream [contentTerm](Batman Begins)
+  - Stream [contentTerm](Yojimbo)
+  - Stream [contentTerm](Downfall)
+  - Stream [contentTerm](Die Hard)
+  - Stream [contentTerm](Heat)
+  - Stream [contentTerm](Incendies)
+  - Stream [contentTerm](Ikiru)
+  - Stream [contentTerm](Green Book)
+  - Stream [contentTerm](The Great Escape)
+  - Stream [contentTerm](Children of Heaven)
+  - Stream [contentTerm](Pan's Labyrinth)
+  - Stream [contentTerm](My Neighbor Totoro)
+  - Stream [contentTerm](Howl's Moving Castle)
+  - Stream [contentTerm](Ran)
+  - Stream [contentTerm](Judgment at Nuremberg)
+  - Stream [contentTerm](My Father and My Son)
+  - Stream [contentTerm](The Secret in Their Eyes)
+  - Stream [contentTerm](The Gold Rush)
+  - Stream [contentTerm](A Beautiful Mind)
+  - Stream [contentTerm](Casino)
+  - Stream [contentTerm](Lock, Stock and Two Smoking Barrels)
+  - Stream [contentTerm](Three Billboards Outside Ebbing, Missouri)
+  - Stream [contentTerm](The Seventh Seal)
+  - Stream [contentTerm](The Wolf of Wall Street)
+  - Stream [contentTerm](The Elephant Man)
+  - Stream [contentTerm](Inside Out)
+  - Stream [contentTerm](V for Vendetta)
+  - Stream [contentTerm](There Will Be Blood)
+  - Stream [contentTerm](No Country for Old Men)
+  - Stream [contentTerm](Blade Runner)
+  - Stream [contentTerm](Warrior)
+  - Stream [contentTerm](Dial M for Murder)
+  - Stream [contentTerm](Room)
+  - Stream [contentTerm](Toy Story 4)
+  - Stream [contentTerm](The Sixth Sense)
+  - Stream [contentTerm](Wild Strawberries)
+  - Stream [contentTerm](Trainspotting)
+  - Stream [contentTerm](The General)
+  - Stream [contentTerm](The Thing)
+  - Stream [contentTerm](Come and See)
+  - Stream [contentTerm](Andhadhun)
+  - Stream [contentTerm](Finding Nemo)
+  - Stream [contentTerm](Gran Torino)
+  - Stream [contentTerm](Shutter Island)
+  - Stream [contentTerm](The Big Lebowski)
+  - Stream [contentTerm](Kill Bill Vol. 1)
+  - Stream [contentTerm](Sherlock Jr.)
+  - Stream [contentTerm](Cool Hand Luke)
+  - Stream [contentTerm](Mary and Max)
+  - Stream [contentTerm](Tokyo Story)
+  - Stream [contentTerm](Hacksaw Ridge)
+  - Stream [contentTerm](Rebecca)
+  - Stream [contentTerm](How to Train Your Dragon)
+  - Stream [contentTerm](Wild Tales)
+  - Stream [contentTerm](Gone Girl)
+  - Stream [contentTerm](The Truman Show)
+  - Stream [contentTerm](Stalker)
+  - Stream [contentTerm](The Grand Budapest Hotel)
+  - Stream [contentTerm](In the Name of the Father)
+  - Stream [contentTerm](Stand by Me)
+  - Stream [contentTerm](Memories of Murder)
+  - Stream [contentTerm](Sunrise)
+  - Stream [contentTerm](Into the Wild)
+  - Stream [contentTerm](Persona)
+  - Stream [contentTerm](Monty Python's Life of Brian)
+  - Watch [contentTerm](12 Years a Slave)
+  - Watch [contentTerm](Million Dollar Baby)
+  - Watch [contentTerm](Before Sunrise)
+  - Watch [contentTerm](Hotel Rwanda)
+  - Watch [contentTerm](Prisoners)
+  - Watch [contentTerm](Mad Max Fury Road)
+  - Watch [contentTerm](Logan)
+  - Watch [contentTerm](Hachi A Dog's Tale)
+  - Watch [contentTerm](Rush)
+  - Watch [contentTerm](The Bandit)
+  - Watch [contentTerm](Catch Me If You Can)
+  - Watch [contentTerm](The Wages of Fear)
+  - Watch [contentTerm](The 400 Blows)
+  - Watch [contentTerm](Spotlight)
+  - Watch [contentTerm](Amores Perros)
+  - Watch [contentTerm](Harry Potter and the Deathly Hallows Part 2)
+  - Watch [contentTerm](Andrei Rublev)
+  - Watch [contentTerm](Nausicaä of the Valley of the Wind)
+  - Watch [contentTerm](The Passion of Joan of Arc)
+  - Watch [contentTerm](The Princess Bride)
+  - Watch [contentTerm](Barry Lyndon)
+  - Watch [contentTerm](Neon Genesis Evangelion The End of Evangelion)
+  - Watch [contentTerm](Monsters, Inc.)
+  - Watch [contentTerm](Rang De Basanti)
+  - Watch [contentTerm](Dead Poets Society)
+  - Watch [contentTerm](The Terminator)
+  - Watch [contentTerm](The Handmaiden)
+  - Watch [contentTerm](La Haine)
+  - Watch [contentTerm](In the Mood for Love)
+  - Watch [contentTerm](Gandhi)
+  - Watch [contentTerm](Donnie Darko)
+  - Watch [contentTerm](The Help)
+  - Watch [contentTerm](Groundhog Day)
+  - Watch [contentTerm](Guardians of the Galaxy)
+  - Watch [contentTerm](Diabolique)
+  - Watch [contentTerm](Before Sunset)
+  - Watch [contentTerm](Castle in the Sky)
+  - Watch [contentTerm](Pirates of the Caribbean The Curse of the Black Pearl)
+  - Watch [contentTerm](Paris, Texas)
+  - Watch [contentTerm](Beauty and the Beast)
+  - Watch [contentTerm](Raise the Red Lantern)
+  - Watch [contentTerm](Akira)
+  - Watch [contentTerm](Dog Day Afternoon)
+  - Watch [contentTerm](Hera Pheri)
+  - Watch [contentTerm](Gangs of Wasseypur)
+  - Play [contentTerm](The Godfather) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Shawshank Redemption) on [contentPlatform](YouTube) on [contentPlatform](YouTube)
+  - Play [contentTerm](Schindler's List) on [contentPlatform](YouTube)
+  - Play [contentTerm](Raging Bull) on [contentPlatform](YouTube)
+  - Play [contentTerm](Casablanca) on [contentPlatform](YouTube)
+  - Play [contentTerm](Citizen Kane) on [contentPlatform](YouTube)
+  - Play [contentTerm](Gone with the Wind) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Wizard of Oz) on [contentPlatform](YouTube)
+  - Play [contentTerm](One Flew Over the Cuckoo's Nest) on [contentPlatform](YouTube)
+  - Play [contentTerm](Lawrence of Arabia) on [contentPlatform](YouTube)
+  - Play [contentTerm](Vertigo) on [contentPlatform](YouTube)
+  - Play [contentTerm](Psycho) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Godfather Part II) on [contentPlatform](YouTube)
+  - Play [contentTerm](On the Waterfront) on [contentPlatform](YouTube)
+  - Play [contentTerm](Sunset Blvd) on [contentPlatform](YouTube)
+  - Play [contentTerm](Forrest Gump) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Sound of Music) on [contentPlatform](YouTube)
+  - Play [contentTerm](12 Angry Men) on [contentPlatform](YouTube)
+  - Play [contentTerm](West Side Story) on [contentPlatform](YouTube)
+  - Play [contentTerm](Star Wars Episode IV - A New Hope) on [contentPlatform](YouTube)
+  - Play [contentTerm](2001 A Space Odyssey) on [contentPlatform](YouTube)
+  - Play [contentTerm](E.T. the Extra-Terrestrial) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Silence of the Lambs) on [contentPlatform](YouTube)
+  - Play [contentTerm](Chinatown) on [contentPlatform](YouTube)
+  - Play [contentTerm](The Bridge on the River Kwai)
+  - Watch [contentTerm](Singin' in the Rain) on [contentPlatform](Amazon)
+  - Watch [contentTerm](It's a Wonderful Life) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Dr. Strangelove) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Some Like It Hot) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Ben-Hur) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Apocalypse Now) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Amadeus) on [contentPlatform](Amazon)
+  - Watch [contentTerm](The Lord of the Rings The Return of the King) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Gladiator) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Titanic) on [contentPlatform](Amazon)
+  - Watch [contentTerm](From Here to Eternity) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Saving Private Ryan) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Unforgiven) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Raiders of the Lost Ark) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Rocky) on [contentPlatform](Amazon)
+  - Watch [contentTerm](A Streetcar Named Desire) on [contentPlatform](Amazon)
+  - Watch [contentTerm](The Philadelphia Story) on [contentPlatform](Amazon)
+  - Watch [contentTerm](To Kill a Mockingbird) on [contentPlatform](Amazon)
+  - Watch [contentTerm](An American in Paris) on [contentPlatform](Amazon)
+  - Watch [contentTerm](The Best Years of Our Lives) on [contentPlatform](Amazon)
+  - Watch [contentTerm](My Fair Lady) on [contentPlatform](Amazon)
+  - Watch [contentTerm](A Clockwork Orange) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Doctor Zhivago) on [contentPlatform](Amazon)
+  - Watch [contentTerm](The Searchers) on [contentPlatform](Amazon)
+  - Watch [contentTerm](Jaws)
+  - "[contentTerm](Patton) on [contentPlatform](Netflix)"
+  - "[contentTerm](Butch Cassidy and the Sundance Kid) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Treasure of the Sierra Madre) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Good, the Bad and the Ugly) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Apartment) on [contentPlatform](Netflix)"
+  - "[contentTerm](Platoon) on [contentPlatform](Netflix)"
+  - "[contentTerm](High Noon) on [contentPlatform](Netflix)"
+  - "[contentTerm](Braveheart) on [contentPlatform](Netflix)"
+  - "[contentTerm](Dances with Wolves) on [contentPlatform](Netflix)"
+  - "[contentTerm](Jurassic Park) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Exorcist) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Pianist) on [contentPlatform](Netflix)"
+  - "[contentTerm](Goodfellas) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Deer Hunter) on [contentPlatform](Netflix)"
+  - "[contentTerm](All Quiet on the Western Front) on [contentPlatform](Netflix)"
+  - "[contentTerm](Bonnie and Clyde) on [contentPlatform](Netflix)"
+  - "[contentTerm](The French Connection) on [contentPlatform](Netflix)"
+  - "[contentTerm](City Lights) on [contentPlatform](Netflix)"
+  - "[contentTerm](It Happened One Night) on [contentPlatform](Netflix)"
+  - "[contentTerm](A Place in the Sun) on [contentPlatform](Netflix)"
+  - "[contentTerm](Midnight Cowboy) on [contentPlatform](Netflix)"
+  - "[contentTerm](Mr. Smith Goes to Washington) on [contentPlatform](Netflix)"
+  - "[contentTerm](Rain Man) on [contentPlatform](Netflix)"
+  - "[contentTerm](Annie Hall) on [contentPlatform](Netflix)"
+  - "[contentTerm](Fargo) on [contentPlatform](Netflix)"
+  - "[contentTerm](Giant) on [contentPlatform](Netflix)"
+  - "[contentTerm](Shane) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Grapes of Wrath) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Green Mile) on [contentPlatform](Netflix)"
+  - "[contentTerm](Close Encounters of the Third Kind) on [contentPlatform](Netflix)"
+  - "[contentTerm](Nashville) on [contentPlatform](Netflix)"
+  - "[contentTerm](Network) on [contentPlatform](Netflix)"
+  - "[contentTerm](The Graduate) on [contentPlatform](Netflix)"
+  - "[contentTerm](American Graffiti) on [contentPlatform](Netflix)"
+  - "[contentTerm](Pulp Fiction) on [contentPlatform](Netflix)"
+  - "[contentTerm](Terms of Endearment) on [contentPlatform](Netflix)"
+  - "[contentTerm](Good Will Hunting) on [contentPlatform](Netflix)"
+  - "[contentTerm](The African Queen) on [contentPlatform](Netflix)"
+  - "[contentTerm](Stagecoach)"
+  - Stream [contentTerm](Mutiny on the Bounty)
+  - Stream [contentTerm](The Great Dictator)
+  - Stream [contentTerm](Double Indemnity)
+  - Stream [contentTerm](The Maltese Falcon)
+  - Stream [contentTerm](Wuthering Heights)
+  - Stream [contentTerm](Taxi Driver)
+  - Stream [contentTerm](Rear Window)
+  - Stream [contentTerm](The Third Man)
+  - Stream [contentTerm](Rebel Without a Cause)
+  - Stream [contentTerm](North by Northwest)
+  - Stream [contentTerm](Yankee Doodle Dandy)
+  - "[contentTerm](Moana soundtrack)"
+  - Listen to [contentTerm](What Comes Next)
+  - Listen to [contentTerm](Superboy and the Invisible Girl)
+  - Listen to the [contentTerm](Rent soundtrack)
+  - Play some [contentTerm](Carly Simon)
+  - Listen to [contentTerm](Relax, Take it Easy)
+  - Play [contentTerm](Origin of Love by MIKA) on [contentPlatform](Spotify)
+  - Play [contentTerm](After the Storm by Mumford & Sons)
+  - Play [contentTerm](Once Upon Another Time by Sara Bareilles) on [contentPlatform](YouTube)
+  - Play [contentTerm](Runnin' on Empty by Jackson Browne)
+  - Play [contentTerm](Julia by the Beatles) on [contentPlatform](Spotify)
+  - Listen to [contentTerm](Stay Alive) on [contentPlatform](SoundCloud)
+  - Listen to [contentTerm](Wait for It) on [contentPlatform](SoundCloud)
+  - Listen to [contentTerm](Helpless) on [contentPlatform](Pandora)
+  - Listen to [contentTerm](The Story of Tonight) on [contentPlatform](YouTube)
+  - Listen to [contentTerm](Farmer Refuted) on [contentPlatform](Spotify)
+  - Listen to [contentTerm](The Schuyler Sisters) on [contentPlatform](Spotify)
+  - Play [contentTerm](My Shot) on [contentPlatform](YouTube)
+  - Play [contentTerm](Satisfied) on [contentPlatform](YouTube)
+  - Play [contentTerm](Aaron Burr, Sir) on [contentPlatform](Spotify)
+  - Play [contentTerm](Dear Theodosia) on [contentPlatform](Spotify)
+  - Play [contentTerm](Say No To this) on [contentPlatform](Youtube)
+  - Play the [contentTerm](Waitress soundtrack)
+  - Play [contentTerm](You're So Vain) on [contentPlatform](Pandora)
+  - Play [contentTerm](when we were young by adele) on [contentPlatform](Spotify)
+  - Play [contentPlatform](I Love You Man) on [contentPlatform](Netflix)
+  - Queue up my [contentPlatform](Spotify) [contentTerm](focus playlist)
+  - Play [contentTerm](indie techno) on [contentPlatform](Pandora)
+  - Play [contentTerm](jazz)
+  - "[contentTerm](Adele 21) album"
+  - Play [contentTerm](Backstreet Boys) on [contentPlatform](Pandora)
+  - Play [contentTerm](The Beatles) on [contentPlatform](Spotify)
+  - play the [contentTerm](Hamilton soundtrack) on [contentPlatform](Youtube)
+  - click play
+  - hit play
+  - resume playing
+  - start the video
+  - start playing
+  - un-pause
+  - unpause
+  - resume
+  - play the song
+  - play audio
+  - play the video
+  - watch
+  - restart
+  - continue
+  - play
+
+---
+type: entity
+name: contentPlatform
+automatically_extensible: false # default value is true
+use_synonyms: false # default value is true
+matching_strictness: 0.8 # default value is 1.0
+values:
+  - YouTube
+  - Pandora
+  - Spotify
+  - Google Play
+
+---
+type: entity
+name: contentTerm
+automatically_extensible: true # default value is true
+use_synonyms: false # default value is true
+matching_strictness: 0.1 # default value is 1.0
+values:
+  - Old Town Road
+  - Bad Guy
+  - Senorita
+  - Talk
+  - Truth Hurts
+  - I Don't Care​
+  - Goodbyes
+  - Sucker
+  - Sunflower
+  - If I Can't Have You
+  - Suge
+  - Money In The Grave
+  - The Git Up
+  - You Need To Calm Down
+  - Hey Look Ma, I Made It
+  - Dancing With A Stranger
+  - Wow.
+  - Ran$om
+  - Someone You Loved
+  - God's Country
+  - Without Me
+  - The London
+  - Beer Never Broke My Heart
+  - Beautiful People
+  - Pop Out
+  - Happier
+  - Panini
+  - How Do You Sleep?
+  - Speechless
+  - Sweet But Psycho
+  - Never Really Over
+  - 7 Rings
+  - High Hopes
+  - Whiskey Glasses
+  - Shotta Flow
+  - My Type
+  - Knockin' Boots
+  - Rumor
+  - Act Up
+  - All To Myself
+  - Baby
+  - Better
+  - GIRL
+  - Going Bad
+  - Sicko Mode
+  - Shallow
+  - Con Calma
+  - Middle Child
+  - Clout
+  - Cash Shit
+  - China
+  - Worth It
+  - Rearview Town
+  - Callaita
+  - Go Loko
+  - Just Us
+  - ME!
+  - Some Of It
+  - One Thing Right
+  - Cross Me
+  - Antisocial
+  - Press
+  - Easier
+  - Talk You Out Of It
+  - Call You Mine
+  - Trampoline
+  - The Ones That Didn't Make It Back Home
+  - The Archer
+  - Earfquake
+  - Raised On Country
+  - It's You
+  - Rodeo
+  - Soltera
+  - La La Land
+  - Brown Skin Girl
+  - Lalala
+  - Only Human
+  - Otro Trago
+  - 24/7
+  - Nightmare
+  - Hate Me
+  - No Me Conoce
+  - Cool
+  - Before I Let Go
+  - I Don't Know About You
+  - Tap
+  - Under The Sun
+  - Southbound
+  - Mood 4 Eva
+  - Wish Wish
+  - Love Ain't
+  - Baguettes In The Face
+  - Ballin'
+  - Calma
+  - Que Pretendes
+  - Sanguine Paradise
+  - Tip Of My Tongue
+  - South Of The Border
+  - MEGATRON
+  - The Dark Knight
+  - Fight Club
+  - The Lord of the Rings
+  - The Fellowship of the Ring
+  - Inception
+  - Star Wars Episode V - The Empire Strikes Back
+  - The Lord of the Rings The Two Towers
+  - The Matrix
+  - Seven Samurai
+  - Avengers Endgame
+  - Se7en
+  - City of God
+  - Life Is Beautiful
+  - Spirited Away
+  - The Usual Suspects
+  - Léon The Professional
+  - Interstellar
+  - American History X
+  - Once Upon a Time in the West
+  - Modern Times
+  - The Intouchables
+  - The Departed
+  - Back to the Future
+  - Terminator 2 Judgment Day
+  - The Lion King
+  - Whiplash
+  - The Prestige
+  - Memento
+  - Alien
+  - Grave of the Fireflies
+  - Cinema Paradiso
+  - Spider-Man Into the Spider-Verse
+  - The Lives of Others
+  - Avengers Infinity War
+  - Paths of Glory
+  - Django Unchained
+  - The Shining
+  - WALL·E
+  - Princess Mononoke
+  - Witness for the Prosecution
+  - Oldboy
+  - The Dark Knight Rises
+  - Aliens
+  - American Beauty
+  - Once Upon a Time in America
+  - Coco
+
+---
+type: intent
+name: media_pause
+utterances:
+  - pause music
+  - hit pause
+  - click pause
+  - pause audio
+  - pause the video
+  - stop playing
+  - stop
+  - pause
+
+---
+type: intent
+name: read
+slots:
+  - name: query
+    entity: query
+  - name: readAction
+    entity: readAction
+utterances:
+  - Read [query](Welcome to Pleistocene Park)
+  - ​​Read [query](Science Has Begun Taking Gluten Seriously)
+  - ​​Read [query](How to Start a Fire, Plus 15 Other Outdoor Skills That Aren't Complicated)
+  - ​​Read [query](What Ever Happened To Waterbeds?)
+  - ​​Read [query](The Sacred Journey of Four Million Indian Women to Cook for Their Goddess)
+  - ​​Read [query](The Man Who Tried to Redeem the World with Logic)
+  - ​​Read [query](If You’re Just Not a Morning Person, Science Says You May Never Be)
+  - ​​Read [query](10 Life Lessons I Learned from Surviving My 20s)
+  - ​​Read [query](How Video Games Satisfy Basic Human Needs)
+  - ​​Read [query](How the Five “Love Languages” Can Help You Win at Relationships)
+  - ​​Read [query](Speaking in Tongues)
+  - ​​Read [query](Hermann Hesse on What Trees Teach Us About Belonging and Life)
+  - ​​Read [query](Make Mars Great Again)
+  - ​​Read [query](There Are No True Rebels)
+  - ​​Read [query](Obituary Great Barrier Reef)
+  - ​​Read [query](Stop Trying To Be Happy)
+  - ​​Read [query](Inside the Cut-Throat World of Toddler Bike Racing)
+  - ​​Read [query](One Thing Steve Jobs Did at Apple That Will Instantly Improve Your Productivity)
+  - ​​Read [query](This Article Won’t Change Your Mind)
+  - ​​Read [query](How to Find Your Dream Job)
+  - ​​Read [query](12 Books That Will Improve Your Self-Knowledge)
+  - ​​Read [query](If Everyone Ate Beans Instead of Beef)
+  - ​​Read [query](The Politics of the Dog Park)
+  - ​​Read [query](How Misinformation From Social Security Can Cost You Tens of Thousands of Dollars)
+  - ​​Read [query](The Benefits of Optimism Are Real)
+  - ​​Read [query](How Cubans Live as Long as Americans at a Tenth of the Cost)
+  - ​​Read [query](How to Finally Start Working Out (Even If You Hate It))
+  - ​​Read [query](The Myth of the Kindly General Lee)
+  - ​​Read [query](The Two Things Killing Your Ability to Focus)
+  - ​​Read [query](Why So Many of Us Experience a Midlife Crisis)
+  - ​​Read [query](The Disease of More)
+  - ​​Read [query](Starting Your Day on the Internet Is Damaging Your Brain)
+  - ​​Read [query](There Are Two Kinds of AI, and the Difference is Important)
+  - ​​Read [query](The Shipwrecked Sailors & the Wandering Cod)
+  - ​​Read [query](Who Killed the Weekend?)
+  - ​​Read [query](Chaos Makes the Multiverse Unnecessary)
+  - ​​Read [query](These Maps Reveal the Hidden Structures of ‘Choose Your Own Adventure’ Books)
+  - ​​Read [query](How an 18th-Century Philosopher Helped Solve My Midlife Crisis)
+  - ​​Read [query](What Effective Protest Could Look Like)
+  - ​​Read [query](The Blind Traveler)
+  - ​​Read [query](How to Activate Your Brain’s Ability to Learn)
+  - ​​Read [query](The Like Button Ruined the Internet)
+  - ​​Read [query](How Online Shopping Makes Suckers of Us All)
+  - ​​Read [query](I was 35 when I discovered I'm on the autism spectrum. Here's how it changed my life.)
+  - ​​Read [query](100 Percent Is Overrated)
+  - ​​Read [query](16 People You Should Tip for the Holidays)
+  - ​​Read [query](The Downside of Work-Life Balance)
+  - ​​Read [query](When Your Child Is a Psychopath)
+  - ​​Read [query](Stop Keeping Score)
+  - ​​Read [query](Ursula K. Le Guin on Being a Man)
+  - ​​Read [query](My Life With Marilyn, the Family Lemon Tree)
+  - ​​Read [query](Want To Be Happier and More Successful? Learn To Like Other People)
+  - ​​Read [query](The World’s Last Great Undiscovered Cuisine)
+  - ​​Read [query](What Does Any of This Have to Do With Physics?)
+  - ​​Read [query](I Trained Myself to Be Less Busy — and it Dramatically Improved My Life)
+  - ​​Read [query](The Crab-Fishing Drug King of Everglades City)
+  - ​​Read [query](How Poverty Changes the Brain)
+  - ​​Read [query](The Myth of Creative Inspiration)
+  - ​​Read [query](The World’s Most Efficient Languages)
+  - ​​Read [query](Are We Having Too Much Fun?)
+  - ​​Read [query](An Oral History of Nintendo’s Power Glove)
+  - ​​Read [query](How To Exercise 312 Times A Year)
+  - ​​Read [query](How to Read More)
+  - ​​Read [query](Make Strategic Thinking Part of Your Job)
+  - ​​Read [query](How To Predict Your Future)
+  - ​​Read [query](This is What Your Overactive Brain Needs to Get a Good Night’s Sleep)
+  - ​​Read [query](How to Read a Map)
+  - ​​Read [query](What If Bike Paths Looked Like Subway Maps?)
+  - ​​Read [query](The Healing Power of Nature)
+  - ​​Read [query](Alain de Botton on Love, Vulnerability, and the Psychological Paradox of the Sulk)
+  - ​​Read [query](This Is What Happens to Your Body on a Thru-Hike)
+  - ​​Read [query](The Best Running Tips of All Time)
+  - ​​Read [query](Is This New Swim Stroke the Fastest Yet?)
+  - ​​Read [query](The Trouble with Theories of Everything)
+  - ​​Read [query](What Your Innovation Process Should Look Like)
+  - ​​Read me the article called [query](Secrets of the MIT Poker Course)
+  - ​​Read me the article called [query](Nicole Krauss’s Beautiful Letter to Van Gogh on How to Break the Loop of Our Destructive Patterns)
+  - ​​Read me the article called [query](Why Most People Will Never Be Successful)
+  - ​​Read me the article called [query](The Weird Power of the Placebo Effect, Explained)
+  - ​​Read me the article called [query](How to Teach Girls They Don’t Have to Be Nice)
+  - ​​Read me the article called [query](What Would it Take for an American Guy to Become Danish?)
+  - ​​Read me the article called [query](How to Be Lucky)
+  - ​​Read me the article called [query](Air Jordan III The Shocking Story of the Greatest Shoe Jordan Never Wanted)
+  - ​​Read me the article called [query](What Great Listeners Actually Do)
+  - ​​Read me the article called [query](How to Be More Productive Without Putting in Extra Hours)
+  - ​​Read me the article called [query](8 Ways to Read (a Lot) More Books This Year)
+  - ​​Read me the article called [query](The Right Way to Start a Meeting)
+  - ​​Read me the article called [query](30 Behaviors of Unstoppable People)
+  - ​​Read me the article called [query](Your Brain Can Only Take So Much Focus)
+  - ​​Read me the article called [query](Jack Kerouac on Kindness, the Self Illusion, and the “Golden Eternity”)
+  - ​​Read me the article called [query](We Are Nowhere Close to the Limits of Athletic Performance)
+  - ​​Read me the article called [query](How Our Internal Critics Enslave Us)
+  - ​​Read me the article called [query](Why Your Brain Loves Procrastination)
+  - ​​Read me the article called [query](The Tail End)
+  - ​​Read me the article called [query](The Pu-erh Brokers of Yunnan Province)
+  - ​​Read me the article called [query](A Quiet Revolution in Botany Plants Form Memories)
+  - ​​Read me the article called [query](How to Retain More From the Books You Read in 5 Simple Steps)
+  - ​​Read me the article called [query](Make Peace With Your Unlived Life)
+  - ​​Read me the article called [query](Survival of the Friendliest)
+  - ​​Read me the article called [query](The Hidden Costs of Happiness)
+  - ​​Read me the article called [query](Poet Kahlil Gibran on the Secret to a Loving and Lasting Relationship)
+  - ​​Read me the article called [query](Want to Be Super Successful? Science Says Do Any 1 of These 10 Things)
+  - ​​Read me the article called [query](Why You Feel the Urge to Jump)
+  - ​​Read me the article called [query](This Is Your Brain on Exercise)
+  - ​​Read me the article called [query](Roger Penrose On Why Consciousness Does Not Compute)
+  - ​​Read me the article called [query](I Slept Outside for a Week and It Changed My Life (Really))
+  - ​​Read me the article called [query](Instagram Food Is a Sad, Sparkly Lie)
+  - ​​Read me the article called [query](A Fast Mile Is More Impressive Than a Slow Marathon)
+  - ​​Read me the article called [query](What Is Space?)
+  - ​​Read me the article called [query](How Do You Measure Your Life?)
+  - ​​Read me the article called [query](Journey to the Place Where Pesto Was Born)
+  - ​​Read the [query](No, You Can’t Feel Sorry for Everyone) article
+  - ​​Read the [query](What's Actually Wrong With the U.S. Health System) article
+  - ​​Read the [query](Shut Up and Be Patient) article
+  - ​​Read the [query](Find What You Love and Let It Kill You) article
+  - ​​Read the [query](The Secrets to Dating a Non-Runner) article
+  - ​​Read the [query](Two Things to Do After Every Meeting) article
+  - ​​Read the [query](A Brief History (and Critique) of Romantic Love) article
+  - ​​Read the [query](A Jordan Bookseller’s 24-Hour ‘Emergency Room for the Mind’) article
+  - ​​Read the [query](Ed Smith And The Imagination Machine The Untold Story Of A Black Video Game Pioneer) article
+  - ​​Read the [query](The Tyranny of Simple Explanations) article
+  - ​​Read the [query](Henry Miller’s 11 Commandments of Writing and His Daily Creative Routine) article
+  - ​​Read the [query](How to Keep Your Cool, No Matter What) article
+  - ​​Read the [query](Can Personality Be Changed?) article
+  - ​​Read the [query](The Most Important Question of Your Life) article
+  - ​​Read the [query](8 Simple Tips to Live Longer and Healthier) article
+  - ​​Read the [query](Why Power Brings Out Your True Self) article
+  - ​​Read the [query](If Your Boss Could Do Your Job, You’re More Likely to Be Happy at Work) article
+  - ​​Read the [query](Eating the Arab Roots of Sicilian Cuisine) article
+  - ​​Read the [query](A Theory of Consciousness Can Help Build a Theory of Everything) article
+  - ​​Read the [query](Playing Office Politics Without Selling Your Soul) article
+  - ​​Read the [query](Self-Control Is Just Empathy With Your Future Self) article
+  - ​​Read the [query](What’s the Point of Self-Improvement Anyway?) article
+  - ​​Read the [query](21 Rhetorical Devices Explained) article
+  - ​​Read the [query](An Incredibly Clever Hack for People Who Want to Read More Books) article
+  - ​​Read the [query](Why Do Rich People Love Endurance Sports?) article
+  - ​​Read the [query](The Six Main Arcs in Storytelling, as Identified by an A.I.) article
+  - ​​Read the [query](Declutter Your Life. Declutter Your Mind.) article
+  - ​​Read the [query](Eating Toward Immortality) article
+  - ​​Read the [query](Yes, Life in the Fast Lane Kills You) article
+  - ​​Read the [query](How Starter Jackets Came Unraveled) article
+  - ​​Read the [query](The Future Agency) article
+  - ​​Read the [query](Mental Models How to Train Your Brain to Think in New Ways) article
+  - ​​Read the [query](8 Psychological Tricks of Restaurant Menus) article
+  - ​​Read the [query](Compatibility and Chemistry in Relationships) article
+  - ​​Read the [query](Known Alias How Stephen King Was Outed as Richard Bachman) article
+  - ​​Read the [query](What’s the Real Origin of “OK”?) article
+  - ​​Read the [query](The Guide to Strong Boundaries) article
+  - ​​Read the [query](What You Need to Stand Out in a Noisy World) article
+  - ​​Read the [query](A California Dream) article
+  - ​​Read the [query](What to Eat to Live to 100) article
+  - ​​Read the [query](The History of CTRL + ALT + DELETE) article
+  - ​​Read the [query](Your Brain Is On the Brink of Chaos) article
+  - ​​Read the [query](Why I Hope to Die at 75) article
+  - ​​Read the [query](The Joys of Cabin Living in Alaska) article
+  - ​​Read the [query](Why Canada Is Able to Do Things Better) article
+  - ​​Read the [query](How to Create a Chain Reaction of Good Habits) article
+  - ​​Read the [query](Why Some Dreams Should Not Be Pursued) article
+  - ​​Read the [query](Being Different Beats Being Better) article
+  - ​​Read the [query](Smartphones Are the New Cigarettes) article
+  - ​​Read the [query](7 Strange Questions That Help You Find Your Life Purpose) article
+  - ​​Read the [query](Three Ways You’re Still Onboarding New Hires All Wrong) article
+  - ​​Read the [query](Foodie Localism Loves Farming in Theory, But Not in Practice) article
+  - ​​Read the [query](This Morning Routine Will Save You 20+ Hours Per Week) article
+  - ​​Read the [query](The Needless Complexity of Academic Writing) article
+  - ​​Read the [query](15 Behind-the-Scenes Secrets of Airline Pilots) article
+  - ​​Read the [query](Is Consciousness Fractal?) article
+  - ​​Read the [query](Marcus Aurelius on How to Motivate Yourself to Get Out of Bed in the Morning and Go to Work) article
+  - ​​Read the [query](Why We Fall in Love) article
+  - ​​Read the [query](The Wartime Spies Who Used Knitting as an Espionage Tool) article
+  - ​​Read the [query](Why Can’t the World’s Greatest Minds Solve the Mystery of Consciousness?) article
+  - ​​Read the [query](50 Ways To Live On Your Own Terms) article
+  - ​​Read the [query](Every Successful Relationship Is Successful for the Same Exact Reasons) article
+  - ​​Read the [query](A Vaccine for Depression?) article
+  - ​​Read the [query](Why Do Canadians Say ‘Eh’?) article
+  - ​​Read the [query](To Be Happier, Focus on What’s Within Your Control) article
+  - ​​Read the [query](Ina Garten Does it Herself) article
+  - ​​Read the [query](The Psychology of Writing and the Cognitive Science of the Perfect Daily Routine) article
+  - ​​Read the [query](How to Choose Wisely) article
+  - ​​Read the [query](Being a Go-Getter Is No Fun) article
+  - ​​Read the [query](The Downsides of Being Very Emotionally Intelligent) article
+  - ​​Read the [query](The Lonely City Adventures in the Art of Being Alone) article
+  - ​​Read the [query](Impossibly Hungry Judges) article
+  - ​​Read the [query](How Your Insecurity Is Bought and Sold) article
+  - ​​Read the [query](The Play Deficit) article
+  - ​​Read the [query](Why Do We Gesture When We Talk?) article
+  - Open [query](Even More Evidence That We’re Eating All Wrong) and [readAction](read it)
+  - Open [query](​​How Managers Can Make Group Projects More Efficient) and [readAction](read it)
+  - Open [query](​​Sleepwalking Is the Result of a Survival Mechanism Gone Awry) and [readAction](read it)
+  - Open [query](​​Why We Need to Bring Back the Art of Communal Bathing) and [readAction](read it)
+  - Open [query](​​How the Internet Was Invented) and [readAction](read it)
+  - Open [query](​​When It Pays to Bend Financial Rules) and [readAction](read it)
+  - Open [query](​​Why Some People Take Breakups Harder Than Others) and [readAction](read it)
+  - Open [query](​​No, You Can’t Have It All) and [readAction](read it)
+  - Open [query](​​The Three Types of Supplements You Should Never Buy) and [readAction](read it)
+  - Open [query](​​Scientists Agree Coffee Naps Are Better Than Coffee or Naps Alone) and [readAction](read it)
+  - Open [query](​​How to Actually Get Work Done During the Summer) and [readAction](read it)
+  - Open [query](​​How Writing To-Do Lists Helps Your Brain) and [readAction](read it)
+  - Open [query](​​What Great Managers Do Daily) and [readAction](read it)
+  - Open [query](​​Power Causes Brain Damage) and [readAction](read it)
+  - Open [query](​The Unique Merger That Made You (and Ewe, and Yew)) and [readAction](read it)
+  - Open [query](​​What the Best Mentors Do) and [readAction](read it)
+  - Open [query](​​Great Teams Are About Personalities, Not Just Skills) and [readAction](read it)
+  - Open [query](​​20 Slang Terms From World War I) and [readAction](read it)
+  - Open [query](​​Falling for Sleep) and [readAction](read it)
+  - Open [query](​​The Music in You) and [readAction](read it)
+  - Open [query](​​Emotional Intelligence Has 12 Elements. Which Do You Need to Work On?) and [readAction](read it)
+  - Open [query](​​Why It Was Easier to Be Skinny in the 1980s) and [readAction](read it)
+  - Open [query](​​The TSA is a Waste of Money That Doesn't Save Lives and Might Actually Cost Them) and [readAction](read it)
+  - Open [query](​​How Successful People Make Decisions Differently) and [readAction](read it)
+  - Open [query](​​Against Leaf Blowers) and [readAction](read it)
+  - Open [query](​​6 Tricks That Might Keep You From Getting a Hangover) and [readAction](read it)
+  - Open [query](​​How to Be Thankful For Your Life by Changing Just One Word) and [readAction](read it)
+  - Open [query](​​7 Books That Will Change How You See The World) and [readAction](read it)
+  - Open [query](​​The Lost Art of the Manly Weep) and [readAction](read it)
+  - Open [query](​​Are You Forgetful? That's Just Your Brain Erasing Useless Memories) and [readAction](read it)
+  - Open [query](​​Why Exhaustion Is Not Unique to Our Overstimulated Age) and [readAction](read it)
+  - Open [query](​​How To Read A Self-Help Book In 90 Minutes) and [readAction](read it)
+  - Open [query](​​I spent 2 years cleaning houses. What I saw makes me never want to be rich.) and [readAction](read it)
+  - Open [query](​​The Science of Stress and How Our Emotions Affect Our Susceptibility to Burnout and Disease) and [readAction](read it)
+  - Open [query](​​21 Phrases You Use Without Realizing You’re Quoting Shakespeare) and [readAction](read it)
+  - Open [query](​​How to Survive Solitary Confinement) and [readAction](read it)
+  - Open [query](​​The Day Dostoyevsky Discovered the Meaning of Life in a Dream) and [readAction](read it)
+  - Open [query](​​Nietzsche on How to Find Yourself and the True Value of Education) and [readAction](read it)
+  - Open [query](​​The Paradox of American Restaurants) and [readAction](read it)
+  - Open [query](​​The Complete Guide to Mastering Chinese Dumplings at Home) and [readAction](read it)
+  - Open [query](​​In Defense of Trail Angels) and [readAction](read it)
+  - Open [query](​​The Difference Between National Parks and Monuments) and [readAction](read it)
+  - Open [query](​​The Digital Nomad’s Guide To Working From Anywhere On Earth) and [readAction](read it)
+  - Open [query](The Surprising Benefits of Being (Slightly) Crazy) and [readAction](read it)
+  - Open [query](​​The Art of Homemade Soba Noodles) and [readAction](read it)
+  - Open [query](​​7 Tips for How to Read Faster) and [readAction](read it)
+  - Open [query](​​How Wonder Works) and [readAction](read it)
+  - Open [query](​​Why Aging Isn’t Inevitable) and [readAction](read it)
+  - Open [query](​​Parasites Are Us) and [readAction](read it)
+  - Open [query](​​Top 10 Design Flaws in the Human Body) and [readAction](read it)
+  - Open [query](​​What Are the Ethical Consequences of Immortality Technology?) and [readAction](read it)
+  - Open [query](​​Emotional Intelligence Needs a Rewrite) and [readAction](read it)
+  - Open [query](​​Forget Coding–Here’s The Skill You Need Most When You Start Your Career) and [readAction](read it)
+  - Open [query](​​I'm an obesity doctor. I've seen long-term weight loss work. Here's how.) and [readAction](read it)
+  - Open [query](​​Raising the American Weakling) and [readAction](read it)
+  - Open [query](​​The Sugar Conspiracy) and [readAction](read it)
+  - Open [query](​​Therapy wars The Revenge of Freud) and [readAction](read it)
+  - Open [query](​​Taming the Mammoth Why You Should Stop Caring What Other People Think) and [readAction](read it)
+  - Open [query](​​The Busier You Are, the More You Need Quiet Time) and [readAction](read it)
+  - Open [query](​​What Your Therapist Doesn’t Know) and [readAction](read it)
+  - Open [query](​​Pressure Doesn’t Have to Turn into Stress) and [readAction](read it)
+  - Open [query](​​The Daily Routine Experts Recommend for Peak Productivity) and [readAction](read it)
+  - Open [query](​​“Trust Me In These Parts, Hot Dogs Actually Repel Bears.”) and [readAction](read it)
+  - Open [query](​​The Impossible Mathematics of the Real World) and [readAction](read it)
+  - Open [query](​​If the World Began Again, Would Life as We Know It Exist?) and [readAction](read it)
+  - Open [query](​​How not to bomb your offer negotiation) and [readAction](read it)
+  - Open [query](​​How Jocks and Mathletes Are Alike) and [readAction](read it)
+  - Open [query](​​Chinese Characters Are Futuristic and the Alphabet Is Old News) and [readAction](read it)
+  - Open [query](​​Is Matter Conscious?) and [readAction](read it)
+  - Open [query](​​How to Disappear) and [readAction](read it)
+  - "[readAction](Read me) [query](​​How worried should I really be about carcinogens?)"
+  - "[readAction](Read me) [query](​​A New Word for That Feeling When Travel Makes Everything New)"
+  - "[readAction](Read me) [query](​​What to Do About Mediocrity on Your Team)"
+  - "[readAction](Read me) [query](​​A New, More Rigorous Study Confirms The More You Use Facebook, the Worse You Feel)"
+  - "[readAction](Read me) [query](​​4 Ways to Improve Your Strategic Thinking Skills)"
+  - "[readAction](Read me) [query](​​19 Reasons Why You’re Stuck and How to Get Unstuck)"
+  - "[readAction](Read me) [query](​​Four Books That Will Turn You Into A Practical Thinker)"
+  - "[readAction](Read me) [query](​​How to Find Your Purpose and Do What You Love)"
+  - "[readAction](Read me) [query](​​25 Words That Are Their Own Opposites)"
+  - "[readAction](Read me) [query](​​Will 90 Become The New 60?)"
+  - "[readAction](Read me) [query](​​The Myth of Self-Control)"
+  - "[readAction](Read me) [query](​​Your Smartphone Reduces Your Brainpower, Even If It's Just Sitting There)"
+  - "[readAction](Read me) [query](​​Anna Dostoyevskaya on the Secret to a Happy Marriage)"
+  - "[readAction](Read me) [query](​​Why you shouldn't exercise to lose weight, explained with 60+ studies)"
+  - "[readAction](Read me) [query](​​How to Budget When You’re Broke)"
+  - "[readAction](Read me) [query](​​The Beginner’s Guide to Deliberate Practice)"
+  - "[readAction](Read me) [query](​​22 Life Lessons I Learned From My Mentors That Every Person Should Know)"
+  - "[readAction](Read me) [query](​​The Science Behind Miracles)"
+  - "[readAction](Read me) [query](​​It’s Time These Ancient Women Scientists Get Their Due)"
+  - "[readAction](Read me) [query](​​The World’s 8 Toughest Races)"
+  - "[readAction](Read me) [query](​​The Photographer Who Captured America’s Dark Side)"
+  - "[readAction](Read me) [query](​​The Paradox of the Elephant Brain)"
+  - "[readAction](Read me) [query](​​The Story Behind John Cage’s 4’33”)"
+  - "[readAction](Read me) [query](​​If You Can Believe It, You Can Achieve It)"
+  - "[readAction](Read me) [query](​​Is Physical Law an Alien Intelligence?)"
+  - "[readAction](Read me) [query](​​Don’t Tell Your Friends They’re Lucky)"
+  - "[readAction](Read me) [query](​​The Real Roots of Midlife Crisis)"
+  - "[readAction](Read me) [query](​​How to Prioritize Your Work When Your Manager Doesn’t)"
+  - "[readAction](Read me) [query](​​Things That Go Bump in the Wild)"
+  - "[readAction](Read me) [query](​​How to Survive a Lightning Strike)"
+  - read the article on [query](how to escape the overthinking trap)
+  - read about the [query](hoarding of the american dream)
+  - read about [query](3 ways to better understand your emotions)
+  - read about [query](the cities that have risen from ruins)
+  - read about [query](how designers engineer luck into video games)
+  - read the article about [query](3 timeless rules for making tough decisions)
+  - Read the article about [query](the anatomy of charisma)
+  - Read the article about [query](the insane six day 500 mile race that riveted america)
+  - Read the recipe about [query](making the perfect stuffed pasta)
+  - Read the article about [query](cast iron pots)
+  - Read an article about [query](Weird Al Yankovic)
+  - Read an article about [query](the secret seat of the Knights Templar)
+  - Read the article on [query](best books of 2019)
+  - Read an article about [query](fiction writing)
+  - Read [query](The Hunger Games)
+  - Read [query](Harry Potter and the Order of the Phoenix)
+  - Read [query](To Kill a Mockingbird)
+  - Read [query](Pride and Prejudice)
+  - Read [query](Twilight)
+  - Read [query](The Book Thief)
+  - Read [query](Animal Farm)
+  - Read [query](The Chronicles of Narnia)
+  - Read [query](J.R.R. Tolkien 4-Book Boxed Set The Hobbit and The Lord of the Rings)
+  - Read [query](Gone with the Wind)
+  - Read [query](The Fault in Our Stars)
+  - Read [query](The Giving Tree)
+  - Read [query](Wuthering Heights)
+  - Read [query](The Da Vinci Code)
+  - Read [query](Memoirs of a Geisha)
+  - Read [query](Alice's Adventures in Wonderland & Through the Looking-Glass)
+  - Read [query](The Picture of Dorian Gray)
+  - Read [query](Les Misérables)
+  - Read [query](Jane Eyre)
+  - Read [query](Divergent)
+  - Read [query](Romeo and Juliet)
+  - Read [query](Lord of the Flies)
+  - Read [query](The Alchemist)
+  - Read [query](Crime and Punishment)
+  - Read [query](The Perks of Being a Wallflower)
+  - Read [query](Ender's Game)
+  - Read [query](City of Bones)
+  - Read [query](The Great Gatsby)
+  - Read [query](The Help)
+  - Read the book [query](Anne of Green Gables)
+  - Read the book [query](Charlotte's Web)
+  - Read the book [query](The Time Traveler's Wife)
+  - Read the book [query](Of Mice and Men)
+  - Read the book [query](Dracula)
+  - Read the book [query](The Little Prince)
+  - Read the book [query](Brave New World)
+  - Read the book [query](The Hitchhiker's Guide to the Galaxy)
+  - Read the book [query](One Hundred Years of Solitude)
+  - Read the book [query](The Princess Bride)
+  - Read the book [query](The Catcher in the Rye)
+  - Read the book [query](The Secret Garden)
+  - Read the book [query](Harry Potter and the Sorcerer's Stone)
+  - Read the book [query](A Thousand Splendid Suns)
+  - Read the book [query](A Wrinkle in Time)
+  - Read the book [query](Fahrenheit 451)
+  - Read the book [query](The Lightning Thief)
+  - Read the book [query](A Game of Thrones)
+  - Read the book [query](The Adventures of Huckleberry Finn)
+  - Read the book [query](The Lovely Bones)
+  - Read the book [query](Where the Wild Things Are)
+  - Read the book [query](Green Eggs and Ham)
+  - Read the book [query](The Outsiders)
+  - Read the book [query](Life of Pi)
+  - Read the book [query](A Tale of Two Cities)
+  - Read the book [query](The Odyssey)
+  - Read the book [query](Water for Elephants)
+  - Read the book [query](Lolita)
+  - Read the book [query](Slaughterhouse-Five)
+  - Read the book [query](The Hitchhiker's Guide to the Galaxy)
+  - Read the book [query](Frankenstein)
+  - Read the book [query](The Kite Runner)
+  - Read the book [query](Catch-22)
+  - Read the book [query](The Giver)
+  - Read the book [query](The Pillars of the Earth)
+  - Read the book [query](The Handmaid's Tale)
+  - Read the book [query](The Stand)
+  - Read [query](Watership Down)
+  - Read [query](The Adventures of Sherlock Holmes)
+  - Read [query](One Flew Over the Cuckoo's Nest)
+  - Read [query](My Sister's Keeper)
+  - Read [query](The Bell Jar)
+  - Read [query](Outlander)
+  - Read [query](The Girl with the Dragon Tattoo)
+  - Read [query](Rebecca)
+  - Read [query](Matilda)
+  - Read [query](The Fellowship of the Ring)
+  - Read [query](Little Women)
+  - Read [query](The Color Purple)
+  - Read [query](A Tree Grows in Brooklyn)
+  - Read [query](The Road)
+  - Read [query](A Clockwork Orange)
+  - Read [query](The Brothers Karamazov)
+  - Read [query](Angela's Ashes)
+  - Read [query](Harry Potter and the Deathly Hallows)
+  - Read [query](Dune)
+  - Read [query](Vampire Academy)
+  - Read [query](The Poisonwood Bible)
+  - Read [query](Siddhartha)
+  - Read [query](Fahrenheit 451)
+  - Read [query](Atlas Shrugged)
+  - Read [query](The Golden Compass)
+  - Read [query](Don Quixote)
+  - Read [query](1984)
+  - Read [query](The Old Man and the Sea)
+  - Read [query](The Notebook)
+  - Read [query](Great Expectations)
+  - Read [query](Anna Karenina)
+  - Read [query](The Complete Stories and Poems)
+  - Read [query](Winnie-the-Pooh)
+  - Read [query](A Prayer for Owen Mean)
+  - read me [query](wired articles)
+  - read [query](the great gatsby)
+  - read [query](catcher in the rye)
+  - listen to this article
+  - narrate the page
+  - start reading
+  - read
+  - read [query](where the crawdads sing by delia owens)
+  - narrate the [query](top news on The Guardian)
+  - read my [query](Pocket list)
+  - read me [query](my Pocket queue)
+  - read the [query](latest story on the New York Times)
+  - read me the article on [query](Fitbit data)
+  - read this article to me
+
+---
+type: entity
+name: query
+automatically_extensible: true # default value is true
+use_synonyms: false # default value is true
+matching_strictness: 0.1 # default value is 1.0
+values:
+  - playing the beatles
+  - game of thrones
+  - stranger things
+  - any amount of text between this and the
+  - wildcard slot filling
+  - air conditioner
+  - dictionary
+  - conference
+  - prototype
+  - standing desk
+  - Target
+  - documentation
+  - Slackers
+  - Canvas
+  - CNN article
+  - Hacker News
+  - Medium
+  - New York Times
+  - puppies
+  - onboarding plan
+  - Snips
+  - lin-manuel miranda
+  - Instant Pot
+  - dog videos
+  - wasm
+  - rust
+  - how do i replace a bike wheel
+  - puppies
+  - NSF
+  - closest supermarket
+  - pet adoption centers
+  - godzilla
+  - dog videos
+  - hikes in denver
+  - hurricane irma
+  - despacito
+  - iphone
+  - april the giraffe
+  - nintendo switch
+  - superbowl 2017
+  - bill paxton
+  - lil peep
+  - matt lauer
+  - north korea
+  - astros
+  - wonder woman
+  - 123movies
+  - moana
+  - yankees
+  - prodigy
+  - clima
+  - google slides
+  - chase login
+  - google flights
+  - mp3 juice
+  - solitaire
+  - food near me
+  - restaurants near me
+
+---
+type: entity
+name: readAction
+automatically_extensible: false # default value is true
+use_synonyms: false # default value is true
+matching_strictness: 0.8 # default value is 1.0
+values:
+  - read me
+  - read it
+  - start reading
+  - narrate it to me
+  - read it to me
+
+---
+type: intent
+name: navigate_openWebsite
+slots:
+  - name: query
+    entity: query
+utterances:
+  - "[query](microsoft dot com)"
+  - "[query](google dot com)"
+  - "[query](apple dot com)"
+  - "[query](play.google dot com)"
+  - "[query](blogger dot com)"
+  - "[query](support dot google dot com)"
+  - "[query](plus dot google dot com)"
+  - "[query](youtube dot com)"
+  - "[query](sites dot google dot com)"
+  - "[query](mozilla dot org)"
+  - "[query](wordpress dot org)"
+  - "[query](en.wikipedia dot org)"
+  - "[query](accounts dot google dot com)"
+  - "[query](adobe dot com)"
+  - "[query](docs dot google dot com)"
+  - "[query](drive dot google dot com)"
+  - "[query](creativecommons dot org)"
+  - "[query](linkedin dot com)"
+  - "[query](maps.google dot com)"
+  - "[query](vimeo dot com)"
+  - "[query](googleusercontent dot com)"
+  - "[query](youtu.be)"
+  - "[query](github dot com)"
+  - "[query](dailymotion dot com)"
+  - "[query](istockphoto dot com)"
+  - "[query](bp.blogspot dot com)"
+  - "[query](live dot com)"
+  - "[query](europa.eu)"
+  - "[query](uol dot com.br)"
+  - "[query](bbc.co.uk)"
+  - "[query](amazon dot com)"
+  - "[query](vk dot com)"
+  - "[query](cloudflare dot com)"
+  - "[query](facebook dot com)"
+  - "[query](slideshare.net)"
+  - "[query](whatsapp dot com)"
+  - "[query](google.co.uk)"
+  - "[query](news.google dot com)"
+  - "[query](mail.ru)"
+  - "[query](medium dot com)"
+  - "[query](es.wikipedia dot org)"
+  - "[query](cnet dot com)"
+  - "[query](msn dot com)"
+  - "[query](hugedomains dot com)"
+  - "[query](imdb dot com)"
+  - "[query](wikipedia dot org)"
+  - "[query](opera dot com)"
+  - "[query](dropbox dot com)"
+  - "[query](google.de)"
+  - "[query](change dot org)"
+  - "[query](mediafire dot com)"
+  - "[query](nih.gov)"
+  - "[query](amazon.co.jp)"
+  - "[query](google dot com.br)"
+  - "[query](w3 dot org)"
+  - "[query](mail.google dot com)"
+  - "[query](wikimedia dot org)"
+  - "[query](gstatic dot com)"
+  - "[query](globo dot com)"
+  - "[query](networkadvertising dot org)"
+  - "[query](line.me)"
+  - "[query](yahoo dot com)"
+  - "[query](paypal dot com)"
+  - "[query](google.co.jp)"
+  - "[query](reuters dot com)"
+  - "[query](usatoday dot com)"
+  - "[query](scribd dot com)"
+  - "[query](feedburner dot com)"
+  - "[query](nytimes dot com)"
+  - "[query](forbes dot com)"
+  - "[query](cnn dot com)"
+  - "[query](myspace dot com)"
+  - "[query](developers.google dot com)"
+  - "[query](photos dot google dot com)"
+  - "[query](theguardian dot com)"
+  - "[query](bbc dot com)"
+  - "[query](google dot es)"
+  - "[query](gov.uk)"
+  - "[query](amazon.co.uk)"
+  - "[query](businessinsider dot com)"
+  - Go to [query](Google)
+  - Go to [query](google.com)
+  - Go to [query](YouTube)
+  - Go to [query](youtube.com)
+  - Go to [query](Facebook)
+  - Go to [query](facebook.com)
+  - Go to [query](Wikipedia)
+  - Go to [query](wikipedia.org)
+  - Go to [query](Yahoo!)
+  - Go to [query](yahoo.com)
+  - Go to [query](Amazon)
+  - Go to [query](amazon.com)
+  - Go to [query](Twitter)
+  - Go to [query](twitter.com)
+  - Go to [query](Windows Live)
+  - Go to [query](live.com)
+  - Go to [query](Instagram)
+  - Go to [query](instagram.com)
+  - Go to [query](Reddit)
+  - Go to [query](reddit.com)
+  - Go to [query](Netflix)
+  - Go to [query](netflix.com)
+  - Go to [query](Blogspot)
+  - Go to [query](blogspot.com)
+  - Go to [query](Twitch)
+  - Open [query](twitch.tv)
+  - Open [query](LinkedIn)
+  - Open [query](linkedin.com)
+  - Open [query](t.co)
+  - Open [query](t.co)
+  - Open [query](Microsoft)
+  - Open [query](microsoft.com)
+  - Open [query](eBay)
+  - Open [query](ebay.com)
+  - Open [query](Bing)
+  - Open [query](bing.com)
+  - Open [query](Microsoft Office)
+  - Open [query](office.com)
+  - Open [query](IMDb)
+  - Open [query](imdb.com)
+  - Open [query](GitHub)
+  - Open [query](github.com)
+  - Open [query](MSN)
+  - Open [query](msn.com)
+  - Open [query](Stack Overflow)
+  - Open [query](stackoverflow.com)
+  - Navigate to [query](WhatsApp)
+  - Navigate to [query](whatsapp.com)
+  - Navigate to [query](Pinterest)
+  - Navigate to [query](pinterest.com)
+  - Navigate to [query](Quora)
+  - Navigate to [query](quora.com)
+  - Navigate to [query](AccuWeather)
+  - Navigate to [query](accuweather.com)
+  - Navigate to [query](AMP Project)
+  - Navigate to [query](ampproject.org)
+  - Navigate to [query](Bitly)
+  - Navigate to [query](bitly.com)
+  - go to [query](the abstract slides)
+  - go to [query](amazon polly)
+  - "[query](twitter dot com)"
+  - "[query](fonts.google.com)"
+  - "[query](vuejs.org)"
+  - Go to [query](developer dot mozilla dot org)
+  - Go to [query](sideloading add-ons)
+  - Go to [query](PCS)
+  - Go to a [query](Regex tester)
+  - Show [query](the Voice Issues and Prioritization sheets)
+  - Show [query](Google Maps)
+  - Show [query](the Paper.JS page)
+  - Show [query](Overleaf page)
+  - Go to [query](the Elastic Beanstalk console)
+  - Go to [query](Google Drive)
+  - Show [query](the voicefox github repo)
+  - Show [query](Mozilla Mail)
+  - Show [query](warriors scores on ESPN)
+  - Show me [query](the wikipedia page for Lin-Manuel Miranda)
+  - "[query](n y times dot com)"
+  - "[query](stranger dot com)"
+  - "[query](Find the stranger dot com)"
+  - Bring me to [query](Hacker News)
+  - Open [query](reddit) in a new window
+  - Open [query](Reddit) in a new tab
+  - Navigate to [query](Amazon)
+  - Navigate to [query](Google)
+  - Go to [query](C M U dot e d u)
+  - Go to [query](H B O dot com)
+  - Go to [query](The New York Times)
+
+---
+type: intent
+name: navigate_findTab
+slots:
+  - name: query
+    entity: query
+utterances:
+  - find the tab with [query](the project timelines) 
+  - find the tab about [query](bicycle helmet ratings)
+  - find the tab on [query](firefox gecko browser manifest files)
+  - find the tab on [query](sending parquette pings)
+  - find the tab about [query](webextension api stuff)
+  - find the tab about [query](browser telemetry standards)
+  - find the tab with [query](many words all at once)
+  - open the [query](history) tab
+  - find the tab on [query](sunscreen) and [query](rainbows)
+  - find the tab with my [query](calendar)
+  - find the tab [query](playing the beatles)
+  - find [query](game of thrones) tab
+  - find [query](stranger things) tab
+  - find [query](any amount of text between this and the) tab
+  - find [query](wildcard slot filling) tab
+  - find the [query](air conditioner) tab
+  - open the [query](dictionary) page
+  - find [query](conference) tab
+  - find [query](prototype) tab
+  - find [query](standing desk) tab
+  - find [query](Target) tab
+  - Find the tab with [query](documentation)
+  - Find the tab on [query](Slackers)
+  - Re-open my [query](Canvas) tab
+  - Open the [query](CNN article) tab
+  - Open the [query](Hacker News) tab
+  - Go to the [query](Medium) tab
+  - Switch to the tab with the [query](New York Times)
+  - Open the page with [query](puppies) on it
+  - Show me the tab I have open with my [query](onboarding plan)
+  - Find the tab about [query](Snips)
+
+---
+type: intent
+name: weather
+utterances:
+  - what's the weather in pittsburgh?
+  - forecast for seattle
+
+---
+type: intent
+name: mute
+utterances:
+  - stop audio
+  - turn the sound to zero
+  - volume to zero
+  - volume off
+  - shut up
+  - turn off the sound
+  - turn off the audio
+  - turn off the volume
+  - quiet
+  - stop the sound
+  - stop the audio
+  - stop the music
+  - stop playing
+  - stop whatever is playing
+  - Mute everything
+  - Mute all
+  - Turn the sound off
+  - Disable the sound
+  - Mute
+
+---
+type: intent
+name: unmute
+utterances:
+  - reenable the sound
+  - turn the sound on
+  - unmute all
+  - un mute
+  - unmute
+  - turn on the volume
+  - turn on the audio
+  - turn on the sound
+  - volume on
+  - volume up
+  - turn the sound up again
+
+---
+type: intent
+name: navigate_search
+slots:
+  - name: query
+    entity: query
+utterances:
+  - search [query](lin-manuel miranda) on wikipedia
+  - search for [query](Instant Pot) on Amazon
+  - search [query](dog videos) on youtube
+  - what is [query](wasm)
+  - what is [query](rust)
+  - "[query](how do i replace a bike wheel)"
+  - get me [query](puppies)
+  - look up [query](NSF)
+  - find me the [query](closest supermarket)
+  - find [query](pet adoption centers)
+  - do a search for [query](godzilla)
+  - search [query](dog videos)
+  - search for [query](hikes in denver)
+  - "[query](hurricane irma)"
+  - "[query](despacito)"
+  - "[query](iphone)"
+  - "[query](april the giraffe)"
+  - "[query](nintendo switch)"
+  - "[query](superbowl 2017)"
+  - "[query](bill paxton)"
+  - "[query](lil peep)"
+  - "[query](matt lauer)"
+  - "[query](north korea)"
+  - "[query](astros)"
+  - "[query](wonder woman)"
+  - "[query](123movies)"
+  - "[query](moana)"
+  - "[query](yankees)"
+  - "[query](prodigy)"
+  - "[query](clima)"
+  - "[query](google slides)"
+  - "[query](chase login)"
+  - "[query](google flights)"
+  - "[query](mp3 juice)"
+  - "[query](solitaire)"
+  - "[query](food near me)"
+  - "[query](restaurants near me)"
