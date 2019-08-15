@@ -92,7 +92,6 @@ this.popup = (function() {
       clearInterval(intervalId);
       ui.setState("success");
       ui.setTranscript(json.data[0].text);
-      log.debug("where the fukc");
 
       browser.runtime.sendMessage({
         type: "runIntent",
