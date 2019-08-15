@@ -6,23 +6,11 @@ this.intentParser = (function() {
 
   // TODO: make these part of intent registration
   const INTENTS = {
-    /*
-    alexa: {
-      matches: [
-        /(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i,
-      ],
-    },
-    googleAssistant: {
-      matches: [
-        /(?:ok|okay|o.k.|hey) google (.*)/i,
-      ],
-    },
-    */
     find: {
       matches: [
-        /(?:find (?:the )?(?:tab|tap|tad|todd) (?:about|with) (.*))|(?:(?:(?:bring me to|find) (?:the|my)? )?(.*) (?:tab|tap|tad|todd))/i,
+        /(?:(?:find|bring me to)\s?(?:my|the)?)\s?((?:(?=tab).*)|(?:.*(?=tab)))/i,
       ],
-      slots: ["query", "query"],
+      slots: ["query"],
     },
     navigate: {
       matches: [
