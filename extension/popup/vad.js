@@ -1,4 +1,4 @@
-/* globals util, log */
+/* globals util, log, ui */
 
 // This is part of the WASM integration:
 // eslint-disable-next-line no-var
@@ -156,6 +156,9 @@ this.vad = (function() {
       log.debug("goCloud, why:", why);
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
+      if (why === "GoCloud finishedvoice") {
+        ui.setState("processing"); // REVIEW: not sure if this should send a message to popup.js or emit an event some other way?
+      }
     }
   };
 

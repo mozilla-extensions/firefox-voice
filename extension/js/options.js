@@ -32,9 +32,8 @@ function restoreOptions() {
       return browser.storage.sync.get("language");
     })
     .then(result => {
-      const defaultLanguage = navigator.language in languages
-        ? navigator.language
-        : "en-US";
+      const defaultLanguage =
+        navigator.language in languages ? navigator.language : "en-US";
 
       languageSelect.value = result.language || defaultLanguage;
     })

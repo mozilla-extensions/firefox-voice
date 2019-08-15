@@ -161,7 +161,6 @@ this.ui = (function() {
     document.querySelector("#card-summary").innerText = data.AbstractText;
     document.querySelector("#card-source-link").innerText = data.AbstractSource;
     document.querySelector("#card-source-link").href = data.AbstractURL;
-    console.log("THE BODY HEIGHT IS ", document.querySelector("body").clientHeight);
   };
 
   function playListeningChime() {
@@ -188,14 +187,18 @@ this.ui = (function() {
     settingsIcon.addEventListener("click", showSettings);
   }
 
-  function closePopup() {
+  exports.closePopup = function closePopup(ms = 2500) {
     // TODO: offload mic and other resources before closing?
-    window.close();
-  }
+    setTimeout(() => {
+      window.close();
+    }, ms);
+  };
 
   function listenForClose() {
     const closeIcon = document.getElementById("close-icon");
-    closeIcon.addEventListener("click", closePopup);
+    closeIcon.addEventListener("click", () => {
+      exports.closePopup(0); // close immediately
+    });
   }
 
   listenForClose();

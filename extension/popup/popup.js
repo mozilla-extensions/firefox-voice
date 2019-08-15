@@ -1,16 +1,12 @@
 /* globals util, voice, vad, ui, log */
 
 this.popup = (function() {
-  LOCAL_TESTING = false;
   const PERMISSION_REQUEST_TIME = 2000;
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
   let isWaitingForPermission = null;
 
   async function init() {
-    if (LOCAL_TESTING) {
-      return;
-    }
     document.addEventListener("beforeunload", () => {
       if (
         isWaitingForPermission &&
@@ -38,6 +34,7 @@ this.popup = (function() {
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
+    // Listen for messages from the background scripts
     browser.runtime.onMessage.addListener(handleMessage);
   }
 
@@ -91,6 +88,7 @@ this.popup = (function() {
       clearInterval(intervalId);
       ui.setState("success");
       ui.setTranscript(json.data[0].text);
+
       browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
@@ -104,9 +102,10 @@ this.popup = (function() {
   }
 
   function handleMessage(message) {
-    console.log("OMG I GOT A MESSAGE!!!");
-    console.log(JSON.stringify(message));
-    if (message.action === "showCard") {
+    log.debug(JSON.stringify(message));
+    if (message.type === "closePopup") {
+      ui.closePopup();
+    } else if (message.type === "showCard") {
       ui.showCard(message.cardData);
     }
   }

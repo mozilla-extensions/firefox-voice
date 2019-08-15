@@ -4,6 +4,10 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent("navigate", async desc => {
     const url = searching.googleSearchUrl(desc.slots.query, true);
     await browser.tabs.create({ url });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "navigate",
+    });
   });
 
   this.intentRunner.registerIntent("search", async desc => {
@@ -11,12 +15,16 @@ this.intents.navigation = (function() {
     if (!cardData) {
       // Default to Google Search
       const url = searching.googleSearchUrl(desc.slots.query, false);
-      await browser.tabs.create({ url: url });
+      await browser.tabs.create({ url });
+      browser.runtime.sendMessage({
+        type: "closePopup",
+        sender: "search",
+      });
     } else {
       console.log("sending data to content script");
       browser.runtime.sendMessage({
         sender: "navigation",
-        action: "showCard",
+        type: "showCard",
         cardData,
       });
     }
@@ -29,6 +37,10 @@ this.intents.navigation = (function() {
     );
     console.log("THE URL THAT I HAVE IS ", myurl);
     await browser.tabs.update({ url: myurl });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "find",
+    });
   }
 
   this.intentRunner.registerIntent("bangSearch", async desc => {
@@ -42,5 +54,9 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent("amazonSearch", async desc => {
     const url = searching.amazonSearchUrl(desc.slots.query);
     await browser.tabs.create({ url });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "amazonSearch",
+    });
   });
 })();

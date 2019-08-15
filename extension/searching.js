@@ -17,9 +17,9 @@ this.searching = (function() {
       `https://api.duckduckgo.com/?q=${query}&format=json&pretty=1&skip_disambig=1`
     );
     const ddgData = await response.json();
-    if (!ddgData.Type) {
+    if (!ddgData.AbstractText) {
       // the response from DDG was null, and there was no matching Instant Answer result
-      return;
+      return {};
     }
     const cardData = (({
       Heading,
@@ -47,13 +47,12 @@ this.searching = (function() {
       coursera: "coursera",
     };
     const bang = SERVICE_BANG_MAP[service.toLowerCase()];
-    let response = await fetch(
+    const response = await fetch(
       `https://api.duckduckgo.com/?q=!${bang}+${query}&format=json&pretty=1&no_redirect=1`
     );
-    let json = await response.json();
-    let searchUrl = json.Redirect;
+    const json = await response.json();
 
-    return searchUrl;
+    return json.Redirect;
   };
 
   exports.amazonSearchUrl = function(query) {
