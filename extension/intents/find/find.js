@@ -1,7 +1,7 @@
 /* globals Fuse, log */
 
 this.intents.find = (function() {
-  this.intentRunner.registerIntent("find", async (desc) => {
+  this.intentRunner.registerIntent("find", async desc => {
     const query = desc.slots.query;
     log.info("the most likely query text is:", query);
 
@@ -54,6 +54,9 @@ this.intents.find = (function() {
     await browser.tabs.update(topMatch, {
       active: true,
     });
-    // TODO: close the popup for show status
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "find",
+    });
   });
 })();

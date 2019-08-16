@@ -7,6 +7,9 @@ this.ui = (function() {
   let currentState = "listening";
   let textInputDetected = false;
 
+  // Default amount of time (in milliseconds) before the action is automatically dismissed after we perform certain actions (e.g. successfully switching to a different open tab). This value should give users enough time to read the content on the popup before it closes.
+  const DEFAULT_TIMEOUT = 2500;
+
   const animationSegmentTimes = {
     reveal: [0, 14],
     base: [14, 30],
@@ -52,7 +55,7 @@ this.ui = (function() {
 
   function detectText(e) {
     if (!textInputDetected) {
-      exports.setState("typing"); // TODO: is this the right place to set the state? or should that all be handled by popup.js
+      exports.setState("typing");
       textInputDetected = true;
       exports.onStartTextInput();
     }
@@ -154,6 +157,23 @@ this.ui = (function() {
     });
   };
 
+  exports.showCard = function showCard(data) {
+    document.querySelector("#popup").classList.add("hasCard");
+    document.querySelector("#card-header").textContent = data.Heading;
+    document.querySelector("#card-image > img").src = data.Image;
+    document.querySelector("#card-summary").textContent = data.AbstractText;
+    document.querySelector("#card-source-link").textContent =
+      data.AbstractSource;
+    document.querySelector("#card-source-link").href = data.AbstractURL;
+
+    // Add click handler for #card-source-link. The default behavior is to open links clicked within a popup in a new window, but we'd like for it to open within a new tab in the same window
+    document.querySelector("#card-source-link").addEventListener("click", e => {
+      e.preventDefault();
+      browser.tabs.create({ url: data.AbstractURL });
+      exports.closePopup();
+    });
+  };
+
   function playListeningChime() {
     const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg"); // TODO: File bug on local audio file playback
     audio.play();
@@ -178,14 +198,18 @@ this.ui = (function() {
     settingsIcon.addEventListener("click", showSettings);
   }
 
-  function closePopup() {
+  exports.closePopup = function closePopup(ms = DEFAULT_TIMEOUT) {
     // TODO: offload mic and other resources before closing?
-    window.close();
-  }
+    setTimeout(() => {
+      window.close();
+    }, ms);
+  };
 
   function listenForClose() {
     const closeIcon = document.getElementById("close-icon");
-    closeIcon.addEventListener("click", closePopup);
+    closeIcon.addEventListener("click", () => {
+      exports.closePopup(0); // close immediately
+    });
   }
 
   listenForClose();

@@ -34,6 +34,8 @@ this.popup = (function() {
     console.info("stm_vad is ready");
     startRecorder(stream);
     console.info("finished startRecorder...");
+    // Listen for messages from the background scripts
+    browser.runtime.onMessage.addListener(handleMessage);
   }
 
   async function requestMicrophone() {
@@ -71,6 +73,7 @@ this.popup = (function() {
         recorder.cancel(); // not sure if this is working as expected?
       };
       ui.onTextInput = text => {
+        ui.setState("success");
         browser.runtime.sendMessage({
           type: "runIntent",
           text,
@@ -85,6 +88,7 @@ this.popup = (function() {
       clearInterval(intervalId);
       ui.setState("success");
       ui.setTranscript(json.data[0].text);
+
       browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
@@ -95,6 +99,15 @@ this.popup = (function() {
       clearInterval(intervalId);
     };
     recorder.startRecording();
+  }
+
+  function handleMessage(message) {
+    log.debug(JSON.stringify(message));
+    if (message.type === "closePopup") {
+      ui.closePopup();
+    } else if (message.type === "showCard") {
+      ui.showCard(message.cardData);
+    }
   }
 
   init();

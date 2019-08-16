@@ -6,23 +6,11 @@ this.intentParser = (function() {
 
   // TODO: make these part of intent registration
   const INTENTS = {
-    /*
-    alexa: {
-      matches: [
-        /(?:ok |okay |o.k. |hey )?\balexa\b(.*)/i,
-      ],
-    },
-    googleAssistant: {
-      matches: [
-        /(?:ok|okay|o.k.|hey) google (.*)/i,
-      ],
-    },
-    */
     find: {
       matches: [
-        /(?:find (?:the )?(?:tab|tap|tad|todd) (?:about|with) (.*))|(?:(?:(?:bring me to|find) (?:the|my)? )?(.*) (?:tab|tap|tad|todd))/i,
+        /(?:(?:find|bring me to)\s?(?:my|the)?)\s?((?:(?=tab).*)|(?:.*(?=tab)))/i,
       ],
-      slots: ["query", "query"],
+      slots: ["query"],
     },
     navigate: {
       matches: [
@@ -31,26 +19,12 @@ this.intentParser = (function() {
       slots: ["query"],
     },
     unmute: {
-      matches: [
-        /\bunmute\b/i,
-      ],
+      matches: [/\bunmute\b/i],
     },
     mute: {
       matches: [
         /(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i,
       ],
-    },
-    amazonSearch: {
-      matches: [
-        /search (?:for )?(?:a |an )?(.*) on amazon/i,
-      ],
-      slots: ["query"],
-    },
-    search: {
-      matches: [
-        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
-      ],
-      slots: ["query"],
     },
     /*
     weather: {
@@ -60,7 +34,7 @@ this.intentParser = (function() {
       slots: ["place"],
     },
     */
-   /*
+    /*
     timer: {
       matches: [
         /(?:(?:set |start )(?:a )?timer (.*))|(.*) timer/i,
@@ -69,21 +43,37 @@ this.intentParser = (function() {
     },
     */
     play: {
-      matches: [
-        /(?:play(.*))/i,
-      ],
+      matches: [/(?:play(.*))/i],
       slots: ["query"],
     },
     pause: {
-      matches: [
-        /^pause$/i,
-      ],
+      matches: [/^pause$/i],
     },
     read: {
+      matches: [/^read(?:.*)$/i, /^read(?:this )tab$/i],
+    },
+    amazonSearch: {
+      matches: [/search (?:for )?(?:a |an )?(.*) on amazon/i],
+      slots: ["query"],
+    },
+    bangSearch: {
       matches: [
-        /^read$/i,
-        /^read(?:this )tab$/i,
+        /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i,
       ],
+      slots: ["service", "query"],
+    },
+    bangSearchAlt: {
+      // TODO: handle multiple regexes per intent (https://github.com/mozilla/firefox-voice/issues/119)
+      matches: [
+        /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
+      ],
+      slots: ["query", "service"],
+    },
+    search: {
+      matches: [
+        /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i,
+      ],
+      slots: ["query"],
     },
   };
 
@@ -111,7 +101,7 @@ this.intentParser = (function() {
     }
     return {
       name: DEFAULT_INTENT,
-      slots: {[DEFAULT_SLOT]: text},
+      slots: { [DEFAULT_SLOT]: text },
       text,
     };
   };

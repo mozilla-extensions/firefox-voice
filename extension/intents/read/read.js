@@ -1,7 +1,7 @@
 /* globals util */
 
 this.intents.read = (function() {
-  this.intentRunner.registerIntent("read", async (desc) => {
+  this.intentRunner.registerIntent("read", async desc => {
     // FIXME: this can fail, we should guard against that and show error:
     await browser.tabs.toggleReaderMode();
     // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
@@ -10,6 +10,10 @@ this.intents.read = (function() {
     await browser.tabs.executeScript({
       runAt: "document_end",
       file: "/intents/read/startNarration.js",
+    });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "read",
     });
   });
 })();
