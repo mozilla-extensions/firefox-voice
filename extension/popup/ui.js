@@ -55,7 +55,7 @@ this.ui = (function() {
 
   function detectText(e) {
     if (!textInputDetected) {
-      exports.setState("typing"); // TODO: is this the right place to set the state? or should that all be handled by popup.js
+      exports.setState("typing");
       textInputDetected = true;
       exports.onStartTextInput();
     }
@@ -165,6 +165,13 @@ this.ui = (function() {
     document.querySelector("#card-source-link").textContent =
       data.AbstractSource;
     document.querySelector("#card-source-link").href = data.AbstractURL;
+
+    // Add click handler for #card-source-link. The default behavior is to open links clicked within a popup in a new window, but we'd like for it to open within a new tab in the same window
+    document.querySelector("#card-source-link").addEventListener("click", e => {
+      e.preventDefault();
+      browser.tabs.create({ url: data.AbstractURL });
+      exports.closePopup();
+    });
   };
 
   function playListeningChime() {

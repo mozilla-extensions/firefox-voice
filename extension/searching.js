@@ -23,6 +23,7 @@ this.searching = (function() {
       // the response from DDG was null, and there was no matching Instant Answer result
       return null;
     }
+    // Selecting a subset of the key/value pairs that the DuckDuckGo API returns for use in the card (https://stackoverflow.com/questions/17781472/how-to-get-a-subset-of-a-javascript-objects-properties)
     const cardData = (({
       Heading,
       AbstractText,

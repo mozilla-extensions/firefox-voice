@@ -63,6 +63,7 @@ this.intentParser = (function() {
       slots: ["service", "query"],
     },
     bangSearchAlt: {
+      // TODO: handle multiple regexes per intent (https://github.com/mozilla/firefox-voice/issues/119)
       matches: [
         /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)/i,
       ],
