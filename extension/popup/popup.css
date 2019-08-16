@@ -1,7 +1,9 @@
 @import url("https://rsms.me/inter/inter.css");
+
 html {
   font-family: "Inter", sans-serif;
 }
+
 @supports (font-variation-settings: normal) {
   html {
     font-family: "Inter var", sans-serif;
@@ -25,8 +27,7 @@ body,
   display: none;
 }
 
-.processing
-  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
+.processing :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
   display: none;
 }
 
@@ -46,8 +47,7 @@ body,
   display: none;
 }
 
-:-moz-any(.success, .error)
-  :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
+:-moz-any(.success, .error) :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
   display: none;
 }
 
@@ -68,7 +68,7 @@ body,
   transition-property: font-size padding;
   font-size: 1.5rem;
   text-align: left;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem 0;
   transition-duration: 0.6s;
   transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
   transition-delay: 2s;
@@ -105,7 +105,7 @@ body,
 }
 
 #header-title {
-  font-size: 1.125rrem;
+  font-size: 1.125rem;
   letter-spacing: 0.05rem;
   font-weight: 700;
 }
@@ -119,7 +119,7 @@ body,
 }
 
 #suggestions {
-  padding: 1.2rem 0rem;
+  padding: 1.2rem 0;
 }
 
 .suggestion {
@@ -160,7 +160,7 @@ body,
   font-weight: 600;
   font-style: italic;
   font-size: 2rem;
-  padding: 1.5rem 0rem;
+  padding: 1.5rem 0;
 }
 
 #text-input-field {
@@ -222,7 +222,7 @@ body,
 }
 
 .about-item {
-  margin: 0.6em 0em;
+  margin: 0.6em 0;
 }
 
 .about-item > span {
@@ -244,6 +244,7 @@ body,
 #card {
   /* border-top: 1px solid #0c0c0d10; */
   border-bottom: 1px solid #0c0c0d10;
+
   /* padding-top: 0.8em; */
 }
 
