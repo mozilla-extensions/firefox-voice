@@ -36,6 +36,7 @@ this.popup = (function() {
     console.info("finished startRecorder...");
     // Listen for messages from the background scripts
     browser.runtime.onMessage.addListener(handleMessage);
+    updateExamples();
   }
 
   async function requestMicrophone() {
@@ -108,6 +109,14 @@ this.popup = (function() {
     } else if (message.type === "showCard") {
       ui.showCard(message.cardData);
     }
+  }
+
+  async function updateExamples() {
+    const examples = await browser.runtime.sendMessage({
+      type: "getExamples",
+      number: 2,
+    });
+    ui.showExamples(examples);
   }
 
   init();
