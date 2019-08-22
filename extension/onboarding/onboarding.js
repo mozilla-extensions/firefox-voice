@@ -11,15 +11,6 @@ this.onboarding = (function() {
       // Set hotkey suggestion based on navigator
       document.querySelector("#action-key").textContent =
         navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
-      document.querySelector("#toolbar-large").src = browser.extension.getURL(
-        "/onboarding/images/toolbar-arrow-2.png"
-      );
-      document.querySelector("#toolbar-small").src = browser.extension.getURL(
-        "/onboarding/images/toolbar-arrow-3.png"
-      );
-      document.querySelector("#zap-onboarding").src = browser.extension.getURL(
-        "/onboarding/images/zap.svg"
-      );
     } catch (e) {
       if (e.name === "NotAllowedError") {
         displaySection("#must-allow");
