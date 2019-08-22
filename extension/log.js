@@ -6,7 +6,7 @@ this.log = (function() {
   const exports = {};
 
   const manifest = browser.runtime.getManifest();
-  const logLevel = manifest.settings.logLevel;
+  const logLevel = (manifest.settings && manifest.settings.logLevel) || "debug";
 
   const levels = ["debug", "info", "warn", "error"];
   if (!levels.includes(logLevel)) {
