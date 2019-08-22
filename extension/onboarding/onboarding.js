@@ -1,7 +1,7 @@
 this.onboarding = (function() {
   async function launchPermission() {
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       displaySection("#success");
       // TODO change the following into CSS "success" class declarations?
       document.querySelector("#usage-instructions").style.display = "block";
@@ -11,6 +11,10 @@ this.onboarding = (function() {
       // Set hotkey suggestion based on navigator
       document.querySelector("#action-key").textContent =
         navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
+      const tracks = stream.getTracks();
+      for (const track of tracks) {
+        track.stop();
+      }
     } catch (e) {
       if (e.name === "NotAllowedError") {
         displaySection("#must-allow");
