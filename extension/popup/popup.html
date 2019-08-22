@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="popup.css">
+    <meta charset="UTF-8" />
+    <title>Firefox Voice Microphone</title>
+    <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <div id="popup" class="listening">
       <div id="popup-header">
         <div id="left-icon">
-            <svg id="back-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="context-fill" d="M6.414 8l4.293-4.293a1 1 0 0 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414l5 5a1 1 0 0 0 1.414-1.414z"></path></svg>        </div>
+          <svg
+            id="back-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewbox="0 0 16 16"
+          >
+            <path
+              fill="context-fill"
+              d="M6.414 8l4.293-4.293a1 1 0 0 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414l5 5a1 1 0 0 0 1.414-1.414z"
+            ></path>
+          </svg>
+        </div>
         <div id="header-title">
           Listening
         </div>
         <div id="close-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="context-fill" d="M9.061 8l3.47-3.47a.75.75 0 0 0-1.061-1.06L8 6.939 4.53 3.47a.75.75 0 1 0-1.06 1.06L6.939 8 3.47 11.47a.75.75 0 1 0 1.06 1.06L8 9.061l3.47 3.47a.75.75 0 0 0 1.06-1.061z"></path></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewbox="0 0 16 16"
+          >
+            <path
+              fill="context-fill"
+              d="M9.061 8l3.47-3.47a.75.75 0 0 0-1.061-1.06L8 6.939 4.53 3.47a.75.75 0 1 0-1.06 1.06L6.939 8 3.47 11.47a.75.75 0 1 0 1.06 1.06L8 9.061l3.47 3.47a.75.75 0 0 0 1.06-1.061z"
+            ></path>
+          </svg>
         </div>
       </div>
       <div id="popup-content">
@@ -41,51 +63,85 @@
         <div id="text-input">
           <span id="text-input-field" contenteditable="true">&nbsp;</span>
           <div id="send-btn-wrapper">
-              <button id="send-text-input">GO</button>
+            <button id="send-text-input">GO</button>
           </div>
         </div>
         <div id="card">
-            <div id="card-header"></div>
-            <div id="card-image"><img src=""/></div>
-            <div id="card-summary"></div>
-            <div id="card-ack">
-              <div id="ddg-ack">
-                <img id="ddg-logo" src="./images/dax-logo.svg"/><a href="https://duckduckgo.com/">Results from DuckDuckGo</a>
-              </div>
-              <div class="sep"></div>
-              <div id="source-ack">
-                <span>Source:</span>
-                <div id="card-source">
-                  <a id="card-source-link"></a>
-                </div>
+          <div id="card-header"></div>
+          <div id="card-image"><img alt="" src="" /></div>
+          <div id="card-summary"></div>
+          <div id="card-ack">
+            <div id="ddg-ack">
+              <img alt="" id="ddg-logo" src="./images/dax-logo.svg" /><a
+                href="https://duckduckgo.com/"
+                >Results from DuckDuckGo</a
+              >
+            </div>
+            <div class="sep"></div>
+            <div id="source-ack">
+              <span>Source:</span>
+              <div id="card-source">
+                <a id="card-source-link"></a>
               </div>
             </div>
           </div>
+        </div>
       </div>
       <div id="popup-settings">
         <div id="chime-setting">
           <div class="settings-controls">
-              <input type="checkbox" id="play-chime-pref" name="chime"/>
+            <input type="checkbox" id="play-chime-pref" name="chime" />
           </div>
           <span>Play chime sound</span>
           <div id="settings-about">
             <span id="settings-about-label">About</span>
             <div class="about-item">
               <span>How Mozilla protects voice privacy</span>
-              <svg class="expand-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="context-fill" d="M6 14a1 1 0 0 1-.707-1.707L9.586 8 5.293 3.707a1 1 0 0 1 1.414-1.414l5 5a1 1 0 0 1 0 1.414l-5 5A1 1 0 0 1 6 14z"></path></svg>
+              <svg
+                class="expand-arrow"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewbox="0 0 16 16"
+              >
+                <path
+                  fill="context-fill"
+                  d="M6 14a1 1 0 0 1-.707-1.707L9.586 8 5.293 3.707a1 1 0 0 1 1.414-1.414l5 5a1 1 0 0 1 0 1.414l-5 5A1 1 0 0 1 6 14z"
+                ></path>
+              </svg>
             </div>
             <!-- <div class="about-item">Develop an extension for Firefox Voice</div> -->
             <div class="about-item">
               <span>Disable extension</span>
-              <svg class="expand-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="context-fill" d="M6 14a1 1 0 0 1-.707-1.707L9.586 8 5.293 3.707a1 1 0 0 1 1.414-1.414l5 5a1 1 0 0 1 0 1.414l-5 5A1 1 0 0 1 6 14z"></path></svg>
+              <svg
+                class="expand-arrow"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewbox="0 0 16 16"
+              >
+                <path
+                  fill="context-fill"
+                  d="M6 14a1 1 0 0 1-.707-1.707L9.586 8 5.293 3.707a1 1 0 0 1 1.414-1.414l5 5a1 1 0 0 1 0 1.414l-5 5A1 1 0 0 1 6 14z"
+                ></path>
+              </svg>
             </div>
           </div>
-
         </div>
       </div>
       <div id="popup-footer">
         <div id="settings-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="context-fill" d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"></path></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewbox="0 0 16 16"
+          >
+            <path
+              fill="context-fill"
+              d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
+            ></path>
+          </svg>
         </div>
         <div id="moz-voice-privacy">
           <a href="">How Mozilla ensures voice privacy</a>
