@@ -88,7 +88,9 @@ this.popup = (function() {
       }
       clearInterval(intervalId);
       ui.setState("success");
-      ui.setTranscript(json.data[0].text);
+      if (json) {
+        ui.setTranscript(json.data[0].text);
+      }
 
       browser.runtime.sendMessage({
         type: "runIntent",
