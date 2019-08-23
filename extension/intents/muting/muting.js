@@ -20,10 +20,6 @@ this.intents.muting = (function() {
       }
       // TODO: tell the user if no audible tabs were found
       // TODO: show confirmation
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "mute",
-      });
     },
   });
 
@@ -44,10 +40,6 @@ this.intents.muting = (function() {
       }
       // TODO: tell the user if no audible tabs were found
       // TODO: show confirmation
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "unmute",
-      });
     },
   });
 })();

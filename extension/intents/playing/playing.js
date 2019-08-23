@@ -26,10 +26,6 @@ this.intents.playing = (function() {
         });
         // TODO: poll for playing, instead of timeout
       }, 3000);
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "play",
-      });
     },
   });
 
@@ -40,10 +36,6 @@ this.intents.playing = (function() {
       // get video content for the current tab
       await browser.tabs.executeScript(currentTab.id, {
         file: "/intents/playing/pauseMedia.js",
-      });
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "pause",
       });
     },
   });

@@ -23,12 +23,9 @@ this.intents.navigation = (function() {
         // Default to Google Search
         const url = searching.googleSearchUrl(desc.slots.query, false);
         await browser.tabs.create({ url });
-        browser.runtime.sendMessage({
-          type: "closePopup",
-          sender: "search",
-        });
       } else {
         console.log("sending data to content script");
+        desc.keepPopup();
         browser.runtime.sendMessage({
           sender: "navigation",
           type: "showCard",
@@ -38,31 +35,19 @@ this.intents.navigation = (function() {
     },
   });
 
-  async function bangSearch(desc) {
-    const myurl = await searching.ddgBangSearchUrl(
-      desc.slots.query,
-      desc.slots.service
-    );
-    console.log("THE URL THAT I HAVE IS ", myurl);
-    await browser.tabs.update({ url: myurl });
-    browser.runtime.sendMessage({
-      type: "closePopup",
-      sender: "find",
-    });
-  }
-
   this.intentRunner.registerIntent({
     name: "bangSearch",
-    examples: ["search for shoes on amazon"],
     async run(desc) {
-      await bangSearch(desc);
-    },
-  });
-
-  this.intentRunner.registerIntent({
-    name: "bangSearchAlt",
-    async run(desc) {
-      await bangSearch(desc);
+      const myurl = await searching.ddgBangSearchUrl(
+        desc.slots.query,
+        desc.slots.service
+      );
+      console.log("THE URL THAT I HAVE IS ", myurl);
+      await browser.tabs.update({ url: myurl });
+      browser.runtime.sendMessage({
+        type: "closePopup",
+        sender: "find",
+      });
     },
   });
 
@@ -71,10 +56,6 @@ this.intents.navigation = (function() {
     async run(desc) {
       const url = searching.amazonSearchUrl(desc.slots.query);
       await browser.tabs.create({ url });
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "amazonSearch",
-      });
     },
   });
 })();
