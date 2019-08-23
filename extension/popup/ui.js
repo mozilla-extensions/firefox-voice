@@ -212,6 +212,19 @@ this.ui = (function() {
     });
   }
 
+  exports.showExamples = function(examples) {
+    const container = document.getElementById("suggestions-list");
+    while (container.childNodes.length) {
+      container.childNodes[0].remove();
+    }
+    for (const example of examples) {
+      const el = document.createElement("p");
+      el.className = "suggestion";
+      el.textContent = example;
+      container.appendChild(el);
+    }
+  };
+
   listenForClose();
   listenForSettings();
   listenForBack();
