@@ -83,15 +83,13 @@ this.popup = (function() {
     };
     recorder.onEnd = json => {
       console.info("Got a response:", json && json.data);
-      if (json === null) {
-        // It was cancelled
-      }
       clearInterval(intervalId);
       ui.setState("success");
-      if (json) {
-        ui.setTranscript(json.data[0].text);
+      if (json === null) {
+        // It was cancelled
+        return;
       }
-
+      ui.setTranscript(json.data[0].text);
       browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
