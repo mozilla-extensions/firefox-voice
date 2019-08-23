@@ -132,11 +132,6 @@ this.ui = (function() {
     show() {},
   };
 
-  STATES.settings = {
-    header: "Settings",
-    show() {},
-  };
-
   exports.setState = function setState(newState) {
     document.querySelector("#header-title").textContent =
       STATES[newState].header;
@@ -189,8 +184,11 @@ this.ui = (function() {
     backIcon.addEventListener("click", showPreviousState);
   }
 
-  function showSettings() {
-    exports.setState("settings");
+  async function showSettings() {
+    await browser.tabs.create({
+      url: browser.runtime.getURL("options/options.html"),
+    });
+    exports.closePopup(0);
   }
 
   function listenForSettings() {
