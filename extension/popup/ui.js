@@ -39,7 +39,6 @@ this.ui = (function() {
   }
 
   exports.setAnimationForVolume = function setAnimationForVolume(avgVolume) {
-    log.debug(`updating: volume at ${avgVolume}`);
     animation.onLoopComplete = function() {
       if (avgVolume < 0.1) {
         playAnimation(animationSegmentTimes.base, true, true);

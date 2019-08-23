@@ -63,7 +63,6 @@ this.popup = (function() {
     const recorder = new voice.Recorder(stream);
     const intervalId = setInterval(() => {
       const volumeLevel = recorder.getVolumeLevel();
-      console.info("Volume level:", volumeLevel);
       ui.setAnimationForVolume(volumeLevel);
     }, 500);
     recorder.onBeginRecording = () => {
