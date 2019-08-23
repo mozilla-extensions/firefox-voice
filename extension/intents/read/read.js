@@ -14,10 +14,6 @@ this.intents.read = (function() {
         runAt: "document_end",
         file: "/intents/read/startNarration.js",
       });
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "read",
-      });
     },
   });
 })();

@@ -57,10 +57,6 @@ this.intents.find = (function() {
       await browser.tabs.update(topMatch, {
         active: true,
       });
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "find",
-      });
     },
   });
 })();

@@ -8,10 +8,16 @@ this.intentRunner = (function() {
 
   class IntentContext {
     constructor(desc) {
+      this.closePopupOnFinish = true;
       Object.assign(this, desc);
     }
 
+    keepPopup() {
+      this.closePopupOnFinish = false;
+    }
+
     done() {
+      this.closePopupOnFinish = false;
       return browser.runtime.sendMessage({
         type: "closePopup",
       });
@@ -40,6 +46,9 @@ this.intentRunner = (function() {
     const context = new IntentContext(desc);
     try {
       await intent.run(context);
+      if (context.closePopupOnFinish) {
+        context.done();
+      }
     } catch (e) {
       context.failed(`Internal error: ${e}`);
     }
