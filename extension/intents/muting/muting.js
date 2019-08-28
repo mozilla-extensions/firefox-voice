@@ -1,10 +1,15 @@
-/* globals log */
+/* globals log, intents */
 
 this.intents.muting = (function() {
   this.intentRunner.registerIntent({
     name: "mute",
     examples: ["mute all tabs"],
     async run(desc) {
+      const stoppedReading = await intents.read.stopReading();
+      if (stoppedReading) {
+        // There was an about:reader narration that we stopped
+        return;
+      }
       const audibleTabs = await browser.tabs.query({ audible: true });
       if (audibleTabs.empty) {
         // TODO: pass a message back to the content script to update the UI and indicate that we don't have any audible tabs

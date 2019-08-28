@@ -1,3 +1,4 @@
+/* globals log */
 this.intentParser = (function() {
   const exports = {};
 
@@ -115,7 +116,7 @@ this.intentParser = (function() {
       let next;
       if (nextParen === -1 && nextBrace === -1) {
         // There are no special characters
-        return { word: phrase, phrase: "" };
+        return { words: phrase, phrase: "" };
       }
       if (nextParen !== -1 && nextBrace === -1) {
         next = nextParen;
@@ -162,25 +163,21 @@ this.intentParser = (function() {
   const INTENTS = {
     find: {
       matcher: new MatchSet(`
-      # /(?:(?:find|bring me to)\s?(?:my|the)?)\s?((?:(?=tab).*)|(?:.*(?=tab)))/i,
       (find | bring me to) (my | the |) [query] (tab |)
       `),
     },
     navigate: {
       matcher: new MatchSet(`
-      # /(?!.*tab.*)(?:(?:bring me|go|navigate) to|open|find|show me)\s(.*)/i,
       (bring me | go | navigate) (to | open | find | show me) [query]
       `),
     },
     unmute: {
       matcher: new MatchSet(`
-      # /\bunmute\b/i
       unmute
       `),
     },
     mute: {
       matcher: new MatchSet(`
-      # /(?:mute|turn off)\s?(?:whatever is )?(?:playing|all)?\s?(?:the )?(?:music|audio|sound|everything)?|^quiet$|^shut up$|^stop$/i
       (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything |)
       quiet
       shut up
@@ -205,32 +202,27 @@ this.intentParser = (function() {
     */
     play: {
       matcher: new MatchSet(`
-      # /(?:play(.*))/i
       play [query]
       `),
     },
     pause: {
       matcher: new MatchSet(`
-      # /^pause$/i
       pause
       `),
     },
     read: {
       matcher: new MatchSet(`
-      # /^read(?:.*)$/i, /^read(?:this )tab$/i
       read (this |) (tab |)
       `),
     },
     bangSearch: {
       matcher: new MatchSet(`
-      # /(?:do a )?(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar)(?: for (?:the )?)?(.*)/i
-      # /(?:do a )?(?:(?:search (?:my |on |for )?|query |find(?: me)? |look up |lookup |look on |look for )(?:the )?)(.+) on (google     (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
+      (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
       (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
       `),
     },
     search: {
       matcher: new MatchSet(`
-      # /(?:do a )?(?:search |query |find(?: me)? |google |look up |lookup |look on |look for )(?:google |the web |the internet )?(?:for )?(.*)(?:on the web)?/i
       (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
       `),
     },
@@ -247,6 +239,7 @@ this.intentParser = (function() {
         return match;
       }
     }
+    log.info(`Parsed as fallback intent: ${JSON.stringify(text)}`);
     return {
       name: DEFAULT_INTENT,
       slots: { [DEFAULT_SLOT]: text },
