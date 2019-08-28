@@ -1,4 +1,4 @@
-/* globals lottie, log */
+/* globals lottie */
 
 this.ui = (function() {
   const exports = {};
