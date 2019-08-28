@@ -1,3 +1,4 @@
+/* globals log */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -45,6 +46,12 @@ this.intentRunner = (function() {
     const intent = intents[desc.name];
     const context = new IntentContext(desc);
     try {
+      log.info(
+        `Running intent ${desc.name}`,
+        Object.keys(desc.slots).length
+          ? `with slots: ${JSON.stringify(desc.slots)}`
+          : "with no slots"
+      );
       await intent.run(context);
       if (context.closePopupOnFinish) {
         context.done();

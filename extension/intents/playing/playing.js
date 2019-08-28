@@ -1,4 +1,4 @@
-/* globals searching */
+/* globals searching, log */
 
 this.intents.playing = (function() {
   this.intentRunner.registerIntent({
@@ -8,10 +8,12 @@ this.intents.playing = (function() {
       let playerTab;
       if (desc.slots.query) {
         // Multi-part execution task: will do magical IFL Google Search, then execute play once the page loads
-        const googleQueryURL = searching.googleSearchUrl(
-          desc.slots.query,
-          true
-        );
+        let query = desc.slots.query;
+        log.debug('Adding "youtube" to query:', query);
+        if (!/youtube/i.test(query)) {
+          query += " youtube";
+        }
+        const googleQueryURL = searching.googleSearchUrl(query, true);
         playerTab = await browser.tabs.create({
           url: googleQueryURL,
         });
