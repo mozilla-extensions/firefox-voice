@@ -1,6 +1,27 @@
-/* globals util */
+/* globals util, log */
 
 this.intents.read = (function() {
+  const exports = {};
+
+  exports.stopReading = async function() {
+    const tab = (await browser.tabs.query({ active: true }))[0];
+    if (!tab) {
+      return false;
+    }
+    if (!tab.url.startsWith("about:reader")) {
+      return false;
+    }
+    try {
+      await browser.tabs.sendMessage(tab.id, {
+        type: "stopReading",
+      });
+      return true;
+    } catch (e) {
+      log.info("Exception:", String(e), e);
+      return false;
+    }
+  };
+
   this.intentRunner.registerIntent({
     name: "read",
     examples: ["read this tab"],
@@ -16,4 +37,6 @@ this.intents.read = (function() {
       });
     },
   });
+
+  return exports;
 })();

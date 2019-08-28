@@ -4,7 +4,6 @@ this.main = (function() {
   browser.runtime.onMessage.addListener(async (message, sender) => {
     if (message.type === "runIntent") {
       const desc = intentParser.parse(message.text);
-      log.info(`Executing intent: ${desc}`);
       return intentRunner.runIntent(desc);
     } else if (message.type === "getExamples") {
       return intentExamples.getExamples(message.number || 2);
