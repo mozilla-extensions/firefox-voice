@@ -56,7 +56,7 @@
     "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint extension",
     "once": "web-ext run -s extension",
-    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i manifest.json.ejs && mv web-ext-artifacts/*.zip addon.xpi",
+    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i manifest.json.ejs -i extension/tests/ && mv web-ext-artifacts/*.zip addon.xpi",
     "postinstall": "npm-run-all build:*"
   }
 }
