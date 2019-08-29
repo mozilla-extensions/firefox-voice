@@ -23,7 +23,7 @@ this.intents.read = (function() {
   };
 
   this.intentRunner.registerIntent({
-    name: "read",
+    name: "read.read",
     examples: ["read this tab"],
     match: `
     read (this |) (tab |)

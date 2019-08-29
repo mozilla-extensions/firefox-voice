@@ -2,7 +2,7 @@
 
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
-    name: "navigate",
+    name: "navigation.navigate",
     examples: ["go to wikipedia"],
     match: `
     (bring me | go | navigate) (to | open | find | show me) [query]
@@ -18,7 +18,7 @@ this.intents.navigation = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "search",
+    name: "navigation.search",
     examples: ["search for armadillo"],
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
@@ -42,7 +42,7 @@ this.intents.navigation = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "bangSearch",
+    name: "navigation.bangSearch",
     match: `
     (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
@@ -58,14 +58,6 @@ this.intents.navigation = (function() {
         type: "closePopup",
         sender: "find",
       });
-    },
-  });
-
-  this.intentRunner.registerIntent({
-    name: "amazonSearch",
-    async run(desc) {
-      const url = searching.amazonSearchUrl(desc.slots.query);
-      await browser.tabs.create({ url });
     },
   });
 })();

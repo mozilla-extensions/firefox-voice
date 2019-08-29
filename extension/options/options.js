@@ -94,4 +94,15 @@ function restoreOptions() {
   providerSelect.addEventListener("change", saveOptions);
 }
 
+async function init() {
+  const inDevelopment = await browser.runtime.sendMessage({
+    type: "inDevelopment",
+  });
+  console.log("result", inDevelopment);
+  if (inDevelopment) {
+    document.body.classList.add("inDevelopment");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", restoreOptions);
+document.addEventListener("DOMContentLoaded", init);

@@ -2,7 +2,7 @@
 
 this.intents.playing = (function() {
   this.intentRunner.registerIntent({
-    name: "play",
+    name: "playing.play",
     examples: ["play music on youtube"],
     match: `
     play [query]
@@ -35,7 +35,7 @@ this.intents.playing = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "pause",
+    name: "playing.pause",
     match: `
     pause
     `,

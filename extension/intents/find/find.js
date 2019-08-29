@@ -2,7 +2,7 @@
 
 this.intents.find = (function() {
   this.intentRunner.registerIntent({
-    name: "find",
+    name: "find.find",
     examples: ["find calendar tab"],
     match: `
     (find | bring me to) (my | the |) [query] (tab |)
