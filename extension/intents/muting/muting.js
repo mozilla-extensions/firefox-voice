@@ -4,6 +4,12 @@ this.intents.muting = (function() {
   this.intentRunner.registerIntent({
     name: "mute",
     examples: ["mute all tabs"],
+    match: `
+    (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything |)
+    quiet
+    shut up
+    stop
+    `,
     async run(desc) {
       const stoppedReading = await intents.read.stopReading();
       if (stoppedReading) {
@@ -30,6 +36,9 @@ this.intents.muting = (function() {
 
   this.intentRunner.registerIntent({
     name: "unmute",
+    match: `
+    unmute
+    `,
     async run(desc) {
       const mutedTabs = await browser.tabs.query({ audible: false });
       if (mutedTabs.empty) {

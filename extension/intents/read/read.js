@@ -25,6 +25,9 @@ this.intents.read = (function() {
   this.intentRunner.registerIntent({
     name: "read",
     examples: ["read this tab"],
+    match: `
+    read (this |) (tab |)
+    `,
     async run(desc) {
       // FIXME: this can fail, we should guard against that and show error:
       await browser.tabs.toggleReaderMode();

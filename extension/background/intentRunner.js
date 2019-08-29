@@ -1,4 +1,4 @@
-/* globals log */
+/* globals log, intentParser */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -37,6 +37,10 @@ this.intentRunner = (function() {
       throw new Error(`Attempt to reregister intent: ${intent.name}`);
     }
     intents[intent.name] = intent;
+    if (!intent.match) {
+      throw new Error(`Intent missing .match: ${intent.name}`);
+    }
+    intentParser.registerMatcher(intent.name, intent.match);
   };
 
   exports.runIntent = async function(desc) {

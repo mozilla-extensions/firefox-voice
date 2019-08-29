@@ -159,73 +159,17 @@ this.intentParser = (function() {
     }
   });
 
-  // TODO: make these part of intent registration
-  const INTENTS = {
-    find: {
-      matcher: new MatchSet(`
-      (find | bring me to) (my | the |) [query] (tab |)
-      `),
-    },
-    navigate: {
-      matcher: new MatchSet(`
-      (bring me | go | navigate) (to | open | find | show me) [query]
-      `),
-    },
-    unmute: {
-      matcher: new MatchSet(`
-      unmute
-      `),
-    },
-    mute: {
-      matcher: new MatchSet(`
-      (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything |)
-      quiet
-      shut up
-      stop
-      `),
-    },
-    /*
-    weather: {
-      matches: [
-        /(?:(?:what's the |what is the )?(weather|forecast|temperature) (?:in |for )?(.*))|(?:(.* weather))/i,
-      ],
-      slots: ["place"],
-    },
-    */
-    /*
-    timer: {
-      matches: [
-        /(?:(?:set |start )(?:a )?timer (.*))|(.*) timer/i,
-      ],
-      slots: ["time", "time"],
-    },
-    */
-    play: {
-      matcher: new MatchSet(`
-      play [query]
-      `),
-    },
-    pause: {
-      matcher: new MatchSet(`
-      pause
-      `),
-    },
-    read: {
-      matcher: new MatchSet(`
-      read (this |) (tab |)
-      `),
-    },
-    bangSearch: {
-      matcher: new MatchSet(`
-      (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
-      (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
-      `),
-    },
-    search: {
-      matcher: new MatchSet(`
-      (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
-      `),
-    },
+  // Populated by registerMatcher:
+  const INTENTS = {};
+
+  exports.registerMatcher = function(intentName, matcher) {
+    if (INTENTS[intentName]) {
+      throw new Error(`Intent ${intentName} has already been registered`);
+    }
+    if (typeof matcher === "string") {
+      matcher = new MatchSet(matcher);
+    }
+    INTENTS[intentName] = { matcher };
   };
 
   exports.parse = function parse(text) {

@@ -4,6 +4,9 @@ this.intents.find = (function() {
   this.intentRunner.registerIntent({
     name: "find",
     examples: ["find calendar tab"],
+    match: `
+    (find | bring me to) (my | the |) [query] (tab |)
+    `,
     async run(desc) {
       const query = desc.slots.query;
       log.info("the most likely query text is:", query);

@@ -4,6 +4,9 @@ this.intents.playing = (function() {
   this.intentRunner.registerIntent({
     name: "play",
     examples: ["play music on youtube"],
+    match: `
+    play [query]
+    `,
     async run(desc) {
       let playerTab;
       if (desc.slots.query) {
@@ -33,6 +36,9 @@ this.intents.playing = (function() {
 
   this.intentRunner.registerIntent({
     name: "pause",
+    match: `
+    pause
+    `,
     async run(desc) {
       const currentTab = (await browser.tabs.query({ active: true }))[0];
       // get video content for the current tab
