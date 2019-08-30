@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log */
+/* globals intentParser, intentRunner, intentExamples, log, intents */
 
 this.main = (function() {
   const exports = {};
@@ -13,6 +13,11 @@ this.main = (function() {
       return exports.inDevelopment();
     } else if (message.type === "getIntentSummary") {
       return intentRunner.getIntentSummary();
+    } else if (message.type === "microphoneStarted") {
+      return intents.muting.temporaryMute();
+    } else if (message.type === "microphoneStopped") {
+      console.log("stopping!");
+      return intents.muting.temporaryUnmute();
     }
     log.error(
       `Received message with unexpected type (${message.type}): ${message}`
