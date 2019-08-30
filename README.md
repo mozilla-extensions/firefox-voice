@@ -19,6 +19,10 @@ This will launch a new Firefox browser with the extension installed. You should 
 
 By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
 
+### Viewing Intent Information
+
+There is an index of intents (commands) that is viewable if you open the panel, click on the gear/settings, and follow the "Intent Viewer" link.
+
 ## Contribution
 
 If you have an idea, the best way to start is to open an issue in this repository.

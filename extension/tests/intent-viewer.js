@@ -1,3 +1,11 @@
+const BASE_VIEW_URL =
+  "https://github.com/mozilla/firefox-voice/blob/master/extension/intents";
+
+function makeViewUrl(name) {
+  name = name.split(".")[0];
+  return `${BASE_VIEW_URL}/${name}/${name}.js`;
+}
+
 function quote(text) {
   return String(text)
     .replace(/&/g, "&amp;")
@@ -46,6 +54,7 @@ async function init() {
     }
     html.push(`<div class="intent">
       <h2>${intent.name}</h2>
+      <a href="${quote(makeViewUrl(intent.name))}">View code</a><br>
       ${intent.priority ? "Priority: " + intent.priority + "<br>" : ""}
       <div>
         <h3>Matchers</h3>
