@@ -98,7 +98,8 @@ this.popup = (function() {
       });
     };
     recorder.onError = error => {
-      console.error("Got error:", String(error), error);
+      log.error("Got recorder error:", String(error), error);
+      ui.setState("error");
       clearInterval(intervalId);
     };
     recorder.startRecording();

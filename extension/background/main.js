@@ -16,7 +16,6 @@ this.main = (function() {
     } else if (message.type === "microphoneStarted") {
       return intents.muting.temporaryMute();
     } else if (message.type === "microphoneStopped") {
-      console.log("stopping!");
       return intents.muting.temporaryUnmute();
     }
     log.error(

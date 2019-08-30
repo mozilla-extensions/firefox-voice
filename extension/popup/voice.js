@@ -3,7 +3,9 @@
 this.voice = (function() {
   const exports = {};
 
-  const STT_SERVER_URL = "https://speaktome-2.services.mozilla.com";
+  const STT_SERVER_URL =
+    browser.runtime.getManifest().settings.sstServer ||
+    "https://speaktome-2.services.mozilla.com";
   const LANGUAGE = "en-US";
 
   exports.Recorder = class Recorder {
@@ -59,8 +61,13 @@ this.voice = (function() {
       this.mediaRecorder = new MediaRecorder(this.outputNode.stream, options);
       this.mediaRecorder.start();
       this.onBeginRecording();
-      this.mediaRecorder.onstop = () => {
-        this.mediaStopped();
+      this.mediaRecorder.onstop = async () => {
+        try {
+          await this.mediaStopped();
+        } catch (e) {
+          this.onError(e);
+          throw e;
+        }
       };
       this.mediaRecorder.ondataavailable = e => {
         this.chunks.push(e.data);
