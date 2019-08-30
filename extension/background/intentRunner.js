@@ -65,5 +65,38 @@ this.intentRunner = (function() {
     }
   };
 
+  exports.getIntentSummary = function() {
+    const names = Object.keys(intents);
+    names.sort();
+    return names.map(name => {
+      const intent = Object.assign({}, intents[name]);
+      delete intent.run;
+      const matchSet =
+        typeof intent.match === "string"
+          ? new intentParser.MatchSet(intent.match)
+          : intent.match;
+      const matchers = matchSet.getMatchers();
+      delete intent.match;
+      intent.matchers = matchers.map(m => {
+        return {
+          phrase: m.phrase,
+          slots: m.slots,
+          regex: String(m.regex),
+        };
+      });
+      if (intent.examples) {
+        intent.examples = intent.examples.map(e => {
+          const parsed = intentParser.parse(e);
+          return {
+            parsedIntent: parsed.name,
+            text: e,
+            slots: parsed.slots,
+          };
+        });
+      }
+      return intent;
+    });
+  };
+
   return exports;
 })();

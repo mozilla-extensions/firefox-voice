@@ -1,0 +1,16 @@
+body {
+  font-family: sans-serif;
+}
+
+h2 {
+  background-color: #ddd;
+  padding: 3px;
+}
+
+.intent {
+  margin-bottom: 2em;
+}
+
+section {
+  margin-bottom: 1em;
+}

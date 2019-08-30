@@ -46,6 +46,10 @@ this.intentParser = (function() {
       return result;
     }
 
+    getMatchers() {
+      return [this];
+    }
+
     _phraseToRegex(toParse) {
       const slots = [];
       let regex = "";
@@ -156,6 +160,10 @@ this.intentParser = (function() {
         }
       }
       return null;
+    }
+
+    getMatchers() {
+      return this.matchers;
     }
   });
 

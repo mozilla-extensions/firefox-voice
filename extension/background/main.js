@@ -11,6 +11,8 @@ this.main = (function() {
       return intentExamples.getExamples(message.number || 2);
     } else if (message.type === "inDevelopment") {
       return exports.inDevelopment();
+    } else if (message.type === "getIntentSummary") {
+      return intentRunner.getIntentSummary();
     }
     log.error(
       `Received message with unexpected type (${message.type}): ${message}`
