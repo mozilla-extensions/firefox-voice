@@ -12,3 +12,12 @@ select {
   grid-column: 2 / 3;
   height: 2rem;
 }
+
+.development {
+  display: none;
+}
+
+/* class="inDevelopment" is added to the page when running this in development */
+.inDevelopment .development {
+  display: block;
+}

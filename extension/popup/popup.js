@@ -7,7 +7,8 @@ this.popup = (function() {
   let isWaitingForPermission = null;
 
   async function init() {
-    document.addEventListener("beforeunload", () => {
+    window.addEventListener("unload", () => {
+      browser.runtime.sendMessage({ type: "microphoneStopped" });
       if (
         isWaitingForPermission &&
         Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
@@ -67,6 +68,7 @@ this.popup = (function() {
     }, 500);
     recorder.onBeginRecording = () => {
       console.info("started recording");
+      browser.runtime.sendMessage({ type: "microphoneStarted" });
       ui.setState("listening");
       ui.onStartTextInput = () => {
         log.debug("detected text from the popup");
@@ -81,6 +83,7 @@ this.popup = (function() {
       };
     };
     recorder.onEnd = json => {
+      browser.runtime.sendMessage({ type: "microphoneStopped" });
       console.info("Got a response:", json && json.data);
       clearInterval(intervalId);
       ui.setState("success");

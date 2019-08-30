@@ -1,4 +1,4 @@
-/* globals log */
+/* globals log, intentParser */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -37,6 +37,10 @@ this.intentRunner = (function() {
       throw new Error(`Attempt to reregister intent: ${intent.name}`);
     }
     intents[intent.name] = intent;
+    if (!intent.match) {
+      throw new Error(`Intent missing .match: ${intent.name}`);
+    }
+    intentParser.registerMatcher(intent.name, intent.match);
   };
 
   exports.runIntent = async function(desc) {
@@ -59,6 +63,39 @@ this.intentRunner = (function() {
     } catch (e) {
       context.failed(`Internal error: ${e}`);
     }
+  };
+
+  exports.getIntentSummary = function() {
+    const names = Object.keys(intents);
+    names.sort();
+    return names.map(name => {
+      const intent = Object.assign({}, intents[name]);
+      delete intent.run;
+      const matchSet =
+        typeof intent.match === "string"
+          ? new intentParser.MatchSet(intent.match)
+          : intent.match;
+      const matchers = matchSet.getMatchers();
+      delete intent.match;
+      intent.matchers = matchers.map(m => {
+        return {
+          phrase: m.phrase,
+          slots: m.slots,
+          regex: String(m.regex),
+        };
+      });
+      if (intent.examples) {
+        intent.examples = intent.examples.map(e => {
+          const parsed = intentParser.parse(e);
+          return {
+            parsedIntent: parsed.name,
+            text: e,
+            slots: parsed.slots,
+          };
+        });
+      }
+      return intent;
+    });
   };
 
   return exports;

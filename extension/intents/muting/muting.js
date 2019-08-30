@@ -1,9 +1,19 @@
 /* globals log, intents */
 
 this.intents.muting = (function() {
+  // Always undo temporary muting after this amount of time:
+  const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
+  const exports = {};
+
   this.intentRunner.registerIntent({
-    name: "mute",
+    name: "mute.mute",
     examples: ["mute all tabs"],
+    match: `
+    (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything |)
+    quiet
+    shut up
+    stop
+    `,
     async run(desc) {
       const stoppedReading = await intents.read.stopReading();
       if (stoppedReading) {
@@ -29,7 +39,10 @@ this.intents.muting = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "unmute",
+    name: "mute.unmute",
+    match: `
+    unmute
+    `,
     async run(desc) {
       const mutedTabs = await browser.tabs.query({ audible: false });
       if (mutedTabs.empty) {
@@ -47,4 +60,40 @@ this.intents.muting = (function() {
       // TODO: show confirmation
     },
   });
+
+  let muteTimeoutId = null;
+  let mutedTabIds = [];
+
+  exports.temporaryMute = async function() {
+    const tabsToMute = await browser.tabs.query({
+      audible: true,
+      muted: false,
+    });
+    if (!tabsToMute.length) {
+      return;
+    }
+    if (muteTimeoutId) {
+      clearTimeout(muteTimeoutId);
+    }
+    muteTimeoutId = setTimeout(() => {
+      exports.temporaryUnmute();
+    }, TEMPORARY_MUTE_TIMEOUT);
+    for (const tab of tabsToMute) {
+      browser.tabs.update(tab.id, { muted: true });
+    }
+    mutedTabIds = mutedTabIds.concat(tabsToMute.map(t => t.id));
+  };
+
+  exports.temporaryUnmute = function() {
+    if (muteTimeoutId) {
+      clearTimeout(muteTimeoutId);
+      muteTimeoutId = null;
+    }
+    for (const tabId of mutedTabIds) {
+      browser.tabs.update(tabId, { muted: false });
+    }
+    mutedTabIds = [];
+  };
+
+  return exports;
 })();
