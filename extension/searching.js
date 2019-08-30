@@ -48,6 +48,9 @@ this.searching = (function() {
       goodreads: "goodreads",
       mdn: "mdn",
       coursera: "coursera",
+      gmail: "gmail",
+      mail: "gmail",
+      "google mail": "gmail",
     };
     const bang = SERVICE_BANG_MAP[service.toLowerCase()];
     const response = await fetch(
