@@ -9,7 +9,6 @@ async function init() {
   const intents = await browser.runtime.sendMessage({
     type: "getIntentSummary",
   });
-  console.log("Intents:", intents);
   const html = [];
   for (const intent of intents) {
     const matchers = intent.matchers.map(m => {
@@ -47,6 +46,7 @@ async function init() {
     }
     html.push(`<div class="intent">
       <h2>${intent.name}</h2>
+      ${intent.priority ? "Priority: " + intent.priority + "<br>" : ""}
       <div>
         <h3>Matchers</h3>
         ${matchers.join("\n")}

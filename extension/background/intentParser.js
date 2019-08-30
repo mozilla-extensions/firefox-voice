@@ -1,4 +1,4 @@
-/* globals log */
+/* globals log, util */
 this.intentParser = (function() {
   const exports = {};
 
@@ -14,7 +14,7 @@ this.intentParser = (function() {
   */
 
   const ENTITY_TYPES = {
-    serviceName: "google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar".split(
+    serviceName: "google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar|mail| google mail|gmail".split(
       "|"
     ),
   };
@@ -169,21 +169,33 @@ this.intentParser = (function() {
 
   // Populated by registerMatcher:
   const INTENTS = {};
+  const INTENT_PRIORITY_NAMES = [];
+  let INTENT_NAMES = [];
+  const PRIORITIES = {
+    low: -1,
+    "": 0,
+    high: 1,
+  };
 
-  exports.registerMatcher = function(intentName, matcher) {
+  exports.registerMatcher = function(intentName, matcher, priority) {
     if (INTENTS[intentName]) {
       throw new Error(`Intent ${intentName} has already been registered`);
     }
     if (typeof matcher === "string") {
       matcher = new MatchSet(matcher);
     }
+    INTENT_PRIORITY_NAMES.push([intentName, PRIORITIES[priority || ""]]);
+    INTENT_PRIORITY_NAMES.sort((a, b) => {
+      return util.cmp(-a[1], -b[1]) || util.cmp(a[0], b[0]);
+    });
+    INTENT_NAMES = INTENT_PRIORITY_NAMES.map(i => i[0]);
     INTENTS[intentName] = { matcher };
   };
 
-  exports.parse = function parse(text) {
+  exports.parse = function parse(text, disableFallback = false) {
     text = text.trim();
     text = text.replace(/\s\s+/g, " ");
-    for (const name in INTENTS) {
+    for (const name of INTENT_NAMES) {
       const matcher = INTENTS[name].matcher;
       const match = matcher.match(text);
       if (match) {
@@ -191,12 +203,19 @@ this.intentParser = (function() {
         return match;
       }
     }
+    if (disableFallback) {
+      return null;
+    }
     log.info(`Parsed as fallback intent: ${JSON.stringify(text)}`);
     return {
       name: DEFAULT_INTENT,
       slots: { [DEFAULT_SLOT]: text },
       utterance: text,
     };
+  };
+
+  exports.getNamesByPriority = function() {
+    return INTENT_NAMES;
   };
 
   return exports;

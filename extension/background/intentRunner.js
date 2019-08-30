@@ -40,7 +40,11 @@ this.intentRunner = (function() {
     if (!intent.match) {
       throw new Error(`Intent missing .match: ${intent.name}`);
     }
-    intentParser.registerMatcher(intent.name, intent.match);
+    intentParser.registerMatcher(
+      intent.name,
+      intent.match,
+      intent.priority || ""
+    );
   };
 
   exports.runIntent = async function(desc) {
@@ -66,8 +70,7 @@ this.intentRunner = (function() {
   };
 
   exports.getIntentSummary = function() {
-    const names = Object.keys(intents);
-    names.sort();
+    const names = intentParser.getNamesByPriority();
     return names.map(name => {
       const intent = Object.assign({}, intents[name]);
       delete intent.run;
@@ -86,7 +89,10 @@ this.intentRunner = (function() {
       });
       if (intent.examples) {
         intent.examples = intent.examples.map(e => {
-          const parsed = intentParser.parse(e);
+          const parsed = intentParser.parse(e, true) || {
+            name: "NO MATCH",
+            slots: {},
+          };
           return {
             parsedIntent: parsed.name,
             text: e,

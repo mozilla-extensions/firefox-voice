@@ -23,6 +23,7 @@ this.intents.navigation = (function() {
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
+    priority: "low",
     async run(desc) {
       const cardData = await searching.ddgEntitySearch(desc.slots.query);
       if (!cardData) {
@@ -47,6 +48,7 @@ this.intents.navigation = (function() {
     (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
     `,
+    examples: ["search mail for apple orchards"],
     async run(desc) {
       const myurl = await searching.ddgBangSearchUrl(
         desc.slots.query,
