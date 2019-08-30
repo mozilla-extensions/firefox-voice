@@ -2,7 +2,7 @@
 this.intentParser = (function() {
   const exports = {};
 
-  const DEFAULT_INTENT = "search";
+  const DEFAULT_INTENT = "navigation.search";
   const DEFAULT_SLOT = "query";
 
   /*
