@@ -3,7 +3,11 @@
 this.intents.playing = (function() {
   this.intentRunner.registerIntent({
     name: "playing.play",
-    examples: ["play music on youtube"],
+    examples: [
+      "Play Green Day",
+      "Play yesterday's Daily Show",
+      "Play Old Town Road",
+    ],
     match: `
     play [query]
     `,
@@ -36,6 +40,7 @@ this.intents.playing = (function() {
 
   this.intentRunner.registerIntent({
     name: "playing.pause",
+    examples: ["pause"],
     match: `
     pause
     `,

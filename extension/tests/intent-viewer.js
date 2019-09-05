@@ -51,6 +51,11 @@ async function init() {
         </section>
         `;
       });
+      if (examples.length) {
+        examples = examples.join("\n");
+      } else {
+        examples = "<p>No examples</p>";
+      }
     }
     html.push(`<div class="intent">
       <h2>${intent.name}</h2>

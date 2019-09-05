@@ -7,9 +7,10 @@ this.intents.muting = (function() {
 
   this.intentRunner.registerIntent({
     name: "mute.mute",
-    examples: ["mute all tabs"],
+    examples: ["mute"],
     match: `
     (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything |)
+    mute
     quiet
     shut up
     stop

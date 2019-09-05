@@ -3,9 +3,9 @@
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.navigate",
-    examples: ["go to wikipedia"],
+    examples: ["Go to the New York Times", "Show me the 49ers schedule"],
     match: `
-    (bring me | go | navigate) (to | open | find | show me) [query]
+    (bring me | go | navigate | show me) (to | open | find |) [query]
     `,
     async run(desc) {
       const url = searching.googleSearchUrl(desc.slots.query, true);
@@ -19,7 +19,7 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.search",
-    examples: ["search for armadillo"],
+    examples: ["Search for hiking in Denver", "Look up recipes for fish tacos"],
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
@@ -45,10 +45,14 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
     match: `
-    (do a |) (search | query | look up | lookup | look on | look for) [service:serviceName] (for | for the |) [query]
+    (do a |) (search | query | look up | lookup | look on | look for) (my |) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
     `,
-    examples: ["search mail for apple orchards"],
+    examples: [
+      "Search my Gmail for tickets to Hamilton",
+      "Look up The Book Thief on GoodReads",
+      "Search CSS grid on MDN",
+    ],
     async run(desc) {
       const myurl = await searching.ddgBangSearchUrl(
         desc.slots.query,
