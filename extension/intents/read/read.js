@@ -24,9 +24,9 @@ this.intents.read = (function() {
 
   this.intentRunner.registerIntent({
     name: "read.read",
-    examples: ["read this tab"],
+    examples: ["Read this page"],
     match: `
-    read (this |) (tab |)
+    read (this |) (tab | page |)
     `,
     async run(desc) {
       // FIXME: this can fail, we should guard against that and show error:
