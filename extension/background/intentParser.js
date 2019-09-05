@@ -195,6 +195,8 @@ this.intentParser = (function() {
   exports.parse = function parse(text, disableFallback = false) {
     text = text.trim();
     text = text.replace(/\s\s+/g, " ");
+    text = text.toLowerCase();
+    text = text.replace(/[^a-z0-9 ']/i, "");
     for (const name of INTENT_NAMES) {
       const matcher = INTENTS[name].matcher;
       const match = matcher.match(text);
