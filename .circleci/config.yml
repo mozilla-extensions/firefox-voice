@@ -70,9 +70,12 @@ jobs:
       - run:
           name: Build XPI
           command: |
-            npm run package
+            export VERSION="$(node bin/calculate-version.js)"
+            export UPDATE_BASE="https://va.allimoz.org/releases/dev"
             mkdir -p artifacts/dev/
-            mv addon.xpi artifacts/dev/
+            npm run package
+            mv addon.xpi artifacts/dev/firefox-voice.xpi
+            node bin/generate-update-json.js > artifacts/dev/updates.json
       - store_artifacts:
           path: artifacts/
   deploy_stage:
@@ -85,9 +88,12 @@ jobs:
       - run:
           name: Deploy to Stage
           command: |
-            npm run package
+            export VERSION="$(node bin/calculate-version.js)"
+            export UPDATE_BASE="https://va.allimoz.org/releases/stage"
             mkdir -p artifacts/stage/
-            mv addon.xpi artifacts/stage/
+            npm run package
+            mv addon.xpi artifacts/stage/firefox-voice.xpi
+            node bin/generate-update-json.js > artifacts/stage/updates.json
       - store_artifacts:
         path: artifacts/
 workflows:

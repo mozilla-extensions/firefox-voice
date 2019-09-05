@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Firefox Voice Beta",
-  "version": <%= package_json.version %>,
+  "version": <%= env.VERSION || package_json.version %>,
   "description": "Voice control the web",
   "developer": {
     "name": "Emerging Technologies Advanced Dev Team",
@@ -13,6 +13,9 @@
   },
   "applications": {
     "gecko": {
+      <% if env.UPDATE_URL { %>
+      "update_url": <%= env.UPDATE_BASE + "/updates.json" %>,
+      <% } %>
       "id": "firefox-voice@mozilla.org"
     }
   },
@@ -21,6 +24,7 @@
       "util.js",
       "log.js",
       "js/vendor/fuse.js",
+      "background/telemetry.js",
       "background/main.js",
       "background/intentParser.js",
       "background/intentRunner.js",
