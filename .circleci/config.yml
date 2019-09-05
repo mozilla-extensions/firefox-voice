@@ -71,9 +71,10 @@ jobs:
           name: Build XPI
           command: |
             npm run package
-            # FIXME: upload xpi
+            mkdir -p artifacts/dev/
+            mv addon.xpi artifacts/dev/
       - store_artifacts:
-          path: ./addon.xpi
+          path: artifacts/
   deploy_stage:
     docker:
       - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
@@ -85,7 +86,10 @@ jobs:
           name: Deploy to Stage
           command: |
             npm run package
-            # FIXME: sign and upload
+            mkdir -p artifacts/stage/
+            mv addon.xpi artifacts/stage/
+      - store_artifacts:
+        path: artifacts/
 workflows:
   version: 2
   build_test_deploy:
