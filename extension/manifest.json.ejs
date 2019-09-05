@@ -13,8 +13,8 @@
   },
   "applications": {
     "gecko": {
-      <% if env.UPDATE_URL { %>
-      "update_url": <%= env.UPDATE_BASE + "/updates.json" %>,
+      <% if (env.UPDATE_URL) { %>
+      "update_url": "<%- env.UPDATE_BASE %>/updates.json",
       <% } %>
       "id": "firefox-voice@mozilla.org"
     }
