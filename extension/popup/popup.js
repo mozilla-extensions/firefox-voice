@@ -117,7 +117,7 @@ this.popup = (function() {
   async function updateExamples() {
     const examples = await browser.runtime.sendMessage({
       type: "getExamples",
-      number: 2,
+      number: 3,
     });
     ui.showExamples(examples);
   }
