@@ -19,6 +19,18 @@ This will launch a new Firefox browser with the extension installed. You should 
 
 By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
 
+## Using in-development versions
+
+It's possible to install and use in-development versions of the extension. Every commit to `master` is built into the dev build, and when we prepare for a release and merge to `stage` is used to create the stage build.
+
+To install these you must make a change in `about:config`, adding the new setting `xpinstall.signatures.dev-root` (create a boolean, setting it to true).
+
+- [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi)
+- [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi)
+- [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
+
+Note that the last part of the version number for these releases is roughly a date.
+
 ### Viewing Intent Information
 
 There is an index of intents (commands) that is viewable if you open the panel, click on the gear/settings, and follow the "Intent Viewer" link.
