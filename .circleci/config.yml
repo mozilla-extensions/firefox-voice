@@ -10,6 +10,9 @@ jobs:
           keys:
             - node-modules-{{ checksum "package.json" }}
       - run:
+          name: Install packages
+          command: sudo apt-get install -y zip unzip
+      - run:
           name: Install Node Modules
           command: npm install
       - run:
