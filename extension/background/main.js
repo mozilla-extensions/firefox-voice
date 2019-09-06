@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents */
+/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry */
 
 this.main = (function() {
   const exports = {};
@@ -17,6 +17,12 @@ this.main = (function() {
       return intents.muting.temporaryMute();
     } else if (message.type === "microphoneStopped") {
       return intents.muting.temporaryUnmute();
+    } else if (message.type === "addTelemetry") {
+      return telemetry.add(message.properties);
+    } else if (message.type === "sendTelemetry") {
+      return telemetry.send();
+    } else if (message.type === "addFeedback") {
+      return telemetry.addFeedback(message.properties);
     }
     log.error(
       `Received message with unexpected type (${message.type}): ${message}`
@@ -32,8 +38,14 @@ this.main = (function() {
     return inDevelopment;
   };
 
+  let extensionTemporaryInstall;
+  exports.extensionTemporaryInstall = function() {
+    return extensionTemporaryInstall;
+  };
+
   browser.runtime.onInstalled.addListener(details => {
     const manifest = browser.runtime.getManifest();
+    extensionTemporaryInstall = !!details.temporary;
     inDevelopment = details.temporary || manifest.settings.inDevelopment;
   });
 
