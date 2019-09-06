@@ -1,15 +1,23 @@
 this.telemetry = (function() {
   const exports = {};
 
-  let ping = {};
+  const pingTemplate = {};
+
+  let ping;
+
+  function resetPing() {
+    ping = Object.assign({}, pingTemplate);
+  }
 
   exports.add = function(properties) {
     Object.assign(ping, properties);
   };
 
   exports.sendPing = function() {
-    ping = {};
+    resetPing();
   };
+
+  resetPing();
 
   return exports;
 })();
