@@ -38,7 +38,8 @@ for item in artifacts:
 update_public_log() {
     channel="$1"
     version="$2"
-    message="Updated channel $channel version $version at $(date --utc)"
+    git_commit="$3"
+    message="Updated $channel to $version at $(date --utc) see https://github.com/mozilla/firefox-voice/commit/$git_commit"
     echo "$message" >> public-update-log.txt
     sudo cp public-update-log.txt $RELEASES/public-update-log.txt
 }
@@ -74,10 +75,11 @@ for channel in dev stage prod ; do
             "$autograph_url"
 
     version="$(unzip -p $new_xpi manifest.json | python -c 'import sys, re; print(re.search("\"version\":\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
+    git_commit="$(unzip -p $new_xpi manifest.json | python -c 'import sys, re; print(re.search("\"gitCommit\":\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
 	sudo cp $signed_xpi $RELEASES/$channel/firefox-voice.xpi
 	sudo cp tmp-xpi/$channel/updates.json $RELEASES/$channel/updates.json
 	cp $new_xpi $old_xpi
 	echo "Updated channel $channel"
-	update_public_log "$channel" "$version"
+	update_public_log "$channel" "$version" "$git_commit"
     fi
 done
