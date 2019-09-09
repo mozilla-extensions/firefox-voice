@@ -37,10 +37,13 @@ for item in artifacts:
 
 update_public_log() {
     channel="$1"
-    message="Updated channel $channel at $(date --utc)"
+    version="$2"
+    message="Updated channel $channel version $version at $(date --utc)"
     echo "$message" >> public-update-log.txt
     sudo cp public-update-log.txt $RELEASES/public-update-log.txt
 }
+
+version=unknown
 
 for channel in dev stage prod ; do
     new_xpi="tmp-xpi/$channel/firefox-voice.xpi"
@@ -70,10 +73,11 @@ for channel in dev stage prod ; do
             -H "\"Authorization: $autograph_key\"" \
             "$autograph_url"
 
+    version="$(unzip -p $new_xpi manifest.json | python -c 'import sys, re; print(re.search("\"version\":\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
 	sudo cp $signed_xpi $RELEASES/$channel/firefox-voice.xpi
 	sudo cp tmp-xpi/$channel/updates.json $RELEASES/$channel/updates.json
 	cp $new_xpi $old_xpi
 	echo "Updated channel $channel"
-	update_public_log "$channel"
+	update_public_log "$channel" "$version"
     fi
 done
