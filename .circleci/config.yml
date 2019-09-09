@@ -74,7 +74,7 @@ jobs:
           name: Build XPI
           command: |
             export VERSION="$(node bin/calculate-version.js)"
-            export UPDATE_BASE="https://va.allimoz.org/releases/dev"
+            export UPDATE_BASE="https://va.allizom.org/releases/dev"
             mkdir -p artifacts/dev/
             npm run package
             mv addon.xpi artifacts/dev/firefox-voice.xpi
@@ -92,7 +92,7 @@ jobs:
           name: Deploy to Stage
           command: |
             export VERSION="$(node bin/calculate-version.js)"
-            export UPDATE_BASE="https://va.allimoz.org/releases/stage"
+            export UPDATE_BASE="https://va.allizom.org/releases/stage"
             mkdir -p artifacts/stage/
             npm run package
             mv addon.xpi artifacts/stage/firefox-voice.xpi
