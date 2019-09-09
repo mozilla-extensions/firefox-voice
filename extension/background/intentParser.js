@@ -202,6 +202,7 @@ this.intentParser = (function() {
       const match = matcher.match(text);
       if (match) {
         match.name = name;
+        match.fallback = false;
         return match;
       }
     }
@@ -213,6 +214,7 @@ this.intentParser = (function() {
       name: DEFAULT_INTENT,
       slots: { [DEFAULT_SLOT]: text },
       utterance: text,
+      fallback: true,
     };
   };
 
