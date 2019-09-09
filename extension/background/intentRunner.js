@@ -1,4 +1,4 @@
-/* globals log, intentParser */
+/* globals log, intentParser, telemetry */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -25,9 +25,23 @@ this.intentRunner = (function() {
     }
 
     failed(message) {
+      telemetry.add({ intentSuccess: false });
+      telemetry.send({});
       return browser.runtime.sendMessage({
         type: "displayFailure",
         message,
+      });
+    }
+
+    initTelemetry() {
+      telemetry.add({
+        inputLength: this.utterance.length,
+        intent: this.name,
+        intentCategory: this.name.split(".")[0],
+        intentFallback: this.fallback,
+        intentParseSuccess: !this.fallback,
+        intentSuccess: true,
+        utteranceParsed: { slots: this.slots },
       });
     }
   }
@@ -53,6 +67,7 @@ this.intentRunner = (function() {
     }
     const intent = intents[desc.name];
     const context = new IntentContext(desc);
+    context.initTelemetry();
     try {
       log.info(
         `Running intent ${desc.name}`,
@@ -64,6 +79,9 @@ this.intentRunner = (function() {
       if (context.closePopupOnFinish) {
         context.done();
       }
+      // FIXME: this isn't necessarily the right time to send the ping, if the intent
+      // isn't actually complete:
+      telemetry.send();
     } catch (e) {
       context.failed(`Internal error: ${e}`);
     }

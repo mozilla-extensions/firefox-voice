@@ -75,6 +75,7 @@ jobs:
           command: |
             export VERSION="$(node bin/calculate-version.js)"
             export UPDATE_BASE="https://va.allizom.org/releases/dev"
+            export INSTALL_CHANNEL=dev
             mkdir -p artifacts/dev/
             npm run package
             mv addon.xpi artifacts/dev/firefox-voice.xpi
@@ -93,6 +94,7 @@ jobs:
           command: |
             export VERSION="$(node bin/calculate-version.js)"
             export UPDATE_BASE="https://va.allizom.org/releases/stage"
+            export INSTALL_CHANNEL=stage
             mkdir -p artifacts/stage/
             npm run package
             mv addon.xpi artifacts/stage/firefox-voice.xpi
