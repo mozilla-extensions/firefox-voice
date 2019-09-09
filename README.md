@@ -29,7 +29,9 @@ To install these you must make a change in `about:config`, adding the new settin
 - [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi)
 - [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
 
-Note that the last part of the version number for these releases is roughly a date.
+The version numbers are increased for each release and each commit, but are *not* sequential.
+
+Note that the `xpinstall.signatures.dev-root` setting will disable any other add-ons you use (because they are not signed with the *dev* key). Setting `xpinstall.signatures.required` to false will let the other add-ons work (but be careful about what you install!)
 
 ### Viewing Intent Information
 
