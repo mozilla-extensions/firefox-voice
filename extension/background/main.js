@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry */
+/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util */
 
 this.main = (function() {
   const exports = {};
@@ -23,6 +23,20 @@ this.main = (function() {
       return telemetry.send();
     } else if (message.type === "addFeedback") {
       return telemetry.addFeedback(message.properties);
+    } else if (message.type === "openRecordingTab") {
+      return openRecordingTab();
+    } else if (message.type === "onVoiceShimForward") {
+      message.type = "onVoiceShim";
+      return browser.runtime.sendMessage(message);
+    } else if (message.type === "voiceShimForward") {
+      message.type = "voiceShim";
+      if (!recorderTabId) {
+        throw new Error("Recorder tab has not been created");
+      }
+      return browser.tabs.sendMessage(recorderTabId, message);
+    } else if (message.type === "makeRecorderActive") {
+      browser.tabs.update(recorderTabId, { active: true });
+      return null;
     }
     log.error(
       `Received message with unexpected type (${message.type}): ${message}`
@@ -48,6 +62,55 @@ this.main = (function() {
     extensionTemporaryInstall = !!details.temporary;
     inDevelopment = details.temporary || manifest.settings.inDevelopment;
   });
+
+  let recorderTabId;
+  const RECORDER_URL = browser.runtime.getURL("/recorder/recorder.html");
+
+  async function openRecordingTab() {
+    if (recorderTabId) {
+      try {
+        await browser.tabs.sendMessage(recorderTabId, {
+          type: "voiceShim",
+          method: "ping",
+        });
+        return;
+      } catch (e) {
+        log.info("Error ending message to recorder tab:", String(e));
+        recorderTabId = null;
+      }
+    }
+    let tab;
+    const activeTabId = (await browser.tabs.query({ active: true }))[0].id;
+    const existing = await browser.tabs.query({ url: RECORDER_URL });
+    if (existing.length) {
+      if (existing.length > 1) {
+        browser.tabs.remove(existing.slice(1).map(e => e.id));
+      }
+      tab = existing[0];
+      await browser.tabs.update(tab.id, {
+        url: RECORDER_URL,
+        active: true,
+      });
+    } else {
+      tab = await browser.tabs.create({
+        url: RECORDER_URL,
+        pinned: true,
+      });
+    }
+    // eslint-disable-next-line require-atomic-updates
+    recorderTabId = tab.id;
+    for (let i = 0; i < 5; i++) {
+      try {
+        await browser.tabs.sendMessage(recorderTabId, {
+          type: "voiceShim",
+          method: "ping",
+        });
+        break;
+      } catch (e) {}
+      await util.sleep(100);
+    }
+    await browser.tabs.update(activeTabId, { active: true });
+  }
 
   return exports;
 })();

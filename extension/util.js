@@ -7,6 +7,17 @@ this.util = (function() {
     });
   };
 
+  /** If the promise takes longer than the given number of milliseconds, throw a promise error
+   * (error.name === "TimeoutError") */
+  exports.promiseTimeout = function(promise, time) {
+    const sleeper = exports.sleep(time).then(() => {
+      const exc = new Error("Timed Out");
+      exc.name = "TimeoutError";
+      throw exc;
+    });
+    return Promise.race([promise, sleeper]);
+  };
+
   /** Creates a Promise with .resolve and .reject attributes, so you can pre-create it and then
    * resolve it somewhere else (like after initialization has run) */
   exports.makeNakedPromise = function() {

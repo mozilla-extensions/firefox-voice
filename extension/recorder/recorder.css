@@ -1,0 +1,17 @@
+#acquiring,
+#recording,
+#paused {
+  display: none;
+}
+
+.acquiring #acquiring {
+  display: block;
+}
+
+.recording #recording {
+  display: block;
+}
+
+.paused #paused {
+  display: block;
+}
