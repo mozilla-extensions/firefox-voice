@@ -157,7 +157,10 @@ this.vad = (function() {
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
       if (why === "GoCloud finishedvoice") {
-        ui.setState("processing"); // TODO: send a message through voice.js to popup.js to ui.js to set the processing state
+        if (typeof ui !== "undefined") {
+          // FIXME: needs updating for shim
+          ui.setState("processing"); // TODO: send a message through voice.js to popup.js to ui.js to set the processing state
+        }
       }
     }
   };

@@ -1,4 +1,4 @@
-/* globals util, voice, vad, ui, log */
+/* globals util, voice, vad, ui, log, voiceShim */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 2000;
@@ -6,7 +6,21 @@ this.popup = (function() {
   let stream;
   let isWaitingForPermission = null;
 
+  const { backgroundTabRecorder } = browser.runtime.getManifest().settings;
+
   async function init() {
+    if (!backgroundTabRecorder) {
+      await setupStream();
+    } else {
+      await voiceShim.openRecordingTab();
+    }
+    startRecorder();
+    // Listen for messages from the background scripts
+    browser.runtime.onMessage.addListener(handleMessage);
+    updateExamples();
+  }
+
+  async function setupStream() {
     window.addEventListener("unload", () => {
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       if (
@@ -33,11 +47,6 @@ this.popup = (function() {
     console.info("starting...");
     await vad.stm_vad_ready;
     console.info("stm_vad is ready");
-    startRecorder(stream);
-    console.info("finished startRecorder...");
-    // Listen for messages from the background scripts
-    browser.runtime.onMessage.addListener(handleMessage);
-    updateExamples();
   }
 
   async function requestMicrophone() {
@@ -61,13 +70,17 @@ this.popup = (function() {
   }
 
   function startRecorder(stream) {
-    const recorder = new voice.Recorder(stream);
+    let recorder;
+    if (backgroundTabRecorder) {
+      recorder = new voiceShim.Recorder();
+    } else {
+      recorder = new voice.Recorder(stream);
+    }
     const intervalId = setInterval(() => {
       const volumeLevel = recorder.getVolumeLevel();
       ui.setAnimationForVolume(volumeLevel);
     }, 500);
     recorder.onBeginRecording = () => {
-      console.info("started recording");
       browser.runtime.sendMessage({ type: "microphoneStarted" });
       ui.setState("listening");
       ui.onStartTextInput = () => {
@@ -84,7 +97,6 @@ this.popup = (function() {
     };
     recorder.onEnd = json => {
       browser.runtime.sendMessage({ type: "microphoneStopped" });
-      console.info("Got a response:", json && json.data);
       clearInterval(intervalId);
       ui.setState("success");
       if (json === null) {
@@ -106,7 +118,6 @@ this.popup = (function() {
   }
 
   function handleMessage(message) {
-    log.debug(JSON.stringify(message));
     if (message.type === "closePopup") {
       ui.closePopup();
     } else if (message.type === "showCard") {

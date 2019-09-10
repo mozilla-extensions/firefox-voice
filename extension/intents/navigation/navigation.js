@@ -31,7 +31,6 @@ this.intents.navigation = (function() {
         const url = searching.googleSearchUrl(desc.slots.query, false);
         await browser.tabs.create({ url });
       } else {
-        console.log("sending data to content script");
         desc.keepPopup();
         browser.runtime.sendMessage({
           sender: "navigation",
