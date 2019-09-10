@@ -50,13 +50,8 @@ for channel in dev stage prod ; do
     new_xpi="tmp-xpi/$channel/firefox-voice.xpi"
     signed_xpi="${new_xpi}.signed"
     old_xpi="${new_xpi}.old"
-    if [[ "$channel" = prod ]] ; then
-        autograph_url="$AUTOGRAPH_PROD_URL"
-        autograph_key="$AUTOGRAPH_PROD_KEY"
-    else
-        autograph_url="$AUTOGRAPH_STAGE_URL"
-        autograph_key="$AUTOGRAPH_STAGE_KEY"
-    fi
+    autograph_url="$AUTOGRAPH_PROD_URL"
+    autograph_key="$AUTOGRAPH_PROD_KEY"
     if [[ -e $new_xpi ]] ; then
         if [[ -e $old_xpi ]] ; then
             # Now we check if it's a new file
