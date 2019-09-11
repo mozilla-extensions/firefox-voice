@@ -100,6 +100,10 @@ this.popup = (function() {
         // It was cancelled
         return;
       }
+      browser.runtime.sendMessage({
+        type: "addTelemetry",
+        properties: { transcriptionConfidence: json.data[0].confidence },
+      });
       ui.setTranscript(json.data[0].text);
       executedIntent = true;
       browser.runtime.sendMessage({
