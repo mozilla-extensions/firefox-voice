@@ -5,6 +5,7 @@ this.popup = (function() {
   const FAST_PERMISSION_CLOSE = 500;
   let stream;
   let isWaitingForPermission = null;
+  let executedIntent = false;
 
   const { backgroundTabRecorder } = browser.runtime.getManifest().settings;
 
@@ -21,15 +22,6 @@ this.popup = (function() {
   }
 
   async function setupStream() {
-    window.addEventListener("unload", () => {
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
-      if (
-        isWaitingForPermission &&
-        Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
-      ) {
-        startOnboarding();
-      }
-    });
     try {
       isWaitingForPermission = Date.now();
       await startMicrophone();
@@ -89,6 +81,7 @@ this.popup = (function() {
       };
       ui.onTextInput = text => {
         ui.setState("success");
+        executedIntent = true;
         browser.runtime.sendMessage({
           type: "runIntent",
           text,
@@ -104,6 +97,7 @@ this.popup = (function() {
         return;
       }
       ui.setTranscript(json.data[0].text);
+      executedIntent = true;
       browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
@@ -132,6 +126,21 @@ this.popup = (function() {
     });
     ui.showExamples(examples);
   }
+
+  window.addEventListener("unload", () => {
+    browser.runtime.sendMessage({ type: "microphoneStopped" });
+    console.log("stopped", executedIntent);
+    if (!executedIntent) {
+      browser.runtime.sendMessage({ type: "cancelledIntent" });
+    }
+    if (
+      !backgroundTabRecorder &&
+      isWaitingForPermission &&
+      Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
+    ) {
+      startOnboarding();
+    }
+  });
 
   init();
 })();
