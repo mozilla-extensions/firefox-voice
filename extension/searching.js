@@ -1,6 +1,22 @@
 this.searching = (function() {
   const exports = {};
 
+  const SERVICE_BANG_MAP = {
+    "google slides": "gslides",
+    "google docs": "gd",
+    "google scholar": "googlescholar",
+    calendar: "gcal",
+    "google calendar": "gcal",
+    "google drive": "drive",
+    spotify: "spotify",
+    goodreads: "goodreads",
+    mdn: "mdn",
+    coursera: "coursera",
+    gmail: "gmail",
+    mail: "gmail",
+    "google mail": "gmail",
+  };
+
   exports.googleSearchUrl = function(query, feelingLucky = false) {
     const searchUrl = new URL("https://www.google.com/search");
     searchUrl.searchParams.set("q", query);
@@ -36,23 +52,12 @@ this.searching = (function() {
     return cardData;
   };
 
+  exports.ddgBangServiceName = function(service) {
+    return SERVICE_BANG_MAP[service.toLowerCase()];
+  };
+
   exports.ddgBangSearchUrl = async function(query, service) {
-    const SERVICE_BANG_MAP = {
-      "google slides": "gslides",
-      "google docs": "gd",
-      "google scholar": "googlescholar",
-      calendar: "gcal",
-      "google calendar": "gcal",
-      "google drive": "drive",
-      spotify: "spotify",
-      goodreads: "goodreads",
-      mdn: "mdn",
-      coursera: "coursera",
-      gmail: "gmail",
-      mail: "gmail",
-      "google mail": "gmail",
-    };
-    const bang = SERVICE_BANG_MAP[service.toLowerCase()];
+    const bang = exports.ddgBangServiceName(service);
     const response = await fetch(
       `https://api.duckduckgo.com/?q=!${encodeURIComponent(
         bang
