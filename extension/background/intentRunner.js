@@ -33,6 +33,15 @@ this.intentRunner = (function() {
       });
     }
 
+    showCard(cardData) {
+      this.keepPopup();
+      telemetry.add({ hasCard: true });
+      browser.runtime.sendMessage({
+        type: "showCard",
+        cardData,
+      });
+    }
+
     initTelemetry() {
       telemetry.add({
         inputLength: this.utterance.length,

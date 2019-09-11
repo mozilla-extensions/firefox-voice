@@ -31,12 +31,7 @@ this.intents.navigation = (function() {
         const url = searching.googleSearchUrl(desc.slots.query, false);
         await browser.tabs.create({ url });
       } else {
-        desc.keepPopup();
-        browser.runtime.sendMessage({
-          sender: "navigation",
-          type: "showCard",
-          cardData,
-        });
+        desc.showCard(cardData);
       }
     },
   });
