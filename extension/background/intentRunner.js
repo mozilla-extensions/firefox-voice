@@ -42,6 +42,15 @@ this.intentRunner = (function() {
       });
     }
 
+    /** This is some ad hoc information this specific intent wants to add */
+    addExtraTelemetryData(intentExtraData) {
+      telemetry.add({ intentExtraData });
+    }
+
+    addTelemetryServiceName(intentServiceName) {
+      telemetry.add({ intentServiceName });
+    }
+
     initTelemetry() {
       telemetry.add({
         inputLength: this.utterance.length,
