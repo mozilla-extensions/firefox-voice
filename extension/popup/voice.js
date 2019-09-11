@@ -130,15 +130,32 @@ this.voice = (function() {
       const blob = new Blob(this.chunks, {
         type: "audio/ogg; codecs=opus",
       });
-      const response = await fetch(STT_SERVER_URL, {
-        method: "POST",
-        body: blob,
-        headers: {
-          "Accept-Language-STT": LANGUAGE,
-          "Product-Tag": "vf",
-        },
-      });
+      let response;
+      const startTime = Date.now();
+      try {
+        response = await fetch(STT_SERVER_URL, {
+          method: "POST",
+          body: blob,
+          headers: {
+            "Accept-Language-STT": LANGUAGE,
+            "Product-Tag": "vf",
+          },
+        });
+      } catch (e) {
+        browser.runtime.sendMessage({
+          type: "addTelemetry",
+          properties: { serverErrorSpeech: `Connection error: ${e}` },
+        });
+        this.onError(e);
+        throw e;
+      }
       if (!response.ok) {
+        browser.runtime.sendMessage({
+          type: "addTelemetry",
+          properties: {
+            serverErrorSpeech: `Response error: ${response.status} ${response.statusText}`,
+          },
+        });
         const error = new Error(
           `Failed response from server: ${response.status}`
         );
@@ -146,7 +163,14 @@ this.voice = (function() {
         this.onError(error);
         return;
       }
-      this.onEnd(await response.json());
+      const json = await response.json();
+      browser.runtime.sendMessage({
+        type: "addTelemetry",
+        properties: {
+          serverTimeSpeech: Date.now() - startTime,
+        },
+      });
+      this.onEnd(json);
     }
   };
 
