@@ -23,15 +23,11 @@ By default this will use Firefox Nightly, but you can override this with the env
 
 It's possible to install and use in-development versions of the extension. Every commit to `master` is built into the dev build, and when we prepare for a release and merge to `stage` is used to create the stage build.
 
-To install these you must make a change in `about:config`, adding the new setting `xpinstall.signatures.dev-root` (create a boolean, setting it to true).
-
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi)
 - [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi)
 - [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
 
-The version numbers are increased for each release and each commit, but are *not* sequential.
-
-Note that the `xpinstall.signatures.dev-root` setting will disable any other add-ons you use (because they are not signed with the *dev* key). Setting `xpinstall.signatures.required` to false will let the other add-ons work (but be careful about what you install!)
+The version numbers are increased for each release and each commit, but are _not_ sequential.
 
 ### Viewing Intent Information
 
