@@ -63,6 +63,9 @@ this.main = (function() {
     const manifest = browser.runtime.getManifest();
     extensionTemporaryInstall = !!details.temporary;
     inDevelopment = details.temporary || manifest.settings.inDevelopment;
+    if (details.reason === "install") {
+      launchOnboarding();
+    }
   });
 
   let recorderTabId;
@@ -112,6 +115,11 @@ this.main = (function() {
       await util.sleep(100);
     }
     await browser.tabs.update(activeTabId, { active: true });
+  }
+
+  async function launchOnboarding() {
+    const url = browser.runtime.getURL("onboarding/onboard.html");
+    await browser.tabs.create({ url });
   }
 
   return exports;
