@@ -83,6 +83,10 @@ this.popup = (function() {
         ui.setState("success");
         executedIntent = true;
         browser.runtime.sendMessage({
+          type: "addTelemetry",
+          properties: { inputTyped: true },
+        });
+        browser.runtime.sendMessage({
           type: "runIntent",
           text,
         });
