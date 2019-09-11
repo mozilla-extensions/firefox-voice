@@ -17,8 +17,7 @@ this.telemetry = (function() {
   function resetPing() {
     ping = Object.assign({}, pingTemplate);
     ping.extensionTemporaryInstall = main.extensionTemporaryInstall();
-    lastIntentId = util.randomString(10);
-    ping.intentId = lastIntentId;
+    ping.intentId = util.randomString(10);
     if (ping.extensionTemporaryInstall) {
       ping.extensionInstallationChannel = "web-ext";
     }
@@ -50,8 +49,16 @@ this.telemetry = (function() {
     }
   };
 
+  exports.cancelledIntent = function() {
+    exports.add({ inputCancelled: true });
+    exports.send();
+  };
+
   // See https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/collection/webextension-api.html
   exports.send = function() {
+    if (!ping.inputCancelled) {
+      lastIntentId = ping.intentId;
+    }
     browser.telemetry.submitPing("voice", ping, {
       addClientId: true,
       addEnvironment: true,

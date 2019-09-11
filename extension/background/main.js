@@ -17,6 +17,8 @@ this.main = (function() {
       return intents.muting.temporaryMute();
     } else if (message.type === "microphoneStopped") {
       return intents.muting.temporaryUnmute();
+    } else if (message.type === "cancelledIntent") {
+      return telemetry.cancelledIntent();
     } else if (message.type === "addTelemetry") {
       return telemetry.add(message.properties);
     } else if (message.type === "sendTelemetry") {
