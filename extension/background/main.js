@@ -73,6 +73,9 @@ this.main = (function() {
     if (details.reason === "install") {
       launchOnboarding();
     }
+    if (!details.temporary) {
+      telemetry.initFirstInstallationVersion();
+    }
   });
 
   let recorderTabId;

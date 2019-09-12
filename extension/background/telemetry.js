@@ -20,6 +20,8 @@ this.telemetry = (function() {
     ping.intentId = util.randomString(10);
     if (ping.extensionTemporaryInstall) {
       ping.extensionInstallationChannel = "web-ext";
+    } else {
+      ping.extensionInstallationChannel = firstInstallationVersion;
     }
   }
 
@@ -73,6 +75,18 @@ this.telemetry = (function() {
       { feedback, rating }
     );
     browser.telemetry.sendPing("voice-feedback", ping, {});
+  };
+
+  let firstInstallationVersion = "unknown";
+
+  exports.initFirstInstallationVersion = async function() {
+    const result = await browser.storage.local.get("firstInstallationVersion");
+    if (result.firstInstallationVersion) {
+      firstInstallationVersion = result.firstInstallationVersion;
+    } else {
+      firstInstallationVersion = browser.runtime.getManifest().version;
+      await browser.storage.local.set({ firstInstallationVersion });
+    }
   };
 
   return exports;
