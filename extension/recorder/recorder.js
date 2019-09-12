@@ -6,12 +6,16 @@ this.recorder = (function() {
   const PERMISSION_TIMEOUT = 1000;
   const streamReady = util.makeNakedPromise();
 
-  function setState(state) {
+  function setState(state, properties = {}) {
     document.body.className = state;
+    for (const name in properties) {
+      document.querySelector(name).textContent = properties[name];
+    }
   }
 
   let stream;
   let activeRecorder;
+  let oldActiveRecorder;
 
   async function init() {
     const timeoutId = setTimeout(() => {
@@ -22,8 +26,9 @@ this.recorder = (function() {
       streamReady.resolve();
     } catch (e) {
       log.warn("Failed to acquire stream:", String(e));
+      setState("error", { "#errorMessage": `Error getting stream: ${e}` });
       streamReady.reject(e);
-      throw e;
+      return;
     }
     clearTimeout(timeoutId);
     setState("recording");
@@ -48,33 +53,58 @@ this.recorder = (function() {
   }
 
   class ShimRecorder extends voice.Recorder {
+    constructor(stream) {
+      super(stream);
+      this._destroyed = false;
+    }
+
     stop() {
-      pause();
-      this.mediaStopped();
+      if (this._destroyed) {
+        log.error("stop called after ShimRecorder destroyed");
+      } else {
+        pause();
+        // this.mediaStopped();
+      }
     }
 
     onBeginRecording() {
-      browser.runtime.sendMessage({
-        type: "onVoiceShimForward",
-        method: "onBeginRecording",
-      });
+      if (this._destroyed) {
+        log.error("onBeginRecording called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onBeginRecording",
+        });
+      }
     }
 
     onEnd(json) {
-      browser.runtime.sendMessage({
-        type: "onVoiceShimForward",
-        method: "onEnd",
-        args: [json],
-      });
-      pause();
+      if (this._destroyed) {
+        log.error("onEnd called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onEnd",
+          args: [json],
+        });
+        pause();
+      }
     }
 
     onError(exception) {
-      browser.runtime.sendMessage({
-        type: "onVoiceShimForward",
-        method: "onError",
-        args: [String(exception)],
-      });
+      if (this._destroyed) {
+        log.error("onError called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onError",
+          args: [String(exception)],
+        });
+      }
+    }
+
+    destroy() {
+      this._destroyed = true;
     }
   }
 
@@ -86,6 +116,13 @@ this.recorder = (function() {
       await streamReady;
       return true;
     } else if (message.method === "constructor") {
+      if (oldActiveRecorder) {
+        // This forcefully makes sure that recorders can't overlap, even though
+        // the activeRecorder might take some time to fully complete (send data
+        // to server, etc):
+        oldActiveRecorder.destroy();
+        oldActiveRecorder = null;
+      }
       start();
       if (activeRecorder) {
         throw new Error("Attempted to open recorder.ShimRecorder twice");
@@ -102,6 +139,7 @@ this.recorder = (function() {
       return activeRecorder.startRecording();
     } else if (message.method === "stop") {
       activeRecorder.stop();
+      oldActiveRecorder = activeRecorder;
       activeRecorder = null;
       return null;
     } else if (message.method === "getVolumeLevel") {

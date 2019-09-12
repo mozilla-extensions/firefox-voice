@@ -4,6 +4,13 @@ this.main = (function() {
   const exports = {};
 
   browser.runtime.onMessage.addListener(async (message, sender) => {
+    const properties = Object.assign({}, message);
+    delete properties.type;
+    let propString = "";
+    if (Object.keys(properties).length) {
+      propString = ` ${JSON.stringify(properties)}`;
+    }
+    log.debug(`Message ${message.type}${propString}`);
     if (message.type === "runIntent") {
       const desc = intentParser.parse(message.text);
       return intentRunner.runIntent(desc);
