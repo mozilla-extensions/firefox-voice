@@ -132,20 +132,27 @@ workflows:
           filters:
             branches:
               only: stage
+            tags:
+              only: /.*/
       - test:
           requires:
             - build
+          filters:
+            tags:
+              only: /.*/
+      - deploy_prod:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /^v.*/
       - deploy_dev:
           requires:
             - test
           filters:
             branches:
               only: master
-      - deploy_prod:
-          requires:
-            - test
-          filters:
-            branches:
-              ignore: /.*/
             tags:
-              only: /^v.*/
+              ignore: /^v.*/
