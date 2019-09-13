@@ -100,7 +100,26 @@ jobs:
             mv addon.xpi artifacts/stage/firefox-voice.xpi
             node bin/generate-update-json.js > artifacts/stage/updates.json
       - store_artifacts:
-        path: artifacts/
+          path: artifacts/
+  deploy_prod:
+    docker:
+      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy to Prod
+          command: |
+            export UPDATE_BASE="https://va.allizom.org/releases/prod"
+            export INSTALL_CHANNEL=prod
+            mkdir -p artifacts/prod/
+            npm run package
+            mv addon.xpi artifacts/prod/firefox-voice.xpi
+            node bin/generate-update-json.js > artifacts/prod/updates.json
+      - store_artifacts:
+          path: artifacts/
+
 workflows:
   version: 2
   build_test_deploy:
@@ -121,3 +140,9 @@ workflows:
           filters:
             branches:
               only: master
+      - deploy_prod:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v/
