@@ -55,7 +55,6 @@ this.intents.navigation = (function() {
       desc.addTelemetryServiceName(
         `ddg:${searching.ddgBangServiceName(desc.slots.service)}`
       );
-      console.log("THE URL THAT I HAVE IS ", myurl);
       await browser.tabs.update({ url: myurl });
       browser.runtime.sendMessage({
         type: "closePopup",
