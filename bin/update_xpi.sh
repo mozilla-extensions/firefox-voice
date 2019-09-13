@@ -6,7 +6,7 @@ set -e
 
 source ./xpi-config.sh
 
-mkdir -p tmp-xpi/dev tmp-xpi/stage
+mkdir -p tmp-xpi/dev tmp-xpi/stage tmp-xpi/prod
 
 echo "Fetching $CIRCLECI_URL"
 curl -s $CIRCLECI_URL | python3 -c '

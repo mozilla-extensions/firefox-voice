@@ -25,6 +25,7 @@ It's possible to install and use in-development versions of the extension. Every
 
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi)
 - [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi)
+- [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi)
 - [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
