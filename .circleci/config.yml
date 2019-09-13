@@ -126,33 +126,24 @@ workflows:
   build_test_deploy:
     jobs:
       - build
-      - deploy_stage:
-          requires:
-            - build
-          filters:
-            branches:
-              only: stage
-            tags:
-              only: /.*/
       - test:
           requires:
             - build
-          filters:
-            tags:
-              only: /.*/
-      - deploy_prod:
-          requires:
-            - deploy_dev
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /^v.*/
       - deploy_dev:
           requires:
             - test
           filters:
             branches:
               only: master
-            tags:
-              ignore: /.*/
+      - deploy_stage:
+          requires:
+            - build
+          filters:
+            branches:
+              only: stage
+      - deploy_prod:
+          requires:
+            - build
+          filters:
+            branches:
+              only: prod
