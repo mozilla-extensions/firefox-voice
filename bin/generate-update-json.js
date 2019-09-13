@@ -7,12 +7,14 @@ if (!version || !update_link) {
 }
 const json = {
   addons: {
-    "firefox-voice@mozilla.org": [
-      {
-        version,
-        update_link,
-      },
-    ],
+    "firefox-voice@mozilla.org": {
+      updates: [
+        {
+          version,
+          update_link,
+        },
+      ],
+    },
   },
 };
 process.stdout.write(JSON.stringify(json, null, "  "));
