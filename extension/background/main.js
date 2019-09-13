@@ -63,6 +63,9 @@ this.main = (function() {
 
   let extensionTemporaryInstall;
   exports.extensionTemporaryInstall = function() {
+    if (extensionTemporaryInstall === undefined) {
+      throw new Error("Temporary installation status not yet established");
+    }
     return extensionTemporaryInstall;
   };
 

@@ -58,6 +58,9 @@ this.telemetry = (function() {
 
   // See https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/collection/webextension-api.html
   exports.send = function() {
+    if (!ping) {
+      throw new Error("Telemetry ping uninitialized");
+    }
     if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }

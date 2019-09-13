@@ -137,7 +137,6 @@ this.popup = (function() {
 
   window.addEventListener("unload", () => {
     browser.runtime.sendMessage({ type: "microphoneStopped" });
-    console.log("stopped", executedIntent);
     if (!executedIntent) {
       browser.runtime.sendMessage({ type: "cancelledIntent" });
     }
