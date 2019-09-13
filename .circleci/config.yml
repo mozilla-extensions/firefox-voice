@@ -111,6 +111,7 @@ jobs:
       - run:
           name: Deploy to Prod
           command: |
+            export VERSION="$(node -e 'process.stdout.write(require("./package.json").version, {encoding: "UTF8"})')"
             export UPDATE_BASE="https://va.allizom.org/releases/prod"
             export INSTALL_CHANNEL=prod
             mkdir -p artifacts/prod/
@@ -145,4 +146,4 @@ workflows:
             - test
           filters:
             tags:
-              only: /^v/
+              only: /^v.*/
