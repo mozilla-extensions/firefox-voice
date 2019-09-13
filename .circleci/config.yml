@@ -142,7 +142,7 @@ workflows:
               only: /.*/
       - deploy_prod:
           requires:
-            - test
+            - deploy_dev
           filters:
             branches:
               only: master
@@ -155,4 +155,4 @@ workflows:
             branches:
               only: master
             tags:
-              ignore: /^v.*/
+              ignore: /.*/
