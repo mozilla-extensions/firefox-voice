@@ -23,16 +23,21 @@ body,
   display: none;
 }
 
-.listening #text-input > :not(span) {
-  display: none;
-}
-
-.processing :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
+.processing
+  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
   display: none;
 }
 
 .processing #transcript {
   display: block;
+}
+
+#text-input {
+  opacity: 0;
+}
+
+.typing #text-input {
+  opacity: 1;
 }
 
 .typing :-moz-any(#text-input, #back-icon) {
@@ -47,7 +52,8 @@ body,
   display: none;
 }
 
-:-moz-any(.success, .error) :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
+:-moz-any(.success, .error)
+  :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
   display: none;
 }
 

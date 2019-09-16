@@ -10,7 +10,7 @@ this.onboarding = (function() {
         "column";
       // Set hotkey suggestion based on navigator
       document.querySelector("#action-key").textContent =
-        navigator.platform === "MacIntel" ? "Option ⌥" : "Alt";
+        navigator.platform === "MacIntel" ? "Command ⌘" : "Ctrl";
       const tracks = stream.getTracks();
       for (const track of tracks) {
         track.stop();
