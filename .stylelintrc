@@ -1,9 +1,5 @@
 {
-  "extends": "stylelint-config-standard",
-  "ignoreFiles": "extension/css/vendor/*.css",
-  "rules": {
-    "font-family-no-missing-generic-family-keyword": null,
-    "no-descending-specificity": null,
-    "declaration-colon-newline-after": null
-  }
+  "extends": ["stylelint-prettier/recommended"],
+  "plugins": ["stylelint-prettier"],
+  "ignoreFiles": "extension/css/vendor/*.css"
 }
