@@ -59,13 +59,13 @@ this.ui = (function() {
       exports.onStartTextInput();
     }
     if (e.keyCode === 13) {
-      const textQuery = document.getElementById("text-input-field").innerText;
+      const textQuery = document.getElementById("text-input-field").value;
       exports.onTextInput(textQuery);
     }
   }
 
   function processTextQuery() {
-    const textQuery = document.getElementById("text-input-field").innerText;
+    const textQuery = document.getElementById("text-input-field").value;
     exports.onTextInput(textQuery);
     return textQuery;
   }
