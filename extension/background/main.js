@@ -7,10 +7,16 @@ this.main = (function() {
     const properties = Object.assign({}, message);
     delete properties.type;
     let propString = "";
+    let senderInfo = "? ->";
     if (Object.keys(properties).length) {
       propString = ` ${JSON.stringify(properties)}`;
     }
-    log.debug(`Message ${message.type}${propString}`);
+    if (!sender.tab) {
+      senderInfo = "popup ->";
+    } else if (sender.tab.id === recorderTabId) {
+      senderInfo = "record->";
+    }
+    log.debug(`${senderInfo} ${message.type}${propString}`);
     if (message.type === "runIntent") {
       const desc = intentParser.parse(message.text);
       return intentRunner.runIntent(desc);
