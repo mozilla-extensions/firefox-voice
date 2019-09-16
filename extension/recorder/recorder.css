@@ -1,6 +1,7 @@
 #acquiring,
 #recording,
-#paused {
+#paused,
+#error {
   display: none;
 }
 
@@ -13,5 +14,9 @@
 }
 
 .paused #paused {
+  display: block;
+}
+
+.error #error {
   display: block;
 }
