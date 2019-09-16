@@ -1,5 +1,3 @@
-# Voice Fill Changelog
-
 ## 0.3.0
 
 - Quick follow-on release
