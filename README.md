@@ -34,8 +34,14 @@ The version numbers are increased for each release and each commit, but are _not
 
 There is an index of intents (commands) that is viewable if you open the panel, click on the gear/settings, and follow the "Intent Viewer" link.
 
-## Contribution
+## Contributing
 
-If you have an idea, the best way to start is to open an issue in this repository.
+See the [guidelines][docs/contributing.md] for contributing to this project.
 
-We do plan to allow extensions to add functionality (like a new voice command).
+This project is governed by a [Code Of Conduct][docs/code_of_conduct.md].
+
+To disclose potential a security vulnerability please see our [security][docs/security.md] documentation.
+
+## [License][license-link]
+
+This module is licensed under the [Mozilla Public License, version 2.0][/license].
