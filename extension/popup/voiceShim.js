@@ -9,6 +9,7 @@ this.voiceShim = (function() {
   exports.Recorder = class Recorder {
     constructor() {
       this._cachedVolumeLevel = 0;
+      this._cancelled = false;
       if (activeRecorder) {
         throw new Error("new voiceShim.Recorder() called twice");
       }
@@ -43,6 +44,7 @@ this.voiceShim = (function() {
     }
 
     cancel() {
+      this._cancelled = true;
       this.stop();
     }
 
@@ -81,6 +83,12 @@ this.voiceShim = (function() {
         return null;
       }
       const args = message.args || [];
+      if (
+        activeRecorder._cancelled &&
+        ["onEnd", "onError"].includes(message.method)
+      ) {
+        return null;
+      }
       return activeRecorder[message.method](...args);
     }
     return null;
