@@ -102,6 +102,7 @@ this.intentRunner = (function() {
       telemetry.send();
     } catch (e) {
       context.failed(`Internal error: ${e}`);
+      log.error("Error in intent", desc.name, ":", String(e), e);
     }
   };
 

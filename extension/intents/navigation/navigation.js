@@ -1,4 +1,4 @@
-/* globals searching */
+/* globals searching, services */
 
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
@@ -53,7 +53,7 @@ this.intents.navigation = (function() {
         desc.slots.service
       );
       desc.addTelemetryServiceName(
-        `ddg:${searching.ddgBangServiceName(desc.slots.service)}`
+        `ddg:${services.ddgBangServiceName(desc.slots.service)}`
       );
       await browser.tabs.update({ url: myurl });
       browser.runtime.sendMessage({

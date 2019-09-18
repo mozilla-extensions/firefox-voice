@@ -1,4 +1,4 @@
-/* globals log, util */
+/* globals log, util, services */
 this.intentParser = (function() {
   const exports = {};
 
@@ -14,9 +14,7 @@ this.intentParser = (function() {
   */
 
   const ENTITY_TYPES = {
-    serviceName: "google slides|google docs|spotify|goodreads|mdn|coursera|google scholar|google drive|calendar|google calendar|mail| google mail|gmail".split(
-      "|"
-    ),
+    serviceName: services.allServiceNames(),
   };
 
   const Matcher = (exports.Matcher = class Matcher {
