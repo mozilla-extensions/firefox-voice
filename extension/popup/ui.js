@@ -53,6 +53,12 @@ this.ui = (function() {
   };
 
   function detectText(e) {
+    if (e.keyCode === 224 || e.keyCode === 17) {
+      // 224 is the key code for the Mac Command key
+      // 17 is the key code for Ctrl (not verified)
+      console.log("skipping text input");
+      return;
+    }
     if (!textInputDetected) {
       exports.setState("typing");
       textInputDetected = true;
