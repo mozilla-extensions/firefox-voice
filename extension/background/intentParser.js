@@ -67,7 +67,7 @@ this.intentParser = (function() {
               .join("|");
             regex += `(${entityRegex})`;
           } else {
-            regex += "(.+?)";
+            regex += "( .+?)";
             slots.push(slot);
           }
         } else if (toParse.startsWith("(")) {
