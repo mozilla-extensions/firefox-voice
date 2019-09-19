@@ -5,6 +5,7 @@
 extension/js/vendor/
 extension/css/vendor/
 extension/views/CHANGELOG.html
+extension/buildSettings.js
 node_modules
 npm-debug.log
 package-lock.json

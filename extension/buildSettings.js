@@ -2,8 +2,8 @@ this.buildSettings = {
   logLevel: "debug",
   inDevelopment: null,
   sstServer: "https://speaktome-2.services.mozilla.com",
-  gitCommit: "328d6d7-dirty",
-  buildTime: "2019-09-19T19:12:40.583Z",
+  gitCommit: "a747d2f-dirty",
+  buildTime: "2019-09-19T19:31:03.154Z",
   backgroundTabRecorder: true,
   channel: "unknown",
 };
