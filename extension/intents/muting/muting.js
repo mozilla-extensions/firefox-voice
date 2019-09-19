@@ -13,7 +13,6 @@ this.intents.muting = (function() {
     mute
     quiet
     shut up
-    stop
     `,
     async run(desc) {
       const stoppedReading = await intents.read.stopReading();
