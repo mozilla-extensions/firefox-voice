@@ -137,13 +137,13 @@ workflows:
               only: master
       - deploy_stage:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: stage
       - deploy_prod:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: prod
