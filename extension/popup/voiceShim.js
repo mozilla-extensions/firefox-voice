@@ -60,6 +60,13 @@ this.voiceShim = (function() {
       // override
     }
 
+    onProcessing(exception) {
+      // override
+    }
+    onNoVoice(exception) {
+      // override
+    }
+
     getVolumeLevel() {
       browser.runtime
         .sendMessage({
@@ -85,7 +92,9 @@ this.voiceShim = (function() {
       const args = message.args || [];
       if (
         activeRecorder._cancelled &&
-        ["onEnd", "onError"].includes(message.method)
+        ["onEnd", "onError", "onProcessing", "onNoVoice"].includes(
+          message.method
+        )
       ) {
         return null;
       }

@@ -54,6 +54,13 @@ this.voice = (function() {
         this.sourceNode.disconnect(this.analyzerNode);
         this.analyzerNode.disconnect(this.outputNode);
       };
+      // FIXME: this is a bad pattern, but all I got for now...
+      vad.onProcessing = () => {
+        this.onProcessing();
+      };
+      vad.onNoVoice = () => {
+        this.onNoVoice();
+      };
       // connect stream to our recorder
       this.sourceNode.connect(this.scriptprocessor);
       // MediaRecorder initialization
@@ -91,6 +98,14 @@ this.voice = (function() {
     }
 
     onError(exception) {
+      // Can be overridden
+    }
+
+    onProcessing() {
+      // Can be overridden
+    }
+
+    onNoVoice() {
       // Can be overridden
     }
 

@@ -103,6 +103,30 @@ this.recorder = (function() {
       }
     }
 
+    onProcessing() {
+      if (this._destroyed) {
+        log.error("onProcessing called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onProcessing",
+          args: [],
+        });
+      }
+    }
+
+    onNoVoice() {
+      if (this._destroyed) {
+        log.error("onNoVoice called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onNoVoice",
+          args: [],
+        });
+      }
+    }
+
     destroy() {
       this._destroyed = true;
     }

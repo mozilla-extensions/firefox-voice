@@ -116,6 +116,13 @@ this.popup = (function() {
       ui.setState("error");
       clearInterval(intervalId);
     };
+    recorder.onProcessing = () => {
+      ui.setState("processing");
+    };
+    recorder.onNoVoice = () => {
+      log.debug("Closing popup because of no voice input");
+      window.close();
+    };
     recorder.startRecording();
   }
 
