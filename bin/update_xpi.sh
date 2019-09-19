@@ -70,7 +70,7 @@ for channel in dev stage prod ; do
             "$autograph_url"
 
     version="$(unzip -p $new_xpi manifest.json | python3 -c 'import sys, re; print(re.search("\"version\":\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
-    git_commit="$(unzip -p $new_xpi manifest.json | python3 -c 'import sys, re; print(re.search("\"gitCommit\":\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
+    git_commit="$(unzip -p $new_xpi buildSettings.js | python3 -c 'import sys, re; print(re.search("gitCommit:\\s+\"(.*?)\"", sys.stdin.read()).group(1))')"
 	sudo cp $signed_xpi $RELEASES/$channel/firefox-voice.xpi
 	sudo cp tmp-xpi/$channel/updates.json $RELEASES/$channel/updates.json
 	cp $new_xpi $old_xpi
