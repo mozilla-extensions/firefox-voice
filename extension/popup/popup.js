@@ -131,6 +131,8 @@ this.popup = (function() {
       ui.closePopup();
     } else if (message.type === "showCard") {
       ui.showCard(message.cardData);
+    } else if (message.type === "displayFailure") {
+      ui.setState("error");
     }
   }
 
