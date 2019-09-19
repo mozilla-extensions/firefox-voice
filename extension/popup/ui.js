@@ -176,7 +176,7 @@ this.ui = (function() {
   function listenForBack() {
     const backIcon = document.getElementById("back-icon");
     backIcon.addEventListener("click", () => {
-      location.reload();
+      location.href = `${location.pathname}?${Date.now()}`;
     });
   }
 
