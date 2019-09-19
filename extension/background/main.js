@@ -78,7 +78,7 @@ this.main = (function() {
   browser.runtime.onInstalled.addListener(details => {
     const manifest = browser.runtime.getManifest();
     extensionTemporaryInstall = !!details.temporary;
-    inDevelopment = details.temporary || manifest.settings.inDevelopment;
+    inDevelopment = !!(details.temporary || manifest.settings.inDevelopment);
     if (details.reason === "install") {
       launchOnboarding();
     }
