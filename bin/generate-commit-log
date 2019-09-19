@@ -5,6 +5,8 @@ import os
 import argparse
 import email.parser
 import re
+import json
+import time
 
 IGNORE_COMMITS = [
     "^merge",
@@ -87,10 +89,13 @@ parts = "\n".join(parts)
 
 if args.write:
     filename = os.path.join(base, "CHANGELOG.md")
+    with open(os.path.join(base, "package.json")) as fp:
+        version = json.load(fp)["version"]
+    date = time.strftime("%Y-%m-%d")
     with open(filename) as fp:
         content = fp.read()
     with open(filename, "w") as fp:
-        fp.write("## Version\n\n")
+        fp.write("## Version %s (%s)\n\n" % (version, date))
         fp.write(parts)
         fp.write("\n\n")
         fp.write(content)
