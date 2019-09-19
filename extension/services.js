@@ -30,7 +30,6 @@ this.services = (function() {
     "amazon music": "amusic",
     "google music": "gmusic",
     "google play music": "gmusic",
-    "apple music": "applemusic",
     pandora: "pandora",
     soundcloud: "soundcloud",
     "sound cloud": "soundcloud",
