@@ -1,11 +1,10 @@
-/* globals vad */
+/* globals vad, buildSettings */
 
 this.voice = (function() {
   const exports = {};
 
   const STT_SERVER_URL =
-    browser.runtime.getManifest().settings.sstServer ||
-    "https://speaktome-2.services.mozilla.com";
+    buildSettings.sstServer || "https://speaktome-2.services.mozilla.com";
   const LANGUAGE = "en-US";
 
   exports.Recorder = class Recorder {

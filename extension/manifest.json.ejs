@@ -22,6 +22,7 @@
   "background": {
     "scripts": [
       "util.js",
+      "buildSettings.js",
       "log.js",
       "js/vendor/fuse.js",
       "background/main.js",
@@ -68,15 +69,5 @@
       },
       "description": "Opens Firefox Voice"
     }
-  },
-  // These are actually internal settings for the extension:
-  "settings": {
-    "logLevel": "debug",
-    "inDevelopment": null,
-    "sstServer": "https://speaktome-2.services.mozilla.com",
-    "gitCommit": <%= gitCommit %>,
-    "buildTime": <%= buildTime %>,
-    "backgroundTabRecorder": <%= !env.FOREGROUND %>,
-    "channel": "<%- env.INSTALL_CHANNEL || "unknown" %>"
   }
 }

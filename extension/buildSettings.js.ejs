@@ -1,0 +1,9 @@
+this.buildSettings = {
+  logLevel: "debug",
+  inDevelopment: null,
+  sstServer: "https://speaktome-2.services.mozilla.com",
+  gitCommit: <%= gitCommit %>,
+  buildTime: <%= buildTime %>,
+  backgroundTabRecorder: <%= !env.FOREGROUND %>,
+  channel: "<%- env.INSTALL_CHANNEL || "unknown" %>",
+};

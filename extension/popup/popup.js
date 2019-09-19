@@ -1,4 +1,4 @@
-/* globals util, voice, vad, ui, log, voiceShim */
+/* globals util, voice, vad, ui, log, voiceShim, buildSettings */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 2000;
@@ -7,7 +7,7 @@ this.popup = (function() {
   let isWaitingForPermission = null;
   let executedIntent = false;
 
-  const { backgroundTabRecorder } = browser.runtime.getManifest().settings;
+  const { backgroundTabRecorder } = buildSettings;
 
   async function init() {
     if (!backgroundTabRecorder) {
