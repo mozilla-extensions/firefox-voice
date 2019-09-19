@@ -10,6 +10,7 @@ this.intents.playing = (function() {
     ],
     match: `
     play [query]
+    unpause
     `,
     async run(desc) {
       let playerTab;
