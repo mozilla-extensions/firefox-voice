@@ -1,4 +1,4 @@
-/* globals log, intentParser, telemetry */
+/* globals log, intentParser, telemetry, catcher */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -103,6 +103,7 @@ this.intentRunner = (function() {
     } catch (e) {
       context.failed(`Internal error: ${e}`);
       log.error("Error in intent", desc.name, ":", String(e), e);
+      catcher.capture(e);
     }
   };
 

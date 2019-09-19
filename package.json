@@ -30,6 +30,7 @@
     "web-ext": "^3.1.1"
   },
   "dependencies": {
+    "@sentry/browser": "^5.6.3",
     "fuse.js": "^3.4.5",
     "lottie-web": "^5.5.7",
     "moment": "^2.24.0",
@@ -48,7 +49,7 @@
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "test": "npm-run-all build:manifest lint*",
     "build:changelog": "mkdir -p extension/views && node bin/substitute-changelog.js",
-    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js ; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ",
+    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js raven-js/dist/raven.js ; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "format": "prettier 'extension/**/*.{js,css}' --write",

@@ -6,4 +6,5 @@ this.buildSettings = {
   buildTime: <%= buildTime %>,
   backgroundTabRecorder: <%= !env.FOREGROUND %>,
   channel: "<%- env.INSTALL_CHANNEL || "unknown" %>",
+  sentryDsn: "https://18143ece2d6042ff91ed7678b287a814@sentry.prod.mozaws.net/458",
 };
