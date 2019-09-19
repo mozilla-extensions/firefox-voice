@@ -1,4 +1,4 @@
-/* globals util, voice, vad, ui, log, voiceShim */
+/* globals util, voice, vad, ui, log, voiceShim, buildSettings */
 
 this.popup = (function() {
   const PERMISSION_REQUEST_TIME = 2000;
@@ -7,7 +7,7 @@ this.popup = (function() {
   let isWaitingForPermission = null;
   let executedIntent = false;
 
-  const { backgroundTabRecorder } = browser.runtime.getManifest().settings;
+  const { backgroundTabRecorder } = buildSettings;
 
   async function init() {
     if (!backgroundTabRecorder) {
@@ -115,6 +115,13 @@ this.popup = (function() {
       log.error("Got recorder error:", String(error), error);
       ui.setState("error");
       clearInterval(intervalId);
+    };
+    recorder.onProcessing = () => {
+      ui.setState("processing");
+    };
+    recorder.onNoVoice = () => {
+      log.debug("Closing popup because of no voice input");
+      window.close();
     };
     recorder.startRecording();
   }

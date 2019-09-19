@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util */
+/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings */
 
 this.main = (function() {
   const exports = {};
@@ -76,9 +76,8 @@ this.main = (function() {
   };
 
   browser.runtime.onInstalled.addListener(details => {
-    const manifest = browser.runtime.getManifest();
     extensionTemporaryInstall = !!details.temporary;
-    inDevelopment = !!(details.temporary || manifest.settings.inDevelopment);
+    inDevelopment = !!(details.temporary || buildSettings.inDevelopment);
     if (details.reason === "install") {
       launchOnboarding();
     }

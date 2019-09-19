@@ -40,12 +40,13 @@ this.intents.navigation = (function() {
     name: "navigation.bangSearch",
     match: `
     (do a |) (search | query | look up | lookup | look on | look for) (my |) [service:serviceName] (for | for the |) [query]
-    (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for |) (the |) [query] on [service:serviceName]
+    (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
     `,
     examples: [
       "Search my Gmail for tickets to Hamilton",
       "Look up The Book Thief on GoodReads",
       "Search CSS grid on MDN",
+      "Look up Hamilton in Gmail",
     ],
     async run(desc) {
       const myurl = await searching.ddgBangSearchUrl(
@@ -55,7 +56,7 @@ this.intents.navigation = (function() {
       desc.addTelemetryServiceName(
         `ddg:${services.ddgBangServiceName(desc.slots.service)}`
       );
-      await browser.tabs.update({ url: myurl });
+      await browser.tabs.create({ url: myurl });
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "find",

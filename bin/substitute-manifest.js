@@ -8,6 +8,10 @@ const OUTPUT = path.normalize(
   path.join(__dirname, "../extension/manifest.json")
 );
 const TEMPLATE = OUTPUT + ".ejs";
+const BUILD_OUTPUT = path.normalize(
+  path.join(__dirname, "../extension/buildSettings.js")
+);
+const BUILD_TEMPLATE = BUILD_OUTPUT + ".ejs";
 const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
 
 const filenames = fs.readdirSync(INTENT_DIR, { encoding: "UTF-8" });
@@ -38,10 +42,20 @@ const options = {
 
 ejs.renderFile(TEMPLATE, context, options, function(err, str) {
   if (err) {
-    console.error("Error rendering template:", err);
+    console.error("Error rendering", TEMPLATE, "template:", err);
     process.exit(1);
     return;
   }
   fs.writeFileSync(OUTPUT, str, { encoding: "UTF-8" });
   console.log(`${OUTPUT} written`);
+});
+
+ejs.renderFile(BUILD_TEMPLATE, context, options, function(err, str) {
+  if (err) {
+    console.error("Error rendering", BUILD_TEMPLATE, "template:", err);
+    process.exit(1);
+    return;
+  }
+  fs.writeFileSync(BUILD_OUTPUT, str, { encoding: "UTF-8" });
+  console.log(`${BUILD_OUTPUT} written`);
 });

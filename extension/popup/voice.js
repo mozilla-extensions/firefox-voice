@@ -1,11 +1,10 @@
-/* globals vad */
+/* globals vad, buildSettings */
 
 this.voice = (function() {
   const exports = {};
 
   const STT_SERVER_URL =
-    browser.runtime.getManifest().settings.sstServer ||
-    "https://speaktome-2.services.mozilla.com";
+    buildSettings.sstServer || "https://speaktome-2.services.mozilla.com";
   const LANGUAGE = "en-US";
 
   exports.Recorder = class Recorder {
@@ -55,6 +54,13 @@ this.voice = (function() {
         this.sourceNode.disconnect(this.analyzerNode);
         this.analyzerNode.disconnect(this.outputNode);
       };
+      // FIXME: this is a bad pattern, but all I got for now...
+      vad.onProcessing = () => {
+        this.onProcessing();
+      };
+      vad.onNoVoice = () => {
+        this.onNoVoice();
+      };
       // connect stream to our recorder
       this.sourceNode.connect(this.scriptprocessor);
       // MediaRecorder initialization
@@ -92,6 +98,14 @@ this.voice = (function() {
     }
 
     onError(exception) {
+      // Can be overridden
+    }
+
+    onProcessing() {
+      // Can be overridden
+    }
+
+    onNoVoice() {
       // Can be overridden
     }
 

@@ -12,6 +12,14 @@ this.vad = (function() {
   exports.stm_vad;
   exports.stm_vad_ready = util.makeNakedPromise();
 
+  exports.onProcessing = () => {
+    // Can be overridden
+  };
+
+  exports.onNoVoice = () => {
+    // Can be overridden
+  };
+
   exports.SpeakToMeVad = class SpeakToMeVad {
     constructor() {
       this.webrtc_main = Module.cwrap("main");
@@ -157,10 +165,12 @@ this.vad = (function() {
       this.stopGum();
       // FIXME: maybe we need to signal the UI here?
       if (why === "GoCloud finishedvoice") {
+        exports.onProcessing();
         if (typeof ui !== "undefined") {
-          // FIXME: needs updating for shim
           ui.setState("processing"); // TODO: send a message through voice.js to popup.js to ui.js to set the processing state
         }
+      } else if (why === "Raise novoice") {
+        exports.onNoVoice();
       }
     }
   };

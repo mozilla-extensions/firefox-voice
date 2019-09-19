@@ -6,6 +6,7 @@ this.intents.find = (function() {
     examples: ["Find calendar tab"],
     match: `
     (find | bring me to) (my | the |) [query] (tab |)
+    go (to | to the |) [query] tab
     `,
     async run(desc) {
       const query = desc.slots.query;

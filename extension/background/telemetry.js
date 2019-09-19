@@ -1,4 +1,4 @@
-/* globals voiceSchema, main, util, log */
+/* globals voiceSchema, main, util, log, buildSettings */
 
 this.telemetry = (function() {
   const exports = {};
@@ -9,7 +9,7 @@ this.telemetry = (function() {
 
   const pingTemplate = {
     extensionVersion: manifest.version,
-    extensionInstallationChannel: manifest.settings.channel || "unknown",
+    extensionInstallationChannel: buildSettings.channel || "unknown",
   };
 
   let ping;

@@ -1,3 +1,5 @@
+/* globals buildSettings */
+
 this.options = (function() {
   async function init() {
     const inDevelopment = await browser.runtime.sendMessage({
@@ -8,10 +10,9 @@ this.options = (function() {
     }
     const manifest = browser.runtime.getManifest();
     document.getElementById("version").textContent = manifest.version;
-    document.getElementById("buildTime").textContent =
-      manifest.settings.buildTime;
+    document.getElementById("buildTime").textContent = buildSettings.buildTime;
     let dirty = false;
-    let { gitCommit } = manifest.settings;
+    let { gitCommit } = buildSettings;
     if (gitCommit.endsWith("-dirty")) {
       dirty = true;
       gitCommit = gitCommit.split("-")[0];
