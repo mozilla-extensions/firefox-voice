@@ -4,12 +4,17 @@ this.catcher = (function() {
   const exports = {};
   const hostname = location.hostname;
 
+  const activated = (exports.sentryActivated = !!buildSettings.sentryDsn);
+
   function fixUrl(u) {
     return u.replace(hostname, "firefox-voice");
   }
 
   function install() {
     const manifest = browser.runtime.getManifest();
+    if (!buildSettings.sentryDsn) {
+      return;
+    }
     Sentry.init({
       dsn: buildSettings.sentryDsn,
       release: manifest.version,
@@ -18,7 +23,6 @@ this.catcher = (function() {
         git_commit: buildSettings.gitCommit,
       },
       beforeSend(event) {
-        console.log("!! event", event);
         event.request.url = fixUrl(event.request.url);
         for (const exc of event.exception.values) {
           for (const frame of exc.stacktrace.frames) {
@@ -31,14 +35,15 @@ this.catcher = (function() {
           });
           */
         }
-        console.log("what is it?", event);
         return event;
       },
     });
   }
 
   exports.capture = function(e) {
-    Sentry.captureException(e);
+    if (activated) {
+      Sentry.captureException(e);
+    }
   };
 
   install();

@@ -1,4 +1,4 @@
-/* globals services */
+/* globals serviceList */
 
 this.searching = (function() {
   const exports = {};
@@ -39,7 +39,7 @@ this.searching = (function() {
   };
 
   exports.ddgBangSearchUrl = async function(query, service) {
-    const bang = services.ddgBangServiceName(service);
+    const bang = serviceList.ddgBangServiceName(service);
     const response = await fetch(
       `https://api.duckduckgo.com/?q=!${encodeURIComponent(
         bang
