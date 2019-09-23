@@ -1,4 +1,4 @@
-/* globals log, util, services */
+/* globals log, util, serviceList */
 this.intentParser = (function() {
   const exports = {};
 
@@ -14,7 +14,7 @@ this.intentParser = (function() {
   */
 
   const ENTITY_TYPES = {
-    serviceName: services.allServiceNames(),
+    serviceName: serviceList.allServiceNames(),
   };
 
   const Matcher = (exports.Matcher = class Matcher {

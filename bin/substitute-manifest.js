@@ -13,14 +13,28 @@ const BUILD_OUTPUT = path.normalize(
 );
 const BUILD_TEMPLATE = BUILD_OUTPUT + ".ejs";
 const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
+const SERVICE_DIR = path.normalize(
+  path.join(__dirname, "../extension/services")
+);
+
+function ignoreFilename(filename) {
+  return filename.startsWith(".") || filename.endsWith(".txt");
+}
 
 const filenames = fs.readdirSync(INTENT_DIR, { encoding: "UTF-8" });
 const intentNames = [];
 for (const filename of filenames) {
-  if (!filename.startsWith(".") && !filename.endsWith(".txt")) {
+  if (!ignoreFilename(filename)) {
     intentNames.push(filename);
   }
 }
+const serviceNames = [];
+for (const filename of fs.readdirSync(SERVICE_DIR, { encoding: "UTF-8" })) {
+  if (!ignoreFilename(filename)) {
+    serviceNames.push(filename);
+  }
+}
+
 const gitCommit = child_process
   .execSync("git describe --always --dirty", {
     encoding: "UTF-8",
@@ -31,6 +45,7 @@ const context = {
   env: process.env,
   package_json,
   intentNames,
+  serviceNames,
   gitCommit,
   buildTime: new Date().toISOString(),
 };

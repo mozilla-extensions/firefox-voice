@@ -24,13 +24,16 @@
       "util.js",
       "buildSettings.js",
       "log.js",
+      <% if (! env.NO_SENTRY) { %>
       "js/vendor/sentry.js",
+      <% } %>
       "catcher.js",
       "js/vendor/fuse.js",
       "background/main.js",
       "background/voiceSchema.js",
       "background/telemetry.js",
-      "services.js",
+      "background/serviceList.js",
+      "background/content.js",
       "background/intentParser.js",
       "background/intentRunner.js",
       "background/intentExamples.js",
@@ -39,6 +42,10 @@
         "intents/<%- intentName %>/<%- intentName %>.js",
       <% } %>
       // End of intent list
+      // These service listings are generated from extension/services/*
+      <% for (let serviceName of serviceNames) { %>
+        "services/<%- serviceName %>/<%- serviceName %>.js",
+      <% } %>
       "searching.js"
     ]
   },
@@ -54,7 +61,8 @@
     "tabs",
     "mozillaAddons",
     "about:reader*",
-    "telemetry"
+    "telemetry",
+    "history"
   ],
   "browser_action": {
     "browser_style": false,
