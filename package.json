@@ -45,7 +45,7 @@
     "url": "git+https://github.com/mozilla/firefox-voice.git"
   },
   "scripts": {
-    "start": "npm-run-all maybeinstall build:manifest start-extension",
+    "start": "NO_SENTRY=1 npm-run-all maybeinstall build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "test": "npm-run-all build:manifest lint*",
     "build:changelog": "mkdir -p extension/views && node bin/substitute-changelog.js",
