@@ -4,7 +4,7 @@ this.intents.music = (function() {
   const exports = {};
   const SERVICES = {};
   exports.register = function(service) {
-    SERVICES[service.name] = service;
+    SERVICES[service.id] = service;
   };
 
   intentRunner.registerIntent({
@@ -14,7 +14,8 @@ this.intents.music = (function() {
     play [query]
     `,
     async run(context) {
-      const service = await serviceList.getService("music", SERVICES);
+      const Service = await serviceList.getService("music", SERVICES);
+      const service = new Service(context);
       await service.playQuery(context.slots.query);
     },
   });
@@ -27,7 +28,8 @@ this.intents.music = (function() {
     stop music
     `,
     async run(context) {
-      const service = await serviceList.getService("music", SERVICES);
+      const Service = await serviceList.getService("music", SERVICES);
+      const service = new Service(context);
       await service.pause();
     },
   });
@@ -42,7 +44,8 @@ this.intents.music = (function() {
     `,
     priority: "high",
     async run(context) {
-      const service = await serviceList.getService("music", SERVICES);
+      const Service = await serviceList.getService("music", SERVICES);
+      const service = new Service(context);
       await service.unpause();
     },
   });
@@ -56,7 +59,8 @@ this.intents.music = (function() {
     focus music
     `,
     async run(context) {
-      const service = await serviceList.getService("music", SERVICES);
+      const Service = await serviceList.getService("music", SERVICES);
+      const service = new Service(context);
       await service.activateOrOpen();
     },
   });

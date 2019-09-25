@@ -18,7 +18,19 @@ this.communicate = (function() {
       return HANDLERS[message.type](message, sender);
     } catch (e) {
       log.error(`Error in ${message.type} handler: ${e}`, e.stack);
-      throw e;
+      const response = {
+        status: "error",
+        message: String(e),
+        name: e.name,
+        stack: e.stack,
+        reason: e.reason,
+      };
+      for (const name in e) {
+        if (!(name in response)) {
+          response[name] = e[name];
+        }
+      }
+      return response;
     }
   };
   return exports;

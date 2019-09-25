@@ -1,3 +1,5 @@
+/* globals content */
+
 this.services = {};
 
 this.serviceList = (function() {
@@ -90,7 +92,29 @@ this.serviceList = (function() {
   };
 
   exports.Service = class Service {
-    constructor() {}
+    constructor(context) {
+      this.context = context;
+      this.tab = null;
+      this.context.onError = this.onError.bind(this);
+    }
+
+    get baseUrl() {
+      return this.constructor.baseUrl;
+    }
+
+    onError(message) {
+      if (this.tab) {
+        this.activateTab();
+      }
+    }
+
+    async activateTab() {
+      if (!this.tab) {
+        throw new Error("No tab to activate");
+      }
+      await browser.tabs.update(this.tab.id, { active: true });
+    }
+
     get matchPatterns() {
       const url = new URL(this.baseUrl);
       if (url.pathname && url.pathname !== "/") {
@@ -102,11 +126,13 @@ this.serviceList = (function() {
       }
       return [`${url.protocol}//${url.hostname}/*`];
     }
+
     async activateOrOpen() {
       return this.getTab(true);
     }
+
     async getTab(activate = false) {
-      const tabs = await browser.tabs.query({ url: this.matchPatterns });
+      const tabs = await this.getAllTabs();
       if (!tabs.length) {
         return browser.tabs.create({ url: this.baseUrl, active: activate });
       }
@@ -114,6 +140,37 @@ this.serviceList = (function() {
         await browser.tabs.update(tabs[0].id, { active: activate });
       }
       return tabs[0];
+    }
+
+    async getAllTabs() {
+      return browser.tabs.query({ url: this.matchPatterns });
+    }
+
+    async initTab(scripts) {
+      this.tab = await this.getTab();
+      await content.lazyInject(this.tab.id, scripts);
+    }
+
+    async callTab(name, args) {
+      args = args || {};
+      const response = browser.tabs.sendMessage(this.tab.id, {
+        type: name,
+        ...args,
+      });
+      if (
+        response &&
+        typeof response === "object" &&
+        response.status === "error"
+      ) {
+        const e = new Error(response.message);
+        for (const name in response) {
+          if (name !== "status" && name !== "message") {
+            e[name] = response[name];
+          }
+        }
+        throw e;
+      }
+      return response;
     }
   };
 
@@ -124,6 +181,9 @@ this.serviceList = (function() {
     let bestScore = 0;
     for (const name in services) {
       const service = services[name];
+      if (!service.baseUrl) {
+        throw new Error(`Service ${service.name} has no .baseUrl`);
+      }
       const history = await browser.history.search({
         text: service.baseUrl,
         startTime: oneMonth,
