@@ -1,3 +1,7 @@
+## Version 0.6.0 (2019-09-26)
+
+- Include utterance in Telemetry ping
+
 ## Version 0.5.0 (2019-09-19)
 
 - Add Sentry error collection. Fixes [#70](https://github.com/mozilla-services/screenshots/issues/70) [03281b0](https://github.com/mozilla-services/screenshots/commit/03281b0)
