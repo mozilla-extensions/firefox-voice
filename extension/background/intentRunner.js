@@ -59,6 +59,7 @@ this.intentRunner = (function() {
         intentFallback: this.fallback,
         intentParseSuccess: !this.fallback,
         intentSuccess: true,
+        utterance: this.utterance,
         utteranceParsed: { slots: this.slots },
       });
     }
