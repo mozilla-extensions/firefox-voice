@@ -4,7 +4,11 @@ this.content = (function() {
   const NO_RECEIVER_MESSAGE =
     "Could not establish connection. Receiving end does not exist";
   const exports = {};
+
   exports.lazyInject = async function(tabId, scripts) {
+    if (!tabId) {
+      throw new Error(`Invalid tabId: ${tabId}`);
+    }
     if (typeof scripts === "string") {
       scripts = [scripts];
     }
@@ -43,5 +47,6 @@ this.content = (function() {
       scriptKey,
     });
   };
+
   return exports;
 })();

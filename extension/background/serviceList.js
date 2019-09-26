@@ -91,6 +91,12 @@ this.serviceList = (function() {
     return bang;
   };
 
+  // Note these are maintained separately from the services in extension/services/*, because
+  // those are all loaded too late to be used here
+  exports.musicServiceNames = function() {
+    return ["youtube", "spotify"];
+  };
+
   exports.Service = class Service {
     constructor(context) {
       this.context = context;
@@ -181,6 +187,9 @@ this.serviceList = (function() {
     let bestScore = 0;
     for (const name in services) {
       const service = services[name];
+      if (service.skipAutodetect) {
+        continue;
+      }
       if (!service.baseUrl) {
         throw new Error(`Service ${service.name} has no .baseUrl`);
       }
