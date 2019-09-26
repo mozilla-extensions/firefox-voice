@@ -16,7 +16,7 @@ this.main = (function() {
     } else if (sender.tab.id === recorderTabId) {
       senderInfo = "record->";
     }
-    log.debug(`${senderInfo} ${message.type}${propString}`);
+    log.messaging(`${senderInfo} ${message.type}${propString}`);
     if (message.type === "runIntent") {
       const desc = intentParser.parse(message.text);
       return intentRunner.runIntent(desc);

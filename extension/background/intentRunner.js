@@ -27,6 +27,11 @@ this.intentRunner = (function() {
     failed(message) {
       telemetry.add({ intentSuccess: false });
       telemetry.send({});
+      try {
+        this.onError(message);
+      } catch (e) {
+        log.error("Error in onError handler:", e);
+      }
       return browser.runtime.sendMessage({
         type: "displayFailure",
         message,
@@ -61,6 +66,10 @@ this.intentRunner = (function() {
         intentSuccess: true,
         utteranceParsed: { slots: this.slots },
       });
+    }
+
+    onError(message) {
+      // Can be overridden
     }
   }
 

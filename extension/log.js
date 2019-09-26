@@ -8,7 +8,7 @@ this.log = (function() {
 
   const logLevel = buildSettings.logLevel || "debug";
 
-  const levels = ["debug", "info", "warn", "error"];
+  const levels = ["messaging", "debug", "info", "warn", "error"];
   if (!levels.includes(logLevel)) {
     console.warn("Invalid buildSettings.logLevel:", logLevel);
   }
@@ -27,7 +27,11 @@ this.log = (function() {
   }
 
   function stub() {}
-  exports.debug = exports.info = exports.warn = exports.error = stub;
+  exports.messaging = exports.debug = exports.info = exports.warn = exports.error = stub;
+
+  if (shouldLog.messaging) {
+    exports.messaging = console.debug;
+  }
 
   if (shouldLog.debug) {
     exports.debug = console.debug;

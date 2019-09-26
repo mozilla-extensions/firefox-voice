@@ -15,6 +15,7 @@ this.intentParser = (function() {
 
   const ENTITY_TYPES = {
     serviceName: serviceList.allServiceNames(),
+    musicServiceName: serviceList.musicServiceNames(),
   };
 
   const Matcher = (exports.Matcher = class Matcher {
