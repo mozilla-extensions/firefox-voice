@@ -81,6 +81,7 @@ this.popup = (function() {
       };
       ui.onTextInput = text => {
         ui.setState("success");
+        ui.setTranscript(text);
         executedIntent = true;
         browser.runtime.sendMessage({
           type: "addTelemetry",
