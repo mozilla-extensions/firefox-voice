@@ -111,9 +111,20 @@ this.intentRunner = (function() {
       // isn't actually complete:
       telemetry.send();
     } catch (e) {
-      context.failed(`Internal error: ${e}`);
-      log.error("Error in intent", desc.name, ":", String(e), e.stack);
-      catcher.capture(e);
+      const display = e.displayMessage || `Internal error: ${e}`;
+      context.failed(display);
+      if (e.displayMessage) {
+        log.info(
+          "Expected error in intent",
+          desc.name,
+          ":",
+          String(e),
+          e.stack
+        );
+      } else {
+        log.error("Error in intent", desc.name, ":", String(e), e.stack);
+        catcher.capture(e);
+      }
     }
   };
 

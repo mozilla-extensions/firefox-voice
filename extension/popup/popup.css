@@ -19,12 +19,13 @@ body,
   display: block;
 }
 
-.listening :-moz-any(#transcript, #popup-settings, #back-icon, #card) {
+.listening
+  :-moz-any(#transcript, #popup-settings, #back-icon, #card, #error-message) {
   display: none;
 }
 
 .processing
-  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card) {
+  :-moz-any(#suggestions, #feedback, #popup-settings, #back-icon, #card, #error-message) {
   display: none;
 }
 
@@ -167,6 +168,12 @@ body,
   font-style: italic;
   font-size: 2rem;
   padding: 1.5rem 0;
+}
+
+#error-message {
+  font-weight: 600;
+  padding: 1.5rem 0;
+  color: #800;
 }
 
 #text-input-field {
