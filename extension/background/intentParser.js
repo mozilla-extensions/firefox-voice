@@ -196,14 +196,23 @@ this.intentParser = (function() {
     text = text.replace(/\s\s+/g, " ");
     text = text.toLowerCase();
     text = text.replace(/[^a-z0-9 ']/gi, "");
+    let bestMatch;
+    let bestChars;
     for (const name of INTENT_NAMES) {
       const matcher = INTENTS[name].matcher;
       const match = matcher.match(text);
       if (match) {
         match.name = name;
         match.fallback = false;
-        return match;
+        const slotChars = Object.values(match.slots).join("").length;
+        if (bestMatch === undefined || bestChars > slotChars) {
+          bestMatch = match;
+          bestChars = slotChars;
+        }
       }
+    }
+    if (bestMatch) {
+      return bestMatch;
     }
     if (disableFallback) {
       return null;
