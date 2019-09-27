@@ -11,4 +11,17 @@ this.intents.tabs = (function() {
       await browser.tabs.remove(activeTab.id);
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.open",
+    examples: ["open tab"],
+    match: `
+    open tab
+    open a blank tab
+    open a new tab
+    `,
+    async run(desc) {
+      await browser.tabs.create({ active: true });
+    },
+  });
 })();
