@@ -9,7 +9,8 @@ this.communicate = (function() {
     }
     HANDLERS[type] = handler;
   };
-  exports.handle = function(message, sender) {
+  exports.handle = function(script, message, sender) {
+    log.messaging(`${script}->`, JSON.stringify(message));
     if (!HANDLERS[message.type]) {
       log.warn("Message of unknown type:", message.type, message);
       throw new Error(`No handler for ${message.type}`);

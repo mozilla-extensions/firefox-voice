@@ -1,5 +1,5 @@
 this.buildSettings = {
-  logLevel: "debug",
+  logLevel: <%= env.LOG_LEVEL || "debug" %>,
   inDevelopment: null,
   sstServer: "https://speaktome-2.services.mozilla.com",
   gitCommit: <%= gitCommit %>,

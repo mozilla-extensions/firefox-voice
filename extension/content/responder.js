@@ -4,8 +4,10 @@
 this.responder = (function() {
   const loadedScripts = {};
 
+  let mainScript;
+
   function init() {
-    browser.runtime.onMessage.addListener((message, sender) => {
+    browser.runtime.onMessage.addListener(async (message, sender) => {
       if (message.type === "ping") {
         if (message.scriptKey) {
           return !!loadedScripts[message.scriptKey];
@@ -13,9 +15,10 @@ this.responder = (function() {
         return true;
       } else if (message.type === "scriptsLoaded") {
         loadedScripts[message.scriptKey] = true;
+        mainScript = message.scriptKey;
         return null;
       }
-      return communicate.handle(message, sender);
+      return communicate.handle(mainScript, message, sender);
     });
   }
   init();
