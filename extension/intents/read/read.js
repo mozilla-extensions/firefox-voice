@@ -30,7 +30,19 @@ this.intents.read = (function() {
     `,
     async run(desc) {
       // FIXME: this can fail, we should guard against that and show error:
-      await browser.tabs.toggleReaderMode();
+      try {
+        await browser.tabs.toggleReaderMode();
+      } catch (e) {
+        if (
+          e.message &&
+          e.message.includes(
+            "The specified tab cannot be placed into reader mode"
+          )
+        ) {
+          e.displayMessage = "This page cannot be put into Reader Mode";
+        }
+        throw e;
+      }
       // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
       // Ideally it would give an error or something if it was attached to the wrong kind of tab
       await util.sleep(1000);
