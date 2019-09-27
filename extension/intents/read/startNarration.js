@@ -1,30 +1,29 @@
+/* globals communicate */
+
 function startNarration() {
   const dropdown = document.querySelector(".narrate-dropdown");
   if (dropdown) {
     dropdown.classList.add("open");
   }
-  const element = document.querySelector(".narrate-start-stop");
+  const element = document.querySelector(".narrate-start-stop[title='Start']");
+  if (!element) {
+    return false;
+  }
   if (element) {
     element.click();
   } else {
     setTimeout(startNarration, 500);
   }
+  return true;
 }
 
-function addListener() {
-  browser.runtime.onMessage.addListener(message => {
-    if (message.type === "stopReading") {
-      const element = document.querySelector(".narrate-start-stop");
-      if (element) {
-        // element.click();
-        console.log("clicking element", element);
-        element.dispatchEvent(new MouseEvent("click"));
-      }
-    } else {
-      console.log("Received unexpected message in startNarration:", message);
-    }
-  });
-}
-
-startNarration();
-addListener();
+communicate.register("narrate", startNarration);
+communicate.register("stopReading", () => {
+  const element = document.querySelector(".narrate-start-stop[title='Stop']");
+  if (!element) {
+    return false;
+  }
+  console.log("clicking element", element);
+  element.dispatchEvent(new MouseEvent("click"));
+  return true;
+});

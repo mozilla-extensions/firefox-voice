@@ -1,25 +1,21 @@
-/* globals util, log */
+/* globals util, content */
 
 this.intents.read = (function() {
   const exports = {};
 
   exports.stopReading = async function() {
-    const tab = (await browser.tabs.query({ active: true }))[0];
-    if (!tab) {
+    const activeTab = (await browser.tabs.query({ active: true }))[0];
+    if (!activeTab) {
       return false;
     }
-    if (!tab.url.startsWith("about:reader")) {
+    if (!activeTab.url.startsWith("about:reader")) {
       return false;
     }
-    try {
-      await browser.tabs.sendMessage(tab.id, {
-        type: "stopReading",
-      });
-      return true;
-    } catch (e) {
-      log.info("Exception:", String(e), e);
-      return false;
-    }
+    await content.lazyInject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await browser.tabs.sendMessage(activeTab.id, {
+      type: "stopReading",
+    });
+    return true;
   };
 
   this.intentRunner.registerIntent({
@@ -29,27 +25,63 @@ this.intents.read = (function() {
     read (this |) (tab | page |)
     `,
     async run(desc) {
-      // FIXME: this can fail, we should guard against that and show error:
-      try {
-        await browser.tabs.toggleReaderMode();
-      } catch (e) {
-        if (
-          e.message &&
-          e.message.includes(
-            "The specified tab cannot be placed into reader mode"
-          )
-        ) {
-          e.displayMessage = "This page cannot be put into Reader Mode";
+      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      if (!activeTab.url.startsWith("about:reader")) {
+        try {
+          await browser.tabs.toggleReaderMode();
+        } catch (e) {
+          if (
+            e.message &&
+            e.message.includes(
+              "The specified tab cannot be placed into reader mode"
+            )
+          ) {
+            e.displayMessage = "This page cannot be put into Reader Mode";
+          }
+          throw e;
         }
+        // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
+        // Ideally it would give an error or something if it was attached to the wrong kind of tab
+        await util.sleep(1000);
+      }
+      await content.lazyInject(activeTab.id, [
+        "/intents/read/startNarration.js",
+      ]);
+      const success = await browser.tabs.sendMessage(activeTab.id, {
+        type: "narrate",
+      });
+      if (!success) {
+        const e = new Error(`Already narrating`);
+        e.displayMessage = "Already narrating";
         throw e;
       }
-      // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
-      // Ideally it would give an error or something if it was attached to the wrong kind of tab
-      await util.sleep(1000);
-      await browser.tabs.executeScript({
-        runAt: "document_end",
-        file: "/intents/read/startNarration.js",
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "read.stopRead",
+    examples: ["Stop reading"],
+    match: `
+    stop reading (this |) (tab | page |)
+    `,
+    async run(desc) {
+      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      if (!activeTab.url.startsWith("about:reader")) {
+        const e = new Error(`Not a Reader Mode page`);
+        e.displayMessage = "Page isn't narrating";
+        throw e;
+      }
+      await content.lazyInject(activeTab.id, [
+        "/intents/read/startNarration.js",
+      ]);
+      const success = await browser.tabs.sendMessage(activeTab.id, {
+        type: "stopReading",
       });
+      if (!success) {
+        const e = new Error("Not narrating");
+        e.displayMessage = "Page isn't narrating";
+        throw e;
+      }
     },
   });
 
