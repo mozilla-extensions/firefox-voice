@@ -144,6 +144,10 @@ this.ui = (function() {
     document.querySelector("#transcript").textContent = transcript;
   };
 
+  exports.setErrorMessage = function setErrorMessage(message) {
+    document.querySelector("#error-message").textContent = message;
+  };
+
   exports.setIcon = function setIcon(state) {
     browser.browserAction.setIcon({
       16: `${state}-16.svg`,

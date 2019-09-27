@@ -138,6 +138,9 @@ this.popup = (function() {
       ui.showCard(message.cardData);
     } else if (message.type === "displayFailure") {
       ui.setState("error");
+      if (message.message) {
+        ui.setErrorMessage(message.message);
+      }
     }
   }
 
