@@ -93,6 +93,7 @@ this.popup = (function() {
       };
     };
     recorder.onEnd = json => {
+      // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       clearInterval(intervalId);
       ui.setState("success");
@@ -112,14 +113,18 @@ this.popup = (function() {
       });
     };
     recorder.onError = error => {
+      browser.runtime.sendMessage({ type: "microphoneStopped" });
       log.error("Got recorder error:", String(error), error);
       ui.setState("error");
       clearInterval(intervalId);
     };
     recorder.onProcessing = () => {
+      browser.runtime.sendMessage({ type: "microphoneStopped" });
+
       ui.setState("processing");
     };
     recorder.onNoVoice = () => {
+      browser.runtime.sendMessage({ type: "microphoneStopped" });
       log.debug("Closing popup because of no voice input");
       window.close();
     };
