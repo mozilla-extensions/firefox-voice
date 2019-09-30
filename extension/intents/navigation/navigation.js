@@ -7,9 +7,9 @@ this.intents.navigation = (function() {
     match: `
     (bring me | go | navigate | show me) (to | open | find |) [query]
     `,
-    async run(desc) {
-      const url = searching.googleSearchUrl(desc.slots.query, true);
-      await browser.tabs.create({ url });
+    async run(context) {
+      const url = searching.googleSearchUrl(context.slots.query, true);
+      await context.createTab({ url });
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "navigate",
@@ -24,14 +24,14 @@ this.intents.navigation = (function() {
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
     priority: "low",
-    async run(desc) {
-      const cardData = await searching.ddgEntitySearch(desc.slots.query);
+    async run(context) {
+      const cardData = await searching.ddgEntitySearch(context.slots.query);
       if (!cardData) {
         // Default to Google Search
-        const url = searching.googleSearchUrl(desc.slots.query, false);
-        await browser.tabs.create({ url });
+        const url = searching.googleSearchUrl(context.slots.query, false);
+        await context.createTab({ url });
       } else {
-        desc.showCard(cardData);
+        context.showCard(cardData);
       }
     },
   });
@@ -48,15 +48,15 @@ this.intents.navigation = (function() {
       "Search CSS grid on MDN",
       "Look up Hamilton in Gmail",
     ],
-    async run(desc) {
+    async run(context) {
       const myurl = await searching.ddgBangSearchUrl(
-        desc.slots.query,
-        desc.slots.service
+        context.slots.query,
+        context.slots.service
       );
-      desc.addTelemetryServiceName(
-        `ddg:${serviceList.ddgBangServiceName(desc.slots.service)}`
+      context.addTelemetryServiceName(
+        `ddg:${serviceList.ddgBangServiceName(context.slots.service)}`
       );
-      await browser.tabs.create({ url: myurl });
+      await context.createTab({ url: myurl });
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "find",

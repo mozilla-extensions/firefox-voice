@@ -12,17 +12,17 @@ this.intents.playing = (function() {
     play [query]
     unpause
     `,
-    async run(desc) {
+    async run(context) {
       let playerTab;
-      if (desc.slots.query) {
+      if (context.slots.query) {
         // Multi-part execution task: will do magical IFL Google Search, then execute play once the page loads
-        let query = desc.slots.query;
+        let query = context.slots.query;
         log.debug('Adding "youtube" to query:', query);
         if (!/youtube/i.test(query)) {
           query += " youtube";
         }
         const googleQueryURL = searching.googleSearchUrl(query, true);
-        playerTab = await browser.tabs.create({
+        playerTab = await context.createTab({
           url: googleQueryURL,
         });
       } else {
