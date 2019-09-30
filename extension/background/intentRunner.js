@@ -69,6 +69,10 @@ this.intentRunner = (function() {
       });
     }
 
+    createTab(options) {
+      return browser.tabs.create(options);
+    }
+
     onError(message) {
       // Can be overridden
     }
