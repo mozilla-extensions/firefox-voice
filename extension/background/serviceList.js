@@ -104,6 +104,14 @@ this.serviceList = (function() {
       this.context.onError = this.onError.bind(this);
     }
 
+    get id() {
+      const id = this.constructor.id;
+      if (!id) {
+        throw new Error(`Class has no id: ${this.constructor.name}`);
+      }
+      return id;
+    }
+
     get baseUrl() {
       return this.constructor.baseUrl;
     }
@@ -140,7 +148,10 @@ this.serviceList = (function() {
     async getTab(activate = false) {
       const tabs = await this.getAllTabs();
       if (!tabs.length) {
-        return browser.tabs.create({ url: this.baseUrl, active: activate });
+        return this.context.createTab({
+          url: this.baseUrl,
+          active: activate,
+        });
       }
       if (activate) {
         await browser.tabs.update(tabs[0].id, { active: activate });
@@ -148,8 +159,12 @@ this.serviceList = (function() {
       return tabs[0];
     }
 
-    async getAllTabs() {
-      return browser.tabs.query({ url: this.matchPatterns });
+    async getAllTabs(extraQuery) {
+      const query = Object.assign(
+        { url: this.matchPatterns },
+        extraQuery || {}
+      );
+      return browser.tabs.query(query);
     }
 
     async initTab(scripts) {
@@ -157,9 +172,13 @@ this.serviceList = (function() {
       await content.lazyInject(this.tab.id, scripts);
     }
 
-    async callTab(name, args) {
+    callTab(name, args) {
+      return this.callOneTab(this.tab.id, name, args);
+    }
+
+    async callOneTab(tabId, name, args) {
       args = args || {};
-      const response = browser.tabs.sendMessage(this.tab.id, {
+      const response = browser.tabs.sendMessage(tabId, {
         type: name,
         ...args,
       });

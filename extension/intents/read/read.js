@@ -1,4 +1,4 @@
-/* globals util, content */
+/* globals util, content, log */
 
 this.intents.read = (function() {
   const exports = {};
@@ -11,11 +11,26 @@ this.intents.read = (function() {
     if (!activeTab.url.startsWith("about:reader")) {
       return false;
     }
-    await content.lazyInject(activeTab.id, ["/intents/read/startNarration.js"]);
-    await browser.tabs.sendMessage(activeTab.id, {
+    return stopReadingTab(activeTab.id);
+  };
+
+  async function stopReadingTab(tabId) {
+    await content.lazyInject(tabId, ["/intents/read/startNarration.js"]);
+    await browser.tabs.sendMessage(tabId, {
       type: "stopReading",
     });
     return true;
+  }
+
+  exports.pauseAny = async function() {
+    const tabs = await browser.tabs.query({ url: "about:reader*" });
+    for (const tab of tabs) {
+      try {
+        await stopReadingTab(tab.id);
+      } catch (e) {
+        log.info("Error pausing reading in tab:", String(e));
+      }
+    }
   };
 
   this.intentRunner.registerIntent({

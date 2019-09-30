@@ -20,8 +20,8 @@ this.intents.tabs = (function() {
     open a blank tab
     open a new tab
     `,
-    async run(desc) {
-      await browser.tabs.create({ active: true });
+    async run(context) {
+      await context.createTab({ active: true });
     },
   });
 })();

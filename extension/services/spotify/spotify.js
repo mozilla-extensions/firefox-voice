@@ -1,4 +1,4 @@
-/* globals intents, serviceList */
+/* globals intents, serviceList, content */
 
 this.services.spotify = (function() {
   class Spotify extends serviceList.Service {
@@ -15,6 +15,13 @@ this.services.spotify = (function() {
     async unpause() {
       await this.initTab("/services/spotify/player.js");
       await this.callTab("unpause");
+    }
+
+    async pauseAny() {
+      for (const tab of await this.getAllTabs({ audible: true })) {
+        await content.lazyInject(tab.id, "/services/spotify/player.js");
+        await this.callOneTab(tab.id, "pause");
+      }
     }
   }
 

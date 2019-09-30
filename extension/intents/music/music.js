@@ -1,4 +1,4 @@
-/* globals intentRunner, serviceList, log */
+/* globals intentRunner, serviceList, log, intents */
 
 this.intents.music = (function() {
   const exports = {};
@@ -31,6 +31,16 @@ this.intents.music = (function() {
     return new ServiceClass(context);
   }
 
+  async function pauseAnyBut(context, serviceId) {
+    for (const ServiceClass of Object.values(SERVICES)) {
+      if (ServiceClass.id === serviceId) {
+        continue;
+      }
+      const service = new ServiceClass(context);
+      await service.pauseAny();
+    }
+  }
+
   intentRunner.registerIntent({
     name: "music.play",
     examples: ["Play Green Day"],
@@ -41,6 +51,10 @@ this.intents.music = (function() {
     async run(context) {
       const service = await getService(context);
       await service.playQuery(context.slots.query);
+      // FIXME: this won't pause other YouTube tabs when you play a new YouTube tab,
+      // though maybe YouTube should handle that itself?
+      await pauseAnyBut(context, service.id);
+      await intents.read.pauseAny();
     },
   });
 
@@ -49,12 +63,16 @@ this.intents.music = (function() {
     examples: ["Pause music"],
     match: `
     pause [service:musicServiceName]
+    pause
     pause music
     stop music
     `,
     async run(context) {
-      const service = await getService(context);
-      await service.pause();
+      for (const ServiceClass of Object.values(SERVICES)) {
+        const service = new ServiceClass(context);
+        await service.pauseAny();
+      }
+      await intents.read.pauseAny();
     },
   });
 

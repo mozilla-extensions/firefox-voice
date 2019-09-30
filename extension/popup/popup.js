@@ -75,11 +75,13 @@ this.popup = (function() {
     recorder.onBeginRecording = () => {
       browser.runtime.sendMessage({ type: "microphoneStarted" });
       ui.setState("listening");
-      ui.onStartTextInput = () => {
+      ui.onStartTextInput = async () => {
+        await browser.runtime.sendMessage({ type: "microphoneStopped" });
         log.debug("detected text from the popup");
         recorder.cancel(); // not sure if this is working as expected?
       };
-      ui.onTextInput = text => {
+      ui.onTextInput = async text => {
+        await browser.runtime.sendMessage({ type: "microphoneStopped" });
         ui.setState("success");
         ui.setTranscript(text);
         executedIntent = true;
