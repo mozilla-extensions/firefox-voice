@@ -5,6 +5,7 @@ this.player = (function() {
     action_play() {
       const button = this.querySelector("button.ytp-large-play-button");
       button.click();
+      console.log("clicked", button);
     }
 
     action_pause() {

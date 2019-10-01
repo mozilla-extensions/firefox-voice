@@ -3,7 +3,7 @@
 this.player = (function() {
   class Player extends helpers.Runner {
     action_play() {
-      const button = document.querySelector("button[title='Play']");
+      const button = this.querySelector("button[title='Play']");
       button.click();
     }
 

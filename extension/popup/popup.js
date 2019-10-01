@@ -144,6 +144,8 @@ this.popup = (function() {
       if (message.message) {
         ui.setErrorMessage(message.message);
       }
+    } else if (message.type === "displayAutoplayFailure") {
+      ui.displayAutoplayFailure();
     }
   }
 

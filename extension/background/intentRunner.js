@@ -38,6 +38,12 @@ this.intentRunner = (function() {
       });
     }
 
+    async failedAutoplay(tab) {
+      this.keepPopup();
+      await browser.tabs.update(tab.id, { active: true });
+      await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
+    }
+
     showCard(cardData) {
       this.keepPopup();
       telemetry.add({ hasCard: true });
