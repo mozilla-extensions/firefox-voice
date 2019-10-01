@@ -148,6 +148,12 @@ this.ui = (function() {
     document.querySelector("#error-message").textContent = message;
   };
 
+  exports.displayAutoplayFailure = function displayAutoplayFailure() {
+    document.querySelector("#error-message").textContent =
+      "Please enable autoplay on this site for a better experience";
+    document.querySelector("#error-autoplay").style.display = "";
+  };
+
   exports.setIcon = function setIcon(state) {
     browser.browserAction.setIcon({
       16: `${state}-16.svg`,

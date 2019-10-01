@@ -7,8 +7,11 @@ this.services.youtube = (function() {
         url: searching.googleSearchUrl(`${query} youtube.com`, true),
         active: true,
       });
-      await content.lazyInject(this.tab.id, "/services/youtube/player.js");
-      await this.callTab("play");
+      this.tabCreated = true;
+      const isAudible = await this.pollTabAudible(this.tab.id, 2000);
+      if (!isAudible) {
+        this.context.failedAutoplay(this.tab);
+      }
     }
 
     async pause() {

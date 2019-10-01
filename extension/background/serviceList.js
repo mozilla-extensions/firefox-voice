@@ -1,4 +1,4 @@
-/* globals content */
+/* globals content, util */
 
 this.services = {};
 
@@ -142,21 +142,24 @@ this.serviceList = (function() {
     }
 
     async activateOrOpen() {
-      return this.getTab(true);
+      return (await this.getTab(true)).tab;
     }
 
     async getTab(activate = false) {
       const tabs = await this.getAllTabs();
       if (!tabs.length) {
-        return this.context.createTab({
-          url: this.baseUrl,
-          active: activate,
-        });
+        return {
+          created: true,
+          tab: await this.context.createTab({
+            url: this.baseUrl,
+            active: activate,
+          }),
+        };
       }
       if (activate) {
         await browser.tabs.update(tabs[0].id, { active: activate });
       }
-      return tabs[0];
+      return { created: false, tab: tabs[0] };
     }
 
     async getAllTabs(extraQuery) {
@@ -168,7 +171,9 @@ this.serviceList = (function() {
     }
 
     async initTab(scripts) {
-      this.tab = await this.getTab();
+      const tabInfo = await this.getTab();
+      this.tab = tabInfo.tab;
+      this.tabCreated = tabInfo.created;
       await content.lazyInject(this.tab.id, scripts);
     }
 
@@ -196,6 +201,20 @@ this.serviceList = (function() {
         throw e;
       }
       return response;
+    }
+
+    async pollTabAudible(tabId, timeout) {
+      return util.trySeveralTimes({
+        func: async () => {
+          const tab = await browser.tabs.get(tabId);
+          if (tab.audible) {
+            return true;
+          }
+          return undefined;
+        },
+        returnOnTimeout: false,
+        timeout,
+      });
     }
   };
 

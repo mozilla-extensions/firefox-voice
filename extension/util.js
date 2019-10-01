@@ -18,6 +18,46 @@ this.util = (function() {
     return Promise.race([promise, sleeper]);
   };
 
+  /** Try func() several times, eventually timing out after timeout milliseconds
+   * func() should return undefined when the results are indeterminate. Any other
+   * return value ends the attempts successfully.
+   */
+  exports.trySeveralTimes = function({
+    func,
+    timeout,
+    interval,
+    returnOnTimeout,
+  }) {
+    timeout = timeout || 1000;
+    interval = interval || 100;
+    return new Promise((resolve, reject) => {
+      const intervalId = setInterval(async () => {
+        try {
+          const resp = await func();
+          if (resp !== undefined) {
+            clearTimeout(timeoutId);
+            clearInterval(intervalId);
+            resolve(resp);
+          }
+        } catch (e) {
+          clearTimeout(timeoutId);
+          clearInterval(intervalId);
+          reject(e);
+        }
+      }, interval);
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId);
+        if (returnOnTimeout !== undefined) {
+          resolve(returnOnTimeout);
+        } else {
+          const exc = new Error("Timed out");
+          exc.name = "TimeoutError";
+          reject(exc);
+        }
+      }, timeout);
+    });
+  };
+
   /** Creates a Promise with .resolve and .reject attributes, so you can pre-create it and then
    * resolve it somewhere else (like after initialization has run) */
   exports.makeNakedPromise = function() {
