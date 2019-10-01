@@ -25,6 +25,10 @@ By default messaging-related logging messages aren't shown, you can turn logging
 
 It's possible to install and use in-development versions of the extension. Every commit to `master` is built into the dev build, and when we prepare for a release and merge to `stage` is used to create the stage build.
 
+**NOTE THAT THESE VERSIONS INCLUDE EXTRA DATA COLLECTION**
+
+We are using these builds for internal testing with more-than-normal data collection. We have not yet implemented data collection controls.
+
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi)
 - [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi)
 - [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi)
