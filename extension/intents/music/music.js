@@ -16,7 +16,7 @@ this.intents.music = (function() {
     SERVICES[service.id] = service;
   };
 
-  async function getService(context) {
+  async function getService(context, options) {
     let ServiceClass;
     if (context.slots.service) {
       ServiceClass = SERVICES[context.slots.service.toLowerCase()];
@@ -26,7 +26,7 @@ this.intents.music = (function() {
         );
       }
     } else {
-      ServiceClass = await serviceList.getService("music", SERVICES);
+      ServiceClass = await serviceList.getService("music", SERVICES, options);
     }
     return new ServiceClass(context);
   }
@@ -49,7 +49,7 @@ this.intents.music = (function() {
     play [query]
     `,
     async run(context) {
-      const service = await getService(context);
+      const service = await getService(context, { lookAtCurrentTab: true });
       await service.playQuery(context.slots.query);
       // FIXME: this won't pause other YouTube tabs when you play a new YouTube tab,
       // though maybe YouTube should handle that itself?
@@ -89,7 +89,7 @@ this.intents.music = (function() {
     `,
     priority: "high",
     async run(context) {
-      const service = await getService(context);
+      const service = await getService(context, { lookAtCurrentTab: true });
       await service.unpause();
     },
   });
@@ -108,6 +108,22 @@ this.intents.music = (function() {
     async run(context) {
       const service = await getService(context);
       await service.activateOrOpen();
+    },
+  });
+
+  intentRunner.registerIntent({
+    name: "music.move",
+    examples: ["next", "previous"],
+    match: `
+    play next (song | track |)        [direction=next]
+    next (song | track |)             [direction=next]
+    play previous (song | track |)    [direction=back]
+    previous (song | track |)         [direction=back]
+    skip (song | track |)             [direction=next]
+    `,
+    async run(context) {
+      const service = await getService(context, { lookAtCurrentTab: true });
+      await service.move(context.parameters.direction);
     },
   });
 

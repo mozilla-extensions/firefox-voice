@@ -23,6 +23,19 @@ this.services.spotify = (function() {
       }
     }
 
+    async move(direction) {
+      const tabs = await this.getAllTabs();
+      if (!tabs.length) {
+        const e = new Error("Spotify is not open");
+        e.displayMessage = "Spotify is not open";
+        throw e;
+      }
+      for (const tab of tabs) {
+        await content.lazyInject(tab.id, "/services/spotify/player.js");
+        await this.callOneTab(tab.id, "move", { direction });
+      }
+    }
+
     async pause() {
       await this.initTab("/services/spotify/player.js");
       await this.callTab("pause");

@@ -37,7 +37,23 @@ this.player = (function() {
     }
 
     action_pause() {
-      const button = document.querySelector("button[title='Pause']");
+      const button = this.querySelector("button[title='Pause']");
+      button.click();
+    }
+
+    action_unpause() {
+      const button = this.querySelector(".control-button[title='Play']");
+      button.click();
+    }
+
+    action_move({ direction }) {
+      let selector;
+      if (direction === "next") {
+        selector = ".control-button[title='Next']";
+      } else if (direction === "previous") {
+        selector = ".control-button[title='Previous']";
+      }
+      const button = this.querySelector(selector);
       button.click();
     }
   }

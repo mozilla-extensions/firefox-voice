@@ -21,8 +21,9 @@ this.intentParser = (function() {
   const Matcher = (exports.Matcher = class Matcher {
     constructor(phrase) {
       this.phrase = phrase;
-      const { slots, regex } = this._phraseToRegex(phrase);
+      const { slots, regex, parameters } = this._phraseToRegex(phrase);
       this.slots = slots;
+      this.parameters = parameters;
       this.regexString = regex;
       this.regex = new RegExp("^" + regex + "$", "i");
     }
@@ -32,7 +33,12 @@ this.intentParser = (function() {
       if (!match) {
         return null;
       }
-      const result = { slots: {}, utterance, regex: this.regexString };
+      const result = {
+        slots: {},
+        utterance,
+        regex: this.regexString,
+        parameters: Object.assign({}, this.parameters),
+      };
       for (let i = 0; i < this.slots.length; i++) {
         if (match[i + 1]) {
           if (result.slots[this.slots[i]]) {
@@ -51,9 +57,14 @@ this.intentParser = (function() {
 
     _phraseToRegex(toParse) {
       const slots = [];
+      const parameters = {};
       let regex = "";
       while (toParse) {
-        if (toParse.startsWith("[")) {
+        if (this._isParameter(toParse)) {
+          const { parameter, value, phrase } = this._getParameter(toParse);
+          parameters[parameter] = value;
+          toParse = phrase;
+        } else if (toParse.startsWith("[")) {
           const { slot, phrase } = this._getSlot(toParse);
           toParse = phrase;
           if (slot.includes(":")) {
@@ -82,7 +93,7 @@ this.intentParser = (function() {
           regex += " " + words;
         }
       }
-      return { slots, regex };
+      return { slots, parameters, regex };
     }
 
     _getAlternatives(phrase) {
@@ -132,6 +143,27 @@ this.intentParser = (function() {
       }
       const words = phrase.substr(0, next).trim();
       return { words, phrase: phrase.substr(next) };
+    }
+
+    _isParameter(phrase) {
+      return /^\[\w+=/.test(phrase);
+    }
+
+    _getParameter(phrase) {
+      if (!phrase.startsWith("[")) {
+        throw new Error("Expected [");
+      }
+      phrase = phrase.substr(1);
+      if (!phrase.includes("]")) {
+        throw new Error("Missing ]");
+      }
+      const paramSetter = phrase.substr(0, phrase.indexOf("]")).trim();
+      phrase = phrase.substr(phrase.indexOf("]") + 1).trim();
+      const parts = paramSetter.split("=");
+      if (parts.length !== 2) {
+        throw new Error(`Bad parameter assignment: ${paramSetter}`);
+      }
+      return { parameter: parts[0], value: parts[1], phrase };
     }
   });
 
@@ -221,6 +253,7 @@ this.intentParser = (function() {
     return {
       name: DEFAULT_INTENT,
       slots: { [DEFAULT_SLOT]: text },
+      parameters: {},
       utterance: text,
       fallback: true,
     };
