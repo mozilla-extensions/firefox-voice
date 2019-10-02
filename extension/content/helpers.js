@@ -22,6 +22,10 @@ this.helpers = (function() {
       return element;
     }
 
+    querySelectorAll(selector) {
+      return document.querySelectorAll(selector);
+    }
+
     setReactInputValue(input, value) {
       // See https://hustle.bizongo.in/simulate-react-on-change-on-controlled-components-baa336920e04
       // for the why of this
