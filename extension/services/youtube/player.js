@@ -18,6 +18,14 @@ this.player = (function() {
     action_unpause() {
       this.action_play();
     }
+
+    action_move({ direction }) {
+      if (direction !== "next") {
+        throw new Error("Unexpected direction");
+      }
+      const button = this.querySelector(".ytp-next-button");
+      button.click();
+    }
   }
 
   Player.register();

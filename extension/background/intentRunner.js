@@ -111,7 +111,10 @@ this.intentRunner = (function() {
         `Running intent ${desc.name}`,
         Object.keys(desc.slots).length
           ? `with slots: ${JSON.stringify(desc.slots)}`
-          : "with no slots"
+          : "with no slots",
+        Object.keys(desc.parameters).length
+          ? `and parameters: ${JSON.stringify(desc.parameters)}`
+          : "and no params"
       );
       await intent.run(context);
       if (context.closePopupOnFinish) {
@@ -154,6 +157,7 @@ this.intentRunner = (function() {
           phrase: m.phrase,
           slots: m.slots,
           regex: String(m.regex),
+          parameters: m.parameters,
         };
       });
       if (intent.examples) {
@@ -166,6 +170,7 @@ this.intentRunner = (function() {
             parsedIntent: parsed.name,
             text: e,
             slots: parsed.slots,
+            parameters: parsed.parameters,
           };
         });
       }

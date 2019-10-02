@@ -29,6 +29,13 @@ async function init() {
             ? "Slots: <code>" + quote(m.slots) + "</code><br>"
             : ""
         }
+        ${
+          m.parameters && Object.keys(m.parameters).length
+            ? "Parameters: <code>" +
+              quote(JSON.stringify(m.parameters)) +
+              "</code><br>"
+            : ""
+        }
       </section>
       `;
     });
@@ -46,6 +53,13 @@ async function init() {
           ${
             e.slots && Object.keys(e.slots).length
               ? "Slots: <code>" + quote(JSON.stringify(e.slots)) + "</code><br>"
+              : ""
+          }
+          ${
+            e.parameters && Object.keys(e.parameters).length
+              ? "Parameters: <code>" +
+                quote(JSON.stringify(e.parameters)) +
+                "</code><br>"
               : ""
           }
         </section>

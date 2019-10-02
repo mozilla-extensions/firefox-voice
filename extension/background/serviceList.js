@@ -218,6 +218,17 @@ this.serviceList = (function() {
     }
   };
 
+  exports.detectServiceFromActiveTab = async function(services) {
+    const tab = (await browser.tabs.query({ active: true }))[0];
+    for (const name in services) {
+      const service = services[name];
+      if (tab.url.startsWith(service.baseUrl)) {
+        return name;
+      }
+    }
+    return null;
+  };
+
   exports.detectServiceFromHistory = async function(services) {
     const now = Date.now();
     const oneMonth = now - 1000 * 60 * 60 * 24 * 30; // last 30 days
@@ -252,9 +263,16 @@ this.serviceList = (function() {
     return best;
   };
 
-  exports.getService = async function(serviceType, serviceMap) {
+  exports.getService = async function(serviceType, serviceMap, options) {
     // TODO: serviceType should be used to store a preference related to this service
     // (which would override any automatic detection).
+    options = options || {};
+    if (options.lookAtCurrentTab) {
+      const serviceName = await exports.detectServiceFromActiveTab(serviceMap);
+      if (serviceName) {
+        return serviceMap[serviceName];
+      }
+    }
     const serviceName = await exports.detectServiceFromHistory(serviceMap);
     return serviceMap[serviceName];
   };
