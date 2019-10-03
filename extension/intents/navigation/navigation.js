@@ -23,7 +23,6 @@ this.intents.navigation = (function() {
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
-    priority: "low",
     async run(context) {
       const cardData = await searching.ddgEntitySearch(context.slots.query);
       if (!cardData) {

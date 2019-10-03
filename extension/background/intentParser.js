@@ -1,4 +1,4 @@
-/* globals log, util, serviceList */
+/* globals log, serviceList */
 this.intentParser = (function() {
   const exports = {};
 
@@ -200,26 +200,17 @@ this.intentParser = (function() {
 
   // Populated by registerMatcher:
   const INTENTS = {};
-  const INTENT_PRIORITY_NAMES = [];
-  let INTENT_NAMES = [];
-  const PRIORITIES = {
-    low: -1,
-    "": 0,
-    high: 1,
-  };
+  const INTENT_NAMES = [];
 
-  exports.registerMatcher = function(intentName, matcher, priority) {
+  exports.registerMatcher = function(intentName, matcher) {
     if (INTENTS[intentName]) {
       throw new Error(`Intent ${intentName} has already been registered`);
     }
     if (typeof matcher === "string") {
       matcher = new MatchSet(matcher);
     }
-    INTENT_PRIORITY_NAMES.push([intentName, PRIORITIES[priority || ""]]);
-    INTENT_PRIORITY_NAMES.sort((a, b) => {
-      return util.cmp(-a[1], -b[1]) || util.cmp(a[0], b[0]);
-    });
-    INTENT_NAMES = INTENT_PRIORITY_NAMES.map(i => i[0]);
+    INTENT_NAMES.push(intentName);
+    INTENT_NAMES.sort();
     INTENTS[intentName] = { matcher };
   };
 
@@ -259,7 +250,7 @@ this.intentParser = (function() {
     };
   };
 
-  exports.getNamesByPriority = function() {
+  exports.getIntentNames = function() {
     return INTENT_NAMES;
   };
 

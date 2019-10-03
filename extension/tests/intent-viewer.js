@@ -74,7 +74,6 @@ async function init() {
     html.push(`<div class="intent">
       <h2>${intent.name}</h2>
       <a href="${quote(makeViewUrl(intent.name))}">View code</a><br>
-      ${intent.priority ? "Priority: " + intent.priority + "<br>" : ""}
       <div>
         <h3>Matchers</h3>
         ${matchers.join("\n")}
