@@ -25,6 +25,7 @@ this.catcher = (function() {
       tags: {
         git_commit: buildSettings.gitCommit,
       },
+      ignoreErrors: ["No matching message handler"],
       beforeSend(event) {
         event.request.url = fixUrl(event.request.url);
         for (const exc of event.exception.values) {
