@@ -63,9 +63,8 @@ this.intents.music = (function() {
     examples: ["Pause music"],
     match: `
     pause [service:musicServiceName]
-    pause
-    pause music
-    stop music
+    pause (music |)
+    stop (music |)
     `,
     async run(context) {
       for (const ServiceClass of Object.values(SERVICES)) {
