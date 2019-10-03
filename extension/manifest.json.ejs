@@ -24,7 +24,7 @@
       "util.js",
       "buildSettings.js",
       "log.js",
-      <% if (! env.NO_SENTRY) { %>
+      <% if (! (env.NO_SENTRY && !env.FORCE_SENTRY)) { %>
       "js/vendor/sentry.js",
       <% } %>
       "catcher.js",

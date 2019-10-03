@@ -4,6 +4,8 @@ this.catcher = (function() {
   const exports = {};
   const hostname = location.hostname;
 
+  // Note Sentry is usually enabled for live builds and disabled for local development
+  // to test Sentry locally use FORCE_SENTRY=1 npm start
   const activated = (exports.sentryActivated = !!buildSettings.sentryDsn);
 
   function fixUrl(u) {
