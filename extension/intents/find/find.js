@@ -57,6 +57,11 @@ this.intents.find = (function() {
       const matches = fuse.search(query);
       log.debug("find matches:", matches);
       // TODO account for multiple matches
+      if (!matches.length) {
+        const e = new Error("No matching tab found");
+        e.displayMessage = "No matching tab found";
+        throw e;
+      }
       const topMatch = parseInt(matches[0].item);
       await browser.tabs.update(topMatch, {
         active: true,
