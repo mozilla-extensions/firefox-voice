@@ -63,4 +63,16 @@ this.intents.navigation = (function() {
       });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.cancelIntent",
+    match: `
+    cancel
+    nevermind
+    never mind
+    `,
+    async run(context) {
+      context.done(0);
+    },
+  });
 })();

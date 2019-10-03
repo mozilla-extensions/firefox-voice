@@ -136,7 +136,7 @@ this.popup = (function() {
 
   function handleMessage(message) {
     if (message.type === "closePopup") {
-      ui.closePopup();
+      ui.closePopup(message.time);
     } else if (message.type === "showCard") {
       ui.showCard(message.cardData);
     } else if (message.type === "displayFailure") {

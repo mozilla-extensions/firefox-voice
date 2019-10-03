@@ -17,10 +17,11 @@ this.intentRunner = (function() {
       this.closePopupOnFinish = false;
     }
 
-    done() {
+    done(time = undefined) {
       this.closePopupOnFinish = false;
       return browser.runtime.sendMessage({
         type: "closePopup",
+        time,
       });
     }
 
