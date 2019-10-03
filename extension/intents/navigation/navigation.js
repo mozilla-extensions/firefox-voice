@@ -39,7 +39,7 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
     match: `
-    (do a |) (search | query | look up | lookup | look on | look for) (my |) [service:serviceName] (for | for the |) [query]
+    (do a |) (search on | query on | lookup on | look up on | look on) (my |) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
     `,
     examples: [
