@@ -28,15 +28,17 @@ this.catcher = (function() {
       beforeSend(event) {
         event.request.url = fixUrl(event.request.url);
         for (const exc of event.exception.values) {
-          for (const frame of exc.stacktrace.frames) {
-            frame.filename = fixUrl(frame.filename);
+          if (exc.stacktrace && exc.stacktrace.frames) {
+            for (const frame of exc.stacktrace.frames) {
+              frame.filename = fixUrl(frame.filename);
+            }
+            // FIXME: This may or may not be useful:
+            /*
+            exc.stacktrace.frames = exc.stacktrace.frames.filter(f => {
+              return !f.filename.endsWith("catcher.js");
+            });
+            */
           }
-          // FIXME: This may or may not be useful:
-          /*
-          exc.stacktrace.frames = exc.stacktrace.frames.filter(f => {
-            return !f.filename.endsWith("catcher.js");
-          });
-          */
         }
         return event;
       },
