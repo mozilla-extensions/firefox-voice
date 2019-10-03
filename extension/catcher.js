@@ -1,4 +1,4 @@
-/* globals Sentry, buildSettings */
+/* globals Sentry, buildSettings, catcherAsyncSetup */
 
 this.catcher = (function() {
   const exports = {};
@@ -17,7 +17,8 @@ this.catcher = (function() {
     if (!buildSettings.sentryDsn) {
       return;
     }
-    Sentry.init({
+    const sentryOptions = {
+      url: "/js/vendor/sentry.js",
       dsn: buildSettings.sentryDsn,
       release: manifest.version,
       environment: buildSettings.channel,
@@ -39,7 +40,13 @@ this.catcher = (function() {
         }
         return event;
       },
-    });
+    };
+    if (typeof Sentry === "undefined") {
+      window.SENTRY_DSK = sentryOptions;
+      catcherAsyncSetup();
+    } else {
+      Sentry.init(sentryOptions);
+    }
   }
 
   exports.capture = function(e) {
