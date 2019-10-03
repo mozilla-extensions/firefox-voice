@@ -86,7 +86,6 @@ this.intents.music = (function() {
     continue music
     play music
     `,
-    priority: "high",
     async run(context) {
       const service = await getService(context, { lookAtCurrentTab: true });
       await service.unpause();

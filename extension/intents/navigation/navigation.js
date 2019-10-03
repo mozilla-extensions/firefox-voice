@@ -23,7 +23,6 @@ this.intents.navigation = (function() {
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
-    priority: "low",
     async run(context) {
       const cardData = await searching.ddgEntitySearch(context.slots.query);
       if (!cardData) {
@@ -39,7 +38,8 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
     match: `
-    (do a |) (search on | query on | lookup on | look up on | look on) (my |) [service:serviceName] (for | for the |) [query]
+    (do a |) (search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query]
+    (do a |) (search | query ) my [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
     `,
     examples: [
