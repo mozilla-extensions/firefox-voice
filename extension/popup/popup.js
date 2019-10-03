@@ -68,13 +68,14 @@ this.popup = (function() {
     } else {
       recorder = new voice.Recorder(stream);
     }
-    const intervalId = setInterval(() => {
-      const volumeLevel = recorder.getVolumeLevel();
-      ui.setAnimationForVolume(volumeLevel);
-    }, 500);
+    let intervalId;
     recorder.onBeginRecording = () => {
       browser.runtime.sendMessage({ type: "microphoneStarted" });
       ui.setState("listening");
+      intervalId = setInterval(() => {
+        const volumeLevel = recorder.getVolumeLevel();
+        ui.setAnimationForVolume(volumeLevel);
+      }, 500);
       ui.onStartTextInput = async () => {
         await browser.runtime.sendMessage({ type: "microphoneStopped" });
         log.debug("detected text from the popup");

@@ -1,4 +1,4 @@
-/* globals voiceSchema, main, util, log, buildSettings */
+/* globals voiceSchema, main, util, log, buildSettings, catcher */
 
 this.telemetry = (function() {
   const exports = {};
@@ -16,7 +16,18 @@ this.telemetry = (function() {
 
   function resetPing() {
     ping = Object.assign({}, pingTemplate);
-    ping.extensionTemporaryInstall = main.extensionTemporaryInstall();
+    try {
+      ping.extensionTemporaryInstall = main.extensionTemporaryInstall();
+    } catch (e) {
+      if (!e.message || !e.message.includes("not yet established")) {
+        throw e;
+      } else {
+        log.info(
+          "Tried to send Telemetry before temporary installation established"
+        );
+        catcher.capture(e);
+      }
+    }
     ping.intentId = util.randomString(10);
     if (ping.extensionTemporaryInstall) {
       ping.extensionInstallationChannel = "web-ext";

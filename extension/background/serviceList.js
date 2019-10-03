@@ -274,7 +274,13 @@ this.serviceList = (function() {
       }
     }
     const serviceName = await exports.detectServiceFromHistory(serviceMap);
-    return serviceMap[serviceName];
+    const ServiceClass = serviceMap[serviceName];
+    if (!ServiceClass) {
+      throw new Error(
+        `detectServiceFromHistory did not return service (${serviceName})`
+      );
+    }
+    return ServiceClass;
   };
 
   return exports;
