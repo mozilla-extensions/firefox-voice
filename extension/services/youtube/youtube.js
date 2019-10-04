@@ -1,6 +1,27 @@
-/* globals intents, serviceList, searching, content */
+/* globals intents, serviceList, searching, content, util */
 
 this.services.youtube = (function() {
+  const SUPPORTED_URLS = /^https:\/\/www.youtube.com\/watch/i;
+
+  async function waitForUrl(tabId, options) {
+    const notUrlPattern = options.notUrlPattern;
+    return util.trySeveralTimes(
+      Object.assign({}, options, {
+        func: async () => {
+          const tab = await browser.tabs.get(tabId);
+          if (
+            tab.url.startsWith("about:blank") ||
+            notUrlPattern.test(tab.url)
+          ) {
+            return undefined;
+          }
+          return tab;
+        },
+        returnOnTimeout: null,
+      })
+    );
+  }
+
   class YouTube extends serviceList.Service {
     async playQuery(query) {
       this.tab = await this.context.createTab({
@@ -8,6 +29,14 @@ this.services.youtube = (function() {
         active: true,
       });
       this.tabCreated = true;
+      // We only test for audibility if the URL seems correct
+      const loadedTab = await waitForUrl(this.tab.id, {
+        notUrlPattern: /^https:\/\/[^/]*google.com/i,
+        timeout: 5000,
+      });
+      if (!SUPPORTED_URLS.test(loadedTab.url)) {
+        return;
+      }
       const isAudible = await this.pollTabAudible(this.tab.id, 2000);
       if (!isAudible) {
         this.context.failedAutoplay(this.tab);
@@ -40,7 +69,6 @@ this.services.youtube = (function() {
       let tabs = await this.getAllTabs({ audible: true });
       if (!tabs.length) {
         const currentTab = (await browser.tabs.query({ active: true }))[0];
-        console.log("test", currentTab.url, this.baseUrl);
         if (currentTab.url.startsWith(this.baseUrl)) {
           tabs = [currentTab];
         } else {
