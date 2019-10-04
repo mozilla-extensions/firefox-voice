@@ -39,7 +39,8 @@ update_public_log() {
     channel="$1"
     version="$2"
     git_commit="$3"
-    message="Updated $channel to $version at $(date --utc) see https://github.com/mozilla/firefox-voice/commit/$git_commit"
+    date="$(TZ=America/Los_Angeles date +"%Y-%m-%d %I:%M%p %Z")"
+    message="Updated $channel to $version at ${date} see https://github.com/mozilla/firefox-voice/commit/$git_commit"
     echo "$message" >> public-update-log.txt
     sudo cp public-update-log.txt $RELEASES/public-update-log.txt
 }
