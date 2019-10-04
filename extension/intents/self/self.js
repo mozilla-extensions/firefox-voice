@@ -1,4 +1,4 @@
-this.intents.read = (function() {
+this.intents.self = (function() {
   this.intentRunner.registerIntent({
     name: "self.cancelIntent",
     match: `
