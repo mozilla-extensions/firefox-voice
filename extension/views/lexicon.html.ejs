@@ -2,14 +2,230 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Firefox Voice Changes and Updates</title>
+    <title>Firefox Voice Lexicon</title>
     <!-- <link rel="stylesheet" href="../css/vendor/tailwind.min.css" /> -->
+    <style>
+		#contents{
+			font-family: sans-serif, serif;
+		}
+		#sidebar {
+			float:left;
+			width:33%;
+			font-size: 24px;
+			color: #8E31BD;
+			font-weight: bold;
+			letter-spacing: -2px;
+			line-height: 52px;
+		}
+		#sidebar .stmt{
+			width: 100%;
+			padding-right: 40px;
+		}
+		#list {
+			float:left;
+			width: 66%;
+		}
+		#clear{
+			clear: both;
+		}
+		.example{
+			margin-bottom: 40px;
+		}
+		.intent{
+			font-size: 36px;
+			font-weight: bold;
+			color: #20123A;
+			letter-spacing: -1.5px;	
+		}
+		.description{
+			font-size: 16px;
+			color: #20123A;
+			letter-spacing: -0.87px;
+			padding-bottom: 10px;
+			letter-spacing: 0px;
+		}
+		.utterance{
+			font-size: 16px;
+			font-style: normal;
+			font-weight: bold;
+			background-color: #EDEDF0;
+			border-left: solid 6px #8E31BD;
+			padding: 20px;
+		}
+		.utterance p{
+			font-style: italic;
+			font-size: 28px;
+			color: #20123A;
+			letter-spacing: -1.17px;
+			margin-top: 10px;
+			margin-bottom: 15px;
+			font-weight: normal;
+		}
+		.utterance .small{
+			font-size: 16px;
+			font-weight: normal;
+			letter-spacing: 0px;
+			}
+		footer{
+			padding-top: 1rem;
+		}
+	</style>
+    
   </head>
   <body>
     <h1>Firefox Voice Commands</h1>
 
     <div id="contents">
-      <%- content %>
+      <div id="sidebar">
+	      <div class="stmt">The big list of what you can say.</div>
+      </div>
+      <div id="list">
+	      <div class="example">
+	      	<div class="intent">
+		      	Search the web
+	      	</div>
+	      	<div class="description">
+		      	Returns results from the default search engine.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Search for hiking in Denver</p>
+		      	<p>Look up recipes for fish tacos</p>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Search a specific website
+	      	</div>
+	      	<div class="description">
+		      	Returns results from search feature on a specific website.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Search my Gmail for tickets to Hamilton</p>
+		      	<p>Look up The Book Thief on GoodReads</p>
+		      	<p>Search CSS grid on MDN</p>
+		      	<div class="small"><b>Supported sites:</b> Gmail, Google Docs, Google Calendar, Google Slides, Google Maps, MDN, GoodReads, Spotify, Amazon, Wikipedia, Yelp, Twitter, Reddit, Amazon Music, Google Play Music, Pandora, SoundCloud, YouTube, Vimeo, Netflix, Hulu, StudHub, TicketMaster, Instagram, LinkedIn, Quora, Pinterest, Facebook, Stack Exchange, Dictionary, Thesaurus, DuckDuckGo</div>
+		 
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Go to website / webpage
+	      	</div>
+	      	<div class="description">
+		      	Opens new tab with requested website or a specific web page based on the top search result.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Go to the New York Times</p>
+		      	<p>Show me the 49ers schedule</p>
+		      	<p>Go to the Health section of the BBC</p> 
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Play music / video
+	      	</div>
+	      	<div class="description">
+		      	Plays a song, video, or artist.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Play Green Day on Spotify</p>
+		      	<p>Play yesterday's Daily Show</p>
+		      	<p>Play Old Town Road</p>
+		      	<div class="small"><b>Supported sites:</b> YouTube, Spotify, more coming soon...</div>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Audio / video controls
+	      	</div>
+	      	<div class="description">
+		      	Control playback within the browser.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Play (to control active tab)</p>
+		      	<p>Mute (all tabs)</p>
+		      	<p>Pause</p>
+		      	<p>Next</p>
+	      	</div>
+	      </div>
+
+	      <div class="example">
+	      	<div class="intent">
+		      	Read to me
+	      	</div>
+	      	<div class="description">
+		      	Reads an active article out loud.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Read this page</p>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Weather
+	      	</div>
+	      	<div class="description">
+		      	Displays weather for the requested location
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Show me weather in Flagstaff, Arizona</p>
+		      	<p>What's the temperature in San Antonio?</p>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Timer
+	      	</div>
+	      	<div class="description">
+		      	Sets a timer using a webpage.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Set a timer for 5 minutes.</p>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Find tab
+	      	</div>
+	      	<div class="description">
+		      	Finds one tab among many by making requested tab active.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Find calendar tab</p>
+	      	</div>
+	      </div>
+	      
+	      <div class="example">
+	      	<div class="intent">
+		      	Open or close tab
+	      	</div>
+	      	<div class="description">
+		      	Opens new tab or closes active tab.
+	      	</div>
+	      	<div class="utterance">
+		      	Example
+		      	<p>Close tab</p>
+		      	<p>Open new tab</p>
+	      	</div>
+	      </div>
+      </div>
+      <div id="clear"></div>
     </div>
 
     <footer>
