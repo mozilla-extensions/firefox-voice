@@ -1,0 +1,75 @@
+#contents {
+  font-family: sans-serif, serif;
+}
+
+#sidebar {
+  float: left;
+  width: 33%;
+  font-size: 24px;
+  color: #8e31bd;
+  font-weight: bold;
+  letter-spacing: -2px;
+  line-height: 52px;
+}
+
+#sidebar .stmt {
+  width: 100%;
+  padding-right: 40px;
+}
+
+#list {
+  float: left;
+  width: 66%;
+}
+
+#clear {
+  clear: both;
+}
+
+.example {
+  margin-bottom: 40px;
+}
+
+.intent {
+  font-size: 36px;
+  font-weight: bold;
+  color: #20123a;
+  letter-spacing: -1.5px;
+}
+
+.description {
+  font-size: 16px;
+  color: #20123a;
+  letter-spacing: -0.87px;
+  padding-bottom: 10px;
+  letter-spacing: 0px;
+}
+
+.utterance {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: bold;
+  background-color: #ededf0;
+  border-left: solid 6px #8e31bd;
+  padding: 20px;
+}
+
+.utterance p {
+  font-style: italic;
+  font-size: 28px;
+  color: #20123a;
+  letter-spacing: -1.17px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-weight: normal;
+}
+
+.utterance .small {
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 0px;
+}
+
+footer {
+  padding-top: 1rem;
+}
