@@ -190,6 +190,15 @@ this.ui = (function() {
     });
   }
 
+  function listenForLexicon() {
+    const link = document.getElementById("lexicon");
+    link.addEventListener("click", async event => {
+      event.preventDefault();
+      await browser.tabs.create({ url: event.target.href });
+      window.close();
+    });
+  }
+
   async function showSettings() {
     await browser.tabs.create({
       url: browser.runtime.getURL("options/options.html"),
@@ -232,6 +241,7 @@ this.ui = (function() {
   listenForClose();
   listenForSettings();
   listenForBack();
+  listenForLexicon();
 
   return exports;
 })();
