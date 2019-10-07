@@ -37,6 +37,9 @@ this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
     match: `
+    google images (of |) [query] [service=images]
+    search images (for |) [query] [service=images]
+    images of [query] [service=images]
     (do a |) (search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query ) my [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
@@ -46,14 +49,16 @@ this.intents.navigation = (function() {
       "Look up The Book Thief on GoodReads",
       "Search CSS grid on MDN",
       "Look up Hamilton in Gmail",
+      "Images of sparrows",
     ],
     async run(context) {
+      const service = context.slots.service || context.parameters.service;
       const myurl = await searching.ddgBangSearchUrl(
         context.slots.query,
-        context.slots.service
+        service
       );
       context.addTelemetryServiceName(
-        `ddg:${serviceList.ddgBangServiceName(context.slots.service)}`
+        `ddg:${serviceList.ddgBangServiceName(service)}`
       );
       await context.createTab({ url: myurl });
       browser.runtime.sendMessage({
