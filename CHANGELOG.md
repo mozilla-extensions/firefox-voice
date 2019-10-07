@@ -1,3 +1,7 @@
+## Version 0.8.0 (2019-10-07)
+
+- Follow redirect page in I'm Lucky searches. Sometimes Google has started to interrupt I'm Feeling Luck search URLs with a redirect page. This follows those redirect. Fixes [#362](https://github.com/mozilla-services/screenshots/issues/362) [40d304c](https://github.com/mozilla-services/screenshots/commit/40d304c)
+
 ## Version 0.7.0 (2019-10-04)
 
 - Add a lexicon, viewable with "help" [#129](https://github.com/mozilla-services/screenshots/issues/129) [7a41d6f](https://github.com/mozilla-services/screenshots/commit/7a41d6f) [afd96f1](https://github.com/mozilla-services/screenshots/commit/afd96f1) [aa5d9b6](https://github.com/mozilla-services/screenshots/commit/aa5d9b6) [14314cc](https://github.com/mozilla-services/screenshots/commit/14314cc) [82d4877](https://github.com/mozilla-services/screenshots/commit/82d4877)
