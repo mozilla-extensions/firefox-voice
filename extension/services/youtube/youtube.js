@@ -1,4 +1,4 @@
-/* globals intents, serviceList, searching, content, util */
+/* globals intents, serviceList, content, util */
 
 this.services.youtube = (function() {
   const SUPPORTED_URLS = /^https:\/\/www.youtube.com\/watch/i;
@@ -24,10 +24,9 @@ this.services.youtube = (function() {
 
   class YouTube extends serviceList.Service {
     async playQuery(query) {
-      this.tab = await this.context.createTab({
-        url: searching.googleSearchUrl(`${query} youtube.com`, true),
-        active: true,
-      });
+      this.tab = await this.context.createTabGoogleLucky(
+        `${query} youtube.com`
+      );
       this.tabCreated = true;
       // We only test for audibility if the URL seems correct
       const loadedTab = await waitForUrl(this.tab.id, {

@@ -1,4 +1,4 @@
-/* globals log, intentParser, telemetry, catcher */
+/* globals log, intentParser, telemetry, catcher, searching */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -78,6 +78,34 @@ this.intentRunner = (function() {
 
     createTab(options) {
       return browser.tabs.create(options);
+    }
+
+    async createTabGoogleLucky(query) {
+      const searchUrl = searching.googleSearchUrl(query, true);
+      const tab = await this.createTab({ url: searchUrl });
+      return new Promise((resolve, reject) => {
+        function onUpdated(tabId, changeInfo, tab) {
+          const url = tab.url;
+          if (url.startsWith("about:blank")) {
+            return;
+          }
+          console.log("!!! tab update", tab.status, tab.url);
+          const isGoogle = /^https:\/\/www.google.com\//.test(tab.url);
+          const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
+          if (!isGoogle || isRedirect) {
+            if (isRedirect) {
+              // This is a URL redirect:
+              const params = new URL(url).searchParams;
+              const newUrl = params.get("q");
+              browser.tabs.update(tab.id, { url: newUrl });
+            }
+            // We no longer need to listen for updates:
+            browser.tabs.onUpdated.removeListener(onUpdated, { tabId: tab.id });
+            resolve(tab);
+          }
+        }
+        browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
+      });
     }
 
     onError(message) {
