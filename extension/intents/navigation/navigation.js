@@ -8,8 +8,7 @@ this.intents.navigation = (function() {
     (bring me | go | navigate | show me) (to | open | find |) [query]
     `,
     async run(context) {
-      const url = searching.googleSearchUrl(context.slots.query, true);
-      await context.createTab({ url });
+      await context.createTabGoogleLucky(context.slots.query);
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "navigate",
