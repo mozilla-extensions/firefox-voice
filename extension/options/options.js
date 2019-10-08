@@ -1,7 +1,18 @@
-/* globals buildSettings */
+/* globals buildSettings, settings */
 
 this.options = (function() {
+  let userSettings;
+  let options;
+  const musicServiceEl = document.getElementById("musicService");
+  const chimeEl = document.getElementById("chime");
+
   async function init() {
+    await initVersionInfo();
+    await initSettings();
+    initHandlers();
+  }
+
+  async function initVersionInfo() {
     const inDevelopment = await browser.runtime.sendMessage({
       type: "inDevelopment",
     });
@@ -23,6 +34,41 @@ this.options = (function() {
       gitCommit
     )}`;
     document.getElementById("dirty").style.display = dirty ? "" : "none";
+  }
+
+  async function initSettings() {
+    const result = await settings.getSettingsAndOptions();
+    userSettings = result.settings;
+    options = result.options;
+    while (musicServiceEl.childNodes.length) {
+      musicServiceEl.childNodes[0].remove();
+    }
+    for (const { name, title } of options.musicServices) {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = title;
+      if (name === userSettings.musicService) {
+        option.selected = true;
+      }
+      musicServiceEl.appendChild(option);
+    }
+    chimeEl.checked = !!userSettings.chime;
+  }
+
+  async function sendSettings() {
+    await settings.saveSettings(userSettings);
+  }
+
+  function initHandlers() {
+    musicServiceEl.addEventListener("change", () => {
+      userSettings.musicService = musicServiceEl.value;
+      sendSettings();
+    });
+
+    chimeEl.addEventListener("change", () => {
+      userSettings.chime = chimeEl.checked;
+      sendSettings();
+    });
   }
 
   init();

@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings */
+/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings */
 
 this.main = (function() {
   const exports = {};
@@ -15,6 +15,8 @@ this.main = (function() {
       senderInfo = "popup ->";
     } else if (sender.tab.id === recorderTabId) {
       senderInfo = "record->";
+    } else if (sender.url.endsWith("options.html")) {
+      senderInfo = "option->";
     }
     log.messaging(`${senderInfo} ${message.type}${propString}`);
     if (message.type === "runIntent") {
@@ -32,6 +34,10 @@ this.main = (function() {
       return intents.muting.temporaryUnmute();
     } else if (message.type === "cancelledIntent") {
       return telemetry.cancelledIntent();
+    } else if (message.type === "getSettingsAndOptions") {
+      return settings.getSettingsAndOptions();
+    } else if (message.type === "saveSettings") {
+      return settings.saveSettings(message.settings);
     } else if (message.type === "addTelemetry") {
       return telemetry.add(message.properties);
     } else if (message.type === "sendTelemetry") {

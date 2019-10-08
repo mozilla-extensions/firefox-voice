@@ -16,6 +16,17 @@ this.intents.music = (function() {
     SERVICES[service.id] = service;
   };
 
+  exports.getServiceNamesAndTitles = function() {
+    let names = Object.keys(SERVICES);
+    names.sort();
+    names = names.filter(name => !SERVICES[name].skipAutodetect);
+    const services = names.map(name => {
+      return { name, title: SERVICES[name].title };
+    });
+    services.unshift({ name: "auto", title: "Detect service" });
+    return services;
+  };
+
   async function getService(context, options) {
     let ServiceClass;
     if (context.slots.service) {
@@ -26,7 +37,11 @@ this.intents.music = (function() {
         );
       }
     } else {
-      ServiceClass = await serviceList.getService("music", SERVICES, options);
+      ServiceClass = await serviceList.getService(
+        "musicService",
+        SERVICES,
+        options
+      );
     }
     return new ServiceClass(context);
   }

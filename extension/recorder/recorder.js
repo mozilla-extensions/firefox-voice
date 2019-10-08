@@ -132,10 +132,14 @@ this.recorder = (function() {
     }
   }
 
-  browser.runtime.onMessage.addListener(async message => {
+  browser.runtime.onMessage.addListener(message => {
     if (message.type !== "voiceShim") {
-      return null;
+      return undefined;
     }
+    return handleMessage(message);
+  });
+
+  async function handleMessage(message) {
     if (message.method === "ping") {
       await streamReady;
       return true;
@@ -169,8 +173,8 @@ this.recorder = (function() {
     } else if (message.method === "getVolumeLevel") {
       return activeRecorder.getVolumeLevel();
     }
-    return null;
-  });
+    return undefined;
+  }
 
   setState("acquiring");
   init();

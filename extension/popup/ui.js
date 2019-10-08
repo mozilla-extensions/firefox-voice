@@ -1,4 +1,4 @@
-/* globals lottie */
+/* globals lottie, settings */
 
 this.ui = (function() {
   const exports = {};
@@ -6,6 +6,7 @@ this.ui = (function() {
   let animation;
   let currentState = "listening";
   let textInputDetected = false;
+  let userSettings = {};
 
   // Default amount of time (in milliseconds) before the action is automatically dismissed after we perform certain actions (e.g. successfully switching to a different open tab). This value should give users enough time to read the content on the popup before it closes.
   const DEFAULT_TIMEOUT = 2500;
@@ -20,6 +21,10 @@ this.ui = (function() {
     error: [134, 153],
     success: [184, 203],
   };
+
+  async function init() {
+    userSettings = await settings.getSettings();
+  }
 
   function loadAnimation(animationName, loop) {
     const container = document.getElementById("zap");
@@ -93,7 +98,9 @@ this.ui = (function() {
     header: "Listening",
     show() {
       listenForText();
-      playListeningChime();
+      if (userSettings.chime) {
+        playListeningChime();
+      }
       animation = loadAnimation("Firefox_Voice_Full", true);
       const revealAndBase = [
         animationSegmentTimes.reveal,
@@ -238,6 +245,7 @@ this.ui = (function() {
     }
   };
 
+  init();
   listenForClose();
   listenForSettings();
   listenForBack();

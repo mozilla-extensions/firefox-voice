@@ -9,7 +9,7 @@ this.communicate = (function() {
     }
     HANDLERS[type] = handler;
   };
-  exports.handle = function(script, message, sender) {
+  exports.handle = async function(script, message, sender) {
     log.messaging(`${script}->`, JSON.stringify(message));
     if (!HANDLERS[message.type]) {
       log.warn(
