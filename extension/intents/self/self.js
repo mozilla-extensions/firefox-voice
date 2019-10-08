@@ -25,4 +25,16 @@ this.intents.self = (function() {
       });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "self.openOptions",
+    match: `
+    (open | open the | voice | firefox voice) (settings | options)
+    `,
+    async run(context) {
+      await browser.tabs.create({
+        url: browser.runtime.getURL("/options/options.html"),
+      });
+    },
+  });
 })();

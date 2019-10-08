@@ -1,4 +1,4 @@
-/* globals content, util */
+/* globals content, util, settings */
 
 this.services = {};
 
@@ -266,12 +266,16 @@ this.serviceList = (function() {
   exports.getService = async function(serviceType, serviceMap, options) {
     // TODO: serviceType should be used to store a preference related to this service
     // (which would override any automatic detection).
+    const serviceSetting = settings.getSettings()[serviceType];
     options = options || {};
     if (options.lookAtCurrentTab) {
       const serviceName = await exports.detectServiceFromActiveTab(serviceMap);
       if (serviceName) {
         return serviceMap[serviceName];
       }
+    }
+    if (serviceSetting && serviceSetting !== "auto") {
+      return serviceMap[serviceSetting];
     }
     const serviceName = await exports.detectServiceFromHistory(serviceMap);
     const ServiceClass = serviceMap[serviceName];
