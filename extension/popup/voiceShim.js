@@ -83,11 +83,11 @@ this.voiceShim = (function() {
     }
   };
 
-  browser.runtime.onMessage.addListener(async message => {
+  browser.runtime.onMessage.addListener(message => {
     if (message.type === "onVoiceShim") {
       if (!activeRecorder) {
         log.error("Received message with no Recorder instance:", message);
-        return null;
+        return Promise.resolve(null);
       }
       const args = message.args || [];
       if (
@@ -96,11 +96,11 @@ this.voiceShim = (function() {
           message.method
         )
       ) {
-        return null;
+        return Promise.resolve(null);
       }
-      return activeRecorder[message.method](...args);
+      return Promise.resolve(activeRecorder[message.method](...args));
     }
-    return null;
+    return undefined;
   });
 
   exports.openRecordingTab = async function() {
