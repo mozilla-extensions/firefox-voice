@@ -10,6 +10,9 @@ this.ui = (function() {
 
   // Default amount of time (in milliseconds) before the action is automatically dismissed after we perform certain actions (e.g. successfully switching to a different open tab). This value should give users enough time to read the content on the popup before it closes.
   const DEFAULT_TIMEOUT = 2500;
+  // Timeout for the popup when there's text displaying:
+  const TEXT_TIMEOUT = 7000;
+  let overrideTimeout;
 
   const animationSegmentTimes = {
     reveal: [0, 14],
@@ -155,6 +158,13 @@ this.ui = (function() {
     document.querySelector("#error-message").textContent = message;
   };
 
+  exports.displayText = function displayText(message) {
+    const el = document.querySelector("#text-display");
+    el.style.display = "";
+    el.textContent = message;
+    this.overrideTimeout = TEXT_TIMEOUT;
+  };
+
   exports.displayAutoplayFailure = function displayAutoplayFailure() {
     document.querySelector("#error-message").textContent =
       "Please enable autoplay on this site for a better experience";
@@ -218,7 +228,10 @@ this.ui = (function() {
     settingsIcon.addEventListener("click", showSettings);
   }
 
-  exports.closePopup = function closePopup(ms = DEFAULT_TIMEOUT) {
+  exports.closePopup = function closePopup(ms) {
+    if (ms === null || ms === undefined) {
+      ms = overrideTimeout === undefined ? DEFAULT_TIMEOUT : overrideTimeout;
+    }
     // TODO: offload mic and other resources before closing?
     setTimeout(() => {
       window.close();
