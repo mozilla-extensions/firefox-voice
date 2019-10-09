@@ -39,6 +39,10 @@ this.intentRunner = (function() {
       });
     }
 
+    displayText(message) {
+      return browser.runtime.sendMessage({ type: "displayText", message });
+    }
+
     async failedAutoplay(tab) {
       this.keepPopup();
       await browser.tabs.update(tab.id, { active: true });
