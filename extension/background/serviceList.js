@@ -91,10 +91,20 @@ this.serviceList = (function() {
     return bang;
   };
 
+  const MUSIC_SERVICE_ALIASES = {
+    youtube: "youtube",
+    spotify: "spotify",
+    video: "youtube",
+  };
+
   // Note these are maintained separately from the services in extension/services/*, because
   // those are all loaded too late to be used here
   exports.musicServiceNames = function() {
-    return ["youtube", "spotify"];
+    return Object.keys(MUSIC_SERVICE_ALIASES);
+  };
+
+  exports.mapMusicServiceName = function(utterance) {
+    return MUSIC_SERVICE_ALIASES[utterance.toLowerCase()];
   };
 
   exports.Service = class Service {
