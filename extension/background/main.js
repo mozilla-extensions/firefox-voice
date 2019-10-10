@@ -67,10 +67,7 @@ this.main = (function() {
 
   let inDevelopment;
   exports.inDevelopment = function() {
-    if (inDevelopment === undefined) {
-      throw new Error("Unknown inDevelopment status");
-    }
-    return inDevelopment;
+    return inDevelopment || false;
   };
 
   let extensionTemporaryInstall;
