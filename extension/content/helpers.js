@@ -41,13 +41,18 @@ this.helpers = (function() {
     waitForSelector(selector, options) {
       const interval = (options && options.interval) || 50;
       const timeout = (options && options.timeout) || 1000;
+      const minCount = (options && options.minCount) || 1;
       return new Promise((resolve, reject) => {
         const start = Date.now();
         const id = setInterval(() => {
-          const result = document.querySelector(selector);
-          if (result) {
+          const result = document.querySelectorAll(selector);
+          if (result.length && result.length >= minCount) {
             clearTimeout(id);
-            resolve(result);
+            if (options && options.all) {
+              resolve(result);
+            } else {
+              resolve(result[0]);
+            }
             return;
           }
           if (Date.now() > start + timeout) {

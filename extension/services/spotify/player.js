@@ -1,8 +1,7 @@
-/* globals log, helpers */
+/* globals helpers */
 
 this.player = (function() {
-  const SEARCH_PLAY = ".tracklist-play-pause";
-  const TOP_PLAY = ".top-artist .cover-art-playback";
+  const SEARCH_PLAY = "#searchPage button[aria-label='Play']";
 
   class Player extends helpers.Runner {
     action_play() {
@@ -13,25 +12,14 @@ this.player = (function() {
     async action_search({ query, thenPlay }) {
       const searchButton = this.querySelector("a[aria-label='Search']");
       searchButton.click();
-      const input = await this.waitForSelector(".SearchInputBox input");
+      const input = await this.waitForSelector("div[role=search] input");
       this.setReactInputValue(input, query);
       if (thenPlay) {
-        await this.waitForSelector(`${SEARCH_PLAY}, ${TOP_PLAY}`, {
+        const playerButton = await this.waitForSelector(SEARCH_PLAY, {
           timeout: 2000,
+          // There seem to be 3 fixed buttons that appear early before the search results
+          minCount: 4,
         });
-        const mainPlayer = this.querySelectorAll(TOP_PLAY);
-        let playerButton;
-        if (mainPlayer.length) {
-          if (mainPlayer.length > 1) {
-            log.info(
-              "Got multiple results for query .top-artist .cover-art-playback :",
-              mainPlayer
-            );
-          }
-          playerButton = mainPlayer[0];
-        } else {
-          playerButton = this.querySelector(SEARCH_PLAY);
-        }
         playerButton.click();
       }
     }
