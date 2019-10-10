@@ -52,8 +52,12 @@ this.services.youtube = (function() {
       await this.callTab("unpause");
     }
 
-    async pauseAny() {
+    async pauseAny(options) {
+      const exceptTabId = options && options.exceptTabId;
       for (const tab of await this.getAllTabs({ audible: true })) {
+        if (exceptTabId && exceptTabId === tab.id) {
+          continue;
+        }
         await content.lazyInject(tab.id, "/services/youtube/player.js");
         await this.callOneTab(tab.id, "pause");
       }

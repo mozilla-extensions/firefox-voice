@@ -57,7 +57,12 @@ this.intents.music = (function() {
     }
   }
 
-  async function pauseAnyButTab(context, tabId) {}
+  async function pauseAnyButTab(context, tabId) {
+    for (const ServiceClass of Object.values(SERVICES)) {
+      const service = new ServiceClass(context);
+      await service.pauseAny({ exceptTabId: tabId });
+    }
+  }
 
   intentRunner.registerIntent({
     name: "music.play",
