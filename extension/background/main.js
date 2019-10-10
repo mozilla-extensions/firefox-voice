@@ -81,8 +81,18 @@ this.main = (function() {
     return extensionTemporaryInstall;
   };
 
+  // For reasons I don't understand, extensionTemporaryInstall is frequently not
+  // being set. Presumably onInstalled isn't always called. This makes sure it
+  // gets set eventually.
+  const temporaryInstallId = setTimeout(() => {
+    if (extensionTemporaryInstall === undefined) {
+      extensionTemporaryInstall = false;
+    }
+  }, 5000);
+
   browser.runtime.onInstalled.addListener(details => {
     extensionTemporaryInstall = !!details.temporary;
+    clearTimeout(temporaryInstallId);
     inDevelopment = !!(details.temporary || buildSettings.inDevelopment);
     if (details.reason === "install") {
       launchOnboarding();
