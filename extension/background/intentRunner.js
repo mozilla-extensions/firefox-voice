@@ -93,7 +93,6 @@ this.intentRunner = (function() {
           if (url.startsWith("about:blank")) {
             return;
           }
-          console.log("!!! tab update", tab.status, tab.url);
           const isGoogle = /^https:\/\/www.google.com\//.test(tab.url);
           const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
           if (!isGoogle || isRedirect) {
