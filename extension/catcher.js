@@ -25,7 +25,14 @@ this.catcher = (function() {
       tags: {
         git_commit: buildSettings.gitCommit,
       },
-      ignoreErrors: ["No matching message handler"],
+      ignoreErrors: [
+        // This happens when the popup is closed or something that might receive a message instead is
+        // gone, which happens regularly and is generally harmless:
+        "No matching message handler",
+        // This happens when there's a tab is closed in the middle of some action, which is uncommon
+        // but also harmless:
+        /^Invalid Tab ID/,
+      ],
       beforeSend(event) {
         event.request.url = fixUrl(event.request.url);
         for (const exc of event.exception.values) {
