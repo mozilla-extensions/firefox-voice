@@ -67,6 +67,9 @@ this.intents.music = (function() {
     play video [query] [service=youtube]
     play [query] video [service=youtube]
     play [query]
+    (do a |) (search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:musicServiceName] (for | for the |) [query]
+    (do a |) (search | query ) my [service:musicServiceName] (for | for the |) [query]
+    (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:musicServiceName]
     `,
     async run(context) {
       const service = await getService(context, { lookAtCurrentTab: true });
