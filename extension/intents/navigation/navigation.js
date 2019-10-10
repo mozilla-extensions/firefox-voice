@@ -67,4 +67,19 @@ this.intents.navigation = (function() {
       });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.translate",
+    match: `
+    translate (this |) (page | tab | article | site | this) (to english |)
+    `,
+    examples: ["Translate this page"],
+    async run(context) {
+      const tab = (await browser.tabs.query({ active: true }))[0];
+      const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=en&u=${encodeURIComponent(
+        tab.url
+      )}`;
+      browser.tabs.update(tab.id, { url: translation });
+    },
+  });
 })();
