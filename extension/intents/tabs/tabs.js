@@ -17,8 +17,7 @@ this.intents.tabs = (function() {
     examples: ["open tab"],
     match: `
     open tab
-    open a blank tab
-    open a new tab
+    open (a |) (new | blank |) tab
     `,
     async run(context) {
       await context.createTab({ active: true });

@@ -20,8 +20,8 @@ this.services.readerMode = (function() {
       await this.callOneTab(activeTab.id, "narrate");
     }
 
-    async pauseAny() {
-      return intents.read.pauseAny();
+    async pauseAny(options) {
+      return intents.read.pauseAny(options);
     }
   }
 
