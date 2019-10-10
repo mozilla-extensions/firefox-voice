@@ -1,4 +1,4 @@
-/* globals intentRunner, serviceList, log, intents */
+/* globals intentRunner, serviceList, log */
 
 this.intents.music = (function() {
   const exports = {};
