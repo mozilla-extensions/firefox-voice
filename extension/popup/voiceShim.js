@@ -77,7 +77,7 @@ this.voiceShim = (function() {
           this._cachedVolumeLevel = volume;
         })
         .catch(error => {
-          log.error("Error getting volume level:", error);
+          log.error("Error getting volume level:", String(error));
         });
       return this._cachedVolumeLevel;
     }
