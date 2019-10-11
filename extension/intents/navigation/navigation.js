@@ -1,4 +1,4 @@
-/* globals searching, serviceList */
+/* globals searching, serviceList, pageMetadata */
 
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
@@ -80,6 +80,27 @@ this.intents.navigation = (function() {
         tab.url
       )}`;
       browser.tabs.update(tab.id, { url: translation });
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.translateSelection",
+    match: `
+    translate (this |) selection (to english |)
+    `,
+    examples: ["Translate selection"],
+    async run(context) {
+      const tab = (await browser.tabs.query({ active: true }))[0];
+      const selection = await pageMetadata.getSelection(tab.id);
+      if (!selection || !selection.text) {
+        const e = new Error("No text selected");
+        e.displayMessage = "No text selected";
+        throw e;
+      }
+      const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=${encodeURIComponent(
+        selection.text
+      )}`;
+      await browser.tabs.create({ url });
     },
   });
 })();
