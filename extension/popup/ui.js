@@ -258,6 +258,39 @@ this.ui = (function() {
     }
   };
 
+  STATES.searchResults = {
+    header: "Search results",
+    show() {
+      document.querySelector("#search-results").style.display = "";
+      for (const selector of ["#suggestions", "#zap-wrapper", "#transcript"]) {
+        document.querySelector(selector).style.display = "none";
+      }
+    },
+  };
+
+  exports.showSearchResults = function({ card, searchResults, index }) {
+    exports.setState("searchResults");
+    if (card) {
+      const image = document.querySelector("#search-image");
+      image.style.display = "";
+      image.height = card.height;
+      image.width = card.width;
+      image.src = card.src;
+      const container = document.querySelector("#popup");
+      container.style.minWidth = card.width + "px";
+      container.style.minHeight = card.height + 150 + "px";
+    }
+    const next = searchResults[index + 1];
+    if (next) {
+      document.querySelector("#search-show-next").style.display = "";
+      document.querySelector("#search-show-next-title").textContent =
+        next.title;
+      document.querySelector("#search-show-next-domain").textContent = new URL(
+        next.url
+      ).hostname;
+    }
+  };
+
   init();
   listenForClose();
   listenForSettings();

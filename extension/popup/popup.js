@@ -149,6 +149,8 @@ this.popup = (function() {
       ui.displayText(message.message);
     } else if (message.type === "displayAutoplayFailure") {
       ui.displayAutoplayFailure();
+    } else if (message.type === "showSearchResults") {
+      ui.showSearchResults(message);
     }
   }
 
