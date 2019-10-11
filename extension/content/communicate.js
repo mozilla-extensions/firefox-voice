@@ -3,12 +3,14 @@
 this.communicate = (function() {
   const exports = {};
   const HANDLERS = {};
+
   exports.register = function(type, handler) {
     if (HANDLERS[type]) {
       throw new Error(`There is already a handler registerd for ${type}`);
     }
     HANDLERS[type] = handler;
   };
+
   exports.handle = async function(script, message, sender) {
     log.messaging(`${script}->`, JSON.stringify(message));
     if (!HANDLERS[message.type]) {
