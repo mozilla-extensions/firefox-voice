@@ -36,7 +36,6 @@ this.serviceList = (function() {
     pandora: "pandora",
     soundcloud: "soundcloud",
     "sound cloud": "soundcloud",
-    shazam: "shz",
     tunein: "tunein",
     "tune in": "tunein",
     "tunein radio": "tunein",
