@@ -3,7 +3,7 @@
 this.intentExamples = (function() {
   const exports = {};
 
-  const INTENT_ROTATION_PERIOD = 1000 * 60 * 60 * 3; // 3 hours
+  const INTENT_ROTATION_PERIOD = 1000 * 60 * 5; // 5 minutes
 
   let lastExamples;
   let lastExampleTime = 0;
