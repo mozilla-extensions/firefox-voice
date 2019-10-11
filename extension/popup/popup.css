@@ -53,7 +53,7 @@ body,
   display: none;
 }
 
-:-moz-any(.success, .error)
+:-moz-any(.success, .error, .searchResults)
   :-moz-any(#suggestions, #feedback, #popup-settings, #card) {
   display: none;
 }
@@ -329,4 +329,9 @@ a#lexicon {
   color: #0a84ff;
   font-weight: 400;
   font-size: 0.85em;
+}
+
+#search-show-next-domain {
+  color: #777;
+  font-size: 90%;
 }
