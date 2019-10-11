@@ -47,7 +47,7 @@ this.serviceList = (function() {
     "apple tv": "appletv",
     "apple maps": "amaps",
     "google maps": "gmap",
-    maps: "google maps",
+    maps: "gmap",
     "open street maps": "omap",
     "open maps": "omap",
     stubhub: "stubhub",
