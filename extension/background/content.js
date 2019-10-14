@@ -19,6 +19,9 @@ this.content = (function() {
         type: "ping",
         scriptKey,
       });
+      if (!available) {
+        available = "some";
+      }
     } catch (e) {
       available = false;
       if (String(e).includes(NO_RECEIVER_MESSAGE)) {
@@ -26,7 +29,16 @@ this.content = (function() {
       } else {
         log.error("Error sending message:", String(e));
       }
-      available = false;
+    }
+    if (available === "some") {
+      for (const script of scripts) {
+        await browser.tabs.executeScript(tabId, { file: script });
+      }
+      await browser.tabs.sendMessage(tabId, {
+        type: "scriptsLoaded",
+        scriptKey,
+      });
+      return;
     }
     if (available) {
       return;
@@ -46,6 +58,26 @@ this.content = (function() {
       type: "scriptsLoaded",
       scriptKey,
     });
+  };
+
+  exports.hasScript = async function(tabId, scripts) {
+    if (!tabId) {
+      throw new Error(`Invalid tabId: ${tabId}`);
+    }
+    if (typeof scripts === "string") {
+      scripts = [scripts];
+    }
+    const scriptKey = scripts.join(",");
+    let available;
+    try {
+      available = await browser.tabs.sendMessage(tabId, {
+        type: "ping",
+        scriptKey,
+      });
+    } catch (e) {
+      available = false;
+    }
+    return available;
   };
 
   return exports;
