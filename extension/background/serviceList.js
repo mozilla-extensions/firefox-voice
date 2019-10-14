@@ -163,10 +163,16 @@ this.serviceList = (function() {
           }),
         };
       }
-      if (activate) {
-        await browser.tabs.update(tabs[0].id, { active: activate });
+      let best = 0;
+      for (let i = 0; i < tabs.length; i++) {
+        if (tabs[i].active) {
+          best = i;
+        }
       }
-      return { created: false, tab: tabs[0] };
+      if (activate) {
+        await browser.tabs.update(tabs[best].id, { active: activate });
+      }
+      return { created: false, tab: tabs[best] };
     }
 
     async getAllTabs(extraQuery) {
