@@ -80,6 +80,7 @@ this.popup = (function() {
         await browser.runtime.sendMessage({ type: "microphoneStopped" });
         log.debug("detected text from the popup");
         recorder.cancel(); // not sure if this is working as expected?
+        clearInterval(intervalId);
       };
       ui.onTextInput = async text => {
         await browser.runtime.sendMessage({ type: "microphoneStopped" });
@@ -124,7 +125,6 @@ this.popup = (function() {
     };
     recorder.onProcessing = () => {
       browser.runtime.sendMessage({ type: "microphoneStopped" });
-
       ui.setState("processing");
     };
     recorder.onNoVoice = () => {
