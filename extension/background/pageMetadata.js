@@ -14,5 +14,15 @@ this.pageMetadata = (function() {
     return resp.selection;
   };
 
+  exports.getMetadata = async function(tabId) {
+    await content.lazyInject(
+      tabId,
+      "/background/pageMetadata-contentScript.js"
+    );
+    return browser.tabs.sendMessage(tabId, {
+      type: "getMetadata",
+    });
+  };
+
   return exports;
 })();
