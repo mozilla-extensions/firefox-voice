@@ -71,7 +71,7 @@ this.services.youtube = (function() {
       }
       let tabs = await this.getAllTabs({ audible: true });
       if (!tabs.length) {
-        const currentTab = (await browser.tabs.query({ active: true }))[0];
+        const currentTab = await this.context.activeTab();
         if (currentTab.url.startsWith(this.baseUrl)) {
           tabs = [currentTab];
         } else {

@@ -8,7 +8,7 @@ this.services.readerMode = (function() {
     }
 
     async unpause() {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      const activeTab = await this.context.activeTab();
       if (!activeTab.url.startsWith("about:reader")) {
         const e = new Error("Cannot unpause a non-reader tab");
         e.displayMessage = "Cannot unpause";

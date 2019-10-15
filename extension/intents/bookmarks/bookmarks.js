@@ -57,7 +57,7 @@ this.intents.bookmarks = (function() {
       const id = matches[0].item;
       const url = bookmarksById.get(id);
       if (context.parameters.tab === "this") {
-        const activeTab = (await browser.tabs.query({ active: true }))[0];
+        const activeTab = await context.activeTab();
         await browser.tabs.update(activeTab.id, { url });
       } else {
         await browser.tabs.create({ url });

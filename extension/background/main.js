@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings */
+/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings, browserUtil */
 
 this.main = (function() {
   const exports = {};
@@ -56,7 +56,8 @@ this.main = (function() {
       }
       return browser.tabs.sendMessage(recorderTabId, message);
     } else if (message.type === "makeRecorderActive") {
-      browser.tabs.update(recorderTabId, { active: true });
+      // FIXME: consider focusing the window too
+      browserUtil.makeTabActive(recorderTabId);
       return null;
     }
     log.error(
@@ -116,13 +117,14 @@ this.main = (function() {
       }
     }
     let tab;
-    const activeTabId = (await browser.tabs.query({ active: true }))[0].id;
+    const activeTab = await browserUtil.activeTab();
     const existing = await browser.tabs.query({ url: RECORDER_URL });
     if (existing.length) {
       if (existing.length > 1) {
         browser.tabs.remove(existing.slice(1).map(e => e.id));
       }
       tab = existing[0];
+      // FIXME: make sure window is focused?
       await browser.tabs.update(tab.id, {
         url: RECORDER_URL,
         active: true,
@@ -145,7 +147,7 @@ this.main = (function() {
       } catch (e) {}
       await util.sleep(100);
     }
-    await browser.tabs.update(activeTabId, { active: true });
+    await browserUtil.makeTabActive(activeTab);
   }
 
   async function launchOnboarding() {

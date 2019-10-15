@@ -95,7 +95,7 @@ this.intents.search = (function() {
       }
       if (lastSearchIndex >= lastSearchInfo.searchResults.length - 1) {
         const tabId = await openSearchTab();
-        await browser.tabs.update(tabId, { active: true });
+        await context.makeTabActive(tabId);
         return;
       }
       lastSearchIndex++;
@@ -110,7 +110,7 @@ this.intents.search = (function() {
         // eslint-disable-next-line require-atomic-updates
         lastTabId = tab.id;
       } else {
-        await browser.tabs.update(lastTabId, { url: item.url, active: true });
+        await context.makeTabActive(lastTabId);
       }
     },
   });
@@ -123,7 +123,7 @@ this.intents.search = (function() {
     `,
     async run(context) {
       const tabId = await openSearchTab();
-      await browser.tabs.update(tabId, { active: true });
+      await context.makeTabActive(tabId);
     },
   });
 })();

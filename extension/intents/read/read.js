@@ -1,10 +1,10 @@
-/* globals util, content, log */
+/* globals util, content, log, browserUtil */
 
 this.intents.read = (function() {
   const exports = {};
 
   exports.stopReading = async function() {
-    const activeTab = (await browser.tabs.query({ active: true }))[0];
+    const activeTab = await browserUtil.activeTab();
     if (!activeTab) {
       return false;
     }
@@ -43,8 +43,8 @@ this.intents.read = (function() {
     match: `
     read (this |) (tab | page |)
     `,
-    async run(desc) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+    async run(context) {
+      const activeTab = await context.activeTab();
       if (!activeTab.url.startsWith("about:reader")) {
         try {
           await browser.tabs.toggleReaderMode();
@@ -83,8 +83,8 @@ this.intents.read = (function() {
     match: `
     stop reading (this |) (tab | page |)
     `,
-    async run(desc) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+    async run(context) {
+      const activeTab = await context.activeTab();
       if (!activeTab.url.startsWith("about:reader")) {
         const e = new Error(`Not a Reader Mode page`);
         e.displayMessage = "Page isn't narrating";

@@ -1,4 +1,4 @@
-/* globals log, intentParser, telemetry, catcher, searching */
+/* globals log, intentParser, telemetry, catcher, searching, browserUtil */
 // This gets used elsewhere as a namespace for the intent modules:
 this.intents = {};
 
@@ -45,7 +45,7 @@ this.intentRunner = (function() {
 
     async failedAutoplay(tab) {
       this.keepPopup();
-      await browser.tabs.update(tab.id, { active: true });
+      this.makeTabActive(tab);
       await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
     }
 
@@ -109,6 +109,14 @@ this.intentRunner = (function() {
         }
         browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
       });
+    }
+
+    activeTab() {
+      return browserUtil.activeTab();
+    }
+
+    makeTabActive(tab) {
+      return browserUtil.makeTabActive(tab);
     }
 
     onError(message) {
