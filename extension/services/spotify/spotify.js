@@ -8,13 +8,12 @@ this.services.spotify = (function() {
       if (this.tabCreated) {
         const isAudible = await this.pollTabAudible(this.tab.id, 2000);
         if (!isAudible) {
-          const activeTabId = (await browser.tabs.query({ active: true }))[0]
-            .id;
-          await browser.tabs.update(this.tab.id, { active: true });
+          const activeTabId = (await this.context.activeTab()).id;
+          this.context.makeTabActive(this.tab);
           const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
           if (nowAudible) {
             if (this.tab.id !== activeTabId) {
-              await browser.tabs.update(activeTabId, { active: true });
+              this.context.makeTabActive(activeTabId);
             }
           } else {
             this.context.failedAutoplay(this.tab);

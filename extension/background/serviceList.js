@@ -1,4 +1,4 @@
-/* globals content, util, settings */
+/* globals content, util, settings, browserUtil */
 
 this.services = {};
 
@@ -132,7 +132,7 @@ this.serviceList = (function() {
       if (!this.tab) {
         throw new Error("No tab to activate");
       }
-      await browser.tabs.update(this.tab.id, { active: true });
+      this.context.makeTabActive(this.tab.id);
     }
 
     get matchPatterns() {
@@ -169,7 +169,7 @@ this.serviceList = (function() {
         }
       }
       if (activate) {
-        await browser.tabs.update(tabs[best].id, { active: activate });
+        await this.context.makeTabActive(tabs[best]);
       }
       return { created: false, tab: tabs[best] };
     }
@@ -231,7 +231,7 @@ this.serviceList = (function() {
   };
 
   exports.detectServiceFromActiveTab = async function(services) {
-    const tab = (await browser.tabs.query({ active: true }))[0];
+    const tab = await browserUtil.activeTab();
     for (const name in services) {
       const service = services[name];
       if (tab.url.startsWith(service.baseUrl)) {

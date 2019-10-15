@@ -27,7 +27,7 @@ this.intents.notes = (function() {
     (write | add | make) (notes |) (here | this page | this tab)
     `,
     async run(context) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      const activeTab = await context.activeTab();
       const tabId = activeTab.id;
       await content.lazyInject(tabId, SCRIPT);
       const failureMessage = await browser.tabs.sendMessage(tabId, {
@@ -50,7 +50,7 @@ this.intents.notes = (function() {
     `,
     async run(context) {
       await checkHasTab();
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      const activeTab = await context.activeTab();
       const metadata = await pageMetadata.getMetadata(activeTab.id);
       const success = await browser.tabs.sendMessage(writingTabId, {
         type: "addLink",
@@ -96,7 +96,7 @@ this.intents.notes = (function() {
         e.displayMessage = "You have not set a tab to write";
         throw e;
       }
-      await browser.tabs.update(writingTabId, { active: true });
+      await context.makeTabActive(writingTabId);
     },
   });
 })();

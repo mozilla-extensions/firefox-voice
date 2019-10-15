@@ -8,8 +8,8 @@ this.intents.find = (function() {
     (find | bring me to) (my | the |) [query] (tab |)
     go (to | to the |) [query] tab
     `,
-    async run(desc) {
-      const query = desc.slots.query;
+    async run(context) {
+      const query = context.slots.query;
       log.info("the most likely query text is:", query);
 
       // Fuse options
@@ -63,9 +63,7 @@ this.intents.find = (function() {
         throw e;
       }
       const topMatch = parseInt(matches[0].item);
-      await browser.tabs.update(topMatch, {
-        active: true,
-      });
+      await context.makeTabActive(topMatch);
     },
   });
 })();

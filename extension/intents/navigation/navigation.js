@@ -75,7 +75,7 @@ this.intents.navigation = (function() {
     `,
     examples: ["Translate this page"],
     async run(context) {
-      const tab = (await browser.tabs.query({ active: true }))[0];
+      const tab = await context.activeTab();
       const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=en&u=${encodeURIComponent(
         tab.url
       )}`;
@@ -90,7 +90,7 @@ this.intents.navigation = (function() {
     `,
     examples: ["Translate selection"],
     async run(context) {
-      const tab = (await browser.tabs.query({ active: true }))[0];
+      const tab = await context.activeTab();
       const selection = await pageMetadata.getSelection(tab.id);
       if (!selection || !selection.text) {
         const e = new Error("No text selected");

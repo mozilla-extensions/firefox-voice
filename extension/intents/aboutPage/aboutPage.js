@@ -49,13 +49,11 @@ intents.aboutPage = (function() {
     (show | open |) comments
     `,
     async run(context) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
-      // FIXME: get the "best" URL using rel=self or og:url, etc.
+      const activeTab = await context.activeTab();
       const url = (await pageMetadata.getMetadata(activeTab.id)).canonical;
       let results = (await hnSearchResults(url)).concat(
         await redditSearchResults(url)
       );
-      console.log("results", results);
       results = results.filter(r => {
         return r.num_comments > 0;
       });
@@ -65,7 +63,6 @@ intents.aboutPage = (function() {
         e.displayMessage = "Nobody has commented on this article";
         throw e;
       }
-      console.log("Comment results:", results);
       if (results.length > 1) {
         context.displayText(
           `${results.length} comment threads found. Use "next comments" to see more`
@@ -85,7 +82,7 @@ intents.aboutPage = (function() {
     previous (result | comments | comment) [move=previous]
     `,
     async run(context) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+      const activeTab = await context.activeTab();
       const results = tabResults.get(activeTab.id);
       if (!results) {
         const e = new Error("No comment results for this tab");

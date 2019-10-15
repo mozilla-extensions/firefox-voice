@@ -6,8 +6,8 @@ this.intents.tabs = (function() {
     close tab
     close this tab
     `,
-    async run(desc) {
-      const activeTab = (await browser.tabs.query({ active: true }))[0];
+    async run(context) {
+      const activeTab = await context.activeTab();
       await browser.tabs.remove(activeTab.id);
     },
   });
