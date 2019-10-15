@@ -37,4 +37,16 @@ this.intents.self = (function() {
       });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "self.openIntentViewer",
+    match: `
+    (show | open) all intents
+    `,
+    async run(context) {
+      await browser.tabs.create({
+        url: browser.runtime.getURL("/tests/intent-viewer.html"),
+      });
+    },
+  });
 })();
