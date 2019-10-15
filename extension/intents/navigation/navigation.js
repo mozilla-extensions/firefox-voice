@@ -40,7 +40,7 @@ this.intents.navigation = (function() {
     google images (of |) [query] [service=images]
     search images (for |) [query] [service=images]
     images of [query] [service=images]
-    (do a |) (search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query]
+    (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query]
     (do a |) (search | query ) my [service:serviceName] (for | for the |) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
     `,
