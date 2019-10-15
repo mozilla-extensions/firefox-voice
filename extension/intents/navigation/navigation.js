@@ -3,6 +3,8 @@
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
     name: "navigation.navigate",
+    description:
+      "Navigate directly to a site, using Google's I'm Feeling Luck and the query",
     examples: ["Go to the New York Times", "Show me the 49ers schedule"],
     match: `
     (bring me | go | navigate | show me) (to | open | find |) [query]
@@ -18,6 +20,7 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.search",
+    description: "Do a regular (Google) search",
     examples: ["Search for hiking in Denver", "Look up recipes for fish tacos"],
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
@@ -36,6 +39,8 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
+    description:
+      "Search a specific service, using their site-specific search page",
     match: `
     google images (of |) [query] [service=images]
     search images (for |) [query] [service=images]
@@ -70,6 +75,7 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.translate",
+    description: "Translate the given page to English, using Google Translate",
     match: `
     translate (this |) (page | tab | article | site | this) (to english |)
     `,
@@ -85,6 +91,8 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.translateSelection",
+    description:
+      "Translate whatever text is selected to English, using Google Translate",
     match: `
     translate (this |) selection (to english |)
     `,

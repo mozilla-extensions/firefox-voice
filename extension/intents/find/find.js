@@ -3,6 +3,8 @@
 this.intents.find = (function() {
   this.intentRunner.registerIntent({
     name: "find.find",
+    description:
+      "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active",
     examples: ["Find calendar tab"],
     match: `
     (find | bring me to) (my | the |) [query] (tab |)

@@ -39,6 +39,8 @@ this.intents.read = (function() {
 
   this.intentRunner.registerIntent({
     name: "read.read",
+    description:
+      "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
     read (this |) (tab | page |)
@@ -79,6 +81,7 @@ this.intents.read = (function() {
 
   this.intentRunner.registerIntent({
     name: "read.stopRead",
+    description: "Stop reading/narrating the current tab",
     examples: ["Stop reading"],
     match: `
     stop reading (this |) (tab | page |)

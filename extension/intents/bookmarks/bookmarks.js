@@ -3,6 +3,8 @@
 this.intents.bookmarks = (function() {
   this.intentRunner.registerIntent({
     name: "bookmarks.open",
+    description:
+      "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched",
     examples: ["Open news bookmark"],
     match: `
     open [query] bookmark in (this | current |) tab [tab=this]

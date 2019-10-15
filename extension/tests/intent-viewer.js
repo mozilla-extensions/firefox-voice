@@ -18,6 +18,11 @@ async function init() {
     type: "getIntentSummary",
   });
   const html = [];
+  html.push("<ul>");
+  for (const intent of intents) {
+    html.push(`<li><a href="#${intent.name}">${intent.name}</a></li>`);
+  }
+  html.push("</ul>");
   for (const intent of intents) {
     const matchers = intent.matchers.map(m => {
       return `
@@ -71,8 +76,13 @@ async function init() {
         examples = "<p>No examples</p>";
       }
     }
+    let description = "";
+    if (intent.description) {
+      description = `<p>${quote(intent.description)}</p>`;
+    }
     html.push(`<div class="intent">
-      <h2>${intent.name}</h2>
+      <h2 id="${intent.name}">${intent.name}</h2>
+      ${description}
       <a href="${quote(makeViewUrl(intent.name))}">View code</a><br>
       <div>
         <h3>Matchers</h3>
