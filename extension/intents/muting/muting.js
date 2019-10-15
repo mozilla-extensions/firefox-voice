@@ -7,6 +7,8 @@ this.intents.muting = (function() {
 
   this.intentRunner.registerIntent({
     name: "mute.mute",
+    description:
+      "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound",
     examples: ["mute (all tabs)"],
     match: `
     (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything | tab | tabs)
@@ -40,6 +42,7 @@ this.intents.muting = (function() {
 
   this.intentRunner.registerIntent({
     name: "mute.unmute",
+    description: "Unmute all tabs",
     match: `
     unmute
     `,

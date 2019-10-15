@@ -41,6 +41,8 @@ intents.aboutPage = (function() {
 
   intentRunner.registerIntent({
     name: "aboutPage.comments",
+    description:
+      "This will try to find comments for the current page, searching Reddit and Hacker News, showing forums in order of the number of comments",
     examples: ["Comments on this page?"],
     match: `
     (show | open |) comments on (this |) (page | tab | article)
@@ -77,6 +79,7 @@ intents.aboutPage = (function() {
 
   intentRunner.registerIntent({
     name: "aboutPage.changeComments",
+    description: `If you've used "show comments on this page" and there were multiple forums or pages, this will show the next (or previous) comment forum`,
     match: `
     next (result | comments | comment) [move=next]
     previous (result | comments | comment) [move=previous]

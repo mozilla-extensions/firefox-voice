@@ -66,6 +66,8 @@ this.intents.music = (function() {
 
   intentRunner.registerIntent({
     name: "music.play",
+    description:
+      "Play music on an explicit service, a default service, or the service in the active tab",
     examples: ["Play Green Day"],
     match: `
     play [query] on [service:musicServiceName]
@@ -91,6 +93,7 @@ this.intents.music = (function() {
 
   intentRunner.registerIntent({
     name: "music.pause",
+    description: "Pause all supported services (regardless of tab or window)",
     examples: ["Pause music"],
     match: `
     (stop | pause) video [service=youtube]
@@ -108,6 +111,8 @@ this.intents.music = (function() {
 
   intentRunner.registerIntent({
     name: "music.unpause",
+    description:
+      "Unpause one service, the current tab, or the detected service",
     examples: ["Unpause", "continue music", "play music"],
     match: `
     (unpause | continue | play) video [service=youtube]
@@ -123,6 +128,8 @@ this.intents.music = (function() {
 
   intentRunner.registerIntent({
     name: "music.focus",
+    description:
+      "Focus the tab of a specific or auto-detected service, maybe opening a tab if none is already open",
     examples: ["Open music"],
     match: `
     (open | show | focus) video [service=youtube]
@@ -141,6 +148,7 @@ this.intents.music = (function() {
 
   intentRunner.registerIntent({
     name: "music.move",
+    description: "Go to the next or previous song on a service",
     examples: ["next", "previous"],
     match: `
     (play |) next video               [direction=next] [service=youtube]

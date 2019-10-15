@@ -48,6 +48,8 @@ this.intents.search = (function() {
 
   intentRunner.registerIntent({
     name: "search.search",
+    description:
+      "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab.",
     match: `
     fancy (search |) [query]
     `,
@@ -84,6 +86,8 @@ this.intents.search = (function() {
 
   intentRunner.registerIntent({
     name: "search.next",
+    description:
+      "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result.",
     match: `
     fancy next (result | search |)
     `,
@@ -117,6 +121,7 @@ this.intents.search = (function() {
 
   intentRunner.registerIntent({
     name: "search.show",
+    description: "Focuses the special tab used for searching",
     match: `
     fancy (search | show |) results
     fancy show

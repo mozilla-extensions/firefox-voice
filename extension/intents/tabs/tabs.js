@@ -1,6 +1,7 @@
 this.intents.tabs = (function() {
   this.intentRunner.registerIntent({
     name: "tabs.close",
+    description: "Closes the current tab",
     examples: ["close tab"],
     match: `
     close tab
@@ -14,6 +15,7 @@ this.intents.tabs = (function() {
 
   this.intentRunner.registerIntent({
     name: "tabs.open",
+    description: "Opens a new (blank) tab",
     examples: ["open tab"],
     match: `
     open tab
