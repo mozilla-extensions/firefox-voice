@@ -43,7 +43,6 @@ this.serviceList = (function() {
     vimeo: "vimeo",
     netflix: "netflix",
     hulu: "hulu",
-    "apple tv": "appletv",
     "apple maps": "amaps",
     "google maps": "gmap",
     maps: "gmap",
