@@ -1,4 +1,4 @@
-/* globals intents, intentRunner, util */
+/* globals intents, intentRunner, util, pageMetadata */
 
 intents.aboutPage = (function() {
   const HN_SEARCH = "https://hn.algolia.com/api/v1/search?query=__URL__";
@@ -51,7 +51,7 @@ intents.aboutPage = (function() {
     async run(context) {
       const activeTab = (await browser.tabs.query({ active: true }))[0];
       // FIXME: get the "best" URL using rel=self or og:url, etc.
-      const url = activeTab.url;
+      const url = (await pageMetadata.getMetadata(activeTab.id)).canonical;
       let results = (await hnSearchResults(url)).concat(
         await redditSearchResults(url)
       );
