@@ -1,3 +1,10 @@
+## Version 0.10.0 (2019-10-21)
+
+- Disallow extension in Private Browsing. In new versions of Firefox Nightly this may already be the default, but this makes it explicit. Fixes [#443](https://github.com/mozilla-services/screenshots/issues/443) [d32394e](https://github.com/mozilla-services/screenshots/commit/d32394e)
+- Match search [service] for [query]. Fixes [#428](https://github.com/mozilla-services/screenshots/issues/428) [6ca4b3b](https://github.com/mozilla-services/screenshots/commit/6ca4b3b)
+- Fix multi-window cases. Previously all code would get the 'active tab' from the first window, even if another window was focused. Also when activating a tab it would only make it active in its window, without necessarily focusing that same window. This adds methods that handle both these cases properly. [ed1ec51](https://github.com/mozilla-services/screenshots/commit/ed1ec51)
+- Add "show all intents": This opens up the automatically-generated list of intents, instead of the manual lexicon. Fixes [#426](https://github.com/mozilla-services/screenshots/issues/426) [cf11118](https://github.com/mozilla-services/screenshots/commit/cf11118)
+
 ## Version 0.9.0 (2019-10-15)
 
 - Start [#373](https://github.com/mozilla-services/screenshots/issues/373), add **open bookmark [query]** intent. This only supports opening existing bookmarks, in a new or current tab [c445a78](https://github.com/mozilla-services/screenshots/commit/c445a78)
