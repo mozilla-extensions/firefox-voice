@@ -20,7 +20,8 @@ this.intents.self = (function() {
     match: `
     tell me about (this | firefox voice | this extension | voice)
     help
-    what can I do
+    what (else |) can (I | you) (do | say | ask) (you | from you | of you |)
+    hello
     `,
     async run(context) {
       await browser.tabs.create({
