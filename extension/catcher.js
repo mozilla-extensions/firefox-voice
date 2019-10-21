@@ -65,6 +65,21 @@ this.catcher = (function() {
     }
   };
 
+  /* See: https://docs.sentry.io/enriching-error-data/breadcrumbs/?platform=browser */
+  exports.addBreadcrumb = function(args) {
+    if (typeof Sentry === "undefined") {
+      return;
+    }
+    Sentry.addBreadcrumb(args);
+  };
+
+  exports.setTag = function(name, value) {
+    if (typeof Sentry === "undefined") {
+      return;
+    }
+    Sentry.setTag(name, value);
+  };
+
   install();
 
   return exports;

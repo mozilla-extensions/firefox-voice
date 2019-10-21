@@ -136,6 +136,7 @@ this.intentRunner = (function() {
   };
 
   exports.runIntent = async function(desc) {
+    catcher.setTag("intent", desc.name);
     if (!intents[desc.name]) {
       throw new Error(`No intent found with name ${desc.name}`);
     }
