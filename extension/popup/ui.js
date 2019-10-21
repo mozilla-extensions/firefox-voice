@@ -181,7 +181,11 @@ this.ui = (function() {
   exports.showCard = function showCard(data) {
     document.querySelector("#popup").classList.add("hasCard");
     document.querySelector("#card-header").textContent = data.Heading;
-    document.querySelector("#card-image > img").src = data.Image;
+    if (data.Image) {
+      document.querySelector("#card-image > img").src = data.Image;
+    } else {
+      document.querySelector("#card-image").style.display = "none";
+    }
     document.querySelector("#card-summary").textContent = data.AbstractText;
     document.querySelector("#card-source-link").textContent =
       data.AbstractSource;
