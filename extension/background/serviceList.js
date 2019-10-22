@@ -93,6 +93,8 @@ this.serviceList = (function() {
     video: "youtube",
   };
 
+  const DEFAULT_MUSIC_SERVICE = "spotify";
+
   // Note these are maintained separately from the services in extension/services/*, because
   // those are all loaded too late to be used here
   exports.musicServiceNames = function() {
@@ -244,7 +246,7 @@ this.serviceList = (function() {
   exports.detectServiceFromHistory = async function(services) {
     const now = Date.now();
     const oneMonth = now - 1000 * 60 * 60 * 24 * 30; // last 30 days
-    let best = null;
+    let best = DEFAULT_MUSIC_SERVICE;
     let bestScore = 0;
     for (const name in services) {
       const service = services[name];
