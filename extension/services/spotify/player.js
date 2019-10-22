@@ -1,7 +1,8 @@
 /* globals helpers */
 
 this.player = (function() {
-  const SEARCH_PLAY = "#searchPage button[aria-label='Play']";
+  const SEARCH_PLAY =
+    "#searchPage button[aria-label='Play'], .tracklist .tracklist-play-pause";
 
   class Player extends helpers.Runner {
     action_play() {
@@ -12,7 +13,9 @@ this.player = (function() {
     async action_search({ query, thenPlay }) {
       const searchButton = this.querySelector("a[aria-label='Search']");
       searchButton.click();
-      const input = await this.waitForSelector("div[role=search] input");
+      const input = await this.waitForSelector(
+        "div[role=search] input, input.SearchInputBox__input"
+      );
       this.setReactInputValue(input, query);
       if (thenPlay) {
         const playerButton = await this.waitForSelector(SEARCH_PLAY, {
