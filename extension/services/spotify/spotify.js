@@ -1,4 +1,4 @@
-/* globals intents, serviceList, content */
+/* globals intents, serviceList, content, limiter */
 
 this.services.spotify = (function() {
   class Spotify extends serviceList.Service {
@@ -6,12 +6,18 @@ this.services.spotify = (function() {
       await this.initTab("/services/spotify/player.js");
       await this.callTab("search", { query, thenPlay: true });
       if (this.tabCreated) {
-        const isAudible = await this.pollTabAudible(this.tab.id, 2000);
+        const isAudible = await this.pollTabAudible(this.tab.id, 3000);
         if (!isAudible) {
           const activeTabId = (await this.context.activeTab()).id;
           this.context.makeTabActive(this.tab);
           const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
-          if (nowAudible) {
+          if (
+            nowAudible ||
+            !(await limiter.shouldDisplayWarning("spotifyAudible", {
+              times: 3,
+              frequency: 1000,
+            }))
+          ) {
             if (this.tab.id !== activeTabId) {
               this.context.makeTabActive(activeTabId);
             }
