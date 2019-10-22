@@ -107,7 +107,15 @@ this.intentRunner = (function() {
             resolve(tab);
           }
         }
-        browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
+        try {
+          browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
+        } catch (e) {
+          throw new Error(
+            `Error in tabs.onUpdated: ${e}, onUpdated type: ${typeof onUpdated}, args: tabId: ${
+              tab.id
+            } is ${typeof tab.id}`
+          );
+        }
       });
     }
 
