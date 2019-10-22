@@ -1,4 +1,4 @@
-/* globals intents, serviceList, content, util */
+/* globals intents, serviceList, content, util, limiter */
 
 this.services.youtube = (function() {
   const SUPPORTED_URLS = /^https:\/\/www.youtube.com\/watch/i;
@@ -36,8 +36,14 @@ this.services.youtube = (function() {
       if (!SUPPORTED_URLS.test(loadedTab.url)) {
         return;
       }
-      const isAudible = await this.pollTabAudible(this.tab.id, 2000);
-      if (!isAudible) {
+      const isAudible = await this.pollTabAudible(this.tab.id, 3000);
+      if (
+        !isAudible &&
+        (await limiter.shouldDisplayWarning("youtubeAudible", {
+          times: 3,
+          frequency: 1000,
+        }))
+      ) {
         this.context.failedAutoplay(this.tab);
       }
     }
