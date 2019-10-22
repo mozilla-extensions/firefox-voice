@@ -114,6 +114,7 @@ jobs:
             export VERSION="$(node -e 'process.stdout.write(require("./package.json").version, {encoding: "UTF8"})')"
             export UPDATE_BASE="https://va.allizom.org/releases/prod"
             export INSTALL_CHANNEL=prod
+            export LOG_LEVEL=info
             mkdir -p artifacts/prod/
             npm run package
             mv addon.xpi artifacts/prod/firefox-voice.xpi

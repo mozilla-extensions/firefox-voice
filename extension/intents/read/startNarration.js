@@ -23,7 +23,6 @@ communicate.register("stopReading", () => {
   if (!element) {
     return false;
   }
-  console.log("clicking element", element);
   element.dispatchEvent(new MouseEvent("click"));
   return true;
 });

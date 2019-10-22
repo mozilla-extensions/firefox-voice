@@ -19,8 +19,8 @@ globals:
 
 rules:
   eqeqeq: error
-  no-console: off # TODO: Set back to "warn"
-  no-unused-vars: [error, {vars: all, args: none, ignoreRestSiblings: false}]
+  no-console: "warn" # TODO: Set back to "warn"
+  no-unused-vars: [error, { vars: all, args: none, ignoreRestSiblings: false }]
   no-var: error
   no-warning-comments: off
   prefer-const: error

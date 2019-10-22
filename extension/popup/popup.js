@@ -36,9 +36,7 @@ this.popup = (function() {
       throw e;
     }
 
-    console.info("starting...");
     await vad.stm_vad_ready;
-    console.info("stm_vad is ready");
   }
 
   async function requestMicrophone() {

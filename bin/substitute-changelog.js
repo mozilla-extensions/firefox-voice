@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const ejs = require("ejs");
 const path = require("path");
 const fs = require("fs");
