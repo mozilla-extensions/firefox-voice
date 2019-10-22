@@ -57,7 +57,7 @@ this.main = (function() {
       return browser.tabs.sendMessage(recorderTabId, message);
     } else if (message.type === "makeRecorderActive") {
       // FIXME: consider focusing the window too
-      browserUtil.makeTabActive(recorderTabId);
+      browserUtil.makeTabActive(recorderTabId || sender.tab.id);
       return null;
     }
     log.error(
