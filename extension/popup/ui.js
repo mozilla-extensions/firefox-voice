@@ -86,6 +86,10 @@ this.ui = (function() {
     // can be overridden
   };
 
+  exports.onSearchImageClick = function() {
+    // can be overridden
+  };
+
   function listenForText() {
     const textInput = document.getElementById("text-input-field");
     textInput.focus();
@@ -295,11 +299,18 @@ this.ui = (function() {
     }
   };
 
+  function listenForImageClick() {
+    document.querySelector("#search-image").addEventListener("click", () => {
+      exports.onSearchImageClick();
+    });
+  }
+
   init();
   listenForClose();
   listenForSettings();
   listenForBack();
   listenForLexicon();
+  listenForImageClick();
 
   return exports;
 })();

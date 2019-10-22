@@ -19,25 +19,6 @@ this.intents.navigation = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "navigation.search",
-    description: "Do a regular (Google) search",
-    examples: ["Search for hiking in Denver", "Look up recipes for fish tacos"],
-    match: `
-    (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
-    `,
-    async run(context) {
-      const cardData = await searching.ddgEntitySearch(context.slots.query);
-      if (!cardData) {
-        // Default to Google Search
-        const url = searching.googleSearchUrl(context.slots.query, false);
-        await context.createTab({ url });
-      } else {
-        context.showCard(cardData);
-      }
-    },
-  });
-
-  this.intentRunner.registerIntent({
     name: "navigation.bangSearch",
     description:
       "Search a specific service, using their site-specific search page",

@@ -6,6 +6,7 @@ this.popup = (function() {
   let stream;
   let isWaitingForPermission = null;
   let executedIntent = false;
+  let lastSearchUrl;
 
   const { backgroundTabRecorder } = buildSettings;
 
@@ -94,6 +95,12 @@ this.popup = (function() {
           text,
         });
       };
+      ui.onSearchImageClick = async () => {
+        await browser.runtime.sendMessage({
+          type: "focusSearchResults",
+          searchUrl: lastSearchUrl,
+        });
+      };
     };
     recorder.onEnd = json => {
       // Probably superfluous, since this is called in onProcessing:
@@ -148,6 +155,7 @@ this.popup = (function() {
     } else if (message.type === "displayAutoplayFailure") {
       ui.displayAutoplayFailure();
     } else if (message.type === "showSearchResults") {
+      lastSearchUrl = message.searchUrl;
       ui.showSearchResults(message);
     }
   }

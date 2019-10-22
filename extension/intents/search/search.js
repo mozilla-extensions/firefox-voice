@@ -1,6 +1,7 @@
-/* globals intentRunner, log, searching, content */
+/* globals intentRunner, log, searching, content, browserUtil */
 
 this.intents.search = (function() {
+  const exports = {};
   let _searchTabId;
   const START_URL = "https://www.google.com";
   let lastSearchInfo;
@@ -46,12 +47,26 @@ this.intents.search = (function() {
     return browser.tabs.sendMessage(_searchTabId, message);
   }
 
+  exports.focusSearchResults = async message => {
+    const { searchUrl } = message;
+    const searchTabId = await openSearchTab();
+    const tab = await browser.tabs.get(searchTabId);
+    if (tab.url !== searchUrl) {
+      await browser.tabs.update({ url: searchUrl });
+    }
+    await browserUtil.makeTabActive(tab);
+    await browser.runtime.sendMessage({
+      type: "closePopup",
+      time: 0,
+    });
+  };
+
   intentRunner.registerIntent({
     name: "search.search",
     description:
       "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab.",
     match: `
-    fancy (search |) [query]
+    (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
     async run(context) {
       await performSearch(context.slots.query);
@@ -66,6 +81,7 @@ this.intents.search = (function() {
           type: "showSearchResults",
           card,
           searchResults: searchInfo.searchResults,
+          searchUrl: searchInfo.searchUrl,
           index: -1,
         });
       } else {
@@ -74,6 +90,7 @@ this.intents.search = (function() {
         await browser.runtime.sendMessage({
           type: "showSearchResults",
           searchResults: searchInfo.searchResults,
+          searchUrl: searchInfo.searchUrl,
           index: 0,
         });
         const tab = await browser.tabs.create({
@@ -89,7 +106,7 @@ this.intents.search = (function() {
     description:
       "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result.",
     match: `
-    fancy next (result | search |)
+    (search |) next (search |) (result | item | page | article |)
     `,
     async run(context) {
       if (!lastSearchInfo) {
@@ -107,6 +124,7 @@ this.intents.search = (function() {
       await browser.runtime.sendMessage({
         type: "showSearchResults",
         searchResults: lastSearchInfo.searchResults,
+        searchUrl: lastSearchInfo.searchUrl,
         index: lastSearchIndex,
       });
       if (!lastTabId) {
@@ -123,12 +141,14 @@ this.intents.search = (function() {
     name: "search.show",
     description: "Focuses the special tab used for searching",
     match: `
-    fancy (search | show |) results
-    fancy show
+    (open | show | focus) search (results |)
+    (open | show | focus) results
     `,
     async run(context) {
       const tabId = await openSearchTab();
       await context.makeTabActive(tabId);
     },
   });
+
+  return exports;
 })();

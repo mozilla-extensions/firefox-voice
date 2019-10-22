@@ -18,6 +18,7 @@ this.queryScript = (function() {
       hasSidebarCard,
       hasCard,
       searchResults,
+      searchUrl: location.href,
     };
   });
 

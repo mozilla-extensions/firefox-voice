@@ -49,6 +49,8 @@ this.main = (function() {
     } else if (message.type === "onVoiceShimForward") {
       message.type = "onVoiceShim";
       return browser.runtime.sendMessage(message);
+    } else if (message.type === "focusSearchResults") {
+      return intents.search.focusSearchResults(message);
     } else if (message.type === "voiceShimForward") {
       message.type = "voiceShim";
       if (!recorderTabId) {
