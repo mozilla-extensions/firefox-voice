@@ -29,6 +29,8 @@ this.catcher = (function() {
         // This happens when the popup is closed or something that might receive a message instead is
         // gone, which happens regularly and is generally harmless:
         "No matching message handler",
+        // Another common error when something is closed mid-communication:
+        "Could not establish connection. Receiving end does not exist.",
         // This happens when there's a tab is closed in the middle of some action, which is uncommon
         // but also harmless:
         /^Invalid Tab ID/,
