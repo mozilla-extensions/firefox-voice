@@ -21,7 +21,7 @@ this.intents.notes = (function() {
   }
 
   this.intentRunner.registerIntent({
-    name: "note.setPlace",
+    name: "notes.setPlace",
     description:
       "Indicate where note should be written, both the tab and the element on the tab where text will go",
     examples: ["Write notes here"],
