@@ -39,7 +39,7 @@ this.intents.search = (function() {
   async function performSearch(query) {
     const tabId = await openSearchTab();
     const url = searching.googleSearchUrl(query) + "&voice";
-    await browser.tabs.update(tabId, { url });
+    await browserUtil.loadUrl(tabId, url);
     await content.lazyInject(tabId, "/intents/search/queryScript.js");
   }
 
