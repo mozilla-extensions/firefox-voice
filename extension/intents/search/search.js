@@ -2,6 +2,9 @@
 
 this.intents.search = (function() {
   const exports = {};
+  // Close the search tab after this amount of time:
+  const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
+  let closeTabTimeout = null;
   let _searchTabId;
   const START_URL = "https://www.google.com";
   let lastSearchInfo;
@@ -9,6 +12,13 @@ this.intents.search = (function() {
   let lastTabId;
 
   async function openSearchTab() {
+    if (closeTabTimeout) {
+      clearTimeout(closeTabTimeout);
+      closeTabTimeout = null;
+    }
+    closeTabTimeout = setTimeout(() => {
+      closeSearchTab();
+    }, CLOSE_TIME);
     if (_searchTabId) {
       try {
         await browser.tabs.get(_searchTabId);
@@ -34,6 +44,15 @@ this.intents.search = (function() {
     // eslint-disable-next-line require-atomic-updates
     _searchTabId = tab.id;
     return _searchTabId;
+  }
+
+  async function closeSearchTab() {
+    if (!_searchTabId) {
+      return;
+    }
+    const tabId = _searchTabId;
+    _searchTabId = null;
+    await browser.tabs.remove(tabId);
   }
 
   async function performSearch(query) {
