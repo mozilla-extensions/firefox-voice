@@ -1,7 +1,8 @@
 /* globals communicate */
 
 this.queryScript = (function() {
-  const CARD_SELECTOR = ".vk_c.card-section, .lr_container.mod";
+  const CARD_SELECTOR =
+    ".vk_c.card-section, .lr_container.mod, div[role=widget], .act-card";
 
   communicate.register("searchResultInfo", message => {
     const hasSidebarCard = !!document.querySelector(".kp-header");
@@ -24,6 +25,8 @@ this.queryScript = (function() {
 
   communicate.register("cardImage", message => {
     const card = document.querySelector(CARD_SELECTOR);
+    // When it has a canvas it may dynamically update:
+    const hasWidget = !!card.querySelector("canvas");
     const rect = card.getBoundingClientRect();
     const canvas = document.createElementNS(
       "http://www.w3.org/1999/xhtml",
@@ -38,6 +41,7 @@ this.queryScript = (function() {
       width: rect.width,
       height: rect.height,
       src: canvas.toDataURL(),
+      hasWidget,
     };
   });
 })();

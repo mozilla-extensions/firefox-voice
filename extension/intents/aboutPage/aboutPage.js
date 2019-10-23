@@ -81,8 +81,8 @@ intents.aboutPage = (function() {
     name: "aboutPage.changeComments",
     description: `If you've used "show comments on this page" and there were multiple forums or pages, this will show the next (or previous) comment forum`,
     match: `
-    next (result | comments | comment) [move=next]
-    previous (result | comments | comment) [move=previous]
+    next (comments | comment) [move=next]
+    previous (comments | comment) [move=previous]
     `,
     async run(context) {
       const activeTab = await context.activeTab();

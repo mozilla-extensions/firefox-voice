@@ -157,7 +157,9 @@ this.popup = (function() {
     } else if (message.type === "showSearchResults") {
       lastSearchUrl = message.searchUrl;
       ui.showSearchResults(message);
+      return Promise.resolve(true);
     }
+    return undefined;
   }
 
   async function updateExamples() {
