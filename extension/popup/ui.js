@@ -94,6 +94,11 @@ this.ui = (function() {
     const textInput = document.getElementById("text-input-field");
     textInput.focus();
     textInput.addEventListener("keyup", detectText);
+    textInput.addEventListener("blur", () => {
+      setTimeout(() => {
+        textInput.focus();
+      }, 0);
+    });
 
     const sendText = document.getElementById("send-text-input");
     sendText.addEventListener("click", processTextQuery);
