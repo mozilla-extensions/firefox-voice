@@ -29,10 +29,10 @@ this.queryScript = (function() {
       "http://www.w3.org/1999/xhtml",
       "canvas"
     );
-    canvas.width = rect.width; // * window.devicePixelRatio
-    canvas.height = rect.height; // * window.devicePixelRatio
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
     const ctx = canvas.getContext("2d");
-    // ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     ctx.drawWindow(window, rect.x, rect.y, rect.width, rect.height, "#fff");
     return {
       width: rect.width,
