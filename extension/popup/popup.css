@@ -340,3 +340,7 @@ a#lexicon {
   color: #777;
   font-size: 90%;
 }
+
+#search-image {
+  cursor: pointer;
+}
