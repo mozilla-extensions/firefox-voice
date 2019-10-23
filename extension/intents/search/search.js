@@ -4,7 +4,9 @@ this.intents.search = (function() {
   const exports = {};
   // Close the search tab after this amount of time:
   const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
+  const CARD_POLL_INTERVAL = 200;
   let closeTabTimeout = null;
+  let lastImage = null;
   let _searchTabId;
   const START_URL = "https://www.google.com";
   let lastSearchInfo;
@@ -66,6 +68,38 @@ this.intents.search = (function() {
     return browser.tabs.sendMessage(_searchTabId, message);
   }
 
+  let cardPollTimeout;
+
+  function stopCardPoll() {
+    if (cardPollTimeout) {
+      clearTimeout(cardPollTimeout);
+      cardPollTimeout = null;
+      lastImage = null;
+    }
+  }
+
+  function pollForCard() {
+    stopCardPoll();
+    cardPollTimeout = setInterval(async () => {
+      const card = await callScript({ type: "cardImage" });
+      if (card.src === lastImage) {
+        return;
+      }
+      lastImage = card.src;
+      const response = await browser.runtime.sendMessage({
+        type: "showSearchResults",
+        card,
+        searchResults: lastSearchInfo.searchResults,
+        searchUrl: lastSearchInfo.searchUrl,
+        index: -1,
+      });
+      if (!response) {
+        // There's no listener
+        stopCardPoll();
+      }
+    }, CARD_POLL_INTERVAL);
+  }
+
   exports.focusSearchResults = async message => {
     const { searchUrl } = message;
     const searchTabId = await openSearchTab();
@@ -88,6 +122,7 @@ this.intents.search = (function() {
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
     `,
     async run(context) {
+      stopCardPoll();
       await performSearch(context.slots.query);
       const searchInfo = await callScript({ type: "searchResultInfo" });
       lastSearchInfo = searchInfo;
@@ -103,6 +138,9 @@ this.intents.search = (function() {
           searchUrl: searchInfo.searchUrl,
           index: -1,
         });
+        if (card.hasWidget) {
+          pollForCard();
+        }
       } else {
         context.keepPopup();
         lastSearchIndex = 0;
@@ -128,6 +166,7 @@ this.intents.search = (function() {
     (search |) next (search |) (result | item | page | article |)
     `,
     async run(context) {
+      stopCardPoll();
       if (!lastSearchInfo) {
         const e = new Error("No search made");
         e.displayMessage = "You haven't made a search";
@@ -164,6 +203,7 @@ this.intents.search = (function() {
     (open | show | focus) results
     `,
     async run(context) {
+      stopCardPoll();
       const tabId = await openSearchTab();
       await context.makeTabActive(tabId);
     },
