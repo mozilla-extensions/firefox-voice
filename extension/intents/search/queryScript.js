@@ -1,7 +1,7 @@
 /* globals communicate */
 
 this.queryScript = (function() {
-  const CARD_SELECTOR = ".vk_c.card-section";
+  const CARD_SELECTOR = ".vk_c.card-section, .lr_container.mod";
 
   communicate.register("searchResultInfo", message => {
     const hasSidebarCard = !!document.querySelector(".kp-header");
