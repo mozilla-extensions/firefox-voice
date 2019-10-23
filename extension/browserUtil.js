@@ -20,5 +20,18 @@ this.browserUtil = (function() {
     await browser.windows.update(tab.windowId, { focused: true });
   };
 
+  exports.loadUrl = async function loadUrl(tabId, url) {
+    await browser.tabs.update(tabId, { url });
+    return new Promise((resolve, reject) => {
+      function onUpdated(tabId, changeInfo, tab) {
+        if (tab.url === url) {
+          browser.tabs.onUpdated.removeListener(onUpdated, { tabId });
+          resolve(tab);
+        }
+      }
+      browser.tabs.onUpdated.addListener(onUpdated, { tabId });
+    });
+  };
+
   return exports;
 })();
