@@ -22,7 +22,7 @@ this.communicate = (function() {
       throw new Error(`No handler for ${message.type}`);
     }
     try {
-      return HANDLERS[message.type](message, sender);
+      return Promise.resolve(HANDLERS[message.type](message, sender));
     } catch (e) {
       log.error(`Error in ${message.type} handler: ${e}`, e.stack);
       const response = {

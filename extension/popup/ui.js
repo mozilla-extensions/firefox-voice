@@ -279,14 +279,7 @@ this.ui = (function() {
   exports.showSearchResults = function({ card, searchResults, index }) {
     exports.setState("searchResults");
     if (card) {
-      const image = document.querySelector("#search-image");
-      image.style.display = "";
-      image.height = card.height;
-      image.width = card.width;
-      image.src = card.src;
-      const container = document.querySelector("#popup");
-      container.style.minWidth = card.width + "px";
-      container.style.minHeight = card.height + 150 + "px";
+      exports.showSearchCard(card);
     }
     const next = searchResults[index + 1];
     if (next) {
@@ -297,6 +290,17 @@ this.ui = (function() {
         next.url
       ).hostname;
     }
+  };
+
+  exports.showSearchCard = function(card) {
+    const image = document.querySelector("#search-image");
+    image.style.display = "";
+    image.height = card.height;
+    image.width = card.width;
+    image.src = card.src;
+    const container = document.querySelector("#popup");
+    container.style.minWidth = card.width + "px";
+    container.style.minHeight = card.height + 150 + "px";
   };
 
   function listenForImageClick() {
