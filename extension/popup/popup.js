@@ -158,6 +158,12 @@ this.popup = (function() {
       lastSearchUrl = message.searchUrl;
       ui.showSearchResults(message);
       return Promise.resolve(true);
+    } else if (message.type === "refreshSearchCard") {
+      if (!message.card) {
+        throw new Error(".card propoerty missing on refreshSearchCard message");
+      }
+      ui.showSearchCard(message.card);
+      return Promise.resolve(true);
     }
     return undefined;
   }
