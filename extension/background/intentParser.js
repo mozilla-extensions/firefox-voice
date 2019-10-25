@@ -27,8 +27,11 @@ this.intentParser = (function() {
   const Matcher = (exports.Matcher = class Matcher {
     constructor(phrase) {
       this.phrase = phrase;
-      const { slots, regex, parameters } = this._phraseToRegex(phrase);
+      const { slots, regex, parameters, slotTypes } = this._phraseToRegex(
+        phrase
+      );
       this.slots = slots;
+      this.slotTypes = slotTypes;
       this.parameters = parameters;
       this.regexString = regex;
       this.regex = new RegExp("^" + regex + "$", "i");
@@ -41,6 +44,7 @@ this.intentParser = (function() {
       }
       const result = {
         slots: {},
+        slotTypes: this.slotTypes,
         utterance,
         regex: this.regexString,
         parameters: Object.assign({}, this.parameters),
@@ -63,6 +67,7 @@ this.intentParser = (function() {
 
     _phraseToRegex(toParse) {
       const slots = [];
+      const slotTypes = {};
       const parameters = {};
       let regex = "";
       while (toParse) {
@@ -80,6 +85,7 @@ this.intentParser = (function() {
             if (!ENTITY_TYPES[entityName]) {
               throw new Error(`No entity type by the name ${entityName}`);
             }
+            slotTypes[parts[0].trim()] = parts[1].trim();
             const entityRegex = ENTITY_TYPES[entityName]
               .map(e => (e ? " " + e : e))
               .join("|");
@@ -101,7 +107,7 @@ this.intentParser = (function() {
       }
       // Implements the {s} optional strings:
       regex = regex.replace(/\{(.*?)\}/g, "(?:$1)?");
-      return { slots, parameters, regex };
+      return { slots, parameters, regex, slotTypes };
     }
 
     _getAlternatives(phrase) {
@@ -236,7 +242,14 @@ this.intentParser = (function() {
       if (match) {
         match.name = name;
         match.fallback = false;
-        const slotChars = Object.values(match.slots).join("").length;
+        let slotChars = 0;
+        for (const slotName in match.slots) {
+          if (match.slotTypes[slotName]) {
+            slotChars += 1;
+          } else {
+            slotChars += match.slots[slotName].length;
+          }
+        }
         if (bestMatch === undefined || bestChars > slotChars) {
           bestMatch = match;
           bestChars = slotChars;
