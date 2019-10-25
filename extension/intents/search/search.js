@@ -119,7 +119,7 @@ this.intents.search = (function() {
     description:
       "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab.",
     match: `
-    (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |)
+    (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
     `,
     async run(context) {
       stopCardPoll();
@@ -162,8 +162,9 @@ this.intents.search = (function() {
     name: "search.next",
     description:
       "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result.",
+    examples: ["test:next search item"],
     match: `
-    (search |) next (search |) (result | item | page | article |)
+    (search |) next (search |) (result{s} | item{s} | page | article |)
     `,
     async run(context) {
       stopCardPoll();
@@ -198,9 +199,10 @@ this.intents.search = (function() {
   intentRunner.registerIntent({
     name: "search.show",
     description: "Focuses the special tab used for searching",
+    examples: ["test:open results", "test:show search result"],
     match: `
-    (open | show | focus) search (results |)
-    (open | show | focus) results
+    (open | show | focus) search (result{s} |)
+    (open | show | focus) result{s}
     `,
     async run(context) {
       stopCardPoll();

@@ -7,12 +7,12 @@ this.intents.bookmarks = (function() {
       "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched",
     examples: ["Open news bookmark"],
     match: `
-    open [query] bookmark in (this | current |) tab [tab=this]
-    open bookmark [query] in (this | current |) tab [tab=this]
+    open [query] bookmark (for me |) in (this | current |) tab (for me |) [tab=this]
+    open bookmark [query] (for me |) in (this | current |) tab (for me |) [tab=this]
     open [query] bookmark in new (tab |)
     open bookmark [query] in new (tab |)
-    open [query] bookmark
-    open bookmark [query]
+    open [query] bookmark (for me|)
+    open bookmark [query] (for me|)
     `,
     async run(context) {
       const bookmarks = await browser.bookmarks.search({});

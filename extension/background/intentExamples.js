@@ -4,6 +4,8 @@ this.intentExamples = (function() {
   const exports = {};
 
   const INTENT_ROTATION_PERIOD = 1000 * 60 * 5; // 5 minutes
+  // This gets filled later:
+  let INTENT_EXAMPLES = null;
 
   let lastExamples;
   let lastExampleTime = 0;
@@ -17,6 +19,32 @@ this.intentExamples = (function() {
 
   function pick(array) {
     return array[Math.floor(Math.random() * array.length)];
+  }
+
+  function getAllExamples() {
+    if (INTENT_EXAMPLES === null) {
+      INTENT_EXAMPLES = {};
+      for (const intentName in intentRunner.intents) {
+        const intent = intentRunner.intents[intentName];
+        let examples = intent.examples;
+        if (!examples) {
+          continue;
+        }
+        if (typeof examples === "function") {
+          examples = intent.examples();
+        }
+        for (const example of examples) {
+          if (example.startsWith("test:")) {
+            continue;
+          }
+          if (!INTENT_EXAMPLES[intentName]) {
+            INTENT_EXAMPLES[intentName] = [];
+          }
+          INTENT_EXAMPLES[intentName].push(example);
+        }
+      }
+    }
+    return INTENT_EXAMPLES;
   }
 
   exports.getExamples = function(number) {
@@ -33,16 +61,11 @@ this.intentExamples = (function() {
   };
 
   function freshExamples(number) {
-    let intentNames = Object.keys(intentRunner.intents);
-    intentNames = intentNames.filter(n => intentRunner.intents[n].examples);
-    intentNames = shuffled(intentNames);
+    const examplesByIntent = getAllExamples();
+    const intentNames = shuffled(Object.keys(examplesByIntent));
     const result = [];
     for (let i = 0; i < number; i++) {
-      let examples = intentRunner.intents[intentNames[i]].examples;
-      if (typeof examples === "function") {
-        examples = intentRunner.intents[intentNames[i]].examples();
-      }
-      result.push(pick(examples));
+      result.push(pick(examplesByIntent[intentNames[i]]));
     }
     return result;
   }

@@ -43,7 +43,7 @@ this.intents.read = (function() {
       "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
-    read (this |) (tab | page |)
+    read (this |) (tab | page |) (for me | to me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
@@ -84,7 +84,7 @@ this.intents.read = (function() {
     description: "Stop reading/narrating the current tab",
     examples: ["Stop reading"],
     match: `
-    stop reading (this |) (tab | page |)
+    stop reading (this |) (tab | page |) (to me | for me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
