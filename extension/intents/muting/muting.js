@@ -11,10 +11,10 @@ this.intents.muting = (function() {
       "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound",
     examples: ["mute (all tabs)"],
     match: `
-    (mute | turn off) (whatever is |) (playing | all) (the |) (music | audio | sound | everything | tab | tabs)
+    (mute | turn off) (whatever is |) (playing | all |) (the |) (music | audio | sound | everything | tab{s}) (for me |)
     mute
-    quiet
-    shut up
+    quiet (tabs{s} |) (for me |)
+    shut up (tab{s} |) (for me |)
     `,
     async run(desc) {
       const stoppedReading = await intents.read.stopReading();
@@ -44,7 +44,7 @@ this.intents.muting = (function() {
     name: "mute.unmute",
     description: "Unmute all tabs",
     match: `
-    unmute
+    unmute (tab{s} |) (for me |)
     `,
     async run(desc) {
       const mutedTabs = await browser.tabs.query({ audible: false });

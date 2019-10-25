@@ -5,10 +5,13 @@ this.intents.find = (function() {
     name: "find.find",
     description:
       "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active",
-    examples: ["Find calendar tab"],
+    examples: ["Find calendar tab", "test:go to my calendar"],
     match: `
     (find | bring me to) (my | the |) [query] (tab |)
+    (find | open | focus | show) tab [query]
     go (to | to the |) [query] tab
+    go to my [query]
+    focus [query] (tab |)
     `,
     async run(context) {
       const query = context.slots.query;

@@ -2,6 +2,7 @@ this.intents.self = (function() {
   this.intentRunner.registerIntent({
     name: "self.cancelIntent",
     description: "Cancels input, immediately closing the popup",
+    examples: ["test:nevermind"],
     match: `
     cancel
     nevermind
@@ -34,7 +35,7 @@ this.intents.self = (function() {
     name: "self.openOptions",
     description: "Opens the options page",
     match: `
-    (open | open the | voice | firefox voice) (settings | options)
+    (open | open the | voice | firefox voice) (settings | options) (for me |)
     `,
     async run(context) {
       await browser.tabs.create({
@@ -47,7 +48,7 @@ this.intents.self = (function() {
     name: "self.openIntentViewer",
     description: "Opens the intent viewer (probably this page)",
     match: `
-    (show | open) all intents
+    (show | open) all intents (for me |)
     `,
     async run(context) {
       await browser.tabs.create({

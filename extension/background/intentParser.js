@@ -11,6 +11,12 @@ this.intentParser = (function() {
     "plain text (alt|text) [slot]"
 
   Spaces separate words, but spaces don't matter too much. Slots are all wildcards.
+
+  You can use `[slot:slotType]` to create a slot that must be of a certain types (types are in ENTITY_MAP)
+
+  You can use `[parameter=value]` to set a parameter on any matches for this one item. This does not capture anything.
+
+  You can use `noun{s}` to match both `noun` and `nouns`.
   */
 
   const ENTITY_TYPES = {
@@ -93,6 +99,8 @@ this.intentParser = (function() {
           regex += " " + words;
         }
       }
+      // Implements the {s} optional strings:
+      regex = regex.replace(/\{(.*?)\}/g, "(?:$1)?");
       return { slots, parameters, regex };
     }
 
@@ -216,9 +224,10 @@ this.intentParser = (function() {
 
   exports.parse = function parse(text, disableFallback = false) {
     text = text.trim();
+    // Normalize whitespace, so there's always just one space between words:
     text = text.replace(/\s\s+/g, " ");
-    text = text.toLowerCase();
-    text = text.replace(/[^a-z0-9 ']\B/gi, "");
+    // Removes punctuation at the end of words, like "this, and that.":
+    text = text.replace(/[.,;!?]\B/g, "");
     let bestMatch;
     let bestChars;
     for (const name of INTENT_NAMES) {

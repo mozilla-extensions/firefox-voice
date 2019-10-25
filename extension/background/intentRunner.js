@@ -207,7 +207,8 @@ this.intentRunner = (function() {
       });
       if (intent.examples) {
         intent.examples = intent.examples.map(e => {
-          const parsed = intentParser.parse(e, true) || {
+          const toMatch = e.replace(/^test:/, "").replace(/[()]/g, "");
+          const parsed = intentParser.parse(toMatch, true) || {
             name: "NO MATCH",
             slots: {},
           };

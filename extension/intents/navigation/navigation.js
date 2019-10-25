@@ -23,12 +23,11 @@ this.intents.navigation = (function() {
     description:
       "Search a specific service, using their site-specific search page",
     match: `
-    google images (of |) [query] [service=images]
-    search images (for |) [query] [service=images]
-    images of [query] [service=images]
-    (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query]
-    (do a |) (search | query ) my [service:serviceName] (for | for the |) [query]
-    (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName]
+    google images (of | for |) [query] [service=images]
+    images (of | for) [query] [service=images]
+    (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
+    (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
+    (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
     `,
     examples: [
       "Search my Gmail for tickets to Hamilton",
@@ -36,6 +35,7 @@ this.intents.navigation = (function() {
       "Search CSS grid on MDN",
       "Look up Hamilton in Gmail",
       "Images of sparrows",
+      "test:search google images of sparrows for me",
     ],
     async run(context) {
       const service = context.slots.service || context.parameters.service;
@@ -58,9 +58,9 @@ this.intents.navigation = (function() {
     name: "navigation.translate",
     description: "Translate the given page to English, using Google Translate",
     match: `
-    translate (this |) (page | tab | article | site | this) (to english |)
+    translate (this |) (page | tab | article | site |) (to english |) (for me |)
     `,
-    examples: ["Translate this page"],
+    examples: ["Translate this page", "test:translate"],
     async run(context) {
       const tab = await context.activeTab();
       const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=en&u=${encodeURIComponent(
@@ -75,7 +75,7 @@ this.intents.navigation = (function() {
     description:
       "Translate whatever text is selected to English, using Google Translate",
     match: `
-    translate (this |) selection (to english |)
+    translate (this |) selection (to english |) (for me |)
     `,
     examples: ["Translate selection"],
     async run(context) {
