@@ -641,7 +641,6 @@ class SearchResultsContent extends PureComponent {
             : {}
         const imgAlt = next ? next.title : ""
 
-        console.log(card)
         if (card) setMinPopupSize(card.width, card.height) 
 
         return (
@@ -798,17 +797,17 @@ class Zap extends Component {
         this.currentConfig = this.animationConfig[this.props.currentState]
 
         if (this.currentConfig) {
-            if (this.props.currentState === "processing") {
+            this.playAnimation(
+                this.currentConfig.segments,
+                this.currentConfig.interrupt,
+                this.currentConfig.loop
+            )
+
+            if (this.props.currentState === "listening") {
                 recorderIntervalId = setInterval(() => {
                     const volumeLevel = recorder.getVolumeLevel()
                     this.setAnimationForVolume(volumeLevel)
                 }, 500)
-            } else {
-                this.playAnimation(
-                    this.currentConfig.segments, 
-                    this.currentConfig.interrupt, 
-                    this.currentConfig.loop
-                )
             }
         }
     }
@@ -816,7 +815,7 @@ class Zap extends Component {
     loadAnimation = async () => {
         this.animation = await lottie.loadAnimation({
             container: document.getElementById("zap"), // the dom element that will contain the animation
-            loop: FAST_PERMISSION_CLOSE,
+            loop: false,
             renderer: "svg",
             autoplay: false,
             path: "animations/Firefox_Voice_Full.json", // the path to the animation json
