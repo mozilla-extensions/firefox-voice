@@ -1,0 +1,889 @@
+/* globals util, voice, vad, lottie, settings, log, voiceShim, buildSettings */
+
+const React = window.React
+const { Component } = React
+const ReactDOM = window.ReactDOM
+
+const PERMISSION_REQUEST_TIME = 2000
+const FAST_PERMISSION_CLOSE = 500
+let stream
+let isWaitingForPermission = null
+let executedIntent = false
+
+const { backgroundTabRecorder } = buildSettings
+
+// Default amount of time (in milliseconds) before the action is automatically dismissed after we perform certain actions (e.g. successfully switching to a different open tab). This value should give users enough time to read the content on the popup before it closes.
+const DEFAULT_TIMEOUT = 2500
+// Timeout for the popup when there's text displaying:
+const TEXT_TIMEOUT = 7000
+let overrideTimeout = null
+
+let recorder
+let recorderIntervalId
+
+const initialState = {
+    currentState: "listening",
+    suggestions: [],
+    transcript: null,
+    error: null,
+    displayText: null,
+    displayAutoplay: false,
+    search: null,
+    card: null
+}
+
+class PopupReact extends Component {
+    constructor(props) {
+        super(props)
+        this.state = Object.assign({}, initialState)
+        this.textInputDetected = false
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this.onKeyPressed.bind(this))
+    }
+
+    componentDidMount() {
+        this.init()
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.onKeyPressed.bind(this))
+
+        browser.runtime.sendMessage({ type: "microphoneStopped" })
+        if (!executedIntent) {
+            browser.runtime.sendMessage({ type: "cancelledIntent" })
+        }
+        if (
+            !backgroundTabRecorder &&
+            isWaitingForPermission &&
+            Date.now() - isWaitingForPermission < FAST_PERMISSION_CLOSE
+        ) {
+            this.startOnboarding()
+        }
+
+        // TODO: offload mic and other resources before closing?
+    }
+
+    async init() {
+        backgroundTabRecorder
+            ? await voiceShim.openRecordingTab()
+            : await this.setupStream()
+
+        this.startRecorder()
+        // Listen for messages from the background scripts
+        browser.runtime.onMessage.addListener(this.handleMessage.bind(this))
+        this.updateExamples()
+    }
+
+    onKeyPressed() {
+        if (!this.textInputDetected) {
+            this.textInputDetected = true
+            this.setCurrentState("typing")
+            this.onStartTextInput()
+        }
+    }
+
+    async onStartTextInput() {
+        await browser.runtime.sendMessage({ type: "microphoneStopped" })
+        log.debug("detected text from the popup")
+        recorder.cancel() // not sure if this is working as expected?
+        clearInterval(recorderIntervalId)
+    }
+
+    async setupStream() {
+        try {
+            isWaitingForPermission = Date.now()
+            await this.startMicrophone()
+            isWaitingForPermission = null
+        } catch (e) {
+            isWaitingForPermission = false
+            if (e.name === "NotAllowedError" || e.name === "TimeoutError") {
+                this.startOnboarding()
+                window.close()
+                return
+            }
+            throw e
+        }
+
+        await vad.stm_vad_ready
+    }
+
+    async requestMicrophone() {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+        return stream
+    }
+
+    async startMicrophone() {
+        const sleeper = util.sleep(PERMISSION_REQUEST_TIME).then(() => {
+            const exc = new Error("Permission Timed Out")
+            exc.name = "TimeoutError"
+            throw exc
+        })
+        await Promise.race([this.requestMicrophone(), sleeper])
+    }
+
+    async startOnboarding() {
+        await browser.tabs.create({
+            url: browser.extension.getURL("onboarding/onboard.html"),
+        })
+    }
+
+    startRecorder(stream) {
+        recorder = backgroundTabRecorder
+            ? new voiceShim.Recorder()
+            : new voice.Recorder(stream)
+
+        recorder.onBeginRecording = () => {
+            browser.runtime.sendMessage({ type: "microphoneStarted" })
+            this.setCurrentState("listening")
+        }
+        recorder.onEnd = json => {
+            // Probably superfluous, since this is called in onProcessing:
+            browser.runtime.sendMessage({ type: "microphoneStopped" })
+            clearInterval(recorderIntervalId)
+            this.setCurrentState("success")
+            if (json === null) {
+                // It was cancelled
+                return
+            }
+            browser.runtime.sendMessage({
+                type: "addTelemetry",
+                properties: { transcriptionConfidence: json.data[0].confidence },
+            })
+            this.setTranscript(json.data[0].text)
+            executedIntent = true
+            browser.runtime.sendMessage({
+                type: "runIntent",
+                text: json.data[0].text,
+            })
+        }
+        recorder.onError = error => {
+            browser.runtime.sendMessage({ type: "microphoneStopped" })
+            log.error("Got recorder error:", String(error), error)
+            this.setCurrentState("error")
+            clearInterval(recorderIntervalId)
+        }
+        recorder.onProcessing = () => {
+            browser.runtime.sendMessage({ type: "microphoneStopped" })
+            this.setCurrentState("processing")
+        }
+        recorder.onNoVoice = () => {
+            browser.runtime.sendMessage({ type: "microphoneStopped" })
+            log.debug("Closing popup because of no voice input")
+            window.close()
+        }
+        recorder.startRecording()
+    }
+
+    handleMessage(message) {
+        switch(message.type) {
+            case "closePopup": {
+                closePopup(message.time)
+                break
+            }
+            case "showCard": {
+                this.setState({ card: message.cardData })
+                break
+            }
+            case "displayFailure": {
+                this.setCurrentState("error")
+                if (message.message) {
+                    this.setState({ error: message.message })
+                }
+                break
+            }
+            case "displayText": {
+                this.setState({ displayText: message.message })
+                overrideTimeout = TEXT_TIMEOUT
+                break
+            }
+            case "displayAutoplayFailure": {
+                this.setErrorMessage("Please enable autoplay on this site for a better experience")
+                this.setState({ displayAutoplay: true })
+                break
+            }
+            case "showSearchResults": {
+                this.setState({ search: message })
+                this.setCurrentState("searchResults")
+                return Promise.resolve(true)
+            }
+            default:
+                break
+        }
+        return
+    }
+
+    async updateExamples() {
+        const suggestions = await browser.runtime.sendMessage({
+            type: "getExamples",
+            number: 3,
+        })
+
+        this.setState({ suggestions })
+    }
+
+    setCurrentState(currentState) {
+        this.setState({ currentState })
+    }
+
+    setTranscript(transcript) {
+        this.setState({ transcript })
+    }
+
+    render() {
+        return (
+            <div id="popup" className={this.state.currentState}>
+                <PopupHeader currentState={this.state.currentState} />
+                <PopupContent 
+                    setCurrentState={this.setCurrentState.bind(this)}
+                    setTranscript={this.setTranscript.bind(this)} 
+                    {...this.state} 
+                />
+                <PopupFooter />
+            </div>
+        )
+    }
+}
+
+class PopupHeader extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    getTitle() {
+        switch (this.props.currentState) {
+            case "processing": 
+                return "One second..."
+            case "success": 
+                return "Got it!"
+            case "error": 
+                return "Sorry, there was an issue"
+            case "typing": 
+                return "Type your request"
+            case "searchResults": 
+                return "Search results"
+            case "listening": 
+            default:
+                return "Listening"
+        }
+    }
+
+    onClickGoBack() {
+        location.href = `${location.pathname}?${Date.now()}`
+    }
+
+    onClickClose() {
+        window.close()
+    }
+
+    render() {
+        const hiddenClass = (
+            this.props.currentState === "error" 
+            || this.props.currentState === "searchResults"
+            ) 
+                ? "" 
+                : "hidden"
+
+        return (
+            <div id="popup-header">
+                <div id="left-icon" className={hiddenClass} onClick={this.onClickGoBack}>
+                    <svg
+                        id="back-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill="context-fill"
+                            d="M6.414 8l4.293-4.293a1 1 0 0 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414l5 5a1 1 0 0 0 1.414-1.414z"
+                        ></path>
+                    </svg>
+                </div>
+                <div id="header-title">
+                    {this.getTitle()}
+                </div>
+                <div id="close-icon" onClick={this.onClickClose}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill="context-fill"
+                            d="M9.061 8l3.47-3.47a.75.75 0 0 0-1.061-1.06L8 6.939 4.53 3.47a.75.75 0 1 0-1.06 1.06L6.939 8 3.47 11.47a.75.75 0 1 0 1.06 1.06L8 9.061l3.47 3.47a.75.75 0 0 0 1.06-1.061z"
+                        ></path>
+                    </svg>
+                </div>
+            </div>
+        )
+    }
+}
+
+class PopupContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    getContent() {
+        switch (this.props.currentState) {
+            case "listening":
+                return (<ListeningContent {...this.props} />)
+            case "typing":
+                return (<TypingContent {...this.props} />)
+            case "processing":
+                return (<ProcessingContent {...this.props} />)
+            case "success":
+                return (<SuccessContent {...this.props} />)
+            case "error":
+                return (<ErrorContent {...this.props} />)
+            case "searchResults":
+                return (<SearchResultsContent {...this.props} />)
+            default:
+                return null
+        }
+    }
+
+    render() {
+        return (
+            <div id="popup-content">
+                <Zap currentState={this.props.currentState}/>
+                {this.getContent()}
+            </div>
+        )
+    }
+}
+
+class PopupFooter extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    async showSettings() {
+        await browser.tabs.create({
+            url: browser.runtime.getURL("options/options.html")
+        })
+        window.close()
+    }
+
+    render() {
+        return (
+            <div id="popup-footer">
+                <div id="settings-icon" onClick={this.showSettings}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill="context-fill"
+                            d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
+                        ></path>
+                    </svg>
+                </div>
+                <div id="moz-voice-privacy">
+                    <strong>For Mozilla internal use only</strong>
+                    {/* <a href="">How Mozilla ensures voice privacy</a> */}
+                </div>
+                <div></div>
+            </div>
+        )
+    }
+}
+
+class ListeningContent extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = { 
+            userSettings: null
+        }
+    }
+
+    componentDidMount() {
+        this.getUserSettings()
+    }
+
+    componentDidUpdate() {
+        if (this.state.userSettings.chime) {
+            this.playListeningChime()
+        }
+    }
+
+    async getUserSettings() {
+        this.setState({ userSettings: await settings.getSettings() })
+    }
+
+    playListeningChime() {
+        const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg")
+        audio.play()
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <TextDisplay displayText={this.props.displayText} />
+                <VoiceInput {...this.props} />
+            </React.Fragment>
+        )
+    }
+}
+
+class TypingContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+    
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <TextDisplay displayText={this.props.displayText} />
+                <TypingInput {...this.props} />
+            </React.Fragment>
+        )
+    }
+}
+
+class VoiceInput extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    async onClickLexicon(event) {
+        event.preventDefault()
+        await browser.tabs.create({ url: event.target.href })
+        window.close()
+    }
+
+    render() {
+        return (
+            <div id="voice-input">
+                {this.props.suggestions
+                    ? <div id="suggestions">
+                        <p id="prompt">
+                            You can say things like:
+                            </p>
+                        <div id="suggestions-list">
+                            {this.props.suggestions.map(suggestion => (
+                                <p className="suggestion" key={suggestion}>{suggestion}</p>
+                            ))}
+                        </div>
+                        <div>
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                id="lexicon"
+                                href="../views/lexicon.html"
+                                onClick={this.onClickLexicon}
+                            >
+                                More things you can say
+                                </a>
+                        </div>
+                    </div>
+                    : null
+                }
+            </div>
+        )
+    }
+}
+
+class TypingInput extends Component {
+    constructor(props) {
+        super(props)
+
+        this.textInputRef = React.createRef()
+    }
+
+    componentDidMount() {
+        this.focusText()
+    }
+
+    focusText() {
+        if (this.textInputRef.current) {
+            setTimeout(() => {
+                this.textInputRef.current.focus()
+            }, 0)
+        }
+    }
+
+    onInputKeyPress(event) {
+        if (event.key === "Enter") {
+            this.submitTextInput()
+        }
+    }
+
+    onInputTextChange() {
+        this.setState({ value: event.target.value })
+    }
+
+    async submitTextInput() {
+        const text = this.state.value
+
+        if (text) {
+            await browser.runtime.sendMessage({ type: "microphoneStopped" })
+            this.props.setCurrentState("success")
+            this.props.setTranscript(text)
+            executedIntent = true
+            browser.runtime.sendMessage({
+                type: "addTelemetry",
+                properties: { inputTyped: true }
+            })
+            browser.runtime.sendMessage({
+                type: "runIntent",
+                text
+            })
+        }
+    }
+
+    render() {
+        return (
+            <div id="text-input">
+                <input
+                    type="text"
+                    id="text-input-field"
+                    autoFocus="1"
+                    onKeyPress={this.onInputKeyPress.bind(this)}
+                    onChange={this.onInputTextChange.bind(this)}
+                />
+                <div id="send-btn-wrapper">
+                    <button id="send-text-input" onClick={this.submitTextInput.bind(this)}>GO</button>
+                </div>
+            </div>
+        )
+    }
+}
+
+class ProcessingContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+        
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <Transcript transcript={this.props.transcript} />
+                <TextDisplay displayText={this.props.displayText} />
+            </React.Fragment>    
+        )
+    }
+}
+
+class SuccessContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+
+    }
+
+    render() {
+        return (
+            <div>
+                <Transcript transcript={this.props.transcript}/>
+                <TextDisplay displayText={this.props.displayText}/>
+                <Card card={this.props.card} />
+            </div>
+        )
+    }
+}
+
+class ErrorContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+
+    }
+
+    render() {
+        return (
+            <div>
+                <TextDisplay displayText={this.props.displayText} />
+                <div id="error-message">{this.props.error}</div>
+                { this.props.displayAutoplay 
+                    ? <div id="error-autoplay">
+                        <img
+                            src="images/autoplay-instruction.png"
+                            alt="To enable autoplay, open the site preferences and select Allow Audio and Video"
+                        />
+                    </div>
+                    : null
+                }
+                <Card card={this.props.card} />
+            </div>
+        )
+    }
+}
+
+class SearchResultsContent extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+
+    }
+
+    async onSearchImageClick(){
+        await browser.runtime.sendMessage({
+            type: "focusSearchResults",
+            searchUrl: this.props.search.searchUrl
+        })
+    }
+
+    render() {
+        if (!this.props.search) return null
+
+        const { card, searchResults, index } = this.props.search
+        const next = searchResults[index + 1]
+        const cardStyles = card
+            ? {
+                height: card.height,
+                width: card.width,
+                src: card.src
+            }
+            : {}
+        const imgAlt = next ? next.title : ""
+
+        if (card) setMinPopupSize(card.width, card.height) 
+
+        return (
+            <React.Fragment>
+                <TextDisplay displayText={this.props.displayText} />
+                <div id="search-results">
+                    {/* FIXME: Is alt correct?  */}
+                    { card
+                        ? <img 
+                            id="search-image" 
+                            alt={imgAlt} 
+                            onClick={this.onSearchImageClick} 
+                            style={cardStyles}
+                        />
+                        : null
+                    }
+                    { next
+                        ? <div id="search-show-next">
+                            Say <strong>next result</strong> to view: <br />
+                            <strong id="search-show-next-title">{next.title}</strong>
+                            <span id="search-show-next-domain">{new URL(next.url).hostname}</span>
+                        </div>
+                        : null
+                    }
+                </div>
+            </React.Fragment>
+        )
+    }
+}
+
+class Card extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    cardLinkClick(event) {
+        event.preventDefault()
+        browser.tabs.create({ url: this.props.card.AbstractURL })
+        closePopup()
+    }
+
+    render() {
+        const {card} = this.props
+        return (
+            card
+                ? <div id="card">
+                    <div id="card-header">{card.Heading}</div>
+                    <div id="card-image"><img alt="" src="" /></div>
+                    <div id="card-summary">{card.AbstractText}</div>
+                    <div id="card-ack">
+                        <div id="ddg-ack">
+                            {card.Image
+                                ? <img alt="" id="ddg-logo" src={card.Image} />
+                                : null
+                            }
+                            <a href="https://duckduckgo.com/">
+                                Results from DuckDuckGo
+                            </a>
+                        </div>
+                        <div className="sep"></div>
+                        <div id="source-ack">
+                            <span>Source:</span>
+                            <div id="card-source">
+                                <a id="card-source-link" href={card.AbstractURL}>{card.AbstractSource}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                : null
+        )
+    }
+}
+
+class Transcript extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            this.props.transcript
+                ? <div id="transcript">{this.props.transcript}</div>
+                : null
+        )
+    }
+}
+
+class TextDisplay extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            this.props.displayText
+                ? <div id="text-display">{this.props.displayText}</div>
+                : null
+        )
+    }
+}
+
+class Zap extends Component {
+    constructor(props) {
+        super(props)
+
+        this.animation = null
+
+        this.animationSegmentTimes = {
+            reveal: [0, 14],
+            base: [14, 30],
+            low: [30, 46],
+            medium: [46, 62],
+            high: [62, 78],
+            processing: [78, 134],
+            error: [134, 153],
+            success: [184, 203],
+        }
+
+        this.animationConfig = {
+            listening: {
+                segments: [
+                    this.animationSegmentTimes.reveal,
+                    this.animationSegmentTimes.base
+                ],
+                loop: true,
+                interrupt: true
+            },
+            processing: {
+                segments: [this.animationSegmentTimes.processing],
+                loop: false,
+                interrupt: false
+            },
+            success: {
+                segments: [this.animationSegmentTimes.success], 
+                loop: false,
+                interrupt: false
+            },
+            error: {
+                segments: [this.animationSegmentTimes.error],
+                loop: false,
+                interrupt: false
+            }
+        }
+
+        this.currentConfig = this.animationConfig[this.props.currentState]
+    }
+
+    componentDidMount() {
+        this.loadAnimation()
+    }
+
+    componentDidUpdate() {
+        this.currentConfig = this.animationConfig[this.props.currentState]
+
+        if (this.currentConfig) {
+            if (this.props.currentState === "processing") {
+                recorderIntervalId = setInterval(() => {
+                    const volumeLevel = recorder.getVolumeLevel()
+                    this.setAnimationForVolume(volumeLevel)
+                }, 500)
+            } else {
+                this.playAnimation(
+                    this.currentConfig.segments, 
+                    this.currentConfig.interrupt, 
+                    this.currentConfig.loop
+                )
+            }
+        }
+    }
+
+    async loadAnimation() {
+        this.animation = await lottie.loadAnimation({
+            container: document.getElementById("zap"), // the dom element that will contain the animation
+            loop: FAST_PERMISSION_CLOSE,
+            renderer: "svg",
+            autoplay: false,
+            path: "animations/Firefox_Voice_Full.json", // the path to the animation json
+        })
+    }
+
+    playAnimation(segments, interrupt, loop) {
+        if (this.animation) {
+            this.animation.loop = loop
+            this.animation.playSegments(segments, interrupt)
+        } 
+    }
+
+    setAnimationForVolume(avgVolume) {
+        this.animation.onLoopComplete = () => {
+            if (avgVolume < 0.1) {
+                this.playAnimation(this.animationSegmentTimes.base, true, true)
+            } else if (avgVolume < 0.15) {
+                this.playAnimation(this.animationSegmentTimes.low, true, true)
+            } else if (avgVolume < 0.2) {
+                this.playAnimation(this.animationSegmentTimes.medium, true, true)
+            } else {
+                this.playAnimation(this.animationSegmentTimes.high, true, true)
+            }
+        }
+    }
+
+    render() {
+        return (
+            this.props.currentState !== "typing" && this.props.currentState !== "searchResults" 
+            ? <div id="zap-wrapper">
+                <div id="zap"></div>
+            </div>
+            : null
+        )
+    }
+}
+
+const popupContainer = document.getElementById("popup-container")
+ReactDOM.render(<PopupReact />, popupContainer)
+
+function setMinPopupSize(width, height) {
+    popupContainer.style.minWidth = width + "px"
+    popupContainer.style.minHeight = (parseInt(height) + 150) + "px"
+}
+
+function closePopup(ms) {
+    if (ms === null || ms === undefined) {
+        ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT
+    }
+    
+    setTimeout(() => {
+        window.close()
+    }, ms)
+}

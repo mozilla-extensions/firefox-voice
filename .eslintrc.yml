@@ -4,12 +4,16 @@ env:
   node: true
   webextensions: true
 
+ecmaFeatures:
+  jsx: true
+
 extends:
   - eslint:recommended
   - plugin:mozilla/recommended
 
 plugins:
   - mozilla
+  - react
 
 globals:
   Metrics: true

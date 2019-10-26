@@ -12,6 +12,9 @@
     "url": "https://github.com/mozilla/firefox-voice/issues"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
     "ejs": "^2.6.2",
     "eslint": "^6.1.0",
     "eslint-plugin-fetch-options": "0.0.5",
@@ -34,6 +37,8 @@
     "fuse.js": "^3.4.5",
     "lottie-web": "^5.5.7",
     "moment": "^2.24.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
     "tailwindcss": "^1.0.6",
     "webextension-polyfill": "^0.3.1",
     "webrtcvad_js": "^1.0.0"
@@ -51,6 +56,8 @@
     "build:markdown": "mkdir -p extension/views && node bin/substitute-changelog.js",
     "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js raven-js/dist/raven.js ; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
+    "build:jsx": "babel --plugins @babel/plugin-transform-react-jsx extension/popup/*.jsx --out-dir extension/popup",
+    "watch:jsx": "babel --plugins @babel/plugin-transform-react-jsx extension/popup/*.jsx --watch --out-dir extension/popup",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "maybemarkdown": "if [[ docs/lexicon.md -nt extension/views/lexicon.html ]] ; then npm run build:markdown ; fi",
     "format": "prettier 'extension/**/*.{js,css}' --write",
