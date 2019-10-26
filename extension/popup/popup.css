@@ -21,6 +21,7 @@ body,
 
 #popup {
   min-height: 200px;
+  min-width: inherit;
   width: 350px;
   padding: 1rem;
 }
@@ -85,7 +86,9 @@ body,
   font-style: italic;
 }
 
-#search-results {
+#search-results,
+#text-input,
+#error-message {
   margin: 40px 0;
 }
 

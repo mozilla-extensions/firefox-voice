@@ -1,9 +1,12 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /* globals util, voice, vad, lottie, settings, log, voiceShim, buildSettings */
 const React = window.React;
 const {
-  Component
+  Component,
+  PureComponent
 } = React;
 const ReactDOM = window.ReactDOM;
 const PERMISSION_REQUEST_TIME = 2000;
@@ -32,15 +35,233 @@ const initialState = {
   card: null
 };
 
-class PopupReact extends Component {
+class Popup extends Component {
   constructor(props) {
     super(props);
+
+    _defineProperty(this, "init", async () => {
+      backgroundTabRecorder ? await voiceShim.openRecordingTab() : await this.setupStream();
+      this.startRecorder(); // Listen for messages from the background scripts
+
+      browser.runtime.onMessage.addListener(this.handleMessage);
+      this.updateExamples();
+    });
+
+    _defineProperty(this, "onKeyPressed", () => {
+      if (!this.textInputDetected) {
+        this.textInputDetected = true;
+        this.setCurrentState("typing");
+        this.onStartTextInput();
+      }
+    });
+
+    _defineProperty(this, "onStartTextInput", async () => {
+      await browser.runtime.sendMessage({
+        type: "microphoneStopped"
+      });
+      log.debug("detected text from the popup");
+      recorder.cancel(); // not sure if this is working as expected?
+
+      clearInterval(recorderIntervalId);
+    });
+
+    _defineProperty(this, "setupStream", async () => {
+      try {
+        isWaitingForPermission = Date.now();
+        await this.startMicrophone();
+        isWaitingForPermission = null;
+      } catch (e) {
+        isWaitingForPermission = false;
+
+        if (e.name === "NotAllowedError" || e.name === "TimeoutError") {
+          this.startOnboarding();
+          window.close();
+          return;
+        }
+
+        throw e;
+      }
+
+      await vad.stm_vad_ready;
+    });
+
+    _defineProperty(this, "requestMicrophone", async () => {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
+      return stream;
+    });
+
+    _defineProperty(this, "startMicrophone", async () => {
+      const sleeper = util.sleep(PERMISSION_REQUEST_TIME).then(() => {
+        const exc = new Error("Permission Timed Out");
+        exc.name = "TimeoutError";
+        throw exc;
+      });
+      await Promise.race([this.requestMicrophone(), sleeper]);
+    });
+
+    _defineProperty(this, "startOnboarding", async () => {
+      await browser.tabs.create({
+        url: browser.extension.getURL("onboarding/onboard.html")
+      });
+    });
+
+    _defineProperty(this, "startRecorder", () => {
+      recorder = backgroundTabRecorder ? new voiceShim.Recorder() : new voice.Recorder(stream);
+
+      recorder.onBeginRecording = () => {
+        browser.runtime.sendMessage({
+          type: "microphoneStarted"
+        });
+        this.setCurrentState("listening");
+      };
+
+      recorder.onEnd = json => {
+        // Probably superfluous, since this is called in onProcessing:
+        browser.runtime.sendMessage({
+          type: "microphoneStopped"
+        });
+        clearInterval(recorderIntervalId);
+        this.setCurrentState("success");
+
+        if (json === null) {
+          // It was cancelled
+          return;
+        }
+
+        browser.runtime.sendMessage({
+          type: "addTelemetry",
+          properties: {
+            transcriptionConfidence: json.data[0].confidence
+          }
+        });
+        this.setTranscript(json.data[0].text);
+        executedIntent = true;
+        browser.runtime.sendMessage({
+          type: "runIntent",
+          text: json.data[0].text
+        });
+      };
+
+      recorder.onError = error => {
+        browser.runtime.sendMessage({
+          type: "microphoneStopped"
+        });
+        log.error("Got recorder error:", String(error), error);
+        this.setCurrentState("error");
+        clearInterval(recorderIntervalId);
+      };
+
+      recorder.onProcessing = () => {
+        browser.runtime.sendMessage({
+          type: "microphoneStopped"
+        });
+        this.setCurrentState("processing");
+      };
+
+      recorder.onNoVoice = () => {
+        browser.runtime.sendMessage({
+          type: "microphoneStopped"
+        });
+        log.debug("Closing popup because of no voice input");
+        window.close();
+      };
+
+      recorder.startRecording();
+    });
+
+    _defineProperty(this, "handleMessage", message => {
+      switch (message.type) {
+        case "closePopup":
+          {
+            closePopup(message.time);
+            break;
+          }
+
+        case "showCard":
+          {
+            this.setState({
+              card: message.cardData
+            });
+            break;
+          }
+
+        case "displayFailure":
+          {
+            this.setCurrentState("error");
+
+            if (message.message) {
+              this.setState({
+                error: message.message
+              });
+            }
+
+            break;
+          }
+
+        case "displayText":
+          {
+            this.setState({
+              displayText: message.message
+            });
+            overrideTimeout = TEXT_TIMEOUT;
+            break;
+          }
+
+        case "displayAutoplayFailure":
+          {
+            this.setErrorMessage("Please enable autoplay on this site for a better experience");
+            this.setState({
+              displayAutoplay: true
+            });
+            break;
+          }
+
+        case "showSearchResults":
+          {
+            this.setState({
+              search: message
+            });
+            this.setCurrentState("searchResults");
+            return Promise.resolve(true);
+          }
+
+        default:
+          break;
+      }
+
+      return;
+    });
+
+    _defineProperty(this, "updateExamples", async () => {
+      const suggestions = await browser.runtime.sendMessage({
+        type: "getExamples",
+        number: 3
+      });
+      this.setState({
+        suggestions
+      });
+    });
+
+    _defineProperty(this, "setCurrentState", currentState => {
+      this.setState({
+        currentState
+      });
+    });
+
+    _defineProperty(this, "setTranscript", transcript => {
+      this.setState({
+        transcript
+      });
+    });
+
     this.state = Object.assign({}, initialState);
     this.textInputDetected = false;
   }
 
   componentWillMount() {
-    document.addEventListener("keydown", this.onKeyPressed.bind(this));
+    document.addEventListener("keydown", this.onKeyPressed);
   }
 
   componentDidMount() {
@@ -48,7 +269,7 @@ class PopupReact extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.onKeyPressed.bind(this));
+    document.removeEventListener("keydown", this.onKeyPressed);
     browser.runtime.sendMessage({
       type: "microphoneStopped"
     });
@@ -65,223 +286,6 @@ class PopupReact extends Component {
 
   }
 
-  async init() {
-    backgroundTabRecorder ? await voiceShim.openRecordingTab() : await this.setupStream();
-    this.startRecorder(); // Listen for messages from the background scripts
-
-    browser.runtime.onMessage.addListener(this.handleMessage.bind(this));
-    this.updateExamples();
-  }
-
-  onKeyPressed() {
-    if (!this.textInputDetected) {
-      this.textInputDetected = true;
-      this.setCurrentState("typing");
-      this.onStartTextInput();
-    }
-  }
-
-  async onStartTextInput() {
-    await browser.runtime.sendMessage({
-      type: "microphoneStopped"
-    });
-    log.debug("detected text from the popup");
-    recorder.cancel(); // not sure if this is working as expected?
-
-    clearInterval(recorderIntervalId);
-  }
-
-  async setupStream() {
-    try {
-      isWaitingForPermission = Date.now();
-      await this.startMicrophone();
-      isWaitingForPermission = null;
-    } catch (e) {
-      isWaitingForPermission = false;
-
-      if (e.name === "NotAllowedError" || e.name === "TimeoutError") {
-        this.startOnboarding();
-        window.close();
-        return;
-      }
-
-      throw e;
-    }
-
-    await vad.stm_vad_ready;
-  }
-
-  async requestMicrophone() {
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: true
-    });
-    return stream;
-  }
-
-  async startMicrophone() {
-    const sleeper = util.sleep(PERMISSION_REQUEST_TIME).then(() => {
-      const exc = new Error("Permission Timed Out");
-      exc.name = "TimeoutError";
-      throw exc;
-    });
-    await Promise.race([this.requestMicrophone(), sleeper]);
-  }
-
-  async startOnboarding() {
-    await browser.tabs.create({
-      url: browser.extension.getURL("onboarding/onboard.html")
-    });
-  }
-
-  startRecorder(stream) {
-    recorder = backgroundTabRecorder ? new voiceShim.Recorder() : new voice.Recorder(stream);
-
-    recorder.onBeginRecording = () => {
-      browser.runtime.sendMessage({
-        type: "microphoneStarted"
-      });
-      this.setCurrentState("listening");
-    };
-
-    recorder.onEnd = json => {
-      // Probably superfluous, since this is called in onProcessing:
-      browser.runtime.sendMessage({
-        type: "microphoneStopped"
-      });
-      clearInterval(recorderIntervalId);
-      this.setCurrentState("success");
-
-      if (json === null) {
-        // It was cancelled
-        return;
-      }
-
-      browser.runtime.sendMessage({
-        type: "addTelemetry",
-        properties: {
-          transcriptionConfidence: json.data[0].confidence
-        }
-      });
-      this.setTranscript(json.data[0].text);
-      executedIntent = true;
-      browser.runtime.sendMessage({
-        type: "runIntent",
-        text: json.data[0].text
-      });
-    };
-
-    recorder.onError = error => {
-      browser.runtime.sendMessage({
-        type: "microphoneStopped"
-      });
-      log.error("Got recorder error:", String(error), error);
-      this.setCurrentState("error");
-      clearInterval(recorderIntervalId);
-    };
-
-    recorder.onProcessing = () => {
-      browser.runtime.sendMessage({
-        type: "microphoneStopped"
-      });
-      this.setCurrentState("processing");
-    };
-
-    recorder.onNoVoice = () => {
-      browser.runtime.sendMessage({
-        type: "microphoneStopped"
-      });
-      log.debug("Closing popup because of no voice input");
-      window.close();
-    };
-
-    recorder.startRecording();
-  }
-
-  handleMessage(message) {
-    switch (message.type) {
-      case "closePopup":
-        {
-          closePopup(message.time);
-          break;
-        }
-
-      case "showCard":
-        {
-          this.setState({
-            card: message.cardData
-          });
-          break;
-        }
-
-      case "displayFailure":
-        {
-          this.setCurrentState("error");
-
-          if (message.message) {
-            this.setState({
-              error: message.message
-            });
-          }
-
-          break;
-        }
-
-      case "displayText":
-        {
-          this.setState({
-            displayText: message.message
-          });
-          overrideTimeout = TEXT_TIMEOUT;
-          break;
-        }
-
-      case "displayAutoplayFailure":
-        {
-          this.setErrorMessage("Please enable autoplay on this site for a better experience");
-          this.setState({
-            displayAutoplay: true
-          });
-          break;
-        }
-
-      case "showSearchResults":
-        {
-          this.setState({
-            search: message
-          });
-          this.setCurrentState("searchResults");
-          return Promise.resolve(true);
-        }
-
-      default:
-        break;
-    }
-
-    return;
-  }
-
-  async updateExamples() {
-    const suggestions = await browser.runtime.sendMessage({
-      type: "getExamples",
-      number: 3
-    });
-    this.setState({
-      suggestions
-    });
-  }
-
-  setCurrentState(currentState) {
-    this.setState({
-      currentState
-    });
-  }
-
-  setTranscript(transcript) {
-    this.setState({
-      transcript
-    });
-  }
-
   render() {
     return React.createElement("div", {
       id: "popup",
@@ -289,47 +293,47 @@ class PopupReact extends Component {
     }, React.createElement(PopupHeader, {
       currentState: this.state.currentState
     }), React.createElement(PopupContent, _extends({
-      setCurrentState: this.setCurrentState.bind(this),
-      setTranscript: this.setTranscript.bind(this)
+      setCurrentState: this.setCurrentState,
+      setTranscript: this.setTranscript
     }, this.state)), React.createElement(PopupFooter, null));
   }
 
 }
 
-class PopupHeader extends Component {
+class PopupHeader extends PureComponent {
   constructor(props) {
     super(props);
-  }
 
-  getTitle() {
-    switch (this.props.currentState) {
-      case "processing":
-        return "One second...";
+    _defineProperty(this, "getTitle", () => {
+      switch (this.props.currentState) {
+        case "processing":
+          return "One second...";
 
-      case "success":
-        return "Got it!";
+        case "success":
+          return "Got it!";
 
-      case "error":
-        return "Sorry, there was an issue";
+        case "error":
+          return "Sorry, there was an issue";
 
-      case "typing":
-        return "Type your request";
+        case "typing":
+          return "Type your request";
 
-      case "searchResults":
-        return "Search results";
+        case "searchResults":
+          return "Search results";
 
-      case "listening":
-      default:
-        return "Listening";
-    }
-  }
+        case "listening":
+        default:
+          return "Listening";
+      }
+    });
 
-  onClickGoBack() {
-    location.href = `${location.pathname}?${Date.now()}`;
-  }
+    _defineProperty(this, "onClickGoBack", () => {
+      location.href = `${location.pathname}?${Date.now()}`;
+    });
 
-  onClickClose() {
-    window.close();
+    _defineProperty(this, "onClickClose", () => {
+      window.close();
+    });
   }
 
   render() {
@@ -370,31 +374,31 @@ class PopupHeader extends Component {
 class PopupContent extends Component {
   constructor(props) {
     super(props);
-  }
 
-  getContent() {
-    switch (this.props.currentState) {
-      case "listening":
-        return React.createElement(ListeningContent, this.props);
+    _defineProperty(this, "getContent", () => {
+      switch (this.props.currentState) {
+        case "listening":
+          return React.createElement(ListeningContent, this.props);
 
-      case "typing":
-        return React.createElement(TypingContent, this.props);
+        case "typing":
+          return React.createElement(TypingContent, this.props);
 
-      case "processing":
-        return React.createElement(ProcessingContent, this.props);
+        case "processing":
+          return React.createElement(ProcessingContent, this.props);
 
-      case "success":
-        return React.createElement(SuccessContent, this.props);
+        case "success":
+          return React.createElement(SuccessContent, this.props);
 
-      case "error":
-        return React.createElement(ErrorContent, this.props);
+        case "error":
+          return React.createElement(ErrorContent, this.props);
 
-      case "searchResults":
-        return React.createElement(SearchResultsContent, this.props);
+        case "searchResults":
+          return React.createElement(SearchResultsContent, this.props);
 
-      default:
-        return null;
-    }
+        default:
+          return null;
+      }
+    });
   }
 
   render() {
@@ -407,16 +411,16 @@ class PopupContent extends Component {
 
 }
 
-class PopupFooter extends Component {
+class PopupFooter extends PureComponent {
   constructor(props) {
     super(props);
-  }
 
-  async showSettings() {
-    await browser.tabs.create({
-      url: browser.runtime.getURL("options/options.html")
+    _defineProperty(this, "showSettings", async () => {
+      await browser.tabs.create({
+        url: browser.runtime.getURL("options/options.html")
+      });
+      window.close();
     });
-    window.close();
   }
 
   render() {
@@ -440,9 +444,21 @@ class PopupFooter extends Component {
 
 }
 
-class ListeningContent extends Component {
+class ListeningContent extends PureComponent {
   constructor(props) {
     super(props);
+
+    _defineProperty(this, "getUserSettings", async () => {
+      this.setState({
+        userSettings: await settings.getSettings()
+      });
+    });
+
+    _defineProperty(this, "playListeningChime", () => {
+      const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
+      audio.play();
+    });
+
     this.state = {
       userSettings: null
     };
@@ -458,17 +474,6 @@ class ListeningContent extends Component {
     }
   }
 
-  async getUserSettings() {
-    this.setState({
-      userSettings: await settings.getSettings()
-    });
-  }
-
-  playListeningChime() {
-    const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg");
-    audio.play();
-  }
-
   render() {
     return React.createElement(React.Fragment, null, React.createElement(TextDisplay, {
       displayText: this.props.displayText
@@ -477,7 +482,7 @@ class ListeningContent extends Component {
 
 }
 
-class TypingContent extends Component {
+class TypingContent extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -492,17 +497,17 @@ class TypingContent extends Component {
 
 }
 
-class VoiceInput extends Component {
+class VoiceInput extends PureComponent {
   constructor(props) {
     super(props);
-  }
 
-  async onClickLexicon(event) {
-    event.preventDefault();
-    await browser.tabs.create({
-      url: event.target.href
+    _defineProperty(this, "onClickLexicon", async event => {
+      event.preventDefault();
+      await browser.tabs.create({
+        url: event.target.href
+      });
+      window.close();
     });
-    window.close();
   }
 
   render() {
@@ -528,57 +533,58 @@ class VoiceInput extends Component {
 
 }
 
-class TypingInput extends Component {
+class TypingInput extends PureComponent {
   constructor(props) {
     super(props);
+
+    _defineProperty(this, "focusText", () => {
+      if (this.textInputRef.current) {
+        setTimeout(() => {
+          this.textInputRef.current.focus();
+        }, 0);
+      }
+    });
+
+    _defineProperty(this, "onInputKeyPress", event => {
+      if (event.key === "Enter") {
+        this.submitTextInput();
+      }
+    });
+
+    _defineProperty(this, "onInputTextChange", () => {
+      this.setState({
+        value: event.target.value
+      });
+    });
+
+    _defineProperty(this, "submitTextInput", async () => {
+      const text = this.state.value;
+
+      if (text) {
+        await browser.runtime.sendMessage({
+          type: "microphoneStopped"
+        });
+        this.props.setCurrentState("success");
+        this.props.setTranscript(text);
+        executedIntent = true;
+        browser.runtime.sendMessage({
+          type: "addTelemetry",
+          properties: {
+            inputTyped: true
+          }
+        });
+        browser.runtime.sendMessage({
+          type: "runIntent",
+          text
+        });
+      }
+    });
+
     this.textInputRef = React.createRef();
   }
 
   componentDidMount() {
     this.focusText();
-  }
-
-  focusText() {
-    if (this.textInputRef.current) {
-      setTimeout(() => {
-        this.textInputRef.current.focus();
-      }, 0);
-    }
-  }
-
-  onInputKeyPress(event) {
-    if (event.key === "Enter") {
-      this.submitTextInput();
-    }
-  }
-
-  onInputTextChange() {
-    this.setState({
-      value: event.target.value
-    });
-  }
-
-  async submitTextInput() {
-    const text = this.state.value;
-
-    if (text) {
-      await browser.runtime.sendMessage({
-        type: "microphoneStopped"
-      });
-      this.props.setCurrentState("success");
-      this.props.setTranscript(text);
-      executedIntent = true;
-      browser.runtime.sendMessage({
-        type: "addTelemetry",
-        properties: {
-          inputTyped: true
-        }
-      });
-      browser.runtime.sendMessage({
-        type: "runIntent",
-        text
-      });
-    }
   }
 
   render() {
@@ -588,24 +594,22 @@ class TypingInput extends Component {
       type: "text",
       id: "text-input-field",
       autoFocus: "1",
-      onKeyPress: this.onInputKeyPress.bind(this),
-      onChange: this.onInputTextChange.bind(this)
+      onKeyPress: this.onInputKeyPress,
+      onChange: this.onInputTextChange
     }), React.createElement("div", {
       id: "send-btn-wrapper"
     }, React.createElement("button", {
       id: "send-text-input",
-      onClick: this.submitTextInput.bind(this)
+      onClick: this.submitTextInput
     }, "GO")));
   }
 
 }
 
-class ProcessingContent extends Component {
+class ProcessingContent extends PureComponent {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {}
 
   render() {
     return React.createElement(React.Fragment, null, React.createElement(Transcript, {
@@ -617,12 +621,10 @@ class ProcessingContent extends Component {
 
 }
 
-class SuccessContent extends Component {
+class SuccessContent extends PureComponent {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {}
 
   render() {
     return React.createElement("div", null, React.createElement(Transcript, {
@@ -636,12 +638,10 @@ class SuccessContent extends Component {
 
 }
 
-class ErrorContent extends Component {
+class ErrorContent extends PureComponent {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {}
 
   render() {
     return React.createElement("div", null, React.createElement(TextDisplay, {
@@ -660,17 +660,15 @@ class ErrorContent extends Component {
 
 }
 
-class SearchResultsContent extends Component {
+class SearchResultsContent extends PureComponent {
   constructor(props) {
     super(props);
-  }
 
-  componentDidMount() {}
-
-  async onSearchImageClick() {
-    await browser.runtime.sendMessage({
-      type: "focusSearchResults",
-      searchUrl: this.props.search.searchUrl
+    _defineProperty(this, "onSearchImageClick", async () => {
+      await browser.runtime.sendMessage({
+        type: "focusSearchResults",
+        searchUrl: this.props.search.searchUrl
+      });
     });
   }
 
@@ -684,10 +682,10 @@ class SearchResultsContent extends Component {
     const next = searchResults[index + 1];
     const cardStyles = card ? {
       height: card.height,
-      width: card.width,
-      src: card.src
+      width: card.width
     } : {};
     const imgAlt = next ? next.title : "";
+    console.log(card);
     if (card) setMinPopupSize(card.width, card.height);
     return React.createElement(React.Fragment, null, React.createElement(TextDisplay, {
       displayText: this.props.displayText
@@ -697,7 +695,8 @@ class SearchResultsContent extends Component {
       id: "search-image",
       alt: imgAlt,
       onClick: this.onSearchImageClick,
-      style: cardStyles
+      style: cardStyles,
+      src: card.src
     }) : null, next ? React.createElement("div", {
       id: "search-show-next"
     }, "Say ", React.createElement("strong", null, "next result"), " to view: ", React.createElement("br", null), React.createElement("strong", {
@@ -709,17 +708,17 @@ class SearchResultsContent extends Component {
 
 }
 
-class Card extends Component {
+class Card extends PureComponent {
   constructor(props) {
     super(props);
-  }
 
-  cardLinkClick(event) {
-    event.preventDefault();
-    browser.tabs.create({
-      url: this.props.card.AbstractURL
+    _defineProperty(this, "cardLinkClick", event => {
+      event.preventDefault();
+      browser.tabs.create({
+        url: this.props.card.AbstractURL
+      });
+      closePopup();
     });
-    closePopup();
   }
 
   render() {
@@ -761,7 +760,7 @@ class Card extends Component {
 
 }
 
-class Transcript extends Component {
+class Transcript extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -774,7 +773,7 @@ class Transcript extends Component {
 
 }
 
-class TextDisplay extends Component {
+class TextDisplay extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -790,6 +789,40 @@ class TextDisplay extends Component {
 class Zap extends Component {
   constructor(props) {
     super(props);
+
+    _defineProperty(this, "loadAnimation", async () => {
+      this.animation = await lottie.loadAnimation({
+        container: document.getElementById("zap"),
+        // the dom element that will contain the animation
+        loop: FAST_PERMISSION_CLOSE,
+        renderer: "svg",
+        autoplay: false,
+        path: "animations/Firefox_Voice_Full.json" // the path to the animation json
+
+      });
+    });
+
+    _defineProperty(this, "playAnimation", (segments, interrupt, loop) => {
+      if (this.animation) {
+        this.animation.loop = loop;
+        this.animation.playSegments(segments, interrupt);
+      }
+    });
+
+    _defineProperty(this, "setAnimationForVolume", avgVolume => {
+      this.animation.onLoopComplete = () => {
+        if (avgVolume < 0.1) {
+          this.playAnimation(this.animationSegmentTimes.base, true, true);
+        } else if (avgVolume < 0.15) {
+          this.playAnimation(this.animationSegmentTimes.low, true, true);
+        } else if (avgVolume < 0.2) {
+          this.playAnimation(this.animationSegmentTimes.medium, true, true);
+        } else {
+          this.playAnimation(this.animationSegmentTimes.high, true, true);
+        }
+      };
+    });
+
     this.animation = null;
     this.animationSegmentTimes = {
       reveal: [0, 14],
@@ -845,39 +878,6 @@ class Zap extends Component {
     }
   }
 
-  async loadAnimation() {
-    this.animation = await lottie.loadAnimation({
-      container: document.getElementById("zap"),
-      // the dom element that will contain the animation
-      loop: FAST_PERMISSION_CLOSE,
-      renderer: "svg",
-      autoplay: false,
-      path: "animations/Firefox_Voice_Full.json" // the path to the animation json
-
-    });
-  }
-
-  playAnimation(segments, interrupt, loop) {
-    if (this.animation) {
-      this.animation.loop = loop;
-      this.animation.playSegments(segments, interrupt);
-    }
-  }
-
-  setAnimationForVolume(avgVolume) {
-    this.animation.onLoopComplete = () => {
-      if (avgVolume < 0.1) {
-        this.playAnimation(this.animationSegmentTimes.base, true, true);
-      } else if (avgVolume < 0.15) {
-        this.playAnimation(this.animationSegmentTimes.low, true, true);
-      } else if (avgVolume < 0.2) {
-        this.playAnimation(this.animationSegmentTimes.medium, true, true);
-      } else {
-        this.playAnimation(this.animationSegmentTimes.high, true, true);
-      }
-    };
-  }
-
   render() {
     return this.props.currentState !== "typing" && this.props.currentState !== "searchResults" ? React.createElement("div", {
       id: "zap-wrapper"
@@ -889,14 +889,13 @@ class Zap extends Component {
 }
 
 const popupContainer = document.getElementById("popup-container");
-ReactDOM.render(React.createElement(PopupReact, null), popupContainer);
 
-function setMinPopupSize(width, height) {
+setMinPopupSize = (width, height) => {
   popupContainer.style.minWidth = width + "px";
   popupContainer.style.minHeight = parseInt(height) + 150 + "px";
-}
+};
 
-function closePopup(ms) {
+closePopup = ms => {
   if (ms === null || ms === undefined) {
     ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
   }
@@ -904,4 +903,6 @@ function closePopup(ms) {
   setTimeout(() => {
     window.close();
   }, ms);
-}
+};
+
+ReactDOM.render(React.createElement(Popup, null), popupContainer);

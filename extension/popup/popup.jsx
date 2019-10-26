@@ -1,7 +1,7 @@
 /* globals util, voice, vad, lottie, settings, log, voiceShim, buildSettings */
 
 const React = window.React
-const { Component } = React
+const { Component, PureComponent } = React
 const ReactDOM = window.ReactDOM
 
 const PERMISSION_REQUEST_TIME = 2000
@@ -32,7 +32,7 @@ const initialState = {
     card: null
 }
 
-class PopupReact extends Component {
+class Popup extends Component {
     constructor(props) {
         super(props)
         this.state = Object.assign({}, initialState)
@@ -40,7 +40,7 @@ class PopupReact extends Component {
     }
 
     componentWillMount() {
-        document.addEventListener("keydown", this.onKeyPressed.bind(this))
+        document.addEventListener("keydown", this.onKeyPressed)
     }
 
     componentDidMount() {
@@ -48,7 +48,7 @@ class PopupReact extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener("keydown", this.onKeyPressed.bind(this))
+        document.removeEventListener("keydown", this.onKeyPressed)
 
         browser.runtime.sendMessage({ type: "microphoneStopped" })
         if (!executedIntent) {
@@ -65,18 +65,18 @@ class PopupReact extends Component {
         // TODO: offload mic and other resources before closing?
     }
 
-    async init() {
+    init = async () => {
         backgroundTabRecorder
             ? await voiceShim.openRecordingTab()
             : await this.setupStream()
 
         this.startRecorder()
         // Listen for messages from the background scripts
-        browser.runtime.onMessage.addListener(this.handleMessage.bind(this))
+        browser.runtime.onMessage.addListener(this.handleMessage)
         this.updateExamples()
     }
 
-    onKeyPressed() {
+    onKeyPressed = () => {
         if (!this.textInputDetected) {
             this.textInputDetected = true
             this.setCurrentState("typing")
@@ -84,14 +84,14 @@ class PopupReact extends Component {
         }
     }
 
-    async onStartTextInput() {
+    onStartTextInput = async () => {
         await browser.runtime.sendMessage({ type: "microphoneStopped" })
         log.debug("detected text from the popup")
         recorder.cancel() // not sure if this is working as expected?
         clearInterval(recorderIntervalId)
     }
 
-    async setupStream() {
+    setupStream = async () => {
         try {
             isWaitingForPermission = Date.now()
             await this.startMicrophone()
@@ -109,12 +109,12 @@ class PopupReact extends Component {
         await vad.stm_vad_ready
     }
 
-    async requestMicrophone() {
+    requestMicrophone = async () => {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true })
         return stream
     }
 
-    async startMicrophone() {
+    startMicrophone = async () => {
         const sleeper = util.sleep(PERMISSION_REQUEST_TIME).then(() => {
             const exc = new Error("Permission Timed Out")
             exc.name = "TimeoutError"
@@ -123,13 +123,13 @@ class PopupReact extends Component {
         await Promise.race([this.requestMicrophone(), sleeper])
     }
 
-    async startOnboarding() {
+    startOnboarding = async () => {
         await browser.tabs.create({
             url: browser.extension.getURL("onboarding/onboard.html"),
         })
     }
 
-    startRecorder(stream) {
+    startRecorder = () => {
         recorder = backgroundTabRecorder
             ? new voiceShim.Recorder()
             : new voice.Recorder(stream)
@@ -176,7 +176,7 @@ class PopupReact extends Component {
         recorder.startRecording()
     }
 
-    handleMessage(message) {
+    handleMessage = (message) => {
         switch(message.type) {
             case "closePopup": {
                 closePopup(message.time)
@@ -214,7 +214,7 @@ class PopupReact extends Component {
         return
     }
 
-    async updateExamples() {
+    updateExamples = async () => {
         const suggestions = await browser.runtime.sendMessage({
             type: "getExamples",
             number: 3,
@@ -223,11 +223,11 @@ class PopupReact extends Component {
         this.setState({ suggestions })
     }
 
-    setCurrentState(currentState) {
+    setCurrentState = (currentState) => {
         this.setState({ currentState })
     }
 
-    setTranscript(transcript) {
+    setTranscript = (transcript) => {
         this.setState({ transcript })
     }
 
@@ -236,8 +236,8 @@ class PopupReact extends Component {
             <div id="popup" className={this.state.currentState}>
                 <PopupHeader currentState={this.state.currentState} />
                 <PopupContent 
-                    setCurrentState={this.setCurrentState.bind(this)}
-                    setTranscript={this.setTranscript.bind(this)} 
+                    setCurrentState={this.setCurrentState}
+                    setTranscript={this.setTranscript} 
                     {...this.state} 
                 />
                 <PopupFooter />
@@ -246,12 +246,12 @@ class PopupReact extends Component {
     }
 }
 
-class PopupHeader extends Component {
+class PopupHeader extends PureComponent {
     constructor(props) {
         super(props)
     }
 
-    getTitle() {
+    getTitle = () => {
         switch (this.props.currentState) {
             case "processing": 
                 return "One second..."
@@ -269,11 +269,11 @@ class PopupHeader extends Component {
         }
     }
 
-    onClickGoBack() {
+    onClickGoBack = () => {
         location.href = `${location.pathname}?${Date.now()}`
     }
 
-    onClickClose() {
+    onClickClose = () => {
         window.close()
     }
 
@@ -327,7 +327,7 @@ class PopupContent extends Component {
         super(props)
     }
 
-    getContent() {
+    getContent = () => {
         switch (this.props.currentState) {
             case "listening":
                 return (<ListeningContent {...this.props} />)
@@ -356,12 +356,12 @@ class PopupContent extends Component {
     }
 }
 
-class PopupFooter extends Component {
+class PopupFooter extends PureComponent {
     constructor(props) {
         super(props)
     }
 
-    async showSettings() {
+    showSettings = async () => {
         await browser.tabs.create({
             url: browser.runtime.getURL("options/options.html")
         })
@@ -394,7 +394,7 @@ class PopupFooter extends Component {
     }
 }
 
-class ListeningContent extends Component {
+class ListeningContent extends PureComponent {
     constructor(props) {
         super(props)
 
@@ -413,11 +413,11 @@ class ListeningContent extends Component {
         }
     }
 
-    async getUserSettings() {
+    getUserSettings = async () => {
         this.setState({ userSettings: await settings.getSettings() })
     }
 
-    playListeningChime() {
+    playListeningChime = () => {
         const audio = new Audio("https://jcambre.github.io/vf/mic_open_chime.ogg")
         audio.play()
     }
@@ -432,7 +432,7 @@ class ListeningContent extends Component {
     }
 }
 
-class TypingContent extends Component {
+class TypingContent extends PureComponent {
     constructor(props) {
         super(props)
     }
@@ -451,12 +451,12 @@ class TypingContent extends Component {
     }
 }
 
-class VoiceInput extends Component {
+class VoiceInput extends PureComponent {
     constructor(props) {
         super(props)
     }
 
-    async onClickLexicon(event) {
+    onClickLexicon = async (event) => {
         event.preventDefault()
         await browser.tabs.create({ url: event.target.href })
         window.close()
@@ -494,7 +494,7 @@ class VoiceInput extends Component {
     }
 }
 
-class TypingInput extends Component {
+class TypingInput extends PureComponent {
     constructor(props) {
         super(props)
 
@@ -505,7 +505,7 @@ class TypingInput extends Component {
         this.focusText()
     }
 
-    focusText() {
+    focusText = () => {
         if (this.textInputRef.current) {
             setTimeout(() => {
                 this.textInputRef.current.focus()
@@ -513,17 +513,17 @@ class TypingInput extends Component {
         }
     }
 
-    onInputKeyPress(event) {
+    onInputKeyPress = (event) => {
         if (event.key === "Enter") {
             this.submitTextInput()
         }
     }
 
-    onInputTextChange() {
+    onInputTextChange = () => {
         this.setState({ value: event.target.value })
     }
 
-    async submitTextInput() {
+    submitTextInput = async () => {
         const text = this.state.value
 
         if (text) {
@@ -549,24 +549,20 @@ class TypingInput extends Component {
                     type="text"
                     id="text-input-field"
                     autoFocus="1"
-                    onKeyPress={this.onInputKeyPress.bind(this)}
-                    onChange={this.onInputTextChange.bind(this)}
+                    onKeyPress={this.onInputKeyPress}
+                    onChange={this.onInputTextChange}
                 />
                 <div id="send-btn-wrapper">
-                    <button id="send-text-input" onClick={this.submitTextInput.bind(this)}>GO</button>
+                    <button id="send-text-input" onClick={this.submitTextInput}>GO</button>
                 </div>
             </div>
         )
     }
 }
 
-class ProcessingContent extends Component {
+class ProcessingContent extends PureComponent {
     constructor(props) {
         super(props)
-    }
-
-    componentDidMount() {
-        
     }
 
     render() {
@@ -579,13 +575,9 @@ class ProcessingContent extends Component {
     }
 }
 
-class SuccessContent extends Component {
+class SuccessContent extends PureComponent {
     constructor(props) {
         super(props)
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
@@ -599,13 +591,9 @@ class SuccessContent extends Component {
     }
 }
 
-class ErrorContent extends Component {
+class ErrorContent extends PureComponent {
     constructor(props) {
         super(props)
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
@@ -628,16 +616,12 @@ class ErrorContent extends Component {
     }
 }
 
-class SearchResultsContent extends Component {
+class SearchResultsContent extends PureComponent {
     constructor(props) {
         super(props)
     }
 
-    componentDidMount() {
-
-    }
-
-    async onSearchImageClick(){
+    onSearchImageClick = async () => {
         await browser.runtime.sendMessage({
             type: "focusSearchResults",
             searchUrl: this.props.search.searchUrl
@@ -652,12 +636,12 @@ class SearchResultsContent extends Component {
         const cardStyles = card
             ? {
                 height: card.height,
-                width: card.width,
-                src: card.src
+                width: card.width
             }
             : {}
         const imgAlt = next ? next.title : ""
 
+        console.log(card)
         if (card) setMinPopupSize(card.width, card.height) 
 
         return (
@@ -671,6 +655,7 @@ class SearchResultsContent extends Component {
                             alt={imgAlt} 
                             onClick={this.onSearchImageClick} 
                             style={cardStyles}
+                            src={card.src}
                         />
                         : null
                     }
@@ -688,12 +673,12 @@ class SearchResultsContent extends Component {
     }
 }
 
-class Card extends Component {
+class Card extends PureComponent {
     constructor(props) {
         super(props)
     }
 
-    cardLinkClick(event) {
+    cardLinkClick = (event) => {
         event.preventDefault()
         browser.tabs.create({ url: this.props.card.AbstractURL })
         closePopup()
@@ -731,7 +716,7 @@ class Card extends Component {
     }
 }
 
-class Transcript extends Component {
+class Transcript extends PureComponent {
     constructor(props) {
         super(props)
     }
@@ -745,7 +730,7 @@ class Transcript extends Component {
     }
 }
 
-class TextDisplay extends Component {
+class TextDisplay extends PureComponent {
     constructor(props) {
         super(props)
     }
@@ -828,7 +813,7 @@ class Zap extends Component {
         }
     }
 
-    async loadAnimation() {
+    loadAnimation = async () => {
         this.animation = await lottie.loadAnimation({
             container: document.getElementById("zap"), // the dom element that will contain the animation
             loop: FAST_PERMISSION_CLOSE,
@@ -838,14 +823,14 @@ class Zap extends Component {
         })
     }
 
-    playAnimation(segments, interrupt, loop) {
+    playAnimation = (segments, interrupt, loop) => {
         if (this.animation) {
             this.animation.loop = loop
             this.animation.playSegments(segments, interrupt)
         } 
     }
 
-    setAnimationForVolume(avgVolume) {
+    setAnimationForVolume = (avgVolume) => {
         this.animation.onLoopComplete = () => {
             if (avgVolume < 0.1) {
                 this.playAnimation(this.animationSegmentTimes.base, true, true)
@@ -871,14 +856,13 @@ class Zap extends Component {
 }
 
 const popupContainer = document.getElementById("popup-container")
-ReactDOM.render(<PopupReact />, popupContainer)
 
-function setMinPopupSize(width, height) {
+setMinPopupSize = (width, height) => {
     popupContainer.style.minWidth = width + "px"
     popupContainer.style.minHeight = (parseInt(height) + 150) + "px"
 }
 
-function closePopup(ms) {
+closePopup = (ms) => {
     if (ms === null || ms === undefined) {
         ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT
     }
@@ -887,3 +871,5 @@ function closePopup(ms) {
         window.close()
     }, ms)
 }
+
+ReactDOM.render(<Popup />, popupContainer)
