@@ -35,7 +35,7 @@ const initialState = {
 class Popup extends Component {
     constructor(props) {
         super(props)
-        this.state = Object.assign({}, initialState)
+        this.state = {...initialState}
         this.textInputDetected = false
     }
 
@@ -162,6 +162,8 @@ class Popup extends Component {
             browser.runtime.sendMessage({ type: "microphoneStopped" })
             log.error("Got recorder error:", String(error), error)
             this.setCurrentState("error")
+            // TODO: No error message is shown yet. Show one?
+            //this.setState({ error })
             clearInterval(recorderIntervalId)
         }
         recorder.onProcessing = () => {
