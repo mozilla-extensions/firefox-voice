@@ -28,8 +28,7 @@ const initialState = {
     error: null,
     displayText: null,
     displayAutoplay: false,
-    search: null,
-    card: null
+    search: null
 }
 
 class Popup extends Component {
@@ -182,10 +181,6 @@ class Popup extends Component {
         switch(message.type) {
             case "closePopup": {
                 closePopup(message.time)
-                break
-            }
-            case "showCard": {
-                this.setState({ card: message.cardData })
                 break
             }
             case "displayFailure": {
@@ -587,7 +582,6 @@ class SuccessContent extends PureComponent {
             <div>
                 <Transcript transcript={this.props.transcript}/>
                 <TextDisplay displayText={this.props.displayText}/>
-                <Card card={this.props.card} />
             </div>
         )
     }
@@ -612,7 +606,6 @@ class ErrorContent extends PureComponent {
                     </div>
                     : null
                 }
-                <Card card={this.props.card} />
             </div>
         )
     }
@@ -670,49 +663,6 @@ class SearchResultsContent extends PureComponent {
                     }
                 </div>
             </React.Fragment>
-        )
-    }
-}
-
-class Card extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    cardLinkClick = (event) => {
-        event.preventDefault()
-        browser.tabs.create({ url: this.props.card.AbstractURL })
-        closePopup()
-    }
-
-    render() {
-        const {card} = this.props
-        return (
-            card
-                ? <div id="card">
-                    <div id="card-header">{card.Heading}</div>
-                    <div id="card-image"><img alt="" src="" /></div>
-                    <div id="card-summary">{card.AbstractText}</div>
-                    <div id="card-ack">
-                        <div id="ddg-ack">
-                            {card.Image
-                                ? <img alt="" id="ddg-logo" src={card.Image} />
-                                : null
-                            }
-                            <a href="https://duckduckgo.com/">
-                                Results from DuckDuckGo
-                            </a>
-                        </div>
-                        <div className="sep"></div>
-                        <div id="source-ack">
-                            <span>Source:</span>
-                            <div id="card-source">
-                                <a id="card-source-link" href={card.AbstractURL}>{card.AbstractSource}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                : null
         )
     }
 }
