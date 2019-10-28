@@ -38,11 +38,8 @@ class Popup extends Component {
         this.textInputDetected = false
     }
 
-    componentWillMount() {
-        document.addEventListener("keydown", this.onKeyPressed)
-    }
-
     componentDidMount() {
+        document.addEventListener("keydown", this.onKeyPressed)
         this.init()
     }
 
@@ -243,152 +240,131 @@ class Popup extends Component {
     }
 }
 
-class PopupHeader extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    getTitle = () => {
-        switch (this.props.currentState) {
-            case "processing": 
+const PopupHeader = ({ currentState }) => {
+    const getTitle = () => {
+        switch (currentState) {
+            case "processing":
                 return "One second..."
-            case "success": 
+            case "success":
                 return "Got it!"
-            case "error": 
+            case "error":
                 return "Sorry, there was an issue"
-            case "typing": 
+            case "typing":
                 return "Type your request"
-            case "searchResults": 
+            case "searchResults":
                 return "Search results"
-            case "listening": 
+            case "listening":
             default:
                 return "Listening"
         }
     }
 
-    onClickGoBack = () => {
+    const onClickGoBack = () => {
         location.href = `${location.pathname}?${Date.now()}`
     }
 
-    onClickClose = () => {
+    const onClickClose = () => {
         window.close()
     }
 
-    render() {
-        const hiddenClass = (
-            this.props.currentState === "error" 
-            || this.props.currentState === "searchResults"
-            ) 
-                ? "" 
-                : "hidden"
+    const hiddenClass = (currentState === "error" || currentState === "searchResults")
+        ? ""
+        : "hidden"
 
-        return (
-            <div id="popup-header">
-                <div id="left-icon" className={hiddenClass} onClick={this.onClickGoBack}>
-                    <svg
-                        id="back-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                    >
-                        <path
-                            fill="context-fill"
-                            d="M6.414 8l4.293-4.293a1 1 0 0 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414l5 5a1 1 0 0 0 1.414-1.414z"
-                        ></path>
-                    </svg>
-                </div>
-                <div id="header-title">
-                    {this.getTitle()}
-                </div>
-                <div id="close-icon" onClick={this.onClickClose}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                    >
-                        <path
-                            fill="context-fill"
-                            d="M9.061 8l3.47-3.47a.75.75 0 0 0-1.061-1.06L8 6.939 4.53 3.47a.75.75 0 1 0-1.06 1.06L6.939 8 3.47 11.47a.75.75 0 1 0 1.06 1.06L8 9.061l3.47 3.47a.75.75 0 0 0 1.06-1.061z"
-                        ></path>
-                    </svg>
-                </div>
+    return (
+        <div id="popup-header">
+            <div id="left-icon" className={hiddenClass} onClick={onClickGoBack}>
+                <svg
+                    id="back-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill="context-fill"
+                        d="M6.414 8l4.293-4.293a1 1 0 0 0-1.414-1.414l-5 5a1 1 0 0 0 0 1.414l5 5a1 1 0 0 0 1.414-1.414z"
+                    ></path>
+                </svg>
             </div>
-        )
-    }
+            <div id="header-title">
+                {getTitle()}
+            </div>
+            <div id="close-icon" onClick={onClickClose}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill="context-fill"
+                        d="M9.061 8l3.47-3.47a.75.75 0 0 0-1.061-1.06L8 6.939 4.53 3.47a.75.75 0 1 0-1.06 1.06L6.939 8 3.47 11.47a.75.75 0 1 0 1.06 1.06L8 9.061l3.47 3.47a.75.75 0 0 0 1.06-1.061z"
+                    ></path>
+                </svg>
+            </div>
+        </div>
+    )
 }
 
-class PopupContent extends Component {
-    constructor(props) {
-        super(props)
-    }
-
-    getContent = () => {
-        switch (this.props.currentState) {
+const PopupContent = (props) => {
+    const getContent = () => {
+        switch (props.currentState) {
             case "listening":
-                return (<ListeningContent {...this.props} />)
+                return (<ListeningContent {...props} />)
             case "typing":
-                return (<TypingContent {...this.props} />)
+                return (<TypingContent {...props} />)
             case "processing":
-                return (<ProcessingContent {...this.props} />)
+                return (<ProcessingContent {...props} />)
             case "success":
-                return (<SuccessContent {...this.props} />)
+                return (<SuccessContent {...props} />)
             case "error":
-                return (<ErrorContent {...this.props} />)
+                return (<ErrorContent {...props} />)
             case "searchResults":
-                return (<SearchResultsContent {...this.props} />)
+                return (<SearchResultsContent {...props} />)
             default:
                 return null
         }
     }
 
-    render() {
-        return (
-            <div id="popup-content">
-                <Zap currentState={this.props.currentState}/>
-                {this.getContent()}
-            </div>
-        )
-    }
+    return (
+        <div id="popup-content">
+            <Zap currentState={props.currentState} />
+            {getContent()}
+        </div>
+    )
 }
 
-class PopupFooter extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    showSettings = async () => {
+const PopupFooter = () => {
+    const showSettings = async () => {
         await browser.tabs.create({
             url: browser.runtime.getURL("options/options.html")
         })
         window.close()
     }
 
-    render() {
-        return (
-            <div id="popup-footer">
-                <div id="settings-icon" onClick={this.showSettings}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                    >
-                        <path
-                            fill="context-fill"
-                            d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
-                        ></path>
-                    </svg>
-                </div>
-                <div id="moz-voice-privacy">
-                    <strong>For Mozilla internal use only</strong>
-                    {/* <a href="">How Mozilla ensures voice privacy</a> */}
-                </div>
-                <div></div>
+    return (
+        <div id="popup-footer">
+            <div id="settings-icon" onClick={showSettings}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill="context-fill"
+                        d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
+                    ></path>
+                </svg>
             </div>
-        )
-    }
+            <div id="moz-voice-privacy">
+                <strong>For Mozilla internal use only</strong>
+                {/* <a href="">How Mozilla ensures voice privacy</a> */}
+            </div>
+            <div></div>
+        </div>
+    )
 }
 
 class ListeningContent extends PureComponent {
@@ -429,23 +405,13 @@ class ListeningContent extends PureComponent {
     }
 }
 
-class TypingContent extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidMount() {
-    
-    }
-
-    render() {
-        return (
-            <React.Fragment>
-                <TextDisplay displayText={this.props.displayText} />
-                <TypingInput {...this.props} />
-            </React.Fragment>
-        )
-    }
+const TypingContent = (props) => {
+    return (
+        <React.Fragment>
+            <TextDisplay displayText={props.displayText} />
+            <TypingInput {...props} />
+        </React.Fragment>
+    )
 }
 
 class VoiceInput extends PureComponent {
@@ -557,142 +523,94 @@ class TypingInput extends PureComponent {
     }
 }
 
-class ProcessingContent extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        return (
-            <React.Fragment>
-                <Transcript transcript={this.props.transcript} />
-                <TextDisplay displayText={this.props.displayText} />
-            </React.Fragment>    
-        )
-    }
+const ProcessingContent = SuccessContent = ({ transcript, displayText }) => {
+    return (
+        <React.Fragment>
+            <Transcript transcript={transcript} />
+            <TextDisplay displayText={displayText} />
+        </React.Fragment>    
+    )
 }
 
-class SuccessContent extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        return (
-            <div>
-                <Transcript transcript={this.props.transcript}/>
-                <TextDisplay displayText={this.props.displayText}/>
-            </div>
-        )
-    }
+const ErrorContent = ({ displayText, error, displayAutoplay }) => {
+    return (
+        <div>
+            <TextDisplay displayText={displayText} />
+            <div id="error-message">{error}</div>
+            { displayAutoplay
+                ? <div id="error-autoplay">
+                    <img
+                        src="images/autoplay-instruction.png"
+                        alt="To enable autoplay, open the site preferences and select Allow Audio and Video"
+                    />
+                </div>
+                : null
+            }
+        </div>
+    )
 }
 
-class ErrorContent extends PureComponent {
-    constructor(props) {
-        super(props)
+const SearchResultsContent = (props) => {
+    if (!props.search) return null
+
+    const { card, searchResults, index, searchUrl } = props.search
+    const next = searchResults[index + 1]
+    const cardStyles = card
+        ? { height: card.height, width: card.width}
+        : {}
+    const imgAlt = next ? next.title : ""
+
+    if (card) setMinPopupSize(card.width, card.height)
+
+    const onSearchImageClick = async () => {
+        await browser.runtime.sendMessage({
+            type: "focusSearchResults",
+            searchUrl: searchUrl
+        })
     }
 
-    render() {
-        return (
-            <div>
-                <TextDisplay displayText={this.props.displayText} />
-                <div id="error-message">{this.props.error}</div>
-                { this.props.displayAutoplay 
-                    ? <div id="error-autoplay">
-                        <img
-                            src="images/autoplay-instruction.png"
-                            alt="To enable autoplay, open the site preferences and select Allow Audio and Video"
-                        />
+    return (
+        <React.Fragment>
+            <TextDisplay displayText={props.displayText} />
+            <div id="search-results">
+                {/* FIXME: img alt is using "next" title, but it should use the card title, which is not available in the data  */}
+                {card
+                    ? <img
+                        id="search-image"
+                        alt={imgAlt}
+                        onClick={this.onSearchImageClick}
+                        style={cardStyles}
+                        src={card.src}
+                    />
+                    : null
+                }
+                {next
+                    ? <div id="search-show-next">
+                        Say <strong>next result</strong> to view: <br />
+                        <strong id="search-show-next-title">{next.title}</strong>
+                        <span id="search-show-next-domain">{new URL(next.url).hostname}</span>
                     </div>
                     : null
                 }
             </div>
-        )
-    }
+        </React.Fragment>
+    )
 }
 
-class SearchResultsContent extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    onSearchImageClick = async () => {
-        await browser.runtime.sendMessage({
-            type: "focusSearchResults",
-            searchUrl: this.props.search.searchUrl
-        })
-    }
-
-    render() {
-        if (!this.props.search) return null
-
-        const { card, searchResults, index } = this.props.search
-        const next = searchResults[index + 1]
-        const cardStyles = card
-            ? {
-                height: card.height,
-                width: card.width
-            }
-            : {}
-        const imgAlt = next ? next.title : ""
-
-        if (card) setMinPopupSize(card.width, card.height) 
-
-        return (
-            <React.Fragment>
-                <TextDisplay displayText={this.props.displayText} />
-                <div id="search-results">
-                    {/* FIXME: Is alt correct?  */}
-                    { card
-                        ? <img 
-                            id="search-image" 
-                            alt={imgAlt} 
-                            onClick={this.onSearchImageClick} 
-                            style={cardStyles}
-                            src={card.src}
-                        />
-                        : null
-                    }
-                    { next
-                        ? <div id="search-show-next">
-                            Say <strong>next result</strong> to view: <br />
-                            <strong id="search-show-next-title">{next.title}</strong>
-                            <span id="search-show-next-domain">{new URL(next.url).hostname}</span>
-                        </div>
-                        : null
-                    }
-                </div>
-            </React.Fragment>
-        )
-    }
+const Transcript = ({ transcript }) => {
+    return (
+        transcript
+            ? <div id="transcript">{transcript}</div>
+            : null
+    )
 }
 
-class Transcript extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        return (
-            this.props.transcript
-                ? <div id="transcript">{this.props.transcript}</div>
-                : null
-        )
-    }
-}
-
-class TextDisplay extends PureComponent {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        return (
-            this.props.displayText
-                ? <div id="text-display">{this.props.displayText}</div>
-                : null
-        )
-    }
+const TextDisplay = ({ displayText }) => {
+    return (
+        displayText
+            ? <div id="text-display">{displayText}</div>
+            : null
+    )
 }
 
 class Zap extends Component {
@@ -808,12 +726,12 @@ class Zap extends Component {
 
 const popupContainer = document.getElementById("popup-container")
 
-setMinPopupSize = (width, height) => {
+const setMinPopupSize = (width, height) => {
     popupContainer.style.minWidth = width + "px"
     popupContainer.style.minHeight = (parseInt(height) + 150) + "px"
 }
 
-closePopup = (ms) => {
+const closePopup = (ms) => {
     if (ms === null || ms === undefined) {
         ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT
     }
