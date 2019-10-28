@@ -201,10 +201,21 @@ class Popup extends Component {
         this.setCurrentState("searchResults");
         return Promise.resolve(true);
       }
+      case "refreshSearchCard": {
+        if (!message.card) {
+          throw new Error(
+            ".card property missing on refreshSearchCard message"
+          );
+        }
+        let updatedSearch = { ...this.state.search };
+        updatedSearch.card = message.card;
+        this.setState({ search: updatedSearch });
+        return Promise.resolve(true);
+      }
       default:
         break;
     }
-    return null;
+    return undefined;
   };
 
   updateExamples = async () => {
