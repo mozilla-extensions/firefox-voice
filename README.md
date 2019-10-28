@@ -6,6 +6,8 @@ Firefox Voice is a browser extension that allows you to give voice commands to y
 
 ## Developing
 
+There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
+
 If you are using Windows, please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), as the installation won't work from a normal Windows command prompt.
 
 The developer installation is:

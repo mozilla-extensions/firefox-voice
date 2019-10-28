@@ -186,7 +186,11 @@ this.intentParser = (function() {
       if (typeof phrases === "string") {
         const lines = [];
         for (const line of phrases.split("\n")) {
-          if (line.trim() && !line.trim().startsWith("#")) {
+          if (
+            line.trim() &&
+            !line.trim().startsWith("#") &&
+            !line.trim().startsWith("//")
+          ) {
             lines.push(line.trim());
           }
         }
