@@ -114,7 +114,7 @@ There are some other methods in `IntentContext` that you might want to look into
 
 ### browserUtil
 
-Also make sure you look at [`browserUtil.js`](../extensions/browserUtil.js), as there are several functions there that may be useful. Usually a function exists there because there's something subtle to doing the "right" thing.
+Also make sure you look at [`browserUtil.js`](../extension/browserUtil.js), as there are several functions there that may be useful. Usually a function exists there because there's something subtle to doing the "right" thing.
 
 ## Content scripts
 
@@ -131,7 +131,7 @@ async run(context) {
 }
 ```
 
-`content.lazyInject` will make sure the script is available and fully loaded, and will not re-load the script if called multiple times on the same tab. It also loads [`content/communicate.js`](../extension/content/communicate.js) and [`content/helpers.js`](../extension/content/helpers).
+`content.lazyInject` will make sure the script is available and fully loaded, and will not re-load the script if called multiple times on the same tab. It also loads [`content/communicate.js`](../extension/content/communicate.js) and [`content/helpers.js`](../extension/content/helpers.js).
 
 You can use this pattern in your script (`contentScript.js` in this example):
 
