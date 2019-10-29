@@ -11,6 +11,12 @@ this.intentParser = (function() {
     "plain text (alt|text) [slot]"
 
   Spaces separate words, but spaces don't matter too much. Slots are all wildcards.
+
+  You can use `[slot:slotType]` to create a slot that must be of a certain types (types are in ENTITY_MAP)
+
+  You can use `[parameter=value]` to set a parameter on any matches for this one item. This does not capture anything.
+
+  You can use `noun{s}` to match both `noun` and `nouns`.
   */
 
   const ENTITY_TYPES = {
@@ -21,8 +27,11 @@ this.intentParser = (function() {
   const Matcher = (exports.Matcher = class Matcher {
     constructor(phrase) {
       this.phrase = phrase;
-      const { slots, regex, parameters } = this._phraseToRegex(phrase);
+      const { slots, regex, parameters, slotTypes } = this._phraseToRegex(
+        phrase
+      );
       this.slots = slots;
+      this.slotTypes = slotTypes;
       this.parameters = parameters;
       this.regexString = regex;
       this.regex = new RegExp("^" + regex + "$", "i");
@@ -35,6 +44,7 @@ this.intentParser = (function() {
       }
       const result = {
         slots: {},
+        slotTypes: this.slotTypes,
         utterance,
         regex: this.regexString,
         parameters: Object.assign({}, this.parameters),
@@ -57,6 +67,7 @@ this.intentParser = (function() {
 
     _phraseToRegex(toParse) {
       const slots = [];
+      const slotTypes = {};
       const parameters = {};
       let regex = "";
       while (toParse) {
@@ -74,6 +85,7 @@ this.intentParser = (function() {
             if (!ENTITY_TYPES[entityName]) {
               throw new Error(`No entity type by the name ${entityName}`);
             }
+            slotTypes[parts[0].trim()] = parts[1].trim();
             const entityRegex = ENTITY_TYPES[entityName]
               .map(e => (e ? " " + e : e))
               .join("|");
@@ -93,7 +105,9 @@ this.intentParser = (function() {
           regex += " " + words;
         }
       }
-      return { slots, parameters, regex };
+      // Implements the {s} optional strings:
+      regex = regex.replace(/\{(.*?)\}/g, "(?:$1)?");
+      return { slots, parameters, regex, slotTypes };
     }
 
     _getAlternatives(phrase) {
@@ -172,7 +186,11 @@ this.intentParser = (function() {
       if (typeof phrases === "string") {
         const lines = [];
         for (const line of phrases.split("\n")) {
-          if (line.trim() && !line.trim().startsWith("#")) {
+          if (
+            line.trim() &&
+            !line.trim().startsWith("#") &&
+            !line.trim().startsWith("//")
+          ) {
             lines.push(line.trim());
           }
         }
@@ -216,9 +234,10 @@ this.intentParser = (function() {
 
   exports.parse = function parse(text, disableFallback = false) {
     text = text.trim();
+    // Normalize whitespace, so there's always just one space between words:
     text = text.replace(/\s\s+/g, " ");
-    text = text.toLowerCase();
-    text = text.replace(/[^a-z0-9 ']\B/gi, "");
+    // Removes punctuation at the end of words, like "this, and that.":
+    text = text.replace(/[.,;!?]\B/g, "");
     let bestMatch;
     let bestChars;
     for (const name of INTENT_NAMES) {
@@ -227,7 +246,14 @@ this.intentParser = (function() {
       if (match) {
         match.name = name;
         match.fallback = false;
-        const slotChars = Object.values(match.slots).join("").length;
+        let slotChars = 0;
+        for (const slotName in match.slots) {
+          if (match.slotTypes[slotName]) {
+            slotChars += 1;
+          } else {
+            slotChars += match.slots[slotName].length;
+          }
+        }
         if (bestMatch === undefined || bestChars > slotChars) {
           bestMatch = match;
           bestChars = slotChars;

@@ -45,10 +45,10 @@ intents.aboutPage = (function() {
       "This will try to find comments for the current page, searching Reddit and Hacker News, showing forums in order of the number of comments",
     examples: ["Comments on this page?"],
     match: `
-    (show | open |) comments on (this |) (page | tab | article)
-    (show | open |) what are people (saying | talking | commenting) about (this |) (page | tab | article)
-    (show | open |) comments (for | on) (this |) (page | tab | article)
-    (show | open |) comments
+    (show | open |) comment{s} on (this |) (page | tab | article) (to me | for me |)
+    (show | open |) what are people (saying | talking | commenting) about (this |) (page | tab | article) (to me | for me |)
+    (show | open |) comments (for | on) (this |) (page | tab | article) (to me | for me |)
+    (show | open |) comments (to me | for me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
@@ -81,8 +81,8 @@ intents.aboutPage = (function() {
     name: "aboutPage.changeComments",
     description: `If you've used "show comments on this page" and there were multiple forums or pages, this will show the next (or previous) comment forum`,
     match: `
-    next (comments | comment) [move=next]
-    previous (comments | comment) [move=previous]
+    next comment{s} [move=next]
+    previous comment{s} [move=previous]
     `,
     async run(context) {
       const activeTab = await context.activeTab();

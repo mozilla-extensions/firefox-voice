@@ -4,8 +4,7 @@ this.intents.tabs = (function() {
     description: "Closes the current tab",
     examples: ["close tab"],
     match: `
-    close tab
-    close this tab
+    close (this |) tab (for me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
@@ -19,7 +18,8 @@ this.intents.tabs = (function() {
     examples: ["open tab"],
     match: `
     open tab
-    open (a |) (new | blank |) tab
+    open (a |) (new | blank |) tab (for me|)
+    new (blank |) tab
     `,
     async run(context) {
       await context.createTab({ active: true });

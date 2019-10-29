@@ -71,11 +71,12 @@ this.intents.music = (function() {
     examples: ["Play Green Day"],
     match: `
     play [query] on [service:musicServiceName]
-    play video [query] [service=youtube]
-    play [query] video [service=youtube]
+    play video{s} [query] [service=youtube]
+    play [query] video{s} [service=youtube]
     play [query]
-    (do a |) (search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:musicServiceName] (for | for the |) [query]
+    (do a |) (search | query | look up| look | look up | lookup) (on | in |) (my |) [service:musicServiceName] (for | for the |) [query]
     (do a |) (search | query ) my [service:musicServiceName] (for | for the |) [query]
+    (do a |) (search | query ) (on |) [service:musicServiceName] (for | for the) [query]
     (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:musicServiceName]
     `,
     async run(context) {
@@ -113,7 +114,7 @@ this.intents.music = (function() {
     name: "music.unpause",
     description:
       "Unpause one service, the current tab, or the detected service",
-    examples: ["Unpause", "continue music", "play music"],
+    examples: ["Unpause", "continue music", "play music", "test:play spotify"],
     match: `
     (unpause | continue | play) video [service=youtube]
     (unpause | continue | play) [service:musicServiceName]
@@ -132,13 +133,9 @@ this.intents.music = (function() {
       "Focus the tab of a specific or auto-detected service, maybe opening a tab if none is already open",
     examples: ["Open music"],
     match: `
-    (open | show | focus) video [service=youtube]
-    open [service:musicServiceName]
-    show [service:musicServiceName]
-    focus [service:musicServiceName]
-    open music
-    show music
-    focus music
+    (open | show | focus) (my | the |) video (for me |) [service=youtube]
+    (open | show | focus) [service:musicServiceName] (for me|)
+    (open | show | focus) music
     `,
     async run(context) {
       const service = await getService(context);
@@ -158,7 +155,7 @@ this.intents.music = (function() {
     next (song | track |)             [direction=next]
     play previous (song | track |)    [direction=back]
     previous (song | track |)         [direction=back]
-    skip (song | track |)             [direction=next]
+    (skip | forward) (song | track |) [direction=next]
     `,
     async run(context) {
       const service = await getService(context, { lookAtCurrentTab: true });

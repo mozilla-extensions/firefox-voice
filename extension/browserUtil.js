@@ -33,5 +33,50 @@ this.browserUtil = (function() {
     });
   };
 
+  exports.TabRemovalWatcher = class TabRemovalWatcher {
+    constructor() {
+      this.isWatching = false;
+      this.onRemoved = this.onRemoved.bind(this);
+      this.watching = new Map();
+    }
+
+    watch(tabId, callback) {
+      if (!this.isWatching) {
+        browser.tabs.onRemoved.addListener(this.onRemoved);
+      }
+      this.watching.set(tabId, callback);
+    }
+
+    onRemoved(tabId) {
+      const callback = this.watching.get(tabId);
+      this.watching.delete(tabId);
+      if (!this.watching.size) {
+        browser.tabs.onRemoved.removeListener(this.onRemoved);
+        this.isWatching = false;
+      }
+      if (callback) {
+        callback(tabId);
+      }
+    }
+  };
+
+  exports.TabDataMap = class TabDataMap {
+    constructor() {
+      this.watcher = new exports.TabRemovalWatcher();
+      this.onRemoved = this.onRemoved.bind(this);
+      this.map = new Map();
+    }
+    set(tabId, value) {
+      this.watcher.watch(tabId, this.onRemoved);
+      this.map.set(tabId, value);
+    }
+    get(tabId) {
+      return this.map.get(tabId);
+    }
+    onRemoved(tabId) {
+      this.map.delete(tabId);
+    }
+  };
+
   return exports;
 })();

@@ -26,7 +26,8 @@ this.intents.notes = (function() {
       "Indicate where note should be written, both the tab and the element on the tab where text will go",
     examples: ["Write notes here"],
     match: `
-    (write | add | make) (notes |) (here | this page | this tab)
+    (add | make) note{s} (here | this page | this tab) (for me |)
+    write (note{s} |) (here | this page | this tab) (for me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
@@ -49,7 +50,7 @@ this.intents.notes = (function() {
     description: "Add to the note with the link and title of the current tab",
     examples: ["Make note of this page"],
     match: `
-    (make | add | write |) note (of | about |) (this |) (page | tab | link)
+    (make | add | write |) note{s} (of | about |) (this |) (page | tab | link) (for me |)
     `,
     async run(context) {
       await checkHasTab();
@@ -72,7 +73,7 @@ this.intents.notes = (function() {
     description: "Add to the note with the given text",
     examples: ["Add note stuff to remember"],
     match: `
-    (make | add | write) note (about |) [text]
+    (make | add | write) note{s} (about |) [text] (for me |)
     `,
     async run(context) {
       await checkHasTab();
@@ -94,7 +95,7 @@ this.intents.notes = (function() {
       "Focus the tab previously indicated as being the place to write notes",
     examples: ["Show notes"],
     match: `
-    (show | focus | activate | read) (the |) notes
+    (show | focus | activate | read) (the |) note{s} (for me |)
     `,
     async run(context) {
       if (!writingTabId) {
