@@ -27,7 +27,7 @@ this.intentRunner = (function() {
 
     failed(message) {
       telemetry.add({ intentSuccess: false });
-      telemetry.send({});
+      telemetry.sendSoon();
       try {
         this.onError(message);
       } catch (e) {
@@ -76,6 +76,7 @@ this.intentRunner = (function() {
         intentParseSuccess: !this.fallback,
         intentSuccess: true,
         utterance: this.utterance,
+        utteranceChars: this.utterance.length,
         utteranceParsed: { slots: this.slots },
       });
     }
@@ -167,7 +168,7 @@ this.intentRunner = (function() {
       }
       // FIXME: this isn't necessarily the right time to send the ping, if the intent
       // isn't actually complete:
-      telemetry.send();
+      telemetry.sendSoon();
     } catch (e) {
       const display = e.displayMessage || `Internal error: ${e}`;
       context.failed(display);

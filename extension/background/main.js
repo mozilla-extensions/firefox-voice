@@ -40,8 +40,6 @@ this.main = (function() {
       return settings.saveSettings(message.settings);
     } else if (message.type === "addTelemetry") {
       return telemetry.add(message.properties);
-    } else if (message.type === "sendTelemetry") {
-      return telemetry.send();
     } else if (message.type === "addFeedback") {
       return telemetry.addFeedback(message.properties);
     } else if (message.type === "openRecordingTab") {

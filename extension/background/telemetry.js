@@ -83,6 +83,11 @@ this.telemetry = (function() {
     ping = null;
   };
 
+  exports.sendSoon = async function() {
+    await util.sleep(1000);
+    return exports.send();
+  };
+
   exports.addFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
       { intentId: lastIntentId, timestamp: Date.now() },
