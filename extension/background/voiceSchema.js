@@ -1,6 +1,6 @@
 /* eslint-disable */
 // This is a copy of:
-// https://github.com/mozilla-services/mozilla-pipeline-schemas/blob/master/schemas/telemetry/voice/voice.1.schema.json
+// https://github.com/mozilla-services/mozilla-pipeline-schemas/blob/master/schemas/telemetry/voice/voice.4.schema.json
 
 this.voiceSchema = {
   "$schema": "http://json-schema.org/draft-04/schema#",
@@ -96,6 +96,12 @@ this.voiceSchema = {
                     ]
                   },
                   "isSystem": {
+                    "type": "boolean"
+                  },
+                  "isWebExtension": {
+                    "type": "boolean"
+                  },
+                  "multiprocessCompatible": {
                     "type": "boolean"
                   },
                   "name": {
@@ -306,7 +312,10 @@ this.voiceSchema = {
               "type": "boolean"
             },
             "vendor": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "version": {
               "pattern": "^[0-9]{2,3}\\.",
@@ -332,6 +341,12 @@ this.voiceSchema = {
           "additionalProperties": {
             "properties": {
               "branch": {
+                "type": "string"
+              },
+              "enrollmentId": {
+                "type": "string"
+              },
+              "type": {
                 "type": "string"
               }
             },
@@ -397,6 +412,17 @@ this.voiceSchema = {
           },
           "type": "object"
         },
+        "services": {
+          "properties": {
+            "accountEnabled": {
+              "type": "boolean"
+            },
+            "syncEnabled": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "settings": {
           "properties": {
             "addonCompatibilityCheckEnabled": {
@@ -429,6 +455,29 @@ this.voiceSchema = {
             },
             "blocklistEnabled": {
               "type": "boolean"
+            },
+            "defaultPrivateSearchEngine": {
+              "type": "string"
+            },
+            "defaultPrivateSearchEngineData": {
+              "properties": {
+                "loadPath": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "origin": {
+                  "type": "string"
+                },
+                "submissionURL": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
             },
             "defaultSearchEngine": {
               "type": "string"
@@ -516,6 +565,12 @@ this.voiceSchema = {
                 "null"
               ]
             },
+            "isInOptoutSample": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "launcherProcessState": {
               "type": "integer"
             },
@@ -557,6 +612,14 @@ this.voiceSchema = {
               "type": "object"
             },
             "userPrefs": {
+              "additionalProperties": {
+                "type": [
+                  "boolean",
+                  "string",
+                  "number",
+                  "null"
+                ]
+              },
               "type": "object"
             }
           },
@@ -739,6 +802,12 @@ this.voiceSchema = {
                   "properties": {
                     "advancedLayers": {
                       "properties": {
+                        "noConstantBufferOffsetting": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
                         "status": {
                           "type": [
                             "string",
@@ -807,6 +876,28 @@ this.voiceSchema = {
                       "type": "object"
                     },
                     "gpuProcess": {
+                      "properties": {
+                        "status": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "webrender": {
+                      "properties": {
+                        "status": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "wrQualified": {
                       "properties": {
                         "status": {
                           "type": [
@@ -938,13 +1029,22 @@ this.voiceSchema = {
             "isWow64": {
               "type": "boolean"
             },
+            "isWowARM64": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "memoryMB": {
               "type": "number"
             },
             "os": {
               "properties": {
                 "installYear": {
-                  "type": "number"
+                  "type": [
+                    "number",
+                    "null"
+                  ]
                 },
                 "kernelVersion": {
                   "type": "string"
@@ -963,8 +1063,7 @@ this.voiceSchema = {
                 },
                 "version": {
                   "type": [
-                    "string",
-                    "integer"
+                    "string"
                   ]
                 },
                 "windowsBuildNumber": {
@@ -1035,6 +1134,10 @@ this.voiceSchema = {
     },
     "payload": {
       "properties": {
+        "deepSpeechMatches": {
+          "title": "Did the DeepSpeech transcription match with Google's?",
+          "type": "boolean"
+        },
         "extensionInstallationChannel": {
           "description": "Where the user first installed the extension (e.g., internal_beta, external_beta, etc)",
           "title": "First install channel",
@@ -1170,6 +1273,19 @@ this.voiceSchema = {
           "title": "Text utterance by user",
           "type": "string"
         },
+        "utteranceChars": {
+          "title": "Number of characters in utterance",
+          "type": "number"
+        },
+        "utteranceDeepSpeech": {
+          "description": "An alternate transcription for verification",
+          "title": "Utterance as transcribed by DeepSpeech",
+          "type": "string"
+        },
+        "utteranceDeepSpeechChars": {
+          "title": "Number of characters in DeepSpeech transcription",
+          "type": "number"
+        },
         "utteranceParsed": {
           "description": "Typically the slots found in the utterance",
           "title": "Parsed form of the utterance",
@@ -1190,8 +1306,8 @@ this.voiceSchema = {
       "type": "string"
     },
     "version": {
-      "maximum": 1,
-      "minimum": 1,
+      "maximum": 4,
+      "minimum": 4,
       "type": "number"
     }
   },

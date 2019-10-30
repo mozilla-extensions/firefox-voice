@@ -80,6 +80,16 @@ this.util = (function() {
     return 0;
   };
 
+  exports.normalizedStringsMatch = function(a, b) {
+    function norm(s) {
+      s = s.toLowerCase().trim();
+      s = s.replace(/\s\s+/, " ");
+      s = s.replace(/[^a-z0-9]/, "");
+      return s;
+    }
+    return norm(a) === norm(b);
+  };
+
   exports.randomString = function randomString(length, chars) {
     const randomStringChars =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

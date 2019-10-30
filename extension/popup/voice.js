@@ -1,10 +1,11 @@
-/* globals vad, buildSettings */
+/* globals vad, buildSettings, log, util */
 
 this.voice = (function() {
   const exports = {};
 
   const STT_SERVER_URL =
-    buildSettings.sstServer || "https://speaktome-2.services.mozilla.com";
+    buildSettings.sttServer || "https://speaktome-2.services.mozilla.com";
+  const DEEP_SPEECH_URL = buildSettings.deepSpeechServer;
   const LANGUAGE = "en-US";
 
   exports.Recorder = class Recorder {
@@ -178,6 +179,46 @@ this.voice = (function() {
         return;
       }
       const json = await response.json();
+      if (buildSettings.sendToDeepSpeech) {
+        // We will send it right away, but we don't want block on this:
+        setTimeout(async () => {
+          let response;
+          try {
+            response = await fetch(DEEP_SPEECH_URL, {
+              method: "POST",
+              body: blob,
+              headers: {
+                "Accept-Language-STT": LANGUAGE,
+                "Product-Tag": "vf",
+              },
+            });
+          } catch (e) {
+            log.warn("Error sending audio to DeepSpeech:", String(e), e);
+            return;
+          }
+          if (!response.ok) {
+            log.warn(
+              "Server error for DeepSpeech:",
+              response.status,
+              response.statusText
+            );
+            return;
+          }
+          const deepJson = await response.json();
+          const utterance = deepJson.data[0].text;
+          browser.runtime.sendMessage({
+            type: "addTelemetry",
+            properties: {
+              utteranceDeepSpeech: utterance,
+              utteranceDeepSpeechChars: utterance.length,
+              deepSpeechMatches: util.normalizedStringsMatch(
+                utterance,
+                json.data[0].text
+              ),
+            },
+          });
+        });
+      }
       browser.runtime.sendMessage({
         type: "addTelemetry",
         properties: {
