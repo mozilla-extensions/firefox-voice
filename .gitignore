@@ -7,6 +7,8 @@ extension/css/vendor/
 extension/views/CHANGELOG.html
 extension/views/lexicon.html
 extension/buildSettings.js
+extension/popup/popupController.js
+extension/popup/popupView.js
 node_modules
 npm-debug.log
 package-lock.json
