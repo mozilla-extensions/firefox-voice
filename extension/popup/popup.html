@@ -15,6 +15,8 @@
             width="16"
             height="16"
             viewbox="0 0 16 16"
+            role="button"
+            aria-label="Back"
           >
             <path
               fill="context-fill"
@@ -25,7 +27,7 @@
         <div id="header-title">
           Listening
         </div>
-        <div id="close-icon">
+        <div id="close-icon" role="button" aria-label="Close">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -75,8 +77,7 @@
             />
           </div>
           <div id="search-results" style="display: none">
-            <!-- FIXME: alt="" isn't correct here: -->
-            <img id="search-image" style="display: none" alt="" />
+            <img id="search-image" style="display: none" alt="Show results" role="button" />
             <div id="search-show-next" style="display: none">
               Say <strong>next result</strong> to view: <br />
               <strong id="search-show-next-title"></strong>
@@ -118,7 +119,7 @@
         </div>
       </div>
       <div id="popup-footer">
-        <div id="settings-icon">
+        <div id="settings-icon" role="button" aria-label="Settings">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
