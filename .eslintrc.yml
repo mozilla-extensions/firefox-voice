@@ -4,8 +4,7 @@ env:
   node: true
   webextensions: true
 
-ecmaFeatures:
-  jsx: true
+parser: babel-eslint
 
 parserOptions:
   ecmaFeatures:
@@ -18,12 +17,7 @@ extends:
 plugins:
   - mozilla
   - react
-
-globals:
-  Metrics: true
-  SpeakToMe: true
-  TestPilotGA: true
-  bodymovin: true
+  - class-property
 
 rules:
   eqeqeq: error
