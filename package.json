@@ -62,7 +62,7 @@
     "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js raven-js/dist/raven.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
     "build:jsx": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/popup/*.jsx --out-dir extension/popup",
-    "watch:jsx": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/popup/*.jsx --watch --out-dir extension/popup",
+    "watch": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/popup/*.jsx --watch --out-dir extension/popup",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "maybemarkdown": "if [[ docs/lexicon.md -nt extension/views/lexicon.html ]] ; then npm run build:markdown ; fi",
     "format": "prettier 'extension/**/*.{js,jsx,css}' --write",

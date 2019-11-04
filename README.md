@@ -23,6 +23,14 @@ By default this will use Firefox Nightly, but you can override this with the env
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
+### JSX changes
+
+The .jsx files (used for the popup UI) are not automatically regenerated when you use `npm start`. If you want to watch for changes to these files and rebuild them, in a separate console rule:
+
+```sh
+npm run watch
+```
+
 ## Using in-development versions
 
 It's possible to install and use in-development versions of the extension. Every commit to `master` is built into the dev build, and when we prepare for a release and merge to `stage` is used to create the stage build.
