@@ -54,7 +54,7 @@ this.catcher = (function() {
       },
     };
     if (typeof Sentry === "undefined") {
-      window.SENTRY_DSK = sentryOptions;
+      window.SENTRY_SDK = sentryOptions;
       catcherAsyncSetup();
     } else {
       Sentry.init(sentryOptions);
