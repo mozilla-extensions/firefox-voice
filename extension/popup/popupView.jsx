@@ -10,6 +10,7 @@ const Popup = ({
   errorMessage,
   displayAutoplay,
   searchResult,
+  cardImage,
   recorderVolume,
   showSettings,
   submitTextInput,
@@ -28,6 +29,7 @@ const Popup = ({
         errorMessage={errorMessage}
         displayAutoplay={displayAutoplay}
         searchResult={searchResult}
+        cardImage={cardImage}
         recorderVolume={recorderVolume}
         submitTextInput={submitTextInput}
         onClickLexicon={onClickLexicon}
@@ -111,6 +113,7 @@ const PopupContent = ({
   errorMessage,
   displayAutoplay,
   searchResult,
+  cardImage,
   recorderVolume,
   submitTextInput,
   onClickLexicon,
@@ -157,6 +160,7 @@ const PopupContent = ({
         return (
           <SearchResultsContent
             search={searchResult}
+            cardImage={cardImage}
             displayText={displayText}
             onSearchImageClick={onSearchImageClick}
             setMinPopupSize={setMinPopupSize}
@@ -350,13 +354,15 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
 
 const SearchResultsContent = ({
   search,
+  cardImage,
   displayText,
   onSearchImageClick,
   setMinPopupSize,
 }) => {
   if (!search) return null;
 
-  const { card, searchResults, index, searchUrl } = search;
+  const { searchResults, index, searchUrl } = search;
+  const card = cardImage;
   const next = searchResults[index + 1];
   const cardStyles = card ? { height: card.height, width: card.width } : {};
   const imgAlt = next ? next.title : "";

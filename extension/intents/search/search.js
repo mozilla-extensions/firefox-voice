@@ -145,7 +145,7 @@ this.intents.search = (function() {
       popupSearchInfo = null;
       await performSearch(context.slots.query);
       const searchInfo = await callScript({ type: "searchResultInfo" });
-      if (searchInfo.hasCard) {
+      if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
         const card = await callScript({ type: "cardImage" });
         context.keepPopup();
         searchInfo.index = -1;

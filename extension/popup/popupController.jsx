@@ -13,6 +13,7 @@ function PopupController() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [displayAutoplay, setDisplayAutoplay] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
+  const [cardImage, setCardImage] = useState(null);
   const [recorderVolume, setRecorderVolume] = useState(null);
 
   let recorder;
@@ -176,21 +177,25 @@ function PopupController() {
     );
   };
 
-  const showSearchResults = newSearch => {
+  const showSearchResults = message => {
     setCurrentView("searchResults");
+    const newSearch = {};
+    for (const prop in message) {
+      if (prop !== "type" && prop !== "card") {
+        newSearch[prop] = message[prop];
+      }
+    }
     setSearchResult(newSearch);
 
-    if (newSearch.card) {
-      setMinPopupSize(card.width, card.height);
+    if (message.card) {
+      setCardImage(message.card);
+      setMinPopupSize(message.card.width, message.card.height);
     }
   };
 
   const showSearchCard = newCard => {
+    setCardImage(newCard);
     if (newCard) {
-      const newSearch = { ...search };
-      newSearch.card = newCard;
-
-      setSearchResult(newSearch);
       setMinPopupSize(newCard.width, newCard.height);
     }
   };
@@ -341,6 +346,7 @@ function PopupController() {
       errorMessage={errorMessage}
       displayAutoplay={displayAutoplay}
       searchResult={searchResult}
+      cardImage={cardImage}
       recorderVolume={recorderVolume}
       showSettings={showSettings}
       submitTextInput={submitTextInput}
