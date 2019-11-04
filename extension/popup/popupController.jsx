@@ -1,11 +1,11 @@
-/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings, lottie */
+/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings */
 
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
 let textInputDetected = false;
 
-function PopupController() {
+window.PopupController = function() {
   const [currentView, setCurrentView] = useState("listening");
   const [suggestions, setSuggestions] = useState([]);
   const [transcript, setTranscript] = useState(null);
@@ -68,7 +68,7 @@ function PopupController() {
     audio.play();
   };
 
-  const onClickLexicon = async () => {
+  const onClickLexicon = async event => {
     await browser.tabs.create({
       url: browser.runtime.getURL(event.target.href),
     });
@@ -82,7 +82,7 @@ function PopupController() {
         break;
       }
       case "displayFailure": {
-        //setCurrentView("error");
+        // setCurrentView("error");
         setErrorMessage(message.message);
         break;
       }
@@ -203,14 +203,7 @@ function PopupController() {
   const onSearchImageClick = async searchUrl => {
     await browser.runtime.sendMessage({
       type: "focusSearchResults",
-      searchUrl: searchUrl,
-    });
-  };
-
-  const setIcon = state => {
-    browser.browserAction.setIcon({
-      16: `${state}-16.svg`,
-      32: `${state}-32.svg`,
+      searchUrl,
     });
   };
 
@@ -355,6 +348,6 @@ function PopupController() {
       setMinPopupSize={setMinPopupSize}
     />
   );
-}
+};
 
 ReactDOM.render(<PopupController />, popupContainer);

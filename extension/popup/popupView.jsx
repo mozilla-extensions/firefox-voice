@@ -1,8 +1,10 @@
-/* globals lottie */
+/* globals lottie, React */
+/* eslint-disable no-unused-vars */
+// For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 const { Component, PureComponent } = React;
 
-const Popup = ({
+window.Popup = ({
   currentView,
   suggestions,
   transcript,
@@ -285,7 +287,7 @@ class TypingInput extends PureComponent {
     }
   };
 
-  onInputTextChange = () => {
+  onInputTextChange = event => {
     this.value = event.target.value;
   };
 
@@ -487,8 +489,7 @@ class Zap extends Component {
   };
 
   setAnimationForVolume = avgVolume => {
-    console.log("setAnimationForVolume", avgVolume);
-    //this.animation.onLoopComplete = function() {
+    // this.animation.onLoopComplete = function() {
     if (avgVolume < 0.1) {
       this.playAnimation(this.animationSegmentTimes.base, true, true);
     } else if (avgVolume < 0.15) {
@@ -498,7 +499,7 @@ class Zap extends Component {
     } else {
       this.playAnimation(this.animationSegmentTimes.high, true, true);
     }
-    //};
+    // };
   };
 
   render() {
