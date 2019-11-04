@@ -18,7 +18,7 @@ this.queryScript = (function() {
     let selected = container.querySelectorAll(CARD_SELECTOR);
     if (maxBottom) {
       selected = Array.from(selected).filter(
-        e => e.getBoundingClientRect().bottom <= maxBottom
+        e => e.getBoundingClientRect().y <= maxBottom
       );
     }
     if (selected.length) {
