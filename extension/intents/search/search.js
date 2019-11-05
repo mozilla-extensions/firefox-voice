@@ -216,7 +216,14 @@ this.intents.search = (function() {
         tabSearchResults.set(tab.id, searchInfo);
       } else {
         lastTabId = tabId;
-        await context.makeTabActive(tabId);
+        try {
+          await context.makeTabActive(tabId);
+        } catch (e) {
+          if (String(e).includes("Invalid tab ID")) {
+            e.displayMessage = "The search results tab has been closed";
+          }
+          throw e;
+        }
         await browser.tabs.update(tabId, { url: item.url });
       }
     },
