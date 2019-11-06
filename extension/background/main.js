@@ -155,5 +155,9 @@ this.main = (function() {
     await browser.tabs.create({ url });
   }
 
+  if (buildSettings.openPopupOnStart) {
+    browser.tabs.create({ url: browser.runtime.getURL("/popup/popup.html") });
+  }
+
   return exports;
 })();
