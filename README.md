@@ -31,6 +31,20 @@ The .jsx files (used for the popup UI) are not automatically regenerated when yo
 npm run watch
 ```
 
+### Debugging the popup
+
+The popup can be hard to debug, since it disappears and there's no debugging tools. But the popup can also run in a tab. The easiest way to do this is to run:
+
+```sh
+OPEN_POPUP_ON_START=1 npm start
+```
+
+This will open the popup in a tab and reopen it whenever the extension restarts. Reloading the tab is equivalent to reopening the popup.
+
+### Writing a new command / intent
+
+Please see [Writing An Intent](./docs/writing-an-intent.md).
+
 ## Using in-development versions
 
 It's possible to install and use in-development versions of the extension. Every commit to `master` is built into the dev build, and when we prepare for a release and merge to `stage` is used to create the stage build.
