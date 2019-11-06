@@ -4,6 +4,8 @@ const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
 let textInputDetected = false;
+let recorder;
+let recorderIntervalId;
 
 window.PopupController = function() {
   const [currentView, setCurrentView] = useState("listening");
@@ -16,8 +18,6 @@ window.PopupController = function() {
   const [cardImage, setCardImage] = useState(null);
   const [recorderVolume, setRecorderVolume] = useState(null);
 
-  let recorder;
-  let recorderIntervalId;
   let executedIntent = false;
   let stream = null;
   const { backgroundTabRecorder } = buildSettings;
@@ -82,7 +82,7 @@ window.PopupController = function() {
         break;
       }
       case "displayFailure": {
-        // setCurrentView("error");
+        setCurrentView("error");
         setErrorMessage(message.message);
         break;
       }
@@ -123,7 +123,7 @@ window.PopupController = function() {
     setSuggestions(suggestions);
   };
 
-  const onKeyPressed = () => {
+  const onInputStarted = () => {
     setPopupView("typing");
     if (!textInputDetected) {
       textInputDetected = true;
@@ -225,15 +225,10 @@ window.PopupController = function() {
   };
 
   const addListeners = () => {
-    document.addEventListener("keydown", onKeyPressed);
-
     // Listen for messages from the background scripts
     browser.runtime.onMessage.addListener(handleMessage);
 
     window.addEventListener("unload", () => {
-      alert("here");
-      document.removeEventListener("keydown", onKeyPressed);
-
       if (
         !backgroundTabRecorder &&
         isWaitingForPermission &&
@@ -345,6 +340,7 @@ window.PopupController = function() {
       submitTextInput={submitTextInput}
       onClickLexicon={onClickLexicon}
       onSearchImageClick={onSearchImageClick}
+      onInputStarted={onInputStarted}
       setMinPopupSize={setMinPopupSize}
     />
   );

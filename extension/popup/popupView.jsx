@@ -1,4 +1,4 @@
-/* globals lottie, React */
+/* globals lottie, React, useState */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
@@ -18,8 +18,16 @@ window.Popup = ({
   submitTextInput,
   onClickLexicon,
   onSearchImageClick,
+  onInputStarted,
   setMinPopupSize,
 }) => {
+  const [inputValue, setInputValue] = useState(null);
+  function savingOnInputStarted(value) {
+    // When the user types in the hidden field, we need to keep that
+    // first input and use it later
+    setInputValue(value);
+    onInputStarted();
+  }
   return (
     <div id="popup" className={currentView}>
       <PopupHeader currentView={currentView} />
@@ -34,8 +42,10 @@ window.Popup = ({
         cardImage={cardImage}
         recorderVolume={recorderVolume}
         submitTextInput={submitTextInput}
+        inputValue={inputValue}
         onClickLexicon={onClickLexicon}
         onSearchImageClick={onSearchImageClick}
+        onInputStarted={savingOnInputStarted}
         setMinPopupSize={setMinPopupSize}
       />
       <PopupFooter showSettings={showSettings} />
@@ -118,8 +128,10 @@ const PopupContent = ({
   cardImage,
   recorderVolume,
   submitTextInput,
+  inputValue,
   onClickLexicon,
   onSearchImageClick,
+  onInputStarted,
   setMinPopupSize,
 }) => {
   const getContent = () => {
@@ -130,6 +142,7 @@ const PopupContent = ({
             displayText={displayText}
             suggestions={suggestions}
             onClickLexicon={onClickLexicon}
+            onInputStarted={onInputStarted}
           />
         );
       case "typing":
@@ -137,6 +150,7 @@ const PopupContent = ({
           <TypingContent
             displayText={displayText}
             submitTextInput={submitTextInput}
+            inputValue={inputValue}
           />
         );
       case "processing":
@@ -206,20 +220,28 @@ const PopupFooter = ({ showSettings }) => {
   );
 };
 
-const ListeningContent = ({ displayText, suggestions, onClickLexicon }) => {
+const ListeningContent = ({
+  displayText,
+  suggestions,
+  onClickLexicon,
+  onInputStarted,
+}) => {
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
+      <div style={{ opacity: 0 }}>
+        <TypingInput onInputStarted={onInputStarted} />
+      </div>
     </React.Fragment>
   );
 };
 
-const TypingContent = ({ displayText, submitTextInput }) => {
+const TypingContent = ({ displayText, submitTextInput, inputValue }) => {
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      <TypingInput submitTextInput={submitTextInput} />
+      <TypingInput submitTextInput={submitTextInput} inputValue={inputValue} />
     </React.Fragment>
   );
 };
@@ -266,11 +288,14 @@ class TypingInput extends PureComponent {
     super(props);
 
     this.textInputRef = React.createRef();
-    this.value = null;
+    this.value = this.props.inputValue || null;
   }
 
   componentDidMount() {
     this.focusText();
+    if (this.textInputRef.current) {
+      this.textInputRef.current.addEventListener("blur", this.focusText);
+    }
   }
 
   focusText = () => {
@@ -289,11 +314,13 @@ class TypingInput extends PureComponent {
 
   onInputTextChange = event => {
     this.value = event.target.value;
+    if (this.value && this.props.onInputStarted) {
+      this.props.onInputStarted(this.value);
+    }
   };
 
   submitTextInput = async () => {
     const text = this.value;
-
     if (text) {
       this.props.submitTextInput(text);
     }
@@ -305,9 +332,11 @@ class TypingInput extends PureComponent {
         <input
           type="text"
           id="text-input-field"
-          autoFocus="1"
+          autoFocus="true"
           onKeyPress={this.onInputKeyPress}
           onChange={this.onInputTextChange}
+          defaultValue={this.value}
+          ref={this.textInputRef}
         />
         <div id="send-btn-wrapper">
           <button id="send-text-input" onClick={this.submitTextInput}>
