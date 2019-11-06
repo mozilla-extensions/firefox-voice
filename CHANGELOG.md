@@ -1,3 +1,17 @@
+## Version 0.12.0 (2019-11-06)
+
+- Remove hulu bang search. Fixes [#289](https://github.com/mozilla/firefox-voice/issues/289) [a52b7ae](https://github.com/mozilla/firefox-voice/commit/a52b7ae)
+- Add a dev setting to open the popup in a tab, `OPEN_POPUP_ON_START=1 npm start` [6fd469d](https://github.com/mozilla/firefox-voice/commit/6fd469d)
+- Update the lexicon [b600191](https://github.com/mozilla/firefox-voice/commit/b600191) [c5a63a7](https://github.com/mozilla/firefox-voice/commit/c5a63a7)
+- Add an explicit error message if the search result tab is closed when you as for the next result [11bacf8](https://github.com/mozilla/firefox-voice/commit/11bacf8)
+- Improve lazy Sentry setup, enabling it in the popup. Fixes [#532](https://github.com/mozilla/firefox-voice/issues/532) [dc0f8a8](https://github.com/mozilla/firefox-voice/commit/dc0f8a8)
+- Multiple fixes to card images- normal cards were not displayed. Fixes [#530](https://github.com/mozilla/firefox-voice/issues/530) Fixes [#529](https://github.com/mozilla/firefox-voice/issues/529) Fixes [#528](https://github.com/mozilla/firefox-voice/issues/528) Fixes [#514](https://github.com/mozilla/firefox-voice/issues/514) [c3dcf39](https://github.com/mozilla/firefox-voice/commit/c3dcf39)
+- Use React for most popup functionality ([#507](https://github.com/mozilla/firefox-voice/issues/507))
+  - Fixes Issue [#502](https://github.com/mozilla/firefox-voice/issues/502). Fixes [#491](https://github.com/mozilla/firefox-voice/issues/491) [808f57c](https://github.com/mozilla/firefox-voice/commit/808f57c)
+  - Thanks [jenniferharmon](https://github.com/jenniferharmon) for the contribution!
+- Use a heuristic to find cards in search results. This uses some selectors, and then falls back to looking through elements for an appropriately-styled element. It also uses the element position relative to the search results to filter out some cards. Fixes [#498](https://github.com/mozilla/firefox-voice/issues/498) Fixes [#500](https://github.com/mozilla/firefox-voice/issues/500) [35dfd2d](https://github.com/mozilla/firefox-voice/commit/35dfd2d)
+- Do parallel transcription with DeepSpeech. This doesn't effect anything a user sees, but will test the accuracy of DeepSpeech in Telemetry. Fixes [#349](https://github.com/mozilla/firefox-voice/issues/349) [a3bcfef](https://github.com/mozilla/firefox-voice/commit/a3bcfef)
+
 ## Version 0.11.0 (2019-10-29)
 
 - The biggest change is a new search interface:
