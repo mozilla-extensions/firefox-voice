@@ -7,7 +7,7 @@ this.queryScript = (function() {
 
   function findCards() {
     const topElement = document.querySelector("a > h3");
-    const maxBottom = topElement.getBoundingClientRect().top;
+    const maxBottom = topElement.getBoundingClientRect().y;
     return {
       card: findCardIn(document.querySelector(MAIN_SELECTOR), maxBottom),
       sidebarCard: findCardIn(document.querySelector(SIDEBAR_SELECTOR), null),
