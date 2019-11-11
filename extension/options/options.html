@@ -6,46 +6,15 @@
     <link rel="stylesheet" type="text/css" href="options.css" />
   </head>
   <body>
-    <h1>Options</h1>
-
-    <fieldset>
-      <legend>Preferred music service</legend>
-      <select id="musicService"></select>
-    </fieldset>
-
-    <fieldset>
-      <legend>Chimes</legend>
-      <label for="chime">
-        Play a chime? <input type="checkbox" id="chime" />
-      </label>
-    </fieldset>
-
-    <div class="development">
-      Development access:
-      <ul>
-        <li><a href="/tests/intent-viewer.html">Intent Viewer</a></li>
-        <li><a href="/popup/popup.html">View popup in tab</a></li>
-      </ul>
-    </div>
-
-    <footer>
-      <div>
-        <a href="#">Privacy Policy (TODO)</a> | <a href="#">Feedback (TODO)</a>
-      </div>
-
-      <div>
-        Version <span id="version">?</span>, built
-        <span id="buildTime">?</span> from commit
-        <a id="gitCommit" href="">?</a>.
-        <span id="dirty" style="display: none">Contains uncommitted code.</span>
-        <a href="/views/CHANGELOG.html">View latest updates.</a>
-      </div>
-    </footer>
+    <div id="options-container"></div>
+    <script src="../js/vendor/react.production.min.js"></script>
+    <script src="../js/vendor/react-dom.production.min.js"></script>
     <script src="../buildSettings.js"></script>
     <script src="../log.js"></script>
     <script src="../settings.js"></script>
     <script src="../js/vendor/sentry.js"></script>
     <script src="../catcher.js"></script>
-    <script src="options.js"></script>
+    <script src="optionsView.js"></script>
+    <script src="optionsController.js"></script>
   </body>
 </html>

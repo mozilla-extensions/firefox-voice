@@ -1,0 +1,56 @@
+/* 
+Styled Checkbox
+Example markup to use this styled native checkbox
+<div className="styled-checkbox">
+    <input id="myCheckbox" type="checkbox"/>
+    <label for="myCheckbox">My Checkbox Label</label>
+</div> 
+*/
+
+.styled-checkbox {
+  position: relative;
+}
+
+.styled-checkbox label {
+  padding-left: 40px;
+  line-height: 1.875rem;
+  cursor: pointer;
+}
+
+.styled-checkbox label:before {
+  content: " ";
+	position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 0;
+  left: 0;
+  background: white;
+  border-radius: 3px;
+  border: 2px solid #ccc;
+}
+
+.styled-checkbox label:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 7px;
+  top: 7px;
+  left: 6px;
+  background: transparent;
+  border: 3px solid #0361d5;
+  border-top: none;
+  border-right: none;
+  opacity: 0;
+  transform: rotate(-45deg);
+}
+
+.styled-checkbox input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
+.styled-checkbox input[type="checkbox"] {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  position: absolute;
+}
