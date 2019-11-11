@@ -1,3 +1,5 @@
 extension/js/vendor/
 extension/popup/popupController.js
 extension/popup/popupView.js
+extension/options/optionsController.js
+extension/options/optionsView.js

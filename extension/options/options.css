@@ -1,23 +1,94 @@
-form {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: 10rem 20rem;
+@import url("../assets/css/inter.css");
+@import url("../assets/css/gui.css");
+
+html {
+  font-family: "Inter", sans-serif;
 }
 
-label {
-  grid-column: 1 / 2;
+body {
+  background-color: #fafafc;
 }
 
-select {
-  grid-column: 2 / 3;
-  height: 2rem;
+.settings-page {
+  display: flex;
+  flex-direction: row;
 }
 
-.development {
-  display: none;
+.settings-sidebar {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* class="inDevelopment" is added to the page when running this in development */
-.inDevelopment .development {
-  display: block;
+.settings-sidebar > * {
+  text-align: center;
+}
+
+.settings-sidebar img {
+  width: 256px;
+  height: auto;
+  align-self: center;
+}
+
+.settings-sidebar p {
+  margin: 4px 0;
+}
+
+#page-title {
+  font-size: 4rem;
+  line-height: 4rem;
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
+
+#page-title .light-title {
+  font-weight: 100;
+}
+
+.settings-content {
+  margin-left: 36px;
+}
+
+.settings-content fieldset {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 40px 36px 60px;
+}
+
+.settings-content fieldset legend {
+  font-size: 1.875rem;
+  margin-top: 30px;
+  font-weight: 100;
+}
+
+.settings-content fieldset ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#development-access ul li,
+#about ul li {
+  line-height: 2rem;
+}
+
+#data-collection li:not(:last-child) {
+  margin-bottom: 35px;
+}
+
+#data-collection li p {
+  margin: 5px 0 0 40px;
+}
+
+#data-collection  .styled-toggle label {
+  font-weight: 600;
+}
+
+a {
+  color: #0a84ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
