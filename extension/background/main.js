@@ -95,8 +95,8 @@ this.main = (function() {
     if (details.reason === "install") {
       launchOnboarding();
     }
-    if (!details.temporary) {
-      telemetry.initFirstInstallationVersion();
+    if (!extensionTemporaryInstall) {
+      telemetry.initFirstInstallation();
     }
   });
 

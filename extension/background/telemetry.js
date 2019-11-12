@@ -34,6 +34,7 @@ this.telemetry = (function() {
     } else {
       ping.extensionInstallationChannel = firstInstallationVersion;
     }
+    ping.extensionInstallDate = firstInstallationTimestamp;
   }
 
   exports.add = function(properties) {
@@ -101,14 +102,22 @@ this.telemetry = (function() {
   };
 
   let firstInstallationVersion = "unknown";
+  let firstInstallationTimestamp = null;
 
-  exports.initFirstInstallationVersion = async function() {
-    const result = await browser.storage.local.get("firstInstallationVersion");
+  exports.initFirstInstallation = async function() {
+    let result = await browser.storage.local.get("firstInstallationVersion");
     if (result.firstInstallationVersion) {
       firstInstallationVersion = result.firstInstallationVersion;
     } else {
       firstInstallationVersion = browser.runtime.getManifest().version;
       await browser.storage.local.set({ firstInstallationVersion });
+    }
+    result = await browser.storage.local.get("firstInstallationTimestamp");
+    if (result.firstInstallationTimestamp) {
+      firstInstallationTimestamp = result.firstInstallationTimestamp;
+    } else {
+      firstInstallationTimestamp = Date.now();
+      await browser.storage.local.set({ firstInstallationTimestamp });
     }
   };
 
