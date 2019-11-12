@@ -1134,9 +1134,33 @@ this.voiceSchema = {
     },
     "payload": {
       "properties": {
+        "audioTime": {
+          "description": "Time in milliseconds of the recording",
+          "title": "Amount of spoken time",
+          "type": "integer"
+        },
+        "country": {
+          "title": "User country code",
+          "type": "string"
+        },
+        "deepSpeechConfidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence of DeepSpeech text-to-speech transcription",
+          "type": "number"
+        },
         "deepSpeechMatches": {
           "title": "Did the DeepSpeech transcription match with Google's?",
           "type": "boolean"
+        },
+        "deepSpeechServerTime": {
+          "description": "Milliseconds for the DeepSpeech transcription to complete and respond",
+          "title": "Response time of DeepSpeech server",
+          "type": "integer"
+        },
+        "extensionInstallDate": {
+          "title": "Timestamp when the extension was installed",
+          "type": "integer"
         },
         "extensionInstallationChannel": {
           "description": "Where the user first installed the extension (e.g., internal_beta, external_beta, etc)",
@@ -1222,12 +1246,28 @@ this.voiceSchema = {
           "title": "Was the intent action successful?",
           "type": "boolean"
         },
+        "intentTime": {
+          "description": "Milliseconds between getting the utterance and execution the intent",
+          "title": "Time to execute the intent",
+          "type": "integer"
+        },
         "internalError": {
           "title": "If there was an unexpected error, the name of that error",
           "type": "string"
         },
+        "localHour": {
+          "description": "The hour, 0-23, in the local timezone when the action was run",
+          "title": "Local hour of action",
+          "type": "integer"
+        },
+        "numberOfOpenTabs": {
+          "description": "A count of the number of tabs in all windows, that are open when the tool is activated",
+          "title": "Number of open tabs",
+          "type": "integer"
+        },
         "serverErrorIntentParser": {
-          "title": "Error with the server intent parser",
+          "description": "Error with the server intent parser",
+          "title": "DEPRECATED",
           "type": "string"
         },
         "serverErrorSpeech": {
@@ -1235,8 +1275,9 @@ this.voiceSchema = {
           "type": "string"
         },
         "serverTimeIntentParser": {
+          "description": "Time in milliseconds for server intent parsing",
           "minimum": 0,
-          "title": "Time in milliseconds for server intent parsing",
+          "title": "DEPRECATED",
           "type": "number"
         },
         "serverTimeSpeech": {

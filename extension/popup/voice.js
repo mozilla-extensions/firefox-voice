@@ -146,6 +146,7 @@ this.voice = (function() {
         type: "audio/ogg; codecs=opus",
       });
       let response;
+      const deferredJson = util.makeNakedPromise();
       const startTime = Date.now();
       try {
         response = await fetch(STT_SERVER_URL, {
@@ -160,72 +161,101 @@ this.voice = (function() {
         browser.runtime.sendMessage({
           type: "addTelemetry",
           properties: { serverErrorSpeech: `Connection error: ${e}` },
+          doNotInit: true,
         });
         this.onError(e);
         throw e;
       }
+      setTimeout(() => {
+        this.sendForDeepSpeech(blob, deferredJson);
+      });
       if (!response.ok) {
         browser.runtime.sendMessage({
           type: "addTelemetry",
           properties: {
             serverErrorSpeech: `Response error: ${response.status} ${response.statusText}`,
           },
+          doNotInit: true,
         });
         const error = new Error(
           `Failed response from server: ${response.status}`
         );
         error.response = response;
         this.onError(error);
+        deferredJson.reject(new Error("Bad response"));
         return;
       }
       const json = await response.json();
-      if (buildSettings.sendToDeepSpeech) {
-        // We will send it right away, but we don't want block on this:
-        setTimeout(async () => {
-          let response;
-          try {
-            response = await fetch(DEEP_SPEECH_URL, {
-              method: "POST",
-              body: blob,
-              headers: {
-                "Accept-Language-STT": LANGUAGE,
-                "Product-Tag": "vf",
-              },
-            });
-          } catch (e) {
-            log.warn("Error sending audio to DeepSpeech:", String(e), e);
-            return;
-          }
-          if (!response.ok) {
-            log.warn(
-              "Server error for DeepSpeech:",
-              response.status,
-              response.statusText
-            );
-            return;
-          }
-          const deepJson = await response.json();
-          const utterance = deepJson.data[0].text;
-          browser.runtime.sendMessage({
-            type: "addTelemetry",
-            properties: {
-              utteranceDeepSpeech: utterance,
-              utteranceDeepSpeechChars: utterance.length,
-              deepSpeechMatches: util.normalizedStringsMatch(
-                utterance,
-                json.data[0].text
-              ),
-            },
-          });
-        });
-      }
+      deferredJson.resolve(json);
       browser.runtime.sendMessage({
         type: "addTelemetry",
         properties: {
           serverTimeSpeech: Date.now() - startTime,
         },
+        doNotInit: true,
       });
       this.onEnd(json);
+    }
+
+    async sendForDeepSpeech(audio, otherResponsePromise) {
+      if (!buildSettings.sendToDeepSpeech) {
+        return;
+      }
+      let response;
+      const startTime = Date.now();
+      try {
+        response = await fetch(DEEP_SPEECH_URL, {
+          method: "POST",
+          body: audio,
+          headers: {
+            "Accept-Language-STT": LANGUAGE,
+            "Product-Tag": "vf",
+          },
+        });
+      } catch (e) {
+        log.warn("Error sending audio to DeepSpeech:", String(e), e);
+        return;
+      }
+      if (!response.ok) {
+        log.warn(
+          "Server error for DeepSpeech:",
+          response.status,
+          response.statusText
+        );
+        return;
+      }
+      const deepJson = await response.json();
+      const deepSpeechServerTime = Date.now() - startTime;
+      const utterance = deepJson.data[0].text;
+      const confidence = deepJson.data[0].confidence;
+      const otherResponse = (await otherResponsePromise).data[0];
+      function formatConfidence(n) {
+        return Number(n).toFixed(2);
+      }
+      log.info(
+        "Transcription comparison:\n" +
+          `  ${otherResponse.text} (${formatConfidence(
+            otherResponse.confidence
+          )}))\n` +
+          `  ${utterance} (${formatConfidence(confidence)})`
+      );
+      browser.runtime.sendMessage({
+        type: "addTelemetry",
+        properties: {
+          utteranceDeepSpeech: utterance,
+          utteranceDeepSpeechChars: utterance.length,
+          // The server has been responding with a confidence of 1.0 for all audio, which
+          // isn't correct. Since it should never really be 1.0, we'll skip this value if
+          // it's reported as such:
+          deepSpeechConfidence: confidence === 1.0 ? null : confidence,
+          deepSpeechServerTime,
+          deepSpeechMatches: util.normalizedStringsMatch(
+            utterance,
+            otherResponse.text
+          ),
+          doNotInit: true,
+        },
+      });
     }
   };
 

@@ -1,4 +1,4 @@
-/* globals intentRunner, log, searching, content, browserUtil */
+/* globals intentRunner, log, searching, content, browserUtil, telemetry */
 
 this.intents.search = (function() {
   const exports = {};
@@ -156,6 +156,7 @@ this.intents.search = (function() {
           searchUrl: searchInfo.searchUrl,
           index: -1,
         });
+        telemetry.add({ hasCard: true });
         if (card.hasWidget) {
           pollForCard();
         }
