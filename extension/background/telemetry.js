@@ -38,8 +38,12 @@ this.telemetry = (function() {
 
   exports.add = function(properties) {
     if (!ping) {
+      if (properties.doNotInit) {
+        throw new Error("Telemetry added after submission");
+      }
       resetPing();
     }
+    delete properties.doNotInit;
     for (const name in properties) {
       const value = properties[name];
       const payloadProperties = voiceSchema.properties.payload.properties;
