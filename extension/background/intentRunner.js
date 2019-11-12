@@ -49,15 +49,6 @@ this.intentRunner = (function() {
       await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
     }
 
-    showCard(cardData) {
-      this.keepPopup();
-      telemetry.add({ hasCard: true });
-      browser.runtime.sendMessage({
-        type: "showCard",
-        cardData,
-      });
-    }
-
     /** This is some ad hoc information this specific intent wants to add */
     addExtraTelemetryData(intentExtraData) {
       telemetry.add({ intentExtraData });
