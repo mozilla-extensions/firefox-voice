@@ -35,6 +35,7 @@ this.telemetry = (function() {
       ping.extensionInstallationChannel = firstInstallationVersion;
     }
     ping.extensionInstallDate = firstInstallationTimestamp;
+    ping.localHour = new Date().getHours();
   }
 
   exports.add = function(properties) {
