@@ -1,10 +1,10 @@
-/* 
+/*
 Styled Checkbox
 Example markup to use this styled native checkbox
 <div className="styled-checkbox">
     <input id="myCheckbox" type="checkbox"/>
     <label for="myCheckbox">My Checkbox Label</label>
-</div> 
+</div>
 */
 
 .styled-checkbox {
@@ -19,7 +19,7 @@ Example markup to use this styled native checkbox
 
 .styled-checkbox label:before {
   content: " ";
-	position: absolute;
+  position: absolute;
   width: 26px;
   height: 26px;
   top: 0;

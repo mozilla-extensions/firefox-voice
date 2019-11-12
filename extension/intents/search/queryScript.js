@@ -17,6 +17,9 @@ this.queryScript = (function() {
   function findCardIn(container, maxBottom) {
     let selected = container.querySelectorAll(CARD_SELECTOR);
     if (maxBottom) {
+      // FIXME: this is testing if the top of the card is above the top of the first search
+      // result, as opposed to testing if the *bottom* of the card is there. This probably doesn't
+      // result in any false positives (or negatives), but the names are unclear here.
       selected = Array.from(selected).filter(
         e => e.getBoundingClientRect().y <= maxBottom
       );
