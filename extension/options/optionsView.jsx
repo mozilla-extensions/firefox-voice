@@ -165,12 +165,11 @@ this.optionsView = (function() {
         <ul>
           <li>
             <div className="styled-checkbox">
-              <input
-                id="technical-data"
-                type="checkbox"
-              />
-              <label htmlFor="technical-data">Allow Firefox Voice to send technical and interaction data to
-                Mozilla.</label>
+              <input id="technical-data" type="checkbox" />
+              <label htmlFor="technical-data">
+                Allow Firefox Voice to send technical and interaction data to
+                Mozilla.
+              </label>
             </div>
             <p>
               Includes anonymized high level categorization of requests (e.g.
@@ -179,12 +178,11 @@ this.optionsView = (function() {
           </li>
           <li>
             <div className="styled-checkbox">
-              <input
-                id="transcripts-data"
-                type="checkbox"
-              />
-              <label htmlFor="transcripts-data">Allow Firefox Voice to send anonymized transcipts of your audio
-                request.</label>
+              <input id="transcripts-data" type="checkbox" />
+              <label htmlFor="transcripts-data">
+                Allow Firefox Voice to send anonymized transcipts of your audio
+                request.
+              </label>
             </div>
             <p>
               Audio transcripts help Mozilla improve product accuracy and

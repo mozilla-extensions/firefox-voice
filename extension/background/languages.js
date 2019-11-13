@@ -1,9 +1,7 @@
-this.languages = {};
-
-this.languageList = (function() {
+this.languages = (function() {
     const exports = {};
 
-    const LANGUAGES = {
+    exports.languageCode = {
         Czech: "cs",
         Danish: "da",
         Dutch: "nl",
@@ -26,7 +24,7 @@ this.languageList = (function() {
         Ukrainian: "uk",
     };
 
-    exports.allLanguages = function() {
-        return Object.keys(LANGUAGES);
+    exports.getLanguages = function() {
+        return exports;
     };
 })();
