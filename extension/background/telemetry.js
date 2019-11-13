@@ -46,8 +46,12 @@ this.telemetry = (function() {
       resetPing();
     }
     delete properties.doNotInit;
-    for (const name in properties) {
+    for (const name of Object.keys(properties)) {
       const value = properties[name];
+      if (value === undefined) {
+        delete properties[name];
+        continue;
+      }
       const payloadProperties = voiceSchema.properties.payload.properties;
       if (!(name in payloadProperties)) {
         throw new Error(`Unexpected ping property: ${name}`);
