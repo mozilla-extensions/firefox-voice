@@ -56,14 +56,16 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.translate",
-    description: "Translate the given page to English, using Google Translate",
+    description: "Translate the given page to the chosen language, using Google Translate",
     match: `
-    translate (this |) (page | tab | article | site |) (to english |) (for me |)
+    translate (this |) (page | tab | article | site |) to [language:lang]
     `,
-    examples: ["Translate this page", "test:translate"],
+    examples: ["test:translate this page to Spanish", 
+    "test:translate this page to Dutch"],
     async run(context) {
+      const language = context.slots.language;
       const tab = await context.activeTab();
-      const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=en&u=${encodeURIComponent(
+      const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${language}&u=${encodeURIComponent(
         tab.url
       )}`;
       browser.tabs.update(tab.id, { url: translation });
