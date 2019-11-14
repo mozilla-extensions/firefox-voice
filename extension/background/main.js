@@ -24,6 +24,8 @@ this.main = (function() {
       return intentRunner.runIntent(desc);
     } else if (message.type === "getExamples") {
       return intentExamples.getExamples(message.number || 2);
+    } else if (message.type === "getLastIntentForFeedback") {
+      return intentRunner.getLastIntentForFeedback();
     } else if (message.type === "inDevelopment") {
       return exports.inDevelopment();
     } else if (message.type === "getIntentSummary") {
@@ -40,8 +42,9 @@ this.main = (function() {
       return settings.saveSettings(message.settings);
     } else if (message.type === "addTelemetry") {
       return telemetry.add(message.properties);
-    } else if (message.type === "addFeedback") {
-      return telemetry.addFeedback(message.properties);
+    } else if (message.type === "sendFeedback") {
+      intentRunner.clearFeedbackIntent();
+      return telemetry.sendFeedback(message);
     } else if (message.type === "openRecordingTab") {
       return openRecordingTab();
     } else if (message.type === "onVoiceShimForward") {

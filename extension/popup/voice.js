@@ -247,7 +247,7 @@ this.voice = (function() {
           // The server has been responding with a confidence of 1.0 for all audio, which
           // isn't correct. Since it should never really be 1.0, we'll skip this value if
           // it's reported as such:
-          deepSpeechConfidence: confidence === 1.0 ? null : confidence,
+          deepSpeechConfidence: confidence === 1.0 ? undefined : confidence,
           deepSpeechServerTime,
           deepSpeechMatches: util.normalizedStringsMatch(
             utterance,

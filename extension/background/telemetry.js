@@ -46,8 +46,12 @@ this.telemetry = (function() {
       resetPing();
     }
     delete properties.doNotInit;
-    for (const name in properties) {
+    for (const name of Object.keys(properties)) {
       const value = properties[name];
+      if (value === undefined) {
+        delete properties[name];
+        continue;
+      }
       const payloadProperties = voiceSchema.properties.payload.properties;
       if (!(name in payloadProperties)) {
         throw new Error(`Unexpected ping property: ${name}`);
@@ -94,12 +98,12 @@ this.telemetry = (function() {
     return exports.send();
   };
 
-  exports.addFeedback = function({ feedback, rating }) {
+  exports.sendFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
       { intentId: lastIntentId, timestamp: Date.now() },
       { feedback, rating }
     );
-    browser.telemetry.sendPing("voice-feedback", ping, {});
+    browser.telemetry.submitPing("voice-feedback", ping, {});
   };
 
   let firstInstallationVersion = "unknown";

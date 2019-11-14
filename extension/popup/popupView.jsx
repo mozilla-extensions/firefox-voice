@@ -5,11 +5,13 @@
 this.popupView = (function() {
   const exports = {};
 
-  const { Component, useState, PureComponent } = React;
+  const { Component, useState, useEffect, PureComponent } = React;
 
   exports.Popup = ({
     currentView,
     suggestions,
+    feedback,
+    lastIntent,
     transcript,
     displayText,
     errorMessage,
@@ -22,6 +24,7 @@ this.popupView = (function() {
     onClickLexicon,
     onSearchImageClick,
     onInputStarted,
+    onSubmitFeedback,
     setMinPopupSize,
   }) => {
     const [inputValue, setInputValue] = useState(null);
@@ -37,6 +40,8 @@ this.popupView = (function() {
         <PopupContent
           currentView={currentView}
           suggestions={suggestions}
+          feedback={feedback}
+          lastIntent={lastIntent}
           transcript={transcript}
           displayText={displayText}
           errorMessage={errorMessage}
@@ -49,6 +54,7 @@ this.popupView = (function() {
           onClickLexicon={onClickLexicon}
           onSearchImageClick={onSearchImageClick}
           onInputStarted={savingOnInputStarted}
+          onSubmitFeedback={onSubmitFeedback}
           setMinPopupSize={setMinPopupSize}
         />
         <PopupFooter showSettings={showSettings} />
@@ -69,6 +75,11 @@ this.popupView = (function() {
           return "Type your request";
         case "searchResults":
           return "Search results";
+        case "feedback":
+          // FIXME: should be more dynamic, based on last intent:
+          return "What went wrong?";
+        case "feedbackThanks":
+          return "";
         case "listening":
         default:
           return "Listening";
@@ -125,6 +136,8 @@ this.popupView = (function() {
   const PopupContent = ({
     currentView,
     suggestions,
+    feedback,
+    lastIntent,
     transcript,
     displayText,
     errorMessage,
@@ -137,6 +150,7 @@ this.popupView = (function() {
     onClickLexicon,
     onSearchImageClick,
     onInputStarted,
+    onSubmitFeedback,
     setMinPopupSize,
   }) => {
     const getContent = () => {
@@ -146,8 +160,10 @@ this.popupView = (function() {
             <ListeningContent
               displayText={displayText}
               suggestions={suggestions}
+              lastIntent={lastIntent}
               onClickLexicon={onClickLexicon}
               onInputStarted={onInputStarted}
+              onSubmitFeedback={onSubmitFeedback}
             />
           );
         case "typing":
@@ -187,6 +203,16 @@ this.popupView = (function() {
               setMinPopupSize={setMinPopupSize}
             />
           );
+        case "feedback":
+          return (
+            <Feedback
+              lastIntent={lastIntent}
+              feedback={feedback}
+              onSubmitFeedback={onSubmitFeedback}
+            />
+          );
+        case "feedbackThanks":
+          return <FeedbackThanks />;
         default:
           return null;
       }
@@ -196,6 +222,38 @@ this.popupView = (function() {
       <div id="popup-content">
         <Zap currentView={currentView} recorderVolume={recorderVolume} />
         {getContent()}
+      </div>
+    );
+  };
+
+  const Feedback = ({ lastIntent, feedback, onSubmitFeedback }) => {
+    const textarea = React.createRef();
+    function onSubmit() {
+      const text = textarea.current.value;
+      onSubmitFeedback({ rating: feedback.rating, feedback: text });
+    }
+    useEffect(() => {
+      textarea.current.focus();
+    });
+    return (
+      <div>
+        <h1>☹</h1>
+        <form onSubmit={onSubmit} className="feedback-form">
+          <div>
+            <textarea ref={textarea} autofocus="1"></textarea>
+          </div>
+          <div className="feedback-controls">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
+  const FeedbackThanks = () => {
+    return (
+      <div className="feedback-thanks">
+        <h2>Thanks for your feedback</h2>
       </div>
     );
   };
@@ -228,8 +286,10 @@ this.popupView = (function() {
   const ListeningContent = ({
     displayText,
     suggestions,
+    lastIntent,
     onClickLexicon,
     onInputStarted,
+    onSubmitFeedback,
   }) => {
     return (
       <React.Fragment>
@@ -238,6 +298,12 @@ this.popupView = (function() {
         <div style={{ opacity: 0 }}>
           <TypingInput onInputStarted={onInputStarted} />
         </div>
+        {lastIntent ? (
+          <IntentFeedback
+            lastIntent={lastIntent}
+            onSubmitFeedback={onSubmitFeedback}
+          />
+        ) : null}
       </React.Fragment>
     );
   };
@@ -286,6 +352,36 @@ this.popupView = (function() {
             </div>
           </div>
         ) : null}
+      </div>
+    );
+  };
+
+  const IntentFeedback = ({ lastIntent, onSubmitFeedback }) => {
+    let ago = Math.max(
+      1,
+      Math.round((Date.now() - lastIntent.timestamp) / 60000)
+    );
+    if (ago > 60) {
+      ago = `${Math.round(ago / 60)} hours`;
+    } else {
+      ago = `${ago} mins`;
+    }
+    function onPositive() {
+      onSubmitFeedback({ rating: 1, feedback: null });
+    }
+    function onNegative() {
+      onSubmitFeedback({ rating: -1, feedback: null });
+    }
+    return (
+      <div>
+        <div>How was your last experience?</div>
+        <div className="feedback-utterance">
+          {lastIntent.utterance}({ago} mins ago)
+        </div>
+        <div className="feedback-controls">
+          <button onClick={onPositive}>☺</button>
+          <button onClick={onNegative}>☹</button>
+        </div>
       </div>
     );
   };
@@ -544,7 +640,9 @@ this.popupView = (function() {
 
     render() {
       return this.props.currentView !== "typing" &&
-        this.props.currentView !== "searchResults" ? (
+        this.props.currentView !== "searchResults" &&
+        this.props.currentView !== "feedback" &&
+        this.props.currentView !== "feedbackThanks" ? (
         <div id="zap-wrapper">
           <div id="zap"></div>
         </div>
