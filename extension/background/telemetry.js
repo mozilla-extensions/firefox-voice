@@ -98,12 +98,12 @@ this.telemetry = (function() {
     return exports.send();
   };
 
-  exports.addFeedback = function({ feedback, rating }) {
+  exports.sendFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
       { intentId: lastIntentId, timestamp: Date.now() },
       { feedback, rating }
     );
-    browser.telemetry.sendPing("voice-feedback", ping, {});
+    browser.telemetry.submitPing("voice-feedback", ping, {});
   };
 
   let firstInstallationVersion = "unknown";

@@ -9,10 +9,15 @@ this.popupController = (function() {
   let textInputDetected = false;
   let recorder;
   let recorderIntervalId;
+  // This is feedback that the user started, but hasn't submitted;
+  // if the window closes then we'll send it:
+  let pendingFeedback;
 
   exports.PopupController = function() {
     const [currentView, setCurrentView] = useState("listening");
     const [suggestions, setSuggestions] = useState([]);
+    const [lastIntent, setLastIntent] = useState(null);
+    const [feedback, setFeedback] = useState(null);
     const [transcript, setTranscript] = useState(null);
     const [displayText, setDisplayText] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -56,6 +61,7 @@ this.popupController = (function() {
 
       addListeners();
       updateExamples();
+      updateLastIntent();
       startRecorder();
     };
 
@@ -87,7 +93,7 @@ this.popupController = (function() {
           break;
         }
         case "displayFailure": {
-          setCurrentView("error");
+          setPopupView("error");
           setErrorMessage(message.message);
           break;
         }
@@ -128,6 +134,15 @@ this.popupController = (function() {
       setSuggestions(suggestions);
     };
 
+    const updateLastIntent = async () => {
+      const lastIntent = await browser.runtime.sendMessage({
+        type: "getLastIntentForFeedback",
+      });
+      if (lastIntent) {
+        setLastIntent(lastIntent);
+      }
+    };
+
     const onInputStarted = () => {
       setPopupView("typing");
       if (!textInputDetected) {
@@ -161,7 +176,12 @@ this.popupController = (function() {
     const setPopupView = async newView => {
       setCurrentView(newView);
 
-      if (recorder && !recorderIntervalId && newView === "listening") {
+      if (
+        recorder &&
+        !recorder.cancelled &&
+        !recorderIntervalId &&
+        newView === "listening"
+      ) {
         recorderIntervalId = setInterval(() => {
           setVolumeForAnimation(recorder.getVolumeLevel());
         }, 500);
@@ -182,7 +202,7 @@ this.popupController = (function() {
     };
 
     const showSearchResults = message => {
-      setCurrentView("searchResults");
+      setPopupView("searchResults");
       const newSearch = {};
       for (const prop in message) {
         if (prop !== "type" && prop !== "card") {
@@ -241,6 +261,13 @@ this.popupController = (function() {
           startOnboarding();
         }
 
+        if (pendingFeedback) {
+          browser.runtime.sendMessage({
+            type: "sendFeedback",
+            rating: pendingFeedback.rating,
+            feedback: pendingFeedback.feedback,
+          });
+        }
         browser.runtime.sendMessage({ type: "microphoneStopped" });
         if (!executedIntent) {
           browser.runtime.sendMessage({ type: "cancelledIntent" });
@@ -329,10 +356,40 @@ this.popupController = (function() {
       });
     };
 
+    const sendFeedback = async feedback => {
+      await browser.runtime.sendMessage({
+        type: "sendFeedback",
+        rating: feedback.rating,
+        feedback: feedback.feedback,
+      });
+      pendingFeedback = null;
+    };
+
+    const onSubmitFeedback = async feedback => {
+      setFeedback(feedback);
+      pendingFeedback = feedback;
+      // This cancels the voice input:
+      onStartTextInput();
+      if (feedback.rating === 1) {
+        setPopupView("feedbackThanks");
+        sendFeedback(feedback);
+      } else if (feedback.rating === -1 && !feedback.feedback) {
+        // Negative feedback makes us ask for more info
+        setPopupView("feedback");
+      } else if (feedback.rating === -1 && feedback.feedback) {
+        setPopupView("feedbackThanks");
+        sendFeedback(feedback);
+      } else {
+        log.error("Unexpected feedback:", feedback);
+      }
+    };
+
     return (
       <popupView.Popup
         currentView={currentView}
         suggestions={suggestions}
+        feedback={feedback}
+        lastIntent={lastIntent}
         transcript={transcript}
         displayText={displayText}
         errorMessage={errorMessage}
@@ -345,6 +402,7 @@ this.popupController = (function() {
         onClickLexicon={onClickLexicon}
         onSearchImageClick={onSearchImageClick}
         onInputStarted={onInputStarted}
+        onSubmitFeedback={onSubmitFeedback}
         setMinPopupSize={setMinPopupSize}
       />
     );

@@ -5,11 +5,15 @@ this.intents = {};
 this.intentRunner = (function() {
   const exports = {};
 
+  const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
+
   const intents = (exports.intents = {});
+  let lastIntent;
 
   class IntentContext {
     constructor(desc) {
       this.closePopupOnFinish = true;
+      this.timestamp = Date.now();
       Object.assign(this, desc);
     }
 
@@ -142,6 +146,7 @@ this.intentRunner = (function() {
     }
     const intent = intents[desc.name];
     const context = new IntentContext(desc);
+    lastIntent = context;
     context.initTelemetry();
     try {
       log.info(
@@ -214,6 +219,21 @@ this.intentRunner = (function() {
       }
       return intent;
     });
+  };
+
+  exports.getLastIntentForFeedback = function() {
+    if (!lastIntent) {
+      return null;
+    }
+    if (Date.now() - lastIntent.timestamp > FEEDBACK_INTENT_TIME_LIMIT) {
+      lastIntent = null;
+      return null;
+    }
+    return lastIntent;
+  };
+
+  exports.clearFeedbackIntent = function() {
+    lastIntent = null;
   };
 
   return exports;
