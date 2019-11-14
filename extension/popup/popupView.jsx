@@ -108,6 +108,8 @@ this.popupView = (function() {
             width="16"
             height="16"
             viewBox="0 0 16 16"
+            role="button"
+            aria-label="Back"
           >
             <path
               fill="context-fill"
@@ -116,7 +118,12 @@ this.popupView = (function() {
           </svg>
         </div>
         <div id="header-title">{getTitle()}</div>
-        <div id="close-icon" onClick={onClickClose}>
+        <div
+          id="close-icon"
+          role="button"
+          aria-label="Close"
+          onClick={onClickClose}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -261,7 +268,12 @@ this.popupView = (function() {
   const PopupFooter = ({ showSettings }) => {
     return (
       <div id="popup-footer">
-        <div id="settings-icon" onClick={showSettings}>
+        <div
+          id="settings-icon"
+          role="button"
+          aria-label="Settings"
+          onClick={showSettings}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -500,7 +512,7 @@ this.popupView = (function() {
     const card = cardImage;
     const next = searchResults[index + 1];
     const cardStyles = card ? { height: card.height, width: card.width } : {};
-    const imgAlt = next ? next.title : "";
+    const imgAlt = "Show search results";
 
     if (card) setMinPopupSize(card.width, card.height);
 
@@ -520,6 +532,7 @@ this.popupView = (function() {
               onClick={onSearchCardClick}
               style={cardStyles}
               src={card.src}
+              role="button"
             />
           ) : null}
           {next ? (
