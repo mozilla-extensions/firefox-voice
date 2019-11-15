@@ -22,7 +22,7 @@ this.intentParser = (function() {
   const ENTITY_TYPES = {
     serviceName: serviceList.allServiceNames(),
     musicServiceName: serviceList.musicServiceNames(),
-    lang: languages.getLanguages(),
+    lang: languages.languageCode(),
   };
 
   const Matcher = (exports.Matcher = class Matcher {
