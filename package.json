@@ -74,7 +74,7 @@
     "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
     "once": "web-ext run -s extension",
-    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i extension/tests/ && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
+    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
     "calculate-version": "node bin/calculate-version.js",
     "postinstall": "npm-run-all build:*"
   }
