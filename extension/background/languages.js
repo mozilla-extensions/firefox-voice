@@ -24,7 +24,7 @@ this.languages = (function() {
         Ukrainian: "uk",
     };
 
-    exports.languageCode = function() {
+    exports.languageNames = function() {
         return Object.keys(languageCodes);
     };
 
