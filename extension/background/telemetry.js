@@ -1,7 +1,15 @@
-/* globals voiceSchema, main, util, log, buildSettings, catcher */
+/* globals voiceSchema, main, util, log, buildSettings, catcher, settings */
 
 this.telemetry = (function() {
   const exports = {};
+
+  // These fields will be deleted from the ping if the user has not opted-in
+  // to this special collection:
+  const UTTERANCE_FIELDS = [
+    "utterance",
+    "utteranceDeepSpeech",
+    "utteranceParsed",
+  ];
 
   let lastIntentId;
 
@@ -85,11 +93,21 @@ this.telemetry = (function() {
     if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }
-    browser.telemetry.submitPing("voice", ping, {
-      addClientId: true,
-      addEnvironment: true,
-    });
-    log.info("Telemetry ping:", ping);
+    const s = settings.getSettings();
+    if (!s.disableTelemetry) {
+      if (!s.utterancesTelemetry) {
+        for (const field of UTTERANCE_FIELDS) {
+          delete ping[field];
+        }
+      }
+      browser.telemetry.submitPing("voice", ping, {
+        addClientId: true,
+        addEnvironment: true,
+      });
+      log.info("Telemetry ping:", ping);
+    } else {
+      log.debug("Telemetry ping (unsent):", ping);
+    }
     ping = null;
   };
 

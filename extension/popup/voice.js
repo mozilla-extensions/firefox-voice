@@ -182,7 +182,7 @@ this.voice = (function() {
         );
         error.response = response;
         this.onError(error);
-        deferredJson.reject(new Error("Bad response"));
+        deferredJson.reject(error);
         return;
       }
       const json = await response.json();
