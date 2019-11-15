@@ -13,8 +13,12 @@ this.optionsView = (function() {
     chime,
     musicService,
     musicServiceOptions,
+    telemetry,
+    utterancesTelemetry,
     updateMusicService,
     updateChime,
+    updateTelemetry,
+    updateUtterancesTelemetry,
   }) => {
     return (
       <div className="settings-page">
@@ -29,8 +33,12 @@ this.optionsView = (function() {
           chime={chime}
           musicService={musicService}
           musicServiceOptions={musicServiceOptions}
+          telemetry={telemetry}
+          utterancesTelemetry={utterancesTelemetry}
           updateMusicService={updateMusicService}
           updateChime={updateChime}
+          updateTelemetry={updateTelemetry}
+          updateUtterancesTelemetry={updateUtterancesTelemetry}
         />
       </div>
     );
@@ -73,8 +81,12 @@ this.optionsView = (function() {
     chime,
     musicService,
     musicServiceOptions,
+    telemetry,
+    utterancesTelemetry,
     updateMusicService,
     updateChime,
+    updateTelemetry,
+    updateUtterancesTelemetry,
   }) => {
     return (
       <div className="settings-content">
@@ -84,7 +96,12 @@ this.optionsView = (function() {
           musicServiceOptions={musicServiceOptions}
           updateMusicService={updateMusicService}
         />
-        <DataCollection />
+        <DataCollection
+          telemetry={telemetry}
+          utterancesTelemetry={utterancesTelemetry}
+          updateTelemetry={updateTelemetry}
+          updateUtterancesTelemetry={updateUtterancesTelemetry}
+        />
         <DevelopmentSettings inDevelopment={inDevelopment} />
         <AboutSection />
       </div>
@@ -128,7 +145,7 @@ this.optionsView = (function() {
           <input
             id="chime"
             type="checkbox"
-            defaultChecked={chime}
+            checked={chime}
             onChange={onChimeSettingChange}
           />
           <label htmlFor="chime">Play chime when opening mic</label>
@@ -153,12 +170,19 @@ this.optionsView = (function() {
     );
   };
 
-  const DataCollection = () => {
-    const onToggleChange = event => {
-      if (event) {
-        // TODO
-      }
-    };
+  const DataCollection = ({
+    telemetry,
+    utterancesTelemetry,
+    updateTelemetry,
+    updateUtterancesTelemetry,
+  }) => {
+    function onTelemetryChange(event) {
+      updateTelemetry(event.target.checked);
+    }
+    function onUtteranceTelemetryChange(event) {
+      updateUtterancesTelemetry(event.target.checked);
+    }
+
     return (
       <fieldset id="data-collection">
         <legend>Firefox Voice Data Collection and Use</legend>
@@ -168,9 +192,13 @@ this.optionsView = (function() {
               <input
                 id="technical-data"
                 type="checkbox"
+                checked={telemetry}
+                onChange={onTelemetryChange}
               />
-              <label htmlFor="technical-data">Allow Firefox Voice to send technical and interaction data to
-                Mozilla.</label>
+              <label htmlFor="technical-data">
+                Allow Firefox Voice to send technical and interaction data to
+                Mozilla.
+              </label>
             </div>
             <p>
               Includes anonymized high level categorization of requests (e.g.
@@ -182,9 +210,13 @@ this.optionsView = (function() {
               <input
                 id="transcripts-data"
                 type="checkbox"
+                checked={utterancesTelemetry}
+                onChange={onUtteranceTelemetryChange}
               />
-              <label htmlFor="transcripts-data">Allow Firefox Voice to send anonymized transcipts of your audio
-                request.</label>
+              <label htmlFor="transcripts-data">
+                Allow Firefox Voice to send anonymized transcipts of your audio
+                request.
+              </label>
             </div>
             <p>
               Audio transcripts help Mozilla improve product accuracy and
