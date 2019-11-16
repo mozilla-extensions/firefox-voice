@@ -154,7 +154,7 @@ this.voice = (function() {
           body: blob,
           headers: {
             "Accept-Language-STT": LANGUAGE,
-            "Product-Tag": "vf",
+            "Product-Tag": "fxv",
           },
         });
       } catch (e) {
