@@ -8,6 +8,7 @@ this.settings = (function() {
     musicService: "auto",
     disableTelemetry: false,
     utterancesTelemetry: false,
+    collectAudio: false,
   };
 
   exports.getSettings = function() {
