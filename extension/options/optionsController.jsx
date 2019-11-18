@@ -17,6 +17,7 @@ this.optionsController = (function() {
     const [chime, setChime] = useState(false);
     const [telemetry, setTelemetry] = useState(true);
     const [utterancesTelemetry, setUtterancesTelemetry] = useState(false);
+    const [collectAudio, setCollectAudio] = useState(false);
     const [musicService, setMusicService] = useState("");
     const [musicServiceOptions, setMusicServiceOptions] = useState([]);
 
@@ -59,6 +60,7 @@ this.optionsController = (function() {
       setChime(!!userSettings.chime);
       setTelemetry(!userSettings.disableTelemetry);
       setUtterancesTelemetry(!!userSettings.utterancesTelemetry);
+      setCollectAudio(!!userSettings.collectAudio);
     };
 
     const sendSettings = async () => {
@@ -97,6 +99,13 @@ this.optionsController = (function() {
       setUtterancesTelemetry(!!value);
     };
 
+    const updateCollectAudio = value => {
+      value = !!value;
+      userSettings.collectAudio = value;
+      sendSettings();
+      setCollectAudio(value);
+    };
+
     return (
       <optionsView.Options
         inDevelopment={inDevelopment}
@@ -109,10 +118,12 @@ this.optionsController = (function() {
         musicServiceOptions={musicServiceOptions}
         telemetry={telemetry}
         utterancesTelemetry={utterancesTelemetry}
+        collectAudio={collectAudio}
         updateMusicService={updateMusicService}
         updateChime={updateChime}
         updateTelemetry={updateTelemetry}
         updateUtterancesTelemetry={updateUtterancesTelemetry}
+        updateCollectAudio={updateCollectAudio}
       />
     );
   };

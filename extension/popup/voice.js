@@ -1,4 +1,4 @@
-/* globals vad, buildSettings, log, util */
+/* globals vad, buildSettings, log, util, settings */
 
 this.voice = (function() {
   const exports = {};
@@ -203,13 +203,18 @@ this.voice = (function() {
       }
       let response;
       const startTime = Date.now();
+      const storeSample = settings.getSettings().collectAudio;
+      if (storeSample) {
+        log.info("Sending AND storing audio on server");
+      }
       try {
         response = await fetch(DEEP_SPEECH_URL, {
           method: "POST",
           body: audio,
           headers: {
             "Accept-Language-STT": LANGUAGE,
-            "Product-Tag": "vf",
+            "Product-Tag": "fxv",
+            "Store-Sample": storeSample ? "1" : "0",
           },
         });
       } catch (e) {
