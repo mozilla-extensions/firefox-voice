@@ -56,16 +56,22 @@ this.intents.navigation = (function() {
 
   this.intentRunner.registerIntent({
     name: "navigation.translate",
-    description: "Translate the given page to English, using Google Translate",
+    description:
+      "Translate the given page to the chosen language, using Google Translate",
     match: `
     translate (this |) (page | tab | article | site |) (to english |) (for me |)
+    translate (this |) (page | tab | article | site |) to [language:lang] (for me |)
     `,
-    examples: ["Translate this page", "test:translate"],
+    examples: [
+      "test:translate this page to Spanish",
+      "test:translate this page to Dutch",
+    ],
     async run(context) {
+      const language = context.slots.language || "en";
       const tab = await context.activeTab();
-      const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=en&u=${encodeURIComponent(
-        tab.url
-      )}`;
+      const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
+        languages.languageCode[language]
+      }&u=${encodeURIComponent(tab.url)}`;
       browser.tabs.update(tab.id, { url: translation });
     },
   });
@@ -76,9 +82,15 @@ this.intents.navigation = (function() {
       "Translate whatever text is selected to English, using Google Translate",
     match: `
     translate (this |) selection (to english |) (for me |)
+    translate (this |) selection to [language:lang] (for me |)
     `,
-    examples: ["Translate selection"],
+    examples: [
+      "Translate selection",
+      "test:translate this selection to Hungarian",
+      "test:translate this selection to Slovak",
+    ],
     async run(context) {
+      const language = context.slots.language || "en";
       const tab = await context.activeTab();
       const selection = await pageMetadata.getSelection(tab.id);
       if (!selection || !selection.text) {
@@ -86,7 +98,9 @@ this.intents.navigation = (function() {
         e.displayMessage = "No text selected";
         throw e;
       }
-      const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=${encodeURIComponent(
+      const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=${
+        languages.languageCode[language]
+      }&text=${encodeURIComponent(
         selection.text
       )}`;
       await browser.tabs.create({ url });
