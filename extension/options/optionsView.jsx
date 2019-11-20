@@ -13,8 +13,14 @@ this.optionsView = (function() {
     chime,
     musicService,
     musicServiceOptions,
+    telemetry,
+    utterancesTelemetry,
+    collectAudio,
     updateMusicService,
     updateChime,
+    updateTelemetry,
+    updateUtterancesTelemetry,
+    updateCollectAudio,
   }) => {
     return (
       <div className="settings-page">
@@ -29,8 +35,14 @@ this.optionsView = (function() {
           chime={chime}
           musicService={musicService}
           musicServiceOptions={musicServiceOptions}
+          telemetry={telemetry}
+          utterancesTelemetry={utterancesTelemetry}
+          collectAudio={collectAudio}
           updateMusicService={updateMusicService}
           updateChime={updateChime}
+          updateTelemetry={updateTelemetry}
+          updateUtterancesTelemetry={updateUtterancesTelemetry}
+          updateCollectAudio={updateCollectAudio}
         />
       </div>
     );
@@ -73,8 +85,14 @@ this.optionsView = (function() {
     chime,
     musicService,
     musicServiceOptions,
+    telemetry,
+    utterancesTelemetry,
+    collectAudio,
     updateMusicService,
     updateChime,
+    updateTelemetry,
+    updateUtterancesTelemetry,
+    updateCollectAudio,
   }) => {
     return (
       <div className="settings-content">
@@ -84,7 +102,14 @@ this.optionsView = (function() {
           musicServiceOptions={musicServiceOptions}
           updateMusicService={updateMusicService}
         />
-        <DataCollection />
+        <DataCollection
+          telemetry={telemetry}
+          utterancesTelemetry={utterancesTelemetry}
+          collectAudio={collectAudio}
+          updateTelemetry={updateTelemetry}
+          updateUtterancesTelemetry={updateUtterancesTelemetry}
+          updateCollectAudio={updateCollectAudio}
+        />
         <DevelopmentSettings inDevelopment={inDevelopment} />
         <AboutSection />
       </div>
@@ -128,7 +153,7 @@ this.optionsView = (function() {
           <input
             id="chime"
             type="checkbox"
-            defaultChecked={chime}
+            checked={chime}
             onChange={onChimeSettingChange}
           />
           <label htmlFor="chime">Play chime when opening mic</label>
@@ -153,19 +178,36 @@ this.optionsView = (function() {
     );
   };
 
-  const DataCollection = () => {
-    const onToggleChange = event => {
-      if (event) {
-        // TODO
-      }
-    };
+  const DataCollection = ({
+    telemetry,
+    utterancesTelemetry,
+    collectAudio,
+    updateTelemetry,
+    updateUtterancesTelemetry,
+    updateCollectAudio,
+  }) => {
+    function onTelemetryChange(event) {
+      updateTelemetry(event.target.checked);
+    }
+    function onUtteranceTelemetryChange(event) {
+      updateUtterancesTelemetry(event.target.checked);
+    }
+    function onCollectAudioChange(event) {
+      updateCollectAudio(event.target.checked);
+    }
+
     return (
       <fieldset id="data-collection">
         <legend>Firefox Voice Data Collection and Use</legend>
         <ul>
           <li>
             <div className="styled-checkbox">
-              <input id="technical-data" type="checkbox" />
+              <input
+                id="technical-data"
+                type="checkbox"
+                checked={telemetry}
+                onChange={onTelemetryChange}
+              />
               <label htmlFor="technical-data">
                 Allow Firefox Voice to send technical and interaction data to
                 Mozilla.
@@ -178,7 +220,12 @@ this.optionsView = (function() {
           </li>
           <li>
             <div className="styled-checkbox">
-              <input id="transcripts-data" type="checkbox" />
+              <input
+                id="transcripts-data"
+                type="checkbox"
+                checked={utterancesTelemetry}
+                onChange={onUtteranceTelemetryChange}
+              />
               <label htmlFor="transcripts-data">
                 Allow Firefox Voice to send anonymized transcipts of your audio
                 request.
@@ -189,6 +236,21 @@ this.optionsView = (function() {
               develop new features. Data is stored on Mozilla servers, never
               shared with other organizations and deleted after x months.
             </p>
+          </li>
+          <li>
+            <div className="styled-checkbox">
+              <input
+                id="collect-audio"
+                type="checkbox"
+                checked={collectAudio}
+                onChange={onCollectAudioChange}
+              />
+              <label htmlFor="collect-audio">
+                Allow Firefox Voice to collect your{" "}
+                <strong>audio recordings</strong> for the purpose of improving
+                our speech detection service.
+              </label>
+            </div>
           </li>
         </ul>
       </fieldset>

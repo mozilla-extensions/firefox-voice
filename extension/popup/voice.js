@@ -1,4 +1,4 @@
-/* globals vad, buildSettings, log, util */
+/* globals vad, buildSettings, log, util, settings */
 
 this.voice = (function() {
   const exports = {};
@@ -154,7 +154,7 @@ this.voice = (function() {
           body: blob,
           headers: {
             "Accept-Language-STT": LANGUAGE,
-            "Product-Tag": "vf",
+            "Product-Tag": "fxv",
           },
         });
       } catch (e) {
@@ -182,7 +182,7 @@ this.voice = (function() {
         );
         error.response = response;
         this.onError(error);
-        deferredJson.reject(new Error("Bad response"));
+        deferredJson.reject(error);
         return;
       }
       const json = await response.json();
@@ -203,13 +203,18 @@ this.voice = (function() {
       }
       let response;
       const startTime = Date.now();
+      const storeSample = settings.getSettings().collectAudio;
+      if (storeSample) {
+        log.info("Sending AND storing audio on server");
+      }
       try {
         response = await fetch(DEEP_SPEECH_URL, {
           method: "POST",
           body: audio,
           headers: {
             "Accept-Language-STT": LANGUAGE,
-            "Product-Tag": "vf",
+            "Product-Tag": "fxv",
+            "Store-Sample": storeSample ? "1" : "0",
           },
         });
       } catch (e) {
@@ -247,7 +252,7 @@ this.voice = (function() {
           // The server has been responding with a confidence of 1.0 for all audio, which
           // isn't correct. Since it should never really be 1.0, we'll skip this value if
           // it's reported as such:
-          deepSpeechConfidence: confidence === 1.0 ? null : confidence,
+          deepSpeechConfidence: confidence === 1.0 ? undefined : confidence,
           deepSpeechServerTime,
           deepSpeechMatches: util.normalizedStringsMatch(
             utterance,

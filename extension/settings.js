@@ -6,12 +6,20 @@ this.settings = (function() {
   const DEFAULT_SETTINGS = {
     chime: true,
     musicService: "auto",
+    disableTelemetry: false,
+    utterancesTelemetry: false,
+    collectAudio: false,
   };
 
   exports.getSettings = function() {
     const value = localStorage.getItem("settings");
     if (value) {
-      return JSON.parse(value);
+      let s = JSON.parse(value);
+      // This makes DEFAULT_SETTINGS essentially the parent class,
+      // but any properties will be set on the settings object, only written
+      // properties will be saved.
+      s = Object.assign(Object.create(DEFAULT_SETTINGS), s);
+      return s;
     }
     return Object.assign({}, DEFAULT_SETTINGS);
   };
@@ -33,6 +41,8 @@ this.settings = (function() {
   exports.saveSettings = async function(settings) {
     if (typeof main === "undefined") {
       // We're not running in the background
+      // Remove any inherited/default properties:
+      settings = JSON.parse(JSON.stringify(settings));
       await browser.runtime.sendMessage({ type: "saveSettings", settings });
     } else {
       localStorage.setItem("settings", JSON.stringify(settings));

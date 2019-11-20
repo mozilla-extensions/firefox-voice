@@ -15,6 +15,9 @@ this.optionsController = (function() {
     const [gitCommit, setGitCommit] = useState("");
     const [isDirty, setIsDirty] = useState(false);
     const [chime, setChime] = useState(false);
+    const [telemetry, setTelemetry] = useState(true);
+    const [utterancesTelemetry, setUtterancesTelemetry] = useState(false);
+    const [collectAudio, setCollectAudio] = useState(false);
     const [musicService, setMusicService] = useState("");
     const [musicServiceOptions, setMusicServiceOptions] = useState([]);
 
@@ -55,6 +58,9 @@ this.optionsController = (function() {
       setMusicService(userSettings.musicService);
       setMusicServiceOptions(options.musicServices);
       setChime(!!userSettings.chime);
+      setTelemetry(!userSettings.disableTelemetry);
+      setUtterancesTelemetry(!!userSettings.utterancesTelemetry);
+      setCollectAudio(!!userSettings.collectAudio);
     };
 
     const sendSettings = async () => {
@@ -73,6 +79,33 @@ this.optionsController = (function() {
       setChime(!!userSettings.chime);
     };
 
+    const updateTelemetry = value => {
+      userSettings.disableTelemetry = !value;
+      if (!value) {
+        userSettings.utterancesTelemetry = false;
+        setUtterancesTelemetry(false);
+      }
+      sendSettings();
+      setTelemetry(!!value);
+    };
+
+    const updateUtterancesTelemetry = value => {
+      userSettings.utterancesTelemetry = !!value;
+      if (value) {
+        userSettings.disableTelemetry = false;
+        setTelemetry(true);
+      }
+      sendSettings();
+      setUtterancesTelemetry(!!value);
+    };
+
+    const updateCollectAudio = value => {
+      value = !!value;
+      userSettings.collectAudio = value;
+      sendSettings();
+      setCollectAudio(value);
+    };
+
     return (
       <optionsView.Options
         inDevelopment={inDevelopment}
@@ -83,8 +116,14 @@ this.optionsController = (function() {
         chime={chime}
         musicService={musicService}
         musicServiceOptions={musicServiceOptions}
+        telemetry={telemetry}
+        utterancesTelemetry={utterancesTelemetry}
+        collectAudio={collectAudio}
         updateMusicService={updateMusicService}
         updateChime={updateChime}
+        updateTelemetry={updateTelemetry}
+        updateUtterancesTelemetry={updateUtterancesTelemetry}
+        updateCollectAudio={updateCollectAudio}
       />
     );
   };

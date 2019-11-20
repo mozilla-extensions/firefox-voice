@@ -210,3 +210,43 @@ a#lexicon {
 #search-image {
   cursor: pointer;
 }
+
+.feedback-utterance {
+  font-weight: bold;
+}
+
+.feedback-controls {
+  text-align: center;
+}
+
+.feedback-controls button {
+  border: none;
+  font-size: 150%;
+  margin: 5px;
+  background-color: transparent;
+}
+
+.feedback-controls button:hover {
+  font-size: 160%;
+}
+
+.feedback-form h1 {
+  text-align: center;
+}
+
+.feedback-form textarea {
+  width: 100%;
+  height: 3em;
+}
+
+.feedback-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+.feedback-form button {
+  color: #fff;
+  background-color: #393;
+  font-size: 120%;
+}

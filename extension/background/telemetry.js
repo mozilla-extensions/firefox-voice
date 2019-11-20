@@ -1,7 +1,15 @@
-/* globals voiceSchema, main, util, log, buildSettings, catcher */
+/* globals voiceSchema, main, util, log, buildSettings, catcher, settings */
 
 this.telemetry = (function() {
   const exports = {};
+
+  // These fields will be deleted from the ping if the user has not opted-in
+  // to this special collection:
+  const UTTERANCE_FIELDS = [
+    "utterance",
+    "utteranceDeepSpeech",
+    "utteranceParsed",
+  ];
 
   let lastIntentId;
 
@@ -46,8 +54,12 @@ this.telemetry = (function() {
       resetPing();
     }
     delete properties.doNotInit;
-    for (const name in properties) {
+    for (const name of Object.keys(properties)) {
       const value = properties[name];
+      if (value === undefined) {
+        delete properties[name];
+        continue;
+      }
       const payloadProperties = voiceSchema.properties.payload.properties;
       if (!(name in payloadProperties)) {
         throw new Error(`Unexpected ping property: ${name}`);
@@ -81,11 +93,21 @@ this.telemetry = (function() {
     if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }
-    browser.telemetry.submitPing("voice", ping, {
-      addClientId: true,
-      addEnvironment: true,
-    });
-    log.info("Telemetry ping:", ping);
+    const s = settings.getSettings();
+    if (!s.disableTelemetry) {
+      if (!s.utterancesTelemetry) {
+        for (const field of UTTERANCE_FIELDS) {
+          delete ping[field];
+        }
+      }
+      browser.telemetry.submitPing("voice", ping, {
+        addClientId: true,
+        addEnvironment: true,
+      });
+      log.info("Telemetry ping:", ping);
+    } else {
+      log.debug("Telemetry ping (unsent):", ping);
+    }
     ping = null;
   };
 
@@ -94,12 +116,12 @@ this.telemetry = (function() {
     return exports.send();
   };
 
-  exports.addFeedback = function({ feedback, rating }) {
+  exports.sendFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
       { intentId: lastIntentId, timestamp: Date.now() },
       { feedback, rating }
     );
-    browser.telemetry.sendPing("voice-feedback", ping, {});
+    browser.telemetry.submitPing("voice-feedback", ping, {});
   };
 
   let firstInstallationVersion = "unknown";

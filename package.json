@@ -17,6 +17,7 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "babel-eslint": "^10.0.3",
+    "concurrently": "^5.0.0",
     "ejs": "^2.6.2",
     "eslint": "^6.6.0",
     "eslint-plugin-babel": "^5.3.0",
@@ -55,16 +56,15 @@
     "url": "git+https://github.com/mozilla/firefox-voice.git"
   },
   "scripts": {
-    "start": "NO_SENTRY=1 npm-run-all maybeinstall maybemarkdown build:manifest start-extension",
+    "start": "concurrently 'npm run watch' 'npm run start-and-build'",
+    "start-and-build": "NO_SENTRY=1 npm-run-all maybeinstall maybemarkdown build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "test": "npm-run-all build:manifest lint",
     "build:markdown": "mkdir -p extension/views && node bin/substitute-changelog.js",
     "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
-    "build:options": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/options/*.jsx --source-maps --out-dir extension/options",
-    "watch:options": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/options/*.jsx --watch --source-maps --out-dir extension/options",
-    "build:popup": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/popup/*.jsx --source-maps --out-dir extension/popup",
-    "watch:popup": "babel --plugins @babel/plugin-transform-react-jsx,@babel/plugin-proposal-class-properties extension/popup/*.jsx --watch --source-maps --out-dir extension/popup",
+    "build:jsx": "babel --relative --out-dir . '**/*.jsx'",
+    "watch": "babel --watch --relative --out-dir . '**/*.jsx'",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "maybemarkdown": "if [[ docs/lexicon.md -nt extension/views/lexicon.html ]] ; then npm run build:markdown ; fi",
     "format": "prettier 'extension/**/*.{js,jsx,css}' --write",
@@ -74,7 +74,7 @@
     "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
     "once": "web-ext run -s extension",
-    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i extension/tests/ && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
+    "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
     "calculate-version": "node bin/calculate-version.js",
     "postinstall": "npm-run-all build:*"
   }
