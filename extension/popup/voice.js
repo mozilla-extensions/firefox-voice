@@ -147,6 +147,10 @@ this.voice = (function() {
       });
       let response;
       const deferredJson = util.makeNakedPromise();
+      const storeSample = settings.getSettings().collectAudio;
+      if (storeSample) {
+        log.info("Sending AND storing audio on server");
+      }
       const startTime = Date.now();
       try {
         response = await fetch(STT_SERVER_URL, {
@@ -155,6 +159,7 @@ this.voice = (function() {
           headers: {
             "Accept-Language-STT": LANGUAGE,
             "Product-Tag": "fxv",
+            "Store-Sample": storeSample ? "1" : "0",
           },
         });
       } catch (e) {
@@ -203,10 +208,6 @@ this.voice = (function() {
       }
       let response;
       const startTime = Date.now();
-      const storeSample = settings.getSettings().collectAudio;
-      if (storeSample) {
-        log.info("Sending AND storing audio on server");
-      }
       try {
         response = await fetch(DEEP_SPEECH_URL, {
           method: "POST",
@@ -214,7 +215,6 @@ this.voice = (function() {
           headers: {
             "Accept-Language-STT": LANGUAGE,
             "Product-Tag": "fxv",
-            "Store-Sample": storeSample ? "1" : "0",
           },
         });
       } catch (e) {
