@@ -1,4 +1,4 @@
-/* globals searching, serviceList, pageMetadata */
+/* globals searching, serviceList, pageMetadata, languages */
 
 this.intents.navigation = (function() {
   this.intentRunner.registerIntent({
@@ -100,9 +100,7 @@ this.intents.navigation = (function() {
       }
       const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=${
         languages.languageCode[language]
-      }&text=${encodeURIComponent(
-        selection.text
-      )}`;
+      }&text=${encodeURIComponent(selection.text)}`;
       await browser.tabs.create({ url });
     },
   });

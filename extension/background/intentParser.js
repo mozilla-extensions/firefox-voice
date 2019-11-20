@@ -1,4 +1,4 @@
-/* globals log, serviceList */
+/* globals log, serviceList, languages */
 this.intentParser = (function() {
   const exports = {};
 
