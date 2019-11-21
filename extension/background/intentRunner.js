@@ -76,8 +76,8 @@ this.intentRunner = (function() {
       });
     }
 
-    createTab(options) {
-      return browser.tabs.create(options);
+    async createTab(options) {
+      return browserUtil.createTab(options);
     }
 
     async createTabGoogleLucky(query) {

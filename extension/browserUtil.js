@@ -33,6 +33,14 @@ this.browserUtil = (function() {
     });
   };
 
+  exports.createTab = async options => {
+    const activeTab = await exports.activeTab();
+    if (["about:blank", "about:home", "about:newtab"].includes(activeTab.url)) {
+      return browser.tabs.update(options);
+    }
+    return browser.tabs.create(options);
+  };
+
   exports.TabRemovalWatcher = class TabRemovalWatcher {
     constructor() {
       this.isWatching = false;
