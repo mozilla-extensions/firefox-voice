@@ -12,6 +12,9 @@ this.telemetry = (function() {
   ];
 
   let lastIntentId;
+  let intentCount;
+  let lastIntentDate;
+  let intentDays;
 
   const manifest = browser.runtime.getManifest();
 
@@ -91,6 +94,9 @@ this.telemetry = (function() {
       throw new Error("Telemetry ping uninitialized");
     }
     if (!ping.inputCancelled) {
+      trackIntentMade();
+    }
+    if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }
     const s = settings.getSettings();
@@ -143,6 +149,33 @@ this.telemetry = (function() {
       await browser.storage.local.set({ firstInstallationTimestamp });
     }
   };
+
+  async function init() {
+    const result = await browser.storage.local.get([
+      "intentCount",
+      "intentDays",
+      "lastIntentDate",
+    ]);
+    intentCount = result.intentCount || 0;
+    intentDays = result.intentDays || 0;
+    lastIntentDate = result.lastIntentDate || null;
+  }
+
+  function trackIntentMade() {
+    intentCount += 1;
+    const curDate = new Date().toJSON().split("T")[0];
+    if (curDate !== lastIntentDate) {
+      lastIntentDate = curDate;
+      intentDays += 1;
+    }
+    browser.storage.local.set({
+      intentCount,
+      intentDays,
+      lastIntentDate,
+    });
+  }
+
+  init();
 
   return exports;
 })();
