@@ -1,4 +1,4 @@
-/* globals Fuse, log */
+/* globals Fuse, log, intents */
 
 this.intents.find = (function() {
   this.intentRunner.registerIntent({
@@ -46,6 +46,10 @@ this.intents.find = (function() {
       const tabs = await browser.tabs.query({});
 
       for (const tab of tabs) {
+        // Don't include the active tab:
+        if (tab.active || intents.search.isSearchTab(tab)) {
+          continue;
+        }
         const result = {
           tabId: tab.id,
           title: tab.title,
