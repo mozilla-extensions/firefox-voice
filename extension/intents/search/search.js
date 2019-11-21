@@ -132,6 +132,11 @@ this.intents.search = (function() {
     });
   };
 
+  exports.isSearchTab = tab => {
+    const tabId = typeof tab === "object" && tab ? tab.id : tab;
+    return _searchTabId && _searchTabId === tabId;
+  };
+
   intentRunner.registerIntent({
     name: "search.search",
     description:
