@@ -104,6 +104,7 @@ this.queryScript = (function() {
       width: rect.width,
       height: rect.height,
       src: canvas.toDataURL(),
+      alt: card.innerText,
       hasWidget,
     };
   });

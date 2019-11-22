@@ -512,9 +512,14 @@ this.popupView = (function() {
     const card = cardImage;
     const next = searchResults[index + 1];
     const cardStyles = card ? { height: card.height, width: card.width } : {};
-    const imgAlt = "Show search results";
+    const imgAlt =
+      card && card.alt
+        ? `Click to show search results: ${card.alt}`
+        : "Show search results";
 
-    if (card) setMinPopupSize(card.width, card.height);
+    if (card) {
+      setMinPopupSize(card.width, card.height);
+    }
 
     const onSearchCardClick = () => {
       onSearchImageClick(searchUrl);
