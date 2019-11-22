@@ -11,7 +11,7 @@ this.intents.search = (function() {
   let closeTabTimeout = null;
   let lastImage = null;
   let _searchTabId;
-  const START_URL = "https://www.google.com";
+  const START_URL = "https://www.google.com/?voice";
   // This is a popup search result that isn't associated with a tab (because it had a card):
   let popupSearchInfo;
   // This is the most recent tab that was interacted with (e.g., I search in tab A, search in tab B, switch to tab A, get next result, switch to tab C, then say next result; tab A should get updated):
@@ -40,7 +40,7 @@ this.intents.search = (function() {
     for (const tab of await browser.tabs.query({
       url: ["https://www.google.com/*"],
     })) {
-      if (tab.url.includes("&voice")) {
+      if (tab.url.includes("&voice") || tab.url.includes("?voice")) {
         await browser.tabs.remove(tab.id);
       }
     }
@@ -59,8 +59,11 @@ this.intents.search = (function() {
       return;
     }
     const tabId = _searchTabId;
-    _searchTabId = null;
     await browser.tabs.remove(tabId);
+    // Technically there is a race condition here, but without some lock this is just going to be racy,
+    // so this race is better than the other one
+    // eslint-disable-next-line require-atomic-updates
+    _searchTabId = null;
   }
 
   async function performSearch(query) {
