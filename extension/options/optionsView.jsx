@@ -227,7 +227,7 @@ this.optionsView = (function() {
                 onChange={onUtteranceTelemetryChange}
               />
               <label htmlFor="transcripts-data">
-                Allow Firefox Voice to send anonymized transcipts of your audio
+                Allow Firefox Voice to send anonymized transcripts of your audio
                 request.
               </label>
             </div>
