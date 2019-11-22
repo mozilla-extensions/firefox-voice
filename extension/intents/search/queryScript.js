@@ -84,8 +84,12 @@ this.queryScript = (function() {
     if (!card) {
       throw new Error("No card found for cardImage");
     }
-    // When it has a canvas it may dynamically update:
-    const hasWidget = !!card.querySelector("canvas");
+    // When it has a canvas it may dynamically update,
+    // And timers have this id, otherwise hard to detect:
+    const hasWidget = !!(
+      card.querySelector("canvas") ||
+      card.querySelector("#timer-stopwatch-container")
+    );
     const rect = card.getBoundingClientRect();
     const canvas = document.createElementNS(
       "http://www.w3.org/1999/xhtml",

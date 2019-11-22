@@ -4,7 +4,10 @@ this.intents.search = (function() {
   const exports = {};
   // Close the search tab after this amount of time:
   const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
-  const CARD_POLL_INTERVAL = 200;
+  // Check this often for a new image in a search tab:
+  const CARD_POLL_INTERVAL = 200; // milliseconds
+  // If we don't believe the card is animated, still get new images for this amount of time:
+  const CARD_POLL_LIMIT = 1000; // milliseconds
   let closeTabTimeout = null;
   let lastImage = null;
   let _searchTabId;
@@ -99,8 +102,9 @@ this.intents.search = (function() {
     }
   }
 
-  function pollForCard() {
+  function pollForCard(maxTime) {
     stopCardPoll();
+    const startTime = Date.now();
     cardPollTimeout = setInterval(async () => {
       const card = await callScript({ type: "cardImage" });
       if (card.src === lastImage) {
@@ -111,7 +115,7 @@ this.intents.search = (function() {
         type: "refreshSearchCard",
         card,
       });
-      if (!response) {
+      if (!response || (maxTime && Date.now() - startTime > maxTime)) {
         // There's no listener
         stopCardPoll();
       }
@@ -164,6 +168,8 @@ this.intents.search = (function() {
         telemetry.add({ hasCard: true });
         if (card.hasWidget) {
           pollForCard();
+        } else {
+          pollForCard(CARD_POLL_LIMIT);
         }
         lastTabId = undefined;
         popupSearchInfo = searchInfo;
