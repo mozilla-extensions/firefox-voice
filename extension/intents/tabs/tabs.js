@@ -25,4 +25,30 @@ this.intents.tabs = (function() {
       await context.createTab({ active: true });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.pin",
+    description: "Pins the current tab",
+    examples: ["pin tab"],
+    match: `
+    pin (this |) tab (for me |)
+    `,
+    async run(context) {
+      const activeTab = await context.activeTab();
+      await browser.tabs.update(activeTab.id, {pinned:true});
+    },
+  });
+  
+  this.intentRunner.registerIntent({
+    name: "tabs.unpin",
+    description: "Unpins the current tab",
+    examples: ["unpin tab"],
+    match: `
+    unpin (this |) tab (for me |)
+    `,
+    async run(context) {
+      const activeTab = await context.activeTab();
+      await browser.tabs.update(activeTab.id, {pinned:false});
+    },
+  });
 })();
