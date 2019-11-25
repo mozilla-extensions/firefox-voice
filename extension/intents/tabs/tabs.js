@@ -35,10 +35,10 @@ this.intents.tabs = (function() {
     `,
     async run(context) {
       const activeTab = await context.activeTab();
-      await browser.tabs.update(activeTab.id, {pinned:true});
+      await browser.tabs.update(activeTab.id, { pinned: true });
     },
   });
-  
+
   this.intentRunner.registerIntent({
     name: "tabs.unpin",
     description: "Unpins the current tab",
@@ -48,7 +48,7 @@ this.intents.tabs = (function() {
     `,
     async run(context) {
       const activeTab = await context.activeTab();
-      await browser.tabs.update(activeTab.id, {pinned:false});
+      await browser.tabs.update(activeTab.id, { pinned: false });
     },
   });
 })();
