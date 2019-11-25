@@ -70,7 +70,7 @@ this.intents.music = (function() {
       "Play music on an explicit service, a default service, or the service in the active tab",
     examples: ["Play Green Day"],
     match: `
-    play [query] on [service:musicServiceName]
+    play [query] (on | in) [service:musicServiceName]
     play video{s} [query] [service=youtube]
     play [query] video{s} [service=youtube]
     play [query]
