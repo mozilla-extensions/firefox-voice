@@ -44,7 +44,7 @@ this.vad = (function() {
       // max amount of silence (in milliseconds) that should be captured to be considered end-of-speech
       this.maxsilence = 1500;
       // max amount of capturing time (in seconds)
-      this.maxtime = 6;
+      this.maxtime = 15;
     }
 
     reset() {
