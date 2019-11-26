@@ -1,6 +1,7 @@
 /* eslint-disable */
 // This is a copy of:
 // https://github.com/mozilla-services/mozilla-pipeline-schemas/blob/master/schemas/telemetry/voice/voice.4.schema.json
+// When this is updated also please update metrics.md
 
 this.voiceSchema = {
   "$schema": "http://json-schema.org/draft-04/schema#",
