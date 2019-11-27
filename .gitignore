@@ -22,3 +22,4 @@ credentials
 /Profile*
 manifest.json
 /addon.xpi
+/gh-pages
