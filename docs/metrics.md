@@ -72,10 +72,6 @@ These values store the actual command given to Firefox Voice. This data is only 
 - **intentTime**: performance measurement, about how long it takes to parse and start the intent command
 - **internalError**: some unexpected error associated with the attempt to execute the intent (**intentSuccess** handles expected errors)
 
-### Utterances
-
-- `intentExtraData`
-
 ### Standard Firefox parameters
 
 We store a set of common fields that describe the Firefox build, your CPU type, etc. Everything besides `"payload"` in [voiceSchema.js](../extension/background/voiceSchema.js) is one of these "standard" parameters.
