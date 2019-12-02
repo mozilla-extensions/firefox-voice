@@ -51,4 +51,16 @@ this.intents.tabs = (function() {
       await browser.tabs.update(activeTab.id, { pinned: false });
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.saveaspdf",
+    description: "Saves the current tab as a PDF file",
+    examples: ["save as pdf"],
+    match: `
+    save (this | current |) (tab |) as pdf (for me |)
+    `,
+    async run(context) {
+      const status = await browser.tabs.saveAsPDF({});
+    },
+  });
 })();
