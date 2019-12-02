@@ -263,7 +263,9 @@ this.optionsView = (function() {
         <legend>About</legend>
         <ul>
           <li>
-            <a href="#">How Mozilla Protects Your Voice Privacy (TODO)</a>
+            <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+              How Mozilla Protects Your Voice Privacy
+            </a>
           </li>
           <li>
             <a href="/views/lexicon.html">
