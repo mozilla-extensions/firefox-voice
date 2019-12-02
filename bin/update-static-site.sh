@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ ! -d gh-pages ]] ; then
   echo "You must create the gh-pages subdirectory. Try:"
   echo "  git clone -b gh-pages https://github.com/mozilla/firefox-voice.git gh-pages"
   exit 1
 fi
+
+cd gh-pages && git pull && cd ..
 
 for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html ; do
   cp $file gh-pages/
@@ -23,6 +27,7 @@ echo
 echo "Commit and push? [y/N]"
 read response
 if [[ "$response" = "y" ]] ; then
+  git add .
   git commit -a -m "Update static files"
   git push
 else
