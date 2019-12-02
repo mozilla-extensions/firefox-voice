@@ -130,6 +130,9 @@ workflows:
       - test:
           requires:
             - build
+          filters:
+            branches:
+              ignore: gh-pages
       - deploy_dev:
           requires:
             - test
