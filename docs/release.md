@@ -8,6 +8,7 @@ The release process is handled with [CircleCI](../.circleci/config.yml), with ru
 
 - [ ] Update the version in `package.json` (the third numeral should always be `0`)
 - [ ] Update the changelog with: `./bin/generate-commit-log --write recent`
+- [ ] Run `./bin/update-static-site.sh`
 - [ ] Edit `CHANGELOG.md` to enter the version and review the list of changes, removing uninteresting changes
 - [ ] Commit the changes, `git commit -a -m "Update version with changelog"`
 - [ ] Tag the version like `git tag vX.Y.0`
