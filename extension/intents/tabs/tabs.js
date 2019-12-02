@@ -53,14 +53,20 @@ this.intents.tabs = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "tabs.saveaspdf",
+    name: "tabs.saveAsPdf",
     description: "Saves the current tab as a PDF file",
-    examples: ["save as pdf"],
+    examples: ["Save as PDF"],
     match: `
-    save (this | current |) (tab |) as pdf (for me |)
+    save (this | current |) (tab |) (as |) pdf (for me |)
     `,
     async run(context) {
-      const status = await browser.tabs.saveAsPDF({});
+      // This could return:
+      // "saved"
+      // "replaced"
+      // "canceled"
+      // "not_saved"
+      // "not_replaced"
+      await browser.tabs.saveAsPDF({});
     },
   });
 })();
