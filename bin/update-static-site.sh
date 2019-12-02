@@ -6,7 +6,7 @@ if [[ ! -d gh-pages ]] ; then
   exit 1
 fi
 
-for file in extension/views/lexicon.html extension/views/lexicon.css ; do
+for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html ; do
   cp $file gh-pages/
 done
 

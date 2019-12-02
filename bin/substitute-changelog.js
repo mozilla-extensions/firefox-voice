@@ -53,3 +53,35 @@ ejs.renderFile(
     console.log(`${LEXICON_OUTPUT} written`);
   }
 );
+
+const PRIVACY_POLICY = path.normalize(
+  path.join(__dirname, "../docs/privacy-policy.md")
+);
+const PRIVACY_OUTPUT = path.normalize(
+  path.join(__dirname, "../extension/views/privacy-policy.html")
+);
+const PRIVACTY_TEMPLATE = PRIVACY_OUTPUT + ".ejs";
+const PRIVACY_TEXT = fs.readFileSync(PRIVACY_POLICY, { encoding: "UTF-8" });
+let privacyHtml = markdown.render(PRIVACY_TEXT);
+const PRIVACY_TITLE = /<h1>(.*?)<\/h1>/i.exec(privacyHtml)[1];
+privacyHtml = privacyHtml.replace(/<h1>(.*?)<\/h1>/i, "");
+
+const privacyContext = {
+  content: privacyHtml,
+  title: PRIVACY_TITLE,
+};
+
+ejs.renderFile(
+  PRIVACTY_TEMPLATE,
+  privacyContext,
+  { dialect: "maruku" },
+  function(err, str) {
+    if (err) {
+      console.error("Error rendering template:", err);
+      process.exit(1);
+      return;
+    }
+    fs.writeFileSync(PRIVACY_OUTPUT, str, { encoding: "UTF-8" });
+    console.log(`${PRIVACY_OUTPUT} written`);
+  }
+);
