@@ -215,7 +215,10 @@ this.onboardingView = (function() {
             </a>
           </li>
           <li>
-            <a href="#" target="_blank">
+            <a
+              href="https://firefox-voice-feedback.herokuapp.com/"
+              target="_blank"
+            >
               Feedback
             </a>
           </li>
