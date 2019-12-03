@@ -99,7 +99,7 @@ this.intents.navigation = (function() {
         throw e;
       }
       const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=${
-        languages.languageCode[language]
+        languages.languageCodes[language]
       }&text=${encodeURIComponent(selection.text)}`;
       await browser.tabs.create({ url });
     },

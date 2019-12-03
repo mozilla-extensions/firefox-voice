@@ -97,7 +97,9 @@ this.popupView = (function() {
     const hiddenClass =
       currentView === "error" ||
       currentView === "searchResults" ||
-      currentView === "typing"
+      currentView === "typing" ||
+      currentView === "feedback" ||
+      currentView === "feedbackThanks"
         ? ""
         : "hidden";
 
@@ -289,8 +291,13 @@ this.popupView = (function() {
           </svg>
         </div>
         <div id="moz-voice-privacy">
-          <strong>For Mozilla internal use only</strong>
-          {/* <a href="">How Mozilla ensures voice privacy</a> */}
+          <a
+            href="https://firefox-voice-feedback.herokuapp.com/"
+            target="_blank"
+            rel="noopener"
+          >
+            Feedback?
+          </a>
         </div>
         <div></div>
       </div>
