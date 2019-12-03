@@ -1,10 +1,17 @@
 @import url("../assets/css/gui.css");
 @import url("../assets/css/inter.css");
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 #onboarding-wrapper {
   color: #0f1126;
   background-image: url("./images/onboarding-background.jpg");
   background-repeat: no-repeat;
+  background-size: contain;
+  font-family: "Inter" !important;
 }
 
 #onboarding-logo {
@@ -12,7 +19,6 @@
 }
 
 h1 {
-  font-family: Inter;
   font-size: 44px;
   font-weight: bold;
   letter-spacing: -1.83px;
@@ -21,14 +27,12 @@ h1 {
 a {
   text-decoration: none;
   color: #0f1126;
-  font-family: Inter;
   font-size: 24px;
   font-weight: bold;
   letter-spacing: -1px;
 }
 
 p {
-  font-family: Inter;
   font-size: 21px;
   letter-spacing: -0.87px;
 }
@@ -36,39 +40,79 @@ p {
 .modal-wrapper {
   display: flex;
   justify-content: center;
-  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  position: fixed;
+  left: 0;
   top: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  height: 100%;
 }
 
 .modal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  top: 100px;
-  background: rgb(249, 249, 250);
+  z-index: 1;
+  background: #f9f9fa;
   border-radius: 2px 2px 14px 14px;
   box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
-  width: 1100px;
-  padding: 100px;
+  width: 100%;
+  overflow: scroll;
+  margin: 50px;
+  padding: 50px 100px;
 }
 
-.modal p {
-  align-self: normal;
+.modal-header,
+.modal-footer {
+  text-align: center;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+
+#optinVoiceTranscripts h1:before {
+  content: "";
+  background-image: url("./images/icon-optin.svg");
+  background-repeat: no-repeat;
+  background-position-y: 10px;
+  padding-left: 60px;
+}
+
+#optinVoiceTranscripts h1:after {
+  display: block;
+  content: "";
+  height: 5px;
+  background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
 #optinVoiceTranscripts .modal button {
   margin: 40px 0;
 }
 
+/* .error-modal {
+  height: min-content;
+} */
+
 .error-modal h1 {
   color: #d70022;
-  font-family: Inter;
   font-size: 32px;
   font-weight: bold;
   letter-spacing: -1.33px;
+}
+
+.error-modal h1:before {
+  content: '';
+  background-image: url("./images/icon-mircophone-red.svg");
+  background-repeat: no-repeat;
+  background-position-y: 10px;
+  padding-left: 30px;
+}
+
+.error-modal .modal-content {
+  text-align: center;
 }
 
 #onboarding-content {
@@ -80,19 +124,90 @@ p {
 
 .onboarding-section {
   text-align: center;
-  padding: 100px 0 0 0;
+  padding: 50px 0 0 0;
 }
 
-.onboarding-section .section-header {
+.onboarding-section h1:before {
+  content: "";
   background-repeat: no-repeat;
-  padding-left: 60px;
-  display: inline;
+  background-position-y: 5px;
+  padding-left: 40px;
 }
 
-#get-started .section-header {
+.onboarding-section h1 {
+  display: inline-block;
+}
+
+.onboarding-section h1:after {
+  display: block;
+  content: "";
+  height: 5px;
+  background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
+}
+
+#get-started h1:before {
   background-image: url("./images/icon-microphone.svg");
 }
 
-#try-it .section-header {
+#try-it h1:before {
   background-image: url("./images/icon-superhero.svg");
+}
+
+#try-it p {
+  font-weight: bold;
+}
+
+#try-it ul {
+  font-style: italic;
+  font-weight: 200;
+  font-size: 24px;
+  list-style: none;
+}
+
+#try-it ul li {
+  margin-top: 10px;
+}
+
+#must-allow img.security-button {
+  width: 187px;
+  height: 29px;
+  padding: 0 10px;
+  vertical-align: text-bottom;
+}
+
+#must-allow img.security-panel {
+  width: 369px;
+  height: 188px;
+}
+
+#footer {
+  background: linear-gradient(#25003e, #440071);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: -0.58px;
+  padding: 40px 0;
+}
+
+#footer ul {
+  display: flex;
+  justify-content: center;
+  color: white;
+  list-style: none;
+  padding: 0;
+}
+
+#footer ul li {
+  padding: 0 20px;
+}
+
+#footer ul li a,
+#footer p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
 }

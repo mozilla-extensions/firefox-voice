@@ -9,6 +9,7 @@ this.settings = (function() {
     disableTelemetry: false,
     utterancesTelemetry: false,
     collectAudio: false,
+    collectTranscriptsOptinShown: false,
   };
 
   exports.getSettings = function() {
