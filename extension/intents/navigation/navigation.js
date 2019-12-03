@@ -70,7 +70,7 @@ this.intents.navigation = (function() {
       const language = context.slots.language || "en";
       const tab = await context.activeTab();
       const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
-        languages.languageCode[language]
+        languages.languageCodes[language]
       }&u=${encodeURIComponent(tab.url)}`;
       browser.tabs.update(tab.id, { url: translation });
     },

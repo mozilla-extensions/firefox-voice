@@ -6,6 +6,7 @@ extension/js/vendor/
 extension/css/vendor/
 extension/views/CHANGELOG.html
 extension/views/lexicon.html
+extension/views/privacy-policy.html
 extension/buildSettings.js
 extension/popup/popupController.js
 extension/popup/popupView.js

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="./lexicon.css" />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+    <div id="contents">
+      <div id="sidebar">
+        <div class="stmt">
+          <!-- some text for the sidebar -->
+        </div>
+      </div>
+      <div id="list"><%- content %></div>
+      <div id="clear"></div>
+    </div>
+
+    <footer>
+      For more information on Firefox Voice see our
+      <a href="https://github.com/mozilla/firefox-voice">GitHub repository</a>.
+    </footer>
+  </body>
+</html>
