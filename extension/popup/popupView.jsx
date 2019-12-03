@@ -95,8 +95,10 @@ this.popupView = (function() {
     };
 
     const hiddenClass =
-      currentView === "error" || currentView === "searchResults" ||
-      currentView === "typing" || currentView === "feedback" ||
+      currentView === "error" ||
+      currentView === "searchResults" ||
+      currentView === "typing" ||
+      currentView === "feedback" ||
       currentView === "feedbackThanks"
         ? ""
         : "hidden";
@@ -287,6 +289,15 @@ this.popupView = (function() {
               d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
             ></path>
           </svg>
+        </div>
+        <div id="moz-voice-privacy">
+          <a
+            href="https://firefox-voice-feedback.herokuapp.com/"
+            target="_blank"
+            rel="noopener"
+          >
+            Feedback?
+          </a>
         </div>
         <div></div>
       </div>
