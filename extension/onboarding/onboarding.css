@@ -11,7 +11,6 @@
   align-self: center;
 }
 
-
 h1 {
   font-family: Inter;
   font-size: 44px;
@@ -92,4 +91,8 @@ p {
 
 #get-started .section-header {
   background-image: url("./images/icon-microphone.svg");
+}
+
+#try-it .section-header {
+  background-image: url("./images/icon-superhero.svg");
 }
