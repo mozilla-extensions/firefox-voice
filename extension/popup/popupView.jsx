@@ -288,10 +288,6 @@ this.popupView = (function() {
             ></path>
           </svg>
         </div>
-        <div id="moz-voice-privacy">
-          <strong>For Mozilla internal use only</strong>
-          {/* <a href="">How Mozilla ensures voice privacy</a> */}
-        </div>
         <div></div>
       </div>
     );
