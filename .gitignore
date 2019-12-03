@@ -13,6 +13,9 @@ extension/popup/*.js.map
 extension/options/optionsController.js
 extension/options/optionsView.js
 extension/options/*.js.map
+extension/onboarding/onboardingController.js
+extension/onboarding/onboardingView.js
+extension/onboarding/*.js.map
 node_modules
 npm-debug.log
 package-lock.json

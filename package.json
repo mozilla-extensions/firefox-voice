@@ -61,7 +61,7 @@
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "test": "npm-run-all build:manifest lint",
     "build:markdown": "mkdir -p extension/views && node bin/substitute-changelog.js",
-    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
+    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js react/umd/react.development.js react-dom/umd/react-dom.development.js; do cp node_modules/$file extension/js/vendor/ ; done ; for file in tailwindcss/dist/tailwind.min.css ; do cp node_modules/$file extension/css/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
     "build:jsx": "babel --relative --out-dir . '**/*.jsx'",
     "watch": "babel --watch --relative --out-dir . '**/*.jsx'",

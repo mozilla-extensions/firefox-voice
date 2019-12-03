@@ -1,3 +1,32 @@
+@import url("./inter.css");
+
+.styled-button {
+  background-color: #0060df;
+  color: white;
+  border-radius: 8px;
+  border-style: none;
+  height: 64px;
+  font-family: Inter;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: -0.22px;
+  text-align: center;
+  padding: 0 50px;
+}
+
+.styled-button.light-blue {
+  background-color: #0a84ff;
+}
+
+.styled-button > svg {
+  display: inline;
+  margin-right: 20px;
+}
+
+.styled-button > svg path {
+  fill: white;
+}
+
 /*
 Styled Checkbox
 Example markup to use this styled native checkbox
