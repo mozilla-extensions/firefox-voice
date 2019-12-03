@@ -263,8 +263,18 @@ this.optionsView = (function() {
         <legend>About</legend>
         <ul>
           <li>
+            <a href="https://firefox-voice-feedback.herokuapp.com/">
+              Give Your Feedback
+            </a>
+          </li>
+          <li>
             <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
               How Mozilla Protects Your Voice Privacy
+            </a>
+          </li>
+          <li>
+            <a href="https://www.mozilla.org/en-US/about/legal/terms/firefox/">
+              About Your Rights
             </a>
           </li>
           <li>
