@@ -95,7 +95,9 @@ this.popupView = (function() {
     };
 
     const hiddenClass =
-      currentView === "error" || currentView === "searchResults" || currentView === "typing"
+      currentView === "error" || currentView === "searchResults" ||
+      currentView === "typing" || currentView === "feedback" ||
+      currentView === "feedbackThanks"
         ? ""
         : "hidden";
 
