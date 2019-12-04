@@ -67,10 +67,10 @@ this.intents.navigation = (function() {
       "test:translate this page to Dutch",
     ],
     async run(context) {
-      const language = context.slots.language || "en";
+      const language = context.slots.language || "english";
       const tab = await context.activeTab();
       const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
-        languages.languageCodes[language]
+        languages.languageCodes[language.toLowerCase().trim()]
       }&u=${encodeURIComponent(tab.url)}`;
       browser.tabs.update(tab.id, { url: translation });
     },
@@ -90,7 +90,7 @@ this.intents.navigation = (function() {
       "test:translate this selection to Slovak",
     ],
     async run(context) {
-      const language = context.slots.language || "en";
+      const language = context.slots.language || "english";
       const tab = await context.activeTab();
       const selection = await pageMetadata.getSelection(tab.id);
       if (!selection || !selection.text) {
@@ -99,7 +99,7 @@ this.intents.navigation = (function() {
         throw e;
       }
       const url = `https://translate.google.com/#view=home&op=translate&sl=auto&tl=${
-        languages.languageCodes[language]
+        languages.languageCodes[language.toLowerCase().trim()]
       }&text=${encodeURIComponent(selection.text)}`;
       await browser.tabs.create({ url });
     },
