@@ -82,7 +82,7 @@ this.popupController = (function() {
 
     const playListeningChime = () => {
       const audio = new Audio(
-        "https://jcambre.github.io/vf/mic_open_chime.ogg"
+        "https://mozilla.github.io/firefox-voice/chime.ogg"
       );
       audio.play();
     };

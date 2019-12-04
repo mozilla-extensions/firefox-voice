@@ -10,7 +10,7 @@ fi
 
 cd gh-pages && git pull && cd ..
 
-for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html ; do
+for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html extension/assets/chime.ogg ; do
   cp $file gh-pages/
 done
 

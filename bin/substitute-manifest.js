@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const package_json = require("../package.json");
 const child_process = require("child_process");
+const { getVersionNumber } = require("./calculate-version.js");
 
 const OUTPUT = path.normalize(
   path.join(__dirname, "../extension/manifest.json")
@@ -45,6 +46,7 @@ const gitCommit = child_process
 
 const context = {
   env: process.env,
+  version: getVersionNumber(),
   package_json,
   intentNames,
   serviceNames,
