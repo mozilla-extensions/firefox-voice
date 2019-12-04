@@ -259,11 +259,6 @@ this.optionsView = (function() {
               The Big List of What You Can Say to Firefox Voice
             </a>
           </li>
-          <li>
-            <a href="https://qsurvey.mozilla.com/s3/firefoxvoice-feedback">
-              Leave Feedback
-            </a>
-          </li>
         </ul>
       </fieldset>
     );
