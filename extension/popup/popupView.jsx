@@ -508,63 +508,73 @@ this.popupView = (function() {
     );
   };
 
-  const SearchResultsContent = ({
-    search,
-    cardImage,
-    displayText,
-    onSearchImageClick,
-    setMinPopupSize,
-  }) => {
-    if (!search) return null;
+  class SearchResultsContent extends PureComponent {
+    constructor(props) {
+      super(props);
 
-    const { searchResults, index, searchUrl } = search;
-    const card = cardImage;
-    const next = searchResults[index + 1];
-    const cardStyles = card ? { height: card.height, width: card.width } : {};
-    const imgAlt =
-      card && card.alt
-        ? `Click to show search results: ${card.alt}`
-        : "Show search results";
-
-    if (card) {
-      setMinPopupSize(card.width);
+      this.state = {
+        showBanner: true,
+      };
     }
 
-    const onSearchCardClick = () => {
-      onSearchImageClick(searchUrl);
+    componentDidMount() {
+      setTimeout(() => {
+        this.setState({ showBanner: false });
+      }, 4000);
+    }
+
+    onSearchCardClick = event => {
+      this.props.onSearchImageClick(this.props.search.searchUrl);
     };
 
-    return (
-      <React.Fragment>
-        <TextDisplay displayText={displayText} />
-        <div id="search-results">
-          {/* FIXME: img alt is using "next" title, but it should use the card title, which is not available in the data  */}
-          {card ? (
-            <img
-              id="search-image"
-              alt={imgAlt}
-              onClick={onSearchCardClick}
-              style={cardStyles}
-              src={card.src}
-              role="button"
-            />
-          ) : null}
-        </div>
-        {next ? (
-          <div id="search-show-next">
-            <p>
-              <strong>
-                Click mic and say <i>next</i> to view
-              </strong>
-            </p>
-            <p id="search-show-next-description">
-              {new URL(next.url).hostname} | {next.title}
-            </p>
+    render() {
+      if (!this.props.search) return null;
+
+      const { searchResults, index, searchUrl } = this.props.search;
+      const card = this.props.cardImage;
+      const next = searchResults[index + 1];
+      const cardStyles = card ? { height: card.height, width: card.width } : {};
+      const imgAlt =
+        card && card.alt
+          ? `Click to show search results: ${card.alt}`
+          : "Show search results";
+
+      if (card) {
+        this.props.setMinPopupSize(card.width);
+      }
+
+      return (
+        <React.Fragment>
+          <TextDisplay displayText={this.props.displayText} />
+          <div id="search-results">
+            {/* FIXME: img alt is using "next" title, but it should use the card title, which is not available in the data  */}
+            {card ? (
+              <img
+                id="search-image"
+                alt={imgAlt}
+                onClick={this.onSearchCardClick}
+                style={cardStyles}
+                src={card.src}
+                role="button"
+              />
+            ) : null}
           </div>
-        ) : null}
-      </React.Fragment>
-    );
-  };
+          {next && this.state.showBanner ? (
+            <div id="search-show-next">
+              <p>
+                <strong>
+                  Click mic and say <i>next</i> to view
+                </strong>
+              </p>
+              <p id="search-show-next-description">
+                {new URL(next.url).hostname} | {next.title}
+              </p>
+            </div>
+          ) : null}
+        </React.Fragment>
+      );
+    }
+  }
 
   const Transcript = ({ transcript }) => {
     return transcript ? <div id="transcript">{transcript}</div> : null;

@@ -231,7 +231,7 @@ this.popupController = (function() {
       });
     };
 
-    const setMinPopupSize = (width) => {
+    const setMinPopupSize = width => {
       popupContainer.style.minWidth = width + "px";
     };
 
