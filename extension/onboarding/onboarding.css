@@ -1,68 +1,213 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import url("../assets/css/gui.css");
+@import url("../assets/css/inter.css");
 
-h1 {
-  color: #e31587;
+body {
+  margin: 0;
+  padding: 0;
 }
 
-.highlight {
-  color: #ee7a49;
+#onboarding-wrapper {
+  color: #0f1126;
+  background-image: url("./images/onboarding-background.jpg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  font-family: "Inter" !important;
+}
+
+#onboarding-logo {
+  align-self: center;
+}
+
+h1 {
+  font-size: 44px;
+  font-weight: bold;
+  letter-spacing: -1.83px;
 }
 
 a {
-  color: #548adc;
+  text-decoration: none;
+  color: #0f1126;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: -1px;
 }
 
-#welcome-text-content {
-  max-width: 660px;
+p {
+  font-size: 21px;
+  letter-spacing: -0.87px;
+}
+
+.modal-wrapper {
+  display: flex;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  background: #f9f9fa;
+  border-radius: 2px 2px 14px 14px;
+  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  overflow: scroll;
+  margin: 50px;
+  padding: 50px 100px;
+}
+
+.modal-header,
+.modal-footer {
+  text-align: center;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+
+#optinVoiceTranscripts h1:before {
+  content: "";
+  background-image: url("./images/icon-optin.svg");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-position-y: 10px;
+  padding-left: 60px;
 }
 
-@media (max-width: 880px) {
-  #welcome-text-content {
-    max-width: unset;
-    background-size: 120% 100% !important;
-  }
+#optinVoiceTranscripts h1:after {
+  display: block;
+  content: "";
+  height: 5px;
+  background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
-@media (min-width: 880px) and (max-width: 1024px) {
-  #wrapper {
-    display: flex;
-  }
-
-  #usage-instructions {
-    margin-left: 5rem;
-  }
-
-  #welcome {
-    font-size: 1.875rem;
-  }
-
-  #privacy-promise {
-    font-size: 1.5rem;
-  }
-
-  .privacy-promise-explanations {
-    font-size: 1.5rem;
-  }
-
-  .learn-more-about-data {
-    font-size: 1rem;
-  }
+#optinVoiceTranscripts .modal button {
+  margin: 40px 0;
 }
 
-@media (min-width: 1023px) {
-  #instructions-sub {
-    width: 600px !important;
-  }
+/* .error-modal {
+  height: min-content;
+} */
+
+.error-modal h1 {
+  color: #d70022;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: -1.33px;
 }
 
-#instructions-sub {
-  width: 400px;
+.error-modal h1:before {
+  content: "";
+  background-image: url("./images/icon-mircophone-red.svg");
+  background-repeat: no-repeat;
+  background-position-y: 10px;
+  padding-left: 30px;
 }
 
-.instruction-step {
-  color: #20123a;
+.error-modal .modal-content {
+  text-align: center;
+}
+
+#onboarding-content {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  padding: 40px 100px;
+}
+
+.onboarding-section {
+  text-align: center;
+  padding: 50px 0 0 0;
+}
+
+.onboarding-section h1:before {
+  content: "";
+  background-repeat: no-repeat;
+  background-position-y: 5px;
+  padding-left: 40px;
+}
+
+.onboarding-section h1 {
+  display: inline-block;
+}
+
+.onboarding-section h1:after {
+  display: block;
+  content: "";
+  height: 5px;
+  background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
+}
+
+#get-started h1:before {
+  background-image: url("./images/icon-microphone.svg");
+}
+
+#try-it h1:before {
+  background-image: url("./images/icon-superhero.svg");
+}
+
+#try-it p {
+  font-weight: bold;
+}
+
+#try-it ul {
+  font-style: italic;
+  font-weight: 200;
+  font-size: 24px;
+  list-style: none;
+}
+
+#try-it ul li {
+  margin-top: 10px;
+}
+
+#must-allow img.security-button {
+  width: 187px;
+  height: 29px;
+  padding: 0 10px;
+  vertical-align: text-bottom;
+}
+
+#must-allow img.security-panel {
+  width: 369px;
+  height: 188px;
+}
+
+#footer {
+  background: linear-gradient(#25003e, #440071);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: -0.58px;
+  padding: 40px 0;
+}
+
+#footer ul {
+  display: flex;
+  justify-content: center;
+  color: white;
+  list-style: none;
+  padding: 0;
+}
+
+#footer ul li {
+  padding: 0 20px;
+}
+
+#footer ul li a,
+#footer p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
 }

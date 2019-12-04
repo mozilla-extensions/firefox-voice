@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="275px" height="70px" viewBox="0 0 275 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 60.1 (101010) - https://sketch.com -->
+    <title>45C327D2-D391-417A-9C4B-2C9B7409276D@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Onboarding" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Step-3---Get-Started" transform="translate(-585.000000, -494.000000)">
+            <g id="Content" transform="translate(1.000000, 59.000000)">
+                <g id="Get-started" transform="translate(545.000000, 0.000000)">
+                    <g id="Onboarding/Keyboard-Shortcut" transform="translate(39.000000, 435.000000)">
+                        <g id="Keyboard-Shortcut">
+                            <g id="Command">
+                                <rect id="Btn" stroke="#D7D7DB" fill="#2A2A2E" x="0.5" y="0.5" width="135.164883" height="68.9500712" rx="2"></rect>
+                                <text id="command" font-family="Inter-SemiBold, Inter" font-size="21" font-weight="500" letter-spacing="-0.87499995" fill="#FFFFFF">
+                                    <tspan x="20.7926686" y="51.635164">command</tspan>
+                                </text>
+                                <text id="⌘" font-family="Inter-SemiBold, Inter" font-size="21" font-weight="500" letter-spacing="-0.87499995" fill="#FFFFFF">
+                                    <tspan x="94.5003852" y="25.4038873">⌘</tspan>
+                                </text>
+                            </g>
+                            <g id="Period" transform="translate(203.571429, 0.000000)">
+                                <rect id="Btn" stroke="#D7D7DB" fill="#2A2A2E" x="0.5" y="0.5" width="69.7170042" height="68.9500712" rx="2"></rect>
+                                <text id="." font-family="Inter-SemiBold, Inter" font-size="21" font-weight="500" letter-spacing="-0.87499995" fill="#FFFFFF">
+                                    <tspan x="32.7459311" y="48.7205777">.</tspan>
+                                </text>
+                                <text id="&gt;" font-family="Inter-SemiBold, Inter" font-size="21" font-weight="500" letter-spacing="-0.87499995" fill="#FFFFFF">
+                                    <tspan x="28.8382606" y="25.4038873">&gt;</tspan>
+                                </text>
+                            </g>
+                            <text id="+" font-family="Inter-Regular, Inter" font-size="32" font-weight="normal" letter-spacing="-1.33333326" fill="#0F1126">
+                                <tspan x="157.142857" y="44.6190476">+</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

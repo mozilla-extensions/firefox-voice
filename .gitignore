@@ -10,10 +10,11 @@ extension/views/privacy-policy.html
 extension/buildSettings.js
 extension/popup/popupController.js
 extension/popup/popupView.js
-extension/popup/*.js.map
 extension/options/optionsController.js
 extension/options/optionsView.js
-extension/options/*.js.map
+extension/onboarding/onboardingController.js
+extension/onboarding/onboardingView.js
+extension/**/*.js.map
 node_modules
 npm-debug.log
 package-lock.json
