@@ -46,6 +46,15 @@ this.popupController = (function() {
     });
 
     const init = async () => {
+      const userSettings = await settings.getSettings();
+      if (!userSettings.collectTranscriptsOptinAnswered) {
+        browser.tabs.create({
+          url: browser.runtime.getURL("onboarding/onboard.html"),
+        });
+        window.close();
+        return;
+      }
+
       backgroundTabRecorder
         ? await voiceShim.openRecordingTab()
         : await setupStream();
@@ -54,7 +63,6 @@ this.popupController = (function() {
         ? new voiceShim.Recorder()
         : new voice.Recorder(stream);
 
-      const userSettings = await settings.getSettings();
       if (userSettings.chime) {
         playListeningChime();
       }
