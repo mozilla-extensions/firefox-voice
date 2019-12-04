@@ -221,14 +221,14 @@ this.popupController = (function() {
 
       if (message.card) {
         setCardImage(message.card);
-        setMinPopupSize(message.card.width, message.card.height);
+        setMinPopupSize(message.card.width);
       }
     };
 
     const showSearchCard = newCard => {
       setCardImage(newCard);
       if (newCard) {
-        setMinPopupSize(newCard.width, newCard.height);
+        setMinPopupSize(newCard.width);
       }
     };
 
@@ -239,9 +239,8 @@ this.popupController = (function() {
       });
     };
 
-    const setMinPopupSize = (width, height) => {
+    const setMinPopupSize = width => {
       popupContainer.style.minWidth = width + "px";
-      popupContainer.style.minHeight = parseInt(height) + 150 + "px";
     };
 
     // TODO: Console Warning: "Scripts may not close windows that were not opened by script."
