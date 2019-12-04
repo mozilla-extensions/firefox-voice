@@ -548,6 +548,7 @@ this.popupView = (function() {
     const { searchResults, index, searchUrl } = search;
     const card = cardImage;
     const next = searchResults[index + 1];
+    const previous = searchResults[index - 1];
     const cardStyles = card ? { height: card.height, width: card.width } : {};
     const imgAlt =
       card && card.alt
@@ -575,6 +576,24 @@ this.popupView = (function() {
               src={card.src}
               role="button"
             />
+          ) : null}
+          {next ? (
+            <div id="search-show-next">
+              Say <strong>next result</strong> to view: <br />
+              <strong id="search-show-next-title">{next.title}</strong>
+              <span id="search-show-next-domain">
+                {new URL(next.url).hostname}
+              </span>
+            </div>
+          ) : null}
+          {previous ? (
+            <div id="search-show-previous">
+              Say <strong>previous result</strong> to view: <br />
+              <strong id="search-show-previous-title">{previous.title}</strong>
+              <span id="search-show-previous-domain">
+                {new URL(previous.url).hostname}
+              </span>
+            </div>
           ) : null}
         </div>
         {next ? (
