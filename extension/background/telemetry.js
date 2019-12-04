@@ -175,6 +175,21 @@ this.telemetry = (function() {
     });
   }
 
+  exports.createSurveyUrl = function(surveyUrl) {
+    const url = new URL(surveyUrl);
+    url.searchParams.set(
+      "dateFirstInstalled",
+      firstInstallationTimestamp
+        ? new Date(firstInstallationTimestamp).toISOString()
+        : "unknown"
+    );
+    url.searchParams.set("versionFirstInstalled", firstInstallationVersion);
+    url.searchParams.set("extensionVersion", manifest.version);
+    url.searchParams.set("timesUsed", String(intentCount));
+    url.searchParams.set("daysUsed", String(intentDays));
+    return String(url);
+  };
+
   init();
 
   return exports;
