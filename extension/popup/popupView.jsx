@@ -36,7 +36,7 @@ this.popupView = (function() {
     }
     return (
       <div id="popup" className={currentView}>
-        <PopupHeader currentView={currentView} />
+        <PopupHeader currentView={currentView} transcript={transcript} />
         <PopupContent
           currentView={currentView}
           suggestions={suggestions}
@@ -57,12 +57,12 @@ this.popupView = (function() {
           onSubmitFeedback={onSubmitFeedback}
           setMinPopupSize={setMinPopupSize}
         />
-        <PopupFooter showSettings={showSettings} />
+        <PopupFooter currentView={currentView} showSettings={showSettings} />
       </div>
     );
   };
 
-  const PopupHeader = ({ currentView }) => {
+  const PopupHeader = ({ currentView, transcript }) => {
     const getTitle = () => {
       switch (currentView) {
         case "processing":
@@ -74,7 +74,7 @@ this.popupView = (function() {
         case "typing":
           return "Type your request";
         case "searchResults":
-          return "Search results";
+          return transcript;
         case "feedback":
           // FIXME: should be more dynamic, based on last intent:
           return "What went wrong?";
@@ -269,7 +269,8 @@ this.popupView = (function() {
     );
   };
 
-  const PopupFooter = ({ showSettings }) => {
+  const PopupFooter = ({ currentView, showSettings }) => {
+    if (currentView === "searchResults") return null;
     return (
       <div id="popup-footer">
         <div
@@ -407,7 +408,6 @@ this.popupView = (function() {
     );
   };
 
-  // TODO: test if componentDidMount can be removed? Convert to functional component?
   class TypingInput extends PureComponent {
     constructor(props) {
       super(props);
@@ -527,7 +527,7 @@ this.popupView = (function() {
         : "Show search results";
 
     if (card) {
-      setMinPopupSize(card.width, card.height);
+      setMinPopupSize(card.width);
     }
 
     const onSearchCardClick = () => {
@@ -549,16 +549,19 @@ this.popupView = (function() {
               role="button"
             />
           ) : null}
-          {next ? (
-            <div id="search-show-next">
-              Say <strong>next result</strong> to view: <br />
-              <strong id="search-show-next-title">{next.title}</strong>
-              <span id="search-show-next-domain">
-                {new URL(next.url).hostname}
-              </span>
-            </div>
-          ) : null}
         </div>
+        {next ? (
+          <div id="search-show-next">
+            <p>
+              <strong>
+                Click mic and say <i>next</i> to view
+              </strong>
+            </p>
+            <p id="search-show-next-description">
+              {new URL(next.url).hostname} | {next.title}
+            </p>
+          </div>
+        ) : null}
       </React.Fragment>
     );
   };
@@ -667,7 +670,6 @@ this.popupView = (function() {
 
     render() {
       return this.props.currentView !== "typing" &&
-        this.props.currentView !== "searchResults" &&
         this.props.currentView !== "feedback" &&
         this.props.currentView !== "feedbackThanks" ? (
         <div id="zap-wrapper">

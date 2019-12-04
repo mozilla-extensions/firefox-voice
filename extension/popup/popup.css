@@ -19,16 +19,19 @@ body,
   visibility: hidden;
 }
 
-#popup {
-  min-height: 200px;
-  min-width: inherit;
+#popup-container {
+  min-width: 350px;
   width: 350px;
-  padding: 1rem;
 }
 
 #zap-wrapper {
-  max-width: 350px;
-  max-height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+#zap-wrapper #zap {
+  width: 350px;
+  align-self: center;
 }
 
 #popup-header,
@@ -36,6 +39,23 @@ body,
   display: flex;
   flex: 1;
   justify-content: space-between;
+}
+
+#popup-header {
+  padding: 0.5rem;
+}
+
+#popup-footer {
+  padding: 0.5rem;
+}
+
+#popup-content {
+  display: flex;
+  flex-direction: column;
+}
+
+#popup-content:not(.search-results) {
+  padding: 0.5rem;
 }
 
 #header-title {
@@ -50,10 +70,6 @@ body,
 
 #ff-monitor-icon {
   max-height: 60px;
-}
-
-#suggestions {
-  padding: 1.2rem 0;
 }
 
 .suggestion {
@@ -86,10 +102,14 @@ body,
   font-style: italic;
 }
 
-#search-results,
 #text-input,
 #error-message {
   margin: 40px 0;
+}
+
+#search-results {
+  margin: 0 0 30px 0;
+  align-self: center;
 }
 
 #voice-input,
@@ -202,9 +222,24 @@ a#lexicon {
   font-size: 0.85em;
 }
 
-#search-show-next-domain {
-  color: #777;
-  font-size: 90%;
+#search-show-next {
+  color: white;
+  background-color: black;
+  padding: 0.5em;
+  margin: -1rem;
+  text-align: center;
+}
+
+#search-show-next p {
+  margin: 0 0.5em;
+}
+
+#search-show-next-description {
+  font-size: 0.8em;
+  padding-top: 0.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #search-image {
