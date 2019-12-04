@@ -210,8 +210,12 @@ this.onboardingView = (function() {
       <div id="footer">
         <ul>
           <li>
-            <a href="#" target="_blank">
-              Github
+            <a
+              href="https://github.com/mozilla/firefox-voice"
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub
             </a>
           </li>
           <li>
@@ -223,18 +227,13 @@ this.onboardingView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/privacy-policy.html" target="_blank">
-              Privay Policy
-            </a>
-          </li>
-          <li>
-            <a href="#" target="_blank">
-              Installation Instructions
+            <a href="/views/privacy-policy.html" target="_blank" rel="noopener">
+              Privacy Policy
             </a>
           </li>
           <li>
             <a href="/views/lexicon.html" target="_blank">
-              Lexicon
+              Things you can say
             </a>
           </li>
         </ul>
