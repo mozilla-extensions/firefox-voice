@@ -59,8 +59,7 @@ this.intents.self = (function() {
 
   this.intentRunner.registerIntent({
     name: "self.tellJoke",
-    description:
-      "Someone asks for a joke or something funny",
+    description: "Someone asks for a joke or something funny",
     examples: ["Tell me a joke", "Say something funny", "Make me laugh"],
     match: `
     tell (me |) a joke
@@ -69,7 +68,9 @@ this.intents.self = (function() {
     `,
     async run(context) {
       await browser.tabs.create({
-        url: browser.runtime.getURL("https://www.youtube.com/watch?v=N3jx4WIUYy4"),
+        url: browser.runtime.getURL(
+          "https://www.youtube.com/watch?v=N3jx4WIUYy4"
+        ),
       });
     },
   });

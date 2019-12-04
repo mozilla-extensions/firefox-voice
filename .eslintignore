@@ -3,3 +3,5 @@ extension/popup/popupController.js
 extension/popup/popupView.js
 extension/options/optionsController.js
 extension/options/optionsView.js
+extension/onboarding/onboardingController.js
+extension/onboarding/onboardingView.js

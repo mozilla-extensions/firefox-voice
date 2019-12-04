@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, buildSettings, settings */
+/* globals React, ReactDOM, settings */
 
 this.optionsController = (function() {
   const exports = {};
@@ -11,9 +11,6 @@ this.optionsController = (function() {
   exports.OptionsController = function() {
     const [inDevelopment, setInDevelopment] = useState(false);
     const [version, setVersion] = useState("");
-    const [buildTime, setBuildTime] = useState("");
-    const [gitCommit, setGitCommit] = useState("");
-    const [isDirty, setIsDirty] = useState(false);
     const [chime, setChime] = useState(false);
     const [telemetry, setTelemetry] = useState(true);
     const [utterancesTelemetry, setUtterancesTelemetry] = useState(false);
@@ -40,14 +37,6 @@ this.optionsController = (function() {
         })
       );
       setVersion(browser.runtime.getManifest().version);
-      setBuildTime(buildSettings.buildTime);
-
-      let { gitCommit } = buildSettings;
-      if (gitCommit.endsWith("-dirty")) {
-        setIsDirty(true);
-        gitCommit = gitCommit.split("-")[0];
-      }
-      setGitCommit(gitCommit);
     };
 
     const initSettings = async () => {
@@ -110,9 +99,6 @@ this.optionsController = (function() {
       <optionsView.Options
         inDevelopment={inDevelopment}
         version={version}
-        buildTime={buildTime}
-        gitCommit={gitCommit}
-        isDirty={isDirty}
         chime={chime}
         musicService={musicService}
         musicServiceOptions={musicServiceOptions}
