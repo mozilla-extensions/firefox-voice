@@ -245,6 +245,56 @@ this.intents.search = (function() {
   });
 
   intentRunner.registerIntent({
+    name: "search.previous",
+    description:
+      "If you've done a search then this will display the previous search result.",
+    examples: ["test:previous search item"],
+    match: `
+    (search |) previous (search |) (result{s} | item{s} | page | article |)
+    `,
+    async run(context) {
+      stopCardPoll();
+      const { tabId, searchInfo } = await getSearchInfo();
+      if (!searchInfo) {
+        const e = new Error("No search made");
+        e.displayMessage = "You haven't made a search";
+        throw e;
+      }
+      if (searchInfo.index <= 0) {
+        const tabId = await openSearchTab();
+        await context.makeTabActive(tabId);
+        return;
+      }
+      searchInfo.index--;
+      const item = searchInfo.searchResults[searchInfo.index];
+      await browser.runtime.sendMessage({
+        type: "showSearchResults",
+        searchResults: searchInfo.searchResults,
+        searchUrl: searchInfo.searchUrl,
+        index: searchInfo.index,
+      });
+      if (!tabId) {
+        const tab = await context.createTab({ url: item.url });
+        // eslint-disable-next-line require-atomic-updates
+        lastTabId = tab.id;
+        popupSearchInfo = null;
+        tabSearchResults.set(tab.id, searchInfo);
+      } else {
+        lastTabId = tabId;
+        try {
+          await context.makeTabActive(tabId);
+        } catch (e) {
+          if (String(e).includes("Invalid tab ID")) {
+            e.displayMessage = "The search results tab has been closed";
+          }
+          throw e;
+        }
+        await browser.tabs.update(tabId, { url: item.url });
+      }
+    },
+  });
+
+  intentRunner.registerIntent({
     name: "search.show",
     description: "Focuses the special tab used for searching",
     examples: ["test:open results", "test:show search result"],

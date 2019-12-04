@@ -207,6 +207,11 @@ a#lexicon {
   font-size: 90%;
 }
 
+#search-show-previous-domain {
+  color: #777;
+  font-size: 90%;
+}
+
 #search-image {
   cursor: pointer;
 }
