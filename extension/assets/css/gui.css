@@ -43,6 +43,7 @@ Example markup to use this styled native checkbox
 .styled-checkbox label {
   padding-left: 40px;
   line-height: 1.875rem;
+  display: block;
   cursor: pointer;
 }
 
