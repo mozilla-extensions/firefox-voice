@@ -7,9 +7,6 @@ this.optionsView = (function() {
   exports.Options = ({
     inDevelopment,
     version,
-    buildTime,
-    gitCommit,
-    isDirty,
     chime,
     musicService,
     musicServiceOptions,
@@ -24,12 +21,7 @@ this.optionsView = (function() {
   }) => {
     return (
       <div className="settings-page">
-        <LeftSidebar
-          version={version}
-          buildTime={buildTime}
-          gitCommit={gitCommit}
-          isDirty={isDirty}
-        />
+        <LeftSidebar version={version} />
         <RightContent
           inDevelopment={inDevelopment}
           chime={chime}
@@ -48,30 +40,15 @@ this.optionsView = (function() {
     );
   };
 
-  const LeftSidebar = ({ version, buildTime, gitCommit, isDirty }) => {
-    const commitUrl = `https://github.com/mozilla/firefox-voice/commit/${encodeURIComponent(
-      gitCommit
-    )}`;
+  const LeftSidebar = ({ version }) => {
     return (
       <div className="settings-sidebar">
         <img
-          src="/assets/images/favicons/icon-256.png"
+          src="./images/firefox-voice-stacked.svg"
           alt="Firefox Voice Logo"
         />
-        <h1 id="page-title">
-          Firefox <br />
-          <span className="light-title">Voice</span>
-        </h1>
         <div className="version-info">
-          <p>
-            Version {version}, built {buildTime} from commit{" "}
-            <a href={commitUrl}>{gitCommit}</a>.
-          </p>
-          {isDirty ? (
-            <p>Contains uncommitted code.</p>
-          ) : (
-            <p>Firefox is up to date.</p>
-          )}
+          <p>Version {version}</p>
           <p>
             <a href="/views/CHANGELOG.html">What's New</a>
           </p>

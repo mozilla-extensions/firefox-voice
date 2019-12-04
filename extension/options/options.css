@@ -15,34 +15,22 @@ body {
 }
 
 .settings-sidebar {
-  max-width: 300px;
   display: flex;
   flex-direction: column;
+  text-align: center;
+  padding: 30px;
 }
 
 .settings-sidebar > * {
   text-align: center;
 }
 
-.settings-sidebar img {
-  width: 256px;
-  height: auto;
-  align-self: center;
+.settings-sidebar .version-info {
+  margin-top: 40px;
 }
 
 .settings-sidebar p {
   margin: 4px 0;
-}
-
-#page-title {
-  font-size: 4rem;
-  line-height: 4rem;
-  margin-top: 22px;
-  margin-bottom: 28px;
-}
-
-#page-title .light-title {
-  font-weight: 100;
 }
 
 .settings-content {
@@ -77,7 +65,8 @@ body {
 }
 
 #data-collection li p {
-  margin: 5px 0 0 40px;
+  margin: 15px 0 0 40px;
+  line-height: 1.875rem;
 }
 
 #data-collection .styled-toggle label {
