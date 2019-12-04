@@ -20,7 +20,7 @@ this.onboardingController = (function() {
 
     const init = async () => {
       userSettings = await settings.getSettings();
-      setOptinViewShown(userSettings.collectTranscriptsOptinShown);
+      setOptinViewShown(!!userSettings.collectTranscriptsOptinAnswered);
 
       if (optinViewAlreadyShown) {
         launchPermission();
@@ -28,7 +28,7 @@ this.onboardingController = (function() {
     };
 
     const setOptinValue = async value => {
-      userSettings.collectTranscriptsOptinShown = true;
+      userSettings.collectTranscriptsOptinAnswered = Date.now();
       userSettings.utterancesTelemetry = value;
       await settings.saveSettings(userSettings);
     };
