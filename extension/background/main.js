@@ -2,6 +2,8 @@
 
 this.main = (function() {
   const exports = {};
+  const UNINSTALL_SURVEY =
+    "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
 
   browser.runtime.onMessage.addListener(async (message, sender) => {
     const properties = Object.assign({}, message);
@@ -221,6 +223,14 @@ this.main = (function() {
   });
 
   updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
+
+  function setUninstallURL() {
+    const url = telemetry.createSurveyUrl(UNINSTALL_SURVEY);
+    browser.runtime.setUninstallURL(url);
+  }
+
+  setTimeout(setUninstallURL, 10000);
+  setInterval(setUninstallURL, 1000 * 60 * 60 * 24); // Update the URL once a day
 
   return exports;
 })();
