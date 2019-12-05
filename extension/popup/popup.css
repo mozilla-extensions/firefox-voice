@@ -55,7 +55,7 @@ body,
 }
 
 #popup-content:not(.search-results) {
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 2rem;
 }
 
 #header-title {
@@ -233,6 +233,9 @@ a#lexicon {
   padding: 0.5em;
   margin: 2rem -1rem -1rem;
   text-align: center;
+  position: fixed;
+  bottom: 1em;
+  width: 100%;
 }
 
 #search-show-next p {

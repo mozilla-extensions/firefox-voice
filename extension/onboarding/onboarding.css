@@ -162,6 +162,17 @@ p {
   background-image: url("./images/icon-microphone.svg");
 }
 
+#get-started #keyboard-shortcut {
+  margin-top: 2em;
+}
+
+#get-started #keyboard-shortcut span {
+  background-color: #0f1126;
+  color: white;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+}
+
 #try-it h1:before {
   background-image: url("./images/icon-superhero.svg");
 }

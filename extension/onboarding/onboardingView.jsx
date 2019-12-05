@@ -94,17 +94,16 @@ this.onboardingView = (function() {
   };
 
   const GetStartedSection = () => {
-    // TODO: Set hotkey suggestion based on navigator
-    //     navigator.platform === "MacIntel" ? "Command ⌘" : "Ctrl";
+    const keyboardShortcut =
+      navigator.platform === "MacIntel" ? "Command ⌘" : "Ctrl";
     return (
       <div id="get-started" className="onboarding-section">
         <h1>Get Started</h1>
         <p>Click the mic in the toolbar above.</p>
         <p>Or, try the keyboard shortcut.</p>
-        <img
-          alt="Command + Period keyboard shortcut"
-          src="./images/onboarding-keyboard-shortcut.svg"
-        />
+        <p id="keyboard-shortcut">
+          <span id="device-shortcut">{keyboardShortcut}</span>+<span>.</span>
+        </p>
       </div>
     );
   };
@@ -115,7 +114,6 @@ this.onboardingView = (function() {
         <h1>Try Your New Super Power</h1>
         <p>Say things like</p>
         <ul>
-          <li>Go to New York Times</li>
           <li>Go to New York Times</li>
           <li>Read the article on this page</li>
           <li>Show movie times at the closest theater</li>
@@ -183,7 +181,7 @@ this.onboardingView = (function() {
           First click on
           <img
             alt="Example: Extension (Firefox Voice)"
-            src="security-button.png"
+            src="./images/security-button.png"
             className="security-button"
           />
           in the URL bar.
@@ -193,7 +191,7 @@ this.onboardingView = (function() {
 
         <img
           alt="Example: Permissions: use the microphone"
-          src="security-panel.png"
+          src="./images/security-panel.png"
           className="security-panel"
         />
 
