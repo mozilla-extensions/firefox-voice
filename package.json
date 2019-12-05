@@ -3,7 +3,7 @@
   "id": "firefox-voice@mozilla.org",
   "description": "This is a WebExtension that allows the browser to be voice-controlled.",
   "private": true,
-  "version": "0.12.0",
+  "version": "0.13.0",
   "author": {
     "name": "Mozilla Emerging Technologies",
     "url": "https://github.com/mozilla/firefox-voice"
