@@ -1,7 +1,8 @@
 #acquiring,
 #recording,
 #paused,
-#error {
+#error,
+#fatal-error {
   display: none;
 }
 
@@ -18,5 +19,9 @@
 }
 
 .error #error {
+  display: block;
+}
+
+.fatal-error #fatal-error {
   display: block;
 }

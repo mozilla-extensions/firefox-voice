@@ -26,7 +26,11 @@ this.recorder = (function() {
       streamReady.resolve();
     } catch (e) {
       log.warn("Failed to acquire stream:", String(e));
-      setState("error", { "#errorMessage": `Error getting stream: ${e}` });
+      if (String(e).includes("The object can not be found here")) {
+        setState("fatal-error", { "#fatalErrorMessage": String(e) });
+      } else {
+        setState("error", { "#errorMessage": `Error getting stream: ${e}` });
+      }
       streamReady.reject(e);
       return;
     }
