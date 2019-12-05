@@ -11,11 +11,13 @@
   font-weight: bold;
   letter-spacing: -0.22px;
   text-align: center;
-  padding: 0 50px;
+  padding: 0 135px;
+  cursor: pointer;
 }
 
-.styled-button.light-blue {
-  background-color: #0a84ff;
+.styled-button:hover,
+.styled-button:active {
+  background-color: #003eaa;
 }
 
 .styled-button > svg {
@@ -83,4 +85,16 @@ Example markup to use this styled native checkbox
   height: 0;
   width: 0;
   position: absolute;
+}
+
+a {
+  color: #0a84ff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover,
+a:active {
+  color: #0a6dcf;
+  text-decoration: underline;
 }

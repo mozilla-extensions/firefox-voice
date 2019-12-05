@@ -35,8 +35,8 @@ this.onboardingController = (function() {
 
     const launchPermission = async () => {
       try {
-        // TODO: addTimeout to prevent flash of modal if user has already allowed microphone access
-        setPermissionError("Waiting");
+        // Waiting view has been removed because it looks too much like an error view while we're waiting for user input.
+        // setPermissionError("Waiting");
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
         });

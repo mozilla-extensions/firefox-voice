@@ -55,7 +55,7 @@ body,
 }
 
 #popup-content:not(.search-results) {
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 2rem;
 }
 
 #header-title {
@@ -107,7 +107,7 @@ body,
   margin: 40px 0;
 }
 
-/* This is taking up space when it isn't visible */
+/* This prevents the text input from taking up space when it isn't visible */
 #popup.listening #text-input {
   opacity: 0;
   margin: 0;
@@ -233,6 +233,9 @@ a#lexicon {
   padding: 0.5em;
   margin: 2rem -1rem -1rem;
   text-align: center;
+  position: fixed;
+  bottom: 1em;
+  width: 100%;
 }
 
 #search-show-next p {

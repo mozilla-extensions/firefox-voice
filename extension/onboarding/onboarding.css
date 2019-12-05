@@ -25,10 +25,7 @@ h1 {
 }
 
 a {
-  text-decoration: none;
-  color: #0f1126;
   font-size: 24px;
-  font-weight: bold;
   letter-spacing: -1px;
 }
 
@@ -73,6 +70,13 @@ p {
   padding-bottom: 50px;
 }
 
+#optinVoiceTranscripts .modal-header p:before {
+  content: "";
+  background-image: url("./images/checkmark.svg");
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
 #optinVoiceTranscripts h1:before {
   content: "";
   background-image: url("./images/icon-optin.svg");
@@ -90,6 +94,15 @@ p {
 
 #optinVoiceTranscripts .modal button {
   margin: 40px 0;
+}
+
+#optinVoiceTranscripts .modal a {
+  color: #0060df;
+}
+
+#optinVoiceTranscripts .modal a:hover,
+#optinVoiceTranscripts .modal a:active {
+  color: #003eaa;
 }
 
 /* .error-modal {
@@ -149,6 +162,17 @@ p {
   background-image: url("./images/icon-microphone.svg");
 }
 
+#get-started #keyboard-shortcut {
+  margin-top: 2em;
+}
+
+#get-started #keyboard-shortcut span {
+  background-color: #0f1126;
+  color: white;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+}
+
 #try-it h1:before {
   background-image: url("./images/icon-superhero.svg");
 }
@@ -159,7 +183,7 @@ p {
 
 #try-it ul {
   font-style: italic;
-  font-weight: 200;
+  font-weight: 400;
   font-size: 24px;
   list-style: none;
 }
@@ -204,7 +228,7 @@ p {
   padding: 0 20px;
 }
 
-#footer ul li a,
+#footer a,
 #footer p {
   color: inherit;
   font-size: inherit;

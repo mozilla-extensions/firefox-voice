@@ -66,8 +66,8 @@
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("font-files/Inter-Italic.woff2?v=3.9") format("woff2"),
-    url("font-files/Inter-Italic.woff?v=3.9") format("woff");
+  src: url("font-files/Inter-RegularItalic.woff2?v=3.9") format("woff2"),
+    url("font-files/Inter-RegularItalic.woff?v=3.9") format("woff");
 }
 
 @font-face {
