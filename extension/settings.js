@@ -1,7 +1,8 @@
-/* globals intents */
+/* globals intents, log */
 
 this.settings = (function() {
   const exports = {};
+  const watchers = {};
 
   const DEFAULT_SETTINGS = {
     chime: true,
@@ -10,6 +11,7 @@ this.settings = (function() {
     utterancesTelemetry: false,
     collectAudio: false,
     collectTranscriptsOptinShown: false,
+    keyboardShortcut: null,
   };
 
   exports.getSettings = function() {
@@ -40,14 +42,35 @@ this.settings = (function() {
   };
 
   exports.saveSettings = async function(settings) {
+    if (Object.keys(watchers).length !== 0) {
+      const oldSettings = exports.getSettings();
+      for (const name in settings) {
+        if (settings[name] !== oldSettings[name]) {
+          const callbacks = watchers[name] || [];
+          for (const callback of callbacks) {
+            try {
+              callback(settings[name], name, oldSettings[name]);
+            } catch (e) {
+              log.error(`Error in settings callback for ${name}:`, e);
+            }
+          }
+        }
+      }
+    }
     if (typeof main === "undefined") {
       // We're not running in the background
       // Remove any inherited/default properties:
       settings = JSON.parse(JSON.stringify(settings));
       await browser.runtime.sendMessage({ type: "saveSettings", settings });
-    } else {
-      localStorage.setItem("settings", JSON.stringify(settings));
     }
+    localStorage.setItem("settings", JSON.stringify(settings));
+  };
+
+  exports.watch = function(setting, callback) {
+    if (!(setting in watchers)) {
+      watchers[setting] = [];
+    }
+    watchers[setting].push(callback);
   };
 
   return exports;
