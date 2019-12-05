@@ -107,6 +107,13 @@ body,
   margin: 40px 0;
 }
 
+/* This is taking up space when it isn't visible */
+#popup.listening #text-input {
+  opacity: 0;
+  margin: 0;
+  height: 0;
+}
+
 #search-results {
   align-self: center;
 }
@@ -242,6 +249,12 @@ a#lexicon {
 
 #search-image {
   cursor: pointer;
+}
+
+#intent-feedback {
+  margin: 2em 0;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 
 .feedback-utterance {

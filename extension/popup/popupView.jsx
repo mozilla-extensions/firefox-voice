@@ -317,9 +317,7 @@ this.popupView = (function() {
       <React.Fragment>
         <TextDisplay displayText={displayText} />
         <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
-        <div style={{ opacity: 0 }}>
-          <TypingInput onInputStarted={onInputStarted} />
-        </div>
+        <TypingInput onInputStarted={onInputStarted} />
         {lastIntent ? (
           <IntentFeedback
             lastIntent={lastIntent}
@@ -395,7 +393,7 @@ this.popupView = (function() {
       onSubmitFeedback({ rating: -1, feedback: null });
     }
     return (
-      <div>
+      <div id="intent-feedback">
         <div>How was your last experience?</div>
         <div className="feedback-utterance">
           {lastIntent.utterance}({ago} mins ago)
