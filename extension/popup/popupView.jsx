@@ -273,9 +273,8 @@ this.popupView = (function() {
     if (currentView === "searchResults") return null;
     return (
       <div id="popup-footer">
-        <div
+        <button
           id="settings-icon"
-          role="button"
           aria-label="Settings"
           onClick={showSettings}
         >
@@ -290,7 +289,7 @@ this.popupView = (function() {
               d="M15 7h-2.1a4.967 4.967 0 0 0-.732-1.753l1.49-1.49a1 1 0 0 0-1.414-1.414l-1.49 1.49A4.968 4.968 0 0 0 9 3.1V1a1 1 0 0 0-2 0v2.1a4.968 4.968 0 0 0-1.753.732l-1.49-1.49a1 1 0 0 0-1.414 1.415l1.49 1.49A4.967 4.967 0 0 0 3.1 7H1a1 1 0 0 0 0 2h2.1a4.968 4.968 0 0 0 .737 1.763c-.014.013-.032.017-.045.03l-1.45 1.45a1 1 0 1 0 1.414 1.414l1.45-1.45c.013-.013.018-.031.03-.045A4.968 4.968 0 0 0 7 12.9V15a1 1 0 0 0 2 0v-2.1a4.968 4.968 0 0 0 1.753-.732l1.49 1.49a1 1 0 0 0 1.414-1.414l-1.49-1.49A4.967 4.967 0 0 0 12.9 9H15a1 1 0 0 0 0-2zM5 8a3 3 0 1 1 3 3 3 3 0 0 1-3-3z"
             ></path>
           </svg>
-        </div>
+        </button>
         <div id="moz-voice-privacy">
           <a
             href="https://firefox-voice-feedback.herokuapp.com/"
@@ -396,13 +395,54 @@ this.popupView = (function() {
       <div id="intent-feedback">
         <div>How was your last experience?</div>
         <div className="feedback-utterance">
-          {lastIntent.utterance}({ago} mins ago)
+          {lastIntent.utterance} ({ago} ago)
         </div>
         <div className="feedback-controls">
-          <button onClick={onPositive}>☺</button>
-          <button onClick={onNegative}>☹</button>
+          <button aria-label="Leave a positive review" onClick={onPositive}>
+            <HappyIcon />
+          </button>
+          <button aria-label="Leave a negative review" onClick={onNegative}>
+            <SadIcon />
+          </button>
         </div>
       </div>
+    );
+  };
+
+  // This was done this way instead of with an img tag so that hover color effects could be set in the css.
+  const SadIcon = () => {
+    return (
+      <svg
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g fill="#0a84ff">
+          <path d="m9.6 8.6c0-.9924-.8076-1.8-1.8-1.8s-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8 1.8-.8076 1.8-1.8zm-2.8 0c0-.5512.4488-1 1-1s1 .4488 1 1-.4488 1-1 1-1-.4488-1-1z" />
+          <path d="m16.2 6.8c-.9924 0-1.8.8076-1.8 1.8s.8076 1.8 1.8 1.8 1.8-.8076 1.8-1.8-.8076-1.8-1.8-1.8zm0 2.8c-.5512 0-1-.4488-1-1s.4488-1 1-1 1 .4488 1 1-.4488 1-1 1z" />
+          <path d="m12 0c-6.6168 0-12 5.3832-12 12s5.3832 12 12 12 12-5.3832 12-12-5.3832-12-12-12zm0 23.2c-6.1756 0-11.2-5.0244-11.2-11.2s5.0244-11.2 11.2-11.2 11.2 5.0244 11.2 11.2-5.0244 11.2-11.2 11.2z" />
+          <path d="m7.784 15.5384-1.228.9444.488.6344 1.228-.9444c2.1952-1.6888 5.2616-1.6888 7.4564 0l1.228.9444.488-.6344-1.228-.9444c-2.4828-1.9084-5.9496-1.9092-8.4324 0z" />
+        </g>
+      </svg>
+    );
+  };
+
+  const HappyIcon = () => {
+    return (
+      <svg
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g fill="#0a84ff">
+          <path d="m12 24c6.6168 0 12-5.3832 12-12s-5.3832-12-12-12-12 5.3832-12 12 5.3832 12 12 12zm0-23.2c6.1756 0 11.2 5.0244 11.2 11.2s-5.0244 11.2-11.2 11.2-11.2-5.0244-11.2-11.2 5.0244-11.2 11.2-11.2z" />
+          <path d="m7.8 10.8c.9924 0 1.8-.8076 1.8-1.8s-.8076-1.8-1.8-1.8-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8zm0-2.8c.5512 0 1 .4488 1 1s-.4488 1-1 1-1-.4488-1-1 .4488-1 1-1z" />
+          <path d="m16.2 10.8c.9924 0 1.8-.8076 1.8-1.8s-.8076-1.8-1.8-1.8-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8zm0-2.8c.5512 0 1 .4488 1 1s-.4488 1-1 1-1-.4488-1-1 .4488-1 1-1z" />
+          <path d="m12 19.4512c2.8356 0 5.4144-1.3184 7.0744-3.6172l-.6484-.4684c-1.5084 2.088-3.85 3.2856-6.426 3.2856s-4.9176-1.1976-6.426-3.2856l-.6484.4684c1.66 2.2992 4.2388 3.6172 7.0744 3.6172z" />
+        </g>
+      </svg>
     );
   };
 

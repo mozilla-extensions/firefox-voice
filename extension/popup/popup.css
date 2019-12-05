@@ -1,4 +1,5 @@
 @import url("../assets/css/inter.css");
+@import url("../assets/css/gui.css");
 
 html {
   font-family: "Inter", sans-serif;
@@ -46,17 +47,27 @@ body,
 }
 
 #popup-footer {
-  padding: 0.5rem;
+  padding: 2rem 0.5rem 0.5rem;
 }
 
 #popup-content {
   display: flex;
   flex-direction: column;
+  padding-bottom: 3rem;
 }
 
-#popup-content:not(.search-results) {
-  padding: 0.5rem 0.5rem 2rem;
+#popup:not(.searchResults) #popup-content {
+  padding-bottom: 0;
 }
+
+#popup-footer #settings-icon {
+  border: none;
+  background-color: transparent;
+}
+
+#popup-footer #settings-icon:hover svg path {
+  fill: #444444;
+} 
 
 #header-title {
   font-size: 1.125rem;
@@ -84,11 +95,10 @@ body,
 }
 
 #moz-voice-privacy {
-  margin-top: 1.2em;
+  line-height: 20px;
 }
 
 #moz-voice-privacy > a {
-  color: #0a84ff;
   font-weight: 400;
   font-size: 0.85em;
 }
@@ -221,8 +231,6 @@ body,
 }
 
 a#lexicon {
-  text-decoration: none;
-  color: #0a84ff;
   font-weight: 400;
   font-size: 0.85em;
 }
@@ -255,9 +263,14 @@ a#lexicon {
 }
 
 #intent-feedback {
-  margin: 2em 0;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  margin: 2em 0 0;
+  padding-top: 1em;
+  border-top: 1px solid #ededf0;
+  border-bottom: 1px solid #ededf0;
+  color: #737373;
+  font-size: 14px;
+  letter-spacing: -0.58px;
+  text-align: center;
 }
 
 .feedback-utterance {
@@ -275,8 +288,8 @@ a#lexicon {
   background-color: transparent;
 }
 
-.feedback-controls button:hover {
-  font-size: 160%;
+.feedback-controls button:hover svg path {
+  fill: #0a6dcf;
 }
 
 .feedback-form h1 {
