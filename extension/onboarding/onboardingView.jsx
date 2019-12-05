@@ -238,8 +238,11 @@ this.onboardingView = (function() {
           </li>
         </ul>
         <p>
-          Visit Mozilla Corporation’s not-for-profit parent, the Mozilla
-          Foundation.
+          Visit Mozilla Corporation’s not-for-profit parent, the{" "}
+          <a href="https://foundation.mozilla.org/en/" target="_blank">
+            Mozilla Foundation
+          </a>
+          .
         </p>
       </div>
     );

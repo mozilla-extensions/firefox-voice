@@ -25,10 +25,7 @@ h1 {
 }
 
 a {
-  text-decoration: none;
-  color: #0f1126;
   font-size: 24px;
-  font-weight: bold;
   letter-spacing: -1px;
 }
 
@@ -90,6 +87,15 @@ p {
 
 #optinVoiceTranscripts .modal button {
   margin: 40px 0;
+}
+
+#optinVoiceTranscripts .modal a {
+  color: #0060df;
+}
+
+#optinVoiceTranscripts .modal a:hover,
+#optinVoiceTranscripts .modal a:active {
+  color: #003eaa;
 }
 
 /* .error-modal {
@@ -204,7 +210,7 @@ p {
   padding: 0 20px;
 }
 
-#footer ul li a,
+#footer a,
 #footer p {
   color: inherit;
   font-size: inherit;
