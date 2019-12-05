@@ -7,16 +7,30 @@ this.optionsController = (function() {
 
   let userSettings;
   let isInitialized = false;
+  let onKeyboardShortcutError = () => {};
+
+  browser.runtime.onMessage.addListener(message => {
+    if (message.type !== "keyboardShortcutError") {
+      return;
+    }
+    onKeyboardShortcutError(message.error);
+  });
 
   exports.OptionsController = function() {
     const [inDevelopment, setInDevelopment] = useState(false);
     const [version, setVersion] = useState("");
     const [chime, setChime] = useState(false);
+    const [keyboardShortcut, setKeyboardShortcut] = useState(null);
+    const [keyboardShortcutError, setKeyboardShortcutError] = useState(
+      localStorage.getItem("keyboardShortcutError")
+    );
     const [telemetry, setTelemetry] = useState(true);
     const [utterancesTelemetry, setUtterancesTelemetry] = useState(false);
     const [collectAudio, setCollectAudio] = useState(false);
     const [musicService, setMusicService] = useState("");
     const [musicServiceOptions, setMusicServiceOptions] = useState([]);
+
+    onKeyboardShortcutError = setKeyboardShortcutError;
 
     useEffect(() => {
       if (!isInitialized) {
@@ -50,6 +64,7 @@ this.optionsController = (function() {
       setTelemetry(!userSettings.disableTelemetry);
       setUtterancesTelemetry(!!userSettings.utterancesTelemetry);
       setCollectAudio(!!userSettings.collectAudio);
+      setKeyboardShortcut(userSettings.keyboardShortcut);
     };
 
     const sendSettings = async () => {
@@ -95,11 +110,20 @@ this.optionsController = (function() {
       setCollectAudio(value);
     };
 
+    const updateKeyboardShortcut = value => {
+      value = value || null;
+      userSettings.keyboardShortcut = value;
+      sendSettings();
+      setKeyboardShortcut(value);
+    };
+
     return (
       <optionsView.Options
         inDevelopment={inDevelopment}
         version={version}
         chime={chime}
+        keyboardShortcut={keyboardShortcut}
+        keyboardShortcutError={keyboardShortcutError}
         musicService={musicService}
         musicServiceOptions={musicServiceOptions}
         telemetry={telemetry}
@@ -107,6 +131,7 @@ this.optionsController = (function() {
         collectAudio={collectAudio}
         updateMusicService={updateMusicService}
         updateChime={updateChime}
+        updateKeyboardShortcut={updateKeyboardShortcut}
         updateTelemetry={updateTelemetry}
         updateUtterancesTelemetry={updateUtterancesTelemetry}
         updateCollectAudio={updateCollectAudio}

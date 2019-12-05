@@ -164,5 +164,63 @@ this.main = (function() {
     browser.tabs.create({ url: browser.runtime.getURL("/popup/popup.html") });
   }
 
+  let _shortcutSet = false;
+
+  async function updateKeyboardShortcut(shortcut) {
+    if (shortcut) {
+      let success = false;
+      try {
+        await browser.commands.update({
+          name: "_execute_browser_action",
+          shortcut,
+        });
+        _shortcutSet = true;
+        success = true;
+      } catch (e) {
+        let error = String(e);
+        error = error.replace(/^.*Error: Value/, "");
+        try {
+          await browser.runtime.sendMessage({
+            type: "keyboardShortcutError",
+            error,
+          });
+          // I would have thought sessionStorage would work here, but apparently not:
+          localStorage.removeItem("keyboardShortcutError");
+        } catch (e) {
+          // The options page isn't open (this might be startup), so it can't respond
+          log.error(
+            "Error trying to set keyboard shortcut to:",
+            shortcut,
+            "; error:",
+            error
+          );
+          // We'll put it in sessionStorage for later:
+          localStorage.setItem("keyboardShortcutError", error);
+        }
+      }
+      if (success) {
+        try {
+          await browser.runtime.sendMessage({
+            type: "keyboardShortcutError",
+            error: "",
+          });
+        } catch (e) {
+          // Ignore (no options page receiver)
+        }
+      }
+    } else if (_shortcutSet) {
+      browser.commands.update({
+        name: "_execute_browser_action",
+        shortcut: "Ctrl+Period",
+      });
+    }
+  }
+
+  settings.watch("keyboardShortcut", newValue => {
+    updateKeyboardShortcut(newValue);
+  });
+
+  updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
+
   return exports;
 })();

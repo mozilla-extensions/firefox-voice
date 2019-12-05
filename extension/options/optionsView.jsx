@@ -8,6 +8,8 @@ this.optionsView = (function() {
     inDevelopment,
     version,
     chime,
+    keyboardShortcut,
+    keyboardShortcutError,
     musicService,
     musicServiceOptions,
     telemetry,
@@ -15,6 +17,7 @@ this.optionsView = (function() {
     collectAudio,
     updateMusicService,
     updateChime,
+    updateKeyboardShortcut,
     updateTelemetry,
     updateUtterancesTelemetry,
     updateCollectAudio,
@@ -25,6 +28,8 @@ this.optionsView = (function() {
         <RightContent
           inDevelopment={inDevelopment}
           chime={chime}
+          keyboardShortcut={keyboardShortcut}
+          keyboardShortcutError={keyboardShortcutError}
           musicService={musicService}
           musicServiceOptions={musicServiceOptions}
           telemetry={telemetry}
@@ -32,6 +37,7 @@ this.optionsView = (function() {
           collectAudio={collectAudio}
           updateMusicService={updateMusicService}
           updateChime={updateChime}
+          updateKeyboardShortcut={updateKeyboardShortcut}
           updateTelemetry={updateTelemetry}
           updateUtterancesTelemetry={updateUtterancesTelemetry}
           updateCollectAudio={updateCollectAudio}
@@ -60,6 +66,8 @@ this.optionsView = (function() {
   const RightContent = ({
     inDevelopment,
     chime,
+    keyboardShortcut,
+    keyboardShortcutError,
     musicService,
     musicServiceOptions,
     telemetry,
@@ -67,6 +75,7 @@ this.optionsView = (function() {
     collectAudio,
     updateMusicService,
     updateChime,
+    updateKeyboardShortcut,
     updateTelemetry,
     updateUtterancesTelemetry,
     updateCollectAudio,
@@ -74,6 +83,11 @@ this.optionsView = (function() {
     return (
       <div className="settings-content">
         <ChimeSettings chime={chime} updateChime={updateChime} />
+        <KeyboardShortcutSettings
+          keyboardShortcut={keyboardShortcut}
+          updateKeyboardShortcut={updateKeyboardShortcut}
+          keyboardShortcutError={keyboardShortcutError}
+        />
         <MusicServiceSettings
           musicService={musicService}
           musicServiceOptions={musicServiceOptions}
@@ -134,6 +148,66 @@ this.optionsView = (function() {
             onChange={onChimeSettingChange}
           />
           <label htmlFor="chime">Play chime when opening mic</label>
+        </div>
+      </fieldset>
+    );
+  };
+
+  const KeyboardShortcutSettings = ({
+    keyboardShortcut,
+    updateKeyboardShortcut,
+    keyboardShortcutError,
+  }) => {
+    const onChangeSetting = event => {
+      updateKeyboardShortcut(event.target.value);
+    };
+    const isMac = window.navigator.platform.match(/Mac/i);
+    let modifier1, modifier2, placeholder;
+    if (isMac) {
+      modifier1 = "Command Alt MacCtrl";
+      modifier2 = "Command Alt MacCtrl Shift";
+      placeholder = "Command+Period";
+    } else {
+      modifier1 = "Ctrl Alt";
+      modifier2 = "Ctrl Alt Shift";
+      placeholder = "Ctrl+Period";
+    }
+    return (
+      <fieldset id="keyboard-shortcut">
+        <legend>Keyboard Shortcut</legend>
+        <div>
+          <input
+            id="keyboard-shortcut-field"
+            placeholder={placeholder}
+            type="text"
+            onChange={onChangeSetting}
+            value={keyboardShortcut}
+          />
+          <label htmlFor="keyboard-shortcut-field">Keyboard Shortcut</label>
+          <div>
+            Shortcut syntax (
+            <a
+              href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
+              target="_blank"
+              rel="noopener"
+            >
+              details
+            </a>
+            ):
+            <blockquote>
+              <code>MOD1+KEY</code> or <code>MOD1+MOD2+KEY</code> <br />
+              <code>MOD1</code> is one of: <code>{modifier1}</code> <br />
+              <code>MOD2</code> is one of: <code>{modifier2}</code> <br />
+              <code>KEY&nbsp;</code> is one of:{" "}
+              <code>
+                A-Z 0-9 F1-F12 Comma Period Home End PageUp PageDown Space
+                Insert Delete Up Down Left Right
+              </code>
+            </blockquote>
+          </div>
+          {keyboardShortcutError ? (
+            <div className="error">{keyboardShortcutError}</div>
+          ) : null}
         </div>
       </fieldset>
     );
