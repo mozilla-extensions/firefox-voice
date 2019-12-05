@@ -70,6 +70,13 @@ p {
   padding-bottom: 50px;
 }
 
+#optinVoiceTranscripts .modal-header p:before {
+  content: "";
+  background-image: url("./images/checkmark.svg");
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
 #optinVoiceTranscripts h1:before {
   content: "";
   background-image: url("./images/icon-optin.svg");

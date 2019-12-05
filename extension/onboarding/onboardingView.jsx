@@ -40,6 +40,7 @@ this.onboardingView = (function() {
       <div id="optinVoiceTranscripts" className="modal-wrapper">
         <div className="modal">
           <div className="modal-header">
+            <p>Successfully Installed</p>
             <h1>Allow Firefox Voice to Collect Voice Transcripts</h1>
           </div>
           <div className="modal-content">
