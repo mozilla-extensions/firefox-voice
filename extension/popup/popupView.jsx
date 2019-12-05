@@ -273,11 +273,7 @@ this.popupView = (function() {
     if (currentView === "searchResults") return null;
     return (
       <div id="popup-footer">
-        <button
-          id="settings-icon"
-          aria-label="Settings"
-          onClick={showSettings}
-        >
+        <button id="settings-icon" aria-label="Settings" onClick={showSettings}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
