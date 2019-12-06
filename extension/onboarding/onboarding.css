@@ -203,6 +203,7 @@ p {
   font-weight: 400;
   font-size: 24px;
   list-style: none;
+  padding: 0;
 }
 
 #try-it ul li {
