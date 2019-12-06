@@ -65,6 +65,7 @@ body,
 #close-icon {
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 #settings-icon:hover svg path,
