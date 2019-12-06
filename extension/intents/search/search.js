@@ -198,7 +198,7 @@ this.intents.search = (function() {
     name: "search.next",
     description:
       "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result.",
-    examples: ["test:next search item"],
+    examples: ["test:next search item", "test:next"],
     match: `
     (search |) next (search |) (result{s} | item{s} | page | article |)
     `,
