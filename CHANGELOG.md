@@ -1,3 +1,17 @@
+## Version 0.14.0 (2019-12-06)
+
+- Make 'next' do the next search item. Fixes [#680](https://github.com/mozilla/firefox-voice/issues/680) [c51321f](https://github.com/mozilla/firefox-voice/commit/c51321f)
+- Update mic icon. Fixes [#677](https://github.com/mozilla/firefox-voice/issues/677) [7fbee60](https://github.com/mozilla/firefox-voice/commit/7fbee60) [4c1cccf](https://github.com/mozilla/firefox-voice/commit/4c1cccf)
+- Various small style updates:
+  - Adds hover state to text input 'Go' button. [c252a96](https://github.com/mozilla/firefox-voice/commit/c252a96)
+  - Aligns opt-in modal buttons horizontally so "Don't Allow" isn't hidden below the page threshold. [3327307](https://github.com/mozilla/firefox-voice/commit/3327307)
+  - Fixes layout bug with voice command list on onboarding page. [61a3ae7](https://github.com/mozilla/firefox-voice/commit/61a3ae7)
+  - Adds toolbar arrow to onboarding page. [155804d](https://github.com/mozilla/firefox-voice/commit/155804d)
+  - Adds cursor:pointer to popup icon buttons. [ee1fff2](https://github.com/mozilla/firefox-voice/commit/ee1fff2)
+  - Adds hover state to popup icon buttons [c429a17](https://github.com/mozilla/firefox-voice/commit/c429a17)
+  - Formats and fixes lint errors. [4b98c22](https://github.com/mozilla/firefox-voice/commit/4b98c22)
+  - Fixes layout and icons for popup feedback widget. [6369b9b](https://github.com/mozilla/firefox-voice/commit/6369b9b)
+
 ## Version 0.13.0 (2019-12-05)
 
 - Open a form when uninstalling. Fixes [#141](https://github.com/mozilla/firefox-voice/issues/141) [56fca20](https://github.com/mozilla/firefox-voice/commit/56fca20)
