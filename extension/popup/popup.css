@@ -60,13 +60,17 @@ body,
   padding-bottom: 0;
 }
 
-#popup-footer #settings-icon {
+#settings-icon,
+#left-icon,
+#close-icon {
   border: none;
   background-color: transparent;
 }
 
-#popup-footer #settings-icon:hover svg path {
-  fill: #444444;
+#settings-icon:hover svg path,
+#left-icon:hover svg path,
+#close-icon:hover svg path {
+  fill: #555555;
 }
 
 #header-title {
