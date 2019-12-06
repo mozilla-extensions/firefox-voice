@@ -66,8 +66,8 @@ p {
 
 .modal-footer {
   display: flex;
-  flex-direction: column;
   padding-bottom: 50px;
+  margin: 40px 0;
 }
 
 #optinVoiceTranscripts .modal-header p:before {
@@ -92,8 +92,8 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
-#optinVoiceTranscripts .modal button {
-  margin: 40px 0;
+#optinVoiceTranscripts .modal-footer a {
+  margin: 15px 0 0 40px;
 }
 
 #optinVoiceTranscripts .modal a {
@@ -104,10 +104,6 @@ p {
 #optinVoiceTranscripts .modal a:active {
   color: #003eaa;
 }
-
-/* .error-modal {
-  height: min-content;
-} */
 
 .error-modal h1 {
   color: #d70022;
