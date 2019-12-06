@@ -49,6 +49,7 @@ this.intents.self = (function() {
     description: "Opens the intent viewer (probably this page)",
     match: `
     (show | open) all intents (for me |)
+    (show | open) intent viewer (for me|)
     `,
     async run(context) {
       await browser.tabs.create({

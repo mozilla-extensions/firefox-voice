@@ -146,13 +146,13 @@ this.intents.music = (function() {
   intentRunner.registerIntent({
     name: "music.move",
     description: "Go to the next or previous song on a service",
-    examples: ["next", "previous"],
+    examples: ["next track", "previous song"],
     match: `
     (play |) next video               [direction=next] [service=youtube]
     skip video                        [direction=next] [service=youtube]
     (play |) previous video           [direction=back] [service=youtube]
     play next (song | track |)        [direction=next]
-    next (song | track |)             [direction=next]
+    next (song | track)             [direction=next]
     play previous (song | track |)    [direction=back]
     previous (song | track |)         [direction=back]
     (skip | forward) (song | track |) [direction=next]
