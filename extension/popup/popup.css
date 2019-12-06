@@ -186,6 +186,11 @@ body,
   color: #fff;
 }
 
+#send-text-input:hover,
+#send-text-input:active {
+  background-color: rgb(18, 140, 0);
+}
+
 #send-btn-wrapper {
   text-align: center;
   margin-top: 1em;
