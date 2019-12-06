@@ -82,6 +82,9 @@ this.onboardingView = (function() {
   const OnboardingPageContent = () => {
     return (
       <div id="onboarding-content">
+        <div id="toolbar-arrow-wrapper">
+          <div id="toolbar-arrow"></div>
+        </div>
         <div id="onboarding-logo">
           <img src="./images/firefox-voice-logo.svg" alt="Firefox Voice Logo" />
         </div>

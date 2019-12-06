@@ -129,10 +129,27 @@ p {
 }
 
 #onboarding-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-content: center;
   padding: 40px 100px;
+}
+
+#toolbar-arrow-wrapper {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 50px;
+}
+
+#toolbar-arrow {
+  background-image: url("./images/extensions-arrow.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 240px;
+  width: 400px;
+  float: right;
 }
 
 .onboarding-section {
@@ -234,4 +251,10 @@ p {
   font-size: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
+}
+
+@media only screen and (max-width: 1240px) {
+  #toolbar-arrow-wrapper {
+    width: 30vw;
+  }
 }
