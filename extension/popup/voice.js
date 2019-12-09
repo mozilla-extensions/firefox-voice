@@ -62,6 +62,9 @@ this.voice = (function() {
       vad.onNoVoice = () => {
         this.onNoVoice();
       };
+      vad.onStartVoice = () => {
+        this.onStartVoice();
+      };
       // connect stream to our recorder
       this.sourceNode.connect(this.scriptprocessor);
       // MediaRecorder initialization
@@ -107,6 +110,10 @@ this.voice = (function() {
     }
 
     onNoVoice() {
+      // Can be overridden
+    }
+
+    onStartVoice() {
       // Can be overridden
     }
 

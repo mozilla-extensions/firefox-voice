@@ -20,6 +20,10 @@ this.vad = (function() {
     // Can be overridden
   };
 
+  exports.onStartVoice = () => {
+    // Can be overrideen
+  };
+
   exports.SpeakToMeVad = class SpeakToMeVad {
     constructor() {
       this.webrtc_main = Module.cwrap("main");
@@ -59,6 +63,7 @@ this.vad = (function() {
       this.dtantesmili = Date.now();
       this.raisenovoice = false;
       this.done = false;
+      this.onStartVoiceSent = false;
     }
 
     // function that returns if the specified buffer has silence of speech
@@ -137,6 +142,10 @@ this.vad = (function() {
             stm_vad.samplesvoice += dtdepois - stm_vad.dtantesmili;
             if (stm_vad.samplesvoice > stm_vad.minvoice) {
               stm_vad.touchedvoice = true;
+            }
+            if (!this.onStartVoiceSent) {
+              exports.onStartVoice();
+              this.onStartVoiceSent = true;
             }
           }
           stm_vad.dtantesmili = dtdepois;

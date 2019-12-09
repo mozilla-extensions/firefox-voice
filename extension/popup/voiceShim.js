@@ -63,7 +63,12 @@ this.voiceShim = (function() {
     onProcessing(exception) {
       // override
     }
+
     onNoVoice(exception) {
+      // override
+    }
+
+    onStartVoice() {
       // override
     }
 
@@ -92,9 +97,13 @@ this.voiceShim = (function() {
       const args = message.args || [];
       if (
         activeRecorder._cancelled &&
-        ["onEnd", "onError", "onProcessing", "onNoVoice"].includes(
-          message.method
-        )
+        [
+          "onEnd",
+          "onError",
+          "onProcessing",
+          "onNoVoice",
+          "onStartVoice",
+        ].includes(message.method)
       ) {
         return Promise.resolve(null);
       }
