@@ -4,6 +4,7 @@ this.queryScript = (function() {
   const CARD_SELECTOR = ".vk_c, .kp-blk, .EyBRub";
   const SIDEBAR_SELECTOR = "#rhs";
   const MAIN_SELECTOR = "#center_col";
+  const AD_CLASS = "commercial-unit-desktop-rhs";
 
   function findCards() {
     const topElement = document.querySelector("a > h3");
@@ -15,15 +16,14 @@ this.queryScript = (function() {
   }
 
   function findCardIn(container, maxBottom) {
-    let selected = container.querySelectorAll(CARD_SELECTOR);
+    let selected = Array.from(container.querySelectorAll(CARD_SELECTOR));
     if (maxBottom) {
       // FIXME: this is testing if the top of the card is above the top of the first search
       // result, as opposed to testing if the *bottom* of the card is there. This probably doesn't
       // result in any false positives (or negatives), but the names are unclear here.
-      selected = Array.from(selected).filter(
-        e => e.getBoundingClientRect().y <= maxBottom
-      );
+      selected = selected.filter(e => e.getBoundingClientRect().y <= maxBottom);
     }
+    selected = selected.filter(e => !isRhsAd(e));
     if (selected.length) {
       return selected[0];
     }
@@ -58,6 +58,16 @@ this.queryScript = (function() {
       style.borderBottomLeftRadius === RADIUS &&
       style.borderBottomRightRadius === RADIUS
     );
+  }
+
+  function isRhsAd(element) {
+    while (element && element.classList) {
+      if (element.classList.contains(AD_CLASS)) {
+        return true;
+      }
+      element = element.parentNode;
+    }
+    return false;
   }
 
   communicate.register("searchResultInfo", message => {
