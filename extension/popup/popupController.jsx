@@ -322,6 +322,9 @@ this.popupController = (function() {
         log.debug("Closing popup because of no voice input");
         window.close();
       };
+      recorder.onStartVoice = () => {
+        // See https://github.com/mozilla/firefox-voice/issues/324 for some work to be done here
+      };
       recorder.startRecording();
     };
 

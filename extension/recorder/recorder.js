@@ -131,6 +131,18 @@ this.recorder = (function() {
       }
     }
 
+    onStartVoice() {
+      if (this._destroyed) {
+        log.error("onStartVoice called after ShimRecorder destroyed");
+      } else {
+        browser.runtime.sendMessage({
+          type: "onVoiceShimForward",
+          method: "onStartVoice",
+          args: [],
+        });
+      }
+    }
+
     destroy() {
       this._destroyed = true;
     }
