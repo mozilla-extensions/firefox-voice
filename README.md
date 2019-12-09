@@ -1,6 +1,6 @@
 # Firefox Voice
 
-Firefox Voice is an experiment from [Mozilla Research](https://research.mozilla.org/).
+Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://research.mozilla.org/).
 
 Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "what is the weather?" or "find the gmail tab". Ultimately the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions. Initially the goal is to provide _any_ useful interactions.
 
