@@ -1,4 +1,4 @@
-# Firefox Voice Privacy Notice
+# Privacy Policy
 
 When Mozilla (that’s us) receives information from you, our [Privacy Policy](https://www.mozilla.org/en-US/privacy/) describes how we handle that information. In particular, you should know the following about Firefox Voice:
 

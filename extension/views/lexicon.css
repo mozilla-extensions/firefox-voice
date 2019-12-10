@@ -1,31 +1,3 @@
-#contents {
-  font-family: sans-serif, serif;
-}
-
-#sidebar {
-  float: left;
-  width: 33%;
-  font-size: 24px;
-  color: #8e31bd;
-  font-weight: bold;
-  letter-spacing: -2px;
-  line-height: 52px;
-}
-
-#sidebar .stmt {
-  width: 100%;
-  padding-right: 40px;
-}
-
-#list {
-  float: left;
-  width: 66%;
-}
-
-#clear {
-  clear: both;
-}
-
 .example {
   margin-bottom: 40px;
 }
@@ -68,8 +40,4 @@
   font-size: 16px;
   font-weight: normal;
   letter-spacing: 0px;
-}
-
-footer {
-  padding-top: 1rem;
 }
