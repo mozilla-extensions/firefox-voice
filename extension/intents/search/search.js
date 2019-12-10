@@ -125,6 +125,48 @@ this.intents.search = (function() {
     }, CARD_POLL_INTERVAL);
   }
 
+  async function moveResult(context, step) {
+    stopCardPoll();
+    const { tabId, searchInfo } = await getSearchInfo();
+    if (!searchInfo) {
+      const e = new Error("No search made");
+      e.displayMessage = "You haven't made a search";
+      throw e;
+    }
+    if ((searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
+    (searchInfo.index <= 0 && step < 0)) {
+      const tabId = await openSearchTab();
+      await context.makeTabActive(tabId);
+      return;
+    }
+    searchInfo.index += step;
+    const item = searchInfo.searchResults[searchInfo.index];
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: searchInfo.index,
+    });
+    if (!tabId) {
+      const tab = await context.createTab({ url: item.url });
+      // eslint-disable-next-line require-atomic-updates
+      lastTabId = tab.id;
+      popupSearchInfo = null;
+      tabSearchResults.set(tab.id, searchInfo);
+    } else {
+      lastTabId = tabId;
+      try {
+        await context.makeTabActive(tabId);
+      } catch (e) {
+        if (String(e).includes("Invalid tab ID")) {
+          e.displayMessage = "The search results tab has been closed";
+        }
+        throw e;
+      }
+      await browser.tabs.update(tabId, { url: item.url });
+    }
+  }
+
   exports.focusSearchResults = async message => {
     const { searchUrl } = message;
     const searchTabId = await openSearchTab();
@@ -203,44 +245,7 @@ this.intents.search = (function() {
     (search |) next (search |) (result{s} | item{s} | page | article |)
     `,
     async run(context) {
-      stopCardPoll();
-      const { tabId, searchInfo } = await getSearchInfo();
-      if (!searchInfo) {
-        const e = new Error("No search made");
-        e.displayMessage = "You haven't made a search";
-        throw e;
-      }
-      if (searchInfo.index >= searchInfo.searchResults.length - 1) {
-        const tabId = await openSearchTab();
-        await context.makeTabActive(tabId);
-        return;
-      }
-      searchInfo.index++;
-      const item = searchInfo.searchResults[searchInfo.index];
-      await browser.runtime.sendMessage({
-        type: "showSearchResults",
-        searchResults: searchInfo.searchResults,
-        searchUrl: searchInfo.searchUrl,
-        index: searchInfo.index,
-      });
-      if (!tabId) {
-        const tab = await context.createTab({ url: item.url });
-        // eslint-disable-next-line require-atomic-updates
-        lastTabId = tab.id;
-        popupSearchInfo = null;
-        tabSearchResults.set(tab.id, searchInfo);
-      } else {
-        lastTabId = tabId;
-        try {
-          await context.makeTabActive(tabId);
-        } catch (e) {
-          if (String(e).includes("Invalid tab ID")) {
-            e.displayMessage = "The search results tab has been closed";
-          }
-          throw e;
-        }
-        await browser.tabs.update(tabId, { url: item.url });
-      }
+      await moveResult(context, 1);
     },
   });
 
@@ -253,44 +258,7 @@ this.intents.search = (function() {
     (search |) previous (search |) (result{s} | item{s} | page | article |)
     `,
     async run(context) {
-      stopCardPoll();
-      const { tabId, searchInfo } = await getSearchInfo();
-      if (!searchInfo) {
-        const e = new Error("No search made");
-        e.displayMessage = "You haven't made a search";
-        throw e;
-      }
-      if (searchInfo.index <= 0) {
-        const tabId = await openSearchTab();
-        await context.makeTabActive(tabId);
-        return;
-      }
-      searchInfo.index--;
-      const item = searchInfo.searchResults[searchInfo.index];
-      await browser.runtime.sendMessage({
-        type: "showSearchResults",
-        searchResults: searchInfo.searchResults,
-        searchUrl: searchInfo.searchUrl,
-        index: searchInfo.index,
-      });
-      if (!tabId) {
-        const tab = await context.createTab({ url: item.url });
-        // eslint-disable-next-line require-atomic-updates
-        lastTabId = tab.id;
-        popupSearchInfo = null;
-        tabSearchResults.set(tab.id, searchInfo);
-      } else {
-        lastTabId = tabId;
-        try {
-          await context.makeTabActive(tabId);
-        } catch (e) {
-          if (String(e).includes("Invalid tab ID")) {
-            e.displayMessage = "The search results tab has been closed";
-          }
-          throw e;
-        }
-        await browser.tabs.update(tabId, { url: item.url });
-      }
+      await moveResult(context, -1);
     },
   });
 
