@@ -17,7 +17,7 @@ this.intents.search = (function() {
   // This is the most recent tab that was interacted with (e.g., I search in tab A, search in tab B, switch to tab A, get next result, switch to tab C, then say next result; tab A should get updated):
   let lastTabId;
   // These store per-tab search results; tabDataMap handles cleaning up results when a tab is closed:
-  const tabSearchResults = new browserUtil.TabDataMap();
+  const tabSearchResults = new browserUtil.TabDataMap(5 * 60 * 1000); // only delete after 5 minutes
 
   async function openSearchTab() {
     if (closeTabTimeout) {
@@ -230,16 +230,27 @@ this.intents.search = (function() {
         popupSearchInfo = null;
         tabSearchResults.set(tab.id, searchInfo);
       } else {
+        // eslint-disable-next-line require-atomic-updates
         lastTabId = tabId;
+        let exists = true;
         try {
           await context.makeTabActive(tabId);
         } catch (e) {
           if (String(e).includes("Invalid tab ID")) {
-            e.displayMessage = "The search results tab has been closed";
+            exists = false;
+          } else {
+            throw e;
           }
-          throw e;
         }
-        await browser.tabs.update(tabId, { url: item.url });
+        if (exists) {
+          await browser.tabs.update(tabId, { url: item.url });
+        } else {
+          const newTabId = await browser.tabs.create({ url: item.url });
+          // eslint-disable-next-line require-atomic-updates
+          lastTabId = newTabId;
+          tabSearchResults.set(newTabId, searchInfo);
+          tabSearchResults.delete(tabId);
+        }
       }
     },
   });
