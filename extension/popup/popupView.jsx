@@ -578,7 +578,12 @@ this.popupView = (function() {
           ) : null}
         </div>
         {next ? (
-          <div id="search-show-next">
+          <a
+            id="search-show-next"
+            href={new URL(next.url)}
+            target="_blank"
+            rel="noopener"
+          >
             <p>
               <strong>
                 Click mic and say <i>next</i> to view
@@ -587,7 +592,7 @@ this.popupView = (function() {
             <p id="search-show-next-description">
               {new URL(next.url).hostname} | {next.title}
             </p>
-          </div>
+          </a>
         ) : null}
       </React.Fragment>
     );
