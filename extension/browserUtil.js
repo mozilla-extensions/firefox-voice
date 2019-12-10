@@ -69,10 +69,11 @@ this.browserUtil = (function() {
   };
 
   exports.TabDataMap = class TabDataMap {
-    constructor() {
+    constructor(delay = 0) {
       this.watcher = new exports.TabRemovalWatcher();
       this.onRemoved = this.onRemoved.bind(this);
       this.map = new Map();
+      this.delay = delay;
     }
     set(tabId, value) {
       this.watcher.watch(tabId, this.onRemoved);
@@ -81,8 +82,17 @@ this.browserUtil = (function() {
     get(tabId) {
       return this.map.get(tabId);
     }
-    onRemoved(tabId) {
+    delete(tabId) {
       this.map.delete(tabId);
+    }
+    onRemoved(tabId) {
+      if (this.delay) {
+        setTimeout(() => {
+          this.map.delete(tabId);
+        }, this.delay);
+      } else {
+        this.map.delete(tabId);
+      }
     }
   };
 
