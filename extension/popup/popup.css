@@ -268,11 +268,6 @@ a#lexicon {
   text-overflow: ellipsis;
 }
 
-#search-show-previous-domain {
-  color: #777;
-  font-size: 90%;
-}
-
 #search-image {
   cursor: pointer;
 }
