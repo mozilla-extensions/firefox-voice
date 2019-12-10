@@ -86,7 +86,10 @@ this.onboardingView = (function() {
           <div id="toolbar-arrow"></div>
         </div>
         <div id="onboarding-logo">
-          <img src="./images/firefox-voice-logo.svg" alt="Firefox Voice Logo" />
+          <img
+            src="/assets/images/firefox-voice-logo.svg"
+            alt="Firefox Voice Logo"
+          />
         </div>
         <div>
           <GetStartedSection />
