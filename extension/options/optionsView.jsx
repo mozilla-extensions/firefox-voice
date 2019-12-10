@@ -164,12 +164,14 @@ this.optionsView = (function() {
     const isMac = window.navigator.platform.match(/Mac/i);
     let modifier1, modifier2, placeholder;
     if (isMac) {
-      modifier1 = "Command Alt MacCtrl";
-      modifier2 = "Command Alt MacCtrl Shift";
+      modifier1 =
+        "<code>Command</code>, <code>Alt</code>,  <code>MacCtrl</code>";
+      modifier2 =
+        "<code>Command</code>, <code>Alt</code>, <code>MacCtrl</code>, <code>Shift</code>";
       placeholder = "Command+Period";
     } else {
-      modifier1 = "Ctrl Alt";
-      modifier2 = "Ctrl Alt Shift";
+      modifier1 = "<code>Ctrl</code>, <code>Alt</code>";
+      modifier2 = "<code>Ctrl</code>, <code>Alt</code>, <code>Shift</code>";
       placeholder = "Ctrl+Period";
     }
     return (
@@ -178,13 +180,17 @@ this.optionsView = (function() {
         <div>
           <input
             id="keyboard-shortcut-field"
+            className="styled-input"
             placeholder={placeholder}
             type="text"
             onChange={onChangeSetting}
             value={keyboardShortcut}
           />
           <label htmlFor="keyboard-shortcut-field">Keyboard Shortcut</label>
-          <div>
+          {keyboardShortcutError ? (
+            <div className="error">{keyboardShortcutError}</div>
+          ) : null}
+          <div id="shortcut-syntax">
             Shortcut syntax (
             <a
               href="https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/commands#Key_combinations"
@@ -195,19 +201,40 @@ this.optionsView = (function() {
             </a>
             ):
             <blockquote>
-              <code>MOD1+KEY</code> or <code>MOD1+MOD2+KEY</code> <br />
-              <code>MOD1</code> is one of: <code>{modifier1}</code> <br />
-              <code>MOD2</code> is one of: <code>{modifier2}</code> <br />
-              <code>KEY&nbsp;</code> is one of:{" "}
-              <code>
-                A-Z 0-9 F1-F12 Comma Period Home End PageUp PageDown Space
-                Insert Delete Up Down Left Right
-              </code>
+              <p>
+                <code>MOD1+KEY</code> or <code>MOD1+MOD2+KEY</code>
+              </p>
+              <p>
+                <code>MOD1</code> is one of:{" "}
+                <span dangerouslySetInnerHTML={{ __html: modifier1 }} />
+              </p>
+              <p>
+                <code>MOD2</code> is one of:{" "}
+                <span dangerouslySetInnerHTML={{ __html: modifier2 }} />
+              </p>
+              <p>
+                <code>KEY</code> is one of:{" "}
+                <ul>
+                  <li>
+                    <code>A-Z</code>
+                  </li>
+                  <li>
+                    <code>0-9</code>
+                  </li>
+                  <li>
+                    <code>F1-F12</code>
+                  </li>
+                  <li>
+                    <code>Comma</code>, <code>Period</code>, <code>Home</code>,{" "}
+                    <code>End</code>, <code>PageUp</code>, <code>PageDown</code>
+                    , <code>Space</code>, <code>Insert</code>,{" "}
+                    <code>Delete</code>, <code>Up</code>, <code>Down</code>,{" "}
+                    <code>Left</code>, <code>Right</code>
+                  </li>
+                </ul>
+              </p>
             </blockquote>
           </div>
-          {keyboardShortcutError ? (
-            <div className="error">{keyboardShortcutError}</div>
-          ) : null}
         </div>
       </fieldset>
     );
