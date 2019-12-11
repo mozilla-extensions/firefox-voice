@@ -81,4 +81,38 @@ this.intents.tabs = (function() {
       await browser.tabs.reload();
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.openWindow",
+    description: "Opens a new (blank) window",
+    examples: ["open window"],
+    match: `
+    open window
+    open (a |) (new | blank |) window (for me|)
+    new (blank |) window
+    `,
+    async run(context) {
+      await browser.windows.create({});
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.openPrivateWindow",
+    description: "Opens a new private window",
+    examples: ["open private window"],
+    match: `
+    open (a |) (new | blank |) (private | incognito) window (for me|)
+    new (private | incognito) window
+    `,
+    async run(context) {
+      const isAllowed = browser.extension.isAllowedIncognitoAccess();
+      if (isAllowed === true) {
+        await browser.windows.create({ incognito: true });
+      } else {
+        const e = new Error("Failed to open private window");
+        e.displayMessage = "Extension does not have permission for incognito mode";
+        throw e;
+      }
+    },
+  });
 })();
