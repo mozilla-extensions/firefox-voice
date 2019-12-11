@@ -69,4 +69,16 @@ this.intents.tabs = (function() {
       await browser.tabs.saveAsPDF({});
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.reload",
+    description: "Reload the active tab of the current window",
+    examples: ["reload this page"],
+    match: `
+    (reload | refresh) (this | current |) (tab | page |) (for me |)
+    `,
+    async run(context) {
+      await browser.tabs.reload();
+    },
+  });
 })();
