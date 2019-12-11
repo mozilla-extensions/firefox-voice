@@ -154,7 +154,7 @@ this.intents.music = (function() {
     play next (song | track |)        [direction=next]
     next (song | track)             [direction=next]
     play previous (song | track |)    [direction=back]
-    previous (song | track |)         [direction=back]
+    previous (song | track)         [direction=back]
     (skip | forward) (song | track |) [direction=next]
     `,
     async run(context) {

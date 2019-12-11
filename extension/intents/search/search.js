@@ -125,6 +125,59 @@ this.intents.search = (function() {
     }, CARD_POLL_INTERVAL);
   }
 
+  async function moveResult(context, step) {
+    stopCardPoll();
+    const { tabId, searchInfo } = await getSearchInfo();
+    if (!searchInfo) {
+      const e = new Error("No search made");
+      e.displayMessage = "You haven't made a search";
+      throw e;
+    }
+    if ((searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
+    (searchInfo.index <= 0 && step < 0)) {
+      const tabId = await openSearchTab();
+      await context.makeTabActive(tabId);
+      return;
+    }
+    searchInfo.index += step;
+    const item = searchInfo.searchResults[searchInfo.index];
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: searchInfo.index,
+    });
+    if (!tabId) {
+      const tab = await context.createTab({ url: item.url });
+      // eslint-disable-next-line require-atomic-updates
+      lastTabId = tab.id;
+      popupSearchInfo = null;
+      tabSearchResults.set(tab.id, searchInfo);
+    } else {
+      // eslint-disable-next-line require-atomic-updates
+      lastTabId = tabId;
+      let exists = true;
+      try {
+        await context.makeTabActive(tabId);
+      } catch (e) {
+        if (String(e).includes("Invalid tab ID")) {
+          exists = false;
+        } else {
+          throw e;
+        }
+      }
+      if (exists) {
+        await browser.tabs.update(tabId, { url: item.url });
+      } else {
+        const newTabId = await browser.tabs.create({ url: item.url });
+        // eslint-disable-next-line require-atomic-updates
+        lastTabId = newTabId;
+        tabSearchResults.set(newTabId, searchInfo);
+        tabSearchResults.delete(tabId);
+      }
+    }
+  }
+
   exports.focusSearchResults = async message => {
     const { searchUrl } = message;
     const searchTabId = await openSearchTab();
@@ -203,55 +256,20 @@ this.intents.search = (function() {
     (search |) next (search |) (result{s} | item{s} | page | article |)
     `,
     async run(context) {
-      stopCardPoll();
-      const { tabId, searchInfo } = await getSearchInfo();
-      if (!searchInfo) {
-        const e = new Error("No search made");
-        e.displayMessage = "You haven't made a search";
-        throw e;
-      }
-      if (searchInfo.index >= searchInfo.searchResults.length - 1) {
-        const tabId = await openSearchTab();
-        await context.makeTabActive(tabId);
-        return;
-      }
-      searchInfo.index++;
-      const item = searchInfo.searchResults[searchInfo.index];
-      await browser.runtime.sendMessage({
-        type: "showSearchResults",
-        searchResults: searchInfo.searchResults,
-        searchUrl: searchInfo.searchUrl,
-        index: searchInfo.index,
-      });
-      if (!tabId) {
-        const tab = await context.createTab({ url: item.url });
-        // eslint-disable-next-line require-atomic-updates
-        lastTabId = tab.id;
-        popupSearchInfo = null;
-        tabSearchResults.set(tab.id, searchInfo);
-      } else {
-        // eslint-disable-next-line require-atomic-updates
-        lastTabId = tabId;
-        let exists = true;
-        try {
-          await context.makeTabActive(tabId);
-        } catch (e) {
-          if (String(e).includes("Invalid tab ID")) {
-            exists = false;
-          } else {
-            throw e;
-          }
-        }
-        if (exists) {
-          await browser.tabs.update(tabId, { url: item.url });
-        } else {
-          const newTabId = await browser.tabs.create({ url: item.url });
-          // eslint-disable-next-line require-atomic-updates
-          lastTabId = newTabId;
-          tabSearchResults.set(newTabId, searchInfo);
-          tabSearchResults.delete(tabId);
-        }
-      }
+      await moveResult(context, 1);
+    },
+  });
+
+  intentRunner.registerIntent({
+    name: "search.previous",
+    description:
+      "If you've done a search then this will display the previous search result.",
+    examples: ["test:previous search item", "test:previous"],
+    match: `
+    (search |) previous (search |) (result{s} | item{s} | page | article |)
+    `,
+    async run(context) {
+      await moveResult(context, -1);
     },
   });
 
