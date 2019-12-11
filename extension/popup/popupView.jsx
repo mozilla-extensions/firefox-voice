@@ -580,7 +580,7 @@ this.popupView = (function() {
         {next ? (
           <a
             id="search-show-next"
-            href={new URL(next.url)}
+            href={next.url}
             target="_blank"
             rel="noopener"
           >
