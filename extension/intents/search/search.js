@@ -151,6 +151,7 @@ this.intents.search = (function() {
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
     `,
+    examples: ["test:search for tops"],
     async run(context) {
       stopCardPoll();
       // An old popup-only search result is no longer valid once a new search is made:
