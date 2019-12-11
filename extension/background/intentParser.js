@@ -25,6 +25,32 @@ this.intentParser = (function() {
     lang: languages.languageNames(),
   };
 
+  // We will consider matches where we have to make these substitutions in order to get an exact
+  // match for an intent pattern. It both considers doing ALL the substitutions, and doing each
+  // substitution alone. (But all possible combinations are not attempted.)
+  // FIXME: we should make these substitutions in the matcher, not the incoming text
+  const SUBSTITUTIONS = {
+    the: "",
+    tap: "tab",
+    top: "tab",
+    "for me": "",
+    in: "on",
+    webpage: "page",
+    website: "site",
+  };
+
+  // This is used to attempt ALL substitutions:
+  const SUB_REGEX = new RegExp(
+    `\\b(${Object.keys(SUBSTITUTIONS).join("|")})\\b`,
+    "gi"
+  );
+
+  // And this is used to attempt one-by-one substitutions:
+  const SUB_REGEXES = {};
+  for (const key in SUBSTITUTIONS) {
+    SUB_REGEXES[key] = [new RegExp(`\\b{key}\\b`, "gi"), SUBSTITUTIONS[key]];
+  }
+
   const Matcher = (exports.Matcher = class Matcher {
     constructor(phrase) {
       this.phrase = phrase;
@@ -221,6 +247,15 @@ this.intentParser = (function() {
   const INTENTS = {};
   const INTENT_NAMES = [];
 
+  function normalizeText(text) {
+    text = text.trim();
+    // Normalize whitespace, so there's always just one space between words:
+    text = text.replace(/\s\s+/g, " ");
+    // Removes punctuation at the end of words, like "this, and that.":
+    text = text.replace(/[.,;!?]\B/g, "");
+    return text;
+  }
+
   exports.registerMatcher = function(intentName, matcher) {
     if (INTENTS[intentName]) {
       throw new Error(`Intent ${intentName} has already been registered`);
@@ -234,30 +269,39 @@ this.intentParser = (function() {
   };
 
   exports.parse = function parse(text, disableFallback = false) {
-    text = text.trim();
-    // Normalize whitespace, so there's always just one space between words:
-    text = text.replace(/\s\s+/g, " ");
-    // Removes punctuation at the end of words, like "this, and that.":
-    text = text.replace(/[.,;!?]\B/g, "");
+    text = normalizeText(text);
+    const alternatives = [[text, 0]];
+    for (const key in SUB_REGEXES) {
+      const [re, sub] = SUB_REGEXES[key];
+      let c = 0;
+      const newText = text.replace(re, () => {
+        c++;
+        return sub;
+      });
+      if (newText !== text) {
+        alternatives.push([normalizeText(newText), c]);
+      }
+    }
+    let c = 0;
+    const newText = text.replace(SUB_REGEX, match => {
+      c++;
+      const sub = SUBSTITUTIONS[match.toLowerCase()];
+      if (sub === undefined) {
+        throw new Error(`Match substitution failed: ${match}`);
+      }
+      return sub;
+    });
+    if (newText !== text) {
+      alternatives.push([normalizeText(newText), c]);
+    }
+    const results = [];
     let bestMatch;
-    let bestChars;
-    for (const name of INTENT_NAMES) {
-      const matcher = INTENTS[name].matcher;
-      const match = matcher.match(text);
-      if (match) {
-        match.name = name;
-        match.fallback = false;
-        let slotChars = 0;
-        for (const slotName in match.slots) {
-          if (match.slotTypes[slotName]) {
-            slotChars += 1;
-          } else {
-            slotChars += match.slots[slotName].length;
-          }
-        }
-        if (bestMatch === undefined || bestChars > slotChars) {
+    for (const [text, score] of alternatives) {
+      for (const match of findMatches(text)) {
+        match.score += score;
+        results.push(match);
+        if (!bestMatch || match.score < bestMatch.score) {
           bestMatch = match;
-          bestChars = slotChars;
         }
       }
     }
@@ -276,6 +320,29 @@ this.intentParser = (function() {
       fallback: true,
     };
   };
+
+  function findMatches(text) {
+    const results = [];
+    for (const name of INTENT_NAMES) {
+      const matcher = INTENTS[name].matcher;
+      const match = matcher.match(text);
+      if (match) {
+        match.name = name;
+        match.fallback = false;
+        let score = 0;
+        for (const slotName in match.slots) {
+          if (match.slotTypes[slotName]) {
+            score += 1;
+          } else {
+            score += match.slots[slotName].length;
+          }
+        }
+        match.score = score;
+        results.push(match);
+      }
+    }
+    return results;
+  }
 
   exports.getIntentNames = function() {
     return INTENT_NAMES;

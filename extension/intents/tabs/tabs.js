@@ -15,7 +15,7 @@ this.intents.tabs = (function() {
   this.intentRunner.registerIntent({
     name: "tabs.open",
     description: "Opens a new (blank) tab",
-    examples: ["open tab"],
+    examples: ["open tab", "test:open top for me", "test:open the tab"],
     match: `
     open tab
     open (a |) (new | blank |) tab (for me|)
@@ -29,7 +29,7 @@ this.intents.tabs = (function() {
   this.intentRunner.registerIntent({
     name: "tabs.pin",
     description: "Pins the current tab",
-    examples: ["pin tab"],
+    examples: ["pin tab", "test:pin tap"],
     match: `
     pin (this |) tab (for me |)
     `,
