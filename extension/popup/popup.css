@@ -267,13 +267,26 @@ a#lexicon {
 
 .feedback-controls button {
   border: none;
-  font-size: 150%;
-  margin: 5px;
+  margin: 5px 10px;
   background-color: transparent;
+  width: 24px;
+  height: 24px;
 }
 
-.feedback-controls button:hover svg path {
-  fill: #0a6dcf;
+.feedback-controls .happy-icon {
+  background-image: url("./images/icon-happy.svg");
+}
+
+.feedback-controls .sad-icon {
+  background-image: url("./images/icon-sad.svg");
+}
+
+.feedback-controls .happy-icon:hover {
+  background-image: url("./images/icon-happy-hover.svg");
+}
+
+.feedback-controls .sad-icon:hover {
+  background-image: url("./images/icon-sad-hover.svg");
 }
 
 .feedback #header-title {
@@ -302,7 +315,11 @@ a#lexicon {
   flex-direction: column;
 }
 
-#feedback-whats-wrong > svg {
+#feedback-whats-wrong .sad-icon {
+  background-image: url("./images/icon-sad.svg");
+  background-color: transparent;
+  background-size: 45px 45px;
+  border: none;
   width: 45px;
   height: 45px;
   margin: 1em 0;
