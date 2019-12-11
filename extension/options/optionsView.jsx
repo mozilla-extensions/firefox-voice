@@ -158,22 +158,51 @@ this.optionsView = (function() {
     updateKeyboardShortcut,
     keyboardShortcutError,
   }) => {
+    const modifier1 = isMac => {
+      if (isMac) {
+        return (
+          <React.Fragment>
+            <code>Command</code>, <code>Alt</code>, <code>MacCtrl</code>
+          </React.Fragment>
+        );
+      }
+
+      return (
+        <React.Fragment>
+          <code>Ctrl</code>, <code>Alt</code>
+        </React.Fragment>
+      );
+    };
+
+    const modifier2 = isMac => {
+      if (isMac) {
+        return (
+          <React.Fragment>
+            <code>Command</code> , <code>Alt</code> , <code>MacCtrl</code> ,{" "}
+            <code>Shift</code>
+          </React.Fragment>
+        );
+      }
+
+      return (
+        <React.Fragment>
+          <code>Ctrl</code> , <code>Alt</code> , <code>Shift</code>
+        </React.Fragment>
+      );
+    };
+
+    const placeholder = isMac => {
+      if (isMac) {
+        return "Command+Period";
+      }
+
+      return "Ctrl+Period";
+    };
+
     const onChangeSetting = event => {
       updateKeyboardShortcut(event.target.value);
     };
     const isMac = window.navigator.platform.match(/Mac/i);
-    let modifier1, modifier2, placeholder;
-    if (isMac) {
-      modifier1 =
-        "<code>Command</code>, <code>Alt</code>,  <code>MacCtrl</code>";
-      modifier2 =
-        "<code>Command</code>, <code>Alt</code>, <code>MacCtrl</code>, <code>Shift</code>";
-      placeholder = "Command+Period";
-    } else {
-      modifier1 = "<code>Ctrl</code>, <code>Alt</code>";
-      modifier2 = "<code>Ctrl</code>, <code>Alt</code>, <code>Shift</code>";
-      placeholder = "Ctrl+Period";
-    }
     return (
       <fieldset id="keyboard-shortcut">
         <legend>Keyboard Shortcut</legend>
@@ -181,7 +210,7 @@ this.optionsView = (function() {
           <input
             id="keyboard-shortcut-field"
             className="styled-input"
-            placeholder={placeholder}
+            placeholder={placeholder(isMac)}
             type="text"
             onChange={onChangeSetting}
             value={keyboardShortcut}
@@ -205,12 +234,10 @@ this.optionsView = (function() {
                 <code>MOD1+KEY</code> or <code>MOD1+MOD2+KEY</code>
               </p>
               <p>
-                <code>MOD1</code> is one of:{" "}
-                <span dangerouslySetInnerHTML={{ __html: modifier1 }} />
+                <code>MOD1</code> is one of: {modifier1(isMac)}
               </p>
               <p>
-                <code>MOD2</code> is one of:{" "}
-                <span dangerouslySetInnerHTML={{ __html: modifier2 }} />
+                <code>MOD2</code> is one of: {modifier2(isMac)}
               </p>
               <p>
                 <code>KEY</code> is one of:{" "}
