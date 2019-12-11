@@ -160,25 +160,9 @@ body,
   color: #800;
 }
 
-#text-input-field {
-  font-size: 20px;
-  caret-color: transparent;
-}
-
-#text-input-field:focus {
-  outline: transparent !important;
-}
-
 .typing #text-input-field {
-  background: #fff;
-  border-radius: 6px;
-  border: 2px solid rgb(215, 215, 219);
-  height: 1.2em;
-  padding: 0.5em;
-  text-align: left;
   width: 40vw;
   margin-top: 0.7em;
-  caret-color: #000 !important;
 }
 
 #send-btn-wrapper {

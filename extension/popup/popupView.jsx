@@ -515,6 +515,7 @@ this.popupView = (function() {
           <input
             type="text"
             id="text-input-field"
+            className="styled-input"
             autoFocus="true"
             onKeyPress={this.onInputKeyPress}
             onChange={this.onInputTextChange}

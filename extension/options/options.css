@@ -81,3 +81,36 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.settings-content #keyboard-shortcut #keyboard-shortcut-field {
+  margin: 0 20px 10px 0;
+}
+
+.settings-content #keyboard-shortcut #shortcut-syntax {
+  margin-top: 30px;
+}
+
+.settings-content #keyboard-shortcut blockquote {
+  margin: 20px 0 0;
+}
+
+.settings-content #keyboard-shortcut blockquote p {
+  margin: 10px 0 0;
+}
+
+.settings-content #keyboard-shortcut ul {
+  list-style-type: disc;
+  padding: 10px 30px 0;
+}
+
+.settings-content #keyboard-shortcut code {
+  background-color: rgba(220, 220, 220, 0.5);
+  border-radius: 2px;
+  box-decoration-break: clone;
+  padding: 0 2px;
+}
+
+.settings-content #keyboard-shortcut .error {
+  color: #d70022;
+  margin-bottom: 20px;
+}
