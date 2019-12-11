@@ -23,6 +23,7 @@ this.popupView = (function() {
     submitTextInput,
     onClickLexicon,
     onSearchImageClick,
+    onNextSearchResultClick,
     onInputStarted,
     onSubmitFeedback,
     setMinPopupSize,
@@ -57,6 +58,7 @@ this.popupView = (function() {
           inputValue={inputValue}
           onClickLexicon={onClickLexicon}
           onSearchImageClick={onSearchImageClick}
+          onNextSearchResultClick={onNextSearchResultClick}
           onInputStarted={savingOnInputStarted}
           onSubmitFeedback={onSubmitFeedback}
           setMinPopupSize={setMinPopupSize}
@@ -162,6 +164,7 @@ this.popupView = (function() {
     inputValue,
     onClickLexicon,
     onSearchImageClick,
+    onNextSearchResultClick,
     onInputStarted,
     onSubmitFeedback,
     setMinPopupSize,
@@ -213,6 +216,7 @@ this.popupView = (function() {
               cardImage={cardImage}
               displayText={displayText}
               onSearchImageClick={onSearchImageClick}
+              onNextSearchResultClick={onNextSearchResultClick}
               setMinPopupSize={setMinPopupSize}
             />
           );
@@ -575,6 +579,7 @@ this.popupView = (function() {
     cardImage,
     displayText,
     onSearchImageClick,
+    onNextSearchResultClick,
     setMinPopupSize,
   }) => {
     if (!search) return null;
@@ -596,6 +601,11 @@ this.popupView = (function() {
       onSearchImageClick(searchUrl);
     };
 
+    const onNextResultClick = event => {
+      event.preventDefault();
+      onNextSearchResultClick();
+    };
+
     return (
       <React.Fragment>
         <TextDisplay displayText={displayText} />
@@ -612,7 +622,7 @@ this.popupView = (function() {
           ) : null}
         </div>
         {next ? (
-          <div id="search-show-next">
+          <a href="#" id="search-show-next" onClick={onNextResultClick}>
             <p>
               <strong>
                 Click mic and say <i>next</i> to view
@@ -621,7 +631,7 @@ this.popupView = (function() {
             <p id="search-show-next-description">
               {new URL(next.url).hostname} | {next.title}
             </p>
-          </div>
+          </a>
         ) : null}
       </React.Fragment>
     );

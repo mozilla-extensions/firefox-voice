@@ -242,6 +242,14 @@ a#lexicon {
   text-overflow: ellipsis;
 }
 
+#search-show-next:hover {
+  text-decoration: none;
+}
+
+#search-show-next:hover #search-show-next-description {
+  text-decoration: underline;
+}
+
 #search-image {
   cursor: pointer;
 }
