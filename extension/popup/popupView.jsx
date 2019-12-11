@@ -36,7 +36,11 @@ this.popupView = (function() {
     }
     return (
       <div id="popup" className={currentView}>
-        <PopupHeader currentView={currentView} transcript={transcript} />
+        <PopupHeader
+          currentView={currentView}
+          transcript={transcript}
+          lastIntent={lastIntent}
+        />
         <PopupContent
           currentView={currentView}
           suggestions={suggestions}
@@ -62,7 +66,7 @@ this.popupView = (function() {
     );
   };
 
-  const PopupHeader = ({ currentView, transcript }) => {
+  const PopupHeader = ({ currentView, transcript, lastIntent }) => {
     const getTitle = () => {
       switch (currentView) {
         case "processing":
@@ -76,8 +80,12 @@ this.popupView = (function() {
         case "searchResults":
           return transcript;
         case "feedback":
-          // FIXME: should be more dynamic, based on last intent:
-          return "What went wrong?";
+          return (
+            <React.Fragment>
+              <p>{lastIntentTime(lastIntent)} ago you said</p>
+              <p className="utterance">{lastIntent.utterance}</p>
+            </React.Fragment>
+          );
         case "feedbackThanks":
           return "";
         case "listening":
@@ -241,14 +249,21 @@ this.popupView = (function() {
       textarea.current.focus();
     });
     return (
-      <div>
-        <h1>☹</h1>
+      <div id="feedback-whats-wrong">
+        <SadIcon />
         <form onSubmit={onSubmit} className="feedback-form">
+          <h1>What Went Wrong?</h1>
           <div>
-            <textarea ref={textarea} autofocus="1"></textarea>
+            <textarea
+              className="styled-textarea"
+              ref={textarea}
+              autofocus="1"
+            ></textarea>
           </div>
-          <div className="feedback-controls">
-            <button type="submit">Submit</button>
+          <div>
+            <button type="submit" className="styled-green-button">
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -264,7 +279,12 @@ this.popupView = (function() {
   };
 
   const PopupFooter = ({ currentView, showSettings }) => {
-    if (currentView === "searchResults") return null;
+    if (
+      currentView === "searchResults" ||
+      currentView === "feedback" ||
+      currentView === "feedbackThanks"
+    )
+      return null;
     return (
       <div id="popup-footer">
         <button id="settings-icon" aria-label="Settings" onClick={showSettings}>
@@ -366,15 +386,7 @@ this.popupView = (function() {
   };
 
   const IntentFeedback = ({ lastIntent, onSubmitFeedback }) => {
-    let ago = Math.max(
-      1,
-      Math.round((Date.now() - lastIntent.timestamp) / 60000)
-    );
-    if (ago > 60) {
-      ago = `${Math.round(ago / 60)} hours`;
-    } else {
-      ago = `${ago} mins`;
-    }
+    const ago = lastIntentTime(lastIntent);
     function onPositive() {
       onSubmitFeedback({ rating: 1, feedback: null });
     }
@@ -397,6 +409,24 @@ this.popupView = (function() {
         </div>
       </div>
     );
+  };
+
+  const lastIntentTime = lastIntent => {
+    let ago;
+    const minutesAgo = Math.max(
+      1,
+      Math.round((Date.now() - lastIntent.timestamp) / 60000)
+    );
+    if (minutesAgo > 60) {
+      const hoursAgo = Math.round(minutesAgo / 60);
+      const plural = hoursAgo === 1 ? "" : "s";
+      ago = `${hoursAgo} hour${plural}`;
+    } else {
+      const plural = minutesAgo === 1 ? "" : "s";
+      ago = `${minutesAgo} min${plural}`;
+    }
+
+    return ago;
   };
 
   // This was done this way instead of with an img tag so that hover color effects could be set in the css.
@@ -493,7 +523,10 @@ this.popupView = (function() {
             ref={this.textInputRef}
           />
           <div id="send-btn-wrapper">
-            <button id="send-text-input" onClick={this.submitTextInput}>
+            <button
+              className="styled-green-button"
+              onClick={this.submitTextInput}
+            >
               GO
             </button>
           </div>
@@ -643,6 +676,11 @@ this.popupView = (function() {
           loop: false,
           interrupt: false,
         },
+        feedbackThanks: {
+          segments: [this.animationSegmentTimes.success],
+          loop: false,
+          interrupt: true,
+        },
       };
     }
 
@@ -698,8 +736,7 @@ this.popupView = (function() {
 
     render() {
       return this.props.currentView !== "typing" &&
-        this.props.currentView !== "feedback" &&
-        this.props.currentView !== "feedbackThanks" ? (
+        this.props.currentView !== "feedback" ? (
         <div id="zap-wrapper">
           <div id="zap"></div>
         </div>
