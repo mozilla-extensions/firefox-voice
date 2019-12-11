@@ -110,7 +110,8 @@ this.intents.tabs = (function() {
         await browser.windows.create({ incognito: true });
       } else {
         const e = new Error("Failed to open private window");
-        e.displayMessage = "Extension does not have permission for incognito mode";
+        e.displayMessage =
+          "Extension does not have permission for incognito mode";
         throw e;
       }
     },

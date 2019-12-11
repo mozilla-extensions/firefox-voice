@@ -254,7 +254,7 @@ this.popupView = (function() {
     });
     return (
       <div id="feedback-whats-wrong">
-        <SadIcon />
+        <button className="sad-icon"></button>
         <form onSubmit={onSubmit} className="feedback-form">
           <h1>What Went Wrong?</h1>
           <div>
@@ -404,12 +404,16 @@ this.popupView = (function() {
           {lastIntent.utterance} ({ago} ago)
         </div>
         <div className="feedback-controls">
-          <button aria-label="Leave a positive review" onClick={onPositive}>
-            <HappyIcon />
-          </button>
-          <button aria-label="Leave a negative review" onClick={onNegative}>
-            <SadIcon />
-          </button>
+          <button
+            className="happy-icon"
+            aria-label="Leave a positive review"
+            onClick={onPositive}
+          ></button>
+          <button
+            className="sad-icon"
+            aria-label="Leave a negative review"
+            onClick={onNegative}
+          ></button>
         </div>
       </div>
     );
@@ -431,43 +435,6 @@ this.popupView = (function() {
     }
 
     return ago;
-  };
-
-  // This was done this way instead of with an img tag so that hover color effects could be set in the css.
-  const SadIcon = () => {
-    return (
-      <svg
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g fill="#0a84ff">
-          <path d="m9.6 8.6c0-.9924-.8076-1.8-1.8-1.8s-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8 1.8-.8076 1.8-1.8zm-2.8 0c0-.5512.4488-1 1-1s1 .4488 1 1-.4488 1-1 1-1-.4488-1-1z" />
-          <path d="m16.2 6.8c-.9924 0-1.8.8076-1.8 1.8s.8076 1.8 1.8 1.8 1.8-.8076 1.8-1.8-.8076-1.8-1.8-1.8zm0 2.8c-.5512 0-1-.4488-1-1s.4488-1 1-1 1 .4488 1 1-.4488 1-1 1z" />
-          <path d="m12 0c-6.6168 0-12 5.3832-12 12s5.3832 12 12 12 12-5.3832 12-12-5.3832-12-12-12zm0 23.2c-6.1756 0-11.2-5.0244-11.2-11.2s5.0244-11.2 11.2-11.2 11.2 5.0244 11.2 11.2-5.0244 11.2-11.2 11.2z" />
-          <path d="m7.784 15.5384-1.228.9444.488.6344 1.228-.9444c2.1952-1.6888 5.2616-1.6888 7.4564 0l1.228.9444.488-.6344-1.228-.9444c-2.4828-1.9084-5.9496-1.9092-8.4324 0z" />
-        </g>
-      </svg>
-    );
-  };
-
-  const HappyIcon = () => {
-    return (
-      <svg
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g fill="#0a84ff">
-          <path d="m12 24c6.6168 0 12-5.3832 12-12s-5.3832-12-12-12-12 5.3832-12 12 5.3832 12 12 12zm0-23.2c6.1756 0 11.2 5.0244 11.2 11.2s-5.0244 11.2-11.2 11.2-11.2-5.0244-11.2-11.2 5.0244-11.2 11.2-11.2z" />
-          <path d="m7.8 10.8c.9924 0 1.8-.8076 1.8-1.8s-.8076-1.8-1.8-1.8-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8zm0-2.8c.5512 0 1 .4488 1 1s-.4488 1-1 1-1-.4488-1-1 .4488-1 1-1z" />
-          <path d="m16.2 10.8c.9924 0 1.8-.8076 1.8-1.8s-.8076-1.8-1.8-1.8-1.8.8076-1.8 1.8.8076 1.8 1.8 1.8zm0-2.8c.5512 0 1 .4488 1 1s-.4488 1-1 1-1-.4488-1-1 .4488-1 1-1z" />
-          <path d="m12 19.4512c2.8356 0 5.4144-1.3184 7.0744-3.6172l-.6484-.4684c-1.5084 2.088-3.85 3.2856-6.426 3.2856s-4.9176-1.1976-6.426-3.2856l-.6484.4684c1.66 2.2992 4.2388 3.6172 7.0744 3.6172z" />
-        </g>
-      </svg>
-    );
   };
 
   class TypingInput extends PureComponent {

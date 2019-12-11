@@ -390,10 +390,10 @@ this.popupController = (function() {
       if (feedback.rating === 1) {
         setPopupView("feedbackThanks");
         sendFeedback(feedback);
-      } else if (feedback.rating === -1 && !feedback.feedback) {
+      } else if (feedback.rating === -1 && feedback.feedback === null) {
         // Negative feedback makes us ask for more info
         setPopupView("feedback");
-      } else if (feedback.rating === -1 && feedback.feedback) {
+      } else if (feedback.rating === -1) {
         setPopupView("feedbackThanks");
         sendFeedback(feedback);
       } else {
