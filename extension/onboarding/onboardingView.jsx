@@ -12,30 +12,32 @@ this.onboardingView = (function() {
   }) => {
     return (
       <div id="onboarding-wrapper">
-        <OnboardingPageContent />
-        <OptinVoiceTranscripts
-          optinViewAlreadyShown={optinViewAlreadyShown}
-          setOptinValue={setOptinValue}
-          setOptinViewShown={setOptinViewShown}
-        />
-        <PermissionError permissionError={permissionError} />
-        <Footer />
+        {!optinViewAlreadyShown && (
+          <OptinVoiceTranscripts
+            setOptinValue={setOptinValue}
+            setOptinViewShown={setOptinViewShown}
+          />
+        )}
+        {optinViewAlreadyShown && permissionError && (
+          <PermissionError permissionError={permissionError} />
+        )}
+        {optinViewAlreadyShown && !permissionError && (
+          <React.Fragment>
+            <OnboardingPageContent />
+            <Footer />
+          </React.Fragment>
+        )}
       </div>
     );
   };
 
-  const OptinVoiceTranscripts = ({
-    optinViewAlreadyShown,
-    setOptinValue,
-    setOptinViewShown,
-  }) => {
+  const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
     const updateVoiceTranscriptOptin = event => {
       event.preventDefault();
       setOptinValue(!!event.target.value);
       setOptinViewShown(true);
     };
 
-    if (optinViewAlreadyShown) return null;
     return (
       <div id="optinVoiceTranscripts" className="modal-wrapper">
         <div className="modal">

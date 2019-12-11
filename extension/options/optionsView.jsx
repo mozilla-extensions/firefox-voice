@@ -314,8 +314,10 @@ this.optionsView = (function() {
                 onChange={onTelemetryChange}
               />
               <label htmlFor="technical-data">
-                Allow Firefox Voice to send technical and interaction data to
-                Mozilla.
+                <strong>
+                  Allow Firefox Voice to send technical and interaction data to
+                  Mozilla.
+                </strong>
               </label>
             </div>
             <p>
@@ -332,8 +334,10 @@ this.optionsView = (function() {
                 onChange={onUtteranceTelemetryChange}
               />
               <label htmlFor="transcripts-data">
-                Allow Firefox Voice to send anonymized transcripts of your audio
-                request.
+                <strong>
+                  Allow Firefox Voice to send anonymized transcripts of your
+                  audio request.
+                </strong>
               </label>
             </div>
             <p>
