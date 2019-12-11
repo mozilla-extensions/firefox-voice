@@ -71,6 +71,18 @@ this.intents.tabs = (function() {
   });
 
   this.intentRunner.registerIntent({
+    name: "tabs.reload",
+    description: "Reload the active tab of the current window",
+    examples: ["reload this page"],
+    match: `
+    (reload | refresh) (this | current |) (tab | page |) (for me |)
+    `,
+    async run(context) {
+      await browser.tabs.reload();
+    },
+  });
+
+  this.intentRunner.registerIntent({
     name: "tabs.openWindow",
     description: "Opens a new (blank) window",
     examples: ["open window"],

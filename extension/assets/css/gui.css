@@ -87,6 +87,21 @@ Example markup to use this styled native checkbox
   position: absolute;
 }
 
+.styled-input {
+  background: #fff;
+  border-radius: 6px;
+  border: 2px solid rgb(215, 215, 219);
+  height: 1.2em;
+  padding: 0.5em;
+  text-align: left;
+  font-size: 20px;
+  caret-color: #000 !important;
+}
+
+.styled-input:focus {
+  outline: transparent !important;
+}
+
 a {
   color: #0a84ff;
   text-decoration: none;
