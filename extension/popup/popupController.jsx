@@ -239,6 +239,13 @@ this.popupController = (function() {
       });
     };
 
+    const onNextSearchResultClick = () => {
+      browser.runtime.sendMessage({
+        type: "runIntent",
+        text: "next",
+      });
+    };
+
     const setMinPopupSize = width => {
       popupContainer.style.minWidth = width + "px";
     };
@@ -411,6 +418,7 @@ this.popupController = (function() {
         submitTextInput={submitTextInput}
         onClickLexicon={onClickLexicon}
         onSearchImageClick={onSearchImageClick}
+        onNextSearchResultClick={onNextSearchResultClick}
         onInputStarted={onInputStarted}
         onSubmitFeedback={onSubmitFeedback}
         setMinPopupSize={setMinPopupSize}
