@@ -279,7 +279,11 @@ this.popupView = (function() {
   };
 
   const PopupFooter = ({ currentView, showSettings }) => {
-    if (currentView === "searchResults" || currentView === "feedback")
+    if (
+      currentView === "searchResults" ||
+      currentView === "feedback" ||
+      currentView === "feedbackThanks"
+    )
       return null;
     return (
       <div id="popup-footer">
@@ -671,6 +675,11 @@ this.popupView = (function() {
           loop: false,
           interrupt: false,
         },
+        feedbackThanks: {
+          segments: [this.animationSegmentTimes.success],
+          loop: false,
+          interrupt: true,
+        },
       };
     }
 
@@ -726,8 +735,7 @@ this.popupView = (function() {
 
     render() {
       return this.props.currentView !== "typing" &&
-        this.props.currentView !== "feedback" &&
-        this.props.currentView !== "feedbackThanks" ? (
+        this.props.currentView !== "feedback" ? (
         <div id="zap-wrapper">
           <div id="zap"></div>
         </div>

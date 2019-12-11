@@ -350,3 +350,7 @@ a#lexicon {
   justify-content: center;
   padding: 5px;
 }
+
+.feedback-thanks {
+  text-align: center;
+}
