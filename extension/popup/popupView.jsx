@@ -688,6 +688,15 @@ this.popupView = (function() {
         autoplay: false,
         path: "animations/Firefox_Voice_Full.json", // the path to the animation json
       });
+
+      this.animation.onComplete = () => {
+        if (this.props.currentView === "searchResults") {
+          // Hide the success animation shortly after it completes animating
+          setInterval(() => {
+            this.animation.destroy();
+          }, 500);
+        }
+      };
     };
 
     playAnimation = (segments, interrupt, loop) => {
