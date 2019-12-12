@@ -35,6 +35,7 @@ this.intents.navigation = (function() {
       "Search CSS grid on MDN",
       "Look up Hamilton in Gmail",
       "Images of sparrows",
+      "Find the nearest sushi on maps",
       "test:search google images of sparrows for me",
     ],
     async run(context) {

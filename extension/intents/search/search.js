@@ -209,22 +209,19 @@ this.intents.search = (function() {
     description:
       "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab.",
     match: `
-    (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
+    (do a |) (query | find | find me | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
     `,
     examples: [
-      "Search for hiking in Denver",
       "Look up recipes for fish tacos",
       "Who created breaking bad?",
       "Who won the World Series game last night?",
       "How deep is the Marianas Trench?",
-      "Show me weather in Flagstaff, Arizona",
+      "Weather in Flagstaff, Arizona",
       "What's the temperature in San Antonio?",
       "What time is it?",
       "What time is it in Berlin?",
-      "Find the nearest sushi on maps",
       "How long will it take to get to Springfield?",
       "How do I get to the hardware store?",
-      "test:search for tops",
     ],
     async run(context) {
       stopCardPoll();
@@ -317,6 +314,19 @@ this.intents.search = (function() {
         await browser.tabs.update(searchTabId, { url: searchInfo.url });
       }
       await context.makeTabActive(searchTabId);
+    },
+  });
+
+  intentRunner.registerIntent({
+    name: "search.searchPage",
+    description: "Opens a search page",
+    match: `
+    (do a |) (search | google) (google | the web | the internet |) (for |) [query] (one the web |) (for me|)
+    `,
+    examples: ["Search for hiking in Denver", "test:search for tops"],
+    async run(context) {
+      const url = searching.googleSearchUrl(context.slots.query);
+      context.createTab({ url });
     },
   });
 
