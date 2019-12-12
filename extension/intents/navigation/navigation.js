@@ -7,7 +7,7 @@ this.intents.navigation = (function() {
       "Navigate directly to a site, using Google's I'm Feeling Luck and the query",
     examples: ["Go to the New York Times", "Show me the 49ers schedule"],
     match: `
-    (bring me | go | navigate | show me) (to | open | find |) [query]
+    (bring me | go | navigate | show me | open) (to | find |) (page |) [query]
     `,
     async run(context) {
       await context.createTabGoogleLucky(context.slots.query);
