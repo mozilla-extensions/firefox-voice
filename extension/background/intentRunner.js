@@ -205,7 +205,11 @@ this.intentRunner = (function() {
       if (intent.examples) {
         intent.examples = intent.examples.map(e => {
           const toMatch = e.replace(/^test:/, "").replace(/[()]/g, "");
-          const parsed = intentParser.parse(toMatch, true) || {
+          const parsed = intentParser.parse(
+            toMatch,
+            // Allow fallback for search.search, but not otherwise:
+            name !== "search.search"
+          ) || {
             name: "NO MATCH",
             slots: {},
           };
