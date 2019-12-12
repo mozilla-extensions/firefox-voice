@@ -211,7 +211,21 @@ this.intents.search = (function() {
     match: `
     (do a |) (search | query | find | find me | google | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
     `,
-    examples: ["test:search for tops"],
+    examples: [
+      "Search for hiking in Denver",
+      "Look up recipes for fish tacos",
+      "Who created breaking bad?",
+      "Who won the World Series game last night?",
+      "How deep is the Marianas Trench?",
+      "Show me weather in Flagstaff, Arizona",
+      "What's the temperature in San Antonio?",
+      "What time is it?",
+      "What time is it in Berlin?",
+      "Find the nearest sushi on maps",
+      "How long will it take to get to Springfield?",
+      "How do I get to the hardware store?",
+      "test:search for tops",
+    ],
     async run(context) {
       stopCardPoll();
       // An old popup-only search result is no longer valid once a new search is made:

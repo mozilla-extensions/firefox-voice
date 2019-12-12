@@ -76,7 +76,12 @@
   "browser_action": {
     "browser_style": false,
     "default_title": "Firefox Voice",
-    "default_icon": "popup/images/mic.svg",
+    "default_icon":
+      <% if (env.DEV_ICON) { %>
+        "popup/images/mic-dev.svg",
+      <% } else { %>
+        "popup/images/mic.svg",
+      <% } %>
     "default_popup": "popup/popup.html"
   },
   "commands": {

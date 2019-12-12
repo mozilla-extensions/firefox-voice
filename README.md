@@ -59,9 +59,9 @@ It's possible to install and use in-development versions of the extension. Every
 
 We are using these builds for internal testing with more-than-normal data collection. We have not yet implemented data collection controls.
 
-- [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi)
-- [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi) (Note: stage isn't always updated!)
-- [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi)
+- [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
+- [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi?src=github) (Note: stage isn't always updated!)
+- [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
 - [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
