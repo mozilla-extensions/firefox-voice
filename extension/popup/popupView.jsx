@@ -27,6 +27,7 @@ this.popupView = (function() {
     onInputStarted,
     onSubmitFeedback,
     setMinPopupSize,
+    expandListeningView,
   }) => {
     const [inputValue, setInputValue] = useState(null);
     function savingOnInputStarted(value) {
@@ -62,6 +63,7 @@ this.popupView = (function() {
           onInputStarted={savingOnInputStarted}
           onSubmitFeedback={onSubmitFeedback}
           setMinPopupSize={setMinPopupSize}
+          expandListeningView={expandListeningView}
         />
         <PopupFooter currentView={currentView} showSettings={showSettings} />
       </div>
@@ -168,6 +170,7 @@ this.popupView = (function() {
     onInputStarted,
     onSubmitFeedback,
     setMinPopupSize,
+    expandListeningView,
   }) => {
     const getContent = () => {
       switch (currentView) {
@@ -180,6 +183,7 @@ this.popupView = (function() {
               onClickLexicon={onClickLexicon}
               onInputStarted={onInputStarted}
               onSubmitFeedback={onSubmitFeedback}
+              expandListeningView={expandListeningView}
             />
           );
         case "typing":
@@ -325,11 +329,16 @@ this.popupView = (function() {
     onClickLexicon,
     onInputStarted,
     onSubmitFeedback,
+    expandListeningView,
   }) => {
     return (
       <React.Fragment>
         <TextDisplay displayText={displayText} />
-        <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
+        <VoiceInput
+          suggestions={suggestions}
+          onClickLexicon={onClickLexicon}
+          expandListeningView={expandListeningView}
+        />
         <TypingInput onInputStarted={onInputStarted} />
         {lastIntent ? (
           <IntentFeedback
@@ -353,7 +362,7 @@ this.popupView = (function() {
     );
   };
 
-  const VoiceInput = ({ suggestions, onClickLexicon }) => {
+  const VoiceInput = ({ suggestions, onClickLexicon, expandListeningView }) => {
     const onMoreSuggestions = event => {
       if (event) {
         event.preventDefault();
@@ -362,7 +371,7 @@ this.popupView = (function() {
     };
     return (
       <div id="voice-input">
-        {suggestions ? (
+        {suggestions && expandListeningView ? (
           <div id="suggestions">
             <p id="prompt">You can say things like:</p>
             <div id="suggestions-list">

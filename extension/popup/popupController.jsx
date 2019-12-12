@@ -25,6 +25,7 @@ this.popupController = (function() {
     const [searchResult, setSearchResult] = useState(null);
     const [cardImage, setCardImage] = useState(null);
     const [recorderVolume, setRecorderVolume] = useState(null);
+    const [expandListeningView, setExpandedListeningView] = useState(true);
 
     let executedIntent = false;
     let stream = null;
@@ -37,6 +38,7 @@ this.popupController = (function() {
     // Timeout for the popup when there's text displaying:
     const TEXT_TIMEOUT = 7000;
     let overrideTimeout;
+    let noVoiceInterval;
 
     useEffect(() => {
       if (!isInitialized) {
@@ -67,10 +69,24 @@ this.popupController = (function() {
         playListeningChime();
       }
 
+      incrementVisits();
       addListeners();
       updateExamples();
       updateLastIntent();
       startRecorder();
+    };
+
+    const incrementVisits = () => {
+      const numVisits = localStorage.getItem("firefox-voice-visits") || "0";
+      const newNumVisits = parseInt(numVisits) + 1;
+      localStorage.setItem("firefox-voice-visits", newNumVisits.toString());
+
+      setExpandedListeningView(newNumVisits <= 5);
+    };
+
+    const getNumberOfVisits = () => {
+      const numVisits = localStorage.getItem("firefox-voice-visits") || 0;
+      return parseInt(numVisits);
     };
 
     const showSettings = async () => {
@@ -195,6 +211,13 @@ this.popupController = (function() {
         }, 500);
       } else {
         clearInterval(recorderIntervalId);
+      }
+
+      if (newView === "listening") {
+        setExpandedListeningView(getNumberOfVisits() <= 5);
+        noVoiceInterval = setInterval(() => {
+          setExpandedListeningView(true);
+        }, 3000);
       }
     };
 
@@ -330,7 +353,7 @@ this.popupController = (function() {
         window.close();
       };
       recorder.onStartVoice = () => {
-        // See https://github.com/mozilla/firefox-voice/issues/324 for some work to be done here
+        clearInterval(noVoiceInterval);
       };
       recorder.startRecording();
     };
@@ -422,6 +445,7 @@ this.popupController = (function() {
         onInputStarted={onInputStarted}
         onSubmitFeedback={onSubmitFeedback}
         setMinPopupSize={setMinPopupSize}
+        expandListeningView={expandListeningView}
       />
     );
   };
