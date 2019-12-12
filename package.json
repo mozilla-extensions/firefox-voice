@@ -56,7 +56,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
-    "start-and-build": "NO_SENTRY=1 npm-run-all maybeinstall maybemarkdown build:manifest start-extension",
+    "start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall maybemarkdown build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
     "test": "npm-run-all build:manifest lint",
     "build:markdown": "mkdir -p extension/views && node bin/substitute-changelog.js",

@@ -76,6 +76,7 @@ jobs:
             export VERSION="$(node bin/calculate-version.js)"
             export UPDATE_BASE="https://va.allizom.org/releases/dev"
             export INSTALL_CHANNEL=dev
+            export DEV_ICON=1
             mkdir -p artifacts/dev/
             npm run package
             mv addon.xpi artifacts/dev/firefox-voice.xpi
