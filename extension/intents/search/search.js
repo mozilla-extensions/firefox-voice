@@ -133,11 +133,18 @@ this.intents.search = (function() {
       e.displayMessage = "You haven't made a search";
       throw e;
     }
-    if ((searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
-    (searchInfo.index <= 0 && step < 0)) {
+    if (
+      (searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
+      (searchInfo.index <= 0 && step < 0)
+    ) {
       const tabId = await openSearchTab();
       await context.makeTabActive(tabId);
       return;
+    }
+    if (!(searchInfo.index + step >= 0)) {
+      const e = new Error("No previous search result");
+      e.displayMessage = "No previous search result";
+      throw e;
     }
     searchInfo.index += step;
     const item = searchInfo.searchResults[searchInfo.index];
