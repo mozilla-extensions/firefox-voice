@@ -340,7 +340,7 @@ this.popupView = (function() {
           expandListeningView={expandListeningView}
         />
         <TypingInput onInputStarted={onInputStarted} />
-        {lastIntent ? (
+        {lastIntent && expandListeningView ? (
           <IntentFeedback
             lastIntent={lastIntent}
             onSubmitFeedback={onSubmitFeedback}
