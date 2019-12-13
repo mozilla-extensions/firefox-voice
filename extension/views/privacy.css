@@ -4,9 +4,9 @@
 
 #list ul {
   list-style: none;
-  padding: 20px 0 40px;
+  padding: 0 0 40px;
 }
 
 #list ul li {
-  margin-top: 40px;
+  margin: 30px 0 10px;
 }
