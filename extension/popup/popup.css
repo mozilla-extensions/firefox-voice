@@ -150,15 +150,12 @@ body,
 #popup.listening #extra-content {
   max-height: 0;
   opacity: 0;
-  transform: scaleY(0);
-  transition: max-height 0.3s ease-in, opacity 0.3s ease-in,
-    transform 0.3s ease-in;
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in 0.3s;
 }
 
 #popup.listening #extra-content.expanded {
   max-height: 300px;
   opacity: 1;
-  transform: scaleY(1);
 }
 
 #search-results {
