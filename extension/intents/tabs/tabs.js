@@ -83,6 +83,19 @@ this.intents.tabs = (function() {
   });
 
   this.intentRunner.registerIntent({
+    name: "tabs.duplicate",
+    description: "Duplicates a tab",
+    examples: ["Duplicate this page"],
+    match: `
+    duplicate (this | current |) (tab | page |) (for me |)
+    `,
+    async run(context) {
+      const activeTab = await context.activeTab();
+      await browser.tabs.duplicate(activeTab.id);
+    },
+  });
+
+  this.intentRunner.registerIntent({
     name: "tabs.openWindow",
     description: "Opens a new (blank) window",
     examples: ["open window"],
