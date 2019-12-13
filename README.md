@@ -78,6 +78,14 @@ This project is governed by a [Code Of Conduct](docs/code_of_conduct.md).
 
 To disclose potential a security vulnerability please see our [security](docs/security.md) documentation.
 
+### Contributors
+
+<a href="https://github.com/mozilla/firefox-voice/graphs/contributors">
+  <img src="https://contributors-img.firebaseapp.com/image?repo=mozilla/firefox-voice" />
+</a>
+
+Made with [contributors-img](https://contributors-img.firebaseapp.com).
+
 ## [License](/LICENSE)
 
 This module is licensed under the [Mozilla Public License, version 2.0](/LICENSE).
