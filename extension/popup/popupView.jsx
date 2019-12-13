@@ -334,18 +334,22 @@ this.popupView = (function() {
     return (
       <React.Fragment>
         <TextDisplay displayText={displayText} />
-        <VoiceInput
-          suggestions={suggestions}
-          onClickLexicon={onClickLexicon}
-          expandListeningView={expandListeningView}
-        />
-        <TypingInput onInputStarted={onInputStarted} />
-        {lastIntent && expandListeningView ? (
-          <IntentFeedback
-            lastIntent={lastIntent}
-            onSubmitFeedback={onSubmitFeedback}
+        <div
+          id="extra-content"
+          className={expandListeningView ? "expanded" : ""}
+        >
+          <VoiceInput
+            suggestions={suggestions}
+            onClickLexicon={onClickLexicon}
           />
-        ) : null}
+          <TypingInput onInputStarted={onInputStarted} />
+          {lastIntent ? (
+            <IntentFeedback
+              lastIntent={lastIntent}
+              onSubmitFeedback={onSubmitFeedback}
+            />
+          ) : null}
+        </div>
       </React.Fragment>
     );
   };
@@ -362,7 +366,7 @@ this.popupView = (function() {
     );
   };
 
-  const VoiceInput = ({ suggestions, onClickLexicon, expandListeningView }) => {
+  const VoiceInput = ({ suggestions, onClickLexicon }) => {
     const onMoreSuggestions = event => {
       if (event) {
         event.preventDefault();
@@ -371,7 +375,7 @@ this.popupView = (function() {
     };
     return (
       <div id="voice-input">
-        {suggestions && expandListeningView ? (
+        {suggestions ? (
           <div id="suggestions">
             <p id="prompt">You can say things like:</p>
             <div id="suggestions-list">
@@ -650,17 +654,17 @@ this.popupView = (function() {
         processing: {
           segments: [this.animationSegmentTimes.processing],
           loop: false,
-          interrupt: false,
+          interrupt: true,
         },
         success: {
           segments: [this.animationSegmentTimes.success],
           loop: false,
-          interrupt: false,
+          interrupt: true,
         },
         error: {
           segments: [this.animationSegmentTimes.error],
           loop: false,
-          interrupt: false,
+          interrupt: true,
         },
         feedbackThanks: {
           segments: [this.animationSegmentTimes.success],
@@ -675,7 +679,9 @@ this.popupView = (function() {
     }
 
     componentDidUpdate() {
-      const config = this.animationConfig[this.props.currentView];
+      const config =
+        this.animationConfig[this.props.currentView] ||
+        this.animationConfig.success;
 
       if (config) {
         this.playAnimation(config.segments, config.interrupt, config.loop);
@@ -697,15 +703,6 @@ this.popupView = (function() {
         autoplay: false,
         path: "animations/Firefox_Voice_Full.json", // the path to the animation json
       });
-
-      this.animation.onComplete = () => {
-        if (this.props.currentView === "searchResults") {
-          // Hide the success animation shortly after it completes animating
-          setInterval(() => {
-            this.animation.destroy();
-          }, 500);
-        }
-      };
     };
 
     playAnimation = (segments, interrupt, loop) => {
@@ -730,12 +727,11 @@ this.popupView = (function() {
     };
 
     render() {
-      return this.props.currentView !== "typing" &&
-        this.props.currentView !== "feedback" ? (
+      return (
         <div id="zap-wrapper">
           <div id="zap"></div>
         </div>
-      ) : null;
+      );
     }
   }
 
