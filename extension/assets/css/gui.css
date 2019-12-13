@@ -8,7 +8,7 @@
   height: 64px;
   font-family: Inter;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 600;
   letter-spacing: -0.22px;
   text-align: center;
   padding: 0 135px;
@@ -133,4 +133,8 @@ a:hover,
 a:active {
   color: #0a6dcf;
   text-decoration: underline;
+}
+
+strong {
+  font-weight: 600;
 }

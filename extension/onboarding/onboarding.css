@@ -20,7 +20,7 @@ body {
 
 h1 {
   font-size: 44px;
-  font-weight: bold;
+  font-weight: 700;
   letter-spacing: -1.83px;
 }
 
@@ -108,7 +108,7 @@ p {
 .error-modal h1 {
   color: #d70022;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 700;
   letter-spacing: -1.33px;
 }
 
@@ -192,7 +192,7 @@ p {
 }
 
 #try-it p {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 #try-it ul {

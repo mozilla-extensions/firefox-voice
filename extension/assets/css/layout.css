@@ -30,7 +30,7 @@ body {
 
 #sidebar .stmt {
   color: #8e31bd;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 48px;
   letter-spacing: -2px;
 }
@@ -39,7 +39,7 @@ body {
   width: 33%;
   font-size: 24px;
   color: #8e31bd;
-  font-weight: bold;
+  font-weight: 600;
   letter-spacing: -2px;
   line-height: 52px;
 }
