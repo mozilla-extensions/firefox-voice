@@ -76,6 +76,7 @@ body,
   border: none;
   background-color: transparent;
   cursor: pointer;
+  padding: 0;
 }
 
 #settings-icon:hover svg path,
@@ -190,8 +191,8 @@ body,
 }
 
 .typing #text-input-field {
-  width: 40vw;
-  margin-top: 0.7em;
+  width: 85vw;
+  height: 3.7em;
 }
 
 #send-btn-wrapper {
