@@ -23,7 +23,7 @@ this.queryScript = (function() {
       // result in any false positives (or negatives), but the names are unclear here.
       selected = selected.filter(e => e.getBoundingClientRect().y <= maxBottom);
     }
-    selected = selected.filter(e => !isRhsAd(e));
+    selected = selected.filter(e => !(isRhsAd(e) || isSeeResults(e)));
     if (selected.length) {
       return selected[0];
     }
@@ -37,7 +37,7 @@ this.queryScript = (function() {
           continue;
         }
       }
-      if (hasCardBorder(div)) {
+      if (hasCardBorder(div) && !(isRhsAd(div) || isSeeResults(div))) {
         return div;
       }
     }
@@ -66,6 +66,16 @@ this.queryScript = (function() {
         return true;
       }
       element = element.parentNode;
+    }
+    return false;
+  }
+
+  function isSeeResults(element) {
+    const SEE_RESULTS_STRING = "See results about";
+    for (const el of element.querySelectorAll("span")) {
+      if (el.innerText.trim().startsWith(SEE_RESULTS_STRING)) {
+        return true;
+      }
     }
     return false;
   }
