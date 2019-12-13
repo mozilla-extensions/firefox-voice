@@ -1,3 +1,36 @@
+## Version 0.15.0 (2019-12-13)
+
+- New intents:
+  - Thanks [maitrella](https://github.com/maitrella) for several new intents:
+    - Duplicate current tab intent [0dad8d9](https://github.com/mozilla/firefox-voice/commit/0dad8d9) (thanks
+    - Move tab to a new window intent [4f0b384](https://github.com/mozilla/firefox-voice/commit/4f0b384)
+    - Previous search intent ([#721](https://github.com/mozilla/firefox-voice/issues/721)) [ebb0a3c](https://github.com/mozilla/firefox-voice/commit/ebb0a3c)
+    - Open new window intent [affaf60](https://github.com/mozilla/firefox-voice/commit/affaf60)
+    - Reload page intent [f0f5a6a](https://github.com/mozilla/firefox-voice/commit/f0f5a6a)
+  - Make 'search' launch a search page. Fixes [#740](https://github.com/mozilla/firefox-voice/issues/740) [375dda3](https://github.com/mozilla/firefox-voice/commit/375dda3)
+  - Make 'open ...' go directly to a page. Fixes [#742](https://github.com/mozilla/firefox-voice/issues/742) [564a73a](https://github.com/mozilla/firefox-voice/commit/564a73a)
+- Intent parsing improvements:
+  - Add more phrase substitutions. Fixes [#757](https://github.com/mozilla/firefox-voice/issues/757) [7d0562f](https://github.com/mozilla/firefox-voice/commit/7d0562f)
+  - Do fuzzier intent parsing. This does substitutions of the incoming text and then tries different matches. Fixes [#657](https://github.com/mozilla/firefox-voice/issues/657) [766c8a2](https://github.com/mozilla/firefox-voice/commit/766c8a2)
+- Style improvements (thanks [jenniferharmon](https://github.com/jenniferharmon))
+  - Adjusts search content height for taller footer. Changes font-weights from 'bold' to number value. [8fd4015](https://github.com/mozilla/firefox-voice/commit/8fd4015)
+  - Updates font styles and padding for feedback prompt [b07f40c](https://github.com/mozilla/firefox-voice/commit/b07f40c)
+  - Fixes type input styling [#323](https://github.com/mozilla/firefox-voice/issues/323) [ea61165](https://github.com/mozilla/firefox-voice/commit/ea61165)
+  - Fixes doorhanger issues for zap success animation, close button, and ease-in suggestions. [0505f30](https://github.com/mozilla/firefox-voice/commit/0505f30)
+  - Hides the zap animation after a successful search. [8163c99](https://github.com/mozilla/firefox-voice/commit/8163c99)
+  - Styles the negative feedback view. [bdf045e](https://github.com/mozilla/firefox-voice/commit/bdf045e)
+  - Improves keyboard config styling. [0168cac](https://github.com/mozilla/firefox-voice/commit/0168cac)
+  - Styles privacy page. Creates reusable templates for header and footer. Adds global layout stylesheet. [e6dc1b7](https://github.com/mozilla/firefox-voice/commit/e6dc1b7)
+- Other changes:
+  - Don't use 'See results about' cards. Fixes [#739](https://github.com/mozilla/firefox-voice/issues/739) [44af306](https://github.com/mozilla/firefox-voice/commit/44af306)
+  - Moves feedback prompt to search result footer [5fab05c](https://github.com/mozilla/firefox-voice/commit/5fab05c)
+  - Uses one state for userSettings in optionsController [0429599](https://github.com/mozilla/firefox-voice/commit/0429599)
+  - Use dev icon in local development and dev version of XPI. Fixes [#484](https://github.com/mozilla/firefox-voice/issues/484) [5f9d085](https://github.com/mozilla/firefox-voice/commit/5f9d085)
+  - Shows minimized or expanded listening view based on voice interaction and number of visits [5e19e82](https://github.com/mozilla/firefox-voice/commit/5e19e82)
+  - Fixes hover state for sad and happy icons. Allows users to omit a text input for negative feedback. [69bb921](https://github.com/mozilla/firefox-voice/commit/69bb921)
+  - Make 'next' work when search tab has been closed. Fixes [#699](https://github.com/mozilla/firefox-voice/issues/699) [83c4130](https://github.com/mozilla/firefox-voice/commit/83c4130)
+  - Filter out ads from card capturing. Fixes [#685](https://github.com/mozilla/firefox-voice/issues/685) [7a8d024](https://github.com/mozilla/firefox-voice/commit/7a8d024)
+
 ## Version 0.14.0 (2019-12-06)
 
 - Make 'next' do the next search item. Fixes [#680](https://github.com/mozilla/firefox-voice/issues/680) [c51321f](https://github.com/mozilla/firefox-voice/commit/c51321f)
