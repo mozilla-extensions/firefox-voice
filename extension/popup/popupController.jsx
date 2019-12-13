@@ -25,7 +25,7 @@ this.popupController = (function() {
     const [searchResult, setSearchResult] = useState(null);
     const [cardImage, setCardImage] = useState(null);
     const [recorderVolume, setRecorderVolume] = useState(null);
-    const [expandListeningView, setExpandedListeningView] = useState(true);
+    const [expandListeningView, setExpandedListeningView] = useState(false);
 
     let executedIntent = false;
     let stream = null;
@@ -57,6 +57,8 @@ this.popupController = (function() {
         return;
       }
 
+      incrementVisits();
+
       backgroundTabRecorder
         ? await voiceShim.openRecordingTab()
         : await setupStream();
@@ -69,7 +71,6 @@ this.popupController = (function() {
         playListeningChime();
       }
 
-      incrementVisits();
       addListeners();
       updateExamples();
       updateLastIntent();
@@ -77,11 +78,9 @@ this.popupController = (function() {
     };
 
     const incrementVisits = () => {
-      const numVisits = localStorage.getItem("firefox-voice-visits") || "0";
-      const newNumVisits = parseInt(numVisits) + 1;
-      localStorage.setItem("firefox-voice-visits", newNumVisits.toString());
-
-      setExpandedListeningView(newNumVisits <= 5);
+      const numVisits = getNumberOfVisits() + 1;
+      localStorage.setItem("firefox-voice-visits", numVisits.toString());
+      setExpandedListeningView(numVisits <= 5);
     };
 
     const getNumberOfVisits = () => {
