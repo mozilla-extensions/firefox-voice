@@ -22,6 +22,7 @@ this.intents.read = (function() {
     return true;
   }
 
+
   exports.pauseAny = async function(options) {
     const exceptTabId = options && options.exceptTabId;
     const tabs = await browser.tabs.query({ url: "about:reader*" });
@@ -43,7 +44,7 @@ this.intents.read = (function() {
       "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
-    read (this |) (tab | page |) (for me | to me |)
+    read (me | ) (this | ) (article | articles |) (tab | page |) (for me | to me |) (aloud | )
     `,
     async run(context) {
       const activeTab = await context.activeTab();
