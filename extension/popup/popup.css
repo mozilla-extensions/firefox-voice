@@ -164,7 +164,7 @@ body,
 
 #search-results {
   align-self: center;
-  padding: 1em 0;
+  padding: 1em 0 6em;
 }
 
 #voice-input,
@@ -265,9 +265,6 @@ a#lexicon {
 #search-show-next {
   font-size: 0.8em;
   padding-top: 0.5em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: white;
 }
 
@@ -285,7 +282,7 @@ a#lexicon {
   letter-spacing: -0.58px;
   text-align: center;
   font-size: 1em;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .feedback-controls {
@@ -318,8 +315,11 @@ a#lexicon {
 
 #next-result {
   margin: 0 0.5em;
-  padding: 0.5em;
+  padding: 0.5em 0 0;
   border-top: 1px solid #ededf0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .feedback #header-title {
