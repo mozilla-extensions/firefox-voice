@@ -151,7 +151,8 @@ body,
   max-height: 0;
   opacity: 0;
   transform: scaleY(0);
-  transition: max-height 0.3s ease-in, opacity 0.3s ease-in 0.3s, transform 0.1s ease-in;
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in 0.3s,
+    transform 0.1s ease-in;
 }
 
 #popup.listening #extra-content.expanded {
