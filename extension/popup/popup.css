@@ -247,7 +247,7 @@ a#lexicon {
   display: block;
 }
 
-#search-show-next {
+#search-footer {
   color: white;
   background-color: black;
   padding: 0.5em;
@@ -258,24 +258,21 @@ a#lexicon {
   width: 100%;
 }
 
-#search-show-next p {
+#search-footer p {
   margin: 0 0.5em;
 }
 
-#search-show-next-description {
+#search-show-next {
   font-size: 0.8em;
   padding-top: 0.5em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: white;
 }
 
 #search-show-next:hover {
-  text-decoration: none;
-}
-
-#search-show-next:hover #search-show-next-description {
-  text-decoration: underline;
+  color: white;
 }
 
 #search-image {
@@ -283,18 +280,12 @@ a#lexicon {
 }
 
 #intent-feedback {
-  margin: 1em 0;
-  padding-top: 1em;
-  border-top: 1px solid #ededf0;
-  border-bottom: 1px solid #ededf0;
-  color: #737373;
+  padding: 0.5em 0;
+  color: white;
+  background-color: black;
   font-size: 14px;
   letter-spacing: -0.58px;
   text-align: center;
-}
-
-.feedback-utterance {
-  font-weight: bold;
 }
 
 .feedback-controls {
@@ -304,25 +295,31 @@ a#lexicon {
 .feedback-controls button {
   border: none;
   margin: 5px 10px;
-  background-color: transparent;
+  background-color: white;
   width: 24px;
   height: 24px;
 }
 
 .feedback-controls .happy-icon {
-  background-image: url("./images/icon-happy.svg");
+  mask: url("./images/icon-happy.svg");
 }
 
 .feedback-controls .sad-icon {
-  background-image: url("./images/icon-sad.svg");
+  mask: url("./images/icon-sad.svg");
 }
 
 .feedback-controls .happy-icon:hover {
-  background-image: url("./images/icon-happy-hover.svg");
+  mask: url("./images/icon-happy-hover.svg");
 }
 
 .feedback-controls .sad-icon:hover {
-  background-image: url("./images/icon-sad-hover.svg");
+  mask: url("./images/icon-sad-hover.svg");
+}
+
+#next-result {
+  margin: 0 0.5em;
+  padding: 0.5em;
+  border-top: 1px solid #ededf0;
 }
 
 .feedback #header-title {
