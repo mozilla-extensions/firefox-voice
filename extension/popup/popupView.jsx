@@ -496,16 +496,15 @@ this.popupView = (function() {
     render() {
       return (
         <div id="text-input">
-          <input
-            type="text"
+          <textarea
             id="text-input-field"
-            className="styled-input"
-            autoFocus="true"
+            className="styled-textarea"
+            autofocus="1"
             onKeyPress={this.onInputKeyPress}
             onChange={this.onInputTextChange}
             defaultValue={this.value}
             ref={this.textInputRef}
-          />
+          ></textarea>
           <div id="send-btn-wrapper">
             <button
               className="styled-green-button"

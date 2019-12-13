@@ -117,8 +117,10 @@ Example markup to use this styled native checkbox
   caret-color: #000 !important;
 }
 
-.styled-input:focus {
+.styled-input:focus,
+.styled-textarea:focus {
   outline: transparent !important;
+  border: 2px solid #0a84ff;
 }
 
 a {
