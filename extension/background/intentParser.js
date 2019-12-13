@@ -31,12 +31,20 @@ this.intentParser = (function() {
   // FIXME: we should make these substitutions in the matcher, not the incoming text
   const SUBSTITUTIONS = {
     the: "",
+    my: "",
+    app: "tab",
+    cat: "tab",
     tap: "tab",
+    tech: "tab",
     top: "tab",
     "for me": "",
     in: "on",
+    nest: "next",
+    closest: "close",
     webpage: "page",
     website: "site",
+    intense: "intents",
+    interns: "intents",
   };
 
   // This is used to attempt ALL substitutions:
