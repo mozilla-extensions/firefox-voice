@@ -280,12 +280,12 @@ a#lexicon {
 }
 
 #intent-feedback {
-  padding: 0.5em 0;
   color: white;
   background-color: black;
-  font-size: 14px;
   letter-spacing: -0.58px;
   text-align: center;
+  font-size: 1em;
+  font-weight: bold;
 }
 
 .feedback-controls {
