@@ -47,7 +47,6 @@ this.popupView = (function() {
           currentView={currentView}
           suggestions={suggestions}
           feedback={feedback}
-          lastIntent={lastIntent}
           transcript={transcript}
           displayText={displayText}
           errorMessage={errorMessage}
@@ -154,7 +153,6 @@ this.popupView = (function() {
     currentView,
     suggestions,
     feedback,
-    lastIntent,
     transcript,
     displayText,
     errorMessage,
@@ -179,10 +177,8 @@ this.popupView = (function() {
             <ListeningContent
               displayText={displayText}
               suggestions={suggestions}
-              lastIntent={lastIntent}
               onClickLexicon={onClickLexicon}
               onInputStarted={onInputStarted}
-              onSubmitFeedback={onSubmitFeedback}
               expandListeningView={expandListeningView}
             />
           );
@@ -222,15 +218,12 @@ this.popupView = (function() {
               onSearchImageClick={onSearchImageClick}
               onNextSearchResultClick={onNextSearchResultClick}
               setMinPopupSize={setMinPopupSize}
+              onSubmitFeedback={onSubmitFeedback}
             />
           );
         case "feedback":
           return (
-            <Feedback
-              lastIntent={lastIntent}
-              feedback={feedback}
-              onSubmitFeedback={onSubmitFeedback}
-            />
+            <Feedback feedback={feedback} onSubmitFeedback={onSubmitFeedback} />
           );
         case "feedbackThanks":
           return <FeedbackThanks />;
@@ -247,7 +240,7 @@ this.popupView = (function() {
     );
   };
 
-  const Feedback = ({ lastIntent, feedback, onSubmitFeedback }) => {
+  const Feedback = ({ feedback, onSubmitFeedback }) => {
     const textarea = React.createRef();
     function onSubmit() {
       const text = textarea.current.value;
@@ -325,10 +318,8 @@ this.popupView = (function() {
   const ListeningContent = ({
     displayText,
     suggestions,
-    lastIntent,
     onClickLexicon,
     onInputStarted,
-    onSubmitFeedback,
     expandListeningView,
   }) => {
     return (
@@ -343,12 +334,6 @@ this.popupView = (function() {
             onClickLexicon={onClickLexicon}
           />
           <TypingInput onInputStarted={onInputStarted} />
-          {lastIntent ? (
-            <IntentFeedback
-              lastIntent={lastIntent}
-              onSubmitFeedback={onSubmitFeedback}
-            />
-          ) : null}
         </div>
       </React.Fragment>
     );
@@ -402,8 +387,7 @@ this.popupView = (function() {
     );
   };
 
-  const IntentFeedback = ({ lastIntent, onSubmitFeedback }) => {
-    const ago = lastIntentTime(lastIntent);
+  const IntentFeedback = ({ onSubmitFeedback }) => {
     function onPositive() {
       onSubmitFeedback({ rating: 1, feedback: null });
     }
@@ -412,10 +396,7 @@ this.popupView = (function() {
     }
     return (
       <div id="intent-feedback">
-        <div>How was your last experience?</div>
-        <div className="feedback-utterance">
-          {lastIntent.utterance} ({ago} ago)
-        </div>
+        <div>Did we get this right?</div>
         <div className="feedback-controls">
           <button
             className="happy-icon"
@@ -560,6 +541,7 @@ this.popupView = (function() {
     onSearchImageClick,
     onNextSearchResultClick,
     setMinPopupSize,
+    onSubmitFeedback,
   }) => {
     if (!search) return null;
 
@@ -600,18 +582,21 @@ this.popupView = (function() {
             />
           ) : null}
         </div>
-        {next ? (
-          <a href="#" id="search-show-next" onClick={onNextResultClick}>
-            <p>
-              <strong>
-                Click mic and say <i>next</i> to view
-              </strong>
-            </p>
-            <p id="search-show-next-description">
-              {new URL(next.url).hostname} | {next.title}
-            </p>
-          </a>
-        ) : null}
+        <div id="search-footer">
+          <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
+          {next ? (
+            <div id="next-result">
+              <p>
+                <strong>
+                  Click mic and say <i>'next'</i> to view
+                </strong>
+              </p>
+              <a href="#" id="search-show-next" onClick={onNextResultClick}>
+                {new URL(next.url).hostname} | {next.title}
+              </a>
+            </div>
+          ) : null}
+        </div>
       </React.Fragment>
     );
   };

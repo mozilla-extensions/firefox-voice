@@ -197,6 +197,7 @@ this.popupController = (function() {
     };
 
     const setPopupView = async newView => {
+      setMinPopupSize(350);
       setCurrentView(newView);
 
       if (
@@ -245,6 +246,8 @@ this.popupController = (function() {
         setCardImage(message.card);
         setMinPopupSize(message.card.width);
       }
+
+      updateLastIntent();
     };
 
     const showSearchCard = newCard => {
