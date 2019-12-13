@@ -97,6 +97,19 @@ this.intents.tabs = (function() {
   });
 
   this.intentRunner.registerIntent({
+    name: "tabs.moveToWindow",
+    description: "Move tab in a new window",
+    examples: ["Move tab in a new window"],
+    match: `
+    (open | move) (tab | this) (in | to) (a |) new window (for me|)
+    `,
+    async run(context) {
+      const activeTab = await context.activeTab();
+      await browser.windows.create({ tabId: activeTab.id });
+    },
+  });
+
+  this.intentRunner.registerIntent({
     name: "tabs.openPrivateWindow",
     description: "Opens a new private window",
     examples: ["open private window"],
