@@ -1,38 +1,10 @@
-#contents {
-  font-family: sans-serif, serif;
-}
-
-#sidebar {
-  float: left;
-  width: 33%;
-  font-size: 24px;
-  color: #8e31bd;
-  font-weight: bold;
-  letter-spacing: -2px;
-  line-height: 52px;
-}
-
-#sidebar .stmt {
-  width: 100%;
-  padding-right: 40px;
-}
-
-#list {
-  float: left;
-  width: 66%;
-}
-
-#clear {
-  clear: both;
-}
-
 .example {
   margin-bottom: 40px;
 }
 
 .intent {
   font-size: 36px;
-  font-weight: bold;
+  font-weight: 600;
   color: #20123a;
   letter-spacing: -1.5px;
 }
@@ -48,7 +20,7 @@
 .utterance {
   font-size: 16px;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 600;
   background-color: #ededf0;
   border-left: solid 6px #8e31bd;
   padding: 20px;
@@ -61,15 +33,11 @@
   letter-spacing: -1.17px;
   margin-top: 10px;
   margin-bottom: 15px;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 .utterance .small {
   font-size: 16px;
-  font-weight: normal;
+  font-weight: 400;
   letter-spacing: 0px;
-}
-
-footer {
-  padding-top: 1rem;
 }

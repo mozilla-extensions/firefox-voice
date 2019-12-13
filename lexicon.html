@@ -3,11 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <title>Firefox Voice Lexicon</title>
+    <link rel="stylesheet" href="../assets/css/inter.css" />
+    <link rel="stylesheet" href="../assets/css/gui.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
     <link rel="stylesheet" href="./lexicon.css" />
   </head>
   <body>
-    <h1>Firefox Voice Commands</h1>
-
+    <header id="page-header">
+    <div id="home-icon">
+        <img src="/assets/images/firefox-voice-logo.svg" alt="Firefox Voice Logo" />
+    </div>
+    <div id="link-menu">
+        <ul>
+            <li>
+                <a href="/views/lexicon.html" target="_blank" rel="noopener">
+                    Things you can say
+                </a>
+            </li>
+            <li>
+                <a href="/views/privacy-policy.html" target="_blank" rel="noopener">
+                    Privacy
+                </a>
+            </li>
+            <li>
+                <button id="install-btn" class="styled-button">Install Now</button>
+            </li>
+        </ul>
+    </div>
+</header>
     <div id="contents">
       <div id="sidebar">
         <div class="stmt">The big list of what you can say.</div>
@@ -213,13 +236,13 @@
             <p>Open my single sign on bookmark</p>
           </div>
         </div>
+
+        <footer>
+    For more information on Firefox Voice see our
+    <a href="https://github.com/mozilla/firefox-voice">GitHub repository</a>.
+</footer>
       </div>
       <div id="clear"></div>
     </div>
-
-    <footer>
-      For more information on Firefox Voice see our
-      <a href="https://github.com/mozilla/firefox-voice">GitHub repository</a>.
-    </footer>
   </body>
 </html>
