@@ -7,40 +7,20 @@ this.optionsView = (function() {
   exports.Options = ({
     inDevelopment,
     version,
-    chime,
-    keyboardShortcut,
     keyboardShortcutError,
-    musicService,
-    musicServiceOptions,
-    telemetry,
-    utterancesTelemetry,
-    collectAudio,
-    updateMusicService,
-    updateChime,
-    updateKeyboardShortcut,
-    updateTelemetry,
-    updateUtterancesTelemetry,
-    updateCollectAudio,
+    userOptions,
+    userSettings,
+    updateUserSettings,
   }) => {
     return (
       <div className="settings-page">
         <LeftSidebar version={version} />
         <RightContent
           inDevelopment={inDevelopment}
-          chime={chime}
-          keyboardShortcut={keyboardShortcut}
           keyboardShortcutError={keyboardShortcutError}
-          musicService={musicService}
-          musicServiceOptions={musicServiceOptions}
-          telemetry={telemetry}
-          utterancesTelemetry={utterancesTelemetry}
-          collectAudio={collectAudio}
-          updateMusicService={updateMusicService}
-          updateChime={updateChime}
-          updateKeyboardShortcut={updateKeyboardShortcut}
-          updateTelemetry={updateTelemetry}
-          updateUtterancesTelemetry={updateUtterancesTelemetry}
-          updateCollectAudio={updateCollectAudio}
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
         />
       </div>
     );
@@ -65,41 +45,30 @@ this.optionsView = (function() {
 
   const RightContent = ({
     inDevelopment,
-    chime,
-    keyboardShortcut,
     keyboardShortcutError,
-    musicService,
-    musicServiceOptions,
-    telemetry,
-    utterancesTelemetry,
-    collectAudio,
-    updateMusicService,
-    updateChime,
-    updateKeyboardShortcut,
-    updateTelemetry,
-    updateUtterancesTelemetry,
-    updateCollectAudio,
+    userOptions,
+    userSettings,
+    updateUserSettings,
   }) => {
     return (
       <div className="settings-content">
-        <ChimeSettings chime={chime} updateChime={updateChime} />
+        <ChimeSettings
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
         <KeyboardShortcutSettings
-          keyboardShortcut={keyboardShortcut}
-          updateKeyboardShortcut={updateKeyboardShortcut}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
           keyboardShortcutError={keyboardShortcutError}
         />
         <MusicServiceSettings
-          musicService={musicService}
-          musicServiceOptions={musicServiceOptions}
-          updateMusicService={updateMusicService}
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
         />
         <DataCollection
-          telemetry={telemetry}
-          utterancesTelemetry={utterancesTelemetry}
-          collectAudio={collectAudio}
-          updateTelemetry={updateTelemetry}
-          updateUtterancesTelemetry={updateUtterancesTelemetry}
-          updateCollectAudio={updateCollectAudio}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
         />
         <DevelopmentSettings inDevelopment={inDevelopment} />
         <AboutSection />
@@ -108,33 +77,39 @@ this.optionsView = (function() {
   };
 
   const MusicServiceSettings = ({
-    musicService,
-    musicServiceOptions,
-    updateMusicService,
+    userOptions,
+    userSettings,
+    updateUserSettings,
   }) => {
     const onMusicServiceChange = event => {
       if (event) {
-        updateMusicService(event.target.value);
+        userSettings.musicService = event.target.value;
+        updateUserSettings(userSettings);
       }
     };
     return (
       <fieldset id="music-services">
         <legend>Music service</legend>
-        <select value={musicService} onChange={onMusicServiceChange}>
-          {musicServiceOptions.map(musicOption => (
-            <option key={musicOption.name} value={musicOption.name}>
-              {musicOption.name}
-            </option>
-          ))}
+        <select
+          value={userSettings.musicService}
+          onChange={onMusicServiceChange}
+        >
+          {userOptions.musicServices &&
+            userOptions.musicServices.map(musicOption => (
+              <option key={musicOption.name} value={musicOption.name}>
+                {musicOption.name}
+              </option>
+            ))}
         </select>
       </fieldset>
     );
   };
 
-  const ChimeSettings = ({ chime, updateChime }) => {
+  const ChimeSettings = ({ userSettings, updateUserSettings }) => {
     const onChimeSettingChange = event => {
       if (event) {
-        updateChime(event.target.checked);
+        userSettings.chime = event.target.checked;
+        updateUserSettings(userSettings);
       }
     };
     return (
@@ -144,7 +119,7 @@ this.optionsView = (function() {
           <input
             id="chime"
             type="checkbox"
-            checked={chime}
+            checked={userSettings.chime}
             onChange={onChimeSettingChange}
           />
           <label htmlFor="chime">Play chime when opening mic</label>
@@ -154,8 +129,8 @@ this.optionsView = (function() {
   };
 
   const KeyboardShortcutSettings = ({
-    keyboardShortcut,
-    updateKeyboardShortcut,
+    userSettings,
+    updateUserSettings,
     keyboardShortcutError,
   }) => {
     const modifier1 = isMac => {
@@ -200,8 +175,11 @@ this.optionsView = (function() {
     };
 
     const onChangeSetting = event => {
-      updateKeyboardShortcut(event.target.value);
+      const value = event.target.value;
+      userSettings.keyboardShortcut = value || null;
+      updateUserSettings(userSettings);
     };
+
     const isMac = window.navigator.platform.match(/Mac/i);
     return (
       <fieldset id="keyboard-shortcut">
@@ -213,7 +191,7 @@ this.optionsView = (function() {
             placeholder={placeholder(isMac)}
             type="text"
             onChange={onChangeSetting}
-            value={keyboardShortcut}
+            value={userSettings.keyboardShortcut}
           />
           <label htmlFor="keyboard-shortcut-field">Keyboard Shortcut</label>
           {keyboardShortcutError ? (
@@ -283,22 +261,26 @@ this.optionsView = (function() {
     );
   };
 
-  const DataCollection = ({
-    telemetry,
-    utterancesTelemetry,
-    collectAudio,
-    updateTelemetry,
-    updateUtterancesTelemetry,
-    updateCollectAudio,
-  }) => {
+  const DataCollection = ({ userSettings, updateUserSettings }) => {
     function onTelemetryChange(event) {
-      updateTelemetry(event.target.checked);
+      const value = !!event.target.checked;
+      userSettings.disableTelemetry = !value;
+      if (!value) {
+        userSettings.utterancesTelemetry = false;
+      }
+      updateUserSettings(userSettings);
     }
     function onUtteranceTelemetryChange(event) {
-      updateUtterancesTelemetry(event.target.checked);
+      const value = !!event.target.checked;
+      userSettings.utterancesTelemetry = value;
+      if (value) {
+        userSettings.disableTelemetry = false;
+      }
+      updateUserSettings(userSettings);
     }
     function onCollectAudioChange(event) {
-      updateCollectAudio(event.target.checked);
+      userSettings.collectAudio = !!event.target.checked;
+      updateUserSettings(userSettings);
     }
 
     return (
@@ -310,7 +292,7 @@ this.optionsView = (function() {
               <input
                 id="technical-data"
                 type="checkbox"
-                checked={telemetry}
+                checked={!userSettings.disableTelemetry}
                 onChange={onTelemetryChange}
               />
               <label htmlFor="technical-data">
@@ -330,7 +312,7 @@ this.optionsView = (function() {
               <input
                 id="transcripts-data"
                 type="checkbox"
-                checked={utterancesTelemetry}
+                checked={userSettings.utterancesTelemetry}
                 onChange={onUtteranceTelemetryChange}
               />
               <label htmlFor="transcripts-data">
@@ -351,7 +333,7 @@ this.optionsView = (function() {
               <input
                 id="collect-audio"
                 type="checkbox"
-                checked={collectAudio}
+                checked={userSettings.collectAudio}
                 onChange={onCollectAudioChange}
               />
               <label htmlFor="collect-audio">
