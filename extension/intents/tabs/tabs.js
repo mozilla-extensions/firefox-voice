@@ -18,7 +18,7 @@ this.intents.tabs = (function() {
     examples: ["open tab", "test:open top for me", "test:open the tab"],
     match: `
     open tab
-    open (a |) (new | blank |) tab (for me|)
+    (open | launch) (a |) (new | blank |) tab (for me|)
     new (blank |) tab
     `,
     async run(context) {
@@ -101,7 +101,7 @@ this.intents.tabs = (function() {
     examples: ["open window"],
     match: `
     open window
-    open (a |) (new | blank |) window (for me|)
+    (open | launch) (a |) (new | blank |) window (for me|)
     new (blank |) window
     `,
     async run(context) {
