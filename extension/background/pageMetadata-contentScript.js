@@ -1,12 +1,14 @@
 /* globals communicate */
 
 this.pageMetadataContentScript = (function() {
+  const exports = {};
+
   communicate.register("getSelection", message => {
     const selection = window.getSelection();
     return { selection: { text: String(selection) } };
   });
 
-  communicate.register("getMetadata", message => {
+  exports.getMetadata = function() {
     let title = document.title || location.href;
     const titleEl = document.querySelector(
       "meta[property='og:title'], meta[property='twitter:title']"
@@ -25,5 +27,11 @@ this.pageMetadataContentScript = (function() {
       url: location.href,
       docTitle: document.title,
     };
+  };
+
+  communicate.register("getMetadata", message => {
+    return exports.getMetadata();
   });
+
+  return exports;
 })();
