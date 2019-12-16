@@ -7,8 +7,8 @@ this.intents.find = (function() {
       "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active",
     examples: ["Find calendar tab", "test:go to my calendar"],
     match: `
-    (find | bring me to) (my | the |) [query] (tab |)
-    (find | open | focus | show) tab [query]
+    (find | bring me to | switch to) (my | the |) [query] (tab |)
+    (find | open | focus | show | switch to) tab [query]
     go (to | to the |) [query] tab
     go to my [query]
     focus [query] (tab |)
