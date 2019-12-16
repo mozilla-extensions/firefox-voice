@@ -23,6 +23,26 @@ this.intentParser = (function() {
     serviceName: serviceList.allServiceNames(),
     musicServiceName: serviceList.musicServiceNames(),
     lang: languages.languageNames(),
+    smallNumber: [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+    ],
   };
 
   // We will consider matches where we have to make these substitutions in order to get an exact
