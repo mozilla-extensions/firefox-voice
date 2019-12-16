@@ -1,4 +1,4 @@
-/* globals intentParser, intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings, browserUtil */
+/* globals intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings, browserUtil */
 
 this.main = (function() {
   const exports = {};
@@ -22,8 +22,7 @@ this.main = (function() {
     }
     log.messaging(`${senderInfo} ${message.type}${propString}`);
     if (message.type === "runIntent") {
-      const desc = intentParser.parse(message.text);
-      return intentRunner.runIntent(desc);
+      return intentRunner.runUtterance(message.text);
     } else if (message.type === "getExamples") {
       return intentExamples.getExamples(message.number || 2);
     } else if (message.type === "getLastIntentForFeedback") {

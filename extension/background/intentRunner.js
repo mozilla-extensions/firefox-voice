@@ -6,15 +6,25 @@ this.intentRunner = (function() {
   const exports = {};
 
   const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
+  // Only keep this many previous intents:
+  const INTENT_HISTORY_LIMIT = 20;
 
   const intents = (exports.intents = {});
   let lastIntent;
+  const intentHistory = [];
 
-  class IntentContext {
+  const IntentContext = (exports.IntentContext = class IntentContext {
     constructor(desc) {
       this.closePopupOnFinish = true;
       this.timestamp = Date.now();
       Object.assign(this, desc);
+    }
+
+    clone() {
+      const c = new IntentContext(this);
+      c.timestamp = Date.now();
+      c.closePopupOnFinish = true;
+      return c;
     }
 
     keepPopup() {
@@ -126,7 +136,7 @@ this.intentRunner = (function() {
     onError(message) {
       // Can be overridden
     }
-  }
+  });
 
   exports.registerIntent = function(intent) {
     if (intents[intent.name]) {
@@ -139,6 +149,33 @@ this.intentRunner = (function() {
     intentParser.registerMatcher(intent.name, intent.match);
   };
 
+  exports.runUtterance = async function(utterance) {
+    for (const name in registeredNicknames) {
+      const re = new RegExp(`\\b${name}\\b`, "i");
+      if (re.test(utterance)) {
+        const repl = utterance.replace(re, "nickname");
+        const context = registeredNicknames[name].clone();
+        const handler = intents[context.name];
+        const method =
+          handler.runNickname ||
+          async function(repl, context, utterance) {
+            if (repl === "nickname") {
+              await intentRunner.runIntent(context);
+              return true;
+            }
+            return false;
+          };
+        const result = await method.call(handler, repl, context, utterance);
+        if (result) {
+          // It was handled
+          break;
+        }
+      }
+    }
+    const desc = intentParser.parse(utterance);
+    return intentRunner.runIntent(desc);
+  };
+
   exports.runIntent = async function(desc) {
     catcher.setTag("intent", desc.name);
     if (!intents[desc.name]) {
@@ -147,6 +184,7 @@ this.intentRunner = (function() {
     const intent = intents[desc.name];
     const context = new IntentContext(desc);
     lastIntent = context;
+    addIntentHistory(context);
     context.initTelemetry();
     try {
       log.info(
@@ -225,6 +263,45 @@ this.intentRunner = (function() {
     });
   };
 
+  function addIntentHistory(context) {
+    intentHistory.push(context);
+    intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
+  }
+
+  exports.getIntentHistory = function() {
+    return intentHistory;
+  };
+
+  const registeredNicknames = {};
+
+  exports.registerNickname = function(name, context) {
+    name = name.toLowerCase();
+    if (!context) {
+      delete registeredNicknames[name];
+      log.info("Removed nickname", name);
+    } else {
+      registeredNicknames[name] = context;
+      log.info("Added nickname", name, "->", context.name, context.slots);
+    }
+    browser.storage.sync.set({ registeredNicknames });
+  };
+
+  async function initRegisteredNicknames() {
+    const result = await browser.storage.sync.get(["registeredNicknames"]);
+    if (result.registeredNicknames) {
+      for (const name in result.registeredNicknames) {
+        const value = result.registeredNicknames[name];
+        const context = new IntentContext(value);
+        registeredNicknames[name] = context;
+        log.info("Loaded nickname", name, context.name, context.slots);
+      }
+    }
+  }
+
+  exports.getRegisteredNicknames = function() {
+    return registeredNicknames;
+  };
+
   exports.getLastIntentForFeedback = function() {
     if (!lastIntent) {
       return null;
@@ -239,6 +316,8 @@ this.intentRunner = (function() {
   exports.clearFeedbackIntent = function() {
     lastIntent = null;
   };
+
+  initRegisteredNicknames();
 
   return exports;
 })();
