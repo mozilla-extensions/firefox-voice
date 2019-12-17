@@ -1,6 +1,9 @@
 /* globals searching, serviceList, pageMetadata, languages */
 
 this.intents.navigation = (function() {
+  const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
+  const queryDatabase = new Map();
+
   this.intentRunner.registerIntent({
     name: "navigation.navigate",
     description:
@@ -10,7 +13,18 @@ this.intents.navigation = (function() {
     (bring me | go | navigate | show me | open) (to | find |) (page |) [query]
     `,
     async run(context) {
-      await context.createTabGoogleLucky(context.slots.query);
+      const query = context.slots.query;
+      const cached = queryDatabase.get(query.toLowerCase());
+      if (cached) {
+        await context.createTab({ url: cached.url });
+      } else {
+        const tab = await context.createTabGoogleLucky(query);
+        queryDatabase.set(query.toLowerCase(), {
+          url: tab.url,
+          date: Date.now(),
+        });
+        saveQueryDatabase();
+      }
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "navigate",
@@ -105,4 +119,26 @@ this.intents.navigation = (function() {
       await browser.tabs.create({ url });
     },
   });
+
+  async function saveQueryDatabase() {
+    const expireTime = Date.now() - QUERY_DATABASE_EXPIRATION;
+    const entries = [];
+    for (const [url, value] of queryDatabase.entries()) {
+      if (value.date >= expireTime) {
+        entries.push([url, value]);
+      }
+    }
+    await browser.storage.local.set({ queryDatabase: entries });
+  }
+
+  async function loadQueryDatabase() {
+    const result = await browser.storage.local.get(["queryDatabase"]);
+    if (result && result.queryDatabase) {
+      for (const [key, value] of result.queryDatabase) {
+        queryDatabase.set(key, value);
+      }
+    }
+  }
+
+  loadQueryDatabase();
 })();
