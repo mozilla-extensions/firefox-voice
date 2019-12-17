@@ -40,6 +40,8 @@
   },
   "dependencies": {
     "@sentry/browser": "^5.6.3",
+    "browserify": "^16.5.0",
+    "freeze-dry": "^0.2.4",
     "fuse.js": "^3.4.5",
     "lottie-web": "^5.5.7",
     "moment": "^2.24.0",
@@ -63,6 +65,7 @@
     "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
     "build:jsx": "babel --relative --out-dir . '**/*.jsx'",
+    "build:browserify": "browserify --require freeze-dry --standalone freezeDry > extension/js/vendor/freezeDry.js",
     "watch": "babel --watch --relative --out-dir . '**/*.jsx'",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "maybemarkdown": "if [[ docs/lexicon.md -nt extension/views/lexicon.html ]] ; then npm run build:markdown ; fi",
