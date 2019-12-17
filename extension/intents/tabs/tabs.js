@@ -1,4 +1,86 @@
 this.intents.tabs = (function() {
+  const MAX_ZOOM = 3;
+  const MIN_ZOOM = 0.3;
+  const DEFAULT_ZOOM = 1;
+  const defaultZoomValues = [
+    0.3,
+    0.5,
+    0.67,
+    0.8,
+    0.9,
+    1,
+    1.1,
+    1.2,
+    1.33,
+    1.5,
+    1.7,
+    2,
+    2.4,
+    3,
+  ];
+
+  async function updateZoom(context, operation) {
+    // 0 -> Reset
+    // 1 -> zoom in
+    // -1 -> zoom out
+    const activeTab = await context.activeTab();
+    if (operation === 0) {
+      await browser.tabs.setZoom(activeTab.id, DEFAULT_ZOOM);
+    } else {
+      const zoomFactor = await browser.tabs.getZoom(activeTab.id);
+      if (
+        (zoomFactor >= MAX_ZOOM && operation === 1) ||
+        (zoomFactor <= MIN_ZOOM && operation === -1)
+      ) {
+        const e = new Error("Zoom limit reached");
+        e.displayMessage = "Zoom limit reached";
+        throw e;
+      }
+      const pos = defaultZoomValues.indexOf(zoomFactor);
+      await browser.tabs.setZoom(
+        activeTab.id,
+        defaultZoomValues[pos + operation]
+      );
+    }
+  }
+
+  this.intentRunner.registerIntent({
+    name: "tabs.zoomIn",
+    description: "Zoom in current tab",
+    examples: ["Zoom in tab"],
+    match: `
+    zoom in (this |) (tab |) (for me |)
+  `,
+    async run(context) {
+      await updateZoom(context, 1);
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.zoomOut",
+    description: "Zoom out current tab",
+    examples: ["Zoom out tab"],
+    match: `
+    zoom out (this |) (tab |) (for me |)
+  `,
+    async run(context) {
+      await updateZoom(context, -1);
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.zoomReset",
+    description: "Reset zoom in current tab",
+    examples: ["Reset zoom"],
+    match: `
+    reset zoom (for me |)
+    zoom reset (for me |)
+  `,
+    async run(context) {
+      await updateZoom(context, 0);
+    },
+  });
+
   this.intentRunner.registerIntent({
     name: "tabs.close",
     description: "Closes the current tab",
