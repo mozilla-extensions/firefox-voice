@@ -1,7 +1,20 @@
-/* globals communicate, pageMetadataContentScript */
+/* globals communicate, pageMetadataContentScript, log */
 
 this.contentScript = (function() {
   const types = {};
+  const PASTE_SELECTORS = `
+    textarea,
+    *[contenteditable],
+    input[type=text],
+    input[type=search],
+    input[type=url],
+    input[type=email],
+    input[type=password],
+    input[type=date],
+    input[type=datetime-local],
+    input[type=time],
+    input[type=color]
+  `;
 
   const meta = pageMetadataContentScript.getMetadata;
 
@@ -37,12 +50,6 @@ this.contentScript = (function() {
     return canvas.toDataURL();
   }
 
-  function copyImage(url) {
-    const img = document.createElement("img");
-    img.src = url;
-    copyElement(img);
-  }
-
   function getDocumentWidth() {
     return Math.max(
       document.body && document.body.clientWidth,
@@ -59,6 +66,13 @@ this.contentScript = (function() {
       document.body && document.body.scrollHeight,
       document.documentElement.scrollHeight
     );
+  }
+
+  function copyImage(url) {
+    return browser.runtime.sendMessage({
+      type: "copyImage",
+      url,
+    });
   }
 
   communicate.register("copy", message => {
@@ -104,7 +118,7 @@ this.contentScript = (function() {
     copyImage(url);
   };
 
-  types.copyFullPageScreenshot = function(el) {
+  types.copyFullPageScreenshot = function() {
     const url = createScreenshot({
       x: 0,
       y: 0,
@@ -112,5 +126,36 @@ this.contentScript = (function() {
       width: getDocumentWidth(),
     });
     copyImage(url);
+  };
+
+  function isPasteable(el) {
+    while (el && el.tagName) {
+      if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
+        return true;
+      }
+      if (el.getAttribute("contenteditable")) {
+        return true;
+      }
+      el = el.parentNode;
+    }
+    return false;
+  }
+
+  types.paste = function() {
+    let timeout = 0;
+    if (!isPasteable(document.activeElement)) {
+      const els = document.querySelectorAll(PASTE_SELECTORS);
+      if (els.length) {
+        els[0].focus();
+        // FIXME: ideally there'd be some polling time instead of a simple timeout:
+        timeout = 1000;
+      }
+    }
+    setTimeout(() => {
+      const result = document.execCommand("paste");
+      if (!result) {
+        log.warn("Paste appeared to fail");
+      }
+    }, timeout);
   };
 })();
