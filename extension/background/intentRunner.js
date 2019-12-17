@@ -90,6 +90,15 @@ this.intentRunner = (function() {
       return browserUtil.createTab(options);
     }
 
+    async openOrFocusTab(url) {
+      const tabs = await browser.tabs.query({ url, currentWindow: true });
+      if (tabs.length) {
+        await this.makeTabActive(tabs[0]);
+      } else {
+        await this.createTab({ url });
+      }
+    }
+
     async createTabGoogleLucky(query) {
       const searchUrl = searching.googleSearchUrl(query, true);
       const tab = await this.createTab({ url: searchUrl });
