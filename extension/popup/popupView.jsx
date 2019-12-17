@@ -253,7 +253,7 @@ this.popupView = (function() {
       <div id="feedback-whats-wrong">
         <button className="sad-icon"></button>
         <form onSubmit={onSubmit} className="feedback-form">
-          <h1>What Went Wrong?</h1>
+          <h1>What went wrong?</h1>
           <div>
             <textarea
               className="styled-textarea"
