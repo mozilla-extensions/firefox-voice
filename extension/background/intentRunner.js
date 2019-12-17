@@ -94,19 +94,26 @@ this.intentRunner = (function() {
       const searchUrl = searching.googleSearchUrl(query, true);
       const tab = await this.createTab({ url: searchUrl });
       return new Promise((resolve, reject) => {
+        let forceRedirecting = false;
         function onUpdated(tabId, changeInfo, tab) {
           const url = tab.url;
           if (url.startsWith("about:blank")) {
             return;
           }
-          const isGoogle = /^https:\/\/www.google.com\//.test(tab.url);
+          const isGoogle = /^https:\/\/www.google.com\//.test(url);
           const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
           if (!isGoogle || isRedirect) {
             if (isRedirect) {
+              if (forceRedirecting) {
+                // We're already sending the user to the new URL
+                return;
+              }
               // This is a URL redirect:
               const params = new URL(url).searchParams;
               const newUrl = params.get("q");
+              forceRedirecting = true;
               browser.tabs.update(tab.id, { url: newUrl });
+              return;
             }
             // We no longer need to listen for updates:
             browser.tabs.onUpdated.removeListener(onUpdated, { tabId: tab.id });
