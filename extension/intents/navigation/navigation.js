@@ -16,19 +16,43 @@ this.intents.navigation = (function() {
       const query = context.slots.query;
       const cached = queryDatabase.get(query.toLowerCase());
       if (cached) {
-        await context.createTab({ url: cached.url });
+        await context.openOrFocusTab(cached.url);
       } else {
         const tab = await context.createTabGoogleLucky(query);
+        const url = tab.url;
         queryDatabase.set(query.toLowerCase(), {
-          url: tab.url,
+          url,
           date: Date.now(),
         });
+        // Sometimes there's a very quick redirect
+        setTimeout(async () => {
+          const newTab = await browser.tabs.get(tab.id);
+          if (newTab.url !== url) {
+            queryDatabase.set(query.toLowerCase(), {
+              url: newTab.url,
+              date: Date.now(),
+            });
+          }
+        }, 1000);
         saveQueryDatabase();
       }
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "navigate",
       });
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.clearQueryDatabase",
+    description: "Debugging command to clear the cache of 'open' queries",
+    match: `
+    clear query (database | cache)
+    `,
+    async run(context) {
+      queryDatabase.clear();
+      saveQueryDatabase();
+      context.displayText('"Open" database/cache cleared');
     },
   });
 
