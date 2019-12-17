@@ -1,6 +1,8 @@
 /* globals content, browserUtil */
 
 this.intents.clipboard = (function() {
+  const exports = {};
+
   async function copy(context, copyType) {
     const activeTab = await browserUtil.activeTab();
     await content.lazyInject(activeTab.id, [
@@ -106,4 +108,45 @@ this.intents.clipboard = (function() {
       return copy(context, "copySelection");
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "nicknames.paste",
+    description: "Copies the selection",
+    examples: ["Copy selection"],
+    match: `
+    paste (the |) (selection | clipboard |)
+    `,
+    async run(context) {
+      // OK, not actually a copy, but...
+      return copy(context, "paste");
+    },
+  });
+
+  /* Image clipboard routines
+   ***********************************************/
+
+  function dataUrlToBlob(url) {
+    const binary = atob(url.split(",", 2)[1]);
+    const contentType = "image/png";
+    const data = Uint8Array.from(binary, char => char.charCodeAt(0));
+    const blob = new Blob([data], { type: contentType });
+    return blob;
+  }
+
+  function blobToArray(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("loadend", function() {
+        resolve(reader.result);
+      });
+      reader.readAsArrayBuffer(blob);
+    });
+  }
+
+  exports.copyImage = async function copyImage(url) {
+    const buffer = await blobToArray(dataUrlToBlob(url));
+    await browser.clipboard.setImageData(buffer, "png");
+  };
+
+  return exports;
 })();
