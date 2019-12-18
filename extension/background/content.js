@@ -32,7 +32,10 @@ this.content = (function() {
     }
     if (available === "some") {
       for (const script of scripts) {
-        await browser.tabs.executeScript(tabId, { file: script });
+        await browser.tabs.executeScript(tabId, {
+          file: script,
+          runAt: "document_idle",
+        });
       }
       await browser.tabs.sendMessage(tabId, {
         type: "scriptsLoaded",

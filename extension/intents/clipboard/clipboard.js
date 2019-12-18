@@ -3,12 +3,15 @@
 this.intents.clipboard = (function() {
   const exports = {};
 
-  async function copy(context, copyType) {
+  async function copy(context, copyType, complete = false) {
     const activeTab = await browserUtil.activeTab();
     await content.lazyInject(activeTab.id, [
       "/background/pageMetadata-contentScript.js",
       "/intents/clipboard/contentScript.js",
     ]);
+    if (complete) {
+      await browserUtil.waitForDocumentComplete(activeTab.id);
+    }
     browser.tabs.sendMessage(activeTab.id, { type: "copy", copyType });
   }
 
