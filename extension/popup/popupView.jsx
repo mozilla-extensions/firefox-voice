@@ -441,8 +441,10 @@ this.popupView = (function() {
 
     componentDidMount() {
       this.focusText();
-      if (this.textInputRef.current) {
-        this.textInputRef.current.addEventListener("blur", this.focusText);
+      const el = this.textInputRef.current;
+      if (el) {
+        el.addEventListener("blur", this.focusText);
+        el.setSelectionRange(el.value.length, el.value.length);
       }
     }
 
