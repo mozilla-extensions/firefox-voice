@@ -154,9 +154,10 @@ this.intents.tabs = (function() {
     `,
     async run(context) {
       const result = await browser.browserSettings.homepageOverride.get({});
-      result.value
-        .split("|")
-        .map(homepageUrl => browser.tabs.create({ url: homepageUrl }));
+      const homePageUrls = result.value.split("|");
+      for (const homePageUrl of homePageUrls) {
+        await browser.tabs.create({ url: homePageUrl });
+      }
     },
   });
 })();
