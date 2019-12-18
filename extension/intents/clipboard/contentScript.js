@@ -2,9 +2,10 @@
 
 this.contentScript = (function() {
   const types = {};
-  const PASTE_SELECTORS = `
-    textarea,
-    *[contenteditable],
+  const PASTE_SELECTORS = [
+    "textarea",
+    "*[contenteditable]",
+    `
     input[type=text],
     input[type=search],
     input[type=url],
@@ -14,7 +15,13 @@ this.contentScript = (function() {
     input[type=datetime-local],
     input[type=time],
     input[type=color]
-  `;
+    `,
+  ];
+
+  const DOMAIN_FOCUS_TIMES = {
+    "twitter.com": 3000,
+  };
+  const DEFAULT_FOCUS_TIME = 500;
 
   const meta = pageMetadataContentScript.getMetadata;
 
@@ -144,17 +151,23 @@ this.contentScript = (function() {
   types.paste = function() {
     let timeout = 0;
     if (!isPasteable(document.activeElement)) {
-      const els = document.querySelectorAll(PASTE_SELECTORS);
-      if (els.length) {
-        els[0].focus();
-        // FIXME: ideally there'd be some polling time instead of a simple timeout:
-        timeout = 1000;
+      let el;
+      for (const selector of PASTE_SELECTORS) {
+        el = document.querySelector(selector);
+        if (el) {
+          break;
+        }
+      }
+      if (el) {
+        el.focus();
+        timeout = DOMAIN_FOCUS_TIMES[location.hostname] || DEFAULT_FOCUS_TIME;
       }
     }
     setTimeout(() => {
       const result = document.execCommand("paste");
       if (!result) {
-        log.warn("Paste appeared to fail");
+        // Though AFAICT this will often return false even when it did succeed
+        log.info("Paste appeared to fail");
       }
     }, timeout);
   };

@@ -96,5 +96,12 @@ this.browserUtil = (function() {
     }
   };
 
+  exports.waitForDocumentComplete = function(tabId) {
+    return browser.tabs.executeScript(tabId, {
+      code: "null",
+      runAt: "document_idle",
+    });
+  };
+
   return exports;
 })();

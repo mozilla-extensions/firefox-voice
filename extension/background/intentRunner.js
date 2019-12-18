@@ -184,7 +184,7 @@ this.intentRunner = (function() {
         const result = await method.call(handler, repl, context, utterance);
         if (result) {
           // It was handled
-          break;
+          return null;
         }
       }
     }
