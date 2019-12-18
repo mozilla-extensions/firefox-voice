@@ -50,18 +50,14 @@ this.popupController = (function() {
     const init = async () => {
       const userSettings = await settings.getSettings();
       if (!userSettings.collectTranscriptsOptinAnswered) {
-        console.log("Searching for open onboarding tabs...");
+        let onboardingURL = browser.runtime.getURL("/onboarding/onboard.html");
         for (const tab of await browser.tabs.query({
-          url: ["moz-extension://*/onboarding/onboard.html"]
+          url: [onboardingURL]
         })) {
-          console.log("Found an open onboarding tab!");
-          window.close();
-          console.log("Trying to open tab " + tab.id);
-          await browserUtil.makeTabActive(tab);
-          return;
+          await browser.tabs.remove(tab.id);
         }
         browser.tabs.create({
-          url: browser.runtime.getURL("onboarding/onboard.html"),
+          url: onboardingURL,
         });
         window.close();
         return;
