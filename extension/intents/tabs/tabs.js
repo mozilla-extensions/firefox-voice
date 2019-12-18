@@ -19,6 +19,24 @@ this.intents.tabs = (function() {
     3,
   ];
 
+  function nextLevel(levels, current) {
+    for (const level of levels) {
+      if (current < level) {
+        return level;
+      }
+    }
+    return levels[levels.length - 1];
+  }
+
+  function previousLevel(levels, current) {
+    for (let i = levels.length - 1; i >= 0; i--) {
+      if (current > levels[i]) {
+        return levels[i];
+      }
+    }
+    return levels[0];
+  }
+
   async function updateZoom(context, operation) {
     // 0 -> Reset
     // 1 -> zoom in
@@ -36,11 +54,17 @@ this.intents.tabs = (function() {
         e.displayMessage = "Zoom limit reached";
         throw e;
       }
-      const pos = defaultZoomValues.indexOf(zoomFactor);
-      await browser.tabs.setZoom(
-        activeTab.id,
-        defaultZoomValues[pos + operation]
-      );
+      if (operation === 1) {
+        await browser.tabs.setZoom(
+          activeTab.id,
+          nextLevel(defaultZoomValues, zoomFactor)
+        );
+      } else {
+        await browser.tabs.setZoom(
+          activeTab.id,
+          previousLevel(defaultZoomValues, zoomFactor)
+        );
+      }
     }
   }
 
@@ -49,7 +73,8 @@ this.intents.tabs = (function() {
     description: "Zoom in current tab",
     examples: ["Zoom in tab"],
     match: `
-    zoom in (this |) (tab |) (for me |)
+    zoom (in |) (this |) (tab |) (for me |)
+    increase size (for me |)
   `,
     async run(context) {
       await updateZoom(context, 1);
@@ -62,6 +87,7 @@ this.intents.tabs = (function() {
     examples: ["Zoom out tab"],
     match: `
     zoom out (this |) (tab |) (for me |)
+    decrease size (for me |)
   `,
     async run(context) {
       await updateZoom(context, -1);
@@ -73,8 +99,8 @@ this.intents.tabs = (function() {
     description: "Reset zoom in current tab",
     examples: ["Reset zoom"],
     match: `
-    reset zoom (for me |)
-    zoom reset (for me |)
+    reset (zoom | size) (for me |)
+    (zoom | size) reset (for me |)
   `,
     async run(context) {
       await updateZoom(context, 0);
