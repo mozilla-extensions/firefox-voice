@@ -144,4 +144,19 @@ this.intents.tabs = (function() {
       }
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.openHomePage",
+    description: "Opens HomePage in a tab",
+    examples: ["open my homepage"],
+    match: `
+    (open | go to |) (my |) homepage (for me|)
+    `,
+    async run(context) {
+      const result = await browser.browserSettings.homepageOverride.get({});
+      result.value
+        .split("|")
+        .map(homepageUrl => browser.tabs.create({ url: homepageUrl }));
+    },
+  });
 })();
