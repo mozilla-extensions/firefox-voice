@@ -6,7 +6,7 @@ this.intents.saving = (function() {
     description: "Saves the current page as HTML",
     examples: ["Save"],
     match: `
-    (save | download) (page | html)
+    (save | download) (this | active |) (page | html) (as html |)
     `,
     async run(context) {
       const activeTab = await browserUtil.activeTab();
@@ -18,7 +18,7 @@ this.intents.saving = (function() {
       const { html, metadata } = await browser.tabs.sendMessage(activeTab.id, {
         type: "freezeHtml",
       });
-      const filename = makeFilename("Page", metadata.title, ".html");
+      const filename = makeFilename(metadata.title, metadata.url, ".html");
       await downloadData(html, "text/html", filename);
     },
   });
@@ -46,7 +46,12 @@ this.intents.saving = (function() {
     });
   }
 
-  function makeFilename(prefix, title, extension) {
+  function getDomain(url) {
+    const hostname = new URL(url).hostname;
+    return hostname.toLowerCase().replace(/^www[^.]*\./i, "");
+  }
+
+  function makeFilename(title, url, extension) {
     let filenameTitle = title;
     const date = new Date();
     // eslint-disable-next-line no-control-regex
@@ -57,7 +62,8 @@ this.intents.saving = (function() {
     )
       .toISOString()
       .substring(0, 10);
-    let clipFilename = `${prefix}_${filenameDate} ${filenameTitle}`;
+    const domain = getDomain(url);
+    let clipFilename = `${domain} ${filenameDate} ${filenameTitle}`;
     const clipFilenameBytesSize = clipFilename.length * 2; // JS STrings are UTF-16
     if (clipFilenameBytesSize > 251) {
       // 255 bytes (Usual filesystems max) - 5 for the ".html" file extension string
