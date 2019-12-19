@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings */
+/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings, browserUtil */
 
 this.popupController = (function() {
   const exports = {};
@@ -50,9 +50,7 @@ this.popupController = (function() {
     const init = async () => {
       const userSettings = await settings.getSettings();
       if (!userSettings.collectTranscriptsOptinAnswered) {
-        browser.tabs.create({
-          url: browser.runtime.getURL("onboarding/onboard.html"),
-        });
+        await browserUtil.activateTab("onboarding/onboard.html");
         window.close();
         return;
       }
@@ -103,9 +101,7 @@ this.popupController = (function() {
     };
 
     const onClickLexicon = async event => {
-      await browser.tabs.create({
-        url: browser.runtime.getURL(event.target.href),
-      });
+      await browserUtil.activateTab(browser.runtime.getURL(event.target.href));
       window.close();
     };
 
