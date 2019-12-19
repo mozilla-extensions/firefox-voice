@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings */
+/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings, browserUtil */
 
 this.popupController = (function() {
   const exports = {};
@@ -50,19 +50,7 @@ this.popupController = (function() {
     const init = async () => {
       const userSettings = await settings.getSettings();
       if (!userSettings.collectTranscriptsOptinAnswered) {
-        console.log("Searching for open onboarding tabs...");
-        for (const tab of await browser.tabs.query({
-          url: ["moz-extension://*/onboarding/onboard.html"]
-        })) {
-          console.log("Found an open onboarding tab!");
-          window.close();
-          console.log("Trying to open tab " + tab.id);
-          await browserUtil.makeTabActive(tab);
-          return;
-        }
-        browser.tabs.create({
-          url: browser.runtime.getURL("onboarding/onboard.html"),
-        });
+        await browserUtil.activateTab("onboarding/onboard.html");
         window.close();
         return;
       }
@@ -113,9 +101,7 @@ this.popupController = (function() {
     };
 
     const onClickLexicon = async event => {
-      await browser.tabs.create({
-        url: browser.runtime.getURL(event.target.href),
-      });
+      await browserUtil.activateTab(browser.runtime.getURL(event.target.href));
       window.close();
     };
 

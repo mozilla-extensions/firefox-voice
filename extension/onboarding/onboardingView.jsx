@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* globals React */
+/* globals React, browserUtil */
 
 this.onboardingView = (function() {
   const exports = {};
@@ -239,7 +239,7 @@ this.onboardingView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/lexicon.html" target="_blank">
+            <a href="/views/lexicon.html" target="_blank" onClick={browserUtil.activateTabClickHandler}>
               Things you can say
             </a>
           </li>

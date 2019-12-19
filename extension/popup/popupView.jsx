@@ -1,4 +1,4 @@
-/* globals lottie, React */
+/* globals browserUtil, lottie, React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
@@ -376,7 +376,7 @@ this.popupView = (function() {
                 rel="noopener"
                 id="lexicon"
                 href="../views/lexicon.html"
-                onClick={onMoreSuggestions}
+                onClick={browserUtil.activateTabClickHandler}
               >
                 More things you can say
               </a>

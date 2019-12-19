@@ -33,6 +33,28 @@ this.browserUtil = (function() {
     });
   };
 
+  exports.activateTab = async function activateTab(url) {
+    if (!url.includes("://")) {
+      url = browser.runtime.getURL(url);
+    }
+    for (const tab of await browser.tabs.query({
+      url: [url]
+    })) {
+      browserUtil.makeTabActive(tab);
+      return;
+    }
+    browser.tabs.create({
+      url
+    });
+  };
+
+  exports.activateTabClickHandler = async function activateTabClickHandler(event) {
+    if (event) {
+      event.preventDefault();
+      await exports.activateTab(event.target.href);
+    }
+  };
+
   exports.createTab = async options => {
     const activeTab = await exports.activeTab();
     if (["about:blank", "about:home", "about:newtab"].includes(activeTab.url)) {

@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* globals browserUtil */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 this.optionsView = (function() {
@@ -369,7 +370,7 @@ this.optionsView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/lexicon.html">
+            <a href="/views/lexicon.html" onClick={browserUtil.activateTabClickHandler}>
               The Big List of What You Can Say to Firefox Voice
             </a>
           </li>
