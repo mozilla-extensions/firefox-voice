@@ -1,3 +1,5 @@
+/* globals buildSettings */
+
 this.browserUtil = (function() {
   const exports = {};
   exports.activeTab = async function activeTab() {
@@ -101,6 +103,27 @@ this.browserUtil = (function() {
       code: "null",
       runAt: "document_idle",
     });
+  };
+
+  /** Wrappers for browser.tabs.onUpdated to handle Android compatibility */
+  exports.onUpdatedListen = function(callback, tabId) {
+    if (buildSettings.android) {
+      callback.wrappedFunction = (tabId, changeInfo, tab) => {
+        if (tab.id !== tabId) {
+          return null;
+        }
+        return callback(tabId, changeInfo, tab);
+      };
+      return browser.tabs.onUpdated.addListener(callback.wrappedFunction);
+    }
+    return browser.tabs.onUpdated.addListener(callback, { tabId });
+  };
+
+  exports.onUpdatedRemove = function(callback, tabId) {
+    if (buildSettings.android) {
+      return browser.tabs.onUpdated.removeListener(callback.wrappedFunction);
+    }
+    return browser.tabs.onUpdated.removeListener(callback, { tabId });
   };
 
   return exports;

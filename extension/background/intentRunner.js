@@ -125,12 +125,12 @@ this.intentRunner = (function() {
               return;
             }
             // We no longer need to listen for updates:
-            browser.tabs.onUpdated.removeListener(onUpdated, { tabId: tab.id });
+            browserUtil.onUpdatedRemove(onUpdated, tab.id);
             resolve(tab);
           }
         }
         try {
-          browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
+          browserUtil.onUpdatedListen(onUpdated, tab.id);
         } catch (e) {
           throw new Error(
             `Error in tabs.onUpdated: ${e}, onUpdated type: ${typeof onUpdated}, args: tabId: ${
