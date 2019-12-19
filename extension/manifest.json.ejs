@@ -19,7 +19,9 @@
       "id": "firefox-voice@mozilla.org"
     }
   },
-  "incognito": "not_allowed",
+  <% if (!env.ANDROID) { %>
+    "incognito": "not_allowed",
+  <% } %>
   "background": {
     "scripts": [
       "util.js",
