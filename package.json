@@ -60,6 +60,8 @@
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
     "start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall build:templates build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
+    "start-android": "NO_SENTRY=1 DEV_ICON=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest start-android-extension",
+    "start-android-extension": "web-ext run --target=firefox-android --source-dir extension/ --android-device ${ANDROID_DEVICE:-please_set_ANDROID_DEVICE} --firefox-apk ${FIREFOX_APK:-org.mozilla.firefox}",
     "test": "npm-run-all build:manifest lint",
     "build:templates": "mkdir -p extension/views && node bin/fill-templates.js",
     "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js moment/min/moment.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
