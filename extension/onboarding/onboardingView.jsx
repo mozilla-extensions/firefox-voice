@@ -59,7 +59,7 @@ this.onboardingView = (function() {
               with a button press or keyboard shortcut.
             </p>
             <p>
-              <a href="/views/privacy-policy.html" target="_blank">
+              <a href="/views/privacy-policy.html" target="_blank" onClick={browserUtil.activateTabClickHandler}>
                 Learn how Mozilla protects your voice data.
               </a>
             </p>
@@ -234,7 +234,7 @@ this.onboardingView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/privacy-policy.html" target="_blank" rel="noopener">
+            <a href="/views/privacy-policy.html" target="_blank" rel="noopener" onClick={browserUtil.activateTabClickHandler}>
               Privacy Policy
             </a>
           </li>
