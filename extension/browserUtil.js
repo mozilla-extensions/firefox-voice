@@ -40,10 +40,9 @@ this.browserUtil = (function() {
     for (const tab of await browser.tabs.query({
       url: [url]
     })) {
-      browserUtil.makeTabActive(tab);
-      return;
+      return browserUtil.makeTabActive(tab);
     }
-    browser.tabs.create({
+    return browser.tabs.create({
       url
     });
   };
