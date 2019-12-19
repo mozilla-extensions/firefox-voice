@@ -53,6 +53,8 @@ this.main = (function() {
       return browser.runtime.sendMessage(message);
     } else if (message.type === "focusSearchResults") {
       return intents.search.focusSearchResults(message);
+    } else if (message.type === "copyImage") {
+      return intents.clipboard.copyImage(message.url);
     } else if (message.type === "createSurveyUrl") {
       return telemetry.createSurveyUrl(message.url);
     } else if (message.type === "voiceShimForward") {

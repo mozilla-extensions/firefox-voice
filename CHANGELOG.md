@@ -1,3 +1,20 @@
+## Version 0.16.0 (2019-12-18)
+
+- Thanks [maitrella](https://github.com/maitrella):
+  - New intent: **go to homepage** [2001b12](https://github.com/mozilla/firefox-voice/commit/2001b12)
+  - New intents: **zoom in, out, reset** [4cdad67](https://github.com/mozilla/firefox-voice/commit/4cdad67) [415b873](https://github.com/mozilla/firefox-voice/commit/415b873)
+  - Add "switch to" phrase to find intent [a764058](https://github.com/mozilla/firefox-voice/commit/a764058)
+  - Add "launch" to new tab/window intent [6708570](https://github.com/mozilla/firefox-voice/commit/6708570)
+- Add more phrases for the read intent [f12e504](https://github.com/mozilla/firefox-voice/commit/f12e504) (thanks [vanekcsi](https://github.com/vanekcsi))
+- Exclude ads from search result list. Fixes [#810](https://github.com/mozilla/firefox-voice/issues/810) [0ecfa8e](https://github.com/mozilla/firefox-voice/commit/0ecfa8e)
+- Put cursor at end of text input. Fixes regression [#774](https://github.com/mozilla/firefox-voice/issues/774) [4f52a15](https://github.com/mozilla/firefox-voice/commit/4f52a15)
+- Make 'open' focus existing tabs. Fixes [#784](https://github.com/mozilla/firefox-voice/issues/784) [52b04c9](https://github.com/mozilla/firefox-voice/commit/52b04c9)
+- Cache 'open [query]' intents. Fixes [#780](https://github.com/mozilla/firefox-voice/issues/780) [0a03a23](https://github.com/mozilla/firefox-voice/commit/0a03a23)
+- New intent: **save page**. Fixes [#714](https://github.com/mozilla/firefox-voice/issues/714) [ec71bbe](https://github.com/mozilla/firefox-voice/commit/ec71bbe)
+- New intent: **paste**. Fixes [#741](https://github.com/mozilla/firefox-voice/issues/741) [9d86c02](https://github.com/mozilla/firefox-voice/commit/9d86c02)
+- New intents: **copy link, rich link, title, markdown link, screenshot, full page screenshot** Fixes [#77](https://github.com/mozilla/firefox-voice/issues/77) [a994d09](https://github.com/mozilla/firefox-voice/commit/a994d09)
+- Added experimental nickname feature. Give your previous command a name with **name that [nickname]** or **name last two [nickname]** (and **remove name [name]**) [bc2b861](https://github.com/mozilla/firefox-voice/commit/bc2b861)
+
 ## Version 0.15.0 (2019-12-13)
 
 - New intents:

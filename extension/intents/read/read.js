@@ -22,7 +22,6 @@ this.intents.read = (function() {
     return true;
   }
 
-
   exports.pauseAny = async function(options) {
     const exceptTabId = options && options.exceptTabId;
     const tabs = await browser.tabs.query({ url: "about:reader*" });

@@ -1,6 +1,9 @@
 /* globals searching, serviceList, pageMetadata, languages */
 
 this.intents.navigation = (function() {
+  const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
+  const queryDatabase = new Map();
+
   this.intentRunner.registerIntent({
     name: "navigation.navigate",
     description:
@@ -10,11 +13,46 @@ this.intents.navigation = (function() {
     (bring me | go | navigate | show me | open) (to | find |) (page |) [query]
     `,
     async run(context) {
-      await context.createTabGoogleLucky(context.slots.query);
+      const query = context.slots.query;
+      const cached = queryDatabase.get(query.toLowerCase());
+      if (cached) {
+        await context.openOrFocusTab(cached.url);
+      } else {
+        const tab = await context.createTabGoogleLucky(query);
+        const url = tab.url;
+        queryDatabase.set(query.toLowerCase(), {
+          url,
+          date: Date.now(),
+        });
+        // Sometimes there's a very quick redirect
+        setTimeout(async () => {
+          const newTab = await browser.tabs.get(tab.id);
+          if (newTab.url !== url) {
+            queryDatabase.set(query.toLowerCase(), {
+              url: newTab.url,
+              date: Date.now(),
+            });
+          }
+        }, 1000);
+        saveQueryDatabase();
+      }
       browser.runtime.sendMessage({
         type: "closePopup",
         sender: "navigate",
       });
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.clearQueryDatabase",
+    description: "Debugging command to clear the cache of 'open' queries",
+    match: `
+    clear query (database | cache)
+    `,
+    async run(context) {
+      queryDatabase.clear();
+      saveQueryDatabase();
+      context.displayText('"Open" database/cache cleared');
     },
   });
 
@@ -105,4 +143,26 @@ this.intents.navigation = (function() {
       await browser.tabs.create({ url });
     },
   });
+
+  async function saveQueryDatabase() {
+    const expireTime = Date.now() - QUERY_DATABASE_EXPIRATION;
+    const entries = [];
+    for (const [url, value] of queryDatabase.entries()) {
+      if (value.date >= expireTime) {
+        entries.push([url, value]);
+      }
+    }
+    await browser.storage.local.set({ queryDatabase: entries });
+  }
+
+  async function loadQueryDatabase() {
+    const result = await browser.storage.local.get(["queryDatabase"]);
+    if (result && result.queryDatabase) {
+      for (const [key, value] of result.queryDatabase) {
+        queryDatabase.set(key, value);
+      }
+    }
+  }
+
+  loadQueryDatabase();
 })();

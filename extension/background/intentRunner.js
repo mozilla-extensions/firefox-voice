@@ -90,31 +90,47 @@ this.intentRunner = (function() {
       return browserUtil.createTab(options);
     }
 
+    async openOrFocusTab(url) {
+      const tabs = await browser.tabs.query({ url, currentWindow: true });
+      if (tabs.length) {
+        await this.makeTabActive(tabs[0]);
+      } else {
+        await this.createTab({ url });
+      }
+    }
+
     async createTabGoogleLucky(query) {
       const searchUrl = searching.googleSearchUrl(query, true);
       const tab = await this.createTab({ url: searchUrl });
       return new Promise((resolve, reject) => {
+        let forceRedirecting = false;
         function onUpdated(tabId, changeInfo, tab) {
           const url = tab.url;
           if (url.startsWith("about:blank")) {
             return;
           }
-          const isGoogle = /^https:\/\/www.google.com\//.test(tab.url);
+          const isGoogle = /^https:\/\/www.google.com\//.test(url);
           const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
           if (!isGoogle || isRedirect) {
             if (isRedirect) {
+              if (forceRedirecting) {
+                // We're already sending the user to the new URL
+                return;
+              }
               // This is a URL redirect:
               const params = new URL(url).searchParams;
               const newUrl = params.get("q");
+              forceRedirecting = true;
               browser.tabs.update(tab.id, { url: newUrl });
+              return;
             }
             // We no longer need to listen for updates:
-            browser.tabs.onUpdated.removeListener(onUpdated, { tabId: tab.id });
+            browserUtil.onUpdatedRemove(onUpdated, tab.id);
             resolve(tab);
           }
         }
         try {
-          browser.tabs.onUpdated.addListener(onUpdated, { tabId: tab.id });
+          browserUtil.onUpdatedListen(onUpdated, tab.id);
         } catch (e) {
           throw new Error(
             `Error in tabs.onUpdated: ${e}, onUpdated type: ${typeof onUpdated}, args: tabId: ${
@@ -168,7 +184,7 @@ this.intentRunner = (function() {
         const result = await method.call(handler, repl, context, utterance);
         if (result) {
           // It was handled
-          break;
+          return null;
         }
       }
     }

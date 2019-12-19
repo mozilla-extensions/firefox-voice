@@ -90,6 +90,7 @@ this.intents.nicknames = (function() {
     give (the |) (name | nickname) [name] to (the |) last [number:smallNumber]
     `,
     async run(context) {
+      // FIXME: this should not created a nicknames.combined context if the number is 1
       const name = context.slots.name.toLowerCase();
       const number = parseNumber(context.slots.number);
       const history = intentRunner.getIntentHistory().slice(-number - 1, -1);

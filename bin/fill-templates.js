@@ -30,14 +30,12 @@ ejs.renderFile(CHANGELOG_TEMPLATE, context, {}, function(err, str) {
   console.log(`${CHANGELOG_OUTPUT} written`);
 });
 
-const LEXICON = path.normalize(path.join(__dirname, "../docs/lexicon.md"));
 const LEXICON_OUTPUT = path.normalize(
   path.join(__dirname, "../extension/views/lexicon.html")
 );
 const LEXICON_TEMPLATE = LEXICON_OUTPUT + ".ejs";
-const LEXICON_TEXT = fs.readFileSync(LEXICON, { encoding: "UTF-8" });
 
-const lexiconContext = { content: markdown.render(LEXICON_TEXT) };
+const lexiconContext = {};
 
 ejs.renderFile(
   LEXICON_TEMPLATE,

@@ -70,6 +70,31 @@ The version numbers are increased for each release and each commit, but are _not
 
 There is an index of intents (commands) that is viewable if you open the panel, click on the gear/settings, and follow the "Intent Viewer" link.
 
+## Developing in Android
+
+This is very experimental, but to develop for Firefox for Android (not Fenix), install Firefox (release) on your Android device.
+
+To try, run:
+
+```sh
+npm run start-android
+```
+
+You may see an error message `Android device ... was not found in list: ["99EAP164UC"]`: if so, then 99EAP164UC (for example) is your Android device name. Try again:
+
+```sh
+export ANDROID_DEVICE=99EAP164UC
+npm run start-android
+```
+
+You might have to install `adb` and enable some permissions as well, look in the console for more instructions.
+
+For some more information:
+
+- This tutorial on [Developing extensions for Firefox for Android](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)
+- See the [web-ext docs](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext#testing-in-firefox-for-android) and the section "Testing in Firefox for Android"
+- [How to get developer options on Android](https://www.digitaltrends.com/mobile/how-to-get-developer-options-on-android/) (to turn on USB access)
+
 ## Contributing
 
 See the [guidelines](docs/contributing.md) for contributing to this project.
@@ -89,3 +114,7 @@ Made with [contributors-img](https://contributors-img.firebaseapp.com).
 ## [License](/LICENSE)
 
 This module is licensed under the [Mozilla Public License, version 2.0](/LICENSE).
+
+```
+
+```

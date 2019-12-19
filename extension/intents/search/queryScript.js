@@ -6,6 +6,17 @@ this.queryScript = (function() {
   const MAIN_SELECTOR = "#center_col";
   const AD_CLASS = "commercial-unit-desktop-rhs";
 
+  function findParent(child, func) {
+    let el = child.parentNode;
+    while (el) {
+      if (func(el)) {
+        return el;
+      }
+      el = el.parentNode;
+    }
+    return null;
+  }
+
   function findCards() {
     const topElement = document.querySelector("a > h3");
     const maxBottom = topElement.getBoundingClientRect().y;
@@ -85,6 +96,11 @@ this.queryScript = (function() {
     const searchHeaders = document.querySelectorAll("a > h3");
     const searchResults = [];
     for (const searchHeader of searchHeaders) {
+      const parent = findParent(searchHeader, el => el.tagName === "LI");
+      if (parent && parent.querySelector(".ad_cclk, .ads-visurl")) {
+        // It's an ad
+        continue;
+      }
       searchResults.push({
         url: searchHeader.parentNode.href,
         title: searchHeader.textContent,

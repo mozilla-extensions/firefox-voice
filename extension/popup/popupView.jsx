@@ -253,7 +253,7 @@ this.popupView = (function() {
       <div id="feedback-whats-wrong">
         <button className="sad-icon"></button>
         <form onSubmit={onSubmit} className="feedback-form">
-          <h1>What Went Wrong?</h1>
+          <h1>What went wrong?</h1>
           <div>
             <textarea
               className="styled-textarea"
@@ -441,8 +441,10 @@ this.popupView = (function() {
 
     componentDidMount() {
       this.focusText();
-      if (this.textInputRef.current) {
-        this.textInputRef.current.addEventListener("blur", this.focusText);
+      const el = this.textInputRef.current;
+      if (el) {
+        el.addEventListener("blur", this.focusText);
+        el.setSelectionRange(el.value.length, el.value.length);
       }
     }
 
