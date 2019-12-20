@@ -1,3 +1,5 @@
+/* globals browserUtil */
+
 this.intents.self = (function() {
   this.intentRunner.registerIntent({
     name: "self.cancelIntent",
@@ -25,9 +27,7 @@ this.intents.self = (function() {
     hello
     `,
     async run(context) {
-      await browser.tabs.create({
-        url: browser.runtime.getURL("/views/lexicon.html"),
-      });
+      await browserUtil.activateTab("/views/lexicon.html");
     },
   });
 
