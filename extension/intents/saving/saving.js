@@ -20,10 +20,11 @@ this.intents.saving = (function() {
       const { html, metadata } = await browser.tabs.sendMessage(activeTab.id, {
         type: "freezeHtml",
       });
-      if (!context.slots.name) {
+      const name = context.slots.name;
+      if (!name) {
         filename = makeFilename(metadata.title, metadata.url, ".html");
       } else {
-        filename = context.slots.name + ".html";
+        filename = name + ".html";
       }
       await downloadData(html, "text/html", filename);
     },
