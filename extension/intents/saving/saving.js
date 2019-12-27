@@ -7,8 +7,10 @@ this.intents.saving = (function() {
     examples: ["Save"],
     match: `
     (save | download) (this | active |) (page | html) (as html |)
+    (save | download) (this | active |) (page | html) as [name]
     `,
     async run(context) {
+      let filename;
       const activeTab = await browserUtil.activeTab();
       await content.lazyInject(activeTab.id, [
         "/js/vendor/freezeDry.js",
@@ -18,7 +20,11 @@ this.intents.saving = (function() {
       const { html, metadata } = await browser.tabs.sendMessage(activeTab.id, {
         type: "freezeHtml",
       });
-      const filename = makeFilename(metadata.title, metadata.url, ".html");
+      if (!context.slots.name) {
+        filename = makeFilename(metadata.title, metadata.url, ".html");
+      } else {
+        filename = context.slots.name + ".html";
+      }
       await downloadData(html, "text/html", filename);
     },
   });
