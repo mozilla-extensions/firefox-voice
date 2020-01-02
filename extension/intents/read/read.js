@@ -43,10 +43,18 @@ this.intents.read = (function() {
       "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
-    read (me | ) (this | ) (article | articles |) (tab | page |) (for me | to me |) (aloud | )
+    read (me | ) (this | ) (article | articles |) (tab | page |) (for me | to me |) (aloud |)
+    read (me |) [query] (for me | to me |) (aloud |)
     `,
     async run(context) {
-      const activeTab = await context.activeTab();
+      let activeTab;
+      const query = context.slots.query;
+      if (!query) {
+        activeTab = await context.activeTab();
+      } else {
+        activeTab = await context.createTabGoogleLucky(query);
+        await util.sleep(10000);
+      }
       if (!activeTab.url.startsWith("about:reader")) {
         try {
           await browser.tabs.toggleReaderMode();
