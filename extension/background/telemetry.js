@@ -127,6 +127,7 @@ this.telemetry = (function() {
       { intentId: lastIntentId, timestamp: Date.now() },
       { feedback, rating }
     );
+    log.info("Telemetry feedback ping:", ping);
     browser.telemetry.submitPing("voice-feedback", ping, {});
   };
 
