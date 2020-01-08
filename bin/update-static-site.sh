@@ -10,8 +10,16 @@ fi
 
 cd gh-pages && git pull && cd ..
 
-for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html extension/assets/chime.ogg ; do
-  cp $file gh-pages/
+for file in extension/views/lexicon.html extension/views/lexicon.css extension/views/privacy-policy.html extension/assets/chime.ogg extension/assets ; do
+  cp -r $file gh-pages/
+done
+
+for html in gh-pages/*.html ; do
+  content="$(cat $html)"
+  python -c '
+import sys
+sys.stdout.write(sys.argv[1].replace("../assets/", "assets/").replace("\"/assets/", "\"assets/"))
+' "$content" > $html
 done
 
 echo "Status of gh-pages/ :"
