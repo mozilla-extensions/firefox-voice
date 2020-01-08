@@ -57,6 +57,7 @@ this.intentParser = (function() {
     tap: "tab",
     tech: "tab",
     top: "tab",
+    "current tab": "tab",
     "for me": "",
     in: "on",
     nest: "next",
