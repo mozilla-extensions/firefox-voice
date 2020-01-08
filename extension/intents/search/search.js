@@ -325,8 +325,9 @@ this.intents.search = (function() {
     `,
     examples: ["Search for hiking in Denver", "test:search for tops"],
     async run(context) {
-      const url = searching.googleSearchUrl(context.slots.query);
-      context.createTab({ url });
+      await browser.search.search({
+        query: context.slots.query,
+      });
     },
   });
 
