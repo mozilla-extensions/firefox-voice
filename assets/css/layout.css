@@ -1,0 +1,97 @@
+body {
+  font-family: "Inter" !important;
+  padding: 40px 20px;
+}
+
+#page-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+#page-header #link-menu ul {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  padding: 0;
+}
+
+#page-header #link-menu ul li {
+  margin-left: 20px;
+}
+
+#page-header #install-btn {
+  padding: 0 45px;
+}
+
+#contents {
+  display: flex;
+}
+
+#sidebar .stmt {
+  color: #8e31bd;
+  font-weight: 600;
+  font-size: 48px;
+  letter-spacing: -2px;
+}
+
+#sidebar {
+  width: 33%;
+  font-size: 24px;
+  color: #8e31bd;
+  font-weight: 600;
+  letter-spacing: -2px;
+  line-height: 52px;
+}
+
+#sidebar .stmt {
+  width: 100%;
+  padding-right: 40px;
+}
+
+#list {
+  width: 66%;
+}
+
+#clear {
+  clear: both;
+}
+
+@media only screen and (max-width: 1000px) {
+  #page-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #contents {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  #list {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #page-header #home-icon img {
+    max-width: 100%;
+  }
+
+  #page-header #link-menu ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #page-header #link-menu ul li {
+    margin-bottom: 15px;
+  }
+}
+
+footer {
+  padding-top: 1rem;
+}
