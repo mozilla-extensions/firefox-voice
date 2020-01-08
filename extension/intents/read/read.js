@@ -53,7 +53,7 @@ this.intents.read = (function() {
         activeTab = await context.activeTab();
       } else {
         activeTab = await context.createTabGoogleLucky(query);
-        await util.sleep(10000);
+        await browserUtil.waitForDocumentComplete(activeTab.id);
       }
       if (!activeTab.url.startsWith("about:reader")) {
         try {
@@ -71,7 +71,7 @@ this.intents.read = (function() {
         }
         // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
         // Ideally it would give an error or something if it was attached to the wrong kind of tab
-        await util.sleep(1000);
+        await util.sleep(5000);
       }
       await content.lazyInject(activeTab.id, [
         "/intents/read/startNarration.js",
