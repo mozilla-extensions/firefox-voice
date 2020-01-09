@@ -4,6 +4,8 @@ this.intents.search = (function() {
   const exports = {};
   // Close the search tab after this amount of time:
   const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
+  // Hide the search tab after this amount of unfocused time:
+  const HIDE_TIME = 1000 * 60; // 1 minute
   // Check this often for a new image in a search tab:
   const CARD_POLL_INTERVAL = 200; // milliseconds
   // If we don't believe the card is animated, still get new images for this amount of time:
@@ -46,9 +48,9 @@ this.intents.search = (function() {
     }
     const tab = await browser.tabs.create({
       url: START_URL,
-      pinned: true,
       active: false,
     });
+    await browser.tabs.hide(tab.id);
     // eslint-disable-next-line require-atomic-updates
     _searchTabId = tab.id;
     return _searchTabId;
@@ -60,10 +62,35 @@ this.intents.search = (function() {
     }
     const tabId = _searchTabId;
     await browser.tabs.remove(tabId);
+    browser.tabs.onActivated.removeListener(_tabHideListener);
     // Technically there is a race condition here, but without some lock this is just going to be racy,
     // so this race is better than the other one
     // eslint-disable-next-line require-atomic-updates
     _searchTabId = null;
+  }
+
+  async function focusSearchTab() {
+    await browser.tabs.show(_searchTabId);
+    await browserUtil.makeTabActive(_searchTabId);
+    trackTabHide();
+  }
+
+  let _tabHideTimeout = null;
+  function _tabHideListener({ previousTabId, tabId }) {
+    if (tabId === _searchTabId) {
+      // The search tab was re-focused
+      clearTimeout(_tabHideTimeout);
+      return;
+    }
+    _tabHideTimeout = setTimeout(async () => {
+      browser.tabs.onActivated.removeListener(_tabHideListener);
+      await browser.tabs.hide(_searchTabId);
+    }, HIDE_TIME);
+  }
+
+  function trackTabHide() {
+    browser.tabs.onActivated.removeListener(_tabHideListener);
+    browser.tabs.onActivated.addListener(_tabHideListener);
   }
 
   async function performSearch(query) {
@@ -192,7 +219,7 @@ this.intents.search = (function() {
     if (tab.url !== searchUrl) {
       await browser.tabs.update({ url: searchUrl });
     }
-    await browserUtil.makeTabActive(tab);
+    await focusSearchTab();
     await browser.runtime.sendMessage({
       type: "closePopup",
       time: 0,
@@ -313,7 +340,7 @@ this.intents.search = (function() {
       if (searchTab.url !== searchInfo.searchUrl) {
         await browser.tabs.update(searchTabId, { url: searchInfo.url });
       }
-      await context.makeTabActive(searchTabId);
+      await focusSearchTab();
     },
   });
 
