@@ -1,4 +1,4 @@
-/* globals intentRunner, log, searching, content, browserUtil, telemetry */
+/* globals intentRunner, log, searching, content, browserUtil, telemetry, buildSettings */
 
 this.intents.search = (function() {
   const exports = {};
@@ -50,7 +50,9 @@ this.intents.search = (function() {
       url: START_URL,
       active: false,
     });
-    await browser.tabs.hide(tab.id);
+    if (!buildSettings.android) {
+      await browser.tabs.hide(tab.id);
+    }
     // eslint-disable-next-line require-atomic-updates
     _searchTabId = tab.id;
     return _searchTabId;
@@ -97,6 +99,9 @@ this.intents.search = (function() {
     const tabId = await openSearchTab();
     const url = searching.googleSearchUrl(query) + "&voice";
     await browserUtil.loadUrl(tabId, url);
+    if (buildSettings.android) {
+      await browserUtil.makeTabActive(tabId);
+    }
     await content.lazyInject(tabId, "/intents/search/queryScript.js");
   }
 
