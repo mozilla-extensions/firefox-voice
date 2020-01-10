@@ -35,21 +35,45 @@ this.browserUtil = (function() {
     });
   };
 
+  exports.turnOnReaderMode = async function(tabId) {
+    if (!tabId) {
+      // eslint-disable-next-line require-atomic-updates
+      tabId = (await exports.activeTab()).id;
+    }
+    const tab = await browser.tabs.get(tabId);
+    if (tab.url.startsWith("about:reader")) {
+      // It's already in reader mode
+      return tab;
+    }
+    return new Promise((resolve, reject) => {
+      function onUpdated(tabId, changeInfo, tab) {
+        if (tab.url.startsWith("about:reader")) {
+          exports.onUpdatedRemove(onUpdated, tabId);
+          resolve(tab);
+        }
+      }
+      exports.onUpdatedListen(onUpdated, tabId);
+      browser.tabs.toggleReaderMode(tabId);
+    });
+  };
+
   exports.activateTab = async function activateTab(url) {
     if (!url.includes("://")) {
       url = browser.runtime.getURL(url);
     }
     for (const tab of await browser.tabs.query({
-      url: [url]
+      url: [url],
     })) {
       return browserUtil.makeTabActive(tab);
     }
     return browser.tabs.create({
-      url
+      url,
     });
   };
 
-  exports.activateTabClickHandler = async function activateTabClickHandler(event) {
+  exports.activateTabClickHandler = async function activateTabClickHandler(
+    event
+  ) {
     if (event) {
       event.preventDefault();
       await exports.activateTab(event.target.href);
