@@ -27,11 +27,11 @@ this.browserUtil = (function() {
     return new Promise((resolve, reject) => {
       function onUpdated(tabId, changeInfo, tab) {
         if (tab.url === url) {
-          browser.tabs.onUpdated.removeListener(onUpdated, { tabId });
+          browserUtil.onUpdatedRemove(onUpdated, tabId);
           resolve(tab);
         }
       }
-      browser.tabs.onUpdated.addListener(onUpdated, { tabId });
+      browserUtil.onUpdatedListen(onUpdated, tabId);
     });
   };
 
