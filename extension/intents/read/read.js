@@ -1,4 +1,4 @@
-/* globals util, content, log, browserUtil */
+/* globals content, log, browserUtil */
 
 this.intents.read = (function() {
   const exports = {};
@@ -55,24 +55,7 @@ this.intents.read = (function() {
         activeTab = await context.createTabGoogleLucky(query);
         await browserUtil.waitForDocumentComplete(activeTab.id);
       }
-      if (!activeTab.url.startsWith("about:reader")) {
-        try {
-          await browser.tabs.toggleReaderMode();
-        } catch (e) {
-          if (
-            e.message &&
-            e.message.includes(
-              "The specified tab cannot be placed into reader mode"
-            )
-          ) {
-            e.displayMessage = "This page cannot be put into Reader Mode";
-          }
-          throw e;
-        }
-        // FIXME: toggleReaderMode just returns immediately so we have to wait to get this to work
-        // Ideally it would give an error or something if it was attached to the wrong kind of tab
-        await util.sleep(5000);
-      }
+      await browserUtil.turnOnReaderMode(activeTab.id);
       await content.lazyInject(activeTab.id, [
         "/intents/read/startNarration.js",
       ]);
