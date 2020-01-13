@@ -1,3 +1,21 @@
+## Version 0.17.0 (2020-01-13)
+
+- Use the default search provider for explicit searches. Note this doesn't affect fallback searches. Fixes [#826](https://github.com/mozilla/firefox-voice/issues/826) [10672d1](https://github.com/mozilla/firefox-voice/commit/10672d1)
+- Hide Google search tab. Fixes [#504](https://github.com/mozilla/firefox-voice/issues/504) [d5cc0ce](https://github.com/mozilla/firefox-voice/commit/d5cc0ce)
+- Add a `browserUtil.turnOnReaderMode` function. This checks if the page is already in reader mode, and doesn't toggle it if it is, and then it also waits to resolve until the page has actually been put into reader mode, instead of returning immediately as toggleReaderMode does. [ea99024](https://github.com/mozilla/firefox-voice/commit/ea99024)
+- "Current tab" an alias for "tab" [1265a0c](https://github.com/mozilla/firefox-voice/commit/1265a0c)
+- `Save page as [name]` intent ([#822](https://github.com/mozilla/firefox-voice/issues/822))\* Save page as [name] intent [dd62540](https://github.com/mozilla/firefox-voice/commit/dd62540)
+- Reduce loading of onboarding, lexicon, and privacy pages. ([#815](https://github.com/mozilla/firefox-voice/issues/815))
+  - Prevent onboarding page from being opened multiple times. This removes redundant opens in onboard.html, options.html [b90e08e](https://github.com/mozilla/firefox-voice/commit/b90e08e) [d28c60d](https://github.com/mozilla/firefox-voice/commit/d28c60d)
+
+### Android
+
+We are starting to work on getting this working in Firefox on Android (_not_ Firefox Preview, as add-on support there is still in development):
+
+- Switch to search tab on Android ([#830](https://github.com/mozilla/firefox-voice/issues/830)) [53b5e93](https://github.com/mozilla/firefox-voice/commit/53b5e93)
+- Fix Google redirect on Android. The Android extension API doesn't support the tabId specifier on browser.tabs.onUpdated [6039bce](https://github.com/mozilla/firefox-voice/commit/6039bce)
+- Add `npm run start-android`, plus some instructions. Remove incognito option on Android, where it is not supported [9252a21](https://github.com/mozilla/firefox-voice/commit/9252a21) [5069d73](https://github.com/mozilla/firefox-voice/commit/5069d73)
+
 ## Version 0.16.0 (2019-12-18)
 
 - Thanks [maitrella](https://github.com/maitrella):
