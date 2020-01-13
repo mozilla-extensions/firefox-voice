@@ -45,7 +45,7 @@ this.telemetry = (function() {
     } else {
       ping.extensionInstallationChannel = firstInstallationVersion;
     }
-    ping.extensionInstallDate = firstInstallationTimestamp;
+    ping.extensionInstallDate = firstInstallationTimestamp || Date.now();
     ping.localHour = new Date().getHours();
   }
 
@@ -99,6 +99,7 @@ this.telemetry = (function() {
     if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }
+    ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
     const s = settings.getSettings();
     if (!s.disableTelemetry) {
       if (!s.utterancesTelemetry) {
