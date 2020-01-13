@@ -1,3 +1,11 @@
+## Version 0.18.0 (2020-01-13)
+
+This quick release fixes some errors we've had with collecting stats.
+
+- Log Telemetry errors with Sentry [da902aa](https://github.com/mozilla/firefox-voice/commit/da902aa)
+- Fix Telemetry schema errors. This makes sure firstInstallationTimestamp and extensionTemporaryInstall are always set. Fixes [#848](https://github.com/mozilla/firefox-voice/issues/848) [408175f](https://github.com/mozilla/firefox-voice/commit/408175f)
+- Always set feedback to a string in Telemetry pingA null is not allowed. This was causing all positive ratings to be lost. Fixes [#820](https://github.com/mozilla/firefox-voice/issues/820) [94db917](https://github.com/mozilla/firefox-voice/commit/94db917)
+
 ## Version 0.17.0 (2020-01-13)
 
 - Use the default search provider for explicit searches. Note this doesn't affect fallback searches. Fixes [#826](https://github.com/mozilla/firefox-voice/issues/826) [10672d1](https://github.com/mozilla/firefox-voice/commit/10672d1)
