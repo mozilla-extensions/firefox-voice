@@ -107,10 +107,12 @@ this.telemetry = (function() {
           delete ping[field];
         }
       }
-      browser.telemetry.submitPing("voice", ping, {
-        addClientId: true,
-        addEnvironment: true,
-      });
+      browser.telemetry
+        .submitPing("voice", ping, {
+          addClientId: true,
+          addEnvironment: true,
+        })
+        .catch(handleTelemetryError);
       log.info("Telemetry ping:", ping);
     } else {
       log.debug("Telemetry ping (unsent):", ping);
@@ -130,7 +132,9 @@ this.telemetry = (function() {
     );
     ping.feedback = ping.feedback || "";
     log.info("Telemetry feedback ping:", ping);
-    browser.telemetry.submitPing("voice-feedback", ping, {});
+    browser.telemetry
+      .submitPing("voice-feedback", ping, {})
+      .catch(handleTelemetryError);
   };
 
   let firstInstallationVersion = "unknown";
@@ -176,6 +180,11 @@ this.telemetry = (function() {
       intentDays,
       lastIntentDate,
     });
+  }
+
+  function handleTelemetryError(e) {
+    log.warn("Error submitting Telemetry:", e);
+    catcher.capture(e);
   }
 
   exports.createSurveyUrl = function(surveyUrl) {
