@@ -45,7 +45,7 @@ this.telemetry = (function() {
     } else {
       ping.extensionInstallationChannel = firstInstallationVersion;
     }
-    ping.extensionInstallDate = firstInstallationTimestamp;
+    ping.extensionInstallDate = firstInstallationTimestamp || Date.now();
     ping.localHour = new Date().getHours();
   }
 
@@ -99,6 +99,7 @@ this.telemetry = (function() {
     if (!ping.inputCancelled) {
       lastIntentId = ping.intentId;
     }
+    ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
     const s = settings.getSettings();
     if (!s.disableTelemetry) {
       if (!s.utterancesTelemetry) {
@@ -106,10 +107,12 @@ this.telemetry = (function() {
           delete ping[field];
         }
       }
-      browser.telemetry.submitPing("voice", ping, {
-        addClientId: true,
-        addEnvironment: true,
-      });
+      browser.telemetry
+        .submitPing("voice", ping, {
+          addClientId: true,
+          addEnvironment: true,
+        })
+        .catch(handleTelemetryError);
       log.info("Telemetry ping:", ping);
     } else {
       log.debug("Telemetry ping (unsent):", ping);
@@ -124,11 +127,14 @@ this.telemetry = (function() {
 
   exports.sendFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
-      { intentId: lastIntentId, timestamp: Date.now() },
+      { intentId: lastIntentId || "unknown", timestamp: Date.now() },
       { feedback, rating }
     );
+    ping.feedback = ping.feedback || "";
     log.info("Telemetry feedback ping:", ping);
-    browser.telemetry.submitPing("voice-feedback", ping, {});
+    browser.telemetry
+      .submitPing("voice-feedback", ping, {})
+      .catch(handleTelemetryError);
   };
 
   let firstInstallationVersion = "unknown";
@@ -174,6 +180,11 @@ this.telemetry = (function() {
       intentDays,
       lastIntentDate,
     });
+  }
+
+  function handleTelemetryError(e) {
+    log.warn("Error submitting Telemetry:", e);
+    catcher.capture(e);
   }
 
   exports.createSurveyUrl = function(surveyUrl) {
