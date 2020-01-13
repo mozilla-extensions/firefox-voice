@@ -124,9 +124,10 @@ this.telemetry = (function() {
 
   exports.sendFeedback = function({ feedback, rating }) {
     const ping = Object.assign(
-      { intentId: lastIntentId, timestamp: Date.now() },
+      { intentId: lastIntentId || "unknown", timestamp: Date.now() },
       { feedback, rating }
     );
+    ping.feedback = ping.feedback || "";
     log.info("Telemetry feedback ping:", ping);
     browser.telemetry.submitPing("voice-feedback", ping, {});
   };
