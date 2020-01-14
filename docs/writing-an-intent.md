@@ -68,7 +68,7 @@ Some things to note:
 
 ## Intent matching
 
-When you register an intent you give a number of matches. The matching is implemented in `intentParser.js`, and each expression is compiled to a regular expression. You can see the regular expressions in the Intent Viewer.
+When you register an intent you give a number of matches. The matching is implemented in [`intentParser.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/background/intentParser.js), and each expression is compiled to a regular expression. You can see the regular expressions in the Intent Viewer.
 
 Each pattern is a line in the string (we use backquotes for multi-line strings). Empty lines and lines starting with `#` or `//` are ignored.
 
@@ -82,7 +82,7 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `ENTITY_TYPES` variable in `intentParser.js`. Right now this system isn't very extensible.
 
-**Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in `extensions/intents/music/music.js` in `music.move`.
+**Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
 
 ### Choosing an intent
 
@@ -125,9 +125,9 @@ To prepare a tab to do your custom stuff, run:
 ```js
 async run(context) {
   const activeTab = await browserUtil.activeTab();
-  await content.lazyInject(activeTab.id, "intents/intents/someName/contentScript.js");
+  await content.lazyInject(activeTab.id, "intents/someName/contentScript.js");
   // Now the script, and a bunch of helpers are available
-  const resp = await browser.tabs.sendMessage(activeTab.id, {type: "doSomething});
+  const resp = await browser.tabs.sendMessage(activeTab.id, {type: "doSomething"});
 }
 ```
 
