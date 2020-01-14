@@ -31,6 +31,8 @@ this.catcher = (function() {
         "No matching message handler",
         // Another common error when something is closed mid-communication:
         "Could not establish connection. Receiving end does not exist.",
+        // The speaktome server gives these for any audio without speech:
+        /Failed response from server: 500/,
       ],
       beforeSend(event) {
         const error = event.exception;
