@@ -124,6 +124,11 @@ this.intents.search = (function() {
   }
 
   async function callScript(message) {
+    if (!_searchTabId) {
+      throw new Error(
+        `Attempt to send message ${message.type} to missing search tab`
+      );
+    }
     return browser.tabs.sendMessage(_searchTabId, message);
   }
 
