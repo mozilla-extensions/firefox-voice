@@ -43,10 +43,19 @@ this.intents.read = (function() {
       "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
-    read (me | ) (this | ) (article | articles |) (tab | page |) (for me | to me |) (aloud | )
+    read (me | ) (this | ) (article | articles |) (tab | page |) (for me | to me |) (aloud |)
+    read (me |) [query] (for me | to me |) (aloud |)
     `,
     async run(context) {
-      const activeTab = await browserUtil.turnOnReaderMode();
+      let activeTab;
+      const query = context.slots.query;
+      if (!query) {
+        activeTab = await context.activeTab();
+      } else {
+        activeTab = await context.createTabGoogleLucky(query);
+        await browserUtil.waitForDocumentComplete(activeTab.id);
+      }
+      await browserUtil.turnOnReaderMode(activeTab.id);
       await content.lazyInject(activeTab.id, [
         "/intents/read/startNarration.js",
       ]);
