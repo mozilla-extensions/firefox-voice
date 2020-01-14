@@ -9,7 +9,11 @@ this.recorder = (function() {
   function setState(state, properties = {}) {
     document.body.className = state;
     for (const name in properties) {
-      document.querySelector(name).textContent = properties[name];
+      const el = document.querySelector(name);
+      if (!el) {
+        throw new Error(`Missing recorder element: ${name}`);
+      }
+      el.textContent = properties[name];
     }
   }
 
