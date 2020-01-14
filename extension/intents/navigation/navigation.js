@@ -10,7 +10,7 @@ this.intents.navigation = (function() {
       "Navigate directly to a site, using Google's I'm Feeling Luck and the query",
     examples: ["Go to the New York Times", "Show me the 49ers schedule"],
     match: `
-    (bring me | go | navigate | show me | open) (to | find |) (page |) [query]
+    (bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]
     `,
     async run(context) {
       const query = context.slots.query;

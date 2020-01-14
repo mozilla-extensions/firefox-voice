@@ -3,7 +3,7 @@
   "id": "firefox-voice@mozilla.org",
   "description": "This is a WebExtension that allows the browser to be voice-controlled.",
   "private": true,
-  "version": "0.16.0",
+  "version": "0.18.0",
   "author": {
     "name": "Mozilla Emerging Technologies",
     "url": "https://github.com/mozilla/firefox-voice"
@@ -60,7 +60,8 @@
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
     "start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall build:templates build:manifest start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console",
-    "start-android": "NO_SENTRY=1 DEV_ICON=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest start-android-extension",
+    "start-android": "concurrently --kill-others --success first --names watch,android 'npm run watch' 'npm run start-and-build-android'",
+    "start-and-build-android": "NO_SENTRY=1 DEV_ICON=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest start-android-extension",
     "start-android-extension": "web-ext run --target=firefox-android --source-dir extension/ --android-device ${ANDROID_DEVICE:-please_set_ANDROID_DEVICE} --firefox-apk ${FIREFOX_APK:-org.mozilla.firefox}",
     "test": "npm-run-all build:manifest lint",
     "build:templates": "mkdir -p extension/views && node bin/fill-templates.js",
