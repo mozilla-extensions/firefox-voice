@@ -18,6 +18,9 @@ this.browserUtil = (function() {
     } else {
       tabId = tab.id;
     }
+    if (!tabId) {
+      throw new Error("Cannot make tab active without ID");
+    }
     await browser.tabs.update(tabId, { active: true });
     await browser.windows.update(tab.windowId, { focused: true });
   };
