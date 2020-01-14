@@ -124,6 +124,11 @@ this.intents.search = (function() {
   }
 
   async function callScript(message) {
+    if (!_searchTabId) {
+      throw new Error(
+        `Attempt to send message ${message.type} to missing search tab`
+      );
+    }
     return browser.tabs.sendMessage(_searchTabId, message);
   }
 
@@ -141,7 +146,21 @@ this.intents.search = (function() {
     stopCardPoll();
     const startTime = Date.now();
     cardPollTimeout = setInterval(async () => {
-      const card = await callScript({ type: "cardImage" });
+      if (!_searchTabId) {
+        // Search tab must be gone
+        stopCardPoll();
+        return;
+      }
+      let card;
+      try {
+        card = await callScript({ type: "cardImage" });
+      } catch (e) {
+        if (e.message && e.message.match(/Invalid Tab ID/i)) {
+          stopCardPoll();
+          return;
+        }
+        throw e;
+      }
       if (card.src === lastImage) {
         return;
       }

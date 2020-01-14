@@ -31,11 +31,20 @@ this.catcher = (function() {
         "No matching message handler",
         // Another common error when something is closed mid-communication:
         "Could not establish connection. Receiving end does not exist.",
-        // This happens when there's a tab is closed in the middle of some action, which is uncommon
-        // but also harmless:
-        /^Invalid Tab ID/,
+        // The speaktome server gives these for any audio without speech:
+        /Failed response from server: 500/,
       ],
       beforeSend(event) {
+        const error = event.exception;
+        if (
+          error &&
+          error.values &&
+          error.values.length &&
+          error.values[0].value.match(/Invalid Tab ID/i)
+        ) {
+          // These exceptions contain the Tab ID, which messes up the fingerprint
+          event.fingerprint = ["Invalid Tab ID"];
+        }
         event.request.url = fixUrl(event.request.url);
         for (const exc of event.exception.values) {
           if (exc.stacktrace && exc.stacktrace.frames) {
