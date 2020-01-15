@@ -1,4 +1,4 @@
-/* globals intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings, browserUtil */
+/* globals intentRunner, intentExamples, log, intents, telemetry, util, buildSettings, settings, browserUtil, catcher */
 
 this.main = (function() {
   const exports = {};
@@ -22,7 +22,13 @@ this.main = (function() {
     }
     log.messaging(`${senderInfo} ${message.type}${propString}`);
     if (message.type === "runIntent") {
-      return intentRunner.runUtterance(message.text);
+      if (message.closeThisTab) {
+        browser.tabs.remove(sender.tab.id).catch(e => {
+          log.error("Error closing temporary execution tab:", e);
+          catcher.capture(e);
+        });
+      }
+      return intentRunner.runUtterance(message.text, message.noPopup);
     } else if (message.type === "getExamples") {
       return intentExamples.getExamples(message.number || 2);
     } else if (message.type === "getLastIntentForFeedback") {
