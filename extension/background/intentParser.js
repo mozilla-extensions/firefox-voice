@@ -66,6 +66,8 @@ this.intentParser = (function() {
     website: "site",
     intense: "intents",
     interns: "intents",
+    "down word": "downward",
+    "up word": "upward"
   };
 
   // This is used to attempt ALL substitutions:
