@@ -33,10 +33,13 @@ this.intentRunner = (function() {
 
     done(time = undefined) {
       this.closePopupOnFinish = false;
-      return browser.runtime.sendMessage({
-        type: "closePopup",
-        time,
-      });
+      if (!this.noPopup) {
+        return browser.runtime.sendMessage({
+          type: "closePopup",
+          time,
+        });
+      }
+      return null;
     }
 
     failed(message) {
@@ -47,6 +50,9 @@ this.intentRunner = (function() {
       } catch (e) {
         log.error("Error in onError handler:", e);
       }
+      if (this.noPopup) {
+        return this.displayInlineMessage({ message, type: "error" });
+      }
       return browser.runtime.sendMessage({
         type: "displayFailure",
         message,
@@ -54,12 +60,28 @@ this.intentRunner = (function() {
     }
 
     displayText(message) {
+      if (this.noPopup) {
+        return this.displayInlineMessage({ message, type: "normal" });
+      }
       return browser.runtime.sendMessage({ type: "displayText", message });
+    }
+
+    displayInlineMessage({ message, type }) {
+      // FIXME: actually inject something and display a message
+      window.alert(message);
     }
 
     async failedAutoplay(tab) {
       this.keepPopup();
       this.makeTabActive(tab);
+      if (this.noPopup) {
+        // FIXME: improve error message:
+        await this.displayInlineMessage({
+          message: "You must enable autoplay",
+          type: "error",
+        });
+        return;
+      }
       await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
     }
 
@@ -165,7 +187,7 @@ this.intentRunner = (function() {
     intentParser.registerMatcher(intent.name, intent.match);
   };
 
-  exports.runUtterance = async function(utterance) {
+  exports.runUtterance = async function(utterance, noPopup) {
     for (const name in registeredNicknames) {
       const re = new RegExp(`\\b${name}\\b`, "i");
       if (re.test(utterance)) {
@@ -189,6 +211,7 @@ this.intentRunner = (function() {
       }
     }
     const desc = intentParser.parse(utterance);
+    desc.noPopup = !!noPopup;
     return intentRunner.runIntent(desc);
   };
 
