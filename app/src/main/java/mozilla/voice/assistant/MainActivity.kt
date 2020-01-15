@@ -13,12 +13,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (Intent.ACTION_ASSIST.equals(intent.action)) {
-            textView.text = "Opened through Intent.ACTION_ASSIST"
-        } else {
-            textView.text = "Opened through launcher"
-        }
         startSpeechRecognizer()
     }
 
@@ -27,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             // The choices of model are FREE_FORM or WEB_SEARCH
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH
         )
         startActivityForResult(intent, SPEECH_RECOGNITION_REQUEST)
     }
@@ -39,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) ?.let {
                     if (it.size > 0) {
                         textView.text = "Sending '${it[0]}"
-                        val url = "${BASE_URL}?${URLEncoder.encode(it[0], ENCODING)}"
+                        val url = "${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}"
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                     } else {
                         textView.text = "No text returned"
@@ -53,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         internal const val SPEECH_RECOGNITION_REQUEST = 1
-        internal const val BASE_URL = "https://voice.allizom.org"
+        internal const val BASE_URL = "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
         internal const val ENCODING = "UTF-8"
     }
 }
