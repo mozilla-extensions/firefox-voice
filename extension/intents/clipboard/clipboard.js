@@ -120,6 +120,12 @@ this.intents.clipboard = (function() {
     paste (the |) (selection | clipboard |)
     `,
     async run(context) {
+      const activeTab = await browserUtil.activeTab();
+      if (activeTab.url.startsWith("about:newtab")) {
+        const e = new Error("Pasting is not allowed on this page");
+        e.displayMessage = "Pasting is not allowed on this page";
+        throw e;
+      }
       // OK, not actually a copy, but...
       return copy(context, "paste");
     },
