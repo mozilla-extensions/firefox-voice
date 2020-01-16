@@ -37,7 +37,7 @@ this.intents.saving = (function() {
     description: "Shows the last downloaded file in its containing folder",
     examples: ["Show download"],
     match: `
-    (show | view | find) (download | file)
+    (show | view | find | open) (download | file)
     `,
     async run(context) {
       const downloadItems = await browser.downloads.search({
@@ -47,29 +47,6 @@ this.intents.saving = (function() {
       if (downloadItems.length > 0) {
         const lastestDownloadId = downloadItems[0].id;
         await browser.downloads.show(lastestDownloadId);
-      } else {
-        const e = new Error("No downloaded items found:");
-        e.displayMessage = "No downloaded items found";
-        throw e;
-      }
-    },
-  });
-
-  this.intentRunner.registerIntent({
-    name: "saving.openLastDownload",
-    description: "Opens the last downloaded file",
-    examples: ["Open download"],
-    match: `
-    (open | launch) (download | file)
-    `,
-    async run(context) {
-      const downloadItems = await browser.downloads.search({
-        limit: 1,
-        orderBy: ["-startTime"],
-      });
-      if (downloadItems.length > 0) {
-        const lastestDownloadId = downloadItems[0].id;
-        await browser.downloads.open(lastestDownloadId);
       } else {
         const e = new Error("No downloaded items found:");
         e.displayMessage = "No downloaded items found";
