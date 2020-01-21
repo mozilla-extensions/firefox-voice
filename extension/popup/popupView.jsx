@@ -249,6 +249,13 @@ this.popupView = (function() {
     useEffect(() => {
       textarea.current.focus();
     });
+
+    onInputKeyPress = event => {
+      if (event.key === "Enter") {
+        onSubmit();
+      }
+    };
+
     return (
       <div id="feedback-whats-wrong">
         <button className="sad-icon"></button>
@@ -259,6 +266,7 @@ this.popupView = (function() {
               className="styled-textarea"
               ref={textarea}
               autofocus="1"
+              onKeyPress={onInputKeyPress}
             ></textarea>
           </div>
           <div>
