@@ -250,11 +250,11 @@ this.popupView = (function() {
       textarea.current.focus();
     });
 
-    onInputKeyPress = event => {
+    function onInputKeyPress(event) {
       if (event.key === "Enter") {
         onSubmit();
       }
-    };
+    }
 
     return (
       <div id="feedback-whats-wrong">
