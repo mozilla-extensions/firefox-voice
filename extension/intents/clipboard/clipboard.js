@@ -120,8 +120,15 @@ this.intents.clipboard = (function() {
     paste (the |) (selection | clipboard |)
     `,
     async run(context) {
-      // OK, not actually a copy, but...
-      return copy(context, "paste");
+      try {
+        // OK, not actually a copy, but...
+        await copy(context, "paste");
+      } catch (e) {
+        if (e.message && e.message.match(/Missing host permission/i)) {
+          e.displayMessage = "Pasting is not allowed on this page";
+        }
+        throw e;
+      }
     },
   });
 
