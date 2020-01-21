@@ -9,7 +9,7 @@
 
 ### Install this app
 
-1. [Enable installation of apps from unknown sources]((https://android.gadgethacks.com/how-to/android-basics-enable-unknown-sources-sideload-apps-0161947/). 
+1. [Enable installation of apps from unknown sources](https://android.gadgethacks.com/how-to/android-basics-enable-unknown-sources-sideload-apps-0161947/). 
 On Oreo or higher, specify Firefox.
 2. In Firefox, [download the APK](https://github.com/espertus/mozilla-assistant/blob/master/app/build/outputs/apk/debug/app-debug.apk?raw=true) on your Android device. Confirm that you wish to install it.
    
