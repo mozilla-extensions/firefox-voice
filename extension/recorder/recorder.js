@@ -5,6 +5,7 @@ this.recorder = (function() {
   // come to the foreground:
   const PERMISSION_TIMEOUT = 1000;
   const streamReady = util.makeNakedPromise();
+  let streamUnpaused;
 
   function setState(state, properties = {}) {
     document.body.className = state;
@@ -50,7 +51,7 @@ this.recorder = (function() {
     setState("paused");
   }
 
-  async function start() {
+  function start() {
     if (!stream) {
       throw new Error("Attempt to start stream before it is acquired");
     }
@@ -171,10 +172,10 @@ this.recorder = (function() {
         oldActiveRecorder.destroy();
         oldActiveRecorder = null;
       }
-      start();
       if (activeRecorder) {
         throw new Error("Attempted to open recorder.ShimRecorder twice");
       }
+      streamUnpaused = Promise.resolve(start());
       activeRecorder = new ShimRecorder(stream);
       return null;
     }
@@ -184,11 +185,14 @@ this.recorder = (function() {
       );
     }
     if (message.method === "startRecording") {
+      await streamReady;
+      await streamUnpaused;
       return activeRecorder.startRecording();
     } else if (message.method === "stop") {
       activeRecorder.stop();
       oldActiveRecorder = activeRecorder;
       activeRecorder = null;
+      streamUnpaused = null;
       return null;
     } else if (message.method === "getVolumeLevel") {
       return activeRecorder.getVolumeLevel();

@@ -91,6 +91,8 @@ this.popupView = (function() {
           );
         case "feedbackThanks":
           return "";
+        case "waiting":
+          return "One moment...";
         case "listening":
         default:
           return "Listening";
@@ -632,6 +634,7 @@ this.popupView = (function() {
         medium: [46, 62],
         high: [62, 78],
         processing: [78, 134],
+        waiting: [88, 122],
         error: [134, 153],
         success: [184, 203],
       };
@@ -648,6 +651,11 @@ this.popupView = (function() {
         processing: {
           segments: [this.animationSegmentTimes.processing],
           loop: false,
+          interrupt: true,
+        },
+        waiting: {
+          segments: [this.animationSegmentTimes.waiting],
+          loop: true,
           interrupt: true,
         },
         success: {
