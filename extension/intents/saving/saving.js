@@ -4,7 +4,7 @@ this.intents.saving = (function() {
   this.intentRunner.registerIntent({
     name: "saving.save",
     description: "Saves the current page as HTML",
-    examples: ["Save"],
+    examples: ["Save page", "Save page as an example"],
     match: `
     (save | download) (this | active |) (page | html) (as html |)
     (save | download) (this | active |) (page | html) as [name]

@@ -49,6 +49,7 @@ this.intentParser = (function() {
   // match for an intent pattern. It both considers doing ALL the substitutions, and doing each
   // substitution alone. (But all possible combinations are not attempted.)
   // FIXME: we should make these substitutions in the matcher, not the incoming text
+  // Note: the substitution should be equal length or shorter than the original word
   const SUBSTITUTIONS = {
     the: "",
     my: "",
@@ -67,7 +68,7 @@ this.intentParser = (function() {
     intense: "intents",
     interns: "intents",
     "down word": "downward",
-    "up word": "upward"
+    "up word": "upward",
   };
 
   // This is used to attempt ALL substitutions:
@@ -79,7 +80,7 @@ this.intentParser = (function() {
   // And this is used to attempt one-by-one substitutions:
   const SUB_REGEXES = {};
   for (const key in SUBSTITUTIONS) {
-    SUB_REGEXES[key] = [new RegExp(`\\b{key}\\b`, "gi"), SUBSTITUTIONS[key]];
+    SUB_REGEXES[key] = [new RegExp(`\\b${key}\\b`, "gi"), SUBSTITUTIONS[key]];
   }
 
   const Matcher = (exports.Matcher = class Matcher {
@@ -310,7 +311,10 @@ this.intentParser = (function() {
         return sub;
       });
       if (newText !== text) {
-        alternatives.push([normalizeText(newText), c]);
+        alternatives.push([
+          normalizeText(newText),
+          -c + (newText.length - text.length),
+        ]);
       }
     }
     let c = 0;
@@ -323,15 +327,18 @@ this.intentParser = (function() {
       return sub;
     });
     if (newText !== text) {
-      alternatives.push([normalizeText(newText), c]);
+      alternatives.push([
+        normalizeText(newText),
+        -c + (newText.length - text.length),
+      ]);
     }
     const results = [];
     let bestMatch;
-    for (const [text, score] of alternatives) {
-      for (const match of findMatches(text)) {
-        match.score += score;
+    for (const [altText, scoreMod] of alternatives) {
+      for (const match of findMatches(altText)) {
+        match.score += scoreMod;
         results.push(match);
-        if (!bestMatch || match.score < bestMatch.score) {
+        if (!bestMatch || match.score > bestMatch.score) {
           bestMatch = match;
         }
       }
@@ -360,15 +367,17 @@ this.intentParser = (function() {
       if (match) {
         match.name = name;
         match.fallback = false;
-        let score = 0;
+        let penalty = 0;
         for (const slotName in match.slots) {
           if (match.slotTypes[slotName]) {
-            score += 1;
+            // While using a typed slot is not as good as a fixed string, it's better
+            // than a free-text slot
+            penalty += 1;
           } else {
-            score += match.slots[slotName].length;
+            penalty += match.slots[slotName].length;
           }
         }
-        match.score = score;
+        match.score = text.length - penalty;
         results.push(match);
       }
     }

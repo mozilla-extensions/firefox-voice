@@ -28,7 +28,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copyTitle",
+    name: "clipboard.copyTitle",
     description: "Copies the title of the current tab",
     examples: ["Copy tab title"],
     match: `
@@ -42,7 +42,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copyRichLink",
+    name: "clipboard.copyRichLink",
     description: "Copies the HTML title and link",
     examples: ["Copy HTML link"],
     match: `
@@ -58,7 +58,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copyMarkdownLink",
+    name: "clipboard.copyMarkdownLink",
     description: "Copies the Markdown [title](link)",
     examples: ["Copy Markdown link"],
     match: `
@@ -73,7 +73,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copyScreenshot",
+    name: "clipboard.copyScreenshot",
     description: "Copies the screenshot of the visible page",
     examples: ["Copy screenshot"],
     match: `
@@ -87,7 +87,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copyFullPageScreenshot",
+    name: "clipboard.copyFullPageScreenshot",
     description: "Copies a full page screenshot",
     examples: ["Copy full page screenshot"],
     match: `
@@ -101,7 +101,7 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.copySelection",
+    name: "clipboard.copySelection",
     description: "Copies the selection",
     examples: ["Copy selection"],
     match: `
@@ -113,9 +113,9 @@ this.intents.clipboard = (function() {
   });
 
   this.intentRunner.registerIntent({
-    name: "nicknames.paste",
-    description: "Copies the selection",
-    examples: ["Copy selection"],
+    name: "clipboard.paste",
+    description: "Pastes from the clipboard",
+    examples: ["Paste"],
     match: `
     paste (the |) (selection | clipboard |)
     `,

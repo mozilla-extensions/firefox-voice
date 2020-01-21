@@ -75,6 +75,7 @@ this.intents.navigation = (function() {
       "Images of sparrows",
       "Find the nearest sushi on maps",
       "test:search google images of sparrows for me",
+      "test:Find website work plan on my Google Drive",
     ],
     async run(context) {
       const service = context.slots.service || context.parameters.service;
