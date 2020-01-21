@@ -1,6 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Firefox Voice Beta",
+  "name": <% if (env.EXECUTE_INTENT_URL) { %>
+      "Firefox Voice Android DEMO ONLY",
+     <% } else { %>
+      "Firefox Voice Beta",
+    <% } %>
   "version": <%= env.VERSION || version %>,
   "description": "Voice control the web",
   "developer": {
