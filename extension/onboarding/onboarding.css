@@ -114,7 +114,7 @@ p {
 
 .error-modal h1:before {
   content: "";
-  background-image: url("./images/icon-mircophone-red.svg");
+  background-image: url("./images/icon-microphone-red.svg");
   background-repeat: no-repeat;
   background-position-y: 10px;
   padding-left: 30px;
