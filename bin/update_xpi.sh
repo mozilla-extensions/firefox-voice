@@ -47,7 +47,7 @@ update_public_log() {
 
 version=unknown
 
-for channel in dev stage prod ; do
+for channel in dev dev-android stage prod ; do
     new_xpi="tmp-xpi/$channel/firefox-voice.xpi"
     signed_xpi="${new_xpi}.signed"
     old_xpi="${new_xpi}.old"
