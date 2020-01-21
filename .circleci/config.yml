@@ -162,7 +162,7 @@ workflows:
               only: master
       - deploy_dev_android:
           requires:
-            - test
+            - deploy_dev
           filters:
             branches:
               only: master
