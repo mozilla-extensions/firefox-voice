@@ -103,6 +103,8 @@ jobs:
             npm run package
             mv addon.xpi artifacts/dev-android/firefox-voice.xpi
             node bin/generate-update-json.js > artifacts/dev-android/updates.json
+      - store_artifacts:
+          path: artifacts/
   deploy_stage:
     docker:
       - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
