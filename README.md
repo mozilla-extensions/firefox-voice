@@ -6,16 +6,18 @@ We recommend opening this page (https://bit.ly/2RGxzrB) in Firefox on Android.
 
 ### Install Firefox and the extension
 
-1. [Install Firefox](https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=en_US), if you haven't already.
-2. [Make Firefox your default browser](https://support.mozilla.org/en-US/kb/make-firefox-default-browser-android).
+1. Install [Firefox](https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=en_US), if you haven't already. (Do not install Firefox Nightly or Preview.)
+2. Make Firefox your [default browser](https://support.mozilla.org/en-US/kb/make-firefox-default-browser-android).
 3. Open Firefox and [download the extension](https://va.allizom.org/releases/dev-android/firefox-voice.xpi).
 4. Confirm that you want to install it.
 5. Grant the requested permissions.
 
 ### Install the Mozilla Assistant app
 
-1. [Enable installation of apps from unknown sources](https://android.gadgethacks.com/how-to/android-basics-enable-unknown-sources-sideload-apps-0161947/). 
-On Oreo or higher, specify Firefox.
+1. Enable installation of apps from unknown sources:
+  * On older versions of Android (before Oreo), select `Settings` > `Security` (or `Lock screen and security`), then enable the switch next to `Unknown sources`.
+  * On recent versions of Android (Oreo or later), select `Settings` > `Apps & Notifications` > `Advanced` > `Special app access` > `Install unknown apps`, then click on Firefox and allow.
+  * If the above instructions do not work, search within `Settings` for "unknown sources" to get to the appropriate page.
 2. In Firefox, [download the APK](https://github.com/espertus/mozilla-assistant/blob/master/app/build/outputs/apk/debug/app-debug.apk?raw=true) on your Android device. Confirm that you wish to install it.
    
 
