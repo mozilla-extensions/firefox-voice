@@ -14,7 +14,7 @@ this.popupController = (function() {
   let pendingFeedback;
 
   exports.PopupController = function() {
-    const [currentView, setCurrentView] = useState("listening");
+    const [currentView, setCurrentView] = useState("waiting");
     const [suggestions, setSuggestions] = useState([]);
     const [lastIntent, setLastIntent] = useState(null);
     const [feedback, setFeedback] = useState(null);
@@ -39,6 +39,7 @@ this.popupController = (function() {
     const TEXT_TIMEOUT = 7000;
     let overrideTimeout;
     let noVoiceInterval;
+    const userSettingsPromise = util.makeNakedPromise();
 
     useEffect(() => {
       if (!isInitialized) {
@@ -49,6 +50,7 @@ this.popupController = (function() {
 
     const init = async () => {
       const userSettings = await settings.getSettings();
+      userSettingsPromise.resolve(userSettings);
       if (!userSettings.collectTranscriptsOptinAnswered) {
         await browserUtil.activateTab("onboarding/onboard.html");
         window.close();
@@ -64,10 +66,6 @@ this.popupController = (function() {
       recorder = backgroundTabRecorder
         ? new voiceShim.Recorder()
         : new voice.Recorder(stream);
-
-      if (userSettings.chime) {
-        playListeningChime();
-      }
 
       addListeners();
       updateExamples();
@@ -313,6 +311,11 @@ this.popupController = (function() {
     const startRecorder = () => {
       recorder.onBeginRecording = () => {
         setPopupView("listening");
+        userSettingsPromise.then(userSettings => {
+          if (userSettings.chime) {
+            playListeningChime();
+          }
+        });
         browser.runtime.sendMessage({ type: "microphoneStarted" });
       };
       recorder.onEnd = json => {

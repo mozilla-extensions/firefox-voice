@@ -70,7 +70,6 @@ this.voice = (function() {
       // MediaRecorder initialization
       this.mediaRecorder = new MediaRecorder(this.outputNode.stream, options);
       this.mediaRecorder.start();
-      this.onBeginRecording();
       this.mediaRecorder.onstop = async () => {
         try {
           await this.mediaStopped();
@@ -82,6 +81,7 @@ this.voice = (function() {
       this.mediaRecorder.ondataavailable = e => {
         this.chunks.push(e.data);
       };
+      this.onBeginRecording();
     }
 
     stop() {
