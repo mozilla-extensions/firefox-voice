@@ -73,6 +73,7 @@ jobs:
       - run:
           name: Build XPI
           command: |
+            # Build desktop version:
             export VERSION="$(node bin/calculate-version.js)"
             export UPDATE_BASE="https://va.allizom.org/releases/dev"
             export INSTALL_CHANNEL=dev
@@ -81,22 +82,9 @@ jobs:
             npm run package
             mv addon.xpi artifacts/dev/firefox-voice.xpi
             node bin/generate-update-json.js > artifacts/dev/updates.json
-      - store_artifacts:
-          path: artifacts/
-  deploy_dev_android:
-    docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
-    steps:
-      - setup_remote_docker
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build Android Dev XPI
-          command: |
-            export VERSION="$(node bin/calculate-version.js)"
+            # Build Android version:
             export UPDATE_BASE="https://va.allizom.org/releases/dev-android"
             export INSTALL_CHANNEL=dev-android
-            export DEV_ICON=1
             export ANDROID=1
             export EXECUTE_INTENT_URL=https://mozilla.github.io/firefox-voice/assets/execute.html
             mkdir -p artifacts/dev-android/
@@ -159,12 +147,6 @@ workflows:
       - deploy_dev:
           requires:
             - test
-          filters:
-            branches:
-              only: master
-      - deploy_dev_android:
-          requires:
-            - deploy_dev
           filters:
             branches:
               only: master
