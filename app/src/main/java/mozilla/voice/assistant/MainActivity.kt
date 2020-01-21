@@ -90,17 +90,19 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SPEECH_RECOGNITION_REQUEST) {
             if (resultCode == RESULT_OK && data is Intent) {
-                handleResults(
-                    data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                )
-            } else {
-                textView.text = "Request failed"
+                data?.let {
+                    handleResults(
+                        it.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    )
+                    return
+                }
             }
+            textView.text = "Request failed"
         }
     }
 
     private fun handleResults(results: List<String>) {
-        results?.let {
+        results.let {
             if (it.size > 0) {
                 textView.text = "Sending '${it[0]}"
                 val url = "${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}"
