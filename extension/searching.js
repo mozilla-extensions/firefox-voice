@@ -2,9 +2,13 @@
 
 this.searching = (function() {
   const exports = {};
+  const luckySearchRemovals = /\.(com|net|org)$/i;
 
   exports.googleSearchUrl = function(query, feelingLucky = false) {
     const searchUrl = new URL("https://www.google.com/search");
+    if (feelingLucky) {
+      query = query.replace(luckySearchRemovals, "");
+    }
     searchUrl.searchParams.set("q", query);
     if (feelingLucky) {
       searchUrl.searchParams.set("btnI", "");
