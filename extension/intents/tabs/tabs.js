@@ -126,7 +126,7 @@ this.intents.tabs = (function() {
     examples: ["open tab", "test:open top for me", "test:open the tab"],
     match: `
     open tab
-    (open | launch) (a |) (new | blank |) tab (for me|)
+    (open | launch) (a | the |) (new | blank |) tab (for me|)
     new (blank |) tab
     `,
     async run(context) {
