@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
+    private val speech: SpeechRecognizer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class Listener : RecognitionListener {
         override fun onResults(results: Bundle?) {
+            animationView.pauseAnimation()
             results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let {
                 handleResults(it)
             }
@@ -44,7 +47,24 @@ class MainActivity : AppCompatActivity() {
         override fun onEndOfSpeech() {}
 
         override fun onError(error: Int) {
-            Log.e(TAG, "err: $error")
+            animationView.pauseAnimation()
+            val errorText = when(error) {
+                SpeechRecognizer.ERROR_AUDIO -> "Audio error"
+                SpeechRecognizer.ERROR_CLIENT -> "Client error"
+                SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+                SpeechRecognizer.ERROR_NETWORK -> "Network error"
+                SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout error"
+                SpeechRecognizer.ERROR_NO_MATCH -> "No match error"
+                SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy error"
+                SpeechRecognizer.ERROR_SERVER -> "Server error"
+                SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "Timeout error"
+                else -> "Unknown error"
+            }
+            textView.text = errorText
+            Log.e(TAG, "err: $errorText")
+            recognizer?.destroy()
+            recognizer = null
+            startSpeechRecognition()
         }
 
         override fun onEvent(eventType: Int, params: Bundle?) {}
@@ -76,14 +96,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startSpeechRecognition() {
-        val recognizer = SpeechRecognizer.createSpeechRecognizer(this)
-        recognizer.setRecognitionListener(Listener())
+        if (recognizer == null) {
+            recognizer = SpeechRecognizer.createSpeechRecognizer(this)
+            recognizer?.setRecognitionListener(Listener())
+        }
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
-        recognizer.startListening(intent)
+        recognizer?.startListening(intent)
+        animationView.playAnimation()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -113,7 +136,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        recognizer?.destroy()
+    }
+
     companion object {
+        internal var recognizer: SpeechRecognizer? = null
         internal const val SPEECH_RECOGNITION_REQUEST = 1
         internal const val PERMISSIONS_REQUEST_CODE = 1
         internal const val BASE_URL =
