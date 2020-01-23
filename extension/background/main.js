@@ -54,6 +54,8 @@ this.main = (function() {
       return telemetry.sendFeedback(message);
     } else if (message.type === "openRecordingTab") {
       return openRecordingTab();
+    } else if (message.type === "zeroVolumeError") {
+      return zeroVolumeError();
     } else if (message.type === "onVoiceShimForward") {
       message.type = "onVoiceShim";
       return browser.runtime.sendMessage(message);
@@ -162,6 +164,17 @@ this.main = (function() {
       await util.sleep(100);
     }
     await browserUtil.makeTabActive(activeTab);
+  }
+
+  async function zeroVolumeError() {
+    const exc = new Error("zeroVolumeError with no recorder tab");
+    log.error(exc.message);
+    catcher.capture(exc);
+    if (!recorderTabId) {
+      throw exc;
+    }
+    await browserUtil.makeTabActive(recorderTabId);
+    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
   }
 
   async function launchOnboarding() {

@@ -6,8 +6,12 @@ this.recorder = (function() {
   const PERMISSION_TIMEOUT = 1000;
   const streamReady = util.makeNakedPromise();
   let streamUnpaused;
+  let disableStateChange = false;
 
   function setState(state, properties = {}) {
+    if (disableStateChange) {
+      return;
+    }
     document.body.className = state;
     for (const name in properties) {
       const el = document.querySelector(name);
@@ -16,6 +20,11 @@ this.recorder = (function() {
       }
       el.textContent = properties[name];
     }
+  }
+
+  function zeroVolumeError() {
+    setState("zero-volume-error");
+    disableStateChange = true;
   }
 
   let stream;
@@ -154,13 +163,16 @@ this.recorder = (function() {
   }
 
   browser.runtime.onMessage.addListener(message => {
-    if (message.type !== "voiceShim") {
+    if (message.type !== "voiceShim" && message.type !== "zeroVolumeError") {
       return undefined;
     }
     return handleMessage(message);
   });
 
   async function handleMessage(message) {
+    if (message.type === "zeroVolumeError") {
+      return zeroVolumeError();
+    }
     if (message.method === "ping") {
       await streamReady;
       return true;

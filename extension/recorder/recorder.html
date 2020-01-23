@@ -21,8 +21,11 @@
   </head>
   <body class="acquiring">
     <div id="acquiring">Acquiring microphone...</div>
+
     <div id="recording">Recording...</div>
+
     <div id="paused">Paused...</div>
+
     <div id="fatal-error">
       <h1>Error: browser restart required</h1>
       <p>
@@ -31,6 +34,7 @@
       </p>
       <p>Details: <span id="#fatalErrorMessage"></span></p>
     </div>
+
     <div id="error">
       <h1>Error</h1>
       <p id="errorMessage"></p>
@@ -39,6 +43,48 @@
         manually reload this page.
       </p>
     </div>
+
+    <div id="zero-volume-error">
+      <p>
+        Your microphone appears completely silent. When you gave microphone
+        permission you selected a specific microphone and device. It's likely
+        you selected the wrong device.
+      </p>
+      <p>
+        To select a new device:
+      </p>
+      <p>
+        <strong>1.</strong> Click this icon in the URL bar: <br />
+        <img
+          src="../onboarding/images/security-button.png"
+          alt="[Clickable area to the left of the URL, showing 'Extension (Voice Fox)']"
+          class="example"
+          style="width: 187px; height: 29px;"
+        />
+      </p>
+      <p>
+        <strong>2.</strong> Remove the permission by clicking on the
+        <strong>✕</strong>: <br />
+        <img
+          src="../onboarding/images/security-panel.png"
+          alt="[Example: Site Information for Firefox Voice Beta with Permissions]"
+          class="example"
+          style="width: 410px; height: 225px;"
+        />
+      </p>
+      <p><strong>3.</strong> Reload this page</p>
+      <p>
+        <strong>4.</strong> Grant microphone permission, using the drop-down
+        select box to review which microphone device to use: <br />
+        <img
+          src="../onboarding/images/security-popup.png"
+          alt="[Example: Permission dialog for Firefox Voice Beta microphone permission]"
+          class="example"
+          style="width: 367px; height: 192px;"
+        />
+      </p>
+    </div>
+
     <script src="../buildSettings.js"></script>
     <script src="../log.js"></script>
     <script src="../js/vendor/sentry.js"></script>
