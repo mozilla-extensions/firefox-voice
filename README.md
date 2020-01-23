@@ -4,6 +4,12 @@ Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://rese
 
 Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "what is the weather?" or "find the gmail tab". Ultimately the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions. Initially the goal is to provide _any_ useful interactions.
 
+## Discussion
+
+If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit any kind of feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in whatever feedback you have about using this tool!
+
+If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://matrix.to/#/!qzDBOUrnxuFFNQRaIo:mozilla.org?via=mozilla.org)). Note that the team mostly works weekdays, North American work hours, so questions outside of that time may take a while to get a response.
+
 ## Developing
 
 There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
