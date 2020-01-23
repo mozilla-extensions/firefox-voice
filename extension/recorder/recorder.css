@@ -2,7 +2,8 @@
 #recording,
 #paused,
 #error,
-#fatal-error {
+#fatal-error,
+#zero-volume-error {
   display: none;
 }
 
@@ -24,4 +25,12 @@
 
 .fatal-error #fatal-error {
   display: block;
+}
+
+.zero-volume-error #zero-volume-error {
+  display: block;
+}
+
+img.example {
+  margin: 1em 2em;
 }

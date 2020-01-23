@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings, browserUtil */
+/* globals React, ReactDOM, util, voice, vad, settings, log, voiceShim, buildSettings, browserUtil, catcher */
 
 this.popupController = (function() {
   const exports = {};
@@ -12,6 +12,24 @@ this.popupController = (function() {
   // This is feedback that the user started, but hasn't submitted;
   // if the window closes then we'll send it:
   let pendingFeedback;
+
+  // For tracking if the microphone works at all:
+  const ZERO_VOLUME_LIMIT = 5000;
+  let hasHadSuccessfulUtterance;
+  browser.storage.local
+    .get("hasHadSuccessfulUtterance")
+    .then(results => {
+      hasHadSuccessfulUtterance = results && results.hasHadSuccessfulUtterance;
+    })
+    .catch(e => {
+      catcher.capture(e);
+    });
+  async function setHasHadSuccessfulUtterance() {
+    if (!hasHadSuccessfulUtterance) {
+      hasHadSuccessfulUtterance = true;
+      await browser.storage.local.set({ hasHadSuccessfulUtterance });
+    }
+  }
 
   exports.PopupController = function() {
     const [currentView, setCurrentView] = useState("waiting");
@@ -200,8 +218,19 @@ this.popupController = (function() {
         !recorderIntervalId &&
         newView === "listening"
       ) {
+        const startTime = Date.now();
+        let nonZeroVolume = false;
         recorderIntervalId = setInterval(() => {
-          setVolumeForAnimation(recorder.getVolumeLevel());
+          const volume = recorder.getVolumeLevel();
+          if (!hasHadSuccessfulUtterance && !nonZeroVolume) {
+            if (volume > 0) {
+              nonZeroVolume = true;
+            } else if (Date.now() - startTime > ZERO_VOLUME_LIMIT) {
+              browser.runtime.sendMessage({ type: "zeroVolumeError" });
+              window.close();
+            }
+          }
+          setVolumeForAnimation(volume);
         }, 500);
       } else {
         clearInterval(recorderIntervalId);
@@ -328,6 +357,7 @@ this.popupController = (function() {
           // It was cancelled
           return;
         }
+        setHasHadSuccessfulUtterance();
         setTranscript(json.data[0].text);
         browser.runtime.sendMessage({
           type: "addTelemetry",
