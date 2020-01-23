@@ -118,8 +118,7 @@ this.intents.music = (function() {
     match: `
     (unpause | continue | play) video [service=youtube]
     (unpause | continue | play) [service:musicServiceName]
-    unpause
-    (continue | play) music
+    (unpause | continue | play) (music |)
     `,
     async run(context) {
       const service = await getService(context, { lookAtCurrentTab: true });
