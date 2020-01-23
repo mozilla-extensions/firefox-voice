@@ -376,9 +376,13 @@ this.intents.search = (function() {
     `,
     examples: ["Search for hiking in Denver", "test:search for tops"],
     async run(context) {
-      await browser.search.search({
-        query: context.slots.query,
-      });
+      if (buildSettings.android) {
+        await performSearch(context.slots.query);
+      } else {
+        await browser.search.search({
+          query: context.slots.query,
+        });
+      }
     },
   });
 
