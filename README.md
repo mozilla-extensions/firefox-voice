@@ -14,6 +14,8 @@ We recommend opening this page (https://bit.ly/2RGxzrB) in Firefox on Android.
 
 ### Install the Mozilla Assistant app
 
+![How to enable installation of apps from unknown sources](/doc/unknown-sources.gif)
+
 1. Enable installation of apps from unknown sources:
      * On older versions of Android (before Oreo), select `Settings` > `Security` (or `Lock screen and security`), then enable the switch next to `Unknown sources`.
      * On recent versions of Android (Oreo or later), select `Settings` > `Apps & Notifications` > `Advanced` > `Special app access` > `Install unknown apps`, then click on Firefox and allow.
