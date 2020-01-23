@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Mozilla Assistant</string>
+    <string name="no_match">I didn\'t understand that. Try again.</string>
+    <string name="no_speech">I didn\'t catch that. Try again.</string>
 </resources>
