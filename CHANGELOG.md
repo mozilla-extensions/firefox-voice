@@ -1,3 +1,22 @@
+## Version 0.19.0 (2020-01-23)
+
+- Detect and report mics with zero volume. We've received many reports of people for whom the extension doesn't seem to hear anything, and this is an attempt to give instructions in this case. This always gets reported to Sentry, so we can track why this happens (we don't understand yet). It also only happens when the user hasn't yet had a successful spoken intent. Fixes [#889](https://github.com/mozilla/firefox-voice/issues/889) [829ca5f](https://github.com/mozilla/firefox-voice/commit/829ca5f)
+- Matching "play" alone (not just "play music") [0b71cc4](https://github.com/mozilla/firefox-voice/commit/0b71cc4) (thanks [maitrella](https://github.com/maitrella))
+- Enable Android search (fix issue #895) [58ee08b](https://github.com/mozilla/firefox-voice/commit/58ee08b)
+- Remove TLDs from lucky searches. For unknown reasons, Google refuses to do an I'm Lucky search when the search term is a domain name. Fixes [#849](https://github.com/mozilla/firefox-voice/issues/849) [38cb317](https://github.com/mozilla/firefox-voice/commit/38cb317)
+- Improve scoring to avoid substitutions. Some substitutions (e.g., "website" to "site") were being preferred because they decreased the slot characters, which does not really count as being a better match.
+  Also individual word substitutions were entirely broken, and only simultaneously doing all substitutions was working.
+  Fix a few errors in intent descriptions, some bad example names, and some incorrect intent names. Fixes [#878](https://github.com/mozilla/firefox-voice/issues/878) [9137ba9](https://github.com/mozilla/firefox-voice/commit/9137ba9)
+- Only show Listening when actually listening. This attempts to handle a couple timing cases. It's unclear if any of them besides a new 'waiting' state actually matters. Fixes [#886](https://github.com/mozilla/firefox-voice/issues/886) [ea45efd](https://github.com/mozilla/firefox-voice/commit/ea45efd)
+- Submit negative feedback after pressing Enter ([#884](https://github.com/mozilla/firefox-voice/issues/884)) (thanks [abahmed](https://github.com/abahmed))
+- Message when pasting into about:newtab ([#874](https://github.com/mozilla/firefox-voice/issues/874)) [5d7c7f6](https://github.com/mozilla/firefox-voice/commit/5d7c7f6)
+- Delete open intent and update show intent with "open" command. [6afa143](https://github.com/mozilla/firefox-voice/commit/6afa143)
+- Add intents for handling downloaded items (e.g., "show download") [ce3f7c7](https://github.com/mozilla/firefox-voice/commit/ce3f7c7) (thanks [maitrella](https://github.com/maitrella))
+- Add scroll commands [aae9018](https://github.com/mozilla/firefox-voice/commit/aae9018) (thanks [espertus](https://github.com/espertus))
+- Show a special message if mic is missing. Fixes [#711](https://github.com/mozilla/firefox-voice/issues/711) [707d64f](https://github.com/mozilla/firefox-voice/commit/707d64f)
+- Ignore speaktome 500 errors [c735474](https://github.com/mozilla/firefox-voice/commit/c735474)
+- Search, open and read page: "read me [query]" ([#824](https://github.com/mozilla/firefox-voice/issues/824)) [2b79eff](https://github.com/mozilla/firefox-voice/commit/2b79eff) (thanks [maitrella](https://github.com/maitrella))
+
 ## Version 0.18.0 (2020-01-13)
 
 This quick release fixes some errors we've had with collecting stats.
