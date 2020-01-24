@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onBeginningOfSpeech() {
             showListening()
+            feedbackView.text = "" // clear any previous feedback
         }
 
         override fun onBufferReceived(buffer: ByteArray?) {}
@@ -152,12 +153,6 @@ class MainActivity : AppCompatActivity() {
             if (error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT ||
                 error == SpeechRecognizer.ERROR_NO_MATCH
             ) {
-                Handler().postDelayed(
-                    {
-                        feedbackView.text = ""
-                    },
-                    ERROR_DISPLAY_TIME
-                )
                 startSpeechRecognition()
             } else {
                 Log.e(TAG, "err: $errorText")
@@ -221,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         internal const val BASE_URL =
             "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
         internal const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
-        internal const val ERROR_DISPLAY_TIME = 1000L
+        internal const val FEEDBACK_DISPLAY_TIME = 2000L
 
         // Animation frames
         internal const val SOLICIT_MIN = 0
