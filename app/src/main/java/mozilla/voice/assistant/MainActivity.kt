@@ -17,6 +17,7 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -80,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     private fun showReady() {
         animationView.setMinAndMaxFrame(SOLICIT_MIN, SOLICIT_MAX)
         animationView.playAnimation()
+        animationView.repeatCount = LottieDrawable.INFINITE
     }
 
     private fun showListening() {
@@ -88,6 +90,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun showProcessing() {
         animationView.setMinAndMaxFrame(PROCESSING_MIN, PROCESSING_MAX)
+    }
+
+    private fun showSuccess() {
+        animationView.setMinAndMaxFrame(SUCCESS_MIN, SUCCESS_MAX)
+        animationView.repeatCount = 0
     }
 
     private fun animateError() {
@@ -110,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onResults(results: Bundle?) {
-            animationView.setMinAndMaxFrame(SUCCESS_MIN, SUCCESS_MAX)
+            showSuccess()
             results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let {
                 handleResults(it)
             }
@@ -181,7 +188,7 @@ class MainActivity : AppCompatActivity() {
                         Intent.ACTION_VIEW,
                         Uri.parse("${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}")
                     ))
-                }, LAUNCH_DELAY)
+                }, TRANSCRIPT_DISPLAY_TIME)
             } else {
                 textView.text = getString(R.string.no_match)
             }
@@ -207,7 +214,7 @@ class MainActivity : AppCompatActivity() {
         internal const val PERMISSIONS_REQUEST_CODE = 1
         internal const val BASE_URL =
             "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
-        internal const val LAUNCH_DELAY = 500L // ms before launching browser
+        internal const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
         internal const val ERROR_DISPLAY_TIME = 1000L
 
         // Animation frames
@@ -220,6 +227,6 @@ class MainActivity : AppCompatActivity() {
         internal const val ERROR_MIN = 134
         internal const val ERROR_MAX = 153
         internal const val SUCCESS_MIN = 184
-        internal const val SUCCESS_MAX = 203
+        internal const val SUCCESS_MAX = 205
     }
 }
