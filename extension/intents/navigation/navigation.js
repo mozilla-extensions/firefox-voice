@@ -145,6 +145,34 @@ this.intents.navigation = (function() {
     },
   });
 
+  this.intentRunner.registerIntent({
+    name: "navigation.goBack",
+    description: "Go back to the previous page, if one is available",
+    match: `
+    go back
+    `,
+    async run(context) {
+      const tab = await context.activeTab();
+      await browser.tabs.executeScript(tab.id, {
+        code: "window.history.back();",
+      });
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.goForward",
+    description: "Go forward to the next page, if one is available",
+    match: `
+    go forward
+    `,
+    async run(context) {
+      const tab = await context.activeTab();
+      await browser.tabs.executeScript(tab.id, {
+        code: "window.history.forward();",
+      });
+    },
+  });
+
   async function saveQueryDatabase() {
     const expireTime = Date.now() - QUERY_DATABASE_EXPIRATION;
     const entries = [];

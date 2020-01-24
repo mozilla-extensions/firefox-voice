@@ -370,7 +370,10 @@ this.optionsView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/lexicon.html" onClick={browserUtil.activateTabClickHandler}>
+            <a
+              href="/views/lexicon.html"
+              onClick={browserUtil.activateTabClickHandler}
+            >
               The Big List of What You Can Say to Firefox Voice
             </a>
           </li>
