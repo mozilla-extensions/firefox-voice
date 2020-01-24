@@ -12,8 +12,8 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URLEncoder
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val speech: SpeechRecognizer? = null
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onError(error: Int) {
             animationView.pauseAnimation()
-            val errorText = when(error) {
+            val errorText = when (error) {
                 SpeechRecognizer.ERROR_AUDIO -> "Audio error"
                 SpeechRecognizer.ERROR_CLIENT -> "Client error"
                 SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
