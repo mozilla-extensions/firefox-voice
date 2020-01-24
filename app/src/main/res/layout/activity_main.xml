@@ -5,20 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/statusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/VoiceText"
+        android:text=""
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/animationView"
+        app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+        app:layout_constraintRight_toRightOf="@id/right_guideline" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:layout_marginLeft="@dimen/anim_left_margin"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="@dimen/anim_right_margin"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@id/textView"
-        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/feedbackView"
+        app:layout_constraintTop_toBottomOf="@id/statusView"
         app:lottie_autoPlay="false"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/firefox_voice_full" />
+        app:lottie_rawRes="@raw/firefox_voice_full"
+        tools:layout_editor_absoluteX="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
@@ -33,8 +45,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9"/>
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/feedbackView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/VoiceText"
@@ -42,5 +55,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/left_guideline"
         app:layout_constraintRight_toRightOf="@id/right_guideline"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/animationView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

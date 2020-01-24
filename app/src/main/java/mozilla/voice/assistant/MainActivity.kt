@@ -29,7 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        textView.text = ""
+        feedbackView.text = ""
+        statusView.text = getString(R.string.initializing)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         animationView.setMinAndMaxFrame(SOLICIT_MIN, SOLICIT_MAX)
         animationView.playAnimation()
         animationView.repeatCount = LottieDrawable.INFINITE
+        statusView.text = getString(R.string.listening)
     }
 
     private fun showListening() {
@@ -90,15 +92,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun showProcessing() {
         animationView.setMinAndMaxFrame(PROCESSING_MIN, PROCESSING_MAX)
+        statusView.text = getString(R.string.listening)
     }
 
     private fun showSuccess() {
         animationView.setMinAndMaxFrame(SUCCESS_MIN, SUCCESS_MAX)
         animationView.repeatCount = 0
+        statusView.text = getString(R.string.got_it)
     }
 
-    private fun animateError() {
+    private fun displayError(errorText: String) {
         animationView.setMinAndMaxFrame(ERROR_MIN, ERROR_MAX)
+        statusView.text = ""
+        feedbackView.text = errorText
     }
 
     inner class Listener : RecognitionListener {
@@ -137,8 +143,7 @@ class MainActivity : AppCompatActivity() {
                 SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> getString(R.string.no_speech)
                 else -> "Unknown error"
             }
-            textView.text = errorText
-            animateError()
+            displayError(errorText)
 
             // This appears to be necessary to make the next
             // attempt at listening work..
@@ -149,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 Handler().postDelayed(
                     {
-                        textView.text = ""
+                        feedbackView.text = ""
                     },
                     ERROR_DISPLAY_TIME
                 )
@@ -168,13 +173,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        statusView.text = ""
         if (requestCode == SPEECH_RECOGNITION_REQUEST) {
             if (resultCode == RESULT_OK && data is Intent) {
                 data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?. let {
                     handleResults(it)
                 }
             } else {
-                textView.text = getString(R.string.no_match)
+                feedbackView.text = getString(R.string.no_match)
             }
         }
     }
@@ -182,7 +188,7 @@ class MainActivity : AppCompatActivity() {
     private fun handleResults(results: List<String>) {
         results.let {
             if (it.isNotEmpty()) {
-                textView.text = it[0]
+                feedbackView.text = it[0]
                 Handler().postDelayed({
                     startActivity(Intent(
                         Intent.ACTION_VIEW,
@@ -190,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                     ))
                 }, TRANSCRIPT_DISPLAY_TIME)
             } else {
-                textView.text = getString(R.string.no_match)
+                feedbackView.text = getString(R.string.no_match)
             }
         }
     }

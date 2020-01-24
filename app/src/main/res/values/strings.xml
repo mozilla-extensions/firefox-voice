@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Mozilla Assistant</string>
+    <string name="initializing">One moment...</string>
+    <string name="listening">Listening</string>
+    <string name="processing">Processing</string>
+    <string name="got_it">One second...</string>
     <string name="no_match">I didn\'t understand that. Try again.</string>
     <string name="no_speech">I didn\'t catch that. Try again.</string>
 </resources>
