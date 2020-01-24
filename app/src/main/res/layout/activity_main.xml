@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/statusView"
-        style="@style/VoiceText"
+        style="@style/StatusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
@@ -62,7 +62,7 @@
 
     <TextView
         android:id="@+id/feedbackView"
-        style="@style/VoiceText"
+        style="@style/FeedbackText"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center_horizontal|top"

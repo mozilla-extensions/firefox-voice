@@ -9,9 +9,16 @@
     </style>
 
     <style name="VoiceText" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">24pt</item>
         <item name="android:textStyle">italic</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="StatusText" parent="VoiceText">
+        <item name="android:textSize">18pt</item>
+    </style>
+
+    <style name="FeedbackText" parent="VoiceText">
+        <item name="android:textSize">14pt</item>
     </style>
 
 </resources>

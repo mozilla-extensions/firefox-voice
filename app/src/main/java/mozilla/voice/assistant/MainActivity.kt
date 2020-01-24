@@ -14,17 +14,25 @@ import android.os.Handler
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.bold
+import androidx.core.text.italic
+import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private var suggestionIndex = 0
+    private lateinit var suggestions: List<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
     }
 
     override fun onStart() {
@@ -107,19 +115,44 @@ class MainActivity : AppCompatActivity() {
         feedbackView.text = errorText
     }
 
+    private fun giveSuggestions() {
+        if (suggestionIndex + NUM_SUGGESTIONS > suggestions.size) {
+            suggestionIndex = 0
+        }
+
+        val ideas = suggestions.subList(suggestionIndex, suggestionIndex + NUM_SUGGESTIONS)
+            .joinToString("\n\n")
+
+        feedbackView.text = SpannableStringBuilder()
+            .scale(.6f) { italic { append(getString(R.string.suggestion_prefix)) } }
+            .scale(.6f) { append("\n\n") }
+            .scale(.6f) { bold { append(ideas) } }
+
+        suggestionIndex += NUM_SUGGESTIONS
+    }
+
     inner class Listener : RecognitionListener {
+        private var speechDetected = false
+
         override fun onReadyForSpeech(params: Bundle?) {
+            speechDetected = false
             showReady()
+            Handler().postDelayed({
+                if (!speechDetected) {
+                    giveSuggestions()
+                }
+            }, ADVICE_DELAY)
         }
 
         override fun onBeginningOfSpeech() {
+            speechDetected = true
             showListening()
-            feedbackView.text = "" // clear any previous feedback
         }
 
         override fun onBufferReceived(buffer: ByteArray?) {}
 
         override fun onEndOfSpeech() {
+            speechDetected = true // just in case onBeginningOfSpeech() wasn't called
             showProcessing()
         }
 
@@ -144,10 +177,9 @@ class MainActivity : AppCompatActivity() {
                 SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> getString(R.string.no_speech)
                 else -> "Unknown error"
             }
-            displayError(errorText)
 
             // This appears to be necessary to make the next
-            // attempt at listening work..
+            // attempt at listening work.
             closeRecognizer()
 
             if (error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT ||
@@ -155,6 +187,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 startSpeechRecognition()
             } else {
+                displayError(errorText)
                 Log.e(TAG, "err: $errorText")
             }
         }
@@ -216,7 +249,8 @@ class MainActivity : AppCompatActivity() {
         internal const val BASE_URL =
             "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
         internal const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
-        internal const val FEEDBACK_DISPLAY_TIME = 2000L
+        internal const val ADVICE_DELAY = 1250L // ms before suggesting utterances
+        internal const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
 
         // Animation frames
         internal const val SOLICIT_MIN = 0
