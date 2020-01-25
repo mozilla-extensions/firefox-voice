@@ -15,10 +15,10 @@ We recommend opening this page (https://bit.ly/2RGxzrB) in Firefox on Android.
 ### Install the Mozilla Assistant app
 
 1. Enable installation of apps from unknown sources. On older versions of Android (before Oreo), select `Settings` > `Security` (or `Lock screen and security`), then enable the switch next to `Unknown sources`. On recent versions of Android, follow the instructions illustrated below or in [this screencast](https://github.com/espertus/mozilla-assistant/blob/master/doc/unknown-sources25.gif):
-  1. Open Settings and enter "unknown" in the Settings search bar.
-  2. Click on "Install unknown apps".
-  3. Click on "Firefox".
-  4. Enable installation of apps from unknown sources on Firefox by dragging the slider right.
+   1. Open Settings and enter "unknown" in the Settings search bar.
+   2. Click on "Install unknown apps".
+   3. Click on "Firefox".
+   4. Enable installation of apps from unknown sources on Firefox by dragging the slider right.
 ![screenshot of process of enabling installation of apps from Firefox](https://github.com/espertus/mozilla-assistant/raw/master/doc/unknown-sources-recent.png)
 2. In Firefox, download the [APK (app)](https://github.com/espertus/mozilla-assistant/blob/master/app/build/outputs/apk/debug/app-debug.apk?raw=true) on your Android device. Confirm that you wish to open and install it. If Firefox won't let you, use Chrome for this step.
    
