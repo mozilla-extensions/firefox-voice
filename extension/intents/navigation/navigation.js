@@ -156,6 +156,34 @@ this.intents.navigation = (function() {
     await browser.storage.local.set({ queryDatabase: entries });
   }
 
+  this.intentRunner.registerIntent({
+    name: "navigation.goBack",
+    description: "Go back to the previous page, if one is available",
+    match: `
+    go back
+    `,
+    async run(context) {
+      const tab = await context.activeTab();
+      await browser.tabs.executeScript(tab.id, {
+        code: "window.history.back();",
+      });
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "navigation.goForward",
+    description: "Go forward to the next page, if one is available",
+    match: `
+    go forward
+    `,
+    async run(context) {
+      const tab = await context.activeTab();
+      await browser.tabs.executeScript(tab.id, {
+        code: "window.history.forward();",
+      });
+    },
+  });
+
   async function loadQueryDatabase() {
     const result = await browser.storage.local.get(["queryDatabase"]);
     if (result && result.queryDatabase) {
