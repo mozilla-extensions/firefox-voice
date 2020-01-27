@@ -69,6 +69,10 @@ this.intentParser = (function() {
     interns: "intents",
     "down word": "downward",
     "up word": "upward",
+    haste: "paste",
+    taste: "paste",
+    pace: "paste",
+    best: "paste",
   };
 
   // This is used to attempt ALL substitutions:
