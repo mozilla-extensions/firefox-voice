@@ -5,10 +5,14 @@ import androidx.annotation.VisibleForTesting
 class MatcherBuilder(
     private val phrase: String
 ) {
-    private val slots = mutableListOf<String>()
-    private val slotTypes = mutableMapOf<String, String>()
-    private val parameters = mutableMapOf<String, String>()
-    private var regexBuilder = StringBuilder()
+    @VisibleForTesting
+    internal val slots = mutableListOf<String>()
+    @VisibleForTesting
+    internal val slotTypes = mutableMapOf<String, String>()
+    @VisibleForTesting
+    internal val parameters = mutableMapOf<String, String>()
+    @VisibleForTesting
+    internal val regexBuilder = StringBuilder()
 
     fun build(): Matcher? {
         if (phrase.isEmpty()) {
@@ -33,7 +37,7 @@ class MatcherBuilder(
 
         // [(parameter)=(value)](.*)
         parameterRegex.matchEntire(toParse)?.run {
-            require(groupValues.size == 3)
+            require(groupValues.size == 4)
             val (parameter, value, rest) = destructured
             parameters[parameter] = value
             return parse(rest)
@@ -41,7 +45,7 @@ class MatcherBuilder(
 
         // [(slot)](.*)
         untypedSlotRegex.matchEntire(toParse)?.run {
-            require(groupValues.size == 2)
+            require(groupValues.size == 3)
             val (slotName, rest) = destructured
             slots.add(slotName)
             regexBuilder.append("( .+?)")
@@ -50,24 +54,27 @@ class MatcherBuilder(
 
         // [(slot):(slotType)](.*)
         typedSlotRegex.matchEntire(toParse)?.let {
-            require(it.groupValues.size == 3)
+            require(it.groupValues.size == 4)
             val (slotName, entityName, rest) = it.destructured
             slots.add(slotName)
             if (!entityTypes.containsKey(entityName)) {
                 throw Error("No entity type by the name $entityName")
             }
+            slotTypes[slotName] = entityName
             entityTypes[entityName]?.run {
                 joinTo(
                     regexBuilder,
                     prefix = "(", separator = "|", postfix = ")"
-                )
+                ) {
+                    if (it.isEmpty()) "" else " $it"
+                }
             }
             return parse(rest)
         }
 
         // (alt1 |alt2 |..|altN| )
         alternativesRegex.matchEntire(toParse)?.run {
-            require(groupValues.size == 2)
+            require(groupValues.size == 3)
             val (alts, rest) = destructured
             alts.split("|")
                 .map { it.trim() }
@@ -79,7 +86,7 @@ class MatcherBuilder(
 
         // everything before a left parenthesis or left bracket
         wordsRegex.matchEntire(toParse)?.run {
-            require(groupValues.size == 2)
+            require(groupValues.size == 3)
             val (words, rest) = destructured
             regexBuilder.append(" ${words.trim()}")
             return parse(rest)
@@ -90,20 +97,21 @@ class MatcherBuilder(
 
     companion object {
         @VisibleForTesting
-        val parameterRegex = Regex("\\[(\\w+)=(\\w+)](.*)")
+        val parameterRegex = Regex("\\[\\s*(\\w+)\\s*=\\s*(\\w+)\\s*](.*)")
         @VisibleForTesting
-        internal val untypedSlotRegex = Regex("\\[(\\w+)\\](.*)")
+        internal val untypedSlotRegex = Regex("\\[\\s*(\\w+)\\s*\\](.*)")
         @VisibleForTesting
-        internal val typedSlotRegex = Regex("\\[(\\w+):(\\w+)\\](.*)")
+        internal val typedSlotRegex = Regex("\\[\\s*(\\w+)\\s*:\\s*(\\w+)\\s*\\](.*)")
         @VisibleForTesting
         internal val alternativesRegex = Regex("\\(([^)]+)\\)(.*)")
         @VisibleForTesting
         internal val wordsRegex = Regex("([^\\(\\[]+)(.*)")
 
+        // TODO: Build dynamically
         private val entityTypes: Map<String, List<String>> = mapOf(
             "serviceName" to listOf("foo"),
-            "musicServiceName" to listOf("bar"),
-            "lang" to listOf("languages"),
+            "musicServiceName" to listOf("Pandora", "Spotify"),
+            "lang" to listOf("English", "Spanish", "French"),
             "smallNumber" to listOf(
                 "1", "2", "3", "4", "5", "6", "7", "8", "9",
                 "one", "two", "three", "four", "five", "six",

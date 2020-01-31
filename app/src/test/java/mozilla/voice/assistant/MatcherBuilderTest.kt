@@ -1,6 +1,7 @@
 package mozilla.voice.assistant
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,7 @@ class MatcherBuilderTest {
     fun testParameterRegexMatches() {
         listOf(
             listOf("[x=5]", "x", "5", ""),
+            listOf("[ x =  5 ]", "x", "5", ""),
             listOf("[foo=bar]baz", "foo", "bar", "baz"),
             listOf("[foo=bar][baz=3]", "foo", "bar", "[baz=3]")
         ).forEach {
@@ -111,5 +113,44 @@ class MatcherBuilderTest {
             assertNull("Did not expect wordsRegex to match: $it",
                 MatcherBuilder.wordsRegex.matchEntire(it))
         }
+    }
+
+    private fun testParseHelper(
+        phrase: String,
+        regex: String,
+        slots: List<String> = emptyList(),
+        slotTypes: Map<String, String> = emptyMap(),
+        parameters: Map<String, String> = emptyMap()
+    ) {
+        val mb = MatcherBuilder(phrase)
+        val matcher = mb.build()
+        assertNotNull(matcher)
+        assertEquals("Slots differ when parsing /$phrase/", slots, mb.slots)
+        assertEquals("Slot types differ when parsing /$phrase/", slotTypes, mb.slotTypes)
+        assertEquals("Parameters differ when parsing /$phrase/", parameters, mb.parameters)
+        assertEquals("Final regex differs when parsing /$phrase/", regex, mb.regexBuilder.toString())
+    }
+
+    @Test
+    fun testParse() {
+        testParseHelper("oranges and lemons", " oranges and lemons")
+        testParseHelper("(oranges | lemons)", "(?: oranges| lemons)")
+        testParseHelper("(oranges | lemons|  )", "(?: oranges| lemons|)")
+        testParseHelper(
+            "plain text (alt|text) [slot]",
+            " plain text(?: alt| text) ( .+?)",
+            slots = listOf("slot")
+        )
+        testParseHelper(
+            "[mu:musicServiceName] [nu] [kappa=k]",
+            "( Pandora| Spotify) ( .+?) ",
+            slots = listOf("mu", "nu"),
+            slotTypes = mapOf(
+                "mu" to "musicServiceName"
+            ),
+            parameters = mapOf(
+                "kappa" to "k"
+            )
+        )
     }
 }
