@@ -21,7 +21,8 @@ class MatcherBuilder(
         return parse(phrase)
     }
 
-    private fun parse(toParse: String): Matcher {
+    private fun parse(toParse0: String): Matcher {
+        val toParse = toParse0.trim()
         if (toParse.isEmpty()) {
             return Matcher(
                 phrase,
@@ -103,14 +104,14 @@ class MatcherBuilder(
         @VisibleForTesting
         internal val typedSlotRegex = Regex("\\[\\s*(\\w+)\\s*:\\s*(\\w+)\\s*\\](.*)")
         @VisibleForTesting
-        internal val alternativesRegex = Regex("\\(([^)]+)\\)(.*)")
+        internal val alternativesRegex = Regex("\\s*\\(([^)]+)\\)(.*)")
         @VisibleForTesting
-        internal val wordsRegex = Regex("([^\\(\\[]+)(.*)")
+        internal val wordsRegex = Regex("\\s*([^\\(\\[]+)(.*)")
 
         // TODO: Build dynamically
         private val entityTypes: Map<String, List<String>> = mapOf(
             "serviceName" to listOf("foo"),
-            "musicServiceName" to listOf("Pandora", "Spotify"),
+            "musicServiceName" to listOf("youtube", "spotify", "video"),
             "lang" to listOf("English", "Spanish", "French"),
             "smallNumber" to listOf(
                 "1", "2", "3", "4", "5", "6", "7", "8", "9",
