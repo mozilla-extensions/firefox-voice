@@ -273,6 +273,12 @@ this.intents.search = (function() {
       "What time is it in Berlin?",
       "How long will it take to get to Springfield?",
       "How do I get to the hardware store?",
+      "Search for hiking in Denver",
+      "Look up The Book Thief on GoodReads",
+      "Search CSS grid on MDN",
+      "Go to the New York Times",
+      "Show me the 49ers schedule",
+      "Go to the Health section of the BBC",
     ],
     async run(context) {
       stopCardPoll();
