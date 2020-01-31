@@ -128,11 +128,12 @@ class MatcherBuilderTest {
         assertEquals("Slots differ when parsing /$phrase/", slots, mb.slots)
         assertEquals("Slot types differ when parsing /$phrase/", slotTypes, mb.slotTypes)
         assertEquals("Parameters differ when parsing /$phrase/", parameters, mb.parameters)
-        assertEquals("Final regex differs when parsing /$phrase/", regex, mb.regexBuilder.toString())
+        assertEquals("Final regex differs when parsing /$phrase/", regex, matcher?.regexString)
     }
 
     @Test
     fun testParse() {
+        assertNotNull(Regex("\\{(.*?)\\}").find("child{ren}"))
         testParseHelper("oranges and lemons", " oranges and lemons")
         testParseHelper("(oranges | lemons)", "(?: oranges| lemons)")
         testParseHelper("(oranges | lemons|  )", "(?: oranges| lemons|)")
@@ -151,6 +152,10 @@ class MatcherBuilderTest {
             parameters = mapOf(
                 "kappa" to "k"
             )
+        )
+        testParseHelper(
+            "child{ren} and adults",
+            " child(?:ren)? and adults"
         )
     }
 }

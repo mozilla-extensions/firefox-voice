@@ -30,7 +30,7 @@ class MatcherBuilder(
                 parameters,
                 regexBuilder.replace(
                     Regex("\\{(.*?)\\}"),
-                    "(?:$1}?"
+                    "(?:$1)?"
                 )
             )
         }
