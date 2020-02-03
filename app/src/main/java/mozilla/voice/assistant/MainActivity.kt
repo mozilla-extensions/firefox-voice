@@ -124,9 +124,11 @@ class MainActivity : AppCompatActivity() {
             .joinToString("\n\n")
 
         feedbackView.text = SpannableStringBuilder()
-            .scale(.6f) { italic { append(getString(R.string.suggestion_prefix)) } }
-            .scale(.6f) { append("\n\n") }
-            .scale(.6f) { bold { append(ideas) } }
+            .scale(.6f) {
+                italic { append(getString(R.string.suggestion_prefix)) }
+                    .append("\n\n")
+                    .bold { append(ideas) }
+            }
 
         suggestionIndex += NUM_SUGGESTIONS
     }
