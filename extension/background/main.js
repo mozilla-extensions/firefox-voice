@@ -249,6 +249,7 @@ this.main = (function() {
 
   settings.watch("enableWakeword", updateWakeword);
   settings.watch("wakewords", updateWakeword);
+  settings.watch("wakewordSensitivity", updateWakeword);
   async function updateWakeword() {
     if (recorderTabId) {
       await browser.tabs.sendMessage(recorderTabId, { type: "updateWakeword" });

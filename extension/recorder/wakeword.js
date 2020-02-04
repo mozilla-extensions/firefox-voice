@@ -22,14 +22,14 @@ this.wakeword = (function() {
     keywordIds[name] = decodeBase64(ppnListing[name]);
   }
 
-  function startWatchword(keywords) {
+  function startWatchword(keywords, sensitivity) {
     const enabledKeywordIds = {};
     for (const keyword of keywords) {
       enabledKeywordIds[keyword] = keywordIds[keyword];
     }
     const sensitivitySources = [];
     for (let i = 0; i < Object.keys(enabledKeywordIds).length; i++) {
-      sensitivitySources.push(0.5);
+      sensitivitySources.push(sensitivity);
     }
     const sensitivities = new Float32Array(sensitivitySources);
     porcupineManager.start(
@@ -50,11 +50,18 @@ this.wakeword = (function() {
         catcher.capture(error);
       }
     );
+    log.info(
+      "Listening for watchwords:",
+      keywords.join(", "),
+      "at sensitivity:",
+      sensitivity
+    );
     enabled = true;
   }
 
   function stopWatchword() {
     porcupineManager.stop();
+    log.info("Stopped listening for watchwords");
     enabled = false;
   }
 
@@ -64,7 +71,10 @@ this.wakeword = (function() {
       if (enabled) {
         stopWatchword();
       }
-      startWatchword(userSettings.wakewords);
+      startWatchword(
+        userSettings.wakewords,
+        userSettings.wakewordSensitivity || 0.5
+      );
     } else if (enabled) {
       stopWatchword();
     }

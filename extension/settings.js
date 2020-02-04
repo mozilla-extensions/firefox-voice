@@ -14,6 +14,7 @@ this.settings = (function() {
     keyboardShortcut: null,
     enableWakeword: false,
     wakewords: [],
+    wakewordSensitivity: 0.6,
   };
 
   exports.getSettings = function() {
