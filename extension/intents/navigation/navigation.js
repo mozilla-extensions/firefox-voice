@@ -121,13 +121,13 @@ this.intents.navigation = (function() {
     description:
       "Translate whatever text is selected to English, using Google Translate",
     match: `
-    translate (this |) selection (to english |) (for me |)
-    translate (this |) selection to [language:lang] (for me |)
+    translate (this | the |) (selection | selected text) (to english |) (for me |)
+    translate (this | the |) (selection | selected text) to [language:lang] (for me |)
     `,
     examples: [
       "Translate selection",
       "test:translate this selection to Hungarian",
-      "test:translate this selection to Slovak",
+      "test:translate the selected text to Slovak",
     ],
     async run(context) {
       const language = context.slots.language || "english";
