@@ -281,6 +281,11 @@ this.optionsView = (function() {
       updateUserSettings(userSettings);
     }
 
+    function onWakewordSensitivityChange(event) {
+      userSettings.wakewordSensitivity = parseFloat(event.target.value);
+      updateUserSettings(userSettings);
+    }
+
     const wakewords = [];
     for (const wakeword of userOptions.wakewords) {
       let className = "styled-checkbox";
@@ -325,6 +330,26 @@ this.optionsView = (function() {
             <p>
               If you turn this option on you will be able to enable Firefox
               Voice by saying any one of the (checked) words below.
+            </p>
+          </li>
+          <li>
+            <div>
+              <input
+                id="wakeword-sensitivity"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={userSettings.wakewordSensitivity}
+                onChange={onWakewordSensitivityChange}
+              />
+              <label htmlFor="wakeword-sensitivity">
+                {userSettings.wakewordSensitivity}
+              </label>
+            </div>
+            <p>
+              Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
+              listen)
             </p>
           </li>
           {wakewords}
