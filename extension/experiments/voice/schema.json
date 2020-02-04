@@ -1,0 +1,15 @@
+[
+  {
+    "namespace": "experiments.voice",
+    "description": "Firefox Voice internal API",
+    "functions": [
+      {
+        "name": "openPopup",
+        "type": "function",
+        "description": "Forces the popup to open",
+        "parameters": [],
+        "async": true
+      }
+    ]
+  }
+]

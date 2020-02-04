@@ -81,7 +81,7 @@ async function init() {
       description = `<p>${quote(intent.description)}</p>`;
     }
     html.push(`<div class="intent">
-      <h2 id="${intent.name}">${intent.name}</h2>
+      <h2 id="${quote(intent.name)}">${quote(intent.name)}</h2>
       ${description}
       <a href="${quote(makeViewUrl(intent.name))}">View code</a><br>
       <div>

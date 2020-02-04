@@ -37,6 +37,7 @@
       "catcher.js",
       "settings.js",
       "js/vendor/fuse.js",
+      "js/vendor/ppnListing.js",
       "browserUtil.js",
       "limiter.js",
       "background/pageMetadata.js",
@@ -70,6 +71,16 @@
     }
   ],
   <% } %>
+  "experiment_apis": {
+    "voice": {
+      "schema": "experiments/voice/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/voice/api.js",
+        "paths": [["experiments", "voice"]]
+      }
+    }
+  },
   "options_ui": {
     "page": "options/options.html"
   },

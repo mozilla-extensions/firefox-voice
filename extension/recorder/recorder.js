@@ -1,4 +1,4 @@
-/* globals log, voice, util */
+/* globals log, voice, util, wakeword */
 
 this.recorder = (function() {
   // If the permission doesn't return in this amount of time, we'll request that this tab
@@ -163,7 +163,11 @@ this.recorder = (function() {
   }
 
   browser.runtime.onMessage.addListener(message => {
-    if (message.type !== "voiceShim" && message.type !== "zeroVolumeError") {
+    if (
+      message.type !== "voiceShim" &&
+      message.type !== "zeroVolumeError" &&
+      message.type !== "updateWakeword"
+    ) {
       return undefined;
     }
     return handleMessage(message);
@@ -172,6 +176,9 @@ this.recorder = (function() {
   async function handleMessage(message) {
     if (message.type === "zeroVolumeError") {
       return zeroVolumeError();
+    }
+    if (message.type === "updateWakeword") {
+      return wakeword.updateWakeword();
     }
     if (message.method === "ping") {
       await streamReady;
