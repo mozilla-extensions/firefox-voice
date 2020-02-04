@@ -101,6 +101,10 @@ Example markup to use this styled native checkbox
   position: absolute;
 }
 
+.styled-checkbox.disabled {
+  opacity: 0.5;
+}
+
 .styled-input,
 .styled-textarea {
   font-family: "Inter" !important;

@@ -62,6 +62,11 @@ this.optionsView = (function() {
           updateUserSettings={updateUserSettings}
           keyboardShortcutError={keyboardShortcutError}
         />
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
         <MusicServiceSettings
           userOptions={userOptions}
           userSettings={userSettings}
@@ -246,6 +251,88 @@ this.optionsView = (function() {
     );
   };
 
+  const WakewordSettings = ({
+    userOptions,
+    userSettings,
+    updateUserSettings,
+  }) => {
+    userSettings.wakewords = userSettings.wakewords || [];
+    userOptions.wakewords = userOptions.wakewords || [];
+
+    function onEnableWakewordChange(event) {
+      userSettings.enableWakeword = !!event.target.checked;
+      updateUserSettings(userSettings);
+    }
+
+    function onWakewordChange(event) {
+      const include = !!event.target.checked;
+      const wakeword = event.target.value;
+      if (include) {
+        if (!userSettings.wakewords.includes(wakeword)) {
+          userSettings.wakewords.push(wakeword);
+        }
+      } else if (userSettings.wakewords.includes(wakeword)) {
+        userSettings.wakewords.splice(
+          userSettings.wakewords.indexOf(wakeword),
+          1
+        );
+      }
+      userSettings.wakewords.sort();
+      updateUserSettings(userSettings);
+    }
+
+    const wakewords = [];
+    for (const wakeword of userOptions.wakewords) {
+      let className = "styled-checkbox";
+      if (!userSettings.enableWakeword) {
+        className += " disabled";
+      }
+      wakewords.push(
+        <li key={`wakeword-${wakeword}`}>
+          <div className={className}>
+            <input
+              id={`wakeword-${wakeword}`}
+              type="checkbox"
+              value={wakeword}
+              checked={userSettings.wakewords.includes(wakeword)}
+              onChange={onWakewordChange}
+              disabled={!userSettings.enableWakeword}
+            />
+            <label htmlFor={`wakeword-${wakeword}`}>
+              <strong>{wakeword}</strong>
+            </label>
+          </div>
+        </li>
+      );
+    }
+
+    return (
+      <fieldset id="wakeword">
+        <legend>Wakeword</legend>
+        <ul>
+          <li>
+            <div className="styled-checkbox">
+              <input
+                id="wakeword-enable"
+                type="checkbox"
+                checked={userSettings.enableWakeword}
+                onChange={onEnableWakewordChange}
+              />
+              <label htmlFor="wakeword-enable">
+                <strong>Enable wakeword detection</strong>
+              </label>
+            </div>
+            <p>
+              If you turn this option on you will be able to enable Firefox
+              Voice by saying any one of the (checked) words below.
+            </p>
+          </li>
+          {wakewords}
+        </ul>
+      </fieldset>
+    );
+  };
+
   const DevelopmentSettings = ({ inDevelopment }) => {
     return (
       <fieldset id="development-access">
@@ -370,7 +457,10 @@ this.optionsView = (function() {
             </a>
           </li>
           <li>
-            <a href="/views/lexicon.html" onClick={browserUtil.activateTabClickHandler}>
+            <a
+              href="/views/lexicon.html"
+              onClick={browserUtil.activateTabClickHandler}
+            >
               The Big List of What You Can Say to Firefox Voice
             </a>
           </li>

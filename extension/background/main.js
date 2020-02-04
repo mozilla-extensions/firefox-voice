@@ -63,6 +63,9 @@ this.main = (function() {
       return intents.search.focusSearchResults(message);
     } else if (message.type === "copyImage") {
       return intents.clipboard.copyImage(message.url);
+    } else if (message.type === "wakeword") {
+      log.info("Received wakeword", message.wakeword);
+      return browser.experiments.voice.openPopup();
     } else if (message.type === "createSurveyUrl") {
       return telemetry.createSurveyUrl(message.url);
     } else if (message.type === "voiceShimForward") {
@@ -243,6 +246,14 @@ this.main = (function() {
   });
 
   updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
+
+  settings.watch("enableWakeword", updateWakeword);
+  settings.watch("wakewords", updateWakeword);
+  async function updateWakeword() {
+    if (recorderTabId) {
+      await browser.tabs.sendMessage(recorderTabId, { type: "updateWakeword" });
+    }
+  }
 
   function setUninstallURL() {
     const url = telemetry.createSurveyUrl(UNINSTALL_SURVEY);

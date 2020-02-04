@@ -1,4 +1,4 @@
-/* globals intents, log */
+/* globals intents, log, ppnListing */
 
 this.settings = (function() {
   const exports = {};
@@ -12,6 +12,8 @@ this.settings = (function() {
     collectAudio: false,
     collectTranscriptsOptinShown: false,
     keyboardShortcut: null,
+    enableWakeword: false,
+    wakewords: [],
   };
 
   exports.getSettings = function() {
@@ -37,6 +39,7 @@ this.settings = (function() {
     const settings = exports.getSettings();
     const options = {
       musicServices: intents.music.getServiceNamesAndTitles(),
+      wakewords: Object.keys(ppnListing),
     };
     return { settings, options };
   };
