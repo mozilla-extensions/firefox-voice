@@ -36,7 +36,7 @@ this.intentRunner.registerIntent({
   examples: ["Scroll all the way up"],
   match: `
         scroll (this |) (tab | page | article |) all the way (up | upward) (to the top |)
-        scroll (this |) (tab | page | article |) (all the way |) to (the |) (very |) top
+        scroll (this |) (tab | page | article |) (all the way | back |) to (the |) (very |) (top | beginning)
         page all the way (up | to the top | to top)
       `,
   async run(context) {
@@ -52,7 +52,7 @@ this.intentRunner.registerIntent({
   examples: ["Scroll all the way down"],
   match: `
         scroll (this |) (tab | page | article |) all the way (down | downward |) (to the bottom |)
-        scroll (this |) (tab | page | article |) (all the way |) to (the |) (very |) bottom
+        scroll (this |) (tab | page | article |) (all the way |) to (the |) (very |) (bottom | end)
         page all the way (down | to the bottom | to bottom)
       `,
   async run(context) {
