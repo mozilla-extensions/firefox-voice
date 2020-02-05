@@ -43,7 +43,7 @@ this.intents.read = (function() {
       "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
     examples: ["Read this page"],
     match: `
-    read (me | ) (this | the |) (article | articles |) (on this| )(tab | page |) (for me | to me |) (aloud |)
+    (can you |) read (me | ) (this | the |) (article | articles | text |) (on this| )(tab | page |) (for me | to me |) (aloud |)
     read (me |) [query] (for me | to me |) (aloud |)
     `,
     async run(context) {
