@@ -35,7 +35,10 @@ this.intents.self = (function() {
     name: "self.openOptions",
     description: "Opens the options page",
     match: `
-    (open | open the | voice | firefox voice) (settings | options) (for me |)
+    (open | open the | voice | firefox voice) (settings | options | preferences) (for me |)
+    settings
+    options
+    preferences
     `,
     async run(context) {
       await browser.tabs.create({
