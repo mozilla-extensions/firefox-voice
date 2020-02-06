@@ -13,7 +13,7 @@ this.settings = (function() {
     collectTranscriptsOptinShown: false,
     keyboardShortcut: null,
     enableWakeword: false,
-    wakewords: [],
+    wakewords: ["grasshopper"],
     wakewordSensitivity: 0.6,
   };
 
