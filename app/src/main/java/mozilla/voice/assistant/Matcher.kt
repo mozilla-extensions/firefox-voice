@@ -29,6 +29,7 @@ class Matcher(
 class MatchSet(
     private val phrases: String
 ) {
+    @VisibleForTesting
     val matchers: List<Matcher> =
         phrases.split("\n")
             .map { it.trim() }
@@ -50,7 +51,7 @@ data class MatcherResult(
     val slots: Map<String, String>,
     val slotTypes: Map<String, String>,
     val utterance: String,
-    val regex: String,
+    val regex: String?, // null when created by createFallbackIntent()
     val parameters: Map<String, String>
 )
 

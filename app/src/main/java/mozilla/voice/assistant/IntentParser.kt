@@ -12,6 +12,9 @@ class IntentParser {
         @VisibleForTesting
         val intentNames = mutableListOf<String>()
 
+        private const val DEFAULT_INTENT = "search.search"
+        private const val DEFAULT_SLOT = "query"
+
         fun registerMatcher(intentName: String, matcher: Matcher) {
             if (intents.contains(intentName)) {
                 throw Error("Intent $intentName has already been registered")
@@ -52,89 +55,142 @@ class IntentParser {
             "up word" to "upward"
         )
 
+        @VisibleForTesting
+        fun createSubRegex(substitutions: Map<String, String>): Regex =
+            Regex(
+                substitutions.keys.joinToString(
+                    prefix = "\\b(",
+                    separator = "|",
+                    postfix = ")\\b"
+                ),
+                RegexOption.IGNORE_CASE
+            )
 
-        fun findMatches(text: String): List<MatcherResult>? {
-            intents.map {entry ->
-                entry.value.match(text) ?. let {
+        private val SUB_REGEX = createSubRegex(SUBSTITUTIONS)
+
+        @VisibleForTesting
+        fun createSubRegexes(substitutions: Map<String, String>):
+                Map<String, Pair<Regex, String>> =
+            substitutions.mapValues { (key, value) ->
+                Pair(Regex("\\b$key\\b", RegexOption.IGNORE_CASE), value)
+            }
+
+        private val SUB_REGEXES: Map<String, Pair<Regex, String>> =
+            createSubRegexes((SUBSTITUTIONS))
+
+        @VisibleForTesting
+        fun findAlternatives(
+            unnormalizedText: String,
+            substitutions: Map<String, String> = SUBSTITUTIONS,
+            sub_regex: Regex = SUB_REGEX,
+            sub_regexes: Map<String, Pair<Regex, String>> = SUB_REGEXES
+        ): List<Alternative> {
+            val text = normalizeText(unnormalizedText)
+            val alternatives = mutableListOf<Alternative>(
+                Alternative(text, 0)
+            )
+
+            // Add an alternative trying each substitution individually. The score is the
+            // difference in text length minus the number of times the substitution was done.
+            for (value in sub_regexes.values) {
+                val (re, sub) = value
+                var count = 0 // count of number of times this substitution is made in text
+                val newText = text.replace(re) {
+                    count += 1
+                    sub
+                }
+
+                if (newText != text) {
+                    alternatives.add(
+                        Alternative(
+                            normalizeText(newText),
+                            -count + newText.length - text.length
+                        )
+                    )
+                }
+            }
+
+            // Now add an alternative where all substitutions are applied together.
+            var count = 0
+            val newText = text.replace(sub_regex) { matchResult ->
+                count += 1
+                // Compiler cannot infer that SUBSTITUTIONS[matchResult.value] returns String, not String?
+                substitutions.getOrKey(matchResult.value)
+            }
+            if (newText != text) {
+                alternatives.add(
+                    Alternative(
+                        normalizeText(newText),
+                        -count + (newText.length - text.length)
+                    )
+                )
+            }
+
+            return alternatives
+        }
+
+
+        fun findMatches(text: String): List<Match>? {
+            return intents.mapNotNull { intent ->
+                intent.value.match(text)?.let {
                     val penalty = it.slots.map { entry ->
                         if (it.slotTypes.contains(entry.key)) {
                             1
                         } else {
                             entry.value.length
                         }
-                    }
+                    }.sum()
+                    Match(
+                        matcherResult = it,
+                        name = intent.key,
+                        fallback = false,
+                        score = text.length - penalty
+                    )
                 }
             }
-            // pick up here
         }
 
-        // example: "up word" -> Pair(Regex("\\bup ward\\b"), "upward")
-        private val SUB_REGEXES: Map<String, Pair<Regex, String>> =
-            SUBSTITUTIONS.mapValues { (key, value) ->
-                Pair(Regex("\\b$key\\b", RegexOption.IGNORE_CASE), value)
+        fun parse(unnormalizedText: String, disableFallback: Boolean = false): Match? {
+            // Find best alternative. TODO: Determine if we need to keep the revised score.
+            val bestMatch = findAlternatives(unnormalizedText).flatMap {
+                findMatches(it.altText)?.map { match ->
+                    match.score += it.scoreMod
+                    match
+                } ?: emptyList()
+            }.maxBy { it.score }
+
+            return bestMatch ?: if (disableFallback) {
+                null
+            } else {
+                createFallbackMatch(normalizeText(unnormalizedText))
             }
+        }
 
-        private val SUB_REGEX = Regex(
-            SUBSTITUTIONS.keys.joinToString(
-                prefix = "\\b(",
-                separator = "|",
-                postfix = ")\\b"
-            ),
-            RegexOption.IGNORE_CASE
-        )
-
-        fun parse(unnormalizedText: String, disableFallback: Boolean = false) {
-            val text = normalizeText(unnormalizedText)
-            val alternatives = mutableListOf<Pair<String, Int>>(
-                Pair(text, 0)
+        @VisibleForTesting
+        fun createFallbackMatch(text: String): Match =
+            Match(
+                MatcherResult(
+                    slots = mapOf(DEFAULT_SLOT to text),
+                    slotTypes = emptyMap(),
+                    parameters = emptyMap(),
+                    regex = null,
+                    utterance = text
+                ),
+                name = DEFAULT_INTENT,
+                fallback = true,
+                score = 0 // unused
             )
-
-            // Add an alternative trying each substitution individually. The score is the
-            // difference in text length minus the number of times the substitution was done.
-            for (value in SUB_REGEXES.values) {
-                val (re, sub) = value
-                var c = 0 // count of number of times this substitution is made in text
-                val newText = text.replace(re) {
-                    c += 1
-                    sub
-                }
-                // learned a nicer way on Slack
-
-                //val c = re.findAll(text).asSequence().count()
-                //val newText = text.replace(re, sub)
-
-                if (newText != text) {
-                    alternatives.add(
-                        Pair(
-                            normalizeText(newText),
-                            -c + newText.length - text.length
-                        )
-                    )
-                }
-            }
-
-            // Now try all of the substitutions at once.
-            var c = 0
-            val newText = text.replace(SUB_REGEX) { matchResult ->
-                c += 1
-                // Compiler cannot infer that SUBSTITUTIONS[matchResult.value] returns String, not String?
-                SUBSTITUTIONS.getOrKey(matchResult.value)
-            }
-            if (newText != text) {
-                alternatives.add(
-                    Pair(
-                        normalizeText(newText),
-                        -c + (newText.length - text.length)
-                    )
-                )
-            }
-        }
     }
 }
+
+data class Alternative(
+    val altText: String,
+    val scoreMod: Int
+)
 
 class Match(
     val matcherResult: MatcherResult,
     val name: String,
     val fallback: Boolean,
-    val score: Int
+    var score: Int
 )
