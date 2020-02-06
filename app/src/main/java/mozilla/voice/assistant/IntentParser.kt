@@ -129,7 +129,6 @@ class IntentParser {
             return alternatives
         }
 
-
         fun findMatches(text: String): List<Match>? {
             return intents.mapNotNull { intent ->
                 intent.value.match(text)?.let {

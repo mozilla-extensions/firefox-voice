@@ -14,14 +14,15 @@ class Matcher(
 
     fun match(utterance: String): MatcherResult? {
         return regex.find(" ${utterance.trim()}")?.run {
-            MatcherResult (
+            MatcherResult(
                 slots.indices.associate { i ->
-                    slots[i] to groupValues[i + 1]
+                    slots[i] to groupValues[i + 1].trim()
                 },
                 slotTypes,
                 utterance,
                 regexString,
-                parameters)
+                parameters
+            )
         }
     }
 }
@@ -54,4 +55,3 @@ data class MatcherResult(
     val regex: String?, // null when created by createFallbackIntent()
     val parameters: Map<String, String>
 )
-
