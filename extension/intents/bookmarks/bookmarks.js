@@ -1,4 +1,4 @@
-/* globals Fuse, log */
+/* globals Fuse, log, pageMetadata */
 
 this.intents.bookmarks = (function() {
   this.intentRunner.registerIntent({
@@ -63,6 +63,28 @@ this.intents.bookmarks = (function() {
         await browser.tabs.update(activeTab.id, { url });
       } else {
         await browser.tabs.create({ url });
+      }
+    },
+  });
+
+  this.intentRunner.registerIntent({
+    name: "bookmarks.create",
+    description:
+      "Creates a bookmark placing it in the default folder (Other Bookmarks)",
+    examples: ["Bookmark this page"],
+    match: `
+    bookmark (this |) (page | site | tab |) (for me |)
+    (save | add) (this |) (page | site | tab |) to bookmarks
+    `,
+    async run(context) {
+      const activeTab = await context.activeTab();
+      const metadata = await pageMetadata.getMetadata(activeTab.id);
+      const bookmarks = await browser.bookmarks.search({ url: metadata.url });
+      if (!bookmarks.length) {
+        await browser.bookmarks.create({
+          title: metadata.title,
+          url: metadata.url,
+        });
       }
     },
   });
