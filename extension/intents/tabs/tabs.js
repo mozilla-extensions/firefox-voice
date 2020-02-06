@@ -112,7 +112,7 @@ this.intents.tabs = (function() {
     description: "Closes the current tab",
     examples: ["close tab"],
     match: `
-    close (this |) tab (for me |)
+    close (this |) (tab | site | page) (for me |)
     `,
     async run(context) {
       const activeTab = await context.activeTab();
