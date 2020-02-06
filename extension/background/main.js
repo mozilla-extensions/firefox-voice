@@ -64,8 +64,7 @@ this.main = (function() {
     } else if (message.type === "copyImage") {
       return intents.clipboard.copyImage(message.url);
     } else if (message.type === "wakeword") {
-      log.info("Received wakeword", message.wakeword);
-      return browser.experiments.voice.openPopup();
+      return wakewordPopup(message.wakeword);
     } else if (message.type === "createSurveyUrl") {
       return telemetry.createSurveyUrl(message.url);
     } else if (message.type === "voiceShimForward") {
@@ -187,6 +186,23 @@ this.main = (function() {
 
   if (buildSettings.openPopupOnStart) {
     browser.tabs.create({ url: browser.runtime.getURL("/popup/popup.html") });
+  }
+
+  async function wakewordPopup(wakeword) {
+    log.info("Received wakeword", wakeword);
+    try {
+      const result = await browser.runtime.sendMessage({
+        type: "wakewordReceivedRestartPopup",
+      });
+      if (result) {
+        // The popup is open and will handle restarting itself
+        return null;
+      }
+    } catch (e) {
+      // This probably won't happen, but if it does we'll try to open the popup anyway
+      catcher.capture(e);
+    }
+    return browser.experiments.voice.openPopup();
   }
 
   let _shortcutSet = false;

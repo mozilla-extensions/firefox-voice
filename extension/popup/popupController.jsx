@@ -154,6 +154,12 @@ this.popupController = (function() {
           showSearchCard(message.card);
           return Promise.resolve(true);
         }
+        case "wakewordReceivedRestartPopup": {
+          setTimeout(() => {
+            location.href = `${location.pathname}?${Date.now()}`;
+          }, 50);
+          return Promise.resolve(true);
+        }
         default:
           break;
       }
