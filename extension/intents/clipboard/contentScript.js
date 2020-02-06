@@ -100,7 +100,7 @@ this.contentScript = (function() {
 
   types.copyMarkdownLink = function() {
     const m = meta();
-    return `[${m.title}](${m.canonical || m.url});`;
+    return `[${m.title}](${m.canonical || m.url})`;
   };
 
   types.copySelection = function() {
