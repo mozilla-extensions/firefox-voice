@@ -114,11 +114,7 @@ this.intentParser = (function() {
       };
       for (let i = 0; i < this.slots.length; i++) {
         if (match[i + 1]) {
-          if (result.slots[this.slots[i]]) {
-            result.slots[this.slots[i]] += " " + match[i + 1].trim();
-          } else {
-            result.slots[this.slots[i]] = match[i + 1].trim();
-          }
+          result.slots[this.slots[i]] = match[i + 1].trim();
         }
       }
       return result;
@@ -336,12 +332,10 @@ this.intentParser = (function() {
         -c + (newText.length - text.length),
       ]);
     }
-    const results = [];
     let bestMatch;
     for (const [altText, scoreMod] of alternatives) {
       for (const match of findMatches(altText)) {
         match.score += scoreMod;
-        results.push(match);
         if (!bestMatch || match.score > bestMatch.score) {
           bestMatch = match;
         }
