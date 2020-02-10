@@ -38,13 +38,13 @@ test("compiler", () => {
 
 test("basic matches", () => {
   const phrase = lm.compile("this [query] test");
-  const results = lm.match("this is a test", phrase);
+  const results = lm.match("this is test", phrase);
   expect(results.toString()).toBe(
-    'MatchResult("this is a test^^", slots: {query: "is a"}, capturedWords: 2)'
+    'MatchResult("this is test^^", slots: {query: "is"}, capturedWords: 2)'
   );
 
-  expect(lm.match("this is 'not' a test", phrase).toString()).toBe(
-    "MatchResult(\"this is 'not' a test^^\", slots: {query: \"is 'not' a\"}, capturedWords: 2)"
+  expect(lm.match("this is 'not' test", phrase).toString()).toBe(
+    "MatchResult(\"this is 'not' test^^\", slots: {query: \"is 'not'\"}, capturedWords: 2)"
   );
 
   expect(lm.match("this test", phrase)).toEqual([]);
@@ -108,5 +108,25 @@ test("Equations", () => {
 
   expect(lm.match("calculate 2 + 3", phrase).toString()).toBe(
     'MatchResult("calculate 2 + 3^^", slots: {equation: "2 + 3"}, capturedWords: 1)'
+  );
+});
+
+test("Prioritizing matches", () => {
+  const fallback = lm.compile("[query]");
+  const search = lm.compile("search (for |) [query]");
+  const matchSet = new lm.MatchSet([
+    ["fallback", fallback],
+    ["search", search],
+  ]);
+  expect(matchSet.match(lm.makeWordList("search for a test")).toString()).toBe(
+    'MatchResult("search for a test^^", slots: {query: "a test"}, intentName: search, capturedWords: 2)'
+  );
+  expect(matchSet.match(lm.makeWordList("this is a fallback")).toString()).toBe(
+    'MatchResult("this is a fallback^^", slots: {query: "this is a fallback"}, intentName: fallback, capturedWords: 0)'
+  );
+  expect(
+    matchSet.match(lm.makeWordList("search for a a a a test")).toString()
+  ).toBe(
+    'MatchResult("search for a a a a test^^", slots: {query: "a a a a test"}, intentName: search, capturedWords: 2)'
   );
 });

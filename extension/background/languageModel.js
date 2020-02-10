@@ -97,6 +97,13 @@ function normalize(text) {
   return n;
 }
 
+function cmp(a, b) {
+  if (a < b) {
+    return 1;
+  }
+  return a > b ? -1 : 0;
+}
+
 export class Word {
   constructor(source) {
     this.source = source;
@@ -168,6 +175,32 @@ export class Word {
 
   toSource() {
     return this.source;
+  }
+}
+
+export class MatchSet {
+  constructor(matchPhrases) {
+    this.matchPhrases = matchPhrases;
+  }
+
+  match(utterance) {
+    let allMatches = [];
+    for (const [intentName, matchPhrase] of this.matchPhrases) {
+      const matches = matchPhrase.matches(utterance);
+      matches.forEach(m => (m.intentName = intentName));
+      allMatches = allMatches.concat(matches);
+    }
+    if (!allMatches.length) {
+      return null;
+    }
+    allMatches.sort((a, b) => {
+      return (
+        cmp(a.capturedWords, b.capturedWords) ||
+        cmp(-a.skippedWords, -b.skippedWords) ||
+        cmp(-a.aliasedWords, -b.aliasedWords)
+      );
+    });
+    return allMatches[0];
   }
 }
 
@@ -331,14 +364,21 @@ class MatchResult {
     capturedWords,
     skippedWords,
     aliasedWords,
+    intentName,
   }) {
     this.utterance = utterance;
+    for (const word of this.utterance) {
+      if (!(word instanceof Word)) {
+        throw new Error(`Unexpected object in utterance: ${word}`);
+      }
+    }
     this.index = index || 0;
     this.slots = slots || {};
     this.parameters = parameters || {};
     this.capturedWords = capturedWords || 0;
     this.skippedWords = skippedWords || 0;
     this.aliasedWords = aliasedWords || 0;
+    this.intentName = intentName || undefined;
   }
 
   toString() {
@@ -378,9 +418,13 @@ class MatchResult {
     if (this.aliasedWords) {
       aliasString = `, aliasedWords: ${this.aliasedWords}`;
     }
+    let intentString = "";
+    if (this.intentName) {
+      intentString = `, intentName: ${this.intentName}`;
+    }
     return `MatchResult(${JSON.stringify(
       s
-    )}${slotString}${paramString}${skipString}${aliasString}, capturedWords: ${
+    )}${slotString}${paramString}${skipString}${aliasString}${intentString}, capturedWords: ${
       this.capturedWords
     })`;
   }
