@@ -1,3 +1,11 @@
+/*
+Information specific to English words:
+
+* `aliases`: canonical word forms vs an alias. Also includes often misheard words
+* `stopwords`: words that can be ignored if it makes a match possible
+
+*/
+
 export const aliases = new Map();
 export const multiwordAliases = new Map();
 export const stopwords = new Set();

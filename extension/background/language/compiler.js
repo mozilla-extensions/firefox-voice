@@ -1,3 +1,25 @@
+/*
+This implements the compiler that translates pattern strings to a matcher.
+
+Syntax:
+
+* The phrase must be matched completely, beginning to end
+* Words match that word
+* A "stopword" (not-important word) can appear anywhere, and is ignored
+  * Stopwords are defined in english.js
+* Aliases (words that might be spelled differently or misheard) can be matched
+  * Aliases are defined in english.js
+* There can be alternatives, like `(one | two | three four)`
+  * Each alternative is separated by `|`. In this example "three four" must appear together
+  * Using an empty alternative makes the word optional, like `(page |)` matches "page" or nothing
+* "Slots" are named and use the syntax `[slotName]`. These act like a wildcard
+  * Wildcards still must match at least one word
+  * Slots can be typed like `[slotName:entityType]`, and are not wildcards
+* "Parameters" are like tags on a phrase, and do not match anything. The syntax is `[param=value]`
+  * This is used to distinguish one phrase from another
+
+*/
+
 import {
   Slot,
   Alternatives,
@@ -8,6 +30,12 @@ import {
   makeWordList,
 } from "./textMatching.js";
 
+/* The entities passed to compile() must go through this function. Typically you call:
+
+    convertEntities({lang: ["English", "Spanish", ...]})
+
+This can be passed into `compile()`
+*/
 export function convertEntities(entityMapping) {
   const result = {};
   for (const name in entityMapping) {

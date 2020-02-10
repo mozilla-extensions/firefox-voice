@@ -1,3 +1,11 @@
+/*
+Matches an utterance against a series of phrases.
+
+Implements match prioritization: choosing the match that makes the least use of
+wildcards. For equal number of wildcards, chooses the match with the least
+skipped stopwords. For equal number of both, the match that uses the least alias
+substitutions.
+*/
 import { MatchResult } from "./textMatching.js";
 
 function cmp(a, b) {
