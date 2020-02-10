@@ -90,4 +90,27 @@ class MatcherTest {
             )
         } ?: fail("Unable to build matcher")
     }
+
+    @Test
+    fun testMatcherSet() {
+        val set = MatcherSet("greetings", listOf("hello [planet]", "goodbye [noplanet=true]"))
+        set.match("hello earth")?.let {
+            assertEquals("hello earth", it.utterance)
+            assertEquals(mapOf("planet" to "earth"), it.slots)
+            assertEquals(0, it.parameters.size)
+        } ?: fail("'hello earth' should have been matched")
+
+        set.match("don't match me")?.let {
+            fail("${it.utterance} should not have been matched by this MatcherSet")
+        }
+
+        set.match("goodbye")?. let {
+            assertEquals("goodbye", it.utterance)
+            assertEquals(0, it.slots.size)
+            assertEquals(1, it.parameters.size)
+            it.parameters["noplanet"]?. let {
+                assertEquals("true", it)
+            }
+        } ?: fail("'goodbye' should have been matched")
+    }
 }

@@ -8,19 +8,19 @@ class IntentParser {
     companion object {
         // Populated by registerMatcher
         @VisibleForTesting
-        val intents = mutableMapOf<String, Matcher>()
+        val INTENT_NAMES = mutableListOf<String>() // all caps to match JS code
         @VisibleForTesting
-        val intentNames = mutableListOf<String>()
+        val INTENTS = mutableMapOf<String, MatcherSet>() // all caps to match JS code
 
         private const val DEFAULT_INTENT = "search.search"
         private const val DEFAULT_SLOT = "query"
 
-        fun registerMatcher(intentName: String, matcher: Matcher) {
-            if (intents.contains(intentName)) {
+        fun registerMatcher(intentName: String, match: List<String>) {
+            if (INTENTS.contains(intentName)) {
                 throw Error("Intent $intentName has already been registered")
             }
-            intentNames.add(intentName)
-            intents[intentName] = matcher
+            INTENT_NAMES.add(intentName)
+            INTENTS[intentName] = MatcherSet(intentName, match)
         }
 
         @VisibleForTesting
@@ -129,8 +129,8 @@ class IntentParser {
             return alternatives
         }
 
-        fun findMatches(text: String): List<Match>? {
-            return intents.mapNotNull { intent ->
+        fun findMatches(text: String): List<MatcherResult>? {
+            return INTENTS.mapNotNull { intent ->
                 intent.value.match(text)?.let {
                     val penalty = it.slots.map { entry ->
                         if (it.slotTypes.contains(entry.key)) {
@@ -139,17 +139,14 @@ class IntentParser {
                             entry.value.length
                         }
                     }.sum()
-                    Match(
-                        matcherResult = it,
-                        name = intent.key,
-                        fallback = false,
-                        score = text.length - penalty
-                    )
+                    it.fallback = false
+                    it.score = text.length - penalty
+                    it
                 }
             }
         }
 
-        fun parse(unnormalizedText: String, disableFallback: Boolean = false): Match? {
+        fun parse(unnormalizedText: String, disableFallback: Boolean = false): MatcherResult? {
             // Find best alternative. TODO: Determine if we need to keep the revised score.
             val bestMatch = findAlternatives(unnormalizedText).flatMap {
                 findMatches(it.altText)?.map { match ->
@@ -166,15 +163,13 @@ class IntentParser {
         }
 
         @VisibleForTesting
-        fun createFallbackMatch(text: String): Match =
-            Match(
-                MatcherResult(
-                    slots = mapOf(DEFAULT_SLOT to text),
-                    slotTypes = emptyMap(),
-                    parameters = emptyMap(),
-                    regex = null,
-                    utterance = text
-                ),
+        fun createFallbackMatch(text: String): MatcherResult =
+            MatcherResult(
+                slots = mapOf(DEFAULT_SLOT to text),
+                slotTypes = emptyMap(),
+                parameters = emptyMap(),
+                regex = null,
+                utterance = text,
                 name = DEFAULT_INTENT,
                 fallback = true,
                 score = 0 // unused
@@ -185,11 +180,4 @@ class IntentParser {
 data class Alternative(
     val altText: String,
     val scoreMod: Int
-)
-
-class Match(
-    val matcherResult: MatcherResult,
-    val name: String,
-    val fallback: Boolean,
-    var score: Int
 )

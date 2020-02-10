@@ -27,12 +27,24 @@ class Matcher(
     }
 }
 
-class MatchSet(
-    private val phrases: String
+data class MatcherResult(
+    val slots: Map<String, String>,
+    val slotTypes: Map<String, String>,
+    val utterance: String,
+    val regex: String?, // null when created by createFallbackIntent()
+    val parameters: Map<String, String>,
+    var score: Int = 0,
+    var fallback: Boolean = false,
+    var name: String? = null
+)
+
+class MatcherSet(
+    private val name: String,
+    phrases: List<String>
 ) {
     @VisibleForTesting
     val matchers: List<Matcher> =
-        phrases.split("\n")
+        phrases
             .map { it.trim() }
             .filter { it.isNotEmpty() && !it.startsWith("#") && !it.startsWith("//") }
             .mapNotNull { MatcherBuilder(it).build() }
@@ -40,18 +52,11 @@ class MatchSet(
     fun match(utterance: String): MatcherResult? {
         // Returns first match
         matchers.forEach { matcher ->
-            matcher.match(utterance) ?.let {
+            matcher.match(utterance)?.let {
+                it.name = name
                 return it
             }
         }
         return null
     }
 }
-
-data class MatcherResult(
-    val slots: Map<String, String>,
-    val slotTypes: Map<String, String>,
-    val utterance: String,
-    val regex: String?, // null when created by createFallbackIntent()
-    val parameters: Map<String, String>
-)

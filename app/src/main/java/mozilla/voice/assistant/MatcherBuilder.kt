@@ -3,7 +3,8 @@ package mozilla.voice.assistant
 import androidx.annotation.VisibleForTesting
 
 class MatcherBuilder(
-    private val phrase: String
+    private val phrase: String,
+    private val process: (MatcherResult) -> Unit = {} // TODO: Require
 ) {
     @VisibleForTesting
     internal val slots = mutableListOf<String>()
