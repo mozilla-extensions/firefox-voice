@@ -11,14 +11,6 @@ export function makeWordList(string) {
   return string.split(/\s+/g).map(w => new Word(w));
 }
 
-export function makeWordMatcher(string) {
-  const list = makeWordList(string);
-  if (list.length === 1) {
-    return list[0];
-  }
-  return new Sequence(list);
-}
-
 function cmp(a, b) {
   if (a < b) {
     return 1;

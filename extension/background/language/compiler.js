@@ -3,9 +3,10 @@ import {
   Alternatives,
   Word,
   Wildcard,
+  Sequence,
   FullPhrase,
 } from "./textMatching.js";
-import { makeWordMatcher } from "./languageModel.js";
+import { makeWordList } from "./languageModel.js";
 
 export function convertEntities(entityMapping) {
   const result = {};
@@ -15,6 +16,14 @@ export function convertEntities(entityMapping) {
     );
   }
   return result;
+}
+
+function makeWordMatcher(string) {
+  const list = makeWordList(string);
+  if (list.length === 1) {
+    return list[0];
+  }
+  return new Sequence(list);
 }
 
 export function compile(string, options) {
