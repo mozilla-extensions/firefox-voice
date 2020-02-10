@@ -1,6 +1,6 @@
 /* globals test, expect */
 
-const lm = require("./languageModel.js");
+const { PhraseSet } = require("./matching.js");
 const { compile, convertEntities } = require("./compiler.js");
 const { MatchResult } = require("./textMatching.js");
 
@@ -117,7 +117,7 @@ test("Equations", () => {
 test("Prioritizing matches", () => {
   const fallback = compile("[query]", { intentName: "fallback" });
   const search = compile("search (for |) [query]", { intentName: "search" });
-  const matchSet = new lm.PhraseSet([fallback, search]);
+  const matchSet = new PhraseSet([fallback, search]);
   expect(matchSet.match("search for a test").toString()).toBe(
     'MatchResult("search for a test^^", slots: {query: "a test"}, intentName: search, capturedWords: 2)'
   );
