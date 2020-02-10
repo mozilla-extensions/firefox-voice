@@ -4,7 +4,7 @@ const { PhraseSet } = require("./matching.js");
 const { compile, convertEntities } = require("./compiler.js");
 const { MatchResult } = require("./textMatching.js");
 
-export function match(utterance, matchPhrase) {
+function match(utterance, matchPhrase) {
   const match = new MatchResult({ utterance });
   return matchPhrase.matchUtterance(match);
 }
