@@ -1,10 +1,5 @@
 import { MatchResult } from "./textMatching.js";
 
-export function match(utterance, matchPhrase) {
-  const match = new MatchResult({ utterance });
-  return matchPhrase.matchUtterance(match);
-}
-
 function cmp(a, b) {
   if (a < b) {
     return 1;
