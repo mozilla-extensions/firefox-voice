@@ -1,5 +1,11 @@
-import { Slot, Alternatives, Word, Wildcard } from "./textMatching.js";
-import { makeWordMatcher, MatchPhrase } from "./languageModel.js";
+import {
+  Slot,
+  Alternatives,
+  Word,
+  Wildcard,
+  FullPhrase,
+} from "./textMatching.js";
+import { makeWordMatcher } from "./languageModel.js";
 
 export function convertEntities(entityMapping) {
   const result = {};
@@ -48,7 +54,7 @@ export function compile(string, entities) {
       toParse = phrase;
     }
   }
-  return new MatchPhrase(seq, parameters);
+  return new FullPhrase(seq, parameters);
 }
 
 function _getAlternatives(phrase) {

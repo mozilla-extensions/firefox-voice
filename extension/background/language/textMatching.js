@@ -80,6 +80,61 @@ export class Word {
   }
 }
 
+export class FullPhrase {
+  constructor(words, parameters = null) {
+    if (typeof words === "string") {
+      throw new Error(
+        `new FullPhrase(words) must be called with an Array or Sequence`
+      );
+    }
+    if (Array.isArray(words)) {
+      words = new Sequence(words);
+    }
+    this.words = words;
+    if (!parameters || !Object.keys(parameters).length) {
+      this.paramters = null;
+    } else {
+      this.parameters = parameters;
+    }
+  }
+
+  matchUtterance(match) {
+    if (match.index !== 0) {
+      throw new Error(
+        "FullPhrase.matchUtterance must be called at the beginning of an utterance"
+      );
+    }
+    const results = [];
+    for (let result of this.words.matchUtterance(match)) {
+      while (
+        !result.utteranceExhausted() &&
+        result.utteranceWord().isStopword()
+      ) {
+        result = result.clone({ addIndex: 1, addSkipped: 1 });
+      }
+      if (!result.utteranceExhausted()) {
+        // There are dangling utterance words that weren't matched
+        continue;
+      }
+      if (this.parameters) {
+        result = result.clone({ parameters: this.parameters });
+      }
+      results.push(result);
+    }
+    return results;
+  }
+
+  toString() {
+    let paramString = "";
+    if (this.parameters && Object.keys(this.parameters).length) {
+      paramString = `, parameters=${JSON.stringify(this.parameters)}`;
+    }
+    return `MatchPhrase(${JSON.stringify(
+      this.words.toSource()
+    )}${paramString})`;
+  }
+}
+
 export class Alternatives {
   constructor(alternatives, empty = false) {
     this.alternatives = alternatives;

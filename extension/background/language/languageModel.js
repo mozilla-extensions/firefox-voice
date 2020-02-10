@@ -2,7 +2,8 @@ import { Sequence, Word, MatchResult } from "./textMatching.js";
 
 export function match(string, matchPhrase) {
   const utterance = makeWordList(string);
-  return matchPhrase.matches(utterance);
+  const match = new MatchResult({ utterance });
+  return matchPhrase.matchUtterance(match);
 }
 
 export function makeWordList(string) {
@@ -32,8 +33,9 @@ export class MatchSet {
 
   match(utterance) {
     let allMatches = [];
+    const matchUtterance = new MatchResult({ utterance });
     for (const [intentName, matchPhrase] of this.matchPhrases) {
-      const matches = matchPhrase.matches(utterance);
+      const matches = matchPhrase.matchUtterance(matchUtterance);
       matches.forEach(m => (m.intentName = intentName));
       allMatches = allMatches.concat(matches);
     }
@@ -48,47 +50,5 @@ export class MatchSet {
       );
     });
     return allMatches[0];
-  }
-}
-
-export class MatchPhrase {
-  constructor(words, parameters = {}) {
-    if (typeof words === "string") {
-      words = makeWordList(words);
-    }
-    if (Array.isArray(words)) {
-      words = new Sequence(words);
-    }
-    this.words = words;
-    this.parameters = parameters;
-  }
-
-  matches(utterance) {
-    const match = new MatchResult({ utterance, parameters: this.parameters });
-    const results = [];
-    for (let result of this.words.matchUtterance(match)) {
-      while (
-        !result.utteranceExhausted() &&
-        result.utteranceWord().isStopword()
-      ) {
-        result = result.clone({ addIndex: 1, addSkipped: 1 });
-      }
-      if (!result.utteranceExhausted()) {
-        // There are dangling utterance words that weren't matched
-        continue;
-      }
-      results.push(result);
-    }
-    return results;
-  }
-
-  toString() {
-    let paramString = "";
-    if (this.parameters && Object.keys(this.parameters).length) {
-      paramString = `, parameters=${JSON.stringify(this.parameters)}`;
-    }
-    return `MatchPhrase(${JSON.stringify(
-      this.words.toSource()
-    )}${paramString})`;
   }
 }
