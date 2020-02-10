@@ -42,17 +42,25 @@ upward up ward
 
 const STOPWORDS = new Set();
 for (let line of `
-the
-my
-me
-for
-# Also look in https://github.com/NaturalNode/natural/blob/master/lib/natural/util/stopwords.js#L25
+# Words from https://github.com/NaturalNode/natural/blob/master/lib/natural/util/stopwords.js#L25
+a about above after again all also am an and another any are as at
+be because been before being below between both but by
+came can cannot come could did do does doing during each
+few for from further get got has had he have her here him himself his how
+if in into is it its itself like make many me might more most much must my myself
+never now of on only or other our ours ourselves out over own
+said same see should since so some still such
+take than that the their theirs them themselves then there these they this those through to too
+under until up very was way we well were what where when which while who whom with would why
+you your yours yourself
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {
     continue;
   }
-  STOPWORDS.add(line);
+  for (const word of line.split(/\s+/g)) {
+    STOPWORDS.add(word);
+  }
 }
 
 export function match(string, matchPhrase) {
