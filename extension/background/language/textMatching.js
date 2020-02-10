@@ -6,6 +6,11 @@ function normalize(text) {
   return n;
 }
 
+export function makeWordList(string) {
+  string = string.trim();
+  return string.split(/\s+/g).map(w => new Word(w));
+}
+
 export class Word {
   constructor(source) {
     this.source = source;
@@ -258,6 +263,9 @@ export class MatchResult {
     aliasedWords,
     intentName,
   }) {
+    if (typeof utterance === "string") {
+      utterance = makeWordList(utterance);
+    }
     this.utterance = utterance;
     for (const word of this.utterance) {
       if (!(word instanceof Word)) {

@@ -5,8 +5,8 @@ import {
   Wildcard,
   Sequence,
   FullPhrase,
+  makeWordList,
 } from "./textMatching.js";
-import { makeWordList } from "./languageModel.js";
 
 export function convertEntities(entityMapping) {
   const result = {};

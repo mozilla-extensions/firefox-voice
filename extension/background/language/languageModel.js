@@ -1,14 +1,8 @@
-import { Sequence, Word, MatchResult } from "./textMatching.js";
+import { MatchResult } from "./textMatching.js";
 
-export function match(string, matchPhrase) {
-  const utterance = makeWordList(string);
+export function match(utterance, matchPhrase) {
   const match = new MatchResult({ utterance });
   return matchPhrase.matchUtterance(match);
-}
-
-export function makeWordList(string) {
-  string = string.trim();
-  return string.split(/\s+/g).map(w => new Word(w));
 }
 
 function cmp(a, b) {
@@ -18,7 +12,7 @@ function cmp(a, b) {
   return a > b ? -1 : 0;
 }
 
-export class MatchSet {
+export class PhraseSet {
   constructor(matchPhrases) {
     this.matchPhrases = matchPhrases;
   }

@@ -111,17 +111,14 @@ test("Equations", () => {
 test("Prioritizing matches", () => {
   const fallback = compile("[query]", { intentName: "fallback" });
   const search = compile("search (for |) [query]", { intentName: "search" });
-  console.log("search", search + "");
-  const matchSet = new lm.MatchSet([fallback, search]);
-  expect(matchSet.match(lm.makeWordList("search for a test")).toString()).toBe(
+  const matchSet = new lm.PhraseSet([fallback, search]);
+  expect(matchSet.match("search for a test").toString()).toBe(
     'MatchResult("search for a test^^", slots: {query: "a test"}, intentName: search, capturedWords: 2)'
   );
-  expect(matchSet.match(lm.makeWordList("this is a fallback")).toString()).toBe(
+  expect(matchSet.match("this is a fallback").toString()).toBe(
     'MatchResult("this is a fallback^^", slots: {query: "this is a fallback"}, intentName: fallback, capturedWords: 0)'
   );
-  expect(
-    matchSet.match(lm.makeWordList("search for a a a a test")).toString()
-  ).toBe(
+  expect(matchSet.match("search for a a a a test").toString()).toBe(
     'MatchResult("search for a a a a test^^", slots: {query: "a a a a test"}, intentName: search, capturedWords: 2)'
   );
 });
