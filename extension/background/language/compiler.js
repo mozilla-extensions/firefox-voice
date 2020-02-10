@@ -7,6 +7,16 @@ import {
   makeWordMatcher,
 } from "./languageModel.js";
 
+export function convertEntities(entityMapping) {
+  const result = {};
+  for (const name in entityMapping) {
+    result[name] = new Alternatives(
+      entityMapping[name].map(e => makeWordMatcher(e))
+    );
+  }
+  return result;
+}
+
 export function compile(string, entities) {
   entities = entities || {};
   const seq = [];

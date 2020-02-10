@@ -18,16 +18,6 @@ export function makeWordMatcher(string) {
   return new Sequence(list);
 }
 
-export function convertEntities(entityMapping) {
-  const result = {};
-  for (const name in entityMapping) {
-    result[name] = new Alternatives(
-      entityMapping[name].map(e => makeWordMatcher(e))
-    );
-  }
-  return result;
-}
-
 function normalize(text) {
   let n = text.toLowerCase();
   n = n.replace(/[^a-z0-9]/gi, "");
