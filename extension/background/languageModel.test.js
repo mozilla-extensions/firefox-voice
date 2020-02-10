@@ -67,3 +67,46 @@ test("alternative matches", () => {
     'MatchResult("hello, my world^^", skippedWords: 1, capturedWords: 2)'
   );
 });
+
+test("Stopwords", () => {
+  const phrase = lm.compile("(launch | open) (new |) (tab | page)");
+
+  expect(lm.match("launch new tab", phrase).toString()).toBe(
+    'MatchResult("launch new tab^^", capturedWords: 3)'
+  );
+
+  expect(lm.match("open new tab for me", phrase).toString()).toBe(
+    'MatchResult("open new tab for me^^", skippedWords: 2, capturedWords: 3)'
+  );
+
+  expect(lm.match("for me open new tab", phrase).toString()).toBe(
+    'MatchResult("for me open new tab^^", skippedWords: 2, capturedWords: 3)'
+  );
+});
+
+test("Aliases", () => {
+  const phrase = lm.compile("(launch | open) (new |) (tab | page)");
+
+  expect(lm.match("open new app", phrase).toString()).toBe(
+    'MatchResult("open new app^^", aliasedWords: 1, capturedWords: 3)'
+  );
+});
+
+test("Multiword aliases", () => {
+  const phrase = lm.compile("scroll upward");
+
+  expect(lm.match("scroll upward", phrase).toString()).toBe(
+    'MatchResult("scroll upward^^", capturedWords: 2)'
+  );
+  expect(lm.match("scroll up ward", phrase).toString()).toBe(
+    'MatchResult("scroll up ward^^", aliasedWords: 1, capturedWords: 3)'
+  );
+});
+
+test("Equations", () => {
+  const phrase = lm.compile("calculate [equation]");
+
+  expect(lm.match("calculate 2 + 3", phrase).toString()).toBe(
+    'MatchResult("calculate 2 + 3^^", slots: {equation: "2 + 3"}, capturedWords: 1)'
+  );
+});

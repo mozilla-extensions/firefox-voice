@@ -1,27 +1,43 @@
 const ALIASES = new Map();
+const MULTIWORD_ALIASES = new Map();
 for (let line of `
-# Each line is a word that might show up in speech, and the word it could be treated as
-app tab
-cat tab
-tap tab
-tech tab
-top tab
-in on
-nest next
-closest close
-intense intents
-interns intents
-haste paste
-taste paste
-pace paste
-best paste
+# Each line is first the "proper" word, and a possible alias that could show up and should
+# potentially be treated as the proper word
+tab app
+tab cat
+tab tap
+tab tech
+tab top
+on in
+next nest
+close closest
+page webpage
+site website
+intents intense
+intents interns
+paste haste
+paste taste
+paste pace
+paste best
+downward down ward
+upward up ward
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {
     continue;
   }
-  line = line.split();
-  ALIASES.set(line[0], [line[1]]);
+  const [proper, ...alias] = line.split(/\s+/g);
+  if (alias.length === 1) {
+    if (ALIASES.get(proper)) {
+      ALIASES.get(proper).push(alias[0]);
+    } else {
+      ALIASES.set(proper, [alias[0]]);
+    }
+  } else if (MULTIWORD_ALIASES.get(proper)) {
+    MULTIWORD_ALIASES.get(proper).push(alias);
+  } else {
+    MULTIWORD_ALIASES.set(proper, [alias]);
+  }
 }
 
 const STOPWORDS = new Set();
@@ -78,6 +94,7 @@ export class Word {
     this.source = source;
     this.word = normalize(source);
     this.aliases = ALIASES.get(this.word) || [];
+    this.multiwordAliases = MULTIWORD_ALIASES.get(this.word);
   }
 
   matchUtterance(match) {
@@ -93,8 +110,38 @@ export class Word {
     if (otherWord.isStopword()) {
       result = this.matchUtterance(match.clone({ addIndex: 1, addSkipped: 1 }));
     }
-    if (otherWord.word === this.word || this.aliases.includes(otherWord.word)) {
+    if (this.multiwordAliases) {
+      for (const alias of this.multiwordAliases) {
+        let multiwordResult = match;
+        for (const word of alias) {
+          if (
+            !multiwordResult.utteranceExhausted() &&
+            multiwordResult.utteranceWord().word === word
+          ) {
+            multiwordResult = multiwordResult.clone({
+              addIndex: 1,
+              addWords: 1,
+              addAliased: 1,
+            });
+          } else {
+            multiwordResult = null;
+            break;
+          }
+        }
+        if (multiwordResult) {
+          result.push(multiwordResult);
+        }
+      }
+    }
+    if (otherWord.word === this.word) {
       const nextMatch = match.clone({ addIndex: 1, addWords: 1 });
+      result.push(nextMatch);
+    } else if (this.aliases.includes(otherWord.word)) {
+      const nextMatch = match.clone({
+        addIndex: 1,
+        addWords: 1,
+        addAliased: 1,
+      });
       result.push(nextMatch);
     }
     return result;
@@ -134,9 +181,9 @@ export class MatchPhrase {
     for (let result of this.words.matchUtterance(match)) {
       while (
         !result.utteranceExhausted() &&
-        result.utteranceWord().isStopword
+        result.utteranceWord().isStopword()
       ) {
-        result = result.clone({ addIndex: 1, addSkip: 1 });
+        result = result.clone({ addIndex: 1, addSkipped: 1 });
       }
       if (!result.utteranceExhausted()) {
         // There are dangling utterance words that weren't matched
@@ -275,6 +322,7 @@ class MatchResult {
     parameters,
     capturedWords,
     skippedWords,
+    aliasedWords,
   }) {
     this.utterance = utterance;
     this.index = index || 0;
@@ -282,6 +330,7 @@ class MatchResult {
     this.parameters = parameters || {};
     this.capturedWords = capturedWords || 0;
     this.skippedWords = skippedWords || 0;
+    this.aliasedWords = aliasedWords || 0;
   }
 
   toString() {
@@ -317,9 +366,13 @@ class MatchResult {
     if (this.skippedWords) {
       skipString = `, skippedWords: ${this.skippedWords}`;
     }
+    let aliasString = "";
+    if (this.aliasedWords) {
+      aliasString = `, aliasedWords: ${this.aliasedWords}`;
+    }
     return `MatchResult(${JSON.stringify(
       s
-    )}${slotString}${paramString}${skipString}, capturedWords: ${
+    )}${slotString}${paramString}${skipString}${aliasString}, capturedWords: ${
       this.capturedWords
     })`;
   }
@@ -335,7 +388,7 @@ class MatchResult {
     return this.utterance[this.index];
   }
 
-  clone({ addIndex, slots, parameters, addWords, addSkipped }) {
+  clone({ addIndex, slots, parameters, addWords, addSkipped, addAliased }) {
     const mr = new MatchResult({
       utterance: this.utterance,
       index: this.index,
@@ -371,6 +424,9 @@ class MatchResult {
     }
     if (addSkipped) {
       mr.skippedWords += addSkipped;
+    }
+    if (addAliased) {
+      mr.aliasedWords += addAliased;
     }
     return mr;
   }
