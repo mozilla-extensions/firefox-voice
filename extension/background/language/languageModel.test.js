@@ -1,7 +1,7 @@
 /* globals test, expect */
 
 const lm = require("./languageModel.js");
-const { compile } = require("./compiler.js");
+const { compile, convertEntities } = require("./compiler.js");
 
 test("compiler", () => {
   expect(
@@ -22,7 +22,7 @@ test("compiler", () => {
     'MatchPhrase("google images (of | for | ) [query:+]", parameters={"service":"images"})'
   );
 
-  const entities = lm.convertEntities({ lang: ["Spanish", "English"] });
+  const entities = convertEntities({ lang: ["Spanish", "English"] });
   expect(
     compile(
       "translate (this |) (page | tab | article | site |) to [language:lang] (for me |)",

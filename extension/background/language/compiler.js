@@ -1,11 +1,5 @@
-import {
-  MatchPhrase,
-  Slot,
-  Alternatives,
-  Word,
-  Wildcard,
-  makeWordMatcher,
-} from "./languageModel.js";
+import { Slot, Alternatives, Word, Wildcard } from "./textMatching.js";
+import { makeWordMatcher, MatchPhrase } from "./languageModel.js";
 
 export function convertEntities(entityMapping) {
   const result = {};
