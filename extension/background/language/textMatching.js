@@ -81,7 +81,8 @@ export class Word {
 }
 
 export class FullPhrase {
-  constructor(words, parameters = null) {
+  constructor(words, options) {
+    options = options || {};
     if (typeof words === "string") {
       throw new Error(
         `new FullPhrase(words) must be called with an Array or Sequence`
@@ -91,11 +92,8 @@ export class FullPhrase {
       words = new Sequence(words);
     }
     this.words = words;
-    if (!parameters || !Object.keys(parameters).length) {
-      this.paramters = null;
-    } else {
-      this.parameters = parameters;
-    }
+    this.parameters = options.parameters;
+    this.intentName = options.intentName;
   }
 
   matchUtterance(match) {
@@ -116,9 +114,10 @@ export class FullPhrase {
         // There are dangling utterance words that weren't matched
         continue;
       }
-      if (this.parameters) {
-        result = result.clone({ parameters: this.parameters });
-      }
+      result = result.clone({
+        parameters: this.parameters,
+        intentName: this.intentName,
+      });
       results.push(result);
     }
     return results;
@@ -129,9 +128,13 @@ export class FullPhrase {
     if (this.parameters && Object.keys(this.parameters).length) {
       paramString = `, parameters=${JSON.stringify(this.parameters)}`;
     }
-    return `MatchPhrase(${JSON.stringify(
+    let intentString = "";
+    if (this.intentName) {
+      intentString = `, intentName=${this.intentName}`;
+    }
+    return `FullPhrase(${JSON.stringify(
       this.words.toSource()
-    )}${paramString})`;
+    )}${paramString}${intentString})`;
   }
 }
 
@@ -329,7 +332,15 @@ export class MatchResult {
     return this.utterance[this.index];
   }
 
-  clone({ addIndex, slots, parameters, addWords, addSkipped, addAliased }) {
+  clone({
+    addIndex,
+    slots,
+    parameters,
+    addWords,
+    addSkipped,
+    addAliased,
+    intentName,
+  }) {
     const mr = new MatchResult({
       utterance: this.utterance,
       index: this.index,
@@ -337,6 +348,8 @@ export class MatchResult {
       parameters: Object.assign({}, this.parameters),
       capturedWords: this.capturedWords,
       skippedWords: this.skippedWords,
+      aliasedWords: this.aliasedWords,
+      intentName: this.intentName,
     });
     if (addIndex) {
       mr.index += addIndex;
@@ -359,6 +372,14 @@ export class MatchResult {
         }
         mr.parameters[name] = parameters[name];
       }
+    }
+    if (intentName) {
+      if (mr.intentName) {
+        throw new Error(
+          `Attempted to override intentName (${mr.intentName}) with ${intentName}`
+        );
+      }
+      mr.intentName = intentName;
     }
     if (addWords) {
       mr.capturedWords += addWords;

@@ -17,8 +17,10 @@ export function convertEntities(entityMapping) {
   return result;
 }
 
-export function compile(string, entities) {
-  entities = entities || {};
+export function compile(string, options) {
+  options = options || {};
+  const entities = options.entities || {};
+  const intentName = options.intentName;
   const seq = [];
   const parameters = {};
   let toParse = string;
@@ -54,7 +56,7 @@ export function compile(string, entities) {
       toParse = phrase;
     }
   }
-  return new FullPhrase(seq, parameters);
+  return new FullPhrase(seq, { intentName, parameters });
 }
 
 function _getAlternatives(phrase) {

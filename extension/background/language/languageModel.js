@@ -34,9 +34,8 @@ export class MatchSet {
   match(utterance) {
     let allMatches = [];
     const matchUtterance = new MatchResult({ utterance });
-    for (const [intentName, matchPhrase] of this.matchPhrases) {
+    for (const matchPhrase of this.matchPhrases) {
       const matches = matchPhrase.matchUtterance(matchUtterance);
-      matches.forEach(m => (m.intentName = intentName));
       allMatches = allMatches.concat(matches);
     }
     if (!allMatches.length) {

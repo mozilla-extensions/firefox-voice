@@ -9,27 +9,27 @@ test("compiler", () => {
       "(bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]"
     ).toString()
   ).toBe(
-    'MatchPhrase("(bring me | take me | go | navigate | show me | open) (to | find | ) (page | ) [query:+]")'
+    'FullPhrase("(bring me | take me | go | navigate | show me | open) (to | find | ) (page | ) [query:+]")'
   );
 
   expect(compile("clear query (database | cache)").toString()).toBe(
-    'MatchPhrase("clear query (database | cache)")'
+    'FullPhrase("clear query (database | cache)")'
   );
 
   expect(
     compile("google images (of | for |) [query] [service=images]").toString()
   ).toBe(
-    'MatchPhrase("google images (of | for | ) [query:+]", parameters={"service":"images"})'
+    'FullPhrase("google images (of | for | ) [query:+]", parameters={"service":"images"})'
   );
 
   const entities = convertEntities({ lang: ["Spanish", "English"] });
   expect(
     compile(
       "translate (this |) (page | tab | article | site |) to [language:lang] (for me |)",
-      entities
+      { entities }
     ).toString()
   ).toBe(
-    'MatchPhrase("translate (this | ) (page | tab | article | site | ) to [language:(Spanish | English)] (for me | )")'
+    'FullPhrase("translate (this | ) (page | tab | article | site | ) to [language:(Spanish | English)] (for me | )")'
   );
 });
 
@@ -96,7 +96,7 @@ test("Multiword aliases", () => {
     'MatchResult("scroll upward^^", capturedWords: 2)'
   );
   expect(lm.match("scroll up ward", phrase).toString()).toBe(
-    'MatchResult("scroll up ward^^", aliasedWords: 1, capturedWords: 3)'
+    'MatchResult("scroll up ward^^", aliasedWords: 2, capturedWords: 3)'
   );
 });
 
@@ -109,12 +109,10 @@ test("Equations", () => {
 });
 
 test("Prioritizing matches", () => {
-  const fallback = compile("[query]");
-  const search = compile("search (for |) [query]");
-  const matchSet = new lm.MatchSet([
-    ["fallback", fallback],
-    ["search", search],
-  ]);
+  const fallback = compile("[query]", { intentName: "fallback" });
+  const search = compile("search (for |) [query]", { intentName: "search" });
+  console.log("search", search + "");
+  const matchSet = new lm.MatchSet([fallback, search]);
   expect(matchSet.match(lm.makeWordList("search for a test")).toString()).toBe(
     'MatchResult("search for a test^^", slots: {query: "a test"}, intentName: search, capturedWords: 2)'
   );
