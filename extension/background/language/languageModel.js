@@ -1,67 +1,4 @@
-const ALIASES = new Map();
-const MULTIWORD_ALIASES = new Map();
-for (let line of `
-# Each line is first the "proper" word, and a possible alias that could show up and should
-# potentially be treated as the proper word
-tab app
-tab cat
-tab tap
-tab tech
-tab top
-on in
-next nest
-close closest
-page webpage
-site website
-intents intense
-intents interns
-paste haste
-paste taste
-paste pace
-paste best
-downward down ward
-upward up ward
-`.split("\n")) {
-  line = line.trim();
-  if (!line || line.startsWith("#")) {
-    continue;
-  }
-  const [proper, ...alias] = line.split(/\s+/g);
-  if (alias.length === 1) {
-    if (ALIASES.get(proper)) {
-      ALIASES.get(proper).push(alias[0]);
-    } else {
-      ALIASES.set(proper, [alias[0]]);
-    }
-  } else if (MULTIWORD_ALIASES.get(proper)) {
-    MULTIWORD_ALIASES.get(proper).push(alias);
-  } else {
-    MULTIWORD_ALIASES.set(proper, [alias]);
-  }
-}
-
-const STOPWORDS = new Set();
-for (let line of `
-# Words from https://github.com/NaturalNode/natural/blob/master/lib/natural/util/stopwords.js#L25
-a about above after again all also am an and another any are as at
-be because been before being below between both but by
-came can cannot come could did do does doing during each
-few for from further get got has had he have her here him himself his how
-if in into is it its itself like make many me might more most much must my myself
-never now of on only or other our ours ourselves out over own
-said same see should since so some still such
-take than that the their theirs them themselves then there these they this those through to too
-under until up very was way we well were what where when which while who whom with would why
-you your yours yourself
-`.split("\n")) {
-  line = line.trim();
-  if (!line || line.startsWith("#")) {
-    continue;
-  }
-  for (const word of line.split(/\s+/g)) {
-    STOPWORDS.add(word);
-  }
-}
+import { aliases, multiwordAliases, stopwords } from "./english.js";
 
 export function match(string, matchPhrase) {
   const utterance = makeWordList(string);
@@ -108,8 +45,8 @@ export class Word {
   constructor(source) {
     this.source = source;
     this.word = normalize(source);
-    this.aliases = ALIASES.get(this.word) || [];
-    this.multiwordAliases = MULTIWORD_ALIASES.get(this.word);
+    this.aliases = aliases.get(this.word) || [];
+    this.multiwordAliases = multiwordAliases.get(this.word);
   }
 
   matchUtterance(match) {
@@ -163,7 +100,7 @@ export class Word {
   }
 
   isStopword() {
-    return STOPWORDS.has(this.word);
+    return stopwords.has(this.word);
   }
 
   toString() {
