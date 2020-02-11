@@ -1,5 +1,7 @@
 package mozilla.voice.assistant
 
+import android.content.Context
+
 class IntentRunner {
     companion object {
         private val intents: MutableMap<String, Intent> = mutableMapOf()
@@ -12,14 +14,13 @@ class IntentRunner {
             IntentParser.registerMatcher(intent.name, intent.match)
         }
 
-        fun runUtterance(utterance: String) {
+        fun processUtterance(utterance: String, context: Context? = null): android.content.Intent? =
             // We are not porting nicknames or noPopup from the JS version.
             IntentParser.parse(utterance)?.let {
                 intents[it.name]?.let { intent ->
-                    intent.run(it)
+                    return intent.createIntent(it)
                 }
             }
-        }
     }
 }
 
@@ -28,5 +29,5 @@ class Intent(
     val description: String,
     val examples: List<String>,
     val match: List<String>, // phrase templates
-    val run: (MatcherResult) -> Unit
+    val createIntent: (MatcherResult) -> android.content.Intent?
 )

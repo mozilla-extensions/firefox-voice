@@ -24,6 +24,7 @@ import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
+import mozilla.voice.assistant.intents.music.Spotify
 
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
@@ -33,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
+
+        // Register intents
+        Spotify.register()
     }
 
     override fun onStart() {
@@ -206,7 +210,7 @@ class MainActivity : AppCompatActivity() {
         statusView.text = ""
         if (requestCode == SPEECH_RECOGNITION_REQUEST) {
             if (resultCode == RESULT_OK && data is Intent) {
-                data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?. let {
+                data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.let {
                     handleResults(it)
                 }
             } else {
@@ -219,12 +223,14 @@ class MainActivity : AppCompatActivity() {
         results.let {
             if (it.isNotEmpty()) {
                 feedbackView.text = it[0]
-                Handler().postDelayed({
-                    startActivity(Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}")
-                    ))
-                }, TRANSCRIPT_DISPLAY_TIME)
+                val intent = IntentRunner.processUtterance(it[0]) ?: Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}")
+                )
+                Handler().postDelayed(
+                    { startActivity(intent) },
+                    TRANSCRIPT_DISPLAY_TIME
+                )
             } else {
                 feedbackView.text = getString(R.string.no_match)
             }

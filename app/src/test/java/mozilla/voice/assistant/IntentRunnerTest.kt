@@ -20,7 +20,7 @@ class IntentRunnerTest {
     @Test
     fun testSandwichIntent() {
         sandwichType = null
-        IntentRunner.runUtterance("make a ham sandwich")
+        IntentRunner.processUtterance("make a ham sandwich")
         assertEquals("ham", sandwichType)
     }
 
@@ -31,7 +31,10 @@ class IntentRunnerTest {
             "make a sandwich",
             listOf("make a cheese sandwich", "make a jam sandwich"),
             listOf("make a [type] sandwich", "make me a [type] sandwich")
-        ) { mr -> sandwichType = mr.slots["type"] }
+        ) { mr ->
+            sandwichType = mr.slots["type"]
+            null
+        }
 
         @BeforeClass
         @JvmStatic
