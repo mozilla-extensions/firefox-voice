@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     working_directory: ~/firefox-voice
     steps:
       - checkout
@@ -29,7 +29,7 @@ jobs:
   test:
     executor: docker
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     environment:
       - NODE_ENV: dev
     steps:
@@ -38,11 +38,15 @@ jobs:
       - run:
           name: Run lint tests
           command: |
+            node --version
+            npm run jest -- --showConfig
+            pwd
+            ls -l
             npm test
   selenium_test:
     executor: docker
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     environment:
       - NODE_ENV: dev
       - GECKODRIVER: 0.23.0
@@ -65,7 +69,7 @@ jobs:
             FIREFOX_CHANNEL=NIGHTLY MOZ_HEADLESS=1 npm run functional-test
   deploy_dev:
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -95,7 +99,7 @@ jobs:
           path: artifacts/
   deploy_stage:
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -114,7 +118,7 @@ jobs:
           path: artifacts/
   deploy_prod:
     docker:
-      - image: circleci/node:8.12.0@sha256:09e1035e50a7574fa1786df406559b4a10362fa62ee552ccb49df89e03249c79
+      - image: circleci/node:13.8.0-stretch
     steps:
       - setup_remote_docker
       - attach_workspace:
