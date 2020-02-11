@@ -259,9 +259,6 @@ export class Slot {
     const results = this.pattern.matchUtterance(match);
     const newResults = [];
     for (const result of results) {
-      // Undo any sense that the slot words were captured
-      // FIXME: not sure if this is a good idea, or if we should trust the pattern to capture or not
-      result.capturedWords = match.capturedWords;
       const words = match.utterance.slice(match.index, result.index);
       const newResult = result.clone({ slots: { [this.slotName]: words } });
       newResults.push(newResult);
@@ -360,6 +357,14 @@ export class MatchResult {
       throw new Error("Attempted to get utterance word past end: " + this);
     }
     return this.utterance[this.index];
+  }
+
+  stringSlots() {
+    const slots = {};
+    for (const name in this.slots) {
+      slots[name] = this.slots[name].map(w => w.source).join(" ");
+    }
+    return slots;
   }
 
   clone({
