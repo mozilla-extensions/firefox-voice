@@ -219,14 +219,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getIntent(utterance: String): Intent =
+        IntentRunner.processUtterance(utterance)?.let { intent ->
+            intent.resolveActivityInfo(packageManager, intent.flags)?.let { activityInfo ->
+                if (activityInfo.exported) intent else null
+            }
+        } ?: Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("${BASE_URL}${URLEncoder.encode(utterance, ENCODING)}")
+        )
+
     private fun handleResults(results: List<String>) {
         results.let {
             if (it.isNotEmpty()) {
-                feedbackView.text = it[0]
-                val intent = IntentRunner.processUtterance(it[0]) ?: Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("${BASE_URL}${URLEncoder.encode(it[0], ENCODING)}")
-                )
+                val intent = getIntent(it[0])
                 Handler().postDelayed(
                     { startActivity(intent) },
                     TRANSCRIPT_DISPLAY_TIME

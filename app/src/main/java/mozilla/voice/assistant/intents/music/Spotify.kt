@@ -1,8 +1,6 @@
 package mozilla.voice.assistant.intents.music
 
-import android.app.SearchManager
-import android.content.ComponentName
-import android.provider.MediaStore
+import android.net.Uri
 import mozilla.voice.assistant.Intent
 import mozilla.voice.assistant.IntentRunner
 import mozilla.voice.assistant.MatcherResult
@@ -10,6 +8,9 @@ import mozilla.voice.assistant.MatcherResult
 class Spotify {
     companion object {
         private const val QUERY_KEY = "query"
+        // I determined the URI by creating an Intent programmatically, then calling toUri on it.
+        private const val TEMPLATE =
+            "#Intent;action=android.media.action.MEDIA_PLAY_FROM_SEARCH;launchFlags=0x10000000;component=com.spotify.music/.MainActivity;S.query=%1;end"
 
         fun register() {
             IntentRunner.registerIntent(
@@ -27,21 +28,10 @@ class Spotify {
         }
 
         private fun createIntent(mr: MatcherResult): android.content.Intent {
-            // https://stackoverflow.com/a/29045294/631051
-            val intent = android.content.Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)
-            intent.component =
-                ComponentName(
-                    "com.spotify.music",
-                    "com.spotify.music.MainActivity"
-                )
-            intent.putExtra(
-                MediaStore.EXTRA_MEDIA_FOCUS,
-                MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE
+            return android.content.Intent.parseUri(
+                TEMPLATE.replace("%1", Uri.encode(mr.slots[QUERY_KEY])),
+                0
             )
-            intent.putExtra(MediaStore.EXTRA_MEDIA_ARTIST, mr.slots[QUERY_KEY])
-            intent.putExtra(SearchManager.QUERY, mr.slots[QUERY_KEY])
-            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-            return intent
         }
     }
 }
