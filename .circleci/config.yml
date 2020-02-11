@@ -40,6 +40,8 @@ jobs:
           command: |
             node --version
             npm run jest -- --showConfig
+            pwd
+            ls -l
             npm test
   selenium_test:
     executor: docker
