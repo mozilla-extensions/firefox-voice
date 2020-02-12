@@ -31,7 +31,7 @@ class IntentRunnerTest {
             "make a sandwich",
             listOf("make a cheese sandwich", "make a jam sandwich"),
             listOf("make a [type] sandwich", "make me a [type] sandwich")
-        ) { mr ->
+        ) { mr, _ ->
             sandwichType = mr.slots["type"]
             null
         }

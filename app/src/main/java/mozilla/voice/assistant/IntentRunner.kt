@@ -18,7 +18,7 @@ class IntentRunner {
             // We are not porting nicknames or noPopup from the JS version.
             IntentParser.parse(utterance)?.let {
                 intents[it.name]?.let { intent ->
-                    return intent.createIntent(it)
+                    return intent.createIntent(it, context)
                 }
             }
     }
@@ -29,5 +29,5 @@ class Intent(
     val description: String,
     val examples: List<String>,
     val match: List<String>, // phrase templates
-    val createIntent: (MatcherResult) -> android.content.Intent?
+    val createIntent: (MatcherResult, Context?) -> android.content.Intent?
 )

@@ -24,7 +24,7 @@ import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
-import mozilla.voice.assistant.intents.music.Spotify
+import mozilla.voice.assistant.intents.music.Music
 
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         // Register intents
-        Spotify.register()
+        Music.register()
     }
 
     override fun onStart() {
@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getIntent(utterance: String): Intent =
-        IntentRunner.processUtterance(utterance)?.let { intent ->
+        IntentRunner.processUtterance(utterance, this)?.let { intent ->
             intent.resolveActivityInfo(packageManager, intent.flags)?.let { activityInfo ->
                 if (activityInfo.exported) intent else null
             }
