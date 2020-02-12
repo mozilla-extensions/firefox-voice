@@ -179,7 +179,7 @@ class MatcherBuilder(
                 "google images",
                 "images"
             ),
-            "musicServiceName" to listOf("youtube", "spotify", "video"),
+            "musicServiceName" to listOf("youtube", "spotify", "video", "google", "google play", "google play music", "google music"),
             "lang" to listOf(
                 "czech", "danish", "dutch", "english", "finnish", "french", "german", "hungarian",
                 "italian", "norwegian", "polish", "portuguese", "romanian", "russian", "slovak",

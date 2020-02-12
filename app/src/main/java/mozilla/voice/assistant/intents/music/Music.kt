@@ -14,6 +14,12 @@ class Music {
         private const val SERVICE_KEY = "service"
         private const val SPOTIFY_SEARCH_TEMPLATE =
             "spotify:search:%1" // https://stackoverflow.com/a/19814669
+        private val SERVICES = mapOf(
+            "google" to Pair("com.google.android.music",
+                "com.google.android.music.ui.search.VoiceActionsActivity"),
+            // VoiceActivity isn't exported, MainActivity doesn't use the argument
+            "spotify" to Pair("com.spotify.music", "com.spotify.music.MainActivity")
+        )
 
         fun register() {
             IntentRunner.registerIntent(
@@ -54,19 +60,15 @@ class Music {
         }
 
         private fun createPlayIntent(mr: MatcherResult, context: Context?): android.content.Intent {
-            val intent = if (mr.slots.containsKey(SERVICE_KEY)) {
-                // While testing, hardcode Google Music
-                android.content.Intent().apply {
-                    setClassName(
-                        "com.google.android.music",
-                        "com.google.android.music.VoiceActionsActivity"
-                    );
-                    setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+            val intent = mr.slots[SERVICE_KEY]?.let {
+                // Use only the first word of service name ("Google Play" -> "Google")
+                SERVICES[it.substringBefore(' ').toLowerCase()]?. let { service ->
+                    android.content.Intent().apply {
+                        setClassName(service.first, service.second)
+                        setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+                    }
                 }
-            } else {
-                // Use default app or prompt user.
-                android.content.Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)
-            }
+            } ?:  android.content.Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)
             intent.putExtra(SearchManager.QUERY, mr.slots[QUERY_KEY])
             return intent
         }
