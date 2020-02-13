@@ -261,24 +261,32 @@ this.intentRunner = (function() {
   };
 
   exports.getIntentSummary = function() {
+    const {
+      PhraseSet,
+      compile,
+      splitPhraseLines,
+      convertEntities,
+    } = window.ecmaModules.language;
+    const convertedEntities = convertEntities(intentParser.ENTITY_TYPES);
     const names = intentParser.getIntentNames();
     return names.map(name => {
       const intent = Object.assign({}, intents[name]);
       delete intent.run;
-      const matchSet =
-        typeof intent.match === "string"
-          ? new intentParser.MatchSet(intent.match)
-          : intent.match;
-      const matchers = matchSet.getMatchers();
-      delete intent.match;
+      const matchSet = new PhraseSet(
+        splitPhraseLines(intent.match).map(line =>
+          compile(line, { entities: convertedEntities, intentName: name })
+        )
+      );
+      const matchers = matchSet.matchPhrases;
       intent.matchers = matchers.map(m => {
         return {
-          phrase: m.phrase,
-          slots: m.slots,
-          regex: String(m.regex),
+          phrase: m.originalSource,
+          compiledPhrase: m.toString(),
+          slots: [...m.slotNames().values()],
           parameters: m.parameters,
         };
       });
+      delete intent.match;
       if (intent.examples) {
         intent.examples = intent.examples.map(e => {
           const toMatch = e.replace(/^test:/, "").replace(/[()]/g, "");

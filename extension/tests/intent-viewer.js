@@ -28,7 +28,7 @@ async function init() {
       return `
       <section>
         Phrase: <code>${quote(m.phrase)}</code><br>
-        Regex: <code>${quote(m.regex)}</code><br>
+        Compiled: <code>${quote(m.compiledPhrase)}</code><br>
         ${
           m.slots && m.slots.length
             ? "Slots: <code>" + quote(m.slots) + "</code><br>"

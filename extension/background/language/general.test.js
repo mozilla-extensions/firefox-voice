@@ -39,6 +39,16 @@ test("compiler", () => {
   );
 });
 
+test("compiler optional bits of words", () => {
+  expect(compile("next result{s}").toString()).toBe(
+    'FullPhrase("next (result | results)")'
+  );
+
+  expect(compile("next (result{s} | concern)").toString()).toBe(
+    'FullPhrase("next (result | results | concern)")'
+  );
+});
+
 test("basic matches", () => {
   const phrase = compile("this [query] test");
   const results = match("this is test", phrase);

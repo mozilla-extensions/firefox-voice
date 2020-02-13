@@ -54,6 +54,18 @@ function makeWordMatcher(string) {
   return new Sequence(list);
 }
 
+export function splitPhraseLines(string) {
+  const result = [];
+  for (let line of string.split("\n")) {
+    line = line.trim();
+    if (!line || line.startsWith("#")) {
+      continue;
+    }
+    result.push(line);
+  }
+  return result;
+}
+
 export function compile(string, options) {
   options = options || {};
   const entities = options.entities || {};
@@ -88,12 +100,18 @@ export function compile(string, options) {
     } else {
       const { words, phrase } = _getWords(toParse);
       for (const word of words.split(/\s+/g)) {
-        seq.push(new Word(word));
+        if (_isAltWord(word)) {
+          seq.push(new Alternatives(_altWords(word).map(w => new Word(w))));
+        } else {
+          seq.push(new Word(word));
+        }
       }
       toParse = phrase;
     }
   }
-  return new FullPhrase(seq, { intentName, parameters });
+  const phrase = new FullPhrase(seq, { intentName, parameters });
+  phrase.originalSource = string;
+  return phrase;
 }
 
 function _getAlternatives(phrase) {
@@ -112,8 +130,16 @@ function _getAlternatives(phrase) {
     empty = true;
     alts = alts.filter(w => w);
   }
+  let altWords = [];
+  for (const word of alts) {
+    if (_isAltWord(word)) {
+      altWords = altWords.concat(_altWords(word));
+    } else {
+      altWords.push(word);
+    }
+  }
   phrase = phrase.substr(phrase.indexOf(")") + 1).trim();
-  return { phrase, alts, empty };
+  return { phrase, alts: altWords, empty };
 }
 
 function _getSlot(phrase) {
@@ -148,6 +174,17 @@ function _getWords(phrase) {
   }
   const words = phrase.substr(0, next).trim();
   return { words, phrase: phrase.substr(next) };
+}
+
+function _isAltWord(string) {
+  return /\{[^}]+\}/.test(string);
+}
+
+function _altWords(string) {
+  const bit = /\{([^}]+)\}/.exec(string)[1];
+  const baseWord = string.replace(/\{[^}]+\}/, "");
+  const altWord = string.replace(/\{[^}]\}/, bit);
+  return [baseWord, altWord];
 }
 
 function _isParameter(phrase) {

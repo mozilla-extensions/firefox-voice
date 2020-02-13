@@ -28,6 +28,16 @@ function normalize(text) {
   return n;
 }
 
+function setUnions(arrayOfSets) {
+  const newSet = new Set();
+  for (const s of arrayOfSets) {
+    for (const item of s.values()) {
+      newSet.add(item);
+    }
+  }
+  return newSet;
+}
+
 export function makeWordList(string) {
   string = string.trim();
   return string.split(/\s+/g).map(w => new Word(w));
@@ -105,6 +115,10 @@ export class Word {
   toSource() {
     return this.source;
   }
+
+  slotNames() {
+    return new Set();
+  }
 }
 
 export class FullPhrase {
@@ -163,6 +177,10 @@ export class FullPhrase {
       this.words.toSource()
     )}${paramString}${intentString})`;
   }
+
+  slotNames() {
+    return this.words.slotNames();
+  }
 }
 
 export class Alternatives {
@@ -190,6 +208,10 @@ export class Alternatives {
     }
     return `(${options.join(" | ")})`;
   }
+
+  slotNames() {
+    return setUnions(this.alternatives.map(w => w.slotNames()));
+  }
 }
 
 export class Sequence {
@@ -212,6 +234,10 @@ export class Sequence {
 
   toSource() {
     return this.patterns.map(p => p.toSource()).join(" ");
+  }
+
+  slotNames() {
+    return setUnions(this.patterns.map(w => w.slotNames()));
   }
 }
 
@@ -244,6 +270,10 @@ export class Wildcard {
   toSource() {
     return this.empty ? "*" : "+";
   }
+
+  slotNames() {
+    return new Set();
+  }
 }
 
 export class Slot {
@@ -259,9 +289,6 @@ export class Slot {
     const results = this.pattern.matchUtterance(match);
     const newResults = [];
     for (const result of results) {
-      // Undo any sense that the slot words were captured
-      // FIXME: not sure if this is a good idea, or if we should trust the pattern to capture or not
-      result.capturedWords = match.capturedWords;
       const words = match.utterance.slice(match.index, result.index);
       const newResult = result.clone({ slots: { [this.slotName]: words } });
       newResults.push(newResult);
@@ -271,6 +298,10 @@ export class Slot {
 
   toSource() {
     return `[${this.slotName}:${this.pattern.toSource()}]`;
+  }
+
+  slotNames() {
+    return new Set([this.slotName]);
   }
 }
 
@@ -360,6 +391,14 @@ export class MatchResult {
       throw new Error("Attempted to get utterance word past end: " + this);
     }
     return this.utterance[this.index];
+  }
+
+  stringSlots() {
+    const slots = {};
+    for (const name in this.slots) {
+      slots[name] = this.slots[name].map(w => w.source).join(" ");
+    }
+    return slots;
   }
 
   clone({
