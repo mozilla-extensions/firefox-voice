@@ -268,4 +268,17 @@ this.intents.tabs = (function() {
       }
     },
   });
+
+  this.intentRunner.registerIntent({
+    name: "tabs.fullScreen",
+    description: "Full screen mode",
+    examples: ["full screen"],
+    match: `
+    (make |) (full screen | fullscreen)
+    `,
+    async run(context) {
+      const currentWindow = await browser.windows.getCurrent();
+      await browser.windows.update(currentWindow.id, { state: "fullscreen" });
+    },
+  });
 })();
