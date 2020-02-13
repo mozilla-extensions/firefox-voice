@@ -8,12 +8,11 @@ this.moduleLoader = (function() {
     document.head.appendChild(script);
   };
 
-  exports.waitForModule = function(propName, objectName, func) {
+  exports.waitForModule = function(objectName, func) {
     const timerId = setInterval(() => {
       if (window.ecmaModules[objectName]) {
         clearInterval(timerId);
-        const module = func();
-        window[propName] = module;
+        func();
       }
     }, 100);
   };

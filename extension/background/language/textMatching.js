@@ -28,6 +28,16 @@ function normalize(text) {
   return n;
 }
 
+function setUnions(arrayOfSets) {
+  const newSet = new Set();
+  for (const s of arrayOfSets) {
+    for (const item of s.values()) {
+      newSet.add(item);
+    }
+  }
+  return newSet;
+}
+
 export function makeWordList(string) {
   string = string.trim();
   return string.split(/\s+/g).map(w => new Word(w));
@@ -105,6 +115,10 @@ export class Word {
   toSource() {
     return this.source;
   }
+
+  slotNames() {
+    return new Set();
+  }
 }
 
 export class FullPhrase {
@@ -163,6 +177,10 @@ export class FullPhrase {
       this.words.toSource()
     )}${paramString}${intentString})`;
   }
+
+  slotNames() {
+    return this.words.slotNames();
+  }
 }
 
 export class Alternatives {
@@ -190,6 +208,10 @@ export class Alternatives {
     }
     return `(${options.join(" | ")})`;
   }
+
+  slotNames() {
+    return setUnions(this.alternatives.map(w => w.slotNames()));
+  }
 }
 
 export class Sequence {
@@ -212,6 +234,10 @@ export class Sequence {
 
   toSource() {
     return this.patterns.map(p => p.toSource()).join(" ");
+  }
+
+  slotNames() {
+    return setUnions(this.patterns.map(w => w.slotNames()));
   }
 }
 
@@ -244,6 +270,10 @@ export class Wildcard {
   toSource() {
     return this.empty ? "*" : "+";
   }
+
+  slotNames() {
+    return new Set();
+  }
 }
 
 export class Slot {
@@ -268,6 +298,10 @@ export class Slot {
 
   toSource() {
     return `[${this.slotName}:${this.pattern.toSource()}]`;
+  }
+
+  slotNames() {
+    return new Set([this.slotName]);
   }
 }
 

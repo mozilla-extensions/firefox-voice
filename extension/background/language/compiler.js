@@ -54,6 +54,18 @@ function makeWordMatcher(string) {
   return new Sequence(list);
 }
 
+export function splitPhraseLines(string) {
+  const result = [];
+  for (let line of string.split("\n")) {
+    line = line.trim();
+    if (!line || line.startsWith("#")) {
+      continue;
+    }
+    result.push(line);
+  }
+  return result;
+}
+
 export function compile(string, options) {
   options = options || {};
   const entities = options.entities || {};
@@ -97,7 +109,9 @@ export function compile(string, options) {
       toParse = phrase;
     }
   }
-  return new FullPhrase(seq, { intentName, parameters });
+  const phrase = new FullPhrase(seq, { intentName, parameters });
+  phrase.originalSource = string;
+  return phrase;
 }
 
 function _getAlternatives(phrase) {

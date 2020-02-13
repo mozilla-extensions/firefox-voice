@@ -2,7 +2,7 @@
 /* Note: this is an ECMA module to expose key language things to the non-ECMA modules */
 
 import { PhraseSet } from "./matching.js";
-import { compile, convertEntities } from "./compiler.js";
+import { compile, convertEntities, splitPhraseLines } from "./compiler.js";
 import { MatchResult } from "./textMatching.js";
 
 if (!window.ecmaModules) {
@@ -15,5 +15,6 @@ window.ecmaModules.language = {
   PhraseSet,
   compile,
   convertEntities,
+  splitPhraseLines,
   MatchResult,
 };
