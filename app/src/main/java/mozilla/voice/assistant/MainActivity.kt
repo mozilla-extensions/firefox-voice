@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         recognizer = null
     }
 
+    private var shownBurst = false
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -73,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
+                shownBurst = false
                 startSpeechRecognition()
             }
         }
@@ -92,19 +95,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showReady() {
-        animationView.setMinAndMaxFrame(SOLICIT_MIN, SOLICIT_MAX)
+        if (shownBurst) {
+            animationView.setMinAndMaxFrame(SOUND_MIN, SOUND_MAX)
+        } else {
+            animationView.setMinAndMaxFrame(SOLICIT_MIN, SOUND_MAX)
+            shownBurst = true
+            animationView.repeatCount = 1
+            animationView.addAnimatorUpdateListener { valueAnimator ->
+                if (valueAnimator.animatedFraction > .99) { // close enough to 1
+                    animationView.setMinFrame(SOUND_MIN)
+                    animationView.removeAllUpdateListeners()
+                    animationView.repeatCount = LottieDrawable.INFINITE
+                }
+            }
+        }
         animationView.playAnimation()
-        animationView.repeatCount = LottieDrawable.INFINITE
         statusView.text = getString(R.string.listening)
     }
 
     private fun showListening() {
+        animationView.pauseAnimation()
         animationView.setMinAndMaxFrame(SOUND_MIN, SOUND_MAX)
+        animationView.resumeAnimation()
+        animationView.removeAllUpdateListeners()
+        animationView.repeatCount = LottieDrawable.INFINITE
+        statusView.text = getString(R.string.listening)
     }
 
     private fun showProcessing() {
         animationView.setMinAndMaxFrame(PROCESSING_MIN, PROCESSING_MAX)
-        statusView.text = getString(R.string.listening)
+        statusView.text = getString(R.string.processing)
     }
 
     private fun showSuccess() {
