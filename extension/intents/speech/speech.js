@@ -1,6 +1,7 @@
-/* globals pageMetadata */
+import * as intentRunner from "../../background/intentRunner.js";
+import * as pageMetadata from "../../background/pageMetadata.js";
 
-this.intentRunner.registerIntent({
+intentRunner.registerIntent({
   name: "speech.readTitle",
   description: "Read page title via speech synthesis",
   examples: ["read page title"],

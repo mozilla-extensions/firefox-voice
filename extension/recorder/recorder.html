@@ -85,20 +85,17 @@
       </p>
     </div>
 
-    <script src="../buildSettings.js"></script>
-    <script src="../log.js"></script>
+    <!-- Vendor scripts: -->
     <script src="../js/vendor/sentry.js"></script>
-    <script src="../catcherAsyncSetup.js"></script>
-    <script src="../catcher.js"></script>
-    <script src="../util.js"></script>
-    <script src="../popup/vad.js"></script>
-    <script src="../js/vendor/webrtc_vad.js"></script>
-    <script src="../settings.js"></script>
-    <script src="../popup/voice.js"></script>
-    <script src="recorder.js"></script>
     <script src="../js/vendor/porcupine/web_voice_processor.js"></script>
     <script src="../js/vendor/porcupine/porcupine_manager.js"></script>
     <script src="../js/vendor/ppnListing.js"></script>
-    <script src="wakeword.js"></script>
+    <!-- Legacy modules: -->
+    <script src="../buildSettings.js"></script>
+    <script src="../log.js"></script>
+    <script src="../catcherAsyncSetup.js"></script>
+    <script src="../catcher.js"></script>
+    <!-- The main script: -->
+    <script src="recorder.js" type="module"></script>
   </body>
 </html>

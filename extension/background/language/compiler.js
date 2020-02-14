@@ -58,7 +58,7 @@ export function splitPhraseLines(string) {
   const result = [];
   for (let line of string.split("\n")) {
     line = line.trim();
-    if (!line || line.startsWith("#")) {
+    if (!line || line.startsWith("#") || line.startsWith("//")) {
       continue;
     }
     result.push(line);

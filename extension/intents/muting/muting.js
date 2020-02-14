@@ -1,102 +1,100 @@
-/* globals log, intents */
+/* globals log */
 
-this.intents.muting = (function() {
-  // Always undo temporary muting after this amount of time:
-  const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
-  const exports = {};
+import * as intentRunner from "../../background/intentRunner.js";
+import { stopReading } from "../read/read.js";
 
-  this.intentRunner.registerIntent({
-    name: "mute.mute",
-    description:
-      "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound",
-    examples: ["mute (all tabs)"],
-    match: `
-    (mute | turn off) (whatever is |) (playing | all |) (the |) (music | audio | sound | everything | tab{s}) (for me |)
-    mute
-    quiet (tabs{s} |) (for me |)
-    shut up (tab{s} |) (for me |)
-    `,
-    async run(desc) {
-      const stoppedReading = await intents.read.stopReading();
-      if (stoppedReading) {
-        // There was an about:reader narration that we stopped
-        return;
-      }
-      const audibleTabs = await browser.tabs.query({ audible: true });
-      if (audibleTabs.empty) {
-        // TODO: pass a message back to the content script to update the UI and indicate that we don't have any audible tabs
-      } else {
-        // pass a message back to indicate that the tabs are currently being muted
-        log.debug("these are the audible tabs:", audibleTabs);
-        // mute each audible tab
-        for (const tab of audibleTabs) {
-          browser.tabs.update(tab.id, {
-            muted: true,
-          });
-        }
-      }
-      // TODO: tell the user if no audible tabs were found
-      // TODO: show confirmation
-    },
-  });
+// Always undo temporary muting after this amount of time:
+const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
 
-  this.intentRunner.registerIntent({
-    name: "mute.unmute",
-    description: "Unmute all tabs",
-    match: `
-    unmute (tab{s} |) (for me |)
-    `,
-    async run(desc) {
-      const mutedTabs = await browser.tabs.query({ audible: false });
-      if (mutedTabs.empty) {
-        // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
-      } else {
-        // pass a message back to indicate that the tabs are currently being un-muted
-        // unmute each muted tab
-        for (const tab of mutedTabs) {
-          browser.tabs.update(tab.id, {
-            muted: false,
-          });
-        }
-      }
-      // TODO: tell the user if no audible tabs were found
-      // TODO: show confirmation
-    },
-  });
-
-  let muteTimeoutId = null;
-  let mutedTabIds = [];
-
-  exports.temporaryMute = async function() {
-    const tabsToMute = await browser.tabs.query({
-      audible: true,
-      muted: false,
-    });
-    if (!tabsToMute.length) {
+intentRunner.registerIntent({
+  name: "mute.mute",
+  description:
+    "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound",
+  examples: ["mute (all tabs)"],
+  match: `
+  (mute | turn off) (whatever is |) (playing | all |) (the |) (music | audio | sound | everything | tab{s}) (for me |)
+  mute
+  quiet (tabs{s} |) (for me |)
+  shut up (tab{s} |) (for me |)
+  `,
+  async run(desc) {
+    const stoppedReading = await stopReading();
+    if (stoppedReading) {
+      // There was an about:reader narration that we stopped
       return;
     }
-    if (muteTimeoutId) {
-      clearTimeout(muteTimeoutId);
+    const audibleTabs = await browser.tabs.query({ audible: true });
+    if (audibleTabs.empty) {
+      // TODO: pass a message back to the content script to update the UI and indicate that we don't have any audible tabs
+    } else {
+      // pass a message back to indicate that the tabs are currently being muted
+      log.debug("these are the audible tabs:", audibleTabs);
+      // mute each audible tab
+      for (const tab of audibleTabs) {
+        browser.tabs.update(tab.id, {
+          muted: true,
+        });
+      }
     }
-    muteTimeoutId = setTimeout(() => {
-      exports.temporaryUnmute();
-    }, TEMPORARY_MUTE_TIMEOUT);
-    for (const tab of tabsToMute) {
-      browser.tabs.update(tab.id, { muted: true });
-    }
-    mutedTabIds = mutedTabIds.concat(tabsToMute.map(t => t.id));
-  };
+    // TODO: tell the user if no audible tabs were found
+    // TODO: show confirmation
+  },
+});
 
-  exports.temporaryUnmute = function() {
-    if (muteTimeoutId) {
-      clearTimeout(muteTimeoutId);
-      muteTimeoutId = null;
+intentRunner.registerIntent({
+  name: "mute.unmute",
+  description: "Unmute all tabs",
+  match: `
+  unmute (tab{s} |) (for me |)
+  `,
+  async run(desc) {
+    const mutedTabs = await browser.tabs.query({ audible: false });
+    if (mutedTabs.empty) {
+      // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
+    } else {
+      // pass a message back to indicate that the tabs are currently being un-muted
+      // unmute each muted tab
+      for (const tab of mutedTabs) {
+        browser.tabs.update(tab.id, {
+          muted: false,
+        });
+      }
     }
-    for (const tabId of mutedTabIds) {
-      browser.tabs.update(tabId, { muted: false });
-    }
-    mutedTabIds = [];
-  };
+    // TODO: tell the user if no audible tabs were found
+    // TODO: show confirmation
+  },
+});
 
-  return exports;
-})();
+let muteTimeoutId = null;
+let mutedTabIds = [];
+
+export async function temporaryMute() {
+  const tabsToMute = await browser.tabs.query({
+    audible: true,
+    muted: false,
+  });
+  if (!tabsToMute.length) {
+    return;
+  }
+  if (muteTimeoutId) {
+    clearTimeout(muteTimeoutId);
+  }
+  muteTimeoutId = setTimeout(() => {
+    temporaryUnmute();
+  }, TEMPORARY_MUTE_TIMEOUT);
+  for (const tab of tabsToMute) {
+    browser.tabs.update(tab.id, { muted: true });
+  }
+  mutedTabIds = mutedTabIds.concat(tabsToMute.map(t => t.id));
+}
+
+export function temporaryUnmute() {
+  if (muteTimeoutId) {
+    clearTimeout(muteTimeoutId);
+    muteTimeoutId = null;
+  }
+  for (const tabId of mutedTabIds) {
+    browser.tabs.update(tabId, { muted: false });
+  }
+  mutedTabIds = [];
+}

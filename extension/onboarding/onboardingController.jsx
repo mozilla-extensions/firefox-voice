@@ -1,67 +1,66 @@
-/* globals React, ReactDOM, settings */
+/* globals React, ReactDOM */
 
-this.onboardingController = (function() {
-  const exports = {};
-  const { useState, useEffect } = React;
-  const onboardingContainer = document.getElementById("onboarding-container");
-  let isInitialized = false;
-  let userSettings;
+// eslint-disable-next-line no-unused-vars
+import * as onboardingView from "./onboardingView.js";
+import * as settings from "../settings.js";
 
-  exports.OnboardingController = function() {
-    const [optinViewAlreadyShown, setOptinViewShown] = useState(true);
-    const [permissionError, setPermissionError] = useState(null);
+const { useState, useEffect } = React;
+const onboardingContainer = document.getElementById("onboarding-container");
+let isInitialized = false;
+let userSettings;
 
-    useEffect(() => {
-      if (!isInitialized) {
-        isInitialized = true;
-        init();
-      }
-    });
+export const OnboardingController = function() {
+  const [optinViewAlreadyShown, setOptinViewShown] = useState(true);
+  const [permissionError, setPermissionError] = useState(null);
 
-    const init = async () => {
-      userSettings = await settings.getSettings();
-      setOptinViewShown(!!userSettings.collectTranscriptsOptinAnswered);
+  useEffect(() => {
+    if (!isInitialized) {
+      isInitialized = true;
+      init();
+    }
+  });
 
-      if (optinViewAlreadyShown) {
-        launchPermission();
-      }
-    };
+  const init = async () => {
+    userSettings = await settings.getSettings();
+    setOptinViewShown(!!userSettings.collectTranscriptsOptinAnswered);
 
-    const setOptinValue = async value => {
-      userSettings.collectTranscriptsOptinAnswered = Date.now();
-      userSettings.utterancesTelemetry = value;
-      await settings.saveSettings(userSettings);
-    };
-
-    const launchPermission = async () => {
-      try {
-        // Waiting view has been removed because it looks too much like an error view while we're waiting for user input.
-        // setPermissionError("Waiting");
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
-        setPermissionError(null);
-
-        const tracks = stream.getTracks();
-        for (const track of tracks) {
-          track.stop();
-        }
-      } catch (e) {
-        setPermissionError(e.name);
-      }
-    };
-
-    return (
-      <onboardingView.Onboarding
-        optinViewAlreadyShown={optinViewAlreadyShown}
-        setOptinValue={setOptinValue}
-        setOptinViewShown={setOptinViewShown}
-        permissionError={permissionError}
-      />
-    );
+    if (optinViewAlreadyShown) {
+      launchPermission();
+    }
   };
 
-  ReactDOM.render(<exports.OnboardingController />, onboardingContainer);
+  const setOptinValue = async value => {
+    userSettings.collectTranscriptsOptinAnswered = Date.now();
+    userSettings.utterancesTelemetry = value;
+    await settings.saveSettings(userSettings);
+  };
 
-  return exports;
-})();
+  const launchPermission = async () => {
+    try {
+      // Waiting view has been removed because it looks too much like an error view while we're waiting for user input.
+      // setPermissionError("Waiting");
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      setPermissionError(null);
+
+      const tracks = stream.getTracks();
+      for (const track of tracks) {
+        track.stop();
+      }
+    } catch (e) {
+      setPermissionError(e.name);
+    }
+  };
+
+  return (
+    <onboardingView.Onboarding
+      optinViewAlreadyShown={optinViewAlreadyShown}
+      setOptinValue={setOptinValue}
+      setOptinViewShown={setOptinViewShown}
+      permissionError={permissionError}
+    />
+  );
+};
+
+ReactDOM.render(<OnboardingController />, onboardingContainer);

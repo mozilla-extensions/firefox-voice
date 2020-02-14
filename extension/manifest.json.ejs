@@ -28,39 +28,16 @@
   <% } %>
   "background": {
     "scripts": [
-      "util.js",
       "buildSettings.js",
       "log.js",
       <% if (! (env.NO_SENTRY && !env.FORCE_SENTRY)) { %>
       "js/vendor/sentry.js",
       <% } %>
       "catcher.js",
-      "settings.js",
       "js/vendor/fuse.js",
       "js/vendor/ppnListing.js",
-      "browserUtil.js",
-      "limiter.js",
       "background/moduleLoader.js",
-      "background/pageMetadata.js",
-      "background/languages.js",
-      "background/main.js",
-      "background/voiceSchema.js",
-      "background/telemetry.js",
-      "background/serviceList.js",
-      "background/content.js",
-      "background/intentParser.js",
-      "background/intentRunner.js",
-      "background/intentExamples.js",
-      // Note: these intent listings are generated from extension/intents/*
-      <% for (let intentName of intentNames) { %>
-        "intents/<%- intentName %>/<%- intentName %>.js",
-      <% } %>
-      // End of intent list
-      // These service listings are generated from extension/services/*
-      <% for (let serviceName of serviceNames) { %>
-        "services/<%- serviceName %>/<%- serviceName %>.js",
-      <% } %>
-      "searching.js"
+      "background/loadMain.js"
     ]
   },
   <% if (env.EXECUTE_INTENT_URL) { %>

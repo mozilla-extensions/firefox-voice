@@ -1,0 +1,7 @@
+/* eslint-disable no-unused-vars */
+// This file is auto-generated from a list of all the services in
+// extension/services/NAME/NAME.js
+
+<% for (const serviceName of serviceNames) { %>
+import * as <%- serviceName %> from "../services/<%- serviceName %>/<%- serviceName %>.js";
+<% } %>

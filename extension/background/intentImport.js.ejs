@@ -1,0 +1,7 @@
+/* eslint-disable no-unused-vars */
+// This file is auto-generated from a list of all the services in
+// extension/intents/NAME/NAME.js
+
+<% for (const intentName of intentNames) { %>
+import * as <%- intentName %> from "../intents/<%- intentName %>/<%- intentName %>.js";
+<% } %>

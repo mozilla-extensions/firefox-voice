@@ -7,22 +7,16 @@
   </head>
   <body>
     <div id="popup-container"></div>
+    <!-- Third party scripts: -->
     <script src="../js/vendor/react.production.min.js"></script>
     <script src="../js/vendor/react-dom.production.min.js"></script>
-    <script src="../browserUtil.js"></script>
+    <script src="../js/vendor/lottie.min.js"></script>
+    <!-- Legacy modules -->
     <script src="../buildSettings.js"></script>
     <script src="../log.js"></script>
     <script src="../catcherAsyncSetup.js"></script>
     <script src="../catcher.js"></script>
-    <script src="../util.js"></script>
-    <script src="../settings.js"></script>
-    <script src="../js/vendor/lottie.min.js"></script>
-    <script src="vad.js"></script>
-    <script src="../js/vendor/webrtc_vad.js"></script>
-    <script src="../settings.js"></script>
-    <script src="voice.js"></script>
-    <script src="voiceShim.js"></script>
-    <script src="popupView.js"></script>
-    <script src="popupController.js"></script>
+    <!-- The main script: -->
+    <script src="popupController.js" type="module"></script>
   </body>
 </html>

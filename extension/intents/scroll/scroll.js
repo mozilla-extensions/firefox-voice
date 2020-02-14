@@ -1,6 +1,7 @@
-/* globals content */
+import * as content from "../../background/content.js";
+import * as intentRunner from "../../background/intentRunner.js";
 
-this.intentRunner.registerIntent({
+intentRunner.registerIntent({
   name: "scroll.up",
   description: "Scroll the current page up",
   examples: ["Scroll up"],
@@ -15,7 +16,7 @@ this.intentRunner.registerIntent({
   },
 });
 
-this.intentRunner.registerIntent({
+intentRunner.registerIntent({
   name: "scroll.down",
   description: "Scroll the current page down",
   examples: ["Scroll down"],
@@ -30,7 +31,7 @@ this.intentRunner.registerIntent({
   },
 });
 
-this.intentRunner.registerIntent({
+intentRunner.registerIntent({
   name: "scroll.top",
   description: "Scroll the current page all the way to the top",
   examples: ["Scroll all the way up"],
@@ -46,7 +47,7 @@ this.intentRunner.registerIntent({
   },
 });
 
-this.intentRunner.registerIntent({
+intentRunner.registerIntent({
   name: "scroll.bottom",
   description: "Scroll the current page all the way to the bottom",
   examples: ["Scroll all the way down"],
