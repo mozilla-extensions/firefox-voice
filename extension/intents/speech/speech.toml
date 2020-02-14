@@ -1,0 +1,9 @@
+[speech.readTitle]
+description = "Read page title via speech synthesis"
+match = """
+  read (page | tab |) (title | name)
+  what is the (title | name) (of this page |)
+"""
+
+[[speech.readTitle.example]]
+phrase = "read page title"

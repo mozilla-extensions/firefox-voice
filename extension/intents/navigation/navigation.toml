@@ -1,0 +1,98 @@
+[navigation.bangSearch]
+description = "Search a specific service, using their site-specific search page"
+match = """
+  google images (of | for |) [query] [service=images]
+  images (of | for) [query] [service=images]
+  (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
+  (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
+  (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
+"""
+
+[[navigation.bangSearch.example]]
+phrase = "Search my Gmail for tickets to Hamilton"
+
+[[navigation.bangSearch.example]]
+phrase = "Look up The Book Thief on GoodReads"
+
+[[navigation.bangSearch.example]]
+phrase = "Search CSS grid on MDN"
+
+[[navigation.bangSearch.example]]
+phrase = "Look up Hamilton in Gmail"
+
+[[navigation.bangSearch.example]]
+phrase = "Images of sparrows"
+
+[[navigation.bangSearch.example]]
+phrase = "Find the nearest sushi on maps"
+
+[[navigation.bangSearch.example]]
+phrase = "search google images of sparrows for me"
+test = true
+
+[[navigation.bangSearch.example]]
+phrase = "Find website work plan on my Google Drive"
+test = true
+
+[navigation.clearQueryDatabase]
+description = "Debugging command to clear the cache of 'open' queries"
+match = """
+  clear query (database | cache)
+"""
+
+[navigation.goBack]
+description = "Go back to the previous page, if one is available"
+match = """
+  go back
+"""
+
+[navigation.goForward]
+description = "Go forward to the next page, if one is available"
+match = """
+  go forward
+"""
+
+[navigation.navigate]
+description = "Navigate directly to a site, using Google's I'm Feeling Luck and the query"
+match = """
+  (bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]
+"""
+
+[[navigation.navigate.example]]
+phrase = "Go to the New York Times"
+
+[[navigation.navigate.example]]
+phrase = "Show me the 49ers schedule"
+
+[navigation.translate]
+description = "Translate the given page to the chosen language, using Google Translate"
+match = """
+  translate (this |) (page | tab | article | site |) (to english |) (for me |)
+  translate (this |) (page | tab | article | site |) to [language:lang] (for me |)
+"""
+
+[[navigation.translate.example]]
+phrase = "translate this page to Spanish"
+test = true
+
+[[navigation.translate.example]]
+phrase = "translate this page to Dutch"
+test = true
+
+[navigation.translateSelection]
+description = "Translate whatever text is selected to English, using Google Translate"
+match = """
+  translate (this | the |) (selection | selected text) (to english |) (for me |)
+  translate (this | the |) (selection | selected text) to [language:lang] (for me |)
+"""
+
+[[navigation.translateSelection.example]]
+phrase = "Translate selection"
+
+[[navigation.translateSelection.example]]
+phrase = "translate this selection to Hungarian"
+test = true
+
+[[navigation.translateSelection.example]]
+phrase = "translate the selected text to Slovak"
+test = true

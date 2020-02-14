@@ -1,0 +1,62 @@
+[self.cancelIntent]
+description = "Cancels input, immediately closing the popup"
+match = """
+  cancel
+  nevermind
+  never mind
+"""
+
+[[self.cancelIntent.example]]
+phrase = "nevermind"
+test = true
+
+[self.openIntentViewer]
+description = "Opens the intent viewer (probably this page)"
+match = """
+  (show | open) all intents (for me |)
+  (show | open) intent viewer (for me|)
+"""
+
+[self.openLexicon]
+description = "Opens the lexicon: a hand-written help file that indicates things you can say"
+match = """
+  tell me about (this | firefox voice | this extension | voice)
+  help
+  what (else |) can (I | you) (do | say | ask) (you | from you | of you |)
+  hello
+"""
+
+[[self.openLexicon.example]]
+phrase = "Tell me about Firefox Voice"
+
+[[self.openLexicon.example]]
+phrase = "Help"
+
+[[self.openLexicon.example]]
+phrase = "What can I do?"
+
+[self.openOptions]
+description = "Opens the options page"
+match = """
+  (open | open the | voice | firefox voice) (settings | options | preferences) (for me |)
+  settings
+  options
+  preferences
+"""
+
+[self.tellJoke]
+description = "Someone asks for a joke or something funny"
+match = """
+  tell (me |) a joke
+  say something funny
+  make me laugh
+"""
+
+[[self.tellJoke.example]]
+phrase = "Tell me a joke"
+
+[[self.tellJoke.example]]
+phrase = "Say something funny"
+
+[[self.tellJoke.example]]
+phrase = "Make me laugh"

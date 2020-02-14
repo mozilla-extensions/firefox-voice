@@ -9,12 +9,6 @@ const queryDatabase = new Map();
 
 intentRunner.registerIntent({
   name: "navigation.navigate",
-  description:
-    "Navigate directly to a site, using Google's I'm Feeling Luck and the query",
-  examples: ["Go to the New York Times", "Show me the 49ers schedule"],
-  match: `
-  (bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]
-  `,
   async run(context) {
     const query = context.slots.query;
     const cached = queryDatabase.get(query.toLowerCase());
@@ -48,10 +42,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "navigation.clearQueryDatabase",
-  description: "Debugging command to clear the cache of 'open' queries",
-  match: `
-  clear query (database | cache)
-  `,
   async run(context) {
     queryDatabase.clear();
     saveQueryDatabase();
@@ -61,25 +51,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "navigation.bangSearch",
-  description:
-    "Search a specific service, using their site-specific search page",
-  match: `
-  google images (of | for |) [query] [service=images]
-  images (of | for) [query] [service=images]
-  (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
-  (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
-  (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
-  `,
-  examples: [
-    "Search my Gmail for tickets to Hamilton",
-    "Look up The Book Thief on GoodReads",
-    "Search CSS grid on MDN",
-    "Look up Hamilton in Gmail",
-    "Images of sparrows",
-    "Find the nearest sushi on maps",
-    "test:search google images of sparrows for me",
-    "test:Find website work plan on my Google Drive",
-  ],
   async run(context) {
     const service = context.slots.service || context.parameters.service;
     const myurl = await searching.ddgBangSearchUrl(
@@ -99,16 +70,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "navigation.translate",
-  description:
-    "Translate the given page to the chosen language, using Google Translate",
-  match: `
-  translate (this |) (page | tab | article | site |) (to english |) (for me |)
-  translate (this |) (page | tab | article | site |) to [language:lang] (for me |)
-  `,
-  examples: [
-    "test:translate this page to Spanish",
-    "test:translate this page to Dutch",
-  ],
   async run(context) {
     const language = context.slots.language || "english";
     const tab = await context.activeTab();
@@ -121,17 +82,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "navigation.translateSelection",
-  description:
-    "Translate whatever text is selected to English, using Google Translate",
-  match: `
-  translate (this | the |) (selection | selected text) (to english |) (for me |)
-  translate (this | the |) (selection | selected text) to [language:lang] (for me |)
-  `,
-  examples: [
-    "Translate selection",
-    "test:translate this selection to Hungarian",
-    "test:translate the selected text to Slovak",
-  ],
   async run(context) {
     const language = context.slots.language || "english";
     const tab = await context.activeTab();
@@ -161,10 +111,6 @@ async function saveQueryDatabase() {
 
 intentRunner.registerIntent({
   name: "navigation.goBack",
-  description: "Go back to the previous page, if one is available",
-  match: `
-  go back
-  `,
   async run(context) {
     const tab = await context.activeTab();
     await browser.tabs.executeScript(tab.id, {
@@ -175,10 +121,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "navigation.goForward",
-  description: "Go forward to the next page, if one is available",
-  match: `
-  go forward
-  `,
   async run(context) {
     const tab = await context.activeTab();
     await browser.tabs.executeScript(tab.id, {

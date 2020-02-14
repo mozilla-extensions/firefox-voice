@@ -1,0 +1,36 @@
+[nicknames.combined]
+description = "An intent that is only used as a memory"
+match = """
+# Nothing to match
+"""
+
+[nicknames.name]
+description = "Names an intent"
+match = """
+  (name | nickname | call) (that | it | last) [name]
+  give (that |) (the |) (name | nickname) [name]
+  give (the |) (name | nickname) [name] to (that | it | last)
+"""
+
+[[nicknames.name.example]]
+phrase = "Name that calendar"
+
+[nicknames.nameLast]
+description = "Combines a few intents into a name"
+match = """
+  (name | nickname | call) last [number:smallNumber] [name]
+  give (the |) last [number:smallNumber] (the |) (name | nickname) [name]
+  give (the |) (name | nickname) [name] to (the |) last [number:smallNumber]
+"""
+
+[[nicknames.nameLast.example]]
+phrase = "Name last three goodmorning"
+
+[nicknames.remove]
+description = "Removes a named intent"
+match = """
+  (remove | delete) (the|) (name | nickname) (called |) [name]
+"""
+
+[[nicknames.remove.example]]
+phrase = "Remove name calendar"

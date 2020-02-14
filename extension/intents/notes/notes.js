@@ -23,13 +23,6 @@ async function checkHasTab() {
 
 intentRunner.registerIntent({
   name: "notes.setPlace",
-  description:
-    "Indicate where note should be written, both the tab and the element on the tab where text will go",
-  examples: ["Write notes here"],
-  match: `
-  (add | make) note{s} (here | this page | this tab) (for me |)
-  write (note{s} |) (here | this page | this tab) (for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     const tabId = activeTab.id;
@@ -48,11 +41,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "notes.addLink",
-  description: "Add to the note with the link and title of the current tab",
-  examples: ["Make note of this page"],
-  match: `
-  (make | add | write |) note{s} (of | about |) (this |) (page | tab | link) (for me |)
-  `,
   async run(context) {
     await checkHasTab();
     const activeTab = await context.activeTab();
@@ -71,11 +59,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "notes.add",
-  description: "Add to the note with the given text",
-  examples: ["Add note stuff to remember"],
-  match: `
-  (make | add | write) note{s} (about |) [text] (for me |)
-  `,
   async run(context) {
     await checkHasTab();
     const success = await browser.tabs.sendMessage(writingTabId, {
@@ -92,12 +75,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "notes.show",
-  description:
-    "Focus the tab previously indicated as being the place to write notes",
-  examples: ["Show notes"],
-  match: `
-  (show | focus | activate | read) (the |) note{s} (for me |)
-  `,
   async run(context) {
     if (!writingTabId) {
       const e = new Error("No writing tab");

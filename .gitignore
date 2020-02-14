@@ -17,6 +17,7 @@ extension/onboarding/onboardingView.js
 extension/**/*.js.map
 extension/background/serviceImport.js
 extension/background/intentImport.js
+extension/intents/metadata.js
 node_modules
 npm-debug.log
 package-lock.json

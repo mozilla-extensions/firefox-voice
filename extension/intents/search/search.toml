@@ -1,0 +1,109 @@
+[search.next]
+description = "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result."
+match = """
+  (search |) next (to view |) (search |) (result{s} | item{s} | page | article |)
+"""
+
+[[search.next.example]]
+phrase = "next search item"
+test = true
+
+[[search.next.example]]
+phrase = "next"
+test = true
+
+[search.previous]
+description = "If you've done a search then this will display the previous search result."
+match = """
+  (search |) previous (search |) (result{s} | item{s} | page | article |)
+"""
+
+[[search.previous.example]]
+phrase = "previous search item"
+test = true
+
+[[search.previous.example]]
+phrase = "previous"
+test = true
+
+[search.search]
+description = "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab."
+match = """
+  (do a |) (query | find | find me | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
+"""
+
+[[search.search.example]]
+phrase = "Look up recipes for fish tacos"
+
+[[search.search.example]]
+phrase = "Who created breaking bad?"
+
+[[search.search.example]]
+phrase = "Who won the World Series game last night?"
+
+[[search.search.example]]
+phrase = "How deep is the Marianas Trench?"
+
+[[search.search.example]]
+phrase = "Weather in Flagstaff, Arizona"
+
+[[search.search.example]]
+phrase = "What's the temperature in San Antonio?"
+
+[[search.search.example]]
+phrase = "What time is it?"
+
+[[search.search.example]]
+phrase = "What time is it in Berlin?"
+
+[[search.search.example]]
+phrase = "How long will it take to get to Springfield?"
+
+[[search.search.example]]
+phrase = "How do I get to the hardware store?"
+
+[[search.search.example]]
+phrase = "Search for hiking in Denver"
+
+[[search.search.example]]
+phrase = "Look up The Book Thief on GoodReads"
+
+[[search.search.example]]
+phrase = "Search CSS grid on MDN"
+
+[[search.search.example]]
+phrase = "Go to the New York Times"
+
+[[search.search.example]]
+phrase = "Show me the 49ers schedule"
+
+[[search.search.example]]
+phrase = "Go to the Health section of the BBC"
+
+[search.searchPage]
+description = "Opens a search page"
+match = """
+  (do a |) (search | google) (google | the web | the internet |) (for |) [query] (one the web |) (for me|)
+"""
+
+[[search.searchPage.example]]
+phrase = "Search for hiking in Denver"
+
+[[search.searchPage.example]]
+phrase = "search for tops"
+test = true
+
+[search.show]
+description = "Focuses the special tab used for searching"
+match = """
+  (open | show | focus) search (result{s} |)
+  (open | show | focus) result{s}
+"""
+
+[[search.show.example]]
+phrase = "open results"
+test = true
+
+[[search.show.example]]
+phrase = "show search result"
+test = true

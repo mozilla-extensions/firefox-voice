@@ -1,0 +1,17 @@
+[muting.mute]
+description = "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound"
+match = """
+  (mute | turn off) (whatever is |) (playing | all |) (the |) (music | audio | sound | everything | tab{s}) (for me |)
+  mute
+  quiet (tabs{s} |) (for me |)
+  shut up (tab{s} |) (for me |)
+"""
+
+[[muting.mute.example]]
+phrase = "mute (all tabs)"
+
+[muting.unmute]
+description = "Unmute all tabs"
+match = """
+  unmute (tab{s} |) (for me |)
+"""

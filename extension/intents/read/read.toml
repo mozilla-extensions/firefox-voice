@@ -1,0 +1,18 @@
+[read.read]
+description = "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration"
+match = """
+  (can you |) read (me | ) (this | the |) (article | articles | text |) (on this| )(tab | page |) (for me | to me |) (aloud |)
+  read (me |) [query] (for me | to me |) (aloud |)
+"""
+
+[[read.read.example]]
+phrase = "Read this page"
+
+[read.stopRead]
+description = "Stop reading/narrating the current tab"
+match = """
+  stop reading (this |) (tab | page |) (to me | for me |)
+"""
+
+[[read.stopRead.example]]
+phrase = "Stop reading"

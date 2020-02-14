@@ -5,16 +5,6 @@ import { isSearchTab } from "../search/search.js";
 
 intentRunner.registerIntent({
   name: "find.find",
-  description:
-    "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active",
-  examples: ["Find calendar tab", "test:go to my calendar"],
-  match: `
-  (find | bring me to | switch to) (my | the |) [query] (tab |)
-  (find | open | focus | show | switch to) tab [query]
-  go (to | to the |) [query] tab
-  go to my [query]
-  focus [query] (tab |)
-  `,
   async run(context) {
     const query = context.slots.query;
     log.info("the most likely query text is:", query);

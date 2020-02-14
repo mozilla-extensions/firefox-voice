@@ -4,10 +4,23 @@ import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import * as searching from "../searching.js";
 import * as browserUtil from "../browserUtil.js";
+import { PhraseSet } from "./language/matching.js";
+import {
+  compile,
+  splitPhraseLines,
+  convertEntities,
+} from "./language/compiler.js";
+import { metadata } from "../intents/metadata.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
+const METADATA_ATTRIBUTES = new Set([
+  "description",
+  "example",
+  "examples",
+  "match",
+]);
 
 export const intents = {};
 let lastIntent;
@@ -180,6 +193,32 @@ export function registerIntent(intent) {
   if (intents[intent.name]) {
     throw new Error(`Attempt to reregister intent: ${intent.name}`);
   }
+  const parts = intent.name.split(".");
+  if (parts.length !== 2) {
+    throw new Error(`Intent ${intent.name} should be named like X.Y`);
+  }
+  if (!metadata[parts[0]] || !metadata[parts[0]][parts[1]]) {
+    throw new Error(`No ${parts[0]}.toml metadata for ${intent.name}`);
+  }
+  const data = metadata[parts[0]][parts[1]];
+  // Pluralize the examples:
+  if (data.example) {
+    data.examples = data.example;
+    delete data.example;
+  }
+  for (const attr in data) {
+    if (attr in intent) {
+      throw new Error(
+        `Metadata for ${intent.name} contains attribute ${attr} that is also in intent object`
+      );
+    }
+    if (!METADATA_ATTRIBUTES.has(attr)) {
+      throw new Error(
+        `Metadata for ${intent.name} contains illegal attribute ${attr}`
+      );
+    }
+  }
+  Object.assign(intent, data);
   intents[intent.name] = intent;
   if (!intent.match) {
     throw new Error(`Intent missing .match: ${intent.name}`);
@@ -255,12 +294,6 @@ export async function runIntent(desc) {
 }
 
 export function getIntentSummary() {
-  const {
-    PhraseSet,
-    compile,
-    splitPhraseLines,
-    convertEntities,
-  } = window.ecmaModules.language;
   const convertedEntities = convertEntities(intentParser.ENTITY_TYPES);
   const names = intentParser.getIntentNames();
   return names.map(name => {
@@ -272,6 +305,7 @@ export function getIntentSummary() {
       )
     );
     const matchers = matchSet.matchPhrases;
+    intent.matchSource = intent.match;
     intent.matchers = matchers.map(m => {
       return {
         phrase: m.originalSource,
@@ -283,7 +317,7 @@ export function getIntentSummary() {
     delete intent.match;
     if (intent.examples) {
       intent.examples = intent.examples.map(e => {
-        const toMatch = e.replace(/^test:/, "").replace(/[()]/g, "");
+        const toMatch = e.phrase;
         const parsed = intentParser.parse(
           toMatch,
           // Allow fallback for search.search, but not otherwise:

@@ -1,0 +1,154 @@
+[tabs.close]
+description = "Closes the current tab"
+match = """
+  close (this |) (tab | site | page) (for me |)
+"""
+
+[[tabs.close.example]]
+phrase = "close tab"
+
+[tabs.duplicate]
+description = "Duplicates a tab"
+match = """
+  duplicate (this | current |) (tab | page |) (for me |)
+"""
+
+[[tabs.duplicate.example]]
+phrase = "Duplicate this page"
+
+[tabs.fullScreen]
+description = "Full screen mode"
+match = """
+  (make |) (full screen | fullscreen)
+"""
+
+[[tabs.fullScreen.example]]
+phrase = "full screen"
+
+[tabs.moveToWindow]
+description = "Move tab in a new window"
+match = """
+  (open | move) (tab | this) (in | to) (a |) new window (for me|)
+"""
+
+[[tabs.moveToWindow.example]]
+phrase = "Move tab in a new window"
+
+[tabs.open]
+description = "Opens a new (blank) tab"
+match = """
+  open tab
+  (open | launch) (a | the |) (new | blank |) tab (for me|)
+  new (blank |) tab
+"""
+
+[[tabs.open.example]]
+phrase = "open tab"
+
+[[tabs.open.example]]
+phrase = "open top for me"
+test = true
+
+[[tabs.open.example]]
+phrase = "open the tab"
+test = true
+
+[tabs.openHomePage]
+description = "Opens HomePage in a tab"
+match = """
+  (open | go to |) (my |) homepage (for me|)
+"""
+
+[[tabs.openHomePage.example]]
+phrase = "open my homepage"
+
+[tabs.openPrivateWindow]
+description = "Opens a new private window"
+match = """
+  open (a |) (new | blank |) (private | incognito) window (for me|)
+  new (private | incognito) window
+"""
+
+[[tabs.openPrivateWindow.example]]
+phrase = "open private window"
+
+[tabs.openWindow]
+description = "Opens a new (blank) window"
+match = """
+  open window
+  (open | launch) (a |) (new | blank |) window (for me|)
+  new (blank |) window
+"""
+
+[[tabs.openWindow.example]]
+phrase = "open window"
+
+[tabs.pin]
+description = "Pins the current tab"
+match = """
+  pin (this |) tab (for me |)
+"""
+
+[[tabs.pin.example]]
+phrase = "pin tab"
+
+[[tabs.pin.example]]
+phrase = "pin tap"
+test = true
+
+[tabs.reload]
+description = "Reload the active tab of the current window"
+match = """
+  (reload | refresh) (this | current |) (tab | page |) (for me |)
+"""
+
+[[tabs.reload.example]]
+phrase = "reload this page"
+
+[tabs.saveAsPdf]
+description = "Saves the current tab as a PDF file"
+match = """
+  save (this | current |) (tab |) (as |) pdf (for me |)
+"""
+
+[[tabs.saveAsPdf.example]]
+phrase = "Save as PDF"
+
+[tabs.unpin]
+description = "Unpins the current tab"
+match = """
+  unpin (this |) tab (for me |)
+"""
+
+[[tabs.unpin.example]]
+phrase = "unpin tab"
+
+[tabs.zoomIn]
+description = "Zoom in current tab"
+match = """
+  zoom (in |) (this |) (tab |) (for me |)
+  increase size (for me |)
+"""
+
+[[tabs.zoomIn.example]]
+phrase = "Zoom in tab"
+
+[tabs.zoomOut]
+description = "Zoom out current tab"
+match = """
+  zoom out (this |) (tab |) (for me |)
+  decrease size (for me |)
+"""
+
+[[tabs.zoomOut.example]]
+phrase = "Zoom out tab"
+
+[tabs.zoomReset]
+description = "Reset zoom in current tab"
+match = """
+  reset (zoom | size) (for me |)
+  (zoom | size) reset (for me |)
+"""
+
+[[tabs.zoomReset.example]]
+phrase = "Reset zoom"

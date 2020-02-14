@@ -1,0 +1,78 @@
+[music.focus]
+description = "Focus the tab of a specific or auto-detected service, maybe opening a tab if none is already open"
+match = """
+  (open | show | focus) (my | the |) video (for me |) [service=youtube]
+  (open | show | focus) [service:musicServiceName] (for me|)
+  (open | show | focus) music
+"""
+
+[[music.focus.example]]
+phrase = "Open music"
+
+[music.move]
+description = "Go to the next or previous song on a service"
+match = """
+  (play |) next video               [direction=next] [service=youtube]
+  skip video                        [direction=next] [service=youtube]
+  (play |) previous video           [direction=back] [service=youtube]
+  play next (song | track |)        [direction=next]
+  next (song | track)             [direction=next]
+  play previous (song | track |)    [direction=back]
+  previous (song | track)         [direction=back]
+  (skip | forward) (song | track |) [direction=next]
+"""
+
+[[music.move.example]]
+phrase = "next track"
+
+[[music.move.example]]
+phrase = "previous song"
+
+[music.pause]
+description = "Pause all supported services (regardless of tab or window)"
+match = """
+  (stop | pause) video [service=youtube]
+  pause [service:musicServiceName]
+  pause (music |)
+  stop (music |)
+"""
+
+[[music.pause.example]]
+phrase = "Pause music"
+
+[music.play]
+description = "Play music on an explicit service, a default service, or the service in the active tab"
+match = """
+  play [query] (on | in) [service:musicServiceName]
+  play video{s} [query] [service=youtube]
+  play [query] video{s} [service=youtube]
+  play [query]
+  (do a |) (search | query | look up| look | look up | lookup) (on | in |) (my |) [service:musicServiceName] (for | for the |) [query]
+  (do a |) (search | query ) my [service:musicServiceName] (for | for the |) [query]
+  (do a |) (search | query ) (on |) [service:musicServiceName] (for | for the) [query]
+  (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:musicServiceName]
+"""
+
+[[music.play.example]]
+phrase = "Play Green Day"
+
+[music.unpause]
+description = "Unpause one service, the current tab, or the detected service"
+match = """
+  (unpause | continue | play) video [service=youtube]
+  (unpause | continue | play) [service:musicServiceName]
+  (unpause | continue | play) (music |)
+"""
+
+[[music.unpause.example]]
+phrase = "Unpause"
+
+[[music.unpause.example]]
+phrase = "continue music"
+
+[[music.unpause.example]]
+phrase = "play music"
+
+[[music.unpause.example]]
+phrase = "play spotify"
+test = true
