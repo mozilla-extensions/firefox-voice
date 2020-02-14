@@ -1,6 +1,5 @@
-/* globals browserUtil */
-
 import * as intentRunner from "../../background/intentRunner.js";
+import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",

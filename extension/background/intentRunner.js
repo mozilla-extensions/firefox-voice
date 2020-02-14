@@ -1,8 +1,9 @@
-/* globals log, catcher, browserUtil */
+/* globals log, catcher */
 
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import * as searching from "../searching.js";
+import * as browserUtil from "../browserUtil.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:

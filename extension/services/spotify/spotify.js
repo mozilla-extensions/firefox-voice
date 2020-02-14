@@ -1,8 +1,7 @@
-/* globals limiter */
-
 import * as music from "../../intents/music/music.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as content from "../../background/content.js";
+import { shouldDisplayWarning } from "../../limiter.js";
 
 class Spotify extends serviceList.Service {
   async playQuery(query) {
@@ -16,7 +15,7 @@ class Spotify extends serviceList.Service {
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (
           nowAudible ||
-          !(await limiter.shouldDisplayWarning("spotifyAudible", {
+          !(await shouldDisplayWarning("spotifyAudible", {
             times: 3,
             frequency: 1000,
           }))

@@ -1,7 +1,6 @@
-/* globals browserUtil */
-
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
+import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "saving.save",

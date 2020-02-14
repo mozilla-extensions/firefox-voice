@@ -1,7 +1,8 @@
-/* globals log, browserUtil */
+/* globals log */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
+import * as browserUtil from "../../browserUtil.js";
 
 export async function stopReading() {
   const activeTab = await browserUtil.activeTab();

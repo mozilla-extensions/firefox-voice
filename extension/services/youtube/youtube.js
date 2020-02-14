@@ -1,8 +1,9 @@
-/* globals util, limiter */
+/* globals util */
 
 import * as serviceList from "../../background/serviceList.js";
 import * as content from "../../background/content.js";
 import * as music from "../../intents/music/music.js";
+import { shouldDisplayWarning } from "../../limiter.js";
 
 const SUPPORTED_URLS = /^https:\/\/www.youtube.com\/watch/i;
 
@@ -37,7 +38,7 @@ class YouTube extends serviceList.Service {
     const isAudible = await this.pollTabAudible(this.tab.id, 3000);
     if (
       !isAudible &&
-      (await limiter.shouldDisplayWarning("youtubeAudible", {
+      (await shouldDisplayWarning("youtubeAudible", {
         times: 3,
         frequency: 1000,
       }))

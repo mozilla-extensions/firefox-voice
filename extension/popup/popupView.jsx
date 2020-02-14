@@ -1,6 +1,8 @@
-/* globals browserUtil, lottie, React */
+/* globals lottie, React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
+
+import * as browserUtil from "../browserUtil.js";
 
 const { Component, useState, useEffect, PureComponent } = React;
 

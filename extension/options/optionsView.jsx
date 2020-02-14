@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
-/* globals browserUtil */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
+
+import * as browserUtil from "../browserUtil.js";
 
 export const Options = ({
   inDevelopment,

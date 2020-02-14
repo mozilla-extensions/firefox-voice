@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
-/* globals React, browserUtil */
+/* globals React */
+
+import * as browserUtil from "../browserUtil.js";
 
 export const Onboarding = ({
   optinViewAlreadyShown,

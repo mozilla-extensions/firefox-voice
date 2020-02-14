@@ -1,9 +1,10 @@
-/* globals log, browserUtil, buildSettings */
+/* globals log, buildSettings */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
+import * as browserUtil from "../../browserUtil.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
