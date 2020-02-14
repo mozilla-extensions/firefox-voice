@@ -1,4 +1,4 @@
-/* globals intents, log, ppnListing */
+/* globals log, ppnListing, music_getServiceNamesAndTitles */
 
 this.settings = (function() {
   const exports = {};
@@ -39,7 +39,7 @@ this.settings = (function() {
     }
     const settings = exports.getSettings();
     const options = {
-      musicServices: intents.music.getServiceNamesAndTitles(),
+      musicServices: music_getServiceNamesAndTitles(),
       wakewords: Object.keys(ppnListing),
     };
     return { settings, options };

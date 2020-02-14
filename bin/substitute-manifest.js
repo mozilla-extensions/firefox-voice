@@ -19,6 +19,14 @@ const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
 const SERVICE_DIR = path.normalize(
   path.join(__dirname, "../extension/services")
 );
+const INTENT_OUTPUT = path.normalize(
+  path.join(__dirname, "../extension/background/intentImport.js")
+);
+const INTENT_TEMPLATE = INTENT_OUTPUT + ".ejs";
+const SERVICE_OUTPUT = path.normalize(
+  path.join(__dirname, "../extension/background/serviceImport.js")
+);
+const SERVICE_TEMPLATE = SERVICE_OUTPUT + ".ejs";
 
 function ignoreFilename(filename) {
   return filename.startsWith(".") || filename.endsWith(".txt");
@@ -77,4 +85,24 @@ ejs.renderFile(BUILD_TEMPLATE, context, options, function(err, str) {
   }
   fs.writeFileSync(BUILD_OUTPUT, str, { encoding: "UTF-8" });
   console.log(`${BUILD_OUTPUT} written`);
+});
+
+ejs.renderFile(INTENT_TEMPLATE, context, options, function(err, str) {
+  if (err) {
+    console.error("Error rendering", INTENT_TEMPLATE, "template:", err);
+    process.exit(1);
+    return;
+  }
+  fs.writeFileSync(INTENT_OUTPUT, str, { encoding: "UTF-8" });
+  console.log(`${INTENT_OUTPUT} written`);
+});
+
+ejs.renderFile(SERVICE_TEMPLATE, context, options, function(err, str) {
+  if (err) {
+    console.error("Error rendering", SERVICE_TEMPLATE, "template:", err);
+    process.exit(1);
+    return;
+  }
+  fs.writeFileSync(SERVICE_OUTPUT, str, { encoding: "UTF-8" });
+  console.log(`${SERVICE_OUTPUT} written`);
 });
