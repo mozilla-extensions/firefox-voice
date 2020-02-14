@@ -71,12 +71,6 @@ async function updateZoom(context, operation) {
 
 intentRunner.registerIntent({
   name: "tabs.zoomIn",
-  description: "Zoom in current tab",
-  examples: ["Zoom in tab"],
-  match: `
-  zoom (in |) (this |) (tab |) (for me |)
-  increase size (for me |)
-`,
   async run(context) {
     await updateZoom(context, 1);
   },
@@ -84,12 +78,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.zoomOut",
-  description: "Zoom out current tab",
-  examples: ["Zoom out tab"],
-  match: `
-  zoom out (this |) (tab |) (for me |)
-  decrease size (for me |)
-`,
   async run(context) {
     await updateZoom(context, -1);
   },
@@ -97,12 +85,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.zoomReset",
-  description: "Reset zoom in current tab",
-  examples: ["Reset zoom"],
-  match: `
-  reset (zoom | size) (for me |)
-  (zoom | size) reset (for me |)
-`,
   async run(context) {
     await updateZoom(context, 0);
   },
@@ -110,11 +92,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.close",
-  description: "Closes the current tab",
-  examples: ["close tab"],
-  match: `
-  close (this |) (tab | site | page) (for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.tabs.remove(activeTab.id);
@@ -123,13 +100,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.open",
-  description: "Opens a new (blank) tab",
-  examples: ["open tab", "test:open top for me", "test:open the tab"],
-  match: `
-  open tab
-  (open | launch) (a | the |) (new | blank |) tab (for me|)
-  new (blank |) tab
-  `,
   async run(context) {
     // context.createTab is the normal way to do this, but it sometimes doesn't open a new tab
     // Since the user asked, we definitely want to open a new tab
@@ -139,11 +109,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.pin",
-  description: "Pins the current tab",
-  examples: ["pin tab", "test:pin tap"],
-  match: `
-  pin (this |) tab (for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.tabs.update(activeTab.id, { pinned: true });
@@ -152,11 +117,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.unpin",
-  description: "Unpins the current tab",
-  examples: ["unpin tab"],
-  match: `
-  unpin (this |) tab (for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.tabs.update(activeTab.id, { pinned: false });
@@ -165,11 +125,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.saveAsPdf",
-  description: "Saves the current tab as a PDF file",
-  examples: ["Save as PDF"],
-  match: `
-  save (this | current |) (tab |) (as |) pdf (for me |)
-  `,
   async run(context) {
     // This could return:
     // "saved"
@@ -183,11 +138,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.reload",
-  description: "Reload the active tab of the current window",
-  examples: ["reload this page"],
-  match: `
-  (reload | refresh) (this | current |) (tab | page |) (for me |)
-  `,
   async run(context) {
     await browser.tabs.reload();
   },
@@ -195,11 +145,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.duplicate",
-  description: "Duplicates a tab",
-  examples: ["Duplicate this page"],
-  match: `
-  duplicate (this | current |) (tab | page |) (for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.tabs.duplicate(activeTab.id);
@@ -208,13 +153,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.openWindow",
-  description: "Opens a new (blank) window",
-  examples: ["open window"],
-  match: `
-  open window
-  (open | launch) (a |) (new | blank |) window (for me|)
-  new (blank |) window
-  `,
   async run(context) {
     await browser.windows.create({});
   },
@@ -222,11 +160,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.moveToWindow",
-  description: "Move tab in a new window",
-  examples: ["Move tab in a new window"],
-  match: `
-  (open | move) (tab | this) (in | to) (a |) new window (for me|)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.windows.create({ tabId: activeTab.id });
@@ -235,12 +168,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.openPrivateWindow",
-  description: "Opens a new private window",
-  examples: ["open private window"],
-  match: `
-  open (a |) (new | blank |) (private | incognito) window (for me|)
-  new (private | incognito) window
-  `,
   async run(context) {
     const isAllowed = browser.extension.isAllowedIncognitoAccess();
     if (isAllowed === true) {
@@ -256,11 +183,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.openHomePage",
-  description: "Opens HomePage in a tab",
-  examples: ["open my homepage"],
-  match: `
-  (open | go to |) (my |) homepage (for me|)
-  `,
   async run(context) {
     const result = await browser.browserSettings.homepageOverride.get({});
     const homePageUrls = result.value.split("|");
@@ -272,11 +194,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "tabs.fullScreen",
-  description: "Full screen mode",
-  examples: ["full screen"],
-  match: `
-  (make |) (full screen | fullscreen)
-  `,
   async run(context) {
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.update(currentWindow.id, { state: "fullscreen" });

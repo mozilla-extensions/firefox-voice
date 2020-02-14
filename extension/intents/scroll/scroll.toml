@@ -1,0 +1,41 @@
+[scroll.bottom]
+description = "Scroll the current page all the way to the bottom"
+match = """
+  scroll (this |) (tab | page | article |) all the way (down | downward |) (to the bottom |)
+  scroll (this |) (tab | page | article |) (all the way |) to (the |) (very |) (bottom | end)
+  page all the way (down | to the bottom | to bottom)
+"""
+
+[[scroll.bottom.example]]
+phrase = "Scroll all the way down"
+
+[scroll.down]
+description = "Scroll the current page down"
+match = """
+  scroll (this |) (tab | page | article |) (down | downward)
+  page down
+"""
+
+[[scroll.down.example]]
+phrase = "Scroll down"
+
+[scroll.top]
+description = "Scroll the current page all the way to the top"
+match = """
+  scroll (this |) (tab | page | article |) all the way (up | upward) (to the top |)
+  scroll (this |) (tab | page | article |) (all the way | back |) to (the |) (very |) (top | beginning)
+  page all the way (up | to the top | to top)
+"""
+
+[[scroll.top.example]]
+phrase = "Scroll all the way up"
+
+[scroll.up]
+description = "Scroll the current page up"
+match = """
+  scroll (this |) (tab | page | article |) (up | upward)
+  page up
+"""
+
+[[scroll.up.example]]
+phrase = "Scroll up"

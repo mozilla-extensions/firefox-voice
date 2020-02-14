@@ -1,0 +1,21 @@
+[saving.save]
+description = "Saves the current page as HTML"
+match = """
+  (save | download) (this | active |) (page | html) (as html |)
+  (save | download) (this | active |) (page | html) as [name]
+"""
+
+[[saving.save.example]]
+phrase = "Save page"
+
+[[saving.save.example]]
+phrase = "Save page as an example"
+
+[saving.showLastDownload]
+description = "Shows the last downloaded file in its containing folder"
+match = """
+  (show | view | find | open) (download | file)
+"""
+
+[[saving.showLastDownload.example]]
+phrase = "Show download"

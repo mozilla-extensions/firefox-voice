@@ -40,13 +40,6 @@ export async function pauseAny(options) {
 
 intentRunner.registerIntent({
   name: "read.read",
-  description:
-    "Narrate the given page. This puts the page into Reader Mode (failing if it can't) and starts narration",
-  examples: ["Read this page"],
-  match: `
-  (can you |) read (me | ) (this | the |) (article | articles | text |) (on this| )(tab | page |) (for me | to me |) (aloud |)
-  read (me |) [query] (for me | to me |) (aloud |)
-  `,
   async run(context) {
     let activeTab;
     const query = context.slots.query;
@@ -71,11 +64,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "read.stopRead",
-  description: "Stop reading/narrating the current tab",
-  examples: ["Stop reading"],
-  match: `
-  stop reading (this |) (tab | page |) (to me | for me |)
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     if (!activeTab.url.startsWith("about:reader")) {

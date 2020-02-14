@@ -1,0 +1,8 @@
+[print.print]
+description = "print the current tab"
+match = """
+  print (this | the |) (current |) (tab | page |)
+"""
+
+[[print.print.example]]
+phrase = "print tab"

@@ -23,21 +23,18 @@ function getAllExamples() {
     INTENT_EXAMPLES = {};
     for (const intentName in intentRunner.intents) {
       const intent = intentRunner.intents[intentName];
-      let examples = intent.examples;
+      const examples = intent.examples;
       if (!examples) {
         continue;
       }
-      if (typeof examples === "function") {
-        examples = intent.examples();
-      }
       for (const example of examples) {
-        if (example.startsWith("test:")) {
+        if (example.test) {
           continue;
         }
         if (!INTENT_EXAMPLES[intentName]) {
           INTENT_EXAMPLES[intentName] = [];
         }
-        INTENT_EXAMPLES[intentName].push(example);
+        INTENT_EXAMPLES[intentName].push(example.phrase);
       }
     }
   }

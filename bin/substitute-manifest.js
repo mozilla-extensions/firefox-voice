@@ -29,7 +29,11 @@ const SERVICE_OUTPUT = path.normalize(
 const SERVICE_TEMPLATE = SERVICE_OUTPUT + ".ejs";
 
 function ignoreFilename(filename) {
-  return filename.startsWith(".") || filename.endsWith(".txt");
+  return (
+    filename.startsWith(".") ||
+    filename.endsWith(".txt") ||
+    filename.endsWith(".js")
+  );
 }
 
 const filenames = fs.readdirSync(INTENT_DIR, { encoding: "UTF-8" });

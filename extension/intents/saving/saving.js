@@ -4,12 +4,6 @@ import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "saving.save",
-  description: "Saves the current page as HTML",
-  examples: ["Save page", "Save page as an example"],
-  match: `
-  (save | download) (this | active |) (page | html) (as html |)
-  (save | download) (this | active |) (page | html) as [name]
-  `,
   async run(context) {
     let filename;
     const activeTab = await browserUtil.activeTab();
@@ -35,11 +29,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "saving.showLastDownload",
-  description: "Shows the last downloaded file in its containing folder",
-  examples: ["Show download"],
-  match: `
-  (show | view | find | open) (download | file)
-  `,
   async run(context) {
     const downloadItems = await browser.downloads.search({
       limit: 1,

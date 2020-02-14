@@ -1,0 +1,18 @@
+[aboutPage.changeComments]
+description = "If you've used \"show comments on this page\" and there were multiple forums or pages, this will show the next (or previous) comment forum"
+match = """
+  next comment{s} [move=next]
+  previous comment{s} [move=previous]
+"""
+
+[aboutPage.comments]
+description = "This will try to find comments for the current page, searching Reddit and Hacker News, showing forums in order of the number of comments"
+match = """
+  (show | open |) comment{s} on (this |) (page | tab | article) (to me | for me |)
+  (show | open |) what are people (saying | talking | commenting) about (this |) (page | tab | article) (to me | for me |)
+  (show | open |) comments (for | on) (this |) (page | tab | article) (to me | for me |)
+  (show | open |) comments (to me | for me |)
+"""
+
+[[aboutPage.comments.example]]
+phrase = "Comments on this page?"

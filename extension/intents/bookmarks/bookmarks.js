@@ -5,17 +5,6 @@ import * as intentRunner from "../../background/intentRunner.js";
 
 intentRunner.registerIntent({
   name: "bookmarks.open",
-  description:
-    "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched",
-  examples: ["Open news bookmark"],
-  match: `
-  open [query] bookmark (for me |) in (this | current |) tab (for me |) [tab=this]
-  open bookmark [query] (for me |) in (this | current |) tab (for me |) [tab=this]
-  open [query] bookmark in new (tab |)
-  open bookmark [query] in new (tab |)
-  open [query] bookmark (for me|)
-  open bookmark [query] (for me|)
-  `,
   async run(context) {
     const bookmarks = await browser.bookmarks.search({});
     const bookmarksById = new Map();
@@ -71,13 +60,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "bookmarks.create",
-  description:
-    "Creates a bookmark placing it in the default folder (Other Bookmarks)",
-  examples: ["Bookmark this page"],
-  match: `
-  bookmark (this |) (page | site | tab |) (for me |)
-  (save | add) (this |) (page | site | tab |) to bookmarks
-  `,
   async run(context) {
     const activeTab = await context.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);

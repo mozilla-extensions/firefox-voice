@@ -1,0 +1,16 @@
+[find.find]
+description = "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active"
+match = """
+  (find | bring me to | switch to) (my | the |) [query] (tab |)
+  (find | open | focus | show | switch to) tab [query]
+  go (to | to the |) [query] tab
+  go to my [query]
+  focus [query] (tab |)
+"""
+
+[[find.find.example]]
+phrase = "Find calendar tab"
+
+[[find.find.example]]
+phrase = "go to my calendar"
+test = true

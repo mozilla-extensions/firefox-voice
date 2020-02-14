@@ -261,29 +261,6 @@ export function isSearchTab(tab) {
 
 intentRunner.registerIntent({
   name: "search.search",
-  description:
-    "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab.",
-  match: `
-  (do a |) (query | find | find me | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
-  `,
-  examples: [
-    "Look up recipes for fish tacos",
-    "Who created breaking bad?",
-    "Who won the World Series game last night?",
-    "How deep is the Marianas Trench?",
-    "Weather in Flagstaff, Arizona",
-    "What's the temperature in San Antonio?",
-    "What time is it?",
-    "What time is it in Berlin?",
-    "How long will it take to get to Springfield?",
-    "How do I get to the hardware store?",
-    "Search for hiking in Denver",
-    "Look up The Book Thief on GoodReads",
-    "Search CSS grid on MDN",
-    "Go to the New York Times",
-    "Show me the 49ers schedule",
-    "Go to the Health section of the BBC",
-  ],
   async run(context) {
     stopCardPoll();
     // An old popup-only search result is no longer valid once a new search is made:
@@ -329,12 +306,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "search.next",
-  description:
-    "If you've done a search then this will display the next search result. If the last search had a card, and no search result was opened, then this will open a new tab with the first search result.",
-  examples: ["test:next search item", "test:next"],
-  match: `
-  (search |) next (to view |) (search |) (result{s} | item{s} | page | article |)
-  `,
   async run(context) {
     await moveResult(context, 1);
   },
@@ -342,12 +313,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "search.previous",
-  description:
-    "If you've done a search then this will display the previous search result.",
-  examples: ["test:previous search item", "test:previous"],
-  match: `
-  (search |) previous (search |) (result{s} | item{s} | page | article |)
-  `,
   async run(context) {
     await moveResult(context, -1);
   },
@@ -355,12 +320,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "search.show",
-  description: "Focuses the special tab used for searching",
-  examples: ["test:open results", "test:show search result"],
-  match: `
-  (open | show | focus) search (result{s} |)
-  (open | show | focus) result{s}
-  `,
   async run(context) {
     stopCardPoll();
     const { searchInfo } = await getSearchInfo();
@@ -380,11 +339,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "search.searchPage",
-  description: "Opens a search page",
-  match: `
-  (do a |) (search | google) (google | the web | the internet |) (for |) [query] (one the web |) (for me|)
-  `,
-  examples: ["Search for hiking in Denver", "test:search for tops"],
   async run(context) {
     if (buildSettings.android) {
       await performSearch(context.slots.query);

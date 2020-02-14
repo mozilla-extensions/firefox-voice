@@ -16,11 +16,6 @@ async function copy(context, copyType, complete = false) {
 
 intentRunner.registerIntent({
   name: "clipboard.copyLink",
-  description: "Copies the link of the current tab",
-  examples: ["Copy link"],
-  match: `
-  copy (the |) (this |) (tab's |) (link | url) (of this tab |) (to clipboard |)
-  `,
   async run(context) {
     return copy(context, "copyLink");
   },
@@ -28,13 +23,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copyTitle",
-  description: "Copies the title of the current tab",
-  examples: ["Copy tab title"],
-  match: `
-  copy (the |) title of (the | this |) tab (to clipboard |)
-  copy (the |) tab title (to clipboard |)
-  copy title (to clipboard |)
-  `,
   async run(context) {
     return copy(context, "copyTitle");
   },
@@ -42,15 +30,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copyRichLink",
-  description: "Copies the HTML title and link",
-  examples: ["Copy HTML link"],
-  match: `
-  copy (the |) (rich | html) link of (the | this |) tab (to clipboard |)
-  copy (the |) (rich | html) (tab |) link (to clipboard |)
-  copy (the |) (rich | html) link (to clipboard |)
-  copy (the |) title and link (to clipboard |)
-  copy (the |) link and title (to clipboard |)
-  `,
   async run(context) {
     return copy(context, "copyRichLink");
   },
@@ -58,14 +37,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copyMarkdownLink",
-  description: "Copies the Markdown [title](link)",
-  examples: ["Copy Markdown link"],
-  match: `
-  copy (the |) markdown link of (the | this |) tab (to clipboard |)
-  copy (the |) markdown (tab |) link (to clipboard |)
-  copy (the |) markdown title and link (to clipboard |)
-  copy (the |) markdown link and title (to clipboard |)
-  `,
   async run(context) {
     return copy(context, "copyMarkdownLink");
   },
@@ -73,13 +44,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copyScreenshot",
-  description: "Copies the screenshot of the visible page",
-  examples: ["Copy screenshot"],
-  match: `
-  copy (the |) screenshot of (the | this |) tab (to clipboard |)
-  copy (the |) (tab's |) screenshot (to clipboard |)
-  screenshot (this |) (tab |) to clipboard
-  `,
   async run(context) {
     return copy(context, "copyScreenshot");
   },
@@ -87,13 +51,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copyFullPageScreenshot",
-  description: "Copies a full page screenshot",
-  examples: ["Copy full page screenshot"],
-  match: `
-  copy (the |) full (page |) (screenshot |) of (the | this |) tab (to clipboard |)
-  copy (the |) (tab's |) full (page |) (screenshot |) (to clipboard |)
-  screenshot full (page |) to clipboard
-  `,
   async run(context) {
     return copy(context, "copyFullPageScreenshot");
   },
@@ -101,11 +58,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.copySelection",
-  description: "Copies the selection",
-  examples: ["Copy selection"],
-  match: `
-  copy (this |) (selection |) (to clipboard |)
-  `,
   async run(context) {
     return copy(context, "copySelection");
   },
@@ -113,11 +65,6 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "clipboard.paste",
-  description: "Pastes from the clipboard",
-  examples: ["Paste"],
-  match: `
-  paste (the |) (selection | clipboard |)
-  `,
   async run(context) {
     try {
       // OK, not actually a copy, but...

@@ -7,16 +7,7 @@ import { stopReading } from "../read/read.js";
 const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
 
 intentRunner.registerIntent({
-  name: "mute.mute",
-  description:
-    "Mute all audible tabs (new tabs or silent tabs are not muted); does not pause any media, only mute the sound",
-  examples: ["mute (all tabs)"],
-  match: `
-  (mute | turn off) (whatever is |) (playing | all |) (the |) (music | audio | sound | everything | tab{s}) (for me |)
-  mute
-  quiet (tabs{s} |) (for me |)
-  shut up (tab{s} |) (for me |)
-  `,
+  name: "muting.mute",
   async run(desc) {
     const stoppedReading = await stopReading();
     if (stoppedReading) {
@@ -42,11 +33,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "mute.unmute",
-  description: "Unmute all tabs",
-  match: `
-  unmute (tab{s} |) (for me |)
-  `,
+  name: "muting.unmute",
   async run(desc) {
     const mutedTabs = await browser.tabs.query({ audible: false });
     if (mutedTabs.empty) {

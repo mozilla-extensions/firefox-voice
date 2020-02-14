@@ -1,0 +1,84 @@
+[clipboard.copyFullPageScreenshot]
+description = "Copies a full page screenshot"
+match = """
+  copy (the |) full (page |) (screenshot |) of (the | this |) tab (to clipboard |)
+  copy (the |) (tab's |) full (page |) (screenshot |) (to clipboard |)
+  screenshot full (page |) to clipboard
+"""
+
+[[clipboard.copyFullPageScreenshot.example]]
+phrase = "Copy full page screenshot"
+
+[clipboard.copyLink]
+description = "Copies the link of the current tab"
+match = """
+  copy (the |) (this |) (tab's |) (link | url) (of this tab |) (to clipboard |)
+"""
+
+[[clipboard.copyLink.example]]
+phrase = "Copy link"
+
+[clipboard.copyMarkdownLink]
+description = "Copies the Markdown [title](link)"
+match = """
+  copy (the |) markdown link of (the | this |) tab (to clipboard |)
+  copy (the |) markdown (tab |) link (to clipboard |)
+  copy (the |) markdown title and link (to clipboard |)
+  copy (the |) markdown link and title (to clipboard |)
+"""
+
+[[clipboard.copyMarkdownLink.example]]
+phrase = "Copy Markdown link"
+
+[clipboard.copyRichLink]
+description = "Copies the HTML title and link"
+match = """
+  copy (the |) (rich | html) link of (the | this |) tab (to clipboard |)
+  copy (the |) (rich | html) (tab |) link (to clipboard |)
+  copy (the |) (rich | html) link (to clipboard |)
+  copy (the |) title and link (to clipboard |)
+  copy (the |) link and title (to clipboard |)
+"""
+
+[[clipboard.copyRichLink.example]]
+phrase = "Copy HTML link"
+
+[clipboard.copyScreenshot]
+description = "Copies the screenshot of the visible page"
+match = """
+  copy (the |) screenshot of (the | this |) tab (to clipboard |)
+  copy (the |) (tab's |) screenshot (to clipboard |)
+  screenshot (this |) (tab |) to clipboard
+"""
+
+[[clipboard.copyScreenshot.example]]
+phrase = "Copy screenshot"
+
+[clipboard.copySelection]
+description = "Copies the selection"
+match = """
+  copy (this |) (selection |) (to clipboard |)
+"""
+
+[[clipboard.copySelection.example]]
+phrase = "Copy selection"
+
+[clipboard.copyTitle]
+description = "Copies the title of the current tab"
+match = """
+  copy (the |) title of (the | this |) tab (to clipboard |)
+  copy (the |) tab title (to clipboard |)
+  copy title (to clipboard |)
+"""
+
+[[clipboard.copyTitle.example]]
+phrase = "Copy tab title"
+
+[clipboard.paste]
+description = "Pastes from the clipboard"
+match = """
+  paste (the |) (selection | clipboard |)
+"""
+
+[[clipboard.paste.example]]
+phrase = "Paste"

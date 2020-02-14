@@ -1,0 +1,24 @@
+[bookmarks.create]
+description = "Creates a bookmark placing it in the default folder (Other Bookmarks)"
+match = """
+  bookmark (this |) (page | site | tab |) (for me |)
+  (save | add) (this |) (page | site | tab |) to bookmarks
+"""
+
+[[bookmarks.create.example]]
+phrase = "Bookmark this page"
+
+[bookmarks.open]
+description = "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched"
+match = """
+  open [query] bookmark (for me |) in (this | current |) tab (for me |) [tab=this]
+  open bookmark [query] (for me |) in (this | current |) tab (for me |) [tab=this]
+  open [query] bookmark in new (tab |)
+  open bookmark [query] in new (tab |)
+  open [query] bookmark (for me|)
+  open bookmark [query] (for me|)
+"""
+
+[[bookmarks.open.example]]
+phrase = "Open news bookmark"
+

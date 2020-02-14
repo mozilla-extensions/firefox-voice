@@ -1,0 +1,36 @@
+[notes.add]
+description = "Add to the note with the given text"
+match = """
+  (make | add | write) note{s} (about |) [text] (for me |)
+"""
+
+[[notes.add.example]]
+phrase = "Add note stuff to remember"
+
+[notes.addLink]
+description = "Add to the note with the link and title of the current tab"
+match = """
+  (make | add | write |) note{s} (of | about |) (this |) (page | tab | link) (for me |)
+"""
+
+[[notes.addLink.example]]
+phrase = "Make note of this page"
+
+[notes.setPlace]
+description = "Indicate where note should be written, both the tab and the element on the tab where text will go"
+match = """
+  (add | make) note{s} (here | this page | this tab) (for me |)
+  write (note{s} |) (here | this page | this tab) (for me |)
+"""
+
+[[notes.setPlace.example]]
+phrase = "Write notes here"
+
+[notes.show]
+description = "Focus the tab previously indicated as being the place to write notes"
+match = """
+  (show | focus | activate | read) (the |) note{s} (for me |)
+"""
+
+[[notes.show.example]]
+phrase = "Show notes"
