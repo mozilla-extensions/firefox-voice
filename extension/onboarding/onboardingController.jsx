@@ -1,7 +1,8 @@
-/* globals React, ReactDOM, settings */
+/* globals React, ReactDOM */
 
 // eslint-disable-next-line no-unused-vars
 import * as onboardingView from "./onboardingView.js";
+import * as settings from "../settings.js";
 
 const { useState, useEffect } = React;
 const onboardingContainer = document.getElementById("onboarding-container");

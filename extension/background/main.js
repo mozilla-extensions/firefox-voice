@@ -1,9 +1,10 @@
-/* globals log, util, buildSettings, settings, catcher */
+/* globals log, util, buildSettings, catcher */
 
 import * as intentRunner from "./intentRunner.js";
 import * as intentExamples from "./intentExamples.js";
 import * as telemetry from "./telemetry.js";
 import * as browserUtil from "../browserUtil.js";
+import * as settings from "../settings.js";
 // eslint-disable-next-line no-unused-vars
 import * as intentImport from "./intentImport.js";
 // eslint-disable-next-line no-unused-vars

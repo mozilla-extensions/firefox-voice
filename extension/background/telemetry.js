@@ -1,7 +1,8 @@
-/* globals util, log, buildSettings, catcher, settings */
+/* globals util, log, buildSettings, catcher */
 
 import * as voiceSchema from "./voiceSchema.js";
 import * as main from "./main.js";
+import * as settings from "../settings.js";
 
 // These fields will be deleted from the ping if the user has not opted-in
 // to this special collection:

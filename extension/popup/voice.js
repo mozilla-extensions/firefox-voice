@@ -1,6 +1,7 @@
-/* globals buildSettings, log, util, settings */
+/* globals buildSettings, log, util */
 
 import * as vad from "./vad.js";
+import * as settings from "../settings.js";
 
 const STT_SERVER_URL =
   buildSettings.sttServer || "https://speaktome-2.services.mozilla.com";

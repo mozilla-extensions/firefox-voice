@@ -1,4 +1,6 @@
-/* globals PorcupineManager, ppnListing, log, catcher, settings */
+/* globals PorcupineManager, ppnListing, log, catcher */
+
+import * as settings from "../settings.js";
 
 const SKIP_WORDS = ["navy_blue"];
 let enabled = false;

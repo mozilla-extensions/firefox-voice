@@ -1,6 +1,7 @@
-/* globals React, ReactDOM, util, settings, log, buildSettings, browserUtil, catcher, vad */
+/* globals React, ReactDOM, util, log, buildSettings, browserUtil, catcher, vad */
 
 import * as voice from "./voice.js";
+import * as settings from "../settings.js";
 import * as voiceShim from "./voiceShim.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
