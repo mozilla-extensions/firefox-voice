@@ -9,6 +9,18 @@
         "description": "Forces the popup to open",
         "parameters": [],
         "async": true
+      },
+      {
+        "name": "doCommand",
+        "type": "function",
+        "description": "Performs a command, such as scrolling",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "commandName"
+          }
+        ],
+        "async": true
       }
     ]
   }

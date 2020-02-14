@@ -1,38 +1,29 @@
-import * as content from "../../background/content.js";
 import * as intentRunner from "../../background/intentRunner.js";
 
 intentRunner.registerIntent({
   name: "scroll.up",
   async run(context) {
-    const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, "intents/scroll/scrollHelper.js");
-    await browser.tabs.sendMessage(activeTab.id, { type: "scrollUp" });
+    await browser.experiments.voice.doCommand("cmd_scrollPageUp");
   },
 });
 
 intentRunner.registerIntent({
   name: "scroll.down",
   async run(context) {
-    const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, "intents/scroll/scrollHelper.js");
-    await browser.tabs.sendMessage(activeTab.id, { type: "scrollDown" });
+    await browser.experiments.voice.doCommand("cmd_scrollPageDown");
   },
 });
 
 intentRunner.registerIntent({
   name: "scroll.top",
   async run(context) {
-    const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, "intents/scroll/scrollHelper.js");
-    await browser.tabs.sendMessage(activeTab.id, { type: "scrollToTop" });
+    await browser.experiments.voice.doCommand("cmd_scrollTop");
   },
 });
 
 intentRunner.registerIntent({
   name: "scroll.bottom",
   async run(context) {
-    const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, "intents/scroll/scrollHelper.js");
-    await browser.tabs.sendMessage(activeTab.id, { type: "scrollToBottom" });
+    await browser.experiments.voice.doCommand("cmd_scrollBottom");
   },
 });
