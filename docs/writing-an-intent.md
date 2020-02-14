@@ -31,30 +31,27 @@ The Intent Viewer will show you all the events, and information about the intent
 Each should look roughly like this:
 
 ```js
-/* globals intents, intentRunner */
+import * as intentRunner from "../../background/intentRunner.js";
 
-intents.someIntent = (function() {
-  intentRunner.register({
-    name: "someIntent.command",
-    description:
-      "A short description of what it does, mostly for other developers.",
-    examples: ["a test intent", "test:an example intent"],
-    match: `
-      a{n} (test | example) intent
-    `,
-    async run(context) {
-      // Run the command
-    },
-  });
-})();
+intentRunner.register({
+  name: "someIntent.command",
+  description:
+    "A short description of what it does, mostly for other developers.",
+  examples: ["a test intent", "test:an example intent"],
+  match: `
+    a{n} (test | example) intent
+  `,
+  async run(context) {
+    // Run the command
+  },
+});
 ```
 
 Some things to note:
 
-- We use an [old-school](https://coryrylan.com/blog/javascript-module-pattern-basics) module pattern in the code-base. Though it's not very elegant, this pattern works everywhere in an extension.
-- Intents often don't actually export anything. If they did, then the function would contain `const exports = {}; exports.something = ...; return exports`
+- We use [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) in most of the extension (except for content scripts).
+- Intents often don't actually export anything, they work by calling `intentRunner.register()`. But you can [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) if you want.
 - We use [eslint](https://eslint.org/) in the codebase, and it's recommended you configure your editor to show warnings.
-- The eslint rules will complain if there are undefined variables, so `/* globals ... */` is required. It's how we fake import statements ;)
 
 **name**: this is a unique name for the intent, the first part should match your module name.
 
@@ -68,7 +65,7 @@ Some things to note:
 
 ## Intent matching
 
-When you register an intent you give a number of matches. The matching is implemented in [`intentParser.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/background/intentParser.js), and each expression is compiled to a regular expression. You can see the regular expressions in the Intent Viewer.
+When you register an intent you give a number of matches. The matching is implemented in [`compiler.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/background/language/compiler.js).
 
 Each pattern is a line in the string (we use backquotes for multi-line strings). Empty lines and lines starting with `#` or `//` are ignored.
 
@@ -156,9 +153,11 @@ Or maybe:
 })();
 ```
 
+Note you _cannot_ use JavaScript modules in content scripts.
+
 ## Logging
 
-Use `log.info()` (debug, etc) for any logging you plan to leave in the code.
+Use `log.info()` (debug, etc) for any logging you plan to leave in the code. `log` is a global; you don't have to import it, though you do have to use `/* globals log */` at the top of the file. `log` is available in all contexts.
 
 If you are doing debugging, use `console.log()`. These are _not_ allowed in the code (and `npm test` will fail), but that's intentional: you should remove any debugging before committing the code, and only leave deliberate log messages.
 
