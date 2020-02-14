@@ -1,4 +1,6 @@
-/* globals util, log, ui */
+/* globals log, ui */
+
+import * as util from "../util.js";
 
 let Module;
 

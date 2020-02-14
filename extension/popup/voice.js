@@ -1,5 +1,6 @@
-/* globals buildSettings, log, util */
+/* globals buildSettings, log */
 
+import * as util from "../util.js";
 import * as vad from "./vad.js";
 import * as settings from "../settings.js";
 

@@ -1,5 +1,6 @@
-/* globals log, util */
+/* globals log */
 
+import * as util from "../util.js";
 import * as voice from "../popup/voice.js";
 import * as wakeword from "./wakeword.js";
 

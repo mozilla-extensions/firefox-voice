@@ -1,8 +1,7 @@
-/* globals util */
-
 import * as content from "./content.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
+import * as util from "../util.js";
 
 // See https://duckduckgo.com/bang for a list of potential services
 const SERVICE_BANG_ALIASES = {

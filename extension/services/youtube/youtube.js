@@ -1,5 +1,4 @@
-/* globals util */
-
+import * as util from "../../util.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as content from "../../background/content.js";
 import * as music from "../../intents/music/music.js";

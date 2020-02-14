@@ -1,5 +1,6 @@
-/* globals React, ReactDOM, util, log, buildSettings, browserUtil, catcher, vad */
+/* globals React, ReactDOM, log, buildSettings, browserUtil, catcher, vad */
 
+import * as util from "../util.js";
 import * as voice from "./voice.js";
 import * as settings from "../settings.js";
 import * as voiceShim from "./voiceShim.js";

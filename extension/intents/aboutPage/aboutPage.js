@@ -1,7 +1,6 @@
-/* globals util */
-
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
+import * as util from "../../util.js";
 
 const HN_SEARCH = "https://hn.algolia.com/api/v1/search?query=__URL__";
 const REDDIT_SEARCH =
