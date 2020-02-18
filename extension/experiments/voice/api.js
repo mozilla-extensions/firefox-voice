@@ -45,7 +45,7 @@ this.voice = class extends ExtensionAPI {
               {}
             ).Management.global.windowTracker;
             const window = windowTracker.topWindow;
-            return window.docShell.doCommand(commandName);
+            return window.goDoCommand(commandName);
           },
         },
       },
