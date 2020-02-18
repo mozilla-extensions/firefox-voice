@@ -1,3 +1,4 @@
+/* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
 
 const MAX_ZOOM = 3;
@@ -151,35 +152,42 @@ intentRunner.registerIntent({
   },
 });
 
-intentRunner.registerIntent({
-  name: "tabs.openWindow",
-  async run(context) {
-    await browser.windows.create({});
-  },
-});
+if (!buildSettings.android) {
+  intentRunner.registerIntent({
+    name: "tabs.openWindow",
+    async run(context) {
+      await browser.windows.create({});
+    },
+  });
+}
 
-intentRunner.registerIntent({
-  name: "tabs.moveToWindow",
-  async run(context) {
-    const activeTab = await context.activeTab();
-    await browser.windows.create({ tabId: activeTab.id });
-  },
-});
+if (!buildSettings.android) {
+  intentRunner.registerIntent({
+    name: "tabs.moveToWindow",
+    async run(context) {
+      const activeTab = await context.activeTab();
+      await browser.windows.create({ tabId: activeTab.id });
+    },
+  });
+}
 
-intentRunner.registerIntent({
-  name: "tabs.openPrivateWindow",
-  async run(context) {
-    const isAllowed = browser.extension.isAllowedIncognitoAccess();
-    if (isAllowed === true) {
-      await browser.windows.create({ incognito: true });
-    } else {
-      const e = new Error("Failed to open private window");
-      e.displayMessage =
-        "Extension does not have permission for incognito mode";
-      throw e;
-    }
-  },
-});
+if (!buildSettings.android) {
+  // See open bug https://bugzilla.mozilla.org/show_bug.cgi?id=1372178 for Android support
+  intentRunner.registerIntent({
+    name: "tabs.openPrivateWindow",
+    async run(context) {
+      const isAllowed = browser.extension.isAllowedIncognitoAccess();
+      if (isAllowed === true) {
+        await browser.windows.create({ incognito: true });
+      } else {
+        const e = new Error("Failed to open private window");
+        e.displayMessage =
+          "Extension does not have permission for incognito mode";
+        throw e;
+      }
+    },
+  });
+}
 
 intentRunner.registerIntent({
   name: "tabs.openHomePage",
@@ -195,6 +203,11 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.fullScreen",
   async run(context) {
+    if (buildSettings.android) {
+      const exc = new Error("Full screen not supported on Android");
+      exc.displayMessage = exc.message;
+      throw exc;
+    }
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.update(currentWindow.id, { state: "fullscreen" });
   },

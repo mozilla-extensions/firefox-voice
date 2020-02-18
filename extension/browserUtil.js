@@ -20,7 +20,9 @@ export async function makeTabActive(tab) {
     throw new Error("Cannot make tab active without ID");
   }
   await browser.tabs.update(tabId, { active: true });
-  await browser.windows.update(tab.windowId, { focused: true });
+  if (!buildSettings.android) {
+    await browser.windows.update(tab.windowId, { focused: true });
+  }
 }
 
 export async function loadUrl(tabId, url) {
