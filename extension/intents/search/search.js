@@ -133,7 +133,14 @@ async function callScript(message) {
       `Attempt to send message ${message.type} to missing search tab`
     );
   }
-  return browser.tabs.sendMessage(_searchTabId, message);
+  try {
+    const result = await browser.tabs.sendMessage(_searchTabId, message);
+    return result;
+  } catch (e) {
+    e.searchTabId = _searchTabId;
+    e.sendMessageBody = message;
+    throw e;
+  }
 }
 
 let cardPollTimeout;
