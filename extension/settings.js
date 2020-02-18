@@ -33,6 +33,9 @@ export async function getSettingsAndOptions() {
     const result = await browser.runtime.sendMessage({
       type: "getSettingsAndOptions",
     });
+    if (!result) {
+      throw new Error(`sendMessage getSettingsAndOptions returned ${result}`);
+    }
     return result;
   }
   const settings = getSettings();
