@@ -181,10 +181,10 @@ async function openRecordingTab() {
 }
 
 async function zeroVolumeError() {
-  const exc = new Error("zeroVolumeError with no recorder tab");
-  log.error(exc.message);
-  catcher.capture(exc);
   if (!recorderTabId) {
+    const exc = new Error("zeroVolumeError with no recorder tab");
+    log.error(exc.message);
+    catcher.capture(exc);
     throw exc;
   }
   await browserUtil.makeTabActive(recorderTabId);
