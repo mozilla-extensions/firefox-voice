@@ -45,7 +45,7 @@ export async function getSettingsAndOptions() {
 
 export async function saveSettings(settings) {
   if (Object.keys(watchers).length !== 0) {
-    const oldSettings = exports.getSettings();
+    const oldSettings = getSettings();
     for (const name in settings) {
       if (settings[name] !== oldSettings[name]) {
         const callbacks = watchers[name] || [];
