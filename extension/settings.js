@@ -59,7 +59,7 @@ export async function saveSettings(settings) {
       }
     }
   }
-  if (typeof main === "undefined") {
+  if (typeof isBackgroundPage === "undefined" || !isBackgroundPage) {
     // We're not running in the background
     // Remove any inherited/default properties:
     settings = JSON.parse(JSON.stringify(settings));

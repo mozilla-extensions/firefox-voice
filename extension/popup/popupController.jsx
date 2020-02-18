@@ -77,6 +77,7 @@ export const PopupController = function() {
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
+      log.info("Opening onboard to force opt-in/out to transcripts");
       await browserUtil.activateTab("onboarding/onboard.html");
       window.close();
       return;
