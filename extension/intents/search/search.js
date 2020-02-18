@@ -1,4 +1,4 @@
-/* globals log, buildSettings */
+/* globals log, buildSettings, catcher */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as searching from "../../searching.js";
@@ -164,6 +164,10 @@ function pollForCard(maxTime) {
         return;
       }
       throw e;
+    }
+    if (!card) {
+      catcher.capture(new Error(`callScript cardImage returned ${card}`));
+      return;
     }
     if (card.src === lastImage) {
       return;
