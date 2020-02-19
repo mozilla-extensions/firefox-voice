@@ -214,6 +214,7 @@ if (buildSettings.openPopupOnStart) {
 }
 
 async function wakewordPopup(wakeword) {
+  telemetry.add({ wakewordUsed: wakeword });
   log.info("Received wakeword", wakeword);
   try {
     const result = await browser.runtime.sendMessage({

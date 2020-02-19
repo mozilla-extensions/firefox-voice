@@ -111,6 +111,7 @@ export function send() {
         delete ping[field];
       }
     }
+    ping.wakewordEnabled = s.enableWakeword;
     browser.telemetry
       .submitPing("voice", ping, {
         addClientId: true,
