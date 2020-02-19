@@ -8,7 +8,7 @@ const DEFAULT_SETTINGS = {
   disableTelemetry: false,
   utterancesTelemetry: false,
   collectAudio: false,
-  collectTranscriptsOptinShown: false,
+  collectTranscriptsOptinAnswered: false,
   keyboardShortcut: null,
   enableWakeword: false,
   wakewords: ["grasshopper"],
