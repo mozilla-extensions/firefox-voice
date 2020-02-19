@@ -112,6 +112,7 @@ export function send() {
       }
     }
     ping.wakewordEnabled = s.enableWakeword;
+    ping.optInAudio = s.collectAudio;
     browser.telemetry
       .submitPing("voice", ping, {
         addClientId: true,
