@@ -83,7 +83,11 @@ export async function activateTabClickHandler(event) {
 
 export async function createTab(options) {
   const active = await activeTab();
-  if (["about:blank", "about:home", "about:newtab"].includes(active.url)) {
+  if (
+    ["about:blank", "about:home", "about:newtab"].includes(active.url) ||
+    (buildSettings.executeIntentUrl &&
+      active.url.startsWith(buildSettings.executeIntentUrl))
+  ) {
     return browser.tabs.update(options);
   }
   return browser.tabs.create(options);

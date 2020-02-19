@@ -35,10 +35,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   log.messaging(`${senderInfo} ${message.type}${propString}`);
   if (message.type === "runIntent") {
     if (message.closeThisTab) {
-      browser.tabs.remove(sender.tab.id).catch(e => {
-        log.error("Error closing temporary execution tab:", e);
-        catcher.capture(e);
-      });
+      closeTabSoon(sender.tab.id, sender.tab.url);
     }
     return intentRunner.runUtterance(message.text, message.noPopup);
   } else if (message.type === "getExamples") {
@@ -178,6 +175,22 @@ async function openRecordingTab() {
     await util.sleep(100);
   }
   await browserUtil.makeTabActive(activeTab);
+}
+
+function closeTabSoon(tabId, tabUrl) {
+  setTimeout(async () => {
+    try {
+      const tab = await browser.tabs.get(tabId);
+      if (tab.url !== tabUrl) {
+        // The tab has been updated, and shouldn't be closed
+        return;
+      }
+      await browser.tabs.remove(tabId);
+    } catch (e) {
+      log.error("Error closing temporary execution tab:", e);
+      catcher.capture(e);
+    }
+  }, 250);
 }
 
 async function zeroVolumeError() {
