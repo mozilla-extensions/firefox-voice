@@ -12,8 +12,8 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AlarmTest {
-
-    private fun testHelper(time: String, hour: Int, min: Int) {
+    // TODO: Mock or pass Calendar instance.
+    private fun testAbsoluteHelper(time: String, hour: Int, min: Int) {
         val utterance = "set alarm for $time"
         IntentRunner.processUtterance(utterance)?.let {
             assertEquals(AlarmClock.ACTION_SET_ALARM, it.action)
@@ -26,35 +26,35 @@ class AlarmTest {
 
     @Test
     fun testMidnight() {
-        testHelper("midnight", 0, 0)
-        testHelper("12 midnight", 0, 0)
+        testAbsoluteHelper("midnight", 0, 0)
+        testAbsoluteHelper("12 midnight", 0, 0)
     }
 
     @Test
     fun testNoon() {
-        testHelper("noon", 12, 0)
-        testHelper("12 noon", 12, 0)
+        testAbsoluteHelper("noon", 12, 0)
+        testAbsoluteHelper("12 noon", 12, 0)
     }
 
     @Test
     fun testNoPeriod() {
-        testHelper("6", 6, 0)
-        testHelper("13", 13, 0)
-        testHelper("5:15", 5, 15)
+        testAbsoluteHelper("6", 6, 0)
+        testAbsoluteHelper("13", 13, 0)
+        testAbsoluteHelper("5:15", 5, 15)
     }
 
     @Test
     fun testAM() {
-        testHelper("3 a.m.", 3, 0)
-        testHelper("11 a.m.", 11, 0)
-        testHelper("11:30 a.m.", 11, 30)
+        testAbsoluteHelper("3 a.m.", 3, 0)
+        testAbsoluteHelper("11 a.m.", 11, 0)
+        testAbsoluteHelper("11:30 a.m.", 11, 30)
     }
 
     @Test
     fun testPM() {
-        testHelper("3 p.m.", 15, 0)
-        testHelper("11 p.m.", 23, 0)
-        testHelper("11:30 p.m.", 23, 30)
+        testAbsoluteHelper("3 p.m.", 15, 0)
+        testAbsoluteHelper("11 p.m.", 23, 0)
+        testAbsoluteHelper("11:30 p.m.", 23, 30)
     }
 
     companion object {

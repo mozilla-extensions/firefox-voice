@@ -18,21 +18,34 @@ class Alarm {
         fun register() {
             IntentRunner.registerIntent(
                 mozilla.voice.assistant.Intent(
-                    "Alarm - set general",
-                    "Set an alarm for the specified",
-                    listOf("Set alarm for 11:50 am", "Set alarm for 1"),
+                    "Alarm - set absolute",
+                    "Set an alarm for the specified time",
+                    listOf("Set alarm for 11:50 am", "Set alarm for 1", "Set alarm for midnight"),
                     listOf(
                         // Periods at ends of words get removed, so use "a.m" instead of "a.m.".
-                        "set alarm for [$HOUR_KEY:number]",
-                        "set alarm for [$HOUR_KEY:number] a.m [$PERIOD_KEY=am]",
-                        "set alarm for [$HOUR_KEY:number] p.m [$PERIOD_KEY=pm]",
-                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number]",
-                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] a.m [$PERIOD_KEY=am]",
-                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] p.m [$PERIOD_KEY=pm]",
-                        "set alarm for (12|) noon [$PERIOD_KEY=noon]",
-                        "set alarm for (12|) midnight [$PERIOD_KEY=midnight]"
+                        "set (the| ) alarm for [$HOUR_KEY:number]",
+                        "set (the| ) alarm for [$HOUR_KEY:number] a.m [$PERIOD_KEY=am]",
+                        "set (the| ) alarm for [$HOUR_KEY:number] p.m [$PERIOD_KEY=pm]",
+                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number]",
+                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] a.m [$PERIOD_KEY=am]",
+                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] p.m [$PERIOD_KEY=pm]",
+                        "set (the| ) alarm for (12|) noon [$PERIOD_KEY=noon]",
+                        "set (the| ) alarm for (12|) midnight [$PERIOD_KEY=midnight]"
                     ),
                     ::createAlarmIntent
+                )
+            )
+            IntentRunner.registerIntent(
+                mozilla.voice.assistant.Intent(
+                    "Alarm - set relative",
+                    "Set an alarm for the specified time",
+                    listOf("Set alarm for 1 hour from now", "Set alarm 90 minutes from now"),
+                    listOf(
+                        "set (the| ) alarm (for| ) [$HOUR_KEY:number] (hours|hour) from now",
+                        "set (the| ) alarm (for| ) [$MIN_KEY:number] (minutes|minute) from now",
+                        "set (the| ) alarm (for| ) [$HOUR_KEY:number] (hours|hour) [$MIN_KEY:number] (minutes|minute) from now"
+                    ),
+                    ::createRelativeAlarmIntent
                 )
             )
         }
@@ -46,7 +59,7 @@ class Alarm {
             // For now, copy year, month, day, seconds, and time zone
             (now.clone() as Calendar).apply {
                 hour?.toInt()?.let { set(Calendar.HOUR_OF_DAY, it) }
-                (mins?.toInt() ?: 0).let { set(Calendar.MINUTE, it) }
+                set(Calendar.MINUTE, (mins?.toInt() ?: 0))
 
                 // Adjust for period of day.
                 set(
@@ -61,21 +74,40 @@ class Alarm {
                 )
             }
 
+        private fun calculateWhenRelative(
+            hour: String?,
+            mins: String?,
+            now: Calendar = Calendar.getInstance()
+        ) =
+            // For now, copy year, month, day, seconds, and time zone
+            (now.clone() as Calendar).apply {
+                hour?.toInt()?.let { add(Calendar.HOUR, it) }
+                mins?.toInt()?.let { add(Calendar.MINUTE, it) }
+            }
+
         private fun createAlarmIntent(
+                mr: MatcherResult,
+                @Suppress("UNUSED_PARAMETER") context: Context?
+            ): android.content.Intent? =
+                try {
+                    calculateWhen(
+                        mr.slots[HOUR_KEY],
+                        mr.slots[MIN_KEY],
+                        mr.parameters[PERIOD_KEY].toPeriod()
+                    ).toAlarmIntent()
+                } catch (_: NumberFormatException) {
+                    null
+                }
+
+        private fun createRelativeAlarmIntent(
             mr: MatcherResult,
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
-                calculateWhen(
+                calculateWhenRelative(
                     mr.slots[HOUR_KEY],
-                    mr.slots[MIN_KEY],
-                    mr.parameters[PERIOD_KEY].toPeriod()
-                ).let { then ->
-                    Intent(AlarmClock.ACTION_SET_ALARM).apply {
-                        putExtra(AlarmClock.EXTRA_HOUR, then.get(Calendar.HOUR_OF_DAY))
-                        putExtra(AlarmClock.EXTRA_MINUTES, then.get(Calendar.MINUTE))
-                    }
-                }
+                    mr.slots[MIN_KEY]
+                ).toAlarmIntent()
             } catch (_: NumberFormatException) {
                 null
             }
@@ -90,6 +122,12 @@ fun String?.toPeriod() =
         "pm" -> Period.PM
         null -> Period.NONE
         else -> throw Error("Illegal argument $this in String.toPeriod()")
+    }
+
+fun Calendar.toAlarmIntent() =
+    Intent(AlarmClock.ACTION_SET_ALARM).apply {
+        putExtra(AlarmClock.EXTRA_HOUR, get(Calendar.HOUR_OF_DAY))
+        putExtra(AlarmClock.EXTRA_MINUTES, get(Calendar.MINUTE))
     }
 
 enum class Period {
