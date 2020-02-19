@@ -14,6 +14,7 @@ const UTTERANCE_FIELDS = [
 ];
 
 let lastIntentId;
+let lastUtterance;
 let intentCount;
 let lastIntentDate;
 let intentDays;
@@ -102,6 +103,7 @@ export function send() {
   }
   if (!ping.inputCancelled) {
     lastIntentId = ping.intentId;
+    lastUtterance = ping.utterance;
   }
   ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
   const s = settings.getSettings();
@@ -134,7 +136,11 @@ export async function sendSoon() {
 
 export function sendFeedback({ feedback, rating }) {
   const ping = Object.assign(
-    { intentId: lastIntentId || "unknown", timestamp: Date.now() },
+    {
+      intentId: lastIntentId || "unknown",
+      timestamp: Date.now(),
+      utterance: lastUtterance,
+    },
     { feedback, rating }
   );
   ping.feedback = ping.feedback || "";
