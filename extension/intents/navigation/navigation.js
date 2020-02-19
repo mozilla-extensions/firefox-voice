@@ -33,10 +33,7 @@ intentRunner.registerIntent({
       }, 1000);
       saveQueryDatabase();
     }
-    browser.runtime.sendMessage({
-      type: "closePopup",
-      sender: "navigate",
-    });
+    context.done();
   },
 });
 

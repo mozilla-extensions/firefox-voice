@@ -1,4 +1,4 @@
-/* globals log, catcher */
+/* globals log, catcher, buildSettings */
 
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
@@ -141,7 +141,11 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (url.startsWith("about:blank")) {
+        if (
+          url.startsWith("about:blank") ||
+          (buildSettings.executeIntentUrl &&
+            url.startsWith(buildSettings.executeIntentUrl))
+        ) {
           return;
         }
         const isGoogle = /^https:\/\/www.google.com\//.test(url);

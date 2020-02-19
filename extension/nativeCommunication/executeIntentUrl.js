@@ -8,8 +8,6 @@ this.executeIntentUrl = (function() {
       noPopup: true,
       closeThisTab: true,
     });
-    const thisTab = await browser.tabs.getCurrent();
-    await browser.tabs.remove(thisTab.id);
   }
 
   execute();
