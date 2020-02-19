@@ -237,7 +237,7 @@ export const PopupController = function() {
       recorderIntervalId = setInterval(() => {
         const volume = recorder.getVolumeLevel();
         if (!hasHadSuccessfulUtterance && !nonZeroVolume) {
-          if (volume > 0) {
+          if (volume > 0.01) {
             nonZeroVolume = true;
           } else if (Date.now() - startTime > ZERO_VOLUME_LIMIT) {
             browser.runtime.sendMessage({ type: "zeroVolumeError" });
