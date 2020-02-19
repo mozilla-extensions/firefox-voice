@@ -24,6 +24,7 @@ import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
+import mozilla.voice.assistant.intents.alarm.Alarm
 import mozilla.voice.assistant.intents.music.Music
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         // Register intents
+        Alarm.register()
         Music.register()
     }
 
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(
+                    Manifest.permission.SET_ALARM,
                     Manifest.permission.RECORD_AUDIO
                 ),
                 PERMISSIONS_REQUEST_CODE
@@ -68,15 +71,15 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.size != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.toList().all { it == PackageManager.PERMISSION_GRANTED }) {
+                shownBurst = false
+                startSpeechRecognition()
+            } else {
                 Toast.makeText(
                     this,
                     "Permissions denied",
                     Toast.LENGTH_LONG
                 ).show()
-            } else {
-                shownBurst = false
-                startSpeechRecognition()
             }
         }
     }

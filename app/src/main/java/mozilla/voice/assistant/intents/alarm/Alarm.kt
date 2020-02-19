@@ -3,6 +3,8 @@ package mozilla.voice.assistant.intents.alarm
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
+import java.util.Calendar
+import java.util.Locale
 import mozilla.voice.assistant.IntentRunner
 import mozilla.voice.assistant.MatcherResult
 
@@ -20,30 +22,42 @@ class Alarm {
                     "Set an alarm for the specified",
                     listOf("Set alarm for 11:50 am", "Set alarm for 1"),
                     listOf(
-                        "set alarm for [$HOUR_KEY]",
-                        "set alarm for [$HOUR_KEY] a.m. {$PERIOD_KEY=am}",
-                        "set alarm for [$HOUR_KEY] p.m. {$PERIOD_KEY=pm}",
-                        "set alarm for [$HOUR_KEY] : [$MIN_KEY]",
-                        "set alarm for [$HOUR_KEY] : [$MIN_KEY] a.m. {$PERIOD_KEY=am}",
-                        "set alarm for [$HOUR_KEY] : [$MIN_KEY] p.m. {$PERIOD_KEY=pm}",
-                        "set alarm for (12|) noon {$PERIOD_KEY=noon}",
-                        "set alarm for (12|) midnight {$PERIOD_KEY=midnight}"
+                        // Periods at ends of words get removed, so use "a.m" instead of "a.m.".
+                        "set alarm for [$HOUR_KEY:number]",
+                        "set alarm for [$HOUR_KEY:number] a.m [$PERIOD_KEY=am]",
+                        "set alarm for [$HOUR_KEY:number] p.m [$PERIOD_KEY=pm]",
+                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number]",
+                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] a.m [$PERIOD_KEY=am]",
+                        "set alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] p.m [$PERIOD_KEY=pm]",
+                        "set alarm for (12|) noon [$PERIOD_KEY=noon]",
+                        "set alarm for (12|) midnight [$PERIOD_KEY=midnight]"
                     ),
                     ::createAlarmIntent
                 )
             )
         }
 
-        private fun calculateTime(hour: String?, mins: String?, period: String?): Pair<Int, Int> =
-            if (hour == null) { // must be noon or midnight
-                Pair(
-                    if (period == "noon") 12 else 0,
-                    0
-                )
-            } else {
-                Pair(
-                    calculateHour(hour.toInt(), period), // might through number format exception
-                    mins?.toInt() ?: 0
+        private fun calculateWhen(
+            hour: String?,
+            mins: String?,
+            period: Period,
+            now: Calendar = Calendar.getInstance()
+        ) =
+            // For now, copy year, month, day, seconds, and time zone
+            (now.clone() as Calendar).apply {
+                hour?.toInt()?.let { set(Calendar.HOUR_OF_DAY, it) }
+                (mins?.toInt() ?: 0).let { set(Calendar.MINUTE, it) }
+
+                // Adjust for period of day.
+                set(
+                    Calendar.HOUR_OF_DAY,
+                    when (period) {
+                        Period.MIDNIGHT -> 0
+                        Period.AM, Period.NONE -> hour?.toInt() ?: throw Error("Hour required")
+                        Period.NOON -> 12
+                        Period.PM -> ((hour?.toInt()
+                            ?: throw Error("Hour required with p.m.")) % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
+                    }
                 )
             }
 
@@ -52,25 +66,32 @@ class Alarm {
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
-                val (hours, mins) = calculateTime(
+                calculateWhen(
                     mr.slots[HOUR_KEY],
                     mr.slots[MIN_KEY],
-                    mr.slots[PERIOD_KEY]
-                )
-                Intent(AlarmClock.ACTION_SET_ALARM).apply {
-                    putExtra(AlarmClock.EXTRA_HOUR, hours)
-                    putExtra(AlarmClock.EXTRA_MINUTES, mins)
+                    mr.parameters[PERIOD_KEY].toPeriod()
+                ).let { then ->
+                    Intent(AlarmClock.ACTION_SET_ALARM).apply {
+                        putExtra(AlarmClock.EXTRA_HOUR, then.get(Calendar.HOUR_OF_DAY))
+                        putExtra(AlarmClock.EXTRA_MINUTES, then.get(Calendar.MINUTE))
+                    }
                 }
             } catch (_: NumberFormatException) {
                 null
             }
-
-        private fun calculateHour(hour: Int, period: String?): Int =
-            when (period) {
-                null -> hour
-                "am" -> if (hour == HOURS_PER_PERIOD) 0 else hour
-                "pm" -> (hour % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
-                else -> hour // should not happen
-            }
     }
+}
+
+fun String?.toPeriod() =
+    when (this?.toLowerCase(Locale.getDefault())) {
+        "midnight" -> Period.MIDNIGHT
+        "am" -> Period.AM
+        "noon" -> Period.NOON
+        "pm" -> Period.PM
+        null -> Period.NONE
+        else -> throw Error("Illegal argument $this in String.toPeriod()")
+    }
+
+enum class Period {
+    MIDNIGHT, AM, NOON, PM, NONE
 }

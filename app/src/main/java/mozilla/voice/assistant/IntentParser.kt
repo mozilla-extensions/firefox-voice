@@ -29,6 +29,7 @@ class IntentParser {
             text.trim()
                 .replace(Regex("\\s\\s+"), " ") // squash multiple spaces
                 .replace(Regex("[.,;!?]\\B"), "") // remove punctuation at word boundaries
+                .replace(":", " : ") // put spaces colons for time
 
         // We will consider matches where we have to make these substitutions in order to get an exact
         // match for an intent pattern. It both considers doing ALL the substitutions, and doing each
