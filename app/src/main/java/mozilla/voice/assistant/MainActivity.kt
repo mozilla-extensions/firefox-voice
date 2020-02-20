@@ -25,6 +25,7 @@ import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.intents.launch.Launch
 import mozilla.voice.assistant.intents.maps.Maps
 import mozilla.voice.assistant.intents.music.Music
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         // Register intents
         Alarm.register()
+        Launch.register()
         Maps.register()
         Music.register()
     }
