@@ -3,6 +3,8 @@ import * as serviceList from "../../background/serviceList.js";
 import * as languages from "../../background/languages.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as searching from "../../searching.js";
+import * as content from "../../background/content.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -123,6 +125,26 @@ intentRunner.registerIntent({
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.forward();",
     });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "navigation.followLink",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/js/vendor/fuse.js",
+      "/intents/navigation/followLink.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "followLink",
+      query: context.slots.query,
+    });
+    if (found === false) {
+      const exc = new Error("No link found matching query");
+      exc.displayMessage = `No link "${context.slots.query}" found`;
+      throw exc;
+    }
   },
 });
 
