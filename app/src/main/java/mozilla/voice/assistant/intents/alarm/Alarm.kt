@@ -50,30 +50,6 @@ class Alarm {
             )
         }
 
-        private fun calculateWhen(
-            hour: String?,
-            mins: String?,
-            period: Period,
-            now: Calendar = Calendar.getInstance()
-        ) =
-            // For now, copy year, month, day, seconds, and time zone
-            (now.clone() as Calendar).apply {
-                hour?.toInt()?.let { set(Calendar.HOUR_OF_DAY, it) }
-                set(Calendar.MINUTE, (mins?.toInt() ?: 0))
-
-                // Adjust for period of day.
-                set(
-                    Calendar.HOUR_OF_DAY,
-                    when (period) {
-                        Period.MIDNIGHT -> 0
-                        Period.AM, Period.NONE -> hour?.toInt() ?: throw Error("Hour required")
-                        Period.NOON -> 12
-                        Period.PM -> ((hour?.toInt()
-                            ?: throw Error("Hour required with p.m.")) % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
-                    }
-                )
-            }
-
         private fun calculateWhenRelative(
             hour: String?,
             mins: String?,
@@ -86,18 +62,30 @@ class Alarm {
             }
 
         private fun createAlarmIntent(
-                mr: MatcherResult,
-                @Suppress("UNUSED_PARAMETER") context: Context?
-            ): android.content.Intent? =
-                try {
-                    calculateWhen(
-                        mr.slots[HOUR_KEY],
-                        mr.slots[MIN_KEY],
-                        mr.parameters[PERIOD_KEY].toPeriod()
-                    ).toAlarmIntent()
-                } catch (_: NumberFormatException) {
-                    null
-                }
+            mr: MatcherResult,
+            @Suppress("UNUSED_PARAMETER") context: Context?
+        ): android.content.Intent? =
+            try {
+                makeAlarmIntent(
+                    (mr.slots[HOUR_KEY]?.toInt() ?: 0).let {
+                        when (mr.parameters[PERIOD_KEY].toPeriod()) {
+                            Period.MIDNIGHT -> 0
+                            Period.AM, Period.NONE -> it
+                            Period.NOON -> 12
+                            Period.PM -> (it % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
+                        }
+                    },
+                    mr.slots[MIN_KEY]?.toInt() ?: 0
+                )
+            } catch (_: NumberFormatException) {
+                null
+            }
+
+        private fun makeAlarmIntent(hour: Int, min: Int) =
+            Intent(AlarmClock.ACTION_SET_ALARM).apply {
+                putExtra(AlarmClock.EXTRA_HOUR, hour)
+                putExtra(AlarmClock.EXTRA_MINUTES, min)
+            }
 
         private fun createRelativeAlarmIntent(
             mr: MatcherResult,

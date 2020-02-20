@@ -1,10 +1,10 @@
 package mozilla.voice.assistant
 
 import android.provider.AlarmClock
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import junit.framework.Assert.fail
 import mozilla.voice.assistant.intents.alarm.Alarm
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,6 +55,7 @@ class AlarmTest {
         testAbsoluteHelper("3 p.m.", 15, 0)
         testAbsoluteHelper("11 p.m.", 23, 0)
         testAbsoluteHelper("11:30 p.m.", 23, 30)
+        testAbsoluteHelper("13 p.m.", 13, 0)
     }
 
     companion object {
