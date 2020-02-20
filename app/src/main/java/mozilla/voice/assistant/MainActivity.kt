@@ -255,9 +255,8 @@ class MainActivity : AppCompatActivity() {
     private fun handleResults(results: List<String>) {
         results.let {
             if (it.isNotEmpty()) {
+                feedbackView.text = it[0]
                 val intent = getIntent(it[0])
-                val apps = packageManager.queryIntentActivities(intent, 0)
-                Log.e("MainActivity", apps.size.toString())
                 Handler().postDelayed(
                     { startActivity(intent) },
                     TRANSCRIPT_DISPLAY_TIME
