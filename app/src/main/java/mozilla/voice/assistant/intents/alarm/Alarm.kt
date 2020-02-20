@@ -3,6 +3,7 @@ package mozilla.voice.assistant.intents.alarm
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
+import androidx.annotation.VisibleForTesting
 import java.util.Calendar
 import java.util.Locale
 import mozilla.voice.assistant.IntentRunner
@@ -50,7 +51,8 @@ class Alarm {
             )
         }
 
-        private fun calculateWhenRelative(
+        @VisibleForTesting
+        fun calculateWhenRelative(
             hour: String?,
             mins: String?,
             now: Calendar = Calendar.getInstance()

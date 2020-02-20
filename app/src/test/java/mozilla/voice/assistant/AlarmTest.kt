@@ -1,10 +1,12 @@
 package mozilla.voice.assistant
 
 import android.provider.AlarmClock
+import java.util.Calendar
 import mozilla.voice.assistant.intents.alarm.Alarm
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,7 +14,14 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AlarmTest {
-    // TODO: Mock or pass Calendar instance.
+    private val calendar330PM = Calendar.getInstance()
+
+    @Before
+    fun setCalendar() {
+        calendar330PM.set(Calendar.HOUR_OF_DAY, 15)
+        calendar330PM.set(Calendar.MINUTE, 30)
+    }
+
     private fun testAbsoluteHelper(time: String, hour: Int, min: Int) {
         val utterance = "set alarm for $time"
         IntentRunner.processUtterance(utterance)?.let {
@@ -58,8 +67,23 @@ class AlarmTest {
         testAbsoluteHelper("13 p.m.", 13, 0)
     }
 
+    private fun testRelativeHelper(hour: String?, min: String?, h: Int, m: Int) =
+        Alarm.calculateWhenRelative(hour, min, calendar330PM).run {
+            assertEquals(h, get(Calendar.HOUR_OF_DAY))
+            assertEquals(m, get(Calendar.MINUTE))
+        }
+
+    @Test
+    fun testCalculateWhenRelative() {
+        testRelativeHelper("1", null, CURRENT_HOUR + 1, CURRENT_MIN)
+        testRelativeHelper(null, "20", CURRENT_HOUR, CURRENT_MIN + 20)
+        testRelativeHelper("2", "10", CURRENT_HOUR + 2, CURRENT_MIN + 10)
+    }
+
     companion object {
-        const val UNUSED_DEFAULT = -1
+        const val UNUSED_DEFAULT = -1 // default argument to Intent.getIntExtra()
+        const val CURRENT_HOUR = 15
+        const val CURRENT_MIN = 30
 
         @BeforeClass
         @JvmStatic
