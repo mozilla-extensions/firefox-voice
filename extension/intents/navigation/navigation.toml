@@ -96,3 +96,13 @@ test = true
 [[navigation.translateSelection.example]]
 phrase = "translate the selected text to Slovak"
 test = true
+
+[navigation.followLink]
+description = "Follow the named link"
+match = """
+  (follow | click | click on) (link |) [query]
+  (open | go to) link [query]
+"""
+
+[[navigation.followLink.example]]
+phrase = "follow link latest news"

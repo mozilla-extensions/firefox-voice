@@ -31,6 +31,7 @@ paste pace
 paste best
 downward down ward
 upward up ward
+link like
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {
