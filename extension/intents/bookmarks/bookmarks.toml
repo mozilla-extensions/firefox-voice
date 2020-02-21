@@ -22,3 +22,22 @@ match = """
 [[bookmarks.open.example]]
 phrase = "Open news bookmark"
 
+[[bookmarks.open.example]]
+phrase = "open query bookmark in this tab"
+test = true
+expectSlots = { query = "query" }
+
+[[bookmarks.open.example]]
+phrase = "open query bookmark for me in this tab"
+test = true
+expectSlots = { query = "query" }
+
+[[bookmarks.open.example]]
+phrase = "open query bookmark in tab for me"
+test = true
+expectSlots = { query = "query" }
+
+[[bookmarks.open.example]]
+phrase = "open bookmark query for me in tab"
+test = true
+expectSlots = { query = "query" }

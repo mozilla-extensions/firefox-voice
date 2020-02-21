@@ -2,78 +2,15 @@ import * as content from "./content.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
 import * as util from "../util.js";
+import { metadata } from "../services/metadata.js";
 
 // See https://duckduckgo.com/bang for a list of potential services
-const SERVICE_BANG_ALIASES = {
-  "google slides": "gslides",
-  slides: "gslides",
-  "google docs": "gd",
-  "google scholar": "googlescholar",
-  calendar: "gcal",
-  "google calendar": "gcal",
-  "google drive": "drive",
-  "google sheets": "gsheets",
-  sheets: "gsheets",
-  spreadsheets: "gsheets",
-  goodreads: "goodreads",
-  mdn: "mdn",
-  coursera: "coursera",
-  gmail: "gmail",
-  mail: "gmail",
-  email: "gmail",
-  "google mail": "gmail",
-  amazon: "az",
-  wikipedia: "wikipedia",
-  wiki: "wikipedia",
-  yelp: "yelp",
-  twitter: "twitter",
-  reddit: "reddit",
-  "amazon music": "amusic",
-  "google music": "gmusic",
-  "google play music": "gmusic",
-  pandora: "pandora",
-  soundcloud: "soundcloud",
-  "sound cloud": "soundcloud",
-  tunein: "tunein",
-  "tune in": "tunein",
-  "tunein radio": "tunein",
-  "tune in radio": "tunein",
-  vimeo: "vimeo",
-  netflix: "netflix",
-  "apple maps": "amaps",
-  "google maps": "gmap",
-  maps: "gmap",
-  "open street maps": "omap",
-  "open maps": "omap",
-  stubhub: "stubhub",
-  "stub hub": "stubhub",
-  ticketmaster: "ticketmaster",
-  "ticket master": "ticketmaster",
-  "google translate": "translate",
-  translate: "translate",
-  instagram: "instagram",
-  insta: "instagram",
-  linkedin: "linkedin",
-  quora: "quora",
-  pinterest: "pin",
-  pin: "pin",
-  facebook: "facebook",
-  stackexchange: "stackexchange",
-  "stack exchange": "stackexchange",
-  dropbox: "dropbox",
-  "dictionary.com": "dcom",
-  dictionary: "dcom",
-  thesaurus: "thesaurus",
-  duckduckgo: "duckduckgo",
-  "duck duck go": "duckduckgo",
-  "duckduckgo images": "ddgi",
-  "duck duck go images": "ddgi",
-  "google images": "gi",
-  images: "gi",
-};
-
-export function allServiceNames() {
-  return Object.keys(SERVICE_BANG_ALIASES);
+// FIXME: this should be removed and serviceMetadata.js preferred.
+const SERVICE_BANG_ALIASES = {};
+for (const id in metadata.search) {
+  for (const name of metadata.search[id].names) {
+    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
+  }
 }
 
 export function ddgBangServiceName(name) {
@@ -277,7 +214,7 @@ export async function getService(serviceType, serviceMap, options) {
   const serviceSetting = settings.getSettings()[serviceType];
   options = options || {};
   if (options.lookAtCurrentTab) {
-    const serviceName = await exports.detectServiceFromActiveTab(serviceMap);
+    const serviceName = await detectServiceFromActiveTab(serviceMap);
     if (serviceName) {
       return serviceMap[serviceName];
     }
@@ -285,7 +222,7 @@ export async function getService(serviceType, serviceMap, options) {
   if (serviceSetting && serviceSetting !== "auto") {
     return serviceMap[serviceSetting];
   }
-  const serviceName = await exports.detectServiceFromHistory(serviceMap);
+  const serviceName = await detectServiceFromHistory(serviceMap);
   const ServiceClass = serviceMap[serviceName];
   if (!ServiceClass) {
     throw new Error(

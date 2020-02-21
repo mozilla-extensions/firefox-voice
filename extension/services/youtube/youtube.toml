@@ -1,0 +1,6 @@
+[youtube]
+type = "music"
+title = "YouTube"
+baseUrl = "https://www.youtube.com"
+skipAutodetect = true
+names = ["video"]

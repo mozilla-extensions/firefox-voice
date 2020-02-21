@@ -55,7 +55,9 @@ function resetPing() {
 export function add(properties) {
   if (!ping) {
     if (properties.doNotInit) {
-      const exc = new Error("Telemetry added after submission");
+      const exc = new Error(
+        `Telemetry (${Object.keys(properties)}) added after submission`
+      );
       exc.propertiesAdded = Object.keys(properties).join(";");
       throw exc;
     }

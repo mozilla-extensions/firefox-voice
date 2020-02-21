@@ -1,4 +1,4 @@
-/* globals serviceList */
+import * as serviceList from "./background/serviceList.js";
 
 const luckySearchRemovals = /\.(com|net|org)$/i;
 
