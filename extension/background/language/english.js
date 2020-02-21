@@ -33,6 +33,9 @@ downward down ward
 upward up ward
 link like
 next text
+# Seems like a bad substitution, but seen in the wild...
+open pooping
+open poop
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {
