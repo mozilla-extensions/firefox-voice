@@ -215,7 +215,7 @@ export async function getService(serviceType, serviceMap, options) {
   const serviceSetting = settings.getSettings()[serviceType];
   options = options || {};
   if (options.lookAtCurrentTab) {
-    const serviceName = await exports.detectServiceFromActiveTab(serviceMap);
+    const serviceName = await detectServiceFromActiveTab(serviceMap);
     if (serviceName) {
       return serviceMap[serviceName];
     }
@@ -223,7 +223,7 @@ export async function getService(serviceType, serviceMap, options) {
   if (serviceSetting && serviceSetting !== "auto") {
     return serviceMap[serviceSetting];
   }
-  const serviceName = await exports.detectServiceFromHistory(serviceMap);
+  const serviceName = await detectServiceFromHistory(serviceMap);
   const ServiceClass = serviceMap[serviceName];
   if (!ServiceClass) {
     throw new Error(
