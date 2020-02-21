@@ -12,7 +12,7 @@ class Maps {
         private const val MODE_KEY = "mode"
         private const val BIKE_MODE = 'b'
         private const val WALK_MODE = 'w'
-        private const val APP_KEY = "app"
+        private const val THING_KEY = "thing"
 
         fun register() {
             IntentRunner.registerIntent(
@@ -38,6 +38,23 @@ class Maps {
                     ::createNavigateIntent
                 )
             )
+
+            IntentRunner.registerIntent(
+                mozilla.voice.assistant.Intent(
+                    "Maps - recommend",
+                    "Find a certain type of place",
+                    listOf("Where can I buy pizza?", "What's a good place to get sushi?", "Where's good ramen in Oakland?"),
+                    listOf(
+                        "where (can i|to) (get|find|buy|eat) [$THING_KEY] (in|near|) [$LOCATION_KEY]",
+                        "where (can i|to) (get|find|buy|eat) [$THING_KEY]",
+                        "(where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [$THING_KEY] (in|near|) [$LOCATION_KEY]",
+                        "(where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [$THING_KEY]",
+                        "(search for|look for|find) nearby [$THING_KEY] (in|near|) [$LOCATION_KEY]",
+                        "(search for|look for|find) nearby [$THING_KEY]"
+                    ),
+                    ::createSearchIntent
+                )
+            )
         }
 
         private fun createNavigateIntent(
@@ -48,6 +65,18 @@ class Maps {
                 Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse("navigation:q=$it${mr.parameters[MODE_KEY].toModeSuffix()}")
+                )
+            }
+
+        private fun createSearchIntent(
+            mr: MatcherResult,
+            @Suppress("UNUSED_PARAMETER") context: Context?
+        ): android.content.Intent? =
+            mr.slots[THING_KEY]?.let { thing ->
+                val suffix = mr.slots[LOCATION_KEY]?.let { "in $it" } ?: ""
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("geo:0.0?q=$thing$suffix")
                 )
             }
     }

@@ -10,7 +10,7 @@ class Launch {
         private const val GOOGLE_MAPS = "google"
         private const val WAZE = "waze"
 
-        private val apps = mapOf(
+        internal val apps = mapOf(
             GOOGLE_MAPS to "com.google.android.apps.maps",
             WAZE to "com.waze"
         )
