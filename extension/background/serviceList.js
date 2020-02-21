@@ -12,7 +12,6 @@ for (const id in metadata.search) {
     SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
   }
 }
-console.log("loaded services:", SERVICE_BANG_ALIASES);
 
 export function ddgBangServiceName(name) {
   const bang = SERVICE_BANG_ALIASES[name.toLowerCase().trim()];
