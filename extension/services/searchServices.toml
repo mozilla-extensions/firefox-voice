@@ -1,0 +1,142 @@
+["google slides"]
+bangSearch = "gslides"
+names = ["slides"]
+
+["google docs"]
+bangSearch = "gd"
+
+["google scholar"]
+bangSearch = "googlescholar"
+
+["google calendar"]
+bangSearch = "gcal"
+names = ["calendar"]
+
+["google drive"]
+bangSearch = "drive"
+
+["google sheets"]
+bangSearch = "gsheets"
+names = ["sheets", "spreadsheets"]
+
+[goodreads]
+bangSearch = "goodreads"
+
+[mdn]
+bangSearch = "mdn"
+
+[coursera]
+bangSearch = "coursera"
+
+[gmail]
+bangSearch = "gmail"
+names = ["mail", "email", "google mail"]
+
+[amazon]
+bangSearch = "az"
+
+[wikipedia]
+bangSearch = "wikipedia"
+names = ["wiki"]
+
+[yelp]
+bangSearch = "yelp"
+
+[twitter]
+bangSearch = "twitter"
+
+[reddit]
+bangSearch = "reddit"
+
+["amazon music"]
+bangSearch = "amusic"
+
+["google music"]
+bangSearch = "gmusic"
+
+["google play music"]
+bangSearch = "gmusic"
+names = ["google music"]
+
+[pandora]
+bangSearch = "pandora"
+
+[soundcloud]
+bangSearch = "soundcloud"
+names = ["sound cloud"]
+
+[tunein]
+bangSearch = "tunein"
+names = ["tune in", "tunein radio", "tune in radio"]
+
+[vimeo]
+bangSearch = "vimeo"
+
+[netflix]
+bangSearch = "netflix"
+
+["apple maps"]
+bangSearch = "amaps"
+
+["google maps"]
+bangSearch = "gmap"
+names = ["maps"]
+
+["open street maps"]
+bangSearch = "omap"
+names = ["open maps"]
+
+[stubhub]
+bangSearch = "stubhub"
+names = ["stub hub"]
+
+[ticketmaster]
+bangSearch = "ticketmaster"
+names = ["ticket master"]
+
+["google translate"]
+bangSearch = "translate"
+names = ["translate"]
+
+[instagram]
+bangSearch = "instagram"
+names = ["insta"]
+
+[linkedin]
+bangSearch = "linkedin"
+
+[quora]
+bangSearch = "quora"
+
+[pinterest]
+bangSearch = "pin"
+names = ["pin"]
+
+[facebook]
+bangSearch = "facebook"
+
+[stackexchange]
+bangSearch = "stackexchange"
+names = ["stack exchange"]
+
+[dropbox]
+bangSearch = "dropbox"
+
+[dictionary]
+bangSearch = "dcom"
+names = ["dictionary.com"]
+
+[thesaurus]
+bangSearch = "thesaurus"
+
+[duckduckgo]
+bangSearch = "duckduckgo"
+names = ["duck duck go"]
+
+["duckduckgo images"]
+bangSearch = "ddgi"
+names = ["duck duck go images"]
+
+["google images"]
+bangSearch = "gi"
+names = ["images"]

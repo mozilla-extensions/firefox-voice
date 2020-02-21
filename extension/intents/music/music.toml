@@ -9,6 +9,16 @@ match = """
 [[music.focus.example]]
 phrase = "Open music"
 
+[[music.focus.example]]
+phrase = "show my video"
+test = true
+expectParameters = {service = "youtube"}
+
+[[music.focus.example]]
+phrase = "open spotify for me"
+test = true
+expectSlots = {service = "spotify"}
+
 [music.move]
 description = "Go to the next or previous song on a service"
 match = """
@@ -28,6 +38,21 @@ phrase = "next track"
 [[music.move.example]]
 phrase = "previous song"
 
+[[music.move.example]]
+phrase = "play next video"
+test = true
+expectParameters = {direction = "next", service = "youtube"}
+
+[[music.move.example]]
+phrase = "skip"
+test = true
+expectParameters = {direction = "next"}
+
+[[music.move.example]]
+phrase = "previous track"
+test = true
+expectParameters = {direction = "back"}
+
 [music.pause]
 description = "Pause all supported services (regardless of tab or window)"
 match = """
@@ -39,6 +64,20 @@ match = """
 
 [[music.pause.example]]
 phrase = "Pause music"
+
+[[music.pause.example]]
+phrase = "pause spotify"
+test = true
+expectParamters = {service = "spotify"}
+
+[[music.pause.example]]
+phrase = "stop"
+test = true
+
+[[music.pause.example]]
+phrase = "stop video"
+test = true
+expectParamters = {service = "youtube"}
 
 [music.play]
 description = "Play music on an explicit service, a default service, or the service in the active tab"
@@ -56,12 +95,30 @@ match = """
 [[music.play.example]]
 phrase = "Play Green Day"
 
+[[music.play.example]]
+phrase = "play query on spotify"
+test = true
+expectParameters = {}
+expectSlots = {service = "spotify", query = "query"}
+
+[[music.play.example]]
+phrase = "play video query"
+test = true
+expectParameters = {service = "youtube"}
+expectSlots = {query = "query"}
+
+[[music.play.example]]
+phrase = "do a search on spotify for query"
+test = true
+expectParameters = {}
+expectSlots = {service = "spotify", query = "query"}
+
 [music.unpause]
 description = "Unpause one service, the current tab, or the detected service"
 match = """
-  (unpause | continue | play) video [service=youtube]
-  (unpause | continue | play) [service:musicServiceName]
-  (unpause | continue | play) (music |)
+  (unpause | continue | play | resume) video [service=youtube]
+  (unpause | continue | play | resume) [service:musicServiceName]
+  (unpause | continue | play | resume) (music |)
 """
 
 [[music.unpause.example]]

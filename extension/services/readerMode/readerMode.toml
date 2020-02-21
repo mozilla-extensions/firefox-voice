@@ -1,0 +1,5 @@
+[readerMode]
+type = "music"
+title = "Reader Mode"
+baseUrl = "about:reader"
+skipAutodetect = true

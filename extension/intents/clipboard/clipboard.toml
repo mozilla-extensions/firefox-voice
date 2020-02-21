@@ -1,13 +1,18 @@
 [clipboard.copyFullPageScreenshot]
 description = "Copies a full page screenshot"
 match = """
-  copy (the |) full (page |) (screenshot |) of (the | this |) tab (to clipboard |)
+  copy (the |) full (page |) (screenshot |) (of |) (the | this |) (tab | page | article | site) (to clipboard |)
   copy (the |) (tab's |) full (page |) (screenshot |) (to clipboard |)
+  copy (full | page) screenshot (to clipboard |)
   screenshot full (page |) to clipboard
 """
 
 [[clipboard.copyFullPageScreenshot.example]]
 phrase = "Copy full page screenshot"
+
+[[clipboard.copyFullPageScreenshot.example]]
+phrase = "Copy page screenshot"
+test = true
 
 [clipboard.copyLink]
 description = "Copies the link of the current tab"

@@ -12,6 +12,18 @@ test = true
 phrase = "next"
 test = true
 
+[[search.next.example]]
+phrase = "next result result"
+test = true
+
+[[search.next.example]]
+phrase = "text"
+test = true
+
+[[search.next.example]]
+phrase = "next article"
+test = true
+
 [search.previous]
 description = "If you've done a search then this will display the previous search result."
 match = """
@@ -62,28 +74,10 @@ phrase = "How long will it take to get to Springfield?"
 [[search.search.example]]
 phrase = "How do I get to the hardware store?"
 
-[[search.search.example]]
-phrase = "Search for hiking in Denver"
-
-[[search.search.example]]
-phrase = "Look up The Book Thief on GoodReads"
-
-[[search.search.example]]
-phrase = "Search CSS grid on MDN"
-
-[[search.search.example]]
-phrase = "Go to the New York Times"
-
-[[search.search.example]]
-phrase = "Show me the 49ers schedule"
-
-[[search.search.example]]
-phrase = "Go to the Health section of the BBC"
-
 [search.searchPage]
 description = "Opens a search page"
 match = """
-  (do a |) (search | google) (google | the web | the internet |) (for |) [query] (one the web |) (for me|)
+  (do a |) (search | google | look on) (google | the web | the internet |) (for |) [query] (on the web |) (for me|)
 """
 
 [[search.searchPage.example]]
@@ -91,7 +85,23 @@ phrase = "Search for hiking in Denver"
 
 [[search.searchPage.example]]
 phrase = "search for tops"
+
+[[search.searchPage.example]]
+phrase = "do a search for query on the web for me"
 test = true
+expectSlots = {query = "query"}
+
+[[search.searchPage.example]]
+phrase = "google query"
+test = true
+expectSlots = {query = "query"}
+
+# FIXME: This is resolving as search.search, because it matches just as well as search.searchPage
+# I'm not sure how to resolve this.
+#[[search.searchPage.example]]
+#phrase = "look on the web for query"
+#test = true
+#expectSlots = {query = "query"}
 
 [search.show]
 description = "Focuses the special tab used for searching"
@@ -106,4 +116,8 @@ test = true
 
 [[search.show.example]]
 phrase = "show search result"
+test = true
+
+[[search.show.example]]
+phrase = "focus result"
 test = true

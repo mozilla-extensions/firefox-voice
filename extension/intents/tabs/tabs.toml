@@ -1,11 +1,16 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (this |) (tab | site | page) (for me |)
+  close (this |) (current |) (tab | site | page) (for me |)
+  close (this | that)
 """
 
 [[tabs.close.example]]
 phrase = "close tab"
+
+[[tabs.close.example]]
+phrase = "close the current top"
+test = true
 
 [tabs.duplicate]
 description = "Duplicates a tab"
@@ -51,6 +56,10 @@ test = true
 
 [[tabs.open.example]]
 phrase = "open the tab"
+test = true
+
+[[tabs.open.example]]
+phrase = "open a blank tap for me"
 test = true
 
 [tabs.openHomePage]

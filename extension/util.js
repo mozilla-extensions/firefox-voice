@@ -7,7 +7,7 @@ export function sleep(ms) {
 /** If the promise takes longer than the given number of milliseconds, throw a promise error
  * (error.name === "TimeoutError") */
 export function promiseTimeout(promise, time) {
-  const sleeper = exports.sleep(time).then(() => {
+  const sleeper = sleep(time).then(() => {
     const exc = new Error("Timed Out");
     exc.name = "TimeoutError";
     throw exc;

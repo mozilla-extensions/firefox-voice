@@ -32,6 +32,10 @@ paste best
 downward down ward
 upward up ward
 link like
+next text
+# Seems like a bad substitution, but seen in the wild...
+open pooping
+open poop
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {
@@ -73,7 +77,8 @@ last latter latterly least less
 just
 made make many may me meanwhile might mine more moreover most mostly move much
 must my myself
-name namely neither never nevertheless next nine no nobody none noone nor not
+# Removing 'not' since it seems important...
+name namely neither never nevertheless next nine no nobody none noone nor
 nothing now nowhere
 of off often on once one only onto or other others otherwise our ours ourselves
 out over own
