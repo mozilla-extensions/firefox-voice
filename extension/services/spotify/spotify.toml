@@ -1,0 +1,4 @@
+[spotify]
+type = "music"
+title = "Spotify"
+baseUrl = "https://open.spotify.com/"

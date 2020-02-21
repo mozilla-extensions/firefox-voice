@@ -4,6 +4,7 @@ import * as settings from "../settings.js";
 import * as util from "../util.js";
 
 // See https://duckduckgo.com/bang for a list of potential services
+// FIXME: this should be removed and serviceMetadata.js preferred.
 const SERVICE_BANG_ALIASES = {
   "google slides": "gslides",
   slides: "gslides",

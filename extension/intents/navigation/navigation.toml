@@ -18,6 +18,12 @@ phrase = "Look up The Book Thief on GoodReads"
 phrase = "Search CSS grid on MDN"
 
 [[navigation.bangSearch.example]]
+phrase = "Look up The Book Thief on GoodReads"
+
+[[navigation.bangSearch.example]]
+phrase = "Search CSS grid on MDN"
+
+[[navigation.bangSearch.example]]
 phrase = "Look up Hamilton in Gmail"
 
 [[navigation.bangSearch.example]]
@@ -63,6 +69,9 @@ phrase = "Go to the New York Times"
 
 [[navigation.navigate.example]]
 phrase = "Show me the 49ers schedule"
+
+[[navigation.navigate.example]]
+phrase = "Go to the Health section of the BBC"
 
 [navigation.translate]
 description = "Translate the given page to the chosen language, using Google Translate"

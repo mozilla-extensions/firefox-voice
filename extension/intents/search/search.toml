@@ -62,24 +62,6 @@ phrase = "How long will it take to get to Springfield?"
 [[search.search.example]]
 phrase = "How do I get to the hardware store?"
 
-[[search.search.example]]
-phrase = "Search for hiking in Denver"
-
-[[search.search.example]]
-phrase = "Look up The Book Thief on GoodReads"
-
-[[search.search.example]]
-phrase = "Search CSS grid on MDN"
-
-[[search.search.example]]
-phrase = "Go to the New York Times"
-
-[[search.search.example]]
-phrase = "Show me the 49ers schedule"
-
-[[search.search.example]]
-phrase = "Go to the Health section of the BBC"
-
 [search.searchPage]
 description = "Opens a search page"
 match = """

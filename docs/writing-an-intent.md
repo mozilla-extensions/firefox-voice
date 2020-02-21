@@ -93,7 +93,7 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Slots:** a slot is a wildcard, and puts the matched words in a named slot. E.g., `play [query]` puts everything after "play" into `content.slots.query`. The matcher tries to put as little text as necessary into a slot, so `play [query] (on |) the radio` will match `play something on the radio` with the `something` in the slot, even though `something on` would also match.
 
-**Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `ENTITY_TYPES` variable in `intentParser.js`. Right now this system isn't very extensible.
+**Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `background/entityTypes.js` module. Right now this system isn't very extensible.
 
 **Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
 

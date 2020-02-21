@@ -32,7 +32,8 @@ function ignoreFilename(filename) {
   return (
     filename.startsWith(".") ||
     filename.endsWith(".txt") ||
-    filename.endsWith(".js")
+    filename.endsWith(".js") ||
+    filename.endsWith(".toml")
   );
 }
 
