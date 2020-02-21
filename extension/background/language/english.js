@@ -32,6 +32,7 @@ paste best
 downward down ward
 upward up ward
 link like
+next text
 `.split("\n")) {
   line = line.trim();
   if (!line || line.startsWith("#")) {

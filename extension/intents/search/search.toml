@@ -17,6 +17,10 @@ phrase = "next result result"
 test = true
 
 [[search.next.example]]
+phrase = "text"
+test = true
+
+[[search.next.example]]
 phrase = "next article"
 test = true
 
