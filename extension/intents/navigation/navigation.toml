@@ -50,7 +50,7 @@ match = """
 [navigation.goBack]
 description = "Go back to the previous page, if one is available"
 match = """
-  go back
+  (go |) back
 """
 
 [navigation.goForward]
