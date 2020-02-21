@@ -90,6 +90,13 @@ export class Word {
     if (otherWord.word === this.word) {
       const nextMatch = match.clone({ addIndex: 1, addWords: 1 });
       result.push(nextMatch);
+      if (
+        !nextMatch.utteranceExhausted() &&
+        nextMatch.utteranceWord().word === this.word
+      ) {
+        // A repeated word, which we'll ignore
+        result.push(nextMatch.clone({ addIndex: 1, addSkipped: 1 }));
+      }
     } else if (this.aliases.includes(otherWord.word)) {
       const nextMatch = match.clone({
         addIndex: 1,
