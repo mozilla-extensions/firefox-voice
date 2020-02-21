@@ -33,6 +33,18 @@ phrase = "Tell me about Firefox Voice"
 phrase = "Help"
 
 [[self.openLexicon.example]]
+phrase = "tell me about this"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what can I do"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what else can I say"
+test = true
+
+[[self.openLexicon.example]]
 phrase = "What can I do?"
 
 [self.openOptions]
@@ -43,6 +55,18 @@ match = """
   options
   preferences
 """
+
+[[self.openOptions.example]]
+phrase = "open settings for me"
+test = true
+
+[[self.openOptions.example]]
+phrase = "voice settings"
+test = true
+
+[[self.openOptions.example]]
+phrase = "firefox voice options"
+test = true
 
 [self.tellJoke]
 description = "Someone asks for a joke or something funny"

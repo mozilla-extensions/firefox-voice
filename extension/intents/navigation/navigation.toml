@@ -35,6 +35,7 @@ phrase = "Find the nearest sushi on maps"
 [[navigation.bangSearch.example]]
 phrase = "search google images of sparrows for me"
 test = true
+expectSlots = {service = "google images"}
 
 [[navigation.bangSearch.example]]
 phrase = "Find website work plan on my Google Drive"
@@ -83,6 +84,7 @@ match = """
 [[navigation.translate.example]]
 phrase = "translate this page to Spanish"
 test = true
+expectSlots = {language = "Spanish"}
 
 [[navigation.translate.example]]
 phrase = "translate this page to Dutch"
@@ -101,6 +103,7 @@ phrase = "Translate selection"
 [[navigation.translateSelection.example]]
 phrase = "translate this selection to Hungarian"
 test = true
+expectSlots = {language = "Hungarian"}
 
 [[navigation.translateSelection.example]]
 phrase = "translate the selected text to Slovak"

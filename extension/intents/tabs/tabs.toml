@@ -53,6 +53,10 @@ test = true
 phrase = "open the tab"
 test = true
 
+[[tabs.open.example]]
+phrase = "open a blank tap for me"
+test = true
+
 [tabs.openHomePage]
 description = "Opens HomePage in a tab"
 match = """
