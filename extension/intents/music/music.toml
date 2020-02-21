@@ -116,9 +116,9 @@ expectSlots = {service = "spotify", query = "query"}
 [music.unpause]
 description = "Unpause one service, the current tab, or the detected service"
 match = """
-  (unpause | continue | play) video [service=youtube]
-  (unpause | continue | play) [service:musicServiceName]
-  (unpause | continue | play) (music |)
+  (unpause | continue | play | resume) video [service=youtube]
+  (unpause | continue | play | resume) [service:musicServiceName]
+  (unpause | continue | play | resume) (music |)
 """
 
 [[music.unpause.example]]
