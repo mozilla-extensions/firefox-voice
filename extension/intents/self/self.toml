@@ -24,6 +24,7 @@ match = """
   help
   what (else |) can (I | you) (do | say | ask) (you | from you | of you |)
   hello
+  what commands (can | could | will | would |) (I | you |) (say | follow | use | speak |)
 """
 
 [[self.openLexicon.example]]
@@ -42,6 +43,10 @@ test = true
 
 [[self.openLexicon.example]]
 phrase = "what else can I say"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what commands can you follow"
 test = true
 
 [[self.openLexicon.example]]
