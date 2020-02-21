@@ -14,10 +14,15 @@ description = "Scroll the current page down"
 match = """
   scroll (this |) (tab | page | article |) (down | downward)
   page down
+  scroll (tab | page | article |)
 """
 
 [[scroll.down.example]]
 phrase = "Scroll down"
+
+[[scroll.down.example]]
+phrase = "Scroll page"
+test = true
 
 [scroll.top]
 description = "Scroll the current page all the way to the top"
