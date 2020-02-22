@@ -3,16 +3,19 @@ package mozilla.voice.assistant.intents.maps
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.VisibleForTesting
 import mozilla.voice.assistant.IntentRunner
 import mozilla.voice.assistant.MatcherResult
 
 class Maps {
     companion object {
-        private const val LOCATION_KEY = "location"
+        @VisibleForTesting
+        internal const val LOCATION_KEY = "location"
+        @VisibleForTesting
+        internal const val THING_KEY = "thing"
         private const val MODE_KEY = "mode"
         private const val BIKE_MODE = 'b'
         private const val WALK_MODE = 'w'
-        private const val THING_KEY = "thing"
 
         fun register() {
             IntentRunner.registerIntent(
@@ -21,9 +24,9 @@ class Maps {
                     "Navigate to a specific destination",
                     listOf("Show me how to get to Carnegie Hall", "Navigate to 345 Spear Street"),
                     listOf(
-                        "(show|tell) me (how to get|how to drive|directions) to [$LOCATION_KEY]",
+                        "(show|tell) me (how to get|how to drive|directions|the way) to [$LOCATION_KEY]",
                         "(give me|i'd like) (car|driving|) directions to [$LOCATION_KEY]",
-                        "navigate (by car) to [$LOCATION_KEY]",
+                        "navigate (by car|) to [$LOCATION_KEY]",
                         "(show|tell) (me|) how to (bike|bicycle|cycle) to [$LOCATION_KEY] [$MODE_KEY=$BIKE_MODE]",
                         "(show|tell) (me|) how to get to [$LOCATION_KEY] by (bike|biking|bicycle|bicycling|cycling) [$MODE_KEY=$BIKE_MODE]",
                         "(show|tell) (me|) how to walk to [$LOCATION_KEY] [$MODE_KEY=$WALK_MODE]",
@@ -64,7 +67,7 @@ class Maps {
             mr.slots[LOCATION_KEY]?.let {
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("navigation:q=$it${mr.parameters[MODE_KEY].toModeSuffix()}")
+                    Uri.parse("google.navigation:q=$it${mr.parameters[MODE_KEY].toModeSuffix()}")
                 )
             }
 

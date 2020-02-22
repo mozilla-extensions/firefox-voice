@@ -134,6 +134,7 @@ class IntentParser {
         private fun findMatches(text: String): List<MatcherResult>? {
             return INTENTS.mapNotNull { intent ->
                 intent.value.match(text)?.let {
+                    // println("IntentParser: utterance matched ${it.regex}")
                     val penalty = it.slots.map { entry ->
                         if (it.slotTypes.contains(entry.key)) {
                             1
@@ -148,16 +149,18 @@ class IntentParser {
             }
         }
 
-        fun parse(unnormalizedText: String, disableFallback: Boolean = false): MatcherResult? {
+        @VisibleForTesting
+        internal fun getBestMatch(unnormalizedText: String): MatcherResult? =
             // Find best alternative. TODO: Determine if we need to keep the revised score.
-            val bestMatch = findAlternatives(unnormalizedText.toLowerCase(Locale.getDefault())).flatMap {
+            findAlternatives(unnormalizedText.toLowerCase(Locale.getDefault())).flatMap {
                 findMatches(it.altText)?.map { match ->
                     match.score += it.scoreMod
                     match
                 } ?: emptyList()
             }.maxBy { it.score }
 
-            return bestMatch ?: if (disableFallback) {
+        fun parse(unnormalizedText: String, disableFallback: Boolean = false): MatcherResult? {
+            return getBestMatch(unnormalizedText) ?: if (disableFallback) {
                 null
             } else {
                 createFallbackMatch(normalizeText(unnormalizedText))
