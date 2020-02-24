@@ -1,0 +1,23 @@
+tab app
+tab cat
+tab tap
+tab tech
+tab top
+on in
+next nest
+close closest
+page webpage
+site website
+intents intense
+intents interns
+paste haste
+paste taste
+paste pace
+paste best
+downward down ward
+upward up ward
+link like
+next text
+# Seems like a bad substitution, but seen in the wild...
+open pooping
+open poop

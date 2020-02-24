@@ -83,6 +83,7 @@ class Maps {
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             mr.slots[THING_KEY]?.let { thing ->
+                // Should there be a space at the start of "in $it"?
                 val suffix = mr.slots[LOCATION_KEY]?.let { "in $it" } ?: ""
                 Intent(
                     Intent.ACTION_VIEW,
