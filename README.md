@@ -16,6 +16,27 @@ There is some documentation in the [docs/](./docs/) directory, notably [writing 
 
 If you are using Windows, please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), as the installation won't work from a normal Windows command prompt.
 
+You will need to setup Firefox Nightly or Developer on WSL before running `firefox-voices`; use the following steps:
+
+1. Download `firefox-nightly.tar.bz2` for Linux and move it to a folder of your choice e.g. `/opt`.
+2. Extract it using `tar -xvjf firefox-*.tar.bz2` and move it to `/opt/firefox/`.
+3. Download `VcXsrv` on Windows and launch it with all default settings EXCEPT access control disabled.
+4. At this point, the `DISPLAY` variable is not set, so you may run into issues running GUI apps from XServer. To fix this, run `cat /etc/resolv.conf` to get the IP address of the nameserver, then run `export DISPLAY=IP_ADDRESS_OF_NAMESERVER_HERE:0`.
+You can also use this one-liner: `export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0`
+5. Test Firefox Nightly by launching `./firefox` in the folder that you extracted the `tar.bz2`; this should open up Firefox Nightly.
+6. In the `firefox-voices` repo, export the variable `FIREFOX` to point the script to your installation of firefox e.g. `export FIREFOX=/opt/firefox/firefox`.
+7. Now, running `npm start` should automatically start `firefox-nightly`, however the sound/microphone might not be working.
+8. Download the [PulseAudio binary for Windows](https://www.freedesktop.org/wiki/Software/PulseAudio/Ports/Windows/Support/).
+9. Extract the files to any location. You should see four folders named `bin`, `etc`, `lib`, and `share`.
+10. Edit the configuration files in `etc`. In `default.pa`, find the line starting with `#load-module module-native-protocol-tcp` and change it to `load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1`
+11. In `daemon.conf`, find the line starting with `; exit-idle-time = 20` and change it to `exit-idle-time = -1` to turn off idle timer.
+12. In admin Powershell, run `pulseaudio.exe` under the `bin` folder, and keep this running.
+13. Now, you will need to install PulseAudio for WSL. Uninstall any current versions of PulseAudio using `sudo apt-get purge pulseaudio`.
+14. Run `sudo add-apt-repository ppa:therealkenc/wsl-pulseaudio` to add the PPA.
+15. Update the sources using `sudo apt-get update`.
+16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
+17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
+
 The developer installation is:
 
 ```sh
