@@ -56,10 +56,10 @@ expectParameters = {direction = "back"}
 [music.pause]
 description = "Pause all supported services (regardless of tab or window)"
 match = """
-  (stop | pause) video [service=youtube]
+  (stop | pause) (play | playing |) video [service=youtube]
   pause [service:musicServiceName]
-  pause (music |)
-  stop (music |)
+  pause (play | playing |) (music |)
+  stop (play | playing |) (music |)
 """
 
 [[music.pause.example]]
@@ -76,6 +76,16 @@ test = true
 
 [[music.pause.example]]
 phrase = "stop video"
+test = true
+expectParamters = {service = "youtube"}
+
+[[music.pause.example]]
+phrase = "stop playing video"
+test = true
+expectParamters = {service = "youtube"}
+
+[[music.pause.example]]
+phrase = "stop playing music"
 test = true
 expectParamters = {service = "youtube"}
 

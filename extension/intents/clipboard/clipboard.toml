@@ -14,6 +14,10 @@ phrase = "Copy full page screenshot"
 phrase = "Copy page screenshot"
 test = true
 
+[[clipboard.copyFullPageScreenshot.example]]
+phrase = "copy a whole page screenshot"
+test = true
+
 [clipboard.copyLink]
 description = "Copies the link of the current tab"
 match = """
@@ -51,13 +55,30 @@ phrase = "Copy HTML link"
 [clipboard.copyScreenshot]
 description = "Copies the screenshot of the visible page"
 match = """
-  copy (the |) screenshot of (the | this |) tab (to clipboard |)
+  copy (the |) screenshot of (the | this |) (tab | page | article) (to clipboard |)
   copy (the |) (tab's |) screenshot (to clipboard |)
   screenshot (this |) (tab |) to clipboard
+  screenshot (page |)
 """
 
 [[clipboard.copyScreenshot.example]]
 phrase = "Copy screenshot"
+
+[[clipboard.copyScreenshot.example]]
+phrase = "Screenshot"
+test = true
+
+[[clipboard.copyScreenshot.example]]
+phrase = "Take a screenshot"
+test = true
+
+[[clipboard.copyScreenshot.example]]
+phrase = "copy a screenshot of the page"
+test = true
+
+[[clipboard.copyScreenshot.example]]
+phrase = "screenshot this page"
+test = true
 
 [clipboard.copySelection]
 description = "Copies the selection"
