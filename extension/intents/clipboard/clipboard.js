@@ -6,6 +6,7 @@ async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
   await content.lazyInject(activeTab.id, [
     "/background/pageMetadata-contentScript.js",
+    "/intents/saving/screenshotContentScript.js",
     "/intents/clipboard/contentScript.js",
   ]);
   if (complete) {
