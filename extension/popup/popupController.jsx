@@ -383,6 +383,11 @@ export const PopupController = function() {
       });
     };
     recorder.onError = error => {
+      if (String(error) === "Error: Failed response from server: 500") {
+        // FIXME: this is because the server gives a 500 response when there's no voice...
+        recorder.onNoVoice();
+        return;
+      }
       setPopupView("error");
       clearInterval(recorderIntervalId);
       browser.runtime.sendMessage({ type: "microphoneStopped" });
