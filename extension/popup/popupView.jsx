@@ -705,9 +705,9 @@ class Zap extends Component {
     // this.animation.onLoopComplete = function() {
     if (avgVolume < 0.1) {
       this.playAnimation(this.animationSegmentTimes.base, true, true);
-    } else if (avgVolume < 0.15) {
+    } else if (avgVolume < 0.3) {
       this.playAnimation(this.animationSegmentTimes.low, true, true);
-    } else if (avgVolume < 0.2) {
+    } else if (avgVolume < 0.4) {
       this.playAnimation(this.animationSegmentTimes.medium, true, true);
     } else {
       this.playAnimation(this.animationSegmentTimes.high, true, true);
