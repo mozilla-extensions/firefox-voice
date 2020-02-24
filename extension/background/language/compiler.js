@@ -55,6 +55,9 @@ function makeWordMatcher(string) {
 }
 
 export function splitPhraseLines(string) {
+  if (typeof string !== "string") {
+    throw new Error(`Bad input: ${string}`);
+  }
   const result = [];
   for (let line of string.split("\n")) {
     line = line.trim();

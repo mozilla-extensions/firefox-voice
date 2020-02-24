@@ -33,6 +33,15 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "muting.muteTab",
+  async run(desc) {
+    const activeTab = await desc.activeTab();
+    await browser.tabs.update(activeTab.id, { muted: true });
+    // TODO: show confirmation
+  },
+});
+
+intentRunner.registerIntent({
   name: "muting.unmute",
   async run(desc) {
     const mutedTabs = await browser.tabs.query({ audible: false });

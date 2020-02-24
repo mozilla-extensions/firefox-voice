@@ -23,6 +23,20 @@ test = true
 phrase = "quiet tabs"
 test = true
 
+[muting.muteTab]
+description = "Mute just the active page"
+match = """
+  (mute | quiet | shot up) (this |) (page | tab)
+"""
+
+[[muting.muteTab.example]]
+phrase = "mute this tab"
+test = true
+
+[[muting.muteTab.example]]
+phrase = "mute page"
+test = true
+
 [muting.unmute]
 description = "Unmute all tabs"
 match = """

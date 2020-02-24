@@ -15,6 +15,9 @@ for (const category in metadata) {
     const data = metadata[category][subname];
     const intentName = `${category}.${subname}`;
     intents[intentName] = data;
+    if (!data.match) {
+      throw new Error(`Intent ${intentName} is missing "match"`);
+    }
     for (const line of splitPhraseLines(data.match)) {
       const compiled = compile(line, { entities: entityTypes, intentName });
       phrases.push(compiled);
