@@ -140,3 +140,6 @@ names = ["duck duck go images"]
 ["google images"]
 bangSearch = "gi"
 names = ["images"]
+
+[imdb]
+bangSearch = "imdb"
