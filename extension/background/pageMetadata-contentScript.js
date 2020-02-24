@@ -3,10 +3,14 @@
 this.pageMetadataContentScript = (function() {
   const exports = {};
 
-  communicate.register("getSelection", message => {
-    const selection = window.getSelection();
-    return { selection: { text: String(selection) } };
-  });
+  communicate.register(
+    "getSelection",
+    message => {
+      const selection = window.getSelection();
+      return { selection: { text: String(selection) } };
+    },
+    true
+  );
 
   exports.getMetadata = function() {
     let title = document.title || location.href;
@@ -29,9 +33,13 @@ this.pageMetadataContentScript = (function() {
     };
   };
 
-  communicate.register("getMetadata", message => {
-    return exports.getMetadata();
-  });
+  communicate.register(
+    "getMetadata",
+    message => {
+      return exports.getMetadata();
+    },
+    true
+  );
 
   return exports;
 })();

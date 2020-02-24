@@ -1,4 +1,4 @@
-/* globals communicate, pageMetadataContentScript, log */
+/* globals communicate, pageMetadataContentScript, log, screenshotContentScript */
 
 this.contentScript = (function() {
   const types = {};
@@ -44,37 +44,6 @@ this.contentScript = (function() {
     el.remove();
   }
 
-  function createScreenshot({ x, y, width, height }) {
-    const canvas = document.createElementNS(
-      "http://www.w3.org/1999/xhtml",
-      "canvas"
-    );
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
-    const ctx = canvas.getContext("2d");
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    ctx.drawWindow(window, x, y, width, height, "#fff");
-    return canvas.toDataURL();
-  }
-
-  function getDocumentWidth() {
-    return Math.max(
-      document.body && document.body.clientWidth,
-      document.documentElement.clientWidth,
-      document.body && document.body.scrollWidth,
-      document.documentElement.scrollWidth
-    );
-  }
-
-  function getDocumentHeight() {
-    return Math.max(
-      document.body && document.body.clientHeight,
-      document.documentElement.clientHeight,
-      document.body && document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
-  }
-
   function copyImage(url) {
     return browser.runtime.sendMessage({
       type: "copyImage",
@@ -116,22 +85,12 @@ this.contentScript = (function() {
   };
 
   types.copyScreenshot = function() {
-    const url = createScreenshot({
-      x: window.scrollX,
-      y: window.scrollY,
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
+    const url = screenshotContentScript.visibleScreenshot();
     copyImage(url);
   };
 
   types.copyFullPageScreenshot = function() {
-    const url = createScreenshot({
-      x: 0,
-      y: 0,
-      height: getDocumentHeight(),
-      width: getDocumentWidth(),
-    });
+    const url = screenshotContentScript.fullPageScreenshot();
     copyImage(url);
   };
 

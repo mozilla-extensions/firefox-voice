@@ -19,3 +19,33 @@ match = """
 
 [[saving.showLastDownload.example]]
 phrase = "Show download"
+
+[saving.downloadScreenshot]
+description = "Saves a PNG screenshot of the viewport"
+match = """
+  (save | download) screenshot (of |) (this | active |) (page | tab | article | site |)
+  (save | download) screenshot (of |) (this | active |) (page | tab | article | site |) as [name]
+"""
+
+[[saving.downloadScreenshot.example]]
+phrase = "save screenshot"
+
+[[saving.downloadScreenshot.example]]
+phrase = "save screenshot as an example"
+
+[saving.downloadFullPageScreenshot]
+description = "Saves a PNG screenshot of the entire page"
+match = """
+  (save | download) full (page |) screenshot (of |) (this | the |) | active |) (page | tab | article | site |)
+  (save | download) full (page |) screenshot (of |) (this | the |) | active |) (page | tab | article | site |) as [name]
+  (save | download) (the |) (tab's |) full (page |) (screenshot |)
+  (save | download) (the |) (tab's |) full (page |) (screenshot |) as [name]
+"""
+
+[[saving.downloadFullPageScreenshot.example]]
+phrase = "save full page screenshot"
+
+[[saving.downloadFullPageScreenshot.example]]
+phrase = "save full page screenshot as some kind of test"
+test = true
+expectSlots = { name = "some kind of test" }
