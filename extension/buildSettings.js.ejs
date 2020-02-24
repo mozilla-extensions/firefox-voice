@@ -6,7 +6,7 @@ this.buildSettings = {
   sendToDeepSpeech: true,
   gitCommit: <%= gitCommit %>,
   buildTime: <%= buildTime %>,
-  backgroundTabRecorder: <%= !env.FOREGROUND && !env.ANDROID %>,
+  backgroundTabRecorder: <%= !!env.BACKGROUND %>,
   channel: "<%- env.INSTALL_CHANNEL || "unknown" %>",
   sentryDsn: <%= (env.NO_SENTRY && !env.FORCE_SENTRY) ? null : env.SENTRY_DSN || "https://18143ece2d6042ff91ed7678b287a814@sentry.prod.mozaws.net/458" %>,
   openPopupOnStart: <%= !!env.OPEN_POPUP_ON_START %>,
