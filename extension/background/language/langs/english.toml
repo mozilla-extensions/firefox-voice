@@ -24,6 +24,7 @@ text = "next"
 # Seems like a bad substitution, but see in the wild...
 pooping = "open"
 poop = "open"
+pint = "pinned"
 
 [stopwords]
 words = """

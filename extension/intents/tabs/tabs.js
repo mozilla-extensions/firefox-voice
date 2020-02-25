@@ -212,3 +212,90 @@ intentRunner.registerIntent({
     await browser.windows.update(currentWindow.id, { state: "fullscreen" });
   },
 });
+
+intentRunner.registerIntent({
+  name: "tabs.switchDir",
+  async run(context) {
+    const tabs = await browser.tabs.query({ currentWindow: true });
+    await switchDir(tabs, context.parameters.dir);
+  },
+});
+
+async function switchDir(tabs, dir) {
+  for (let i = 0; i < tabs.length; i++) {
+    if (tabs[i].active) {
+      let tab;
+      if (dir === "next") {
+        if (tabs[i + 1]) {
+          tab = tabs[i + 1];
+        } else {
+          tab = tabs[0];
+        }
+      } else if (tabs[i - 1]) {
+        tab = tabs[i - 1];
+      } else {
+        tab = tabs[tabs.length - 1];
+      }
+      await browser.tabs.update(tab.id, { active: true });
+      return;
+    }
+  }
+}
+
+intentRunner.registerIntent({
+  name: "tabs.switchSide",
+  async run(context) {
+    const tabs = await browser.tabs.query({ currentWindow: true });
+    await switchSide(tabs, context.parameters.dir);
+  },
+});
+
+async function switchSide(tabs, dir) {
+  let tab;
+  if (dir === "first") {
+    tab = tabs[0];
+  } else {
+    tab = tabs[tabs.length - 1];
+  }
+  if (tab.active) {
+    const exc = new Error("Tab already active");
+    exc.displayMessage =
+      dir === "first"
+        ? "You are already on the first tab"
+        : "You are already on the last tab";
+    throw exc;
+  }
+  await browser.tabs.update(tab.id, { active: true });
+}
+
+intentRunner.registerIntent({
+  name: "tabs.switchDirPinned",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: true,
+    });
+    if (!tabs.length) {
+      const exc = new Error("No pinned tabs");
+      exc.displayMessage = "You don't have any pinned tabs";
+      throw exc;
+    }
+    await switchDir(tabs, context.parameters.dir);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.switchSidePinned",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: true,
+    });
+    if (!tabs.length) {
+      const exc = new Error("No pinned tabs");
+      exc.displayMessage = "You don't have any pinned tabs";
+      throw exc;
+    }
+    await switchSide(tabs, context.parameters.dir);
+  },
+});
