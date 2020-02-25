@@ -74,6 +74,27 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
+    const activeTab = await context.activeTab();
+    if (
+      activeTab.url === "about:newtab" ||
+      activeTab.url === "about:home" ||
+      activeTab.url === "about:blank"
+    ) {
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        const exc = new Error("No text in clipboard");
+        exc.displayMessage = "No text in clipboard";
+        throw exc;
+      }
+      if (/^https?:\/\//i.test(text)) {
+        await browser.tabs.update(activeTab.id, { url: text });
+      } else {
+        await browser.search.search({
+          query: text,
+        });
+      }
+      return;
+    }
     try {
       // OK, not actually a copy, but...
       await copy(context, "paste");
