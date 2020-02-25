@@ -1,0 +1,37 @@
+[forms.dictate]
+description = "Dictate one piece of text into a field"
+match = """
+  (enter | type | write) (text |) [text] (in | into |) (page | field | input | textarea | document | element |)
+"""
+
+[[forms.dictate.example]]
+phrase = "Enter text hello world"
+
+[forms.focusField]
+description = "Focus a named field"
+match = """
+  focus (field | input | text | textarea | element |) (named | with name | labeled | with label |) [label] (field | input | element |)
+"""
+
+[[forms.focusField.example]]
+phrase = "Focus search field"
+
+[forms.focusNext]
+description = "Focus the next field"
+match = """
+  focus next (field | input | text | textarea | element |)
+  next (field | input | textarea | element)
+"""
+
+[[forms.focusNext.example]]
+phrase = "Focus next field"
+
+[forms.focusPrevious]
+description = "Focus the previous field"
+match = """
+  focus (previous | last | back) (field | input | text | textarea | element |)
+  (previous | last | back) (field | input | textarea | element)
+"""
+
+[[forms.focusPrevious.example]]
+phrase = "Focus previous field"
