@@ -18,49 +18,56 @@ async function copy(context, copyType, complete = false) {
 intentRunner.registerIntent({
   name: "clipboard.copyLink",
   async run(context) {
-    return copy(context, "copyLink");
+    await copy(context, "copyLink");
+    context.displayText("Link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyTitle",
   async run(context) {
-    return copy(context, "copyTitle");
+    await copy(context, "copyTitle");
+    context.displayText("Title copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyRichLink",
   async run(context) {
-    return copy(context, "copyRichLink");
+    await copy(context, "copyRichLink");
+    context.displayText("Title and link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyMarkdownLink",
   async run(context) {
-    return copy(context, "copyMarkdownLink");
+    await copy(context, "copyMarkdownLink");
+    context.displayText("Markdown title and link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyScreenshot",
   async run(context) {
-    return copy(context, "copyScreenshot");
+    await copy(context, "copyScreenshot");
+    context.displayText("Screenshot copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyFullPageScreenshot",
   async run(context) {
-    return copy(context, "copyFullPageScreenshot");
+    await copy(context, "copyFullPageScreenshot");
+    context.displayText("Full page screenshot copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copySelection",
   async run(context) {
-    return copy(context, "copySelection");
+    await copy(context, "copySelection");
+    context.displayText("Selected text copied to clipboard");
   },
 });
 
