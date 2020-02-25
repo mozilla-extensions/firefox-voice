@@ -3,27 +3,24 @@ package mozilla.voice.assistant.language
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 
-fun String.stripComment() =
-    replace("#.*$", "")
-
-fun MutableMap<String, MutableList<String>>.add(key: String, value: String) =
+private fun MutableMap<String, MutableList<String>>.add(key: String, value: String) =
     this[key]?.run {
         add(value)
     } ?: set(key, mutableListOf(value))
 
 class English {
-
     companion object {
-        val aliases = mutableMapOf<String, MutableList<String>>()
-        val multiwordAliases = mutableMapOf<String, MutableList<String>>()
-        val stopwords = mutableSetOf<String>()
+        internal val aliases = mutableMapOf<String, MutableList<String>>()
+        internal val multiwordAliases = mutableMapOf<String, MutableList<String>>()
+        internal lateinit var stopwords: Set<String>
 
         @VisibleForTesting
         internal fun addAlias(input: String) {
-            if (!input.trim().startsWith('#')) {
+            val line = input.trim()
+            if (!line.startsWith('#') && line.isNotEmpty()) {
                 val fields = input.trim().split(' ', limit = 3)
-                if (fields.size < 2 || fields.size > 3) {
-                    throw Error("Error parsing this line from aliases.txt: $input")
+                if (fields.size < 2) {
+                    throw IllegalArgumentException("Error parsing this line from aliases.txt: $input")
                 }
                 val proper = fields[0]
                 if (fields.size == 2) {
@@ -34,13 +31,22 @@ class English {
             }
         }
 
+        @VisibleForTesting
+        internal fun splitToSet(lines: List<String>) =
+            lines.map { it.trim() }.flatMap {
+                if (it.startsWith('#') || it.isEmpty()) {
+                    emptyList()
+                } else {
+                    it.trim().split(' ')
+                }
+            }.toSet()
+
         fun initialize(context: Context) {
             context.assets.openFd("raw/aliases.txt").use {
                 readLine()?.let { addAlias(it) }
             }
-            context.assets.openFd("raw/stopwords.txt").createInputStream().bufferedReader().useLines {
-
-
+            stopwords = context.assets.openFd("raw/stopwords.txt").use {
+                splitToSet(it.createInputStream().bufferedReader().readLines())
             }
         }
     }
