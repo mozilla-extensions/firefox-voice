@@ -46,7 +46,8 @@ class MapsTest {
             Pair("navigate to LOC", "mozilla hq"),
             Pair("navigate by car to LOC", "chinatown"),
             Pair("what's the best way to get to LOC", "the bay bridge"),
-            Pair("what's the quickest way to drive to LOC", "seattle")
+            Pair("what's the quickest way to drive to LOC", "seattle"),
+            Pair("directions to mission bay", "mission bay")
         ).map {
             testMapHelper(
                 it.first.replace("LOC", it.second),
@@ -62,7 +63,8 @@ class MapsTest {
             "show how to bicycle to $loc",
             "show how to get to $loc by bike",
             "show how to cycle to $loc",
-            "what's the quickest way to bike to $loc"
+            "what's the quickest way to bike to $loc",
+            "bike directions to $loc"
         ).map {
             testMapHelper(it, expectedMode = Maps.BIKE_MODE)
         }
@@ -78,7 +80,8 @@ class MapsTest {
             "show me how to get to $loc on foot",
             "show me how to get to $loc by foot",
             "show how to get to $loc by walking",
-            "what's the quickest way to walk to $loc"
+            "what's the quickest way to walk to $loc",
+            "walking directions to $loc"
         ).map {
             testMapHelper(it, expectedMode = Maps.WALK_MODE)
         }

@@ -31,7 +31,9 @@ class Maps {
                         "What's the best way to walk to the Bay Bridge?"
                     ),
                     listOf(
-                        "(give me|i'd like) (car|driving|) directions to [$LOCATION_KEY]",
+                        "(give me|show me|i'd like|) (car|driving|) directions to [$LOCATION_KEY]",
+                        "(give me|show me|i'd like|) walking directions to [$LOCATION_KEY] [$MODE_KEY=$WALK_MODE]",
+                        "(give me|show me|i'd like|) (bike|biking|bicycle|bicycling|cycling) directions to [$LOCATION_KEY] [$MODE_KEY=$BIKE_MODE]",
                         "navigate (by car|) to [$LOCATION_KEY]",
                         "(show|tell) (me|) how to (bike|bicycle|cycle) to [$LOCATION_KEY] [$MODE_KEY=$BIKE_MODE]",
                         "(show|tell) (me|) how to get to [$LOCATION_KEY] by (bike|biking|bicycle|bicycling|cycling) [$MODE_KEY=$BIKE_MODE]",
