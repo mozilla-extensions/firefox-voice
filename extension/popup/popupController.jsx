@@ -362,8 +362,12 @@ export const PopupController = function() {
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
     recorder.onEnd = json => {
-      setPopupView("success");
       clearInterval(recorderIntervalId);
+      if (textInputDetected) {
+        // The recorder ended because it was cancelled when typing began
+        return;
+      }
+      setPopupView("success");
       executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
