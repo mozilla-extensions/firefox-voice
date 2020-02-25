@@ -26,6 +26,7 @@ intentRunner.registerIntent({
     }
     const blob = htmlToBlob(html);
     await downloadData(blob, filename);
+    context.displayText("Page saved to downloads folder");
   },
 });
 
@@ -88,6 +89,7 @@ async function downloadScreenshot(context, type) {
   }
   const blob = dataPngUrlToBlob(png);
   await downloadData(blob, filename);
+  context.displayText("Screenshot saved to downloads folder");
 }
 
 function dataPngUrlToBlob(url) {
