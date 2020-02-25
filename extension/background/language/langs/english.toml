@@ -1,61 +1,32 @@
-/*
-Information specific to English words:
+[aliases]
+# Each item is a possible word we'll see in the transcript, and the "correct" version of
+# that word. I.e., if we see "open app" maybe the right transcription is "open tab"
+app = "tab"
+cat = "tab"
+tap = "tab"
+tech = "tab"
+top = "tab"
+in = "on"
+nest = "next"
+closest = "close"
+webpage = "page"
+website = "site"
+intense = "intents"
+interns = "intents"
+haste = "paste"
+taste = "paste"
+pace = "paste"
+best = "paste"
+"down ward" = "downward"
+"up ward" = "upward"
+like = "link"
+text = "next"
+# Seems like a bad substitution, but see in the wild...
+pooping = "open"
+poop = "open"
 
-* `aliases`: canonical word forms vs an alias. Also includes often misheard words
-* `stopwords`: words that can be ignored if it makes a match possible
-
-*/
-
-export const aliases = new Map();
-export const multiwordAliases = new Map();
-export const stopwords = new Set();
-
-for (let line of `
-# Each line is first the "proper" word, and a possible alias that could show up and should
-# potentially be treated as the proper word
-tab app
-tab cat
-tab tap
-tab tech
-tab top
-on in
-next nest
-close closest
-page webpage
-site website
-intents intense
-intents interns
-paste haste
-paste taste
-paste pace
-paste best
-downward down ward
-upward up ward
-link like
-next text
-# Seems like a bad substitution, but seen in the wild...
-open pooping
-open poop
-`.split("\n")) {
-  line = line.trim();
-  if (!line || line.startsWith("#")) {
-    continue;
-  }
-  const [proper, ...alias] = line.split(/\s+/g);
-  if (alias.length === 1) {
-    if (aliases.get(proper)) {
-      aliases.get(proper).push(alias[0]);
-    } else {
-      aliases.set(proper, [alias[0]]);
-    }
-  } else if (multiwordAliases.get(proper)) {
-    multiwordAliases.get(proper).push(alias);
-  } else {
-    multiwordAliases.set(proper, [alias]);
-  }
-}
-
-for (let line of `
+[stopwords]
+words = """
 # Words from https://github.com/explosion/spaCy/blob/e0cf4796a505bd26e8fcb95d23b89fd7eca3be0a/spacy/lang/en/stop_words.py
 a about above across after afterwards again against all almost alone along
 already also although always am among amongst amount an and another any anyhow
@@ -97,12 +68,4 @@ various very very via was we well were what whatever when whence whenever where
 whereafter whereas whereby wherein whereupon wherever whether which while
 whither who whoever whole whom whose why will with within without would
 yet you your yours yourself yourselves
-`.split("\n")) {
-  line = line.trim();
-  if (!line || line.startsWith("#")) {
-    continue;
-  }
-  for (const word of line.split(/\s+/g)) {
-    stopwords.add(word);
-  }
-}
+"""

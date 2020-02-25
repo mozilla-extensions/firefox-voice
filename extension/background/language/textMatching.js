@@ -20,7 +20,8 @@ The most important method across these is `.matchUtterance(aMatchResult)`. This 
 a list of `MatchResult` objects, all possible matches.
 */
 
-import { aliases, multiwordAliases, stopwords } from "./english.js";
+import English from "./langs/english.js";
+const { aliases, multiwordAliases, stopwords } = English;
 
 function normalize(text) {
   let n = text.toLowerCase();

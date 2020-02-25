@@ -14,6 +14,9 @@ const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
 const SERVICE_DIR = path.normalize(
   path.join(__dirname, "../extension/services")
 );
+const LANG_DIR = path.normalize(
+  path.join(__dirname, "../extension/background/language/langs")
+);
 
 const metadata = {};
 
@@ -40,11 +43,8 @@ for (const filename of glob.sync(INTENT_DIR + "/**/*.toml")) {
   Object.assign(metadata, data);
 }
 
-const fileContent = `export const metadata = ${JSON.stringify(
-  metadata,
-  null,
-  "  "
-)};\n`;
+const fileContent = `// Generated from intents/*/*.toml
+export const metadata = ${JSON.stringify(metadata, null, "  ")};\n`;
 
 fs.writeFileSync(OUTPUT, fileContent, { encoding: "UTF-8" });
 console.log(`Wrote file ${OUTPUT} (${fileContent.length} characters)`);
@@ -87,11 +87,42 @@ for (const name in searchData) {
 }
 Object.assign(serviceMetadata.search, searchData);
 
-const serviceContent = `export const metadata = ${JSON.stringify(
-  serviceMetadata,
-  null,
-  "  "
-)};\n`;
+const serviceContent = `// Generated from ${path.basename(searchDataFilename)}
+export const metadata = ${JSON.stringify(serviceMetadata, null, "  ")};\n`;
 
 fs.writeFileSync(SYNC_OUTPUT, serviceContent, { encoding: "UTF-8" });
 console.log(`Wrote file ${SYNC_OUTPUT} (${serviceContent.length} characters)`);
+
+for (const filename of glob.sync(LANG_DIR + "/*.toml")) {
+  let data;
+  try {
+    data = toml.parse(fs.readFileSync(filename));
+  } catch (e) {
+    console.warn("Error:", e, "in file:", filename);
+    continue;
+  }
+  if (
+    !Array.isArray(data.stopwords) &&
+    typeof data.stopwords.words === "string"
+  ) {
+    let lines = data.stopwords.words.split("\n");
+    lines = lines
+      .map(l => l.trim())
+      .filter(l => !l.startsWith("#") && !l.startsWith("//") && l);
+    lines = lines.map(l => l.split(/\s+/g));
+    lines = lines.flat();
+    data.stopwords = lines;
+  }
+  const content = `// Generated from ${path.basename(filename)}
+import { Language } from "./lang.js";
+
+const lang = new Language(${JSON.stringify(data, null, "  ")}
+);
+
+export default lang;
+`;
+
+  const outputFilename = filename.replace(/\.toml$/, ".js");
+  fs.writeFileSync(outputFilename, content, { encoding: "UTF-8" });
+  console.log(`Wrote file ${outputFilename} (${content.length} characters)`);
+}
