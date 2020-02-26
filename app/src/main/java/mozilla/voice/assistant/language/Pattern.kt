@@ -24,4 +24,8 @@ a list of `MatchResult` objects, all possible matches.
 
 interface Pattern {
     fun matchUtterance(match: MatchResult): List<MatchResult>
+
+    fun toSource(): String
+
+    fun slotNames(): Set<String>
 }

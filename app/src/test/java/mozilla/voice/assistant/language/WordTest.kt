@@ -1,7 +1,6 @@
 package mozilla.voice.assistant.language
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,21 +18,10 @@ class WordTest {
         English.addAlias("hello hell oh") // "hell oh" is an alias for "hello"
     }
 
-    private fun makeMatch(s: String) =
-        MatchResult(
-            utterance = s.trim().split(' ').map { it -> Word(it) }
-        )
 
-    private fun checkCounts(match: MatchResult, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
-        assertTrue("match not exhausted: $match", match.utteranceExhausted())
-        assertEquals("unexpected value for aliasedWords: ", aliasedWords, match.aliasedWords)
-        assertEquals("unexpected value for capturedWords: ", capturedWords, match.capturedWords)
-        assertEquals("unexpected value for skippedWords: ", skippedWords, match.skippedWords)
-    }
-
-    private fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
+    internal fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
         val results = Word(word).matchUtterance(makeMatch(utterance))
-        assertEquals("expected a single result: $results", 1, results.size)
+        Assert.assertEquals("expected a single result: $results", 1, results.size)
         checkCounts(results[0], aliasedWords = aliasedWords, capturedWords = capturedWords, skippedWords = skippedWords)
     }
 

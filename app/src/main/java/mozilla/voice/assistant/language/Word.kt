@@ -71,7 +71,7 @@ class Word(val source: String) : Pattern {
             "Word(\"$source\"->$word)"
         }
 
-    fun toSource() = source
+    override fun toSource() = source
 
-    fun slotNames() = emptySet<String>()
+    override fun slotNames() = emptySet<String>()
 }
