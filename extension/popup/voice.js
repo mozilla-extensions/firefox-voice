@@ -58,13 +58,19 @@ export class Recorder {
     };
     // FIXME: this is a bad pattern, but all I got for now...
     vad.events.onProcessing = () => {
-      this.onProcessing();
+      if (!this.cancelled) {
+        this.onProcessing();
+      }
     };
     vad.events.onNoVoice = () => {
-      this.onNoVoice();
+      if (!this.cancelled) {
+        this.onNoVoice();
+      }
     };
     vad.events.onStartVoice = () => {
-      this.onStartVoice();
+      if (!this.cancelled) {
+        this.onStartVoice();
+      }
     };
     // connect stream to our recorder
     this.sourceNode.connect(this.scriptprocessor);
