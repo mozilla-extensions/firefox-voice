@@ -132,7 +132,7 @@ export function send() {
 }
 
 export async function sendSoon() {
-  await util.sleep(1000);
+  await util.sleep(2000);
   return send();
 }
 
