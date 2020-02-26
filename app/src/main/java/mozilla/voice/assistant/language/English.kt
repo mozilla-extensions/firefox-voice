@@ -5,23 +5,28 @@ import androidx.annotation.VisibleForTesting
 
 private fun <K, V> MutableMap<K, MutableList<V>>.add(key: K, value: V) =
     this[key]?.run {
+        if (this.contains(value)) {
+            throw Error("Redundant attempt to add $key -> $value")
+        }
         add(value)
     } ?: set(key, mutableListOf(value))
 
 class English {
     companion object {
-        private var _aliases: MutableMap<String, MutableList<String>> = mutableMapOf()
-        private var _multiwordAliases: MutableMap<String, MutableList<List<String>>> = mutableMapOf()
-        internal lateinit var stopwords: Set<String>
+        internal val _aliases: MutableMap<String, MutableList<String>> = mutableMapOf()
+        internal val _multiwordAliases: MutableMap<String, MutableList<List<String>>> =
+            mutableMapOf()
+        internal val _stopwords: MutableSet<String> = mutableSetOf()
 
-        internal fun aliases(s: String) = _aliases[s] as List<String>
-
-        internal fun multiwordAliases(s: String) = _multiwordAliases[s] as List<List<String>>
+        internal fun aliases(s: String): List<String>? = _aliases[s]
+        internal fun multiwordAliases(s: String): List<List<String>>? = _multiwordAliases[s]
+        internal fun isStopword(word: String) = _stopwords.contains(word)
 
         @VisibleForTesting // exists for testing
         internal fun clear() {
-            _aliases = mutableMapOf()
-            _multiwordAliases = mutableMapOf()
+            _aliases.clear()
+            _multiwordAliases.clear()
+            _stopwords.clear()
         }
 
         @VisibleForTesting // exists for testing
@@ -29,6 +34,9 @@ class English {
 
         @VisibleForTesting // exists for testing
         internal fun getMultiwordAliasesSize() = _multiwordAliases.size
+
+        @VisibleForTesting // exists for testing
+        internal fun addStopword(s: String) = _stopwords.add(s)
 
         @VisibleForTesting
         internal fun addAlias(input: String) {
@@ -60,8 +68,8 @@ class English {
             context.assets.openFd("raw/aliases.txt").use {
                 readLine()?.let { addAlias(it) }
             }
-            stopwords = context.assets.openFd("raw/stopwords.txt").use {
-                splitToSet(it.createInputStream().bufferedReader().readLines())
+            context.assets.openFd("raw/stopwords.txt").use {
+                _stopwords.addAll(splitToSet(it.createInputStream().bufferedReader().readLines()))
             }
         }
     }
