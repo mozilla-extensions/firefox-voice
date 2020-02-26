@@ -88,6 +88,11 @@ export function add(properties) {
   if (!ping.timestamp) {
     ping.timestamp = Date.now();
   }
+  if (!ping.numberOfTabs) {
+    browser.tabs.query({ currentWindow: true }).then(tabs => {
+      ping.numberOfTabs = tabs.length;
+    });
+  }
 }
 
 export function cancelledIntent() {
