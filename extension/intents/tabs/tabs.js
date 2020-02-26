@@ -20,6 +20,9 @@ const defaultZoomValues = [
   2.4,
   3,
 ];
+// Milliseconds: if you activate a tab for less time than this, then it doesn't
+// get tracked (we assume you just passed over the tab)
+const TRACK_TAB_ACTIVATE_MINIMUM = 1500;
 
 function nextLevel(levels, current) {
   for (const level of levels) {
@@ -210,6 +213,51 @@ intentRunner.registerIntent({
     }
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.update(currentWindow.id, { state: "fullscreen" });
+  },
+});
+
+const tabHistory = [];
+let lastActivate;
+
+browser.tabs.onActivated.addListener(({ tabId }) => {
+  if (lastActivate && Date.now() - lastActivate < TRACK_TAB_ACTIVATE_MINIMUM) {
+    // Remove the most recent item if it wasn't active long enough
+    tabHistory.shift();
+  }
+  lastActivate = Date.now();
+  if (tabHistory.includes(tabId)) {
+    tabHistory.splice(tabHistory.indexOf(tabId), 1);
+  }
+  tabHistory.unshift(tabId);
+  // Truncate the history at 4 items (do we ever need more than 2?)
+  if (tabHistory.length > 4) {
+    tabHistory.splice(4);
+  }
+});
+
+intentRunner.registerIntent({
+  name: "tabs.previous",
+  async run(context) {
+    if (!tabHistory.length) {
+      const tabs = await browser.tabs.query({ currentWindow: true });
+      await switchDir(tabs, context.parameters.dir);
+      return;
+    }
+    const activeTab = await context.activeTab();
+    let found;
+    for (const tabId of tabHistory) {
+      if (tabId === activeTab.id) {
+        continue;
+      }
+      found = tabId;
+      break;
+    }
+    if (!found) {
+      const tabs = await browser.tabs.query({ currentWindow: true });
+      await switchDir(tabs, context.parameters.dir);
+      return;
+    }
+    context.makeTabActive(found);
   },
 });
 
