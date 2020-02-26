@@ -13,8 +13,7 @@ import org.junit.runners.JUnit4
 class EnglishTest {
     @Before
     fun reset() {
-        English.aliases.clear()
-        English.multiwordAliases.clear()
+        English.clear()
     }
 
     @Test
@@ -23,8 +22,8 @@ class EnglishTest {
         addAlias("   # so is this  ")
         addAlias("")
         addAlias("  ")
-        assertEquals(0, English.aliases.size)
-        assertEquals(0, English.multiwordAliases.size)
+        assertEquals(0, English.getAliasesSize())
+        assertEquals(0, English.getMultiwordAliasesSize())
     }
 
     private fun testFailingAlias(alias: String) {
@@ -44,10 +43,10 @@ class EnglishTest {
         addAlias("hello bonjour")
         addAlias("hello hola")
         addAlias("goodbye ciao")
-        assertEquals(listOf("bonjour", "hola"), English.aliases["hello"])
-        assertEquals(listOf("ciao"), English.aliases["goodbye"])
-        assertEquals(2, English.aliases.keys.size)
-        assertEquals(0, English.multiwordAliases.size)
+        assertEquals(listOf("bonjour", "hola"), English.aliases("hello"))
+        assertEquals(listOf("ciao"), English.aliases("goodbye"))
+        assertEquals(2, English.getAliasesSize())
+        assertEquals(0, English.getMultiwordAliasesSize())
     }
 
     @Test
@@ -55,16 +54,18 @@ class EnglishTest {
         addAlias("numbers one two three")
         addAlias("numbers four five")
         addAlias("letters alpha beta")
-        assertEquals(listOf("one two three", "four five"), English.multiwordAliases["numbers"])
-        assertEquals(listOf("alpha beta"), English.multiwordAliases["letters"])
-        assertEquals(0, English.aliases.keys.size)
-        assertEquals(2, English.multiwordAliases.size)
+        assertEquals(listOf(listOf("one", "two", "three"), listOf("four", "five")), English.multiwordAliases("numbers"))
+        assertEquals(listOf(listOf("alpha", "beta")), English.multiwordAliases("letters"))
+        assertEquals(0, English.getAliasesSize())
+        assertEquals(2, English.getMultiwordAliasesSize())
     }
 
     @Test
     fun testSplitToSet() {
         assertEquals(0, splitToSet(emptyList()).size)
-        assertEquals(0, splitToSet(listOf(" # ignore me", "  ")).size)
+        assertEquals(0, splitToSet(listOf("#ignore me")).size)
+        assertEquals(0, splitToSet(listOf("  #ignore me")).size)
+        assertEquals(0, splitToSet(listOf("  ")).size)
         val set = splitToSet(listOf(
             "  hello world",
             "#ignore me",
