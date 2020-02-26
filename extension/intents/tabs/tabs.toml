@@ -162,18 +162,32 @@ match = """
 [[tabs.zoomReset.example]]
 phrase = "Reset zoom"
 
+[tabs.previous]
+description = "Go to a previously active tab"
+match = """
+  (Go | switch | change | activate |) (the | my |) previous tab
+"""
+
+[[tabs.previous.example]]
+phrase = "Previous tab"
+
 [tabs.switchDir]
 description = "Go in some direction of tabs"
 match = """
-  (Go | switch | change |) (to |) (the |) (next | right) tab                   [dir=next]
-  (Go | switch | change |) (to |) (the |) tab (to |) (the |) (next | right)    [dir=next]
-  (Go | switch | change |) (to |) (the |) (previous | left) tab                [dir=prev]
-  (Go | switch | change |) (to |) (the |) tab (to |) (the |) (previous | left) [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) (next | right) tab                [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) tab (to |) (the |) (next | right) [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) left tab                          [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) tab (to |) (the |) left           [dir=prev]
 """
 
 [[tabs.switchDir.example]]
 phrase = "Next tab"
 expectParameters = {dir = "next"}
+
+[[tabs.switchDir.example]]
+phrase = "Tab left"
+expectParameters = {dir = "prev"}
+test = true
 
 [[tabs.switchDir.example]]
 phrase = "Switch to the tab to the left"
@@ -182,8 +196,8 @@ expectParameters = {dir = "prev"}
 [tabs.switchSide]
 description = "Go to the first/last tab"
 match = """
-  (Go | switch | change |) (to |) (the |) first tab [dir=first]
-  (Go | switch | change |) (to |) (the |) last tab  [dir=last]
+  (Go | switch | change | activate |) (to |) (the |) first tab [dir=first]
+  (Go | switch | change | activate |) (to |) (the |) last tab  [dir=last]
 """
 
 [[tabs.switchSide.example]]
@@ -197,10 +211,10 @@ expectParameters = {dir = "last"}
 [tabs.switchDirPinned]
 description = "Go in some direction of the pinned tabs"
 match = """
-  (Go | switch | change |) (to |) (the |) (next | left) (pinned | app) tab                     [dir=next]
-  (Go | switch | change |) (to |) (the |) (pinned | app) tab (to |) (the |) (next | left)      [dir=next]
-  (Go | switch | change |) (to |) (the |) (previous | right) (pinned | app) tab                [dir=prev]
-  (Go | switch | change |) (to |) (the |) (pinned | app) tab (to |) (the |) (previous | right) [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) (next | right) (pinned | app) tab                   [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) (pinned | app) tab (to |) (the |) (next | right)    [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) (previous | left) (pinned | app) tab                [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) (pinned | app) tab (to |) (the |) (previous | left) [dir=prev]
 """
 
 [[tabs.switchDirPinned.example]]
@@ -209,6 +223,6 @@ phrase = "Previous pinned tab"
 [tabs.switchSidePinned]
 description = "Go to the first pinnned tab"
 match = """
-  (Go | switch | change |) (to |) (the |) first (pinned | app) tab [dir=first]
-  (Go | switch | change |) (to |) (the |) last (pinned | app) tab  [dir=last]
+  (Go | switch | change | activate |) (to |) (the |) first (pinned | app) tab [dir=first]
+  (Go | switch | change | activate |) (to |) (the |) last (pinned | app) tab  [dir=last]
 """
