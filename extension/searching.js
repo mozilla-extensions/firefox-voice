@@ -6,6 +6,8 @@ export function googleSearchUrl(query, feelingLucky = false) {
   const searchUrl = new URL("https://www.google.com/search");
   if (feelingLucky) {
     query = query.replace(luckySearchRemovals, "");
+  } else {
+    query = fixCalculations(query);
   }
   searchUrl.searchParams.set("q", query);
   if (feelingLucky) {
@@ -14,6 +16,16 @@ export function googleSearchUrl(query, feelingLucky = false) {
   // From https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters
   searchUrl.searchParams.set("safe", "active");
   return searchUrl.href;
+}
+
+function fixCalculations(query) {
+  // Google is weird about adding and subtracting:
+  //   If you search for "5 - 2" it won't work, but "5-2" will work
+  //   Addition also sometimes (but not always) fails, such as "5 + 2"
+  return query.replace(
+    /(\d+)\s+([+-])\s+(\d+)/,
+    (all, first, second, third) => first + second + third
+  );
 }
 
 export async function ddgEntitySearch(query) {
