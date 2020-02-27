@@ -1,5 +1,8 @@
 package mozilla.voice.assistant.language
 
+/**
+ * A representation of a sequence of [Word]s.
+ */
 class FullPhrase(
     private val words: Sequence,
     private val parameters: Map<String, String> = emptyMap(),

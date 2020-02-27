@@ -1,5 +1,8 @@
 package mozilla.voice.assistant.language
 
+/**
+ * A representation of a sequence of patterns that must be matched in order.
+ */
 class Sequence(private val patterns: List<Pattern>) : Pattern {
     // TODO: Change to recursive function.
     override fun matchUtterance(match: MatchResult): List<MatchResult> {

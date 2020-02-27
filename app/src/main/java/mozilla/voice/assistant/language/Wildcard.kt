@@ -1,7 +1,8 @@
 package mozilla.voice.assistant.language
 
 /**
- * A wildcard matches one or more words (zero or more if property empty is true).
+ * A representation of a pattern matching one or more [Word]s. If the property [empty] is
+ * [true], this also matches an empty sequence of [Word]s.
  */
 class Wildcard(
     private val empty: Boolean = false // whether it matches the empty string

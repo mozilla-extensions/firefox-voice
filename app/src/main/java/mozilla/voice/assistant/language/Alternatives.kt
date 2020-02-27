@@ -1,6 +1,9 @@
 package mozilla.voice.assistant.language
 
-class Alternative(
+/**
+ * A representation of a disjunction of alternative [Pattern]s.
+ */
+class Alternatives(
     private val alternatives: List<Pattern>,
     private val empty: Boolean = false
 ) : Pattern {

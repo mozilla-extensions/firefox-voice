@@ -5,15 +5,18 @@ import java.util.Locale
 private fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace("[^a-z0-9]", "")
 
-fun String.toWordList() = trim().split("\\s+").map { Word(it) }
+internal fun String.toWordList() = trim().split("\\s+").map { Word(it) }
 
+/**
+ * A representation of both a word in a user utterance and a word to match in a phrase.
+ */
 class Word(val source: String) : Pattern {
     private val word: String = source.normalize()
     private val aliases = English.aliases(word)
     private val multiwordAliases: List<List<String>>? = English.multiwordAliases(word)
 
     private fun getMultiwordResults(match: MatchResult): List<MatchResult> {
-        var results = mutableListOf<MatchResult>()
+        val results = mutableListOf<MatchResult>()
 
         multiwordAliases?.forEach() { alias: List<String> ->
             var multiwordResult: MatchResult? = match

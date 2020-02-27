@@ -6,10 +6,10 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-class AlternativeTest {
+class AlternativesTest {
     @Test
     fun testWordVsNonEmptyWildcard() {
-        val results = Alternative(listOf(Word("hello"), Wildcard(empty = false)))
+        val results = Alternatives(listOf(Word("hello"), Wildcard(empty = false)))
             .matchUtterance(
                 makeMatch("hello")
             )
@@ -26,7 +26,7 @@ class AlternativeTest {
 
     @Test
     fun testWordVsEmptyWildcard() {
-        val results = Alternative(listOf(Word("hello"), Wildcard(empty = true)))
+        val results = Alternatives(listOf(Word("hello"), Wildcard(empty = true)))
             .matchUtterance(
                 makeMatch("hello")
             )
