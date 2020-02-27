@@ -276,6 +276,14 @@ a#lexicon {
   cursor: pointer;
 }
 
+.invisible-button {
+  border: none;
+  border-radius: 0;
+  color: inherit;
+  padding: 0;
+  background-color: inherit;
+}
+
 #intent-feedback {
   color: white;
   background-color: black;
