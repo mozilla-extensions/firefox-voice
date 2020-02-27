@@ -24,6 +24,7 @@ let popupSearchInfo;
 let lastTabId;
 // These store per-tab search results; tabDataMap handles cleaning up results when a tab is closed:
 const tabSearchResults = new browserUtil.TabDataMap(5 * 60 * 1000); // only delete after 5 minutes
+let googleIsDefaultProvider;
 
 async function openSearchTab() {
   if (closeTabTimeout) {
@@ -278,6 +279,7 @@ intentRunner.registerIntent({
     popupSearchInfo = null;
     await performSearch(context.slots.query);
     const searchInfo = await callScript({ type: "searchResultInfo" });
+    searchInfo.query = context.slots.query;
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
       context.keepPopup();
@@ -341,7 +343,13 @@ intentRunner.registerIntent({
     }
     const searchTabId = await openSearchTab();
     const searchTab = await browser.tabs.get(searchTabId);
-    if (searchTab.url !== searchInfo.searchUrl) {
+    if (!googleIsDefaultProvider) {
+      await browser.tabs.update(searchTabId, { url: "about:blank" });
+      await browser.search.search({
+        query: searchInfo.query || "unkonwn",
+        tabId: searchTabId,
+      });
+    } else if (searchTab.url !== searchInfo.searchUrl) {
       await browser.tabs.update(searchTabId, { url: searchInfo.url });
     }
     await focusSearchTab();
@@ -359,4 +367,18 @@ intentRunner.registerIntent({
       });
     }
   },
+});
+
+async function init() {
+  const engines = await browser.search.get();
+  for (const engine of engines) {
+    if (engine.isDefault) {
+      googleIsDefaultProvider = /google/i.test(engine.name);
+    }
+  }
+}
+
+init().catch(error => {
+  log.error("Error finding default search engine:", error);
+  catcher.capture(error);
 });
