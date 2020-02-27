@@ -90,7 +90,9 @@ export function add(properties) {
   }
   if (!ping.numberOfTabs) {
     browser.tabs.query({ currentWindow: true }).then(tabs => {
-      ping.numberOfTabs = tabs.length;
+      if (ping) {
+        ping.numberOfTabs = tabs.length;
+      }
     });
   }
 }
