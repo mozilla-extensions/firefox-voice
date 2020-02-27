@@ -75,9 +75,12 @@ const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
           >
             Allow
           </button>
-          <a href="#" onClick={updateVoiceTranscriptOptin}>
+          <button
+            className="styled-button cancel-button"
+            onClick={updateVoiceTranscriptOptin}
+          >
             Don't Allow
-          </a>
+          </button>
         </div>
       </div>
     </div>

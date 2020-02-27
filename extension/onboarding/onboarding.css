@@ -92,16 +92,25 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
-#optinVoiceTranscripts .modal-footer a {
-  margin: 15px 0 0 40px;
-}
-
 #optinVoiceTranscripts .modal a {
   color: #0060df;
 }
 
 #optinVoiceTranscripts .modal a:hover,
 #optinVoiceTranscripts .modal a:active {
+  color: #003eaa;
+}
+
+.styled-button.cancel-button {
+  color: #0060df;
+  background-color: inherit;
+  /* margin: 15px 0 0 40px; */
+  font-weight: normal;
+  padding: 0 40px;
+}
+
+.styled-button.cancel-button:hover,
+.styled-button.cancel-button:active {
   color: #003eaa;
 }
 
