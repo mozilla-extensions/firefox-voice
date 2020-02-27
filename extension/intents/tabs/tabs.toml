@@ -75,7 +75,7 @@ phrase = "open my homepage"
 description = "Opens a new private window"
 match = """
   open (a |) (new | blank |) (private | incognito) window (for me|)
-  new (private | incognito) window
+  (new | activate) (private | incognito) (window | mode)
 """
 
 [[tabs.openPrivateWindow.example]]
