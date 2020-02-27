@@ -5,8 +5,6 @@ import java.util.Locale
 private fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace("[^a-z0-9]", "")
 
-// setUnions() is just Array.union
-
 fun String.toWordList() = trim().split("\\s+").map { Word(it) }
 
 class Word(val source: String) : Pattern {
@@ -62,7 +60,7 @@ class Word(val source: String) : Pattern {
         return results
     }
 
-    private fun isStopWord() = English.isStopword(word)
+    internal fun isStopWord() = English.isStopword(word)
 
     override fun toString() =
         if (source == word) {
