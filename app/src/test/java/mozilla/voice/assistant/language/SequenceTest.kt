@@ -45,12 +45,6 @@ class SequenceTest {
         assertEquals(0, results.size)
     }
 
-    private fun getOnly(results: List<MatchResult>, pred: (MatchResult) -> Boolean): MatchResult {
-        val matches = results.filter(pred)
-        assertEquals(1, matches.size)
-        return matches[0]
-    }
-
     @Test
     fun testWildcardSequence3() {
         English.clear()
@@ -66,7 +60,7 @@ class SequenceTest {
         // match1: Wildcard matches "the" and Word matches "hello"
         // match2: Wildcard matches empty string and Word discards stop word "the" and matches "hello"
         assertEquals(2, results.size)
-        checkCounts(getOnly(results) { it.skippedWords == 0 }, capturedWords = 1)
-        checkCounts(getOnly(results) { it.skippedWords != 0 }, capturedWords = 1, skippedWords = 1)
+        checkCounts(results.getOnly() { it.skippedWords == 0 }, capturedWords = 1)
+        checkCounts(results.getOnly() { it.skippedWords != 0 }, capturedWords = 1, skippedWords = 1)
     }
 }

@@ -13,6 +13,12 @@ internal fun makeMatch(s: String) =
         }
     )
 
+internal fun List<MatchResult>.getOnly(pred: (MatchResult) -> Boolean): MatchResult {
+    val matches = this.filter(pred)
+    Assert.assertEquals(1, matches.size)
+    return matches[0]
+}
+
 internal fun checkCounts(
     match: MatchResult,
     aliasedWords: Int = 0,
