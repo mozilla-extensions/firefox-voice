@@ -74,4 +74,8 @@ class Word(val source: String) : Pattern {
     override fun toSource() = source
 
     override fun slotNames() = emptySet<String>()
+
+    override fun equals(other: Any?): Boolean = other is Word && other.word == word
+
+    override fun hashCode() = word.hashCode()
 }

@@ -8,7 +8,7 @@ internal fun makeMatch(s: String) =
             if (it.isEmpty()) {
                 emptyList()
             } else {
-                it.split(' ').map { it -> Word(it) }
+                it.split(' ').map { word -> Word(word) }
             }
         }
     )
@@ -36,5 +36,3 @@ internal fun checkCounts(
         match.skippedWords
     )
 }
-
-

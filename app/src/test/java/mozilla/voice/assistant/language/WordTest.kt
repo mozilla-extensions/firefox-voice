@@ -18,7 +18,6 @@ class WordTest {
         English.addAlias("hello hell oh") // "hell oh" is an alias for "hello"
     }
 
-
     internal fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
         val results = Word(word).matchUtterance(makeMatch(utterance))
         Assert.assertEquals("expected a single result: $results", 1, results.size)

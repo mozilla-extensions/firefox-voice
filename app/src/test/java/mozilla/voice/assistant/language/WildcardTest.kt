@@ -29,7 +29,6 @@ class WildcardTest {
         val consumed = results.filter { it.utteranceExhausted() }[0]
         checkCounts(consumed) // all counts should be 0
         assertEquals(1, results.filterNot { it.utteranceExhausted() }.size)
-        val unconsumed = results.filterNot { it.utteranceExhausted() }[0]
     }
 
     @Test
