@@ -9,7 +9,7 @@ import org.junit.runners.JUnit4
 class FullPhraseTest {
     @Test
     fun testPhraseWithoutStopwords() {
-        val results = FullPhrase("hello world".toWordList()).matchUtterance(makeMatch("hello world"))
+        val results = FullPhrase(Sequence("hello world".toWordList())).matchUtterance(makeMatch("hello world"))
         assertEquals(1, results.size)
         checkCounts(results[0], capturedWords = 2)
     }
@@ -18,7 +18,7 @@ class FullPhraseTest {
     fun testPhraseWithTrailingStopwords() {
         English.clear()
         English.addStopword("the")
-        val results = FullPhrase("hello world".toWordList()).matchUtterance(makeMatch("hello world the"))
+        val results = FullPhrase(Sequence("hello world".toWordList())).matchUtterance(makeMatch("hello world the"))
         assertEquals(1, results.size)
         checkCounts(results[0], capturedWords = 2, skippedWords = 1)
     }

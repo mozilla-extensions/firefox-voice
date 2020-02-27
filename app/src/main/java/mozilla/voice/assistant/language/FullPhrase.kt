@@ -5,15 +5,10 @@ package mozilla.voice.assistant.language
  */
 class FullPhrase(
     private val words: Sequence,
+    private val originalSource: String? = null,
     private val parameters: Map<String, String> = emptyMap(),
     private val intentName: String? = null
 ) : Pattern {
-    internal constructor(
-        words: List<Word>, // convert to Sequence
-        parameters: Map<String, String> = emptyMap(),
-        intentName: String? = null
-    ) : this(Sequence(words), parameters, intentName)
-
     override fun matchUtterance(match: MatchResult): List<MatchResult> {
         require(match.index == 0)
         return words.matchUtterance(match).mapNotNull {
