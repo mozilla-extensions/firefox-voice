@@ -77,8 +77,8 @@ phrase = "Go to the Health section of the BBC"
 [navigation.translate]
 description = "Translate the given page to the chosen language, using Google Translate"
 match = """
-  translate (this |) (page | tab | article | site |) (to english |) (for me |)
-  translate (this |) (page | tab | article | site |) to [language:lang] (for me |)
+  translate (this |) (web page | webpage | page | tab | article | site |) (to english |) (for me |)
+  translate (this |) (web page | webpage | page | tab | article | site |) to [language:lang] (for me |)
 """
 
 [[navigation.translate.example]]
