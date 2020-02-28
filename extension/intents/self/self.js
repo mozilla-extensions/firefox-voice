@@ -11,7 +11,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    await browserUtil.activateTab("/views/lexicon.html");
+    await browserUtil.openOrActivateTab("/views/lexicon.html");
   },
 });
 
