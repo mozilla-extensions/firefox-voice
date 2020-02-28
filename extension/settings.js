@@ -47,8 +47,15 @@ export async function getSettingsAndOptions() {
 }
 
 export async function saveSettings(settings) {
+  const oldSettings = getSettings();
+  if (typeof isBackgroundPage === "undefined" || !isBackgroundPage) {
+    // We're not running in the background
+    // Remove any inherited/default properties:
+    settings = JSON.parse(JSON.stringify(settings));
+    await browser.runtime.sendMessage({ type: "saveSettings", settings });
+  }
+  localStorage.setItem("settings", JSON.stringify(settings));
   if (Object.keys(watchers).length !== 0) {
-    const oldSettings = getSettings();
     for (const name in settings) {
       if (settings[name] !== oldSettings[name]) {
         const callbacks = watchers[name] || [];
@@ -62,13 +69,6 @@ export async function saveSettings(settings) {
       }
     }
   }
-  if (typeof isBackgroundPage === "undefined" || !isBackgroundPage) {
-    // We're not running in the background
-    // Remove any inherited/default properties:
-    settings = JSON.parse(JSON.stringify(settings));
-    await browser.runtime.sendMessage({ type: "saveSettings", settings });
-  }
-  localStorage.setItem("settings", JSON.stringify(settings));
 }
 
 export function watch(setting, callback) {

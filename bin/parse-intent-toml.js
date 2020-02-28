@@ -3,20 +3,13 @@ const toml = require("toml");
 const path = require("path");
 const fs = require("fs");
 const glob = require("glob");
+const { extensionDir, writeFile } = require("./script-utils.js");
 
-const OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/intents/metadata.js")
-);
-const SYNC_OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/services/metadata.js")
-);
-const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
-const SERVICE_DIR = path.normalize(
-  path.join(__dirname, "../extension/services")
-);
-const LANG_DIR = path.normalize(
-  path.join(__dirname, "../extension/background/language/langs")
-);
+const OUTPUT = path.join(extensionDir, "intents/metadata.js");
+const SYNC_OUTPUT = path.join(extensionDir, "/services/metadata.js");
+const INTENT_DIR = path.join(extensionDir, "intents");
+const SERVICE_DIR = path.join(extensionDir, "services");
+const LANG_DIR = path.join(extensionDir, "background/language/langs");
 
 const metadata = {};
 
@@ -46,8 +39,7 @@ for (const filename of glob.sync(INTENT_DIR + "/**/*.toml")) {
 const fileContent = `// Generated from intents/*/*.toml
 export const metadata = ${JSON.stringify(metadata, null, "  ")};\n`;
 
-fs.writeFileSync(OUTPUT, fileContent, { encoding: "UTF-8" });
-console.log(`Wrote file ${OUTPUT} (${fileContent.length} characters)`);
+writeFile(OUTPUT, fileContent, true);
 
 const serviceMetadata = { search: {}, music: {} };
 
@@ -90,8 +82,7 @@ Object.assign(serviceMetadata.search, searchData);
 const serviceContent = `// Generated from ${path.basename(searchDataFilename)}
 export const metadata = ${JSON.stringify(serviceMetadata, null, "  ")};\n`;
 
-fs.writeFileSync(SYNC_OUTPUT, serviceContent, { encoding: "UTF-8" });
-console.log(`Wrote file ${SYNC_OUTPUT} (${serviceContent.length} characters)`);
+writeFile(SYNC_OUTPUT, serviceContent);
 
 for (const filename of glob.sync(LANG_DIR + "/*.toml")) {
   let data;
@@ -123,6 +114,5 @@ export default lang;
 `;
 
   const outputFilename = filename.replace(/\.toml$/, ".js");
-  fs.writeFileSync(outputFilename, content, { encoding: "UTF-8" });
-  console.log(`Wrote file ${outputFilename} (${content.length} characters)`);
+  writeFile(outputFilename, content);
 }
