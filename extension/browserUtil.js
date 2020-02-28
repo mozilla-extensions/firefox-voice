@@ -60,7 +60,7 @@ export async function turnOnReaderMode(tabId) {
   });
 }
 
-export async function activateTab(url) {
+export async function openOrActivateTab(url) {
   if (!url.includes("://")) {
     url = browser.runtime.getURL(url);
   }
@@ -77,7 +77,7 @@ export async function activateTab(url) {
 export async function activateTabClickHandler(event) {
   if (event) {
     event.preventDefault();
-    await activateTab(event.target.href);
+    await openOrActivateTab(event.target.href);
   }
 }
 

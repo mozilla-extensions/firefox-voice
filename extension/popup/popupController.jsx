@@ -78,7 +78,7 @@ export const PopupController = function() {
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
-      await browserUtil.activateTab("onboarding/onboard.html");
+      await browserUtil.openOrActivateTab("onboarding/onboard.html");
       window.close();
       return;
     }
@@ -125,7 +125,9 @@ export const PopupController = function() {
   };
 
   const onClickLexicon = async event => {
-    await browserUtil.activateTab(browser.runtime.getURL(event.target.href));
+    await browserUtil.openOrActivateTab(
+      browser.runtime.getURL(event.target.href)
+    );
     window.close();
   };
 

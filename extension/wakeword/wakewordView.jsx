@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import * as browserUtil from "../browserUtil.js";
 
 export const WakewordView = ({ userSettings }) => {
   if (!userSettings.enableWakeword || userSettings.wakewords.length === 0) {
@@ -6,13 +7,6 @@ export const WakewordView = ({ userSettings }) => {
   }
   return <ListeningWakeword wakewords={userSettings.wakewords} />;
 };
-
-async function openLink(event) {
-  event.preventDefault();
-  const url = event.target.href;
-  browser.tabs.create({ url });
-  return false;
-}
 
 const WakewordDisabled = () => {
   return (
@@ -23,7 +17,7 @@ const WakewordDisabled = () => {
           href="../options/options.html"
           target="_blank"
           className="styled-button"
-          onClick={openLink}
+          onClick={browserUtil.activateTabClickHandler}
         >
           Open settings to enable
         </a>
@@ -51,7 +45,11 @@ const ListeningWakeword = ({ wakewords }) => {
       </p>
       <p>
         If you wish to permanently disable the wakeword then{" "}
-        <a href="../options/options.html" target="_blank" onClick={openLink}>
+        <a
+          href="../options/options.html"
+          target="_blank"
+          onClick={browserUtil.activateTabClickHandler}
+        >
           update your settings
         </a>
         .
