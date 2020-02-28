@@ -226,3 +226,12 @@ match = """
   (Go | switch | change | activate |) (to |) (the |) first (pinned | app) tab [dir=first]
   (Go | switch | change | activate |) (to |) (the |) last (pinned | app) tab  [dir=last]
 """
+
+[tabs.moveSelectedToNewWindow]
+description = "Move selected tabs to (a |) new window"
+match = """
+  move selected tabs to new window
+"""
+
+[[tabs.moveSelectedToNewWindow.example]]
+phrase = "Move selected tabs to new window"

@@ -347,3 +347,13 @@ intentRunner.registerIntent({
     await switchSide(tabs, context.parameters.dir);
   },
 });
+
+intentRunner.registerIntent({
+  name: "tabs.moveSelectedToNewWindow",
+  async run(context) {
+    const tabs = await browser.tabs.query({ highlighted: true });
+    const tabsIds = tabs.map(tabInfo => tabInfo.id);
+    const newWindow = await browser.windows.create({});
+    await browser.tabs.move(tabsIds, { windowId: newWindow.id, index: 0 });
+  },
+});
