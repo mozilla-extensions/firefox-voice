@@ -47,6 +47,11 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "getIntentSummary") {
     return intentRunner.getIntentSummary();
   } else if (message.type === "microphoneStarted") {
+    // FIXME: this is called when the popup is opened, but it's a bit silly
+    openWakeword().catch(e => {
+      log.error("Error enabling wakeword page:", e);
+      catcher.capture(e);
+    });
     return temporaryMute();
   } else if (message.type === "microphoneStopped") {
     return temporaryUnmute();
@@ -289,14 +294,36 @@ settings.watch("keyboardShortcut", newValue => {
 
 updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
 
-settings.watch("enableWakeword", updateWakeword);
-settings.watch("wakewords", updateWakeword);
-settings.watch("wakewordSensitivity", updateWakeword);
-async function updateWakeword() {
-  if (recorderTabId) {
-    await browser.tabs.sendMessage(recorderTabId, { type: "updateWakeword" });
+const openWakeword = util.serializeCalls(async function() {
+  const { enableWakeword, wakewords } = await settings.getSettings();
+  const wakewordUrl = browser.runtime.getURL("/wakeword/wakeword.html");
+  const tabs = await browser.tabs.query({ url: wakewordUrl });
+  if (!enableWakeword || !wakewords.length) {
+    if (tabs.length) {
+      await browser.tabs.remove(tabs.map(t => t.id));
+    }
+    return;
   }
-}
+  if (!tabs.length) {
+    const activeTab = await browserUtil.activeTab();
+    const tab = await browser.tabs.create({
+      url: wakewordUrl,
+      active: true,
+      pinned: true,
+    });
+    await browserUtil.waitForDocumentComplete(tab.id);
+    await browser.tabs.sendMessage(tab.id, { type: "updateWakeword" });
+    await browserUtil.makeTabActive(activeTab.id);
+  } else {
+    await browser.tabs.sendMessage(tabs[0].id, { type: "updateWakeword" });
+  }
+});
+
+settings.watch("enableWakeword", openWakeword);
+settings.watch("wakewords", openWakeword);
+settings.watch("wakewordSensitivity", openWakeword);
+
+openWakeword();
 
 function setUninstallURL() {
   const url = telemetry.createSurveyUrl(UNINSTALL_SURVEY);

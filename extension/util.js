@@ -92,3 +92,20 @@ export function randomString(length, chars) {
   }
   return result;
 }
+
+/* Forces the async function to only be called once, until it has returned */
+// FIXME: I'm worried this is going to leak memory, as it creates a forever-growing promise chain
+export function serializeCalls(asyncFunction) {
+  let otherFuncResult = null;
+  return function(...args) {
+    if (otherFuncResult) {
+      otherFuncResult = otherFuncResult.then(
+        () => asyncFunction(...args),
+        () => asyncFunction(...args)
+      );
+    } else {
+      otherFuncResult = asyncFunction(...args);
+    }
+    return otherFuncResult;
+  };
+}
