@@ -10,12 +10,12 @@ import org.junit.runners.JUnit4
 class WordTest {
     @Before
     fun setAliases() {
-        English.clear()
+        Language.clear()
         // TODO: Figure out why tests fail if I put these in the @BeforeClass method and
-        // remove the above call to English.clear().
-        English.addStopword("the")
-        English.addAlias("hello ello") // "ello" is an alias for "hello"
-        English.addAlias("hello hell oh") // "hell oh" is an alias for "hello"
+        // remove the above call to Language.clear().
+        Language.addStopwords("the")
+        Language.addAlias("ello=hello") // "ello" is an alias for "hello"
+        Language.addAlias("\"hell oh\" = hello") // "hell oh" is an alias for "hello"
     }
 
     internal fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {

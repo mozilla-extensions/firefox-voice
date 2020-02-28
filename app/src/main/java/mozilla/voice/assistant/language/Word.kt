@@ -12,8 +12,8 @@ internal fun String.toWordList() = trim().split("\\s+").map { Word(it) }
  */
 class Word(val source: String) : Pattern {
     private val word: String = source.normalize()
-    private val aliases = English.aliases(word)
-    private val multiwordAliases: List<List<String>>? = English.multiwordAliases(word)
+    private val aliases = Language.getAliases(word)
+    private val multiwordAliases: List<List<String>>? = Language.getMultiwordAliases(word)
 
     private fun getMultiwordResults(match: MatchResult): List<MatchResult> {
         val results = mutableListOf<MatchResult>()
@@ -63,7 +63,7 @@ class Word(val source: String) : Pattern {
         return results
     }
 
-    internal fun isStopWord() = English.isStopword(word)
+    internal fun isStopWord() = Language.isStopword(word)
 
     override fun toString() =
         if (source == word) {

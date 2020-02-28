@@ -47,8 +47,8 @@ class SequenceTest {
 
     @Test
     fun testWildcardSequence3() {
-        English.clear()
-        English.addStopword("the")
+        Language.clear()
+        Language.addStopwords("the")
         val sequence = Sequence(
             listOf(
                 Wildcard(empty = true),

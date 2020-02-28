@@ -16,8 +16,8 @@ class FullPhraseTest {
 
     @Test
     fun testPhraseWithTrailingStopwords() {
-        English.clear()
-        English.addStopword("the")
+        Language.clear()
+        Language.addStopwords("the")
         val results = FullPhrase(Sequence("hello world".toWordList())).matchUtterance(makeMatch("hello world the"))
         assertEquals(1, results.size)
         checkCounts(results[0], capturedWords = 2, skippedWords = 1)
