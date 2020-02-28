@@ -294,13 +294,18 @@ settings.watch("keyboardShortcut", newValue => {
 
 updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
 
+let wakewordMaybeOpen = false;
+
 const openWakeword = util.serializeCalls(async function() {
   const { enableWakeword, wakewords } = await settings.getSettings();
   const wakewordUrl = browser.runtime.getURL("/wakeword/wakeword.html");
   const tabs = await browser.tabs.query({ url: wakewordUrl });
   if (!enableWakeword || !wakewords.length) {
-    if (tabs.length) {
-      await browser.tabs.remove(tabs.map(t => t.id));
+    if (wakewordMaybeOpen) {
+      wakewordMaybeOpen = false;
+      if (tabs.length) {
+        await browser.tabs.remove(tabs.map(t => t.id));
+      }
     }
     return;
   }
@@ -317,6 +322,7 @@ const openWakeword = util.serializeCalls(async function() {
   } else {
     await browser.tabs.sendMessage(tabs[0].id, { type: "updateWakeword" });
   }
+  wakewordMaybeOpen = true;
 });
 
 settings.watch("enableWakeword", openWakeword);
