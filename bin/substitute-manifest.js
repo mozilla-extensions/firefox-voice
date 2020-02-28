@@ -6,26 +6,17 @@ const fs = require("fs");
 const package_json = require("../package.json");
 const child_process = require("child_process");
 const { getVersionNumber } = require("./calculate-version.js");
+const { extensionDir, writeFile } = require("./script-utils.js");
 
-const OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/manifest.json")
-);
+const OUTPUT = path.join(extensionDir, "manifest.json");
 const TEMPLATE = OUTPUT + ".ejs";
-const BUILD_OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/buildSettings.js")
-);
+const BUILD_OUTPUT = path.join(extensionDir, "buildSettings.js");
 const BUILD_TEMPLATE = BUILD_OUTPUT + ".ejs";
-const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
-const SERVICE_DIR = path.normalize(
-  path.join(__dirname, "../extension/services")
-);
-const INTENT_OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/background/intentImport.js")
-);
+const INTENT_DIR = path.join(extensionDir, "intents");
+const SERVICE_DIR = path.join(extensionDir, "services");
+const INTENT_OUTPUT = path.join(extensionDir, "background/intentImport.js");
 const INTENT_TEMPLATE = INTENT_OUTPUT + ".ejs";
-const SERVICE_OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/background/serviceImport.js")
-);
+const SERVICE_OUTPUT = path.join(extensionDir, "background/serviceImport.js");
 const SERVICE_TEMPLATE = SERVICE_OUTPUT + ".ejs";
 
 function ignoreFilename(filename) {
@@ -78,8 +69,7 @@ ejs.renderFile(TEMPLATE, context, options, function(err, str) {
     process.exit(1);
     return;
   }
-  fs.writeFileSync(OUTPUT, str, { encoding: "UTF-8" });
-  console.log(`${OUTPUT} written`);
+  writeFile(OUTPUT, str);
 });
 
 ejs.renderFile(BUILD_TEMPLATE, context, options, function(err, str) {
@@ -88,8 +78,7 @@ ejs.renderFile(BUILD_TEMPLATE, context, options, function(err, str) {
     process.exit(1);
     return;
   }
-  fs.writeFileSync(BUILD_OUTPUT, str, { encoding: "UTF-8" });
-  console.log(`${BUILD_OUTPUT} written`);
+  writeFile(BUILD_OUTPUT, str);
 });
 
 ejs.renderFile(INTENT_TEMPLATE, context, options, function(err, str) {
@@ -98,8 +87,7 @@ ejs.renderFile(INTENT_TEMPLATE, context, options, function(err, str) {
     process.exit(1);
     return;
   }
-  fs.writeFileSync(INTENT_OUTPUT, str, { encoding: "UTF-8" });
-  console.log(`${INTENT_OUTPUT} written`);
+  writeFile(INTENT_OUTPUT, str);
 });
 
 ejs.renderFile(SERVICE_TEMPLATE, context, options, function(err, str) {
@@ -108,6 +96,5 @@ ejs.renderFile(SERVICE_TEMPLATE, context, options, function(err, str) {
     process.exit(1);
     return;
   }
-  fs.writeFileSync(SERVICE_OUTPUT, str, { encoding: "UTF-8" });
-  console.log(`${SERVICE_OUTPUT} written`);
+  writeFile(SERVICE_OUTPUT, str);
 });
