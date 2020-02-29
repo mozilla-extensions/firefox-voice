@@ -16,6 +16,15 @@ match = """
 [[notes.addLink.example]]
 phrase = "Make note of this page"
 
+[notes.paste]
+description = "Focus the tab where you want to paste"
+match = """
+  (paste) (on |) (this |) note (for me |)
+"""
+
+[[notes.paste.example]]
+phrase = "Paste everything present on the clipboard to notes"
+
 [notes.setPlace]
 description = "Indicate where note should be written, both the tab and the element on the tab where text will go"
 match = """

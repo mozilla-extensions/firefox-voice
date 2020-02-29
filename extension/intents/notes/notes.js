@@ -84,3 +84,19 @@ intentRunner.registerIntent({
     await context.makeTabActive(writingTabId);
   },
 });
+
+intentRunner.registerIntent({
+  name: "notes.paste",
+  async run(context) {
+    await checkHasTab();
+    const success = await browser.tabs.sendMessage(writingTabId, {
+      type: "addText",
+      text: document.execCommand("paste"),
+    });
+    if (!success) {
+      const e = new Error("Could not paste text");
+      e.displayMessage = "Could not paste text";
+      throw e;
+    }
+  },
+});
