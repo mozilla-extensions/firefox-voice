@@ -241,6 +241,17 @@ const KeyboardShortcutSettings = ({
               </ul>
             </p>
           </blockquote>
+          <p>
+            Non overridable keyboard shortcut (
+              <a
+            href="https://support.mozilla.org/en-US/kb/keyboard-shortcuts-perform-firefox-tasks-quickly"
+            target="_blank"
+            rel="noopener"
+              >
+                details
+              </a>
+            ):
+          </p>
         </div>
       </div>
     </fieldset>
