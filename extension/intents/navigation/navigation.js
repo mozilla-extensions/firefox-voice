@@ -148,6 +148,14 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "navigation.internetArchive",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    await browser.tabs.update({url: `https://web.archive.org/web/*/${activeTab.url}`});
+  },
+});
+
 async function loadQueryDatabase() {
   const result = await browser.storage.local.get(["queryDatabase"]);
   if (result && result.queryDatabase) {
