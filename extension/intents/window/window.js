@@ -3,7 +3,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 function findTargetWindowId(windowArray, currentWindowId, direction) {
     const len = windowArray.length;
     // find currentWindowId postion in array
-    let currentWindowIndex = windowArray.findIndex((window) => (window.id === currentWindowId));
+    const currentWindowIndex = windowArray.findIndex((window) => (window.id === currentWindowId));
     let targetIndex = 0;
     if ( direction === "next" ) {
       targetIndex = Math.floor((currentWindowIndex + 1) % len);
@@ -12,11 +12,11 @@ function findTargetWindowId(windowArray, currentWindowId, direction) {
     }
     return windowArray[targetIndex].id;
   }
-  // error handle for 
-  function onError(error) {
-    console.error(`Error: ${error}`);
-  }
-  
+// error handle for
+function onError(error) {
+  // console.log(`Error: ${error}`);
+}
+
 intentRunner.registerIntent({
     name: "window.switch",
     async run(context) {
@@ -24,7 +24,7 @@ intentRunner.registerIntent({
         const activeTab = await context.activeTab();
         const currentWindowId = activeTab.windowId;
         // get direction parameter
-        let direction = 'next';
+        let direction = "next";
         if ( context.parameters ) {
            direction = context.parameters.direction;
         }
