@@ -23,7 +23,7 @@ npm start
 
 This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
-You may face errors on performing ```npm install``` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/#winmac)
+You may face errors on performing ```npm install``` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
 If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
 
