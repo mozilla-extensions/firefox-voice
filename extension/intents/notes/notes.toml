@@ -19,7 +19,7 @@ phrase = "Make note of this page"
 [notes.paste]
 description = "Focus the tab where you want to paste"
 match = """
-  (paste) (on |) (this |) note (for me |)
+  paste (on | in | into |) note{s} (for me |)
 """
 
 [[notes.paste.example]]

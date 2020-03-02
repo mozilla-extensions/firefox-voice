@@ -90,8 +90,7 @@ intentRunner.registerIntent({
   async run(context) {
     await checkHasTab();
     const success = await browser.tabs.sendMessage(writingTabId, {
-      type: "addText",
-      text: document.execCommand("paste"),
+      type: "pasteText",
     });
     if (!success) {
       const e = new Error("Could not paste text");

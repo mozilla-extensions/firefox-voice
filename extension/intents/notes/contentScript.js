@@ -43,6 +43,12 @@ this.contentScript = (function() {
     return true;
   });
 
+  communicate.register("pasteText", async message => {
+    focus();
+    document.execCommand("paste");
+    return true;
+  });
+
   communicate.register("addText", async message => {
     let text = message.text;
     const value = focusElement.value;
