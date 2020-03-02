@@ -152,7 +152,9 @@ intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
     const activeTab = await context.activeTab();
-    await browser.tabs.update({url: `https://web.archive.org/web/*/${activeTab.url}`});
+    await browser.tabs.update({
+      url: `https://web.archive.org/web/*/${activeTab.url}`,
+    });
   },
 });
 
