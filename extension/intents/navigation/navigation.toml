@@ -118,3 +118,12 @@ match = """
 
 [[navigation.followLink.example]]
 phrase = "follow link latest news"
+
+[navigation.internetArchive]
+description = "Search current url on archive.org"
+match = """
+  open (this |) (page |) internet archive{s}
+"""
+
+[[navigation.internetArchive.example]]
+phrase = "open this page internet archive"
