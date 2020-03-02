@@ -96,4 +96,31 @@ class CompilerTest {
             verifyExpectedMatch(phrase, it.first, it.second)
         }
     }
+
+    @Test
+    fun testAliases() {
+        Language.clear()
+        Language.addAlias("app = tab")
+        verifyExpectedMatch(
+            "(launch | open) (new |) (tab | page)",
+            "open new app",
+            "MatchResult(\"open new app^^\", aliasedWords: 1, capturedWords: 3)"
+        )
+    }
+
+    @Test
+    fun testMultiwordAliases() {
+        Language.clear()
+        Language.addAlias("\"up ward\" = \"upward\"")
+        verifyExpectedMatch(
+            "scroll upward",
+            "scroll upward",
+            "MatchResult(\"scroll upward^^\", capturedWords: 2)"
+        )
+        verifyExpectedMatch(
+            "scroll upward",
+            "scroll up ward",
+            "MatchResult(\"scroll up ward^^\", aliasedWords: 2, capturedWords: 3)"
+        )
+    }
 }
