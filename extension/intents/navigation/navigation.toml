@@ -122,8 +122,8 @@ phrase = "follow link latest news"
 [navigation.internetArchive]
 description = "Search current url on archive.org"
 match = """
-  open (this |) (page |) internet archive{s}
+  (open | search) (for |) (this |) (page |) (on | in |) (the |) (internet archive{s} | archive.org | wayback | wayback machine)
 """
 
 [[navigation.internetArchive.example]]
-phrase = "open this page internet archive"
+phrase = "open this page in the internet archive"
