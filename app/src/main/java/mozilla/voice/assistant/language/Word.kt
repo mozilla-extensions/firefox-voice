@@ -1,9 +1,12 @@
 package mozilla.voice.assistant.language
 
+import androidx.annotation.VisibleForTesting
 import java.util.Locale
 
-private fun String.normalize() =
-    toLowerCase(Locale.getDefault()).replace("[^a-z0-9]", "")
+private val nonAlphaNumRegex = Regex("[^a-z0-9]")
+@VisibleForTesting
+internal fun String.normalize() =
+    toLowerCase(Locale.getDefault()).replace(nonAlphaNumRegex, "")
 
 internal fun String.toWordList() = trim()
     .split(Regex("\\s+"))

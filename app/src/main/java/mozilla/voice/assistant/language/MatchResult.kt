@@ -23,7 +23,7 @@ class MatchResult(
     internal val aliasedWords: Int = 0,
     private val intentName: String? = null
 ) {
-    internal constructor(s: String) : this(utterance = s.toWordList())
+    internal constructor(string: String) : this(utterance = string.toWordList())
 
     override fun toString(): String {
         val s = buildString {
@@ -40,14 +40,22 @@ class MatchResult(
                 append("^^")
             }
         }
-        val slotString = slots.keys.joinToString(
-            prefix = ", slots: {",
-            separator = ", ",
-            postfix = "}"
-        ) { name ->
-            slots[name]?.let {
-                it.joinToString(prefix = "$name: \"", postfix = "\"", separator = " ") { word -> word.source }
-            } ?: throw Error("Slot name $name not associated with any values")
+        val slotString = if (slots.isEmpty()) {
+            ""
+        } else {
+            slots.keys.joinToString(
+                prefix = ", slots: {",
+                separator = ", ",
+                postfix = "}"
+            ) { name ->
+                slots[name]?.let {
+                    it.joinToString(
+                        prefix = "$name: \"",
+                        postfix = "\"",
+                        separator = " "
+                    ) { word -> word.source }
+                } ?: throw Error("Slot name $name not associated with any values")
+            }
         }
 
         val paramString = if (parameters.isEmpty()) "" else ", parameters: $parameters"
@@ -87,11 +95,11 @@ class MatchResult(
             utterance = this.utterance,
 
             index =
-                if (this.index + addIndex > this.utterance.size) {
-                    throw Error("Attempted to move past the end of the end")
-                } else {
-                    this.index + addIndex
-                },
+            if (this.index + addIndex > this.utterance.size) {
+                throw Error("Attempted to move past the end of the end")
+            } else {
+                this.index + addIndex
+            },
 
             slots = this.slots.merge(slots),
 

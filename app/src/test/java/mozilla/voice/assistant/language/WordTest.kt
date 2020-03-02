@@ -1,6 +1,7 @@
 package mozilla.voice.assistant.language
 
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +19,13 @@ class WordTest {
         Language.addAlias("\"hell oh\" = hello") // "hell oh" is an alias for "hello"
     }
 
-    internal fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
+    @Test
+    fun testNormalize() {
+        assertEquals("foo", "foo".normalize())
+        assertEquals("world", "world!!!".normalize())
+    }
+
+    private fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
         val results = Word(word).matchUtterance(makeMatch(utterance))
         Assert.assertEquals("expected a single result: $results", 1, results.size)
         checkCounts(results[0], aliasedWords = aliasedWords, capturedWords = capturedWords, skippedWords = skippedWords)
