@@ -32,6 +32,7 @@ function startWatchword(keywords, sensitivity) {
     sensitivitySources.push(sensitivity);
   }
   const sensitivities = new Float32Array(sensitivitySources);
+  console.log("keywords:", Object.keys(enabledKeywordIds).join(","));
   porcupineManager.start(
     enabledKeywordIds,
     sensitivities,

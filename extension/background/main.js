@@ -314,7 +314,7 @@ const openWakeword = util.serializeCalls(async function() {
     const tab = await browser.tabs.create({
       url: wakewordUrl,
       active: true,
-      pinned: true,
+      // pinned: true,
     });
     await browserUtil.waitForDocumentComplete(tab.id);
     await browser.tabs.sendMessage(tab.id, { type: "updateWakeword" });
