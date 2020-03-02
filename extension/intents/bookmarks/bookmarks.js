@@ -72,3 +72,15 @@ intentRunner.registerIntent({
     }
   },
 });
+
+intentRunner.registerIntent({
+  name: "bookmarks.remove",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const metadata = await pageMetadata.getMetadata(activeTab.id);
+    const bookmarks = await browser.bookmarks.search({ url: metadata.url });
+    for (const bookmark of bookmarks) {
+      await browser.bookmarks.remove(bookmark.id);
+    }
+  },
+});
