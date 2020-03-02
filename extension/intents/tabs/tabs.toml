@@ -12,6 +12,26 @@ phrase = "close tab"
 phrase = "close the current top"
 test = true
 
+[tabs.undoCloseTab]
+description = "Undo close tab"
+match = """
+  undo (tab |) close (tab |)
+"""
+
+[[tabs.undoCloseTab.example]]
+phrase = "Undo close tab"
+
+[tabs.undoCloseWindow]
+description = "Undo close window"
+match = """
+  undo close window
+  undo window close
+"""
+
+[[tabs.undoCloseWindow.example]]
+example = "Undo close window"
+test = true
+
 [tabs.duplicate]
 description = "Duplicates a tab"
 match = """

@@ -103,6 +103,20 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "tabs.undoCloseTab",
+  async run(context) {
+    await browser.experiments.voice.undoCloseTab();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.undoCloseWindow",
+  async run(context) {
+    await browser.experiments.voice.undoCloseWindow();
+  },
+});
+
+intentRunner.registerIntent({
   name: "tabs.open",
   async run(context) {
     // context.createTab is the normal way to do this, but it sometimes doesn't open a new tab

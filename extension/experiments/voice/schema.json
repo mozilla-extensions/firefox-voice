@@ -9,6 +9,22 @@
         "description": "Forces the popup to open",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "undoCloseTab",
+        "type": "function",
+        "description": "Undo close tab",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "undoCloseWindow",
+        "type": "function",
+        "description": "Undo close window",
+        "parameters": [],
+        "async": true
       }
     ]
   }
