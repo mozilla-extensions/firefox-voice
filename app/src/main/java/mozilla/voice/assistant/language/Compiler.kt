@@ -11,7 +11,7 @@ class Compiler {
         private val parameterRegex = Regex("""^\[(\w+)\s*=\s*(\w+)\s*](.*)$""")
 
         // matches something like: [number:smallNumber]
-        private val typedSlotRegex = Regex("""^\[(\w+)\s*:l\s*(\w+)\s*](.*)$""")
+        private val typedSlotRegex = Regex("""^\[(\w+)\s*:\s*(\w+)\s*]\s*(.*)$""")
 
         // matches something like: [query]
         private val untypedSlotRegex = Regex("""^\[(\w+)\w*](.*)$""")
@@ -23,7 +23,7 @@ class Compiler {
         private val altWordRegex = Regex("""\{([^}]+)}""")
 
         // matches everything before the next left parenthesis/brace and the remainder
-        private val wordsRegex = Regex("""\s*([^(\[]+)(.*)""")
+        private val wordsRegex = Regex("""\s*([^(\[ ]+)\s*(.*)""")
 
         @VisibleForTesting
         internal fun getParameter(phrase: String): Triple<String, String, String>? =

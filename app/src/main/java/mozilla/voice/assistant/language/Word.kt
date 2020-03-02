@@ -6,7 +6,7 @@ private fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace("[^a-z0-9]", "")
 
 internal fun String.toWordList() = trim()
-    .split("\\s+")
+    .split(Regex("\\s+"))
     .map { it.trim() }
     .filterNot { it.isEmpty() }
     .map { Word(it) }

@@ -23,7 +23,7 @@ class MatchResult(
     internal val aliasedWords: Int = 0,
     private val intentName: String? = null
 ) {
-    internal constructor(s: String) : this(s.toWordList())
+    internal constructor(s: String) : this(utterance = s.toWordList())
 
     override fun toString(): String {
         val s = buildString {
@@ -41,7 +41,9 @@ class MatchResult(
             }
         }
         val slotString = slots.keys.joinToString(
-            separator = ", "
+            prefix = ", slots: {",
+            separator = ", ",
+            postfix = "}"
         ) { name ->
             slots[name]?.let {
                 it.joinToString(prefix = "$name: \"", postfix = "\"", separator = " ") { word -> word.source }
@@ -53,7 +55,7 @@ class MatchResult(
         val aliasString = if (aliasedWords == 0) "" else ", aliasedWords: $aliasedWords"
         val intentString = intentName?.let { ", intentName: $it" } ?: ""
 
-        return "MatchResult($s$slotString$paramString$skipString$aliasString$intentString,capturedWords: $capturedWords)"
+        return "MatchResult(\"$s\"$slotString$paramString$skipString$aliasString$intentString, capturedWords: $capturedWords)"
     }
 
     internal fun utteranceExhausted() = index >= utterance.size
