@@ -24,6 +24,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "scroll.bottom",
   async run(context) {
-    await browser.experiments.voice.doCommand("cmd_scrollBottom");
+    // await browser.experiments.voice.doCommand("cmd_scrollBottom");
+    await browser.experiments.voice.doCommand("Tools:Downloads");
   },
 });
