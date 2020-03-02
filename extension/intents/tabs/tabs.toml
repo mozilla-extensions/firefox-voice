@@ -228,9 +228,10 @@ match = """
 """
 
 [tabs.moveSelectedToNewWindow]
-description = "Move selected tabs to (a |) new window"
+description = "Move selected tabs to new window"
 match = """
-  move selected tabs to new window
+  (move | launch | start) selected tabs (to | in |) (a |) (new |) window
+  (launch | start |) new window (with |) selected tab{s}
 """
 
 [[tabs.moveSelectedToNewWindow.example]]
