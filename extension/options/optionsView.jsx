@@ -242,13 +242,12 @@ const KeyboardShortcutSettings = ({
             </p>
           </blockquote>
           <p>
-            Non overridable keyboard shortcut (
+            Some keyboard shortcuts cannot be overridden 
               <a
             href="https://support.mozilla.org/en-US/kb/keyboard-shortcuts-perform-firefox-tasks-quickly"
             target="_blank"
             rel="noopener"
               >
-                details
               </a>
             ):
           </p>
