@@ -63,18 +63,37 @@ class CompilerTest {
         assertEquals(0, match("this no is testy", phrase).size)
     }
 
+    private fun verifyExpectedMatch(phrase: String, utterance: String, expectedString: String) {
+        val results = Compiler.compile(phrase).matchUtterance(MatchResult(string = utterance))
+        assertEquals("Expected 1 match for: $utterance", 1, results.size)
+        assertEquals(expectedString, results[0].toString())
+    }
+
     @Test
     fun testAlternativeMatches() {
+        Language.clear()
         Language.addStopwords("my")
-        val phrase = Compiler.compile("(hi | hello) world")
+        val phrase = "(hi | hello) world"
         listOf(
             Pair("hello world", "MatchResult(\"hello world^^\", capturedWords: 2)"),
             Pair("hi world!!!", "MatchResult(\"hi world!!!^^\", capturedWords: 2)"),
             Pair("hello, my world", "MatchResult(\"hello, my world^^\", skippedWords: 1, capturedWords: 2)")
         ).forEach {
-            val results = phrase.matchUtterance(MatchResult(string = it.first))
-            assertEquals("Expected 1 match for ${it.first}", 1, results.size)
-            assertEquals(it.second, results[0].toString())
+            verifyExpectedMatch(phrase, it.first, it.second)
+        }
+    }
+
+    @Test
+    fun testStopwords() {
+        Language.clear()
+        Language.addStopwords("me for please")
+        val phrase = "(launch | open) (new |) (tab | page)"
+        listOf(
+            Pair("launch new tab", "MatchResult(\"launch new tab^^\", capturedWords: 3)"),
+            Pair("open new tab for me", "MatchResult(\"open new tab for me^^\", skippedWords: 2, capturedWords: 3)"),
+            Pair("for me open new tab", "MatchResult(\"for me open new tab^^\", skippedWords: 2, capturedWords: 3)")
+        ).forEach {
+            verifyExpectedMatch(phrase, it.first, it.second)
         }
     }
 }
