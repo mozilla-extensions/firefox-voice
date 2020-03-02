@@ -29,7 +29,7 @@ match = """
 """
 
 [[tabs.undoCloseWindow.example]]
-example = "Undo close window"
+phrase = "Undo close window"
 test = true
 
 [tabs.duplicate]
