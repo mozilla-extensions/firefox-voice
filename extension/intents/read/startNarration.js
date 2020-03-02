@@ -5,7 +5,10 @@ function startNarration() {
   if (dropdown) {
     dropdown.classList.add("open");
   }
-  const element = document.querySelector(".narrate-start-stop[title='Start']");
+  if (isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-start-stop");
   if (!element) {
     return false;
   }
@@ -17,9 +20,18 @@ function startNarration() {
   return true;
 }
 
+function isPlaying() {
+  const element = document.querySelector(".narrate-skip-previous");
+  // The skip buttons are disabled when the player isn't playing
+  return !element.disabled;
+}
+
 communicate.register("narrate", startNarration);
 communicate.register("stopReading", () => {
-  const element = document.querySelector(".narrate-start-stop[title='Stop']");
+  if (!isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-start-stop");
   if (!element) {
     return false;
   }

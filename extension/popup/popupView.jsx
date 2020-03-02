@@ -574,14 +574,14 @@ const SearchResultsContent = ({
       <TextDisplay displayText={displayText} />
       <div id="search-results">
         {card ? (
-          <img
-            id="search-image"
-            alt={imgAlt}
-            onClick={onSearchCardClick}
-            style={cardStyles}
-            src={card.src}
-            role="button"
-          />
+          <button class="invisible-button" onClick={onSearchCardClick}>
+            <img
+              id="search-image"
+              alt={imgAlt}
+              style={cardStyles}
+              src={card.src}
+            />
+          </button>
         ) : null}
       </div>
       <div id="search-footer">
@@ -593,7 +593,11 @@ const SearchResultsContent = ({
                 Click mic and say <i>'next'</i> to view
               </strong>
             </p>
-            <a href="#" id="search-show-next" onClick={onNextResultClick}>
+            <a
+              href={next.url}
+              id="search-show-next"
+              onClick={onNextResultClick}
+            >
               {new URL(next.url).hostname} | {next.title}
             </a>
           </div>
@@ -705,9 +709,9 @@ class Zap extends Component {
     // this.animation.onLoopComplete = function() {
     if (avgVolume < 0.1) {
       this.playAnimation(this.animationSegmentTimes.base, true, true);
-    } else if (avgVolume < 0.15) {
+    } else if (avgVolume < 0.3) {
       this.playAnimation(this.animationSegmentTimes.low, true, true);
-    } else if (avgVolume < 0.2) {
+    } else if (avgVolume < 0.4) {
       this.playAnimation(this.animationSegmentTimes.medium, true, true);
     } else {
       this.playAnimation(this.animationSegmentTimes.high, true, true);

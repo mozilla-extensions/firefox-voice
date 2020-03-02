@@ -447,6 +447,10 @@ export const schema = {
                 "source": {
                   "type": "string"
                 },
+                "ua": {
+                  "description": "derived user agent, see bug 1595063",
+                  "type": "string"
+                },
                 "variation": {
                   "description": "funnel experiment parameters, see bug 1567339",
                   "type": "string"
@@ -719,6 +723,9 @@ export const schema = {
             },
             "gfx": {
               "properties": {
+                "ContentBackend": {
+                  "type": "string"
+                },
                 "D2DEnabled": {
                   "type": [
                     "boolean",
@@ -1266,6 +1273,14 @@ export const schema = {
           "title": "Number of open tabs",
           "type": "integer"
         },
+        "optInAcceptanceTime": {
+          "title": "The timestamp when the user accepted the opt-in",
+          "type": "integer"
+        },
+        "optInAudio": {
+          "title": "Has the user opted in to audio?",
+          "type": "boolean"
+        },
         "serverErrorIntentParser": {
           "description": "Error with the server intent parser",
           "title": "DEPRECATED",
@@ -1332,6 +1347,14 @@ export const schema = {
           "description": "Typically the slots found in the utterance",
           "title": "Parsed form of the utterance",
           "type": "object"
+        },
+        "wakewordEnabled": {
+          "title": "Has the user enabled the wakeword?",
+          "type": "boolean"
+        },
+        "wakewordUsed": {
+          "title": "Did the user start the intent with a wakeword, and what wakeword?",
+          "type": "string"
         }
       },
       "required": [

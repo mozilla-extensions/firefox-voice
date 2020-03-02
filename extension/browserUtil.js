@@ -20,7 +20,9 @@ export async function makeTabActive(tab) {
     throw new Error("Cannot make tab active without ID");
   }
   await browser.tabs.update(tabId, { active: true });
-  await browser.windows.update(tab.windowId, { focused: true });
+  if (!buildSettings.android) {
+    await browser.windows.update(tab.windowId, { focused: true });
+  }
 }
 
 export async function loadUrl(tabId, url) {
@@ -58,7 +60,7 @@ export async function turnOnReaderMode(tabId) {
   });
 }
 
-export async function activateTab(url) {
+export async function openOrActivateTab(url) {
   if (!url.includes("://")) {
     url = browser.runtime.getURL(url);
   }
@@ -75,13 +77,17 @@ export async function activateTab(url) {
 export async function activateTabClickHandler(event) {
   if (event) {
     event.preventDefault();
-    await activateTab(event.target.href);
+    await openOrActivateTab(event.target.href);
   }
 }
 
 export async function createTab(options) {
   const active = await activeTab();
-  if (["about:blank", "about:home", "about:newtab"].includes(active.url)) {
+  if (
+    ["about:blank", "about:home", "about:newtab"].includes(active.url) ||
+    (buildSettings.executeIntentUrl &&
+      active.url.startsWith(buildSettings.executeIntentUrl))
+  ) {
     return browser.tabs.update(options);
   }
   return browser.tabs.create(options);

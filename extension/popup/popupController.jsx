@@ -77,7 +77,8 @@ export const PopupController = function() {
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
-      await browserUtil.activateTab("onboarding/onboard.html");
+      log.info("Opening onboard to force opt-in/out to transcripts");
+      await browserUtil.openOrActivateTab("onboarding/onboard.html");
       window.close();
       return;
     }
@@ -124,7 +125,9 @@ export const PopupController = function() {
   };
 
   const onClickLexicon = async event => {
-    await browserUtil.activateTab(browser.runtime.getURL(event.target.href));
+    await browserUtil.openOrActivateTab(
+      browser.runtime.getURL(event.target.href)
+    );
     window.close();
   };
 
@@ -236,7 +239,7 @@ export const PopupController = function() {
       recorderIntervalId = setInterval(() => {
         const volume = recorder.getVolumeLevel();
         if (!hasHadSuccessfulUtterance && !nonZeroVolume) {
-          if (volume > 0) {
+          if (volume > 0.01) {
             nonZeroVolume = true;
           } else if (Date.now() - startTime > ZERO_VOLUME_LIMIT) {
             browser.runtime.sendMessage({ type: "zeroVolumeError" });
@@ -361,8 +364,12 @@ export const PopupController = function() {
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
     recorder.onEnd = json => {
-      setPopupView("success");
       clearInterval(recorderIntervalId);
+      if (textInputDetected) {
+        // The recorder ended because it was cancelled when typing began
+        return;
+      }
+      setPopupView("success");
       executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
@@ -382,6 +389,11 @@ export const PopupController = function() {
       });
     };
     recorder.onError = error => {
+      if (String(error) === "Error: Failed response from server: 500") {
+        // FIXME: this is because the server gives a 500 response when there's no voice...
+        recorder.onNoVoice();
+        return;
+      }
       setPopupView("error");
       clearInterval(recorderIntervalId);
       browser.runtime.sendMessage({ type: "microphoneStopped" });

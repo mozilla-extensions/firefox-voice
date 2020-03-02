@@ -18,6 +18,12 @@ phrase = "Look up The Book Thief on GoodReads"
 phrase = "Search CSS grid on MDN"
 
 [[navigation.bangSearch.example]]
+phrase = "Look up The Book Thief on GoodReads"
+
+[[navigation.bangSearch.example]]
+phrase = "Search CSS grid on MDN"
+
+[[navigation.bangSearch.example]]
 phrase = "Look up Hamilton in Gmail"
 
 [[navigation.bangSearch.example]]
@@ -29,6 +35,7 @@ phrase = "Find the nearest sushi on maps"
 [[navigation.bangSearch.example]]
 phrase = "search google images of sparrows for me"
 test = true
+expectSlots = {service = "google images"}
 
 [[navigation.bangSearch.example]]
 phrase = "Find website work plan on my Google Drive"
@@ -43,7 +50,7 @@ match = """
 [navigation.goBack]
 description = "Go back to the previous page, if one is available"
 match = """
-  go back
+  (go |) back
 """
 
 [navigation.goForward]
@@ -64,16 +71,20 @@ phrase = "Go to the New York Times"
 [[navigation.navigate.example]]
 phrase = "Show me the 49ers schedule"
 
+[[navigation.navigate.example]]
+phrase = "Go to the Health section of the BBC"
+
 [navigation.translate]
 description = "Translate the given page to the chosen language, using Google Translate"
 match = """
-  translate (this |) (page | tab | article | site |) (to english |) (for me |)
-  translate (this |) (page | tab | article | site |) to [language:lang] (for me |)
+  translate (this |) (web page | webpage | page | tab | article | site |) (to english |) (for me |)
+  translate (this |) (web page | webpage | page | tab | article | site |) to [language:lang] (for me |)
 """
 
 [[navigation.translate.example]]
 phrase = "translate this page to Spanish"
 test = true
+expectSlots = {language = "Spanish"}
 
 [[navigation.translate.example]]
 phrase = "translate this page to Dutch"
@@ -92,7 +103,27 @@ phrase = "Translate selection"
 [[navigation.translateSelection.example]]
 phrase = "translate this selection to Hungarian"
 test = true
+expectSlots = {language = "Hungarian"}
 
 [[navigation.translateSelection.example]]
 phrase = "translate the selected text to Slovak"
 test = true
+
+[navigation.followLink]
+description = "Follow the named link"
+match = """
+  (follow | click | click on | openlink) (link |) [query]
+  (open | go to) link [query]
+"""
+
+[[navigation.followLink.example]]
+phrase = "follow link latest news"
+
+[navigation.internetArchive]
+description = "Search current url on archive.org"
+match = """
+  (open | search) (for |) (this |) (page |) (on | in |) (the |) (internet archive{s} | archive.org | wayback | wayback machine)
+"""
+
+[[navigation.internetArchive.example]]
+phrase = "open this page in the internet archive"

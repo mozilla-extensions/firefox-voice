@@ -10,6 +10,33 @@ match = """
 [[muting.mute.example]]
 phrase = "mute (all tabs)"
 
+
+[[muting.mute.example]]
+phrase = "shut up tabs for me"
+test = true
+
+[[muting.mute.example]]
+phrase = "mute playing audio"
+test = true
+
+[[muting.mute.example]]
+phrase = "quiet tabs"
+test = true
+
+[muting.muteTab]
+description = "Mute just the active page"
+match = """
+  (mute | quiet | shot up) (this |) (page | tab)
+"""
+
+[[muting.muteTab.example]]
+phrase = "mute this tab"
+test = true
+
+[[muting.muteTab.example]]
+phrase = "mute page"
+test = true
+
 [muting.unmute]
 description = "Unmute all tabs"
 match = """

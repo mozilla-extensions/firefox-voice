@@ -6,6 +6,7 @@ async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
   await content.lazyInject(activeTab.id, [
     "/background/pageMetadata-contentScript.js",
+    "/intents/saving/screenshotContentScript.js",
     "/intents/clipboard/contentScript.js",
   ]);
   if (complete) {
@@ -17,55 +18,83 @@ async function copy(context, copyType, complete = false) {
 intentRunner.registerIntent({
   name: "clipboard.copyLink",
   async run(context) {
-    return copy(context, "copyLink");
+    await copy(context, "copyLink");
+    context.displayText("Link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyTitle",
   async run(context) {
-    return copy(context, "copyTitle");
+    await copy(context, "copyTitle");
+    context.displayText("Title copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyRichLink",
   async run(context) {
-    return copy(context, "copyRichLink");
+    await copy(context, "copyRichLink");
+    context.displayText("Title and link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyMarkdownLink",
   async run(context) {
-    return copy(context, "copyMarkdownLink");
+    await copy(context, "copyMarkdownLink");
+    context.displayText("Markdown title and link copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyScreenshot",
   async run(context) {
-    return copy(context, "copyScreenshot");
+    await copy(context, "copyScreenshot");
+    context.displayText("Screenshot copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copyFullPageScreenshot",
   async run(context) {
-    return copy(context, "copyFullPageScreenshot");
+    await copy(context, "copyFullPageScreenshot");
+    context.displayText("Full page screenshot copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.copySelection",
   async run(context) {
-    return copy(context, "copySelection");
+    await copy(context, "copySelection");
+    context.displayText("Selected text copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
+    const activeTab = await context.activeTab();
+    if (
+      activeTab.url === "about:newtab" ||
+      activeTab.url === "about:home" ||
+      activeTab.url === "about:blank"
+    ) {
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        const exc = new Error("No text in clipboard");
+        exc.displayMessage = "No text in clipboard";
+        throw exc;
+      }
+      if (/^https?:\/\//i.test(text)) {
+        await browser.tabs.update(activeTab.id, { url: text });
+      } else {
+        await browser.search.search({
+          query: text,
+        });
+      }
+      return;
+    }
     try {
       // OK, not actually a copy, but...
       await copy(context, "paste");

@@ -14,8 +14,6 @@ If you'd like to discuss the tool, development, or contributions, we are in the 
 
 There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
 
-If you are using Windows, please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), as the installation won't work from a normal Windows command prompt.
-
 The developer installation is:
 
 ```sh
@@ -25,11 +23,39 @@ npm start
 
 This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
+You may face errors on performing ```npm install``` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
+
+If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
+
 By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
 Any changes you make should cause any .jsx files to be recompiled and the extension will be reloaded.
+
+### Developing in Windows
+
+If you are using Windows, please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), as the installation won't work from a normal Windows command prompt.
+
+You will need to setup Firefox Nightly or Developer on WSL before running `firefox-voice`; use the following steps:
+
+1. Download `firefox-nightly.tar.bz2` for Linux and move it to a folder of your choice e.g. `/opt`.
+2. Extract it using `tar -xvjf firefox-*.tar.bz2` and move it to `/opt/firefox/`.
+3. Download `VcXsrv` on Windows and launch it with all default settings EXCEPT access control disabled.
+4. At this point, the `DISPLAY` variable is not set, so you may run into issues running GUI apps from XServer. To fix this, run `cat /etc/resolv.conf` to get the IP address of the nameserver, then run `export DISPLAY=IP_ADDRESS_OF_NAMESERVER_HERE:0`. You can also use this one-liner: `export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0`
+5. Test Firefox Nightly by launching `./firefox` in the folder that you extracted the `tar.bz2`; this should open up Firefox Nightly.
+6. In the `firefox-voice` repo, export the variable `FIREFOX` to point the script to your installation of firefox e.g. `export FIREFOX=/opt/firefox/firefox`.
+7. Now, running `npm start` should automatically start `firefox-nightly`, however the sound/microphone might not be working.
+8. Download the [PulseAudio binary for Windows](https://www.freedesktop.org/wiki/Software/PulseAudio/Ports/Windows/Support/).
+9. Extract the files to any location. You should see four folders named `bin`, `etc`, `lib`, and `share`.
+10. Edit the configuration files in `etc`. In `default.pa`, find the line starting with `#load-module module-native-protocol-tcp` and change it to `load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1`
+11. In `daemon.conf`, find the line starting with `; exit-idle-time = 20` and change it to `exit-idle-time = -1` to turn off idle timer.
+12. In admin Powershell, run `pulseaudio.exe` under the `bin` folder, and keep this running.
+13. Now, you will need to install PulseAudio for WSL. Uninstall any current versions of PulseAudio using `sudo apt-get purge pulseaudio`.
+14. Run `sudo add-apt-repository ppa:therealkenc/wsl-pulseaudio` to add the PPA.
+15. Update the sources using `sudo apt-get update`.
+16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
+17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
 ### Debugging
 

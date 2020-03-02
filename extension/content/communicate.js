@@ -4,8 +4,8 @@ this.communicate = (function() {
   const exports = {};
   const HANDLERS = {};
 
-  exports.register = function(type, handler) {
-    if (HANDLERS[type]) {
+  exports.register = function(type, handler, noConflict = false) {
+    if (!noConflict && HANDLERS[type]) {
       throw new Error(`There is already a handler registerd for ${type}`);
     }
     HANDLERS[type] = handler;

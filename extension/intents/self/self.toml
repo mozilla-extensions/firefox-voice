@@ -23,7 +23,9 @@ match = """
   tell me about (this | firefox voice | this extension | voice)
   help
   what (else |) can (I | you) (do | say | ask) (you | from you | of you |)
-  hello
+  (hello | hi)
+  what commands (can | could | will | would |) (I | you |) (say | follow | use | speak |)
+  (hello | hi |) how are you (doing |)
 """
 
 [[self.openLexicon.example]]
@@ -31,6 +33,26 @@ phrase = "Tell me about Firefox Voice"
 
 [[self.openLexicon.example]]
 phrase = "Help"
+
+[[self.openLexicon.example]]
+phrase = "tell me about this"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what can I do"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what else can I say"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "what commands can you follow"
+test = true
+
+[[self.openLexicon.example]]
+phrase = "hello how are you"
+test = true
 
 [[self.openLexicon.example]]
 phrase = "What can I do?"
@@ -43,6 +65,18 @@ match = """
   options
   preferences
 """
+
+[[self.openOptions.example]]
+phrase = "open settings for me"
+test = true
+
+[[self.openOptions.example]]
+phrase = "voice settings"
+test = true
+
+[[self.openOptions.example]]
+phrase = "firefox voice options"
+test = true
 
 [self.tellJoke]
 description = "Someone asks for a joke or something funny"

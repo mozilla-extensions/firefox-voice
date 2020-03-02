@@ -1,16 +1,13 @@
-/* globals log, catcher */
+/* globals log, catcher, buildSettings */
 
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import * as searching from "../searching.js";
 import * as browserUtil from "../browserUtil.js";
 import { PhraseSet } from "./language/matching.js";
-import {
-  compile,
-  splitPhraseLines,
-  convertEntities,
-} from "./language/compiler.js";
+import { compile, splitPhraseLines } from "./language/compiler.js";
 import { metadata } from "../intents/metadata.js";
+import { entityTypes } from "./entityTypes.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
@@ -141,7 +138,11 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (url.startsWith("about:blank")) {
+        if (
+          url.startsWith("about:blank") ||
+          (buildSettings.executeIntentUrl &&
+            url.startsWith(buildSettings.executeIntentUrl))
+        ) {
           return;
         }
         const isGoogle = /^https:\/\/www.google.com\//.test(url);
@@ -294,14 +295,13 @@ export async function runIntent(desc) {
 }
 
 export function getIntentSummary() {
-  const convertedEntities = convertEntities(intentParser.ENTITY_TYPES);
   const names = intentParser.getIntentNames();
   return names.map(name => {
     const intent = Object.assign({}, intents[name]);
     delete intent.run;
     const matchSet = new PhraseSet(
       splitPhraseLines(intent.match).map(line =>
-        compile(line, { entities: convertedEntities, intentName: name })
+        compile(line, { entities: entityTypes, intentName: name })
       )
     );
     const matchers = matchSet.matchPhrases;

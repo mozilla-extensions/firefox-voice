@@ -13,11 +13,14 @@ parserOptions:
 extends:
   - eslint:recommended
   - plugin:mozilla/recommended
+  - plugin:jsx-a11y/recommended
 
 plugins:
   - mozilla
   - react
   - class-property
+  - jsx-a11y
+  - react-hooks
 
 rules:
   eqeqeq: error
@@ -29,3 +32,5 @@ rules:
   mozilla/no-import-into-var-and-global: off
   prettier/prettier: off
   comma-dangle: off
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn

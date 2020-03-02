@@ -5,3 +5,5 @@ extension/options/optionsController.js
 extension/options/optionsView.js
 extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
+extension/wakeword/wakewordController.js
+extension/wakeword/wakewordView.js

@@ -1,56 +1,11 @@
 /* globals log */
 
 import { PhraseSet } from "./language/matching.js";
-import {
-  compile,
-  convertEntities,
-  splitPhraseLines,
-} from "./language/compiler.js";
-import * as serviceList from "./serviceList.js";
-import * as languages from "./languages.js";
+import { compile, splitPhraseLines } from "./language/compiler.js";
+import { entityTypes } from "./entityTypes.js";
 
 const DEFAULT_INTENT = "search.search";
 const DEFAULT_SLOT = "query";
-
-/*
-Matcher syntax:
-
-  "plain text (alt|text) [slot]"
-
-Spaces separate words, but spaces don't matter too much. Slots are all wildcards.
-
-You can use `[slot:slotType]` to create a slot that must be of a certain types (types are in ENTITY_MAP)
-
-You can use `[parameter=value]` to set a parameter on any matches for this one item. This does not capture anything.
-
-You can use `noun{s}` to match both `noun` and `nouns`.
-*/
-
-export const ENTITY_TYPES = {
-  serviceName: serviceList.allServiceNames(),
-  musicServiceName: serviceList.musicServiceNames(),
-  lang: languages.languageNames(),
-  smallNumber: [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-  ],
-};
 
 // Populated by registerMatcher:
 const INTENTS = {};
@@ -72,12 +27,14 @@ let initialized = false;
 let phraseSet;
 
 function initialize() {
-  const entities = convertEntities(ENTITY_TYPES);
   const phrases = [];
   for (const name in INTENTS) {
     const { matcher } = INTENTS[name];
     for (const line of splitPhraseLines(matcher)) {
-      const compiled = compile(line, { entities, intentName: name });
+      const compiled = compile(line, {
+        entities: entityTypes,
+        intentName: name,
+      });
       INTENTS[name].compiledMatcher = compiled;
       phrases.push(compiled);
     }

@@ -7,7 +7,7 @@ export function sleep(ms) {
 /** If the promise takes longer than the given number of milliseconds, throw a promise error
  * (error.name === "TimeoutError") */
 export function promiseTimeout(promise, time) {
-  const sleeper = exports.sleep(time).then(() => {
+  const sleeper = sleep(time).then(() => {
     const exc = new Error("Timed Out");
     exc.name = "TimeoutError";
     throw exc;
@@ -91,4 +91,21 @@ export function randomString(length, chars) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
+}
+
+/* Forces the async function to only be called once, until it has returned */
+// FIXME: I'm worried this is going to leak memory, as it creates a forever-growing promise chain
+export function serializeCalls(asyncFunction) {
+  let otherFuncResult = null;
+  return function(...args) {
+    if (otherFuncResult) {
+      otherFuncResult = otherFuncResult.then(
+        () => asyncFunction(...args),
+        () => asyncFunction(...args)
+      );
+    } else {
+      otherFuncResult = asyncFunction(...args);
+    }
+    return otherFuncResult;
+  };
 }

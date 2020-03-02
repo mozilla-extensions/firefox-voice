@@ -14,6 +14,7 @@ const UTTERANCE_FIELDS = [
 ];
 
 let lastIntentId;
+let lastUtterance;
 let intentCount;
 let lastIntentDate;
 let intentDays;
@@ -54,7 +55,11 @@ function resetPing() {
 export function add(properties) {
   if (!ping) {
     if (properties.doNotInit) {
-      throw new Error("Telemetry added after submission");
+      const exc = new Error(
+        `Telemetry (${Object.keys(properties)}) added after submission`
+      );
+      exc.propertiesAdded = Object.keys(properties).join(";");
+      throw exc;
     }
     resetPing();
   }
@@ -83,6 +88,13 @@ export function add(properties) {
   if (!ping.timestamp) {
     ping.timestamp = Date.now();
   }
+  if (!ping.numberOfTabs) {
+    browser.tabs.query({ currentWindow: true }).then(tabs => {
+      if (ping) {
+        ping.numberOfTabs = tabs.length;
+      }
+    });
+  }
 }
 
 export function cancelledIntent() {
@@ -100,6 +112,7 @@ export function send() {
   }
   if (!ping.inputCancelled) {
     lastIntentId = ping.intentId;
+    lastUtterance = ping.utterance;
   }
   ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
   const s = settings.getSettings();
@@ -109,6 +122,9 @@ export function send() {
         delete ping[field];
       }
     }
+    ping.wakewordEnabled = s.enableWakeword;
+    ping.optInAudio = s.collectAudio;
+    ping.optInAcceptanceTime = s.collectTranscriptsOptinAnswered;
     browser.telemetry
       .submitPing("voice", ping, {
         addClientId: true,
@@ -123,13 +139,17 @@ export function send() {
 }
 
 export async function sendSoon() {
-  await util.sleep(1000);
+  await util.sleep(2000);
   return send();
 }
 
 export function sendFeedback({ feedback, rating }) {
   const ping = Object.assign(
-    { intentId: lastIntentId || "unknown", timestamp: Date.now() },
+    {
+      intentId: lastIntentId || "unknown",
+      timestamp: Date.now(),
+      utterance: lastUtterance,
+    },
     { feedback, rating }
   );
   ping.feedback = ping.feedback || "";

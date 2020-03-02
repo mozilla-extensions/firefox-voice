@@ -91,7 +91,11 @@ const MusicServiceSettings = ({
   return (
     <fieldset id="music-services">
       <legend>Music service</legend>
-      <select value={userSettings.musicService} onChange={onMusicServiceChange}>
+      <select
+        value={userSettings.musicService}
+        onChange={onMusicServiceChange}
+        onBlur={onMusicServiceChange}
+      >
         {userOptions.musicServices &&
           userOptions.musicServices.map(musicOption => (
             <option key={musicOption.name} value={musicOption.name}>

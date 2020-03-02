@@ -1,11 +1,16 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (this |) (tab | site | page) (for me |)
+  close (this |) (current |) (tab | site | page) (for me |)
+  close (this | that)
 """
 
 [[tabs.close.example]]
 phrase = "close tab"
+
+[[tabs.close.example]]
+phrase = "close the current top"
+test = true
 
 [tabs.duplicate]
 description = "Duplicates a tab"
@@ -53,6 +58,10 @@ test = true
 phrase = "open the tab"
 test = true
 
+[[tabs.open.example]]
+phrase = "open a blank tap for me"
+test = true
+
 [tabs.openHomePage]
 description = "Opens HomePage in a tab"
 match = """
@@ -66,7 +75,7 @@ phrase = "open my homepage"
 description = "Opens a new private window"
 match = """
   open (a |) (new | blank |) (private | incognito) window (for me|)
-  new (private | incognito) window
+  (new | activate) (private | incognito) (window | mode)
 """
 
 [[tabs.openPrivateWindow.example]]
@@ -152,3 +161,78 @@ match = """
 
 [[tabs.zoomReset.example]]
 phrase = "Reset zoom"
+
+[tabs.previous]
+description = "Go to a previously active tab"
+match = """
+  (Go | switch | change | activate |) (the | my |) previous tab
+"""
+
+[[tabs.previous.example]]
+phrase = "Previous tab"
+
+[tabs.switchDir]
+description = "Go in some direction of tabs"
+match = """
+  (Go | switch | change | activate |) (to |) (the |) (next | right) tab                [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) tab (to |) (the |) (next | right) [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) left tab                          [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) tab (to |) (the |) left           [dir=prev]
+"""
+
+[[tabs.switchDir.example]]
+phrase = "Next tab"
+expectParameters = {dir = "next"}
+
+[[tabs.switchDir.example]]
+phrase = "Tab left"
+expectParameters = {dir = "prev"}
+test = true
+
+[[tabs.switchDir.example]]
+phrase = "Switch to the tab to the left"
+expectParameters = {dir = "prev"}
+
+[tabs.switchSide]
+description = "Go to the first/last tab"
+match = """
+  (Go | switch | change | activate |) (to |) (the |) first tab [dir=first]
+  (Go | switch | change | activate |) (to |) (the |) last tab  [dir=last]
+"""
+
+[[tabs.switchSide.example]]
+phrase = "Go to the first tab"
+expectParameters = {dir = "first"}
+
+[[tabs.switchSide.example]]
+phrase = "Go to the last tab"
+expectParameters = {dir = "last"}
+
+[tabs.switchDirPinned]
+description = "Go in some direction of the pinned tabs"
+match = """
+  (Go | switch | change | activate |) (to |) (the |) (next | right) (pinned | app) tab                   [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) (pinned | app) tab (to |) (the |) (next | right)    [dir=next]
+  (Go | switch | change | activate |) (to |) (the |) (previous | left) (pinned | app) tab                [dir=prev]
+  (Go | switch | change | activate |) (to |) (the |) (pinned | app) tab (to |) (the |) (previous | left) [dir=prev]
+"""
+
+[[tabs.switchDirPinned.example]]
+phrase = "Previous pinned tab"
+
+[tabs.switchSidePinned]
+description = "Go to the first pinnned tab"
+match = """
+  (Go | switch | change | activate |) (to |) (the |) first (pinned | app) tab [dir=first]
+  (Go | switch | change | activate |) (to |) (the |) last (pinned | app) tab  [dir=last]
+"""
+
+[tabs.moveSelectedToNewWindow]
+description = "Move selected tabs to new window"
+match = """
+  (move | launch | start) selected tabs (to | in |) (a |) (new |) window
+  (launch | start |) new window (with |) selected tab{s}
+"""
+
+[[tabs.moveSelectedToNewWindow.example]]
+phrase = "Move selected tabs to new window"

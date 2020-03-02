@@ -2,37 +2,24 @@
 const toml = require("toml");
 const path = require("path");
 const fs = require("fs");
+const glob = require("glob");
+const { extensionDir, writeFile } = require("./script-utils.js");
 
-const OUTPUT = path.normalize(
-  path.join(__dirname, "../extension/intents/metadata.js")
-);
-const INTENT_DIR = path.normalize(path.join(__dirname, "../extension/intents"));
-
-function ignoreFilename(filename) {
-  return (
-    filename.startsWith(".") ||
-    filename.endsWith(".txt") ||
-    filename.endsWith(".js")
-  );
-}
-
-const filenames = fs.readdirSync(INTENT_DIR, { encoding: "UTF-8" });
-const intentNames = [];
-for (const filename of filenames) {
-  if (!ignoreFilename(filename)) {
-    intentNames.push(filename);
-  }
-}
+const OUTPUT = path.join(extensionDir, "intents/metadata.js");
+const SYNC_OUTPUT = path.join(extensionDir, "/services/metadata.js");
+const INTENT_DIR = path.join(extensionDir, "intents");
+const SERVICE_DIR = path.join(extensionDir, "services");
+const LANG_DIR = path.join(extensionDir, "background/language/langs");
 
 const metadata = {};
 
-for (const intentName of intentNames) {
-  const filename = path.join(INTENT_DIR, intentName, intentName + ".toml");
+for (const filename of glob.sync(INTENT_DIR + "/**/*.toml")) {
+  const intentName = path.basename(filename, ".toml");
   let data;
   try {
     data = toml.parse(fs.readFileSync(filename));
   } catch (e) {
-    console.warn("Error:", e);
+    console.warn("Error:", e, "in file:", filename);
     continue;
   }
   if (Object.keys(data).length > 1 || !data[intentName]) {
@@ -49,11 +36,83 @@ for (const intentName of intentNames) {
   Object.assign(metadata, data);
 }
 
-const fileContent = `export const metadata = ${JSON.stringify(
-  metadata,
-  null,
-  "  "
-)};\n`;
+const fileContent = `// Generated from intents/*/*.toml
+export const metadata = ${JSON.stringify(metadata, null, "  ")};\n`;
 
-fs.writeFileSync(OUTPUT, fileContent, { encoding: "UTF-8" });
-console.log(`Wrote file ${OUTPUT} (${fileContent.length} characters)`);
+writeFile(OUTPUT, fileContent, true);
+
+const serviceMetadata = { search: {}, music: {} };
+
+for (const filename of glob.sync(SERVICE_DIR + "/*/*.toml")) {
+  let data;
+  try {
+    data = toml.parse(fs.readFileSync(filename));
+  } catch (e) {
+    console.warn("Error:", e, "in file:", filename);
+    continue;
+  }
+  if (Object.keys(data).length !== 1) {
+    throw new Error(`Only expected one section in ${filename}`);
+  }
+  const name = Object.keys(data)[0];
+  const type = data[name].type;
+  data[name].names = (data[name].names || []).concat([name]);
+  if (type !== "music") {
+    throw new Error(`Expected type=music in ${filename}`);
+  }
+  delete data[name].type;
+  Object.assign(serviceMetadata.music, data);
+}
+
+let searchData;
+const searchDataFilename = SERVICE_DIR + "/searchServices.toml";
+
+try {
+  searchData = toml.parse(fs.readFileSync(searchDataFilename));
+} catch (e) {
+  console.warn("Error:", e, "in file:", searchDataFilename);
+  throw e;
+}
+
+for (const name in searchData) {
+  searchData[name].names = (searchData[name].names || []).concat([name]);
+}
+Object.assign(serviceMetadata.search, searchData);
+
+const serviceContent = `// Generated from ${path.basename(searchDataFilename)}
+export const metadata = ${JSON.stringify(serviceMetadata, null, "  ")};\n`;
+
+writeFile(SYNC_OUTPUT, serviceContent);
+
+for (const filename of glob.sync(LANG_DIR + "/*.toml")) {
+  let data;
+  try {
+    data = toml.parse(fs.readFileSync(filename));
+  } catch (e) {
+    console.warn("Error:", e, "in file:", filename);
+    continue;
+  }
+  if (
+    !Array.isArray(data.stopwords) &&
+    typeof data.stopwords.words === "string"
+  ) {
+    let lines = data.stopwords.words.split("\n");
+    lines = lines
+      .map(l => l.trim())
+      .filter(l => !l.startsWith("#") && !l.startsWith("//") && l);
+    lines = lines.map(l => l.split(/\s+/g));
+    lines = lines.flat();
+    data.stopwords = lines;
+  }
+  const content = `// Generated from ${path.basename(filename)}
+import { Language } from "./lang.js";
+
+const lang = new Language(${JSON.stringify(data, null, "  ")}
+);
+
+export default lang;
+`;
+
+  const outputFilename = filename.replace(/\.toml$/, ".js");
+  writeFile(outputFilename, content);
+}

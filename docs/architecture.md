@@ -30,7 +30,7 @@ The basic components:
     - The listener will probably be open at this stage
   - Intents should have a globally-unique string identifier
   - It can report an error to the listener, who has the responsibility of showing the error
-    - Maybe? With the separate tab interface we might *have* to close the listener to do some actions
+    - Maybe? With the separate tab interface we might _have_ to close the listener to do some actions
     - But intents should have a formal interface for errors and progress
   - It does stuff, of course
   - It tells the background process when it finishes
@@ -50,7 +50,7 @@ The basic components:
 - When one component "owns" some data, it will typically send a complete or subset of that data to another component. When there is any update, it resends the entire thing
   - Updates happen via messages into the component
 - Messages try to be directed to the right process
-- Every message has a "type" property. Ideally these types will be globally unique (i.e., *don't* rely on sending the message to the right location, if it might be treated incorrectly as a valid message to a different receiver)
+- Every message has a "type" property. Ideally these types will be globally unique (i.e., _don't_ rely on sending the message to the right location, if it might be treated incorrectly as a valid message to a different receiver)
 
 ## Intent parsing:
 
@@ -65,19 +65,6 @@ The basic components:
 
 ## Modules:
 
-- While we can use modern modules some places, we can't use them everywhere (e.g., content scripts)
-- We could use Webpack, but then we'd be using Webpack.
-- So instead, old school modules, like:
-
-```js
-// In moduleName.js
-// *Using* an external module is done like:
-/* globals someOtherModule */
-this.moduleName = (function() {
-  let exports = {};
-  exports.foo = function() {
-    return someOtherModule.func();
-  };
-  return exports;
-})();
-```
+- Almost everything uses ECMA JavaScript modules
+- There's a couple old-style modules that are used from multiple contexts: `log.js`, `catcher.js`, and `buildSettings.js`
+- Jest tests `*.test.js` use Node `require()`, but can load new-style modules

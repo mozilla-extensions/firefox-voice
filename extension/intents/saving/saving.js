@@ -10,6 +10,7 @@ intentRunner.registerIntent({
     await content.lazyInject(activeTab.id, [
       "/js/vendor/freezeDry.js",
       "/background/pageMetadata-contentScript.js",
+      "/intents/saving/screenshotContentScript.js",
       "/intents/saving/saveContentScript.js",
     ]);
     const { html, metadata } = await browser.tabs.sendMessage(activeTab.id, {
@@ -17,13 +18,15 @@ intentRunner.registerIntent({
     });
     const name = context.slots.name;
     if (!name) {
-      filename = makeFilename(metadata.title, metadata.url, ".html");
+      filename = makeFilename("", metadata.title, metadata.url, ".html");
     } else {
       filename = cleanFiletitle(name);
       filename = adaptFilenameToMaxSize(filename);
       filename = filename + ".html";
     }
-    await downloadData(html, "text/html", filename);
+    const blob = htmlToBlob(html);
+    await downloadData(blob, filename);
+    context.displayText("Page saved to downloads folder");
   },
 });
 
@@ -45,11 +48,63 @@ intentRunner.registerIntent({
   },
 });
 
-async function downloadData(body, contentType, filename) {
-  if (contentType !== "image/png" && contentType !== "image/jpeg") {
-    contentType = "image/png";
+intentRunner.registerIntent({
+  name: "saving.downloadScreenshot",
+  async run(context) {
+    return downloadScreenshot(context, "screenshot");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "saving.downloadFullPageScreenshot",
+  async run(context) {
+    return downloadScreenshot(context, "screenshotFullPage");
+  },
+});
+
+async function downloadScreenshot(context, type) {
+  let filename;
+  const activeTab = await browserUtil.activeTab();
+  await content.lazyInject(activeTab.id, [
+    "/js/vendor/freezeDry.js",
+    "/background/pageMetadata-contentScript.js",
+    "/intents/saving/screenshotContentScript.js",
+    "/intents/saving/saveContentScript.js",
+  ]);
+  const { png, metadata } = await browser.tabs.sendMessage(activeTab.id, {
+    type,
+  });
+  const name = context.slots.name;
+  if (!name) {
+    filename = makeFilename(
+      "Screenshot of ",
+      metadata.title,
+      metadata.url,
+      ".png"
+    );
+  } else {
+    filename = cleanFiletitle(name);
+    filename = adaptFilenameToMaxSize(filename);
+    filename = filename + ".png";
   }
-  const blob = new Blob([body], { type: contentType });
+  const blob = dataPngUrlToBlob(png);
+  await downloadData(blob, filename);
+  context.displayText("Screenshot saved to downloads folder");
+}
+
+function dataPngUrlToBlob(url) {
+  const binary = atob(url.split(",", 2)[1]);
+  const contentType = "image/png";
+  const data = Uint8Array.from(binary, char => char.charCodeAt(0));
+  const blob = new Blob([data], { type: contentType });
+  return blob;
+}
+
+function htmlToBlob(text) {
+  return new Blob([text], { type: "text/html" });
+}
+
+async function downloadData(blob, filename) {
   const url = URL.createObjectURL(blob);
   let downloadId;
   function onChanged(change) {
@@ -96,7 +151,7 @@ function adaptFilenameToMaxSize(filename) {
   return adaptFilename;
 }
 
-function makeFilename(title, url, extension) {
+function makeFilename(prefix, title, url, extension) {
   const filenameTitle = cleanFiletitle(title);
   const date = new Date();
   const filenameDate = new Date(
@@ -105,7 +160,7 @@ function makeFilename(title, url, extension) {
     .toISOString()
     .substring(0, 10);
   const domain = getDomain(url);
-  let filename = `${domain} ${filenameDate} ${filenameTitle}`;
+  let filename = `${prefix}${domain} ${filenameDate} ${filenameTitle}`;
   filename = adaptFilenameToMaxSize(filename);
   return filename + extension;
 }

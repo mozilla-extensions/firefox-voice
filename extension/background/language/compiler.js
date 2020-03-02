@@ -6,9 +6,9 @@ Syntax:
 * The phrase must be matched completely, beginning to end
 * Words match that word
 * A "stopword" (not-important word) can appear anywhere, and is ignored
-  * Stopwords are defined in english.js
+  * Stopwords are defined in english.toml
 * Aliases (words that might be spelled differently or misheard) can be matched
-  * Aliases are defined in english.js
+  * Aliases are defined in english.toml
 * There can be alternatives, like `(one | two | three four)`
   * Each alternative is separated by `|`. In this example "three four" must appear together
   * Using an empty alternative makes the word optional, like `(page |)` matches "page" or nothing
@@ -55,6 +55,9 @@ function makeWordMatcher(string) {
 }
 
 export function splitPhraseLines(string) {
+  if (typeof string !== "string") {
+    throw new Error(`Bad input: ${string}`);
+  }
   const result = [];
   for (let line of string.split("\n")) {
     line = line.trim();
