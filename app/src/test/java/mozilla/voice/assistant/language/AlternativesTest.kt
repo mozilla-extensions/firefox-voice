@@ -46,4 +46,23 @@ class AlternativesTest {
         assertEquals(0, emptyWildcard.capturedWords)
         assertEquals(0, emptyWildcard.skippedWords)
     }
+
+    @Test
+    fun testToSource() {
+        assertEquals(
+            "(bring | take)",
+            Alternatives(
+                listOf(Word("bring"), Word("take")),
+                empty = false
+            ).toSource()
+        )
+
+        assertEquals(
+            "(bring | take | )",
+            Alternatives(
+                listOf(Word("bring"), Word("take")),
+                empty = true
+            ).toSource()
+        )
+    }
 }

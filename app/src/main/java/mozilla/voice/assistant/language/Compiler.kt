@@ -17,13 +17,13 @@ class Compiler {
         private val untypedSlotRegex = Regex("""^\[(\w+)\w*](.*)$""")
 
         // matches something like: (find | search | look for |)
-        private val alternativesRegex = Regex("""^\(([^)]*)\)(.*)$""")
+        private val alternativesRegex = Regex("""^\(([^)]*)\)\s*(.*)$""")
 
         // matches something like: seek{s}
         private val altWordRegex = Regex("""\{([^}]+)}""")
 
         // matches everything before the next left parenthesis/brace and the remainder
-        private val wordsRegex = Regex("""\s*([^(\[]+)(..*)""")
+        private val wordsRegex = Regex("""\s*([^(\[]+)(.*)""")
 
         @VisibleForTesting
         internal fun getParameter(phrase: String): Triple<String, String, String>? =
@@ -110,6 +110,7 @@ class Compiler {
                         val alts = altString.split("|").map { it.trim() }
                         val patterns = alts
                             .flatMap { splitAlternatives(it) }
+                            .filter { it.isNotEmpty() }
                             .map { makeWordMatcher(it) }
                         seq.add(Alternatives(patterns, empty = alts.contains("")))
                         toParse = rest
@@ -120,13 +121,13 @@ class Compiler {
                 // Check for words before the next left parenthesis or left bracket.
                 wordsRegex.matchEntire(toParse)?.run {
                     val (wordsString, rest) = destructured
-                    wordsString.split("\\s+").forEach {
-                        val alts = splitAlternatives(wordsString)
+                    wordsString.split(Regex("\\s+")).forEach {
+                        val alts = splitAlternatives(it)
                         seq.add(
                             when (alts.size) {
                                 1 -> Word(alts[0])
                                 2 -> Alternatives(alts.map { Word(it) })
-                                else -> throw Error("Illegal value returned from splitAlterrnatives(\"$wordsString\': ${alts.size}")
+                                else -> throw Error("Illegal value returned from splitAlternatives(\"$wordsString\': ${alts.size}")
                             }
                         )
                     }

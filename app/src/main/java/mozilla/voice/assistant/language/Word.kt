@@ -5,7 +5,11 @@ import java.util.Locale
 private fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace("[^a-z0-9]", "")
 
-internal fun String.toWordList() = trim().split("\\s+").map { Word(it) }
+internal fun String.toWordList() = trim()
+    .split("\\s+")
+    .map { it.trim() }
+    .filterNot { it.isEmpty() }
+    .map { Word(it) }
 
 /**
  * A representation of both a word in a user utterance and a word to match in a phrase.

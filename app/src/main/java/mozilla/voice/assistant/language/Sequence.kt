@@ -1,9 +1,15 @@
 package mozilla.voice.assistant.language
 
+import androidx.annotation.VisibleForTesting
+
 /**
  * A representation of a sequence of patterns that must be matched in order.
  */
-class Sequence(private val patterns: List<Pattern>) : Pattern {
+class Sequence(@VisibleForTesting val patterns: List<Pattern>) : Pattern {
+    init {
+        check(patterns.isNotEmpty())
+    }
+
     // TODO: Change to recursive function.
     override fun matchUtterance(match: MatchResult): List<MatchResult> {
         var results = listOf(match)

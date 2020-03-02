@@ -16,8 +16,9 @@ class Alternatives(
 
     override fun toSource() =
         alternatives.joinToString(
+            prefix = "(",
             separator = " | ",
-            postfix = if (empty) "" else " | "
+            postfix = if (empty) " | )" else ")"
         ) { it.toSource() }
 
     override fun slotNames() =

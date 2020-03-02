@@ -1,10 +1,12 @@
 package mozilla.voice.assistant.language
 
+import androidx.annotation.VisibleForTesting
+
 /**
  * A representation of a sequence of [Word]s.
  */
 class FullPhrase(
-    private val words: Sequence,
+    @VisibleForTesting val words: Sequence,
     private val originalSource: String? = null,
     private val parameters: Map<String, String> = emptyMap(),
     private val intentName: String? = null
@@ -32,7 +34,7 @@ class FullPhrase(
             ", parameters=$parameters"
         }
         val intentString = intentName?.let { ", intentName=$it" } ?: ""
-        return "FullPhrase(${words.toSource()}$paramString$intentString"
+        return "FullPhrase(\"${words.toSource()}$paramString$intentString\")"
     }
 
     override fun toSource() = words.toSource()
