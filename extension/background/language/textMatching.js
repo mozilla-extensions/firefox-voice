@@ -124,6 +124,16 @@ export class Word {
     return this.source;
   }
 
+  enumeratePhrases(filler) {
+    // Note we don't include aliases as these are mostly mis-transcriptions
+    /*
+    return [[this.word]]
+      .concat(this.aliases.map(w => [w]))
+      .concat(this.multiwordAliases || []);
+    */
+    return [[this.word]];
+  }
+
   slotNames() {
     return new Set();
   }
@@ -186,6 +196,14 @@ export class FullPhrase {
     )}${paramString}${intentString})`;
   }
 
+  toSource() {
+    return this.words.toSource();
+  }
+
+  enumeratePhrases(filler) {
+    return this.words.enumeratePhrases(filler);
+  }
+
   slotNames() {
     return this.words.slotNames();
   }
@@ -217,6 +235,15 @@ export class Alternatives {
     return `(${options.join(" | ")})`;
   }
 
+  enumeratePhrases(filler) {
+    let words = this.alternatives.map(a => a.enumeratePhrases(filler));
+    words = words.flat();
+    if (this.empty) {
+      words.push([]);
+    }
+    return words;
+  }
+
   slotNames() {
     return setUnions(this.alternatives.map(w => w.slotNames()));
   }
@@ -242,6 +269,24 @@ export class Sequence {
 
   toSource() {
     return this.patterns.map(p => p.toSource()).join(" ");
+  }
+
+  enumeratePhrases(filler) {
+    const words = this.patterns.map(p => p.enumeratePhrases(filler));
+    // Now we have to do a cross product around each of these
+    function crossProduct(items) {
+      if (items.length === 1) {
+        return items[0];
+      }
+      const first = items[0];
+      const rest = items.slice(1);
+      const restCrossProduct = crossProduct(rest);
+      const result = first
+        .map(f => restCrossProduct.map(r => f.concat(r)))
+        .flat();
+      return result;
+    }
+    return crossProduct(words);
   }
 
   slotNames() {
@@ -279,6 +324,11 @@ export class Wildcard {
     return this.empty ? "*" : "+";
   }
 
+  enumeratePhrases(filler) {
+    // Typically this should be done at the slot level
+    return [];
+  }
+
   slotNames() {
     return new Set();
   }
@@ -306,6 +356,15 @@ export class Slot {
 
   toSource() {
     return `[${this.slotName}:${this.pattern.toSource()}]`;
+  }
+
+  enumeratePhrases(filler) {
+    const inner = this.pattern.enumeratePhrases(filler);
+    const result = filler(this.slotName, this.pattern, inner);
+    if (!Array.isArray(result)) {
+      throw new Error("Bad result from filler");
+    }
+    return result;
   }
 
   slotNames() {

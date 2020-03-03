@@ -39,4 +39,8 @@ export class PhraseSet {
     });
     return allMatches[0];
   }
+
+  enumeratePhrases(filler) {
+    return this.matchPhrases.map(m => m.enumeratePhrases(filler)).flat();
+  }
 }
