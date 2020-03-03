@@ -72,6 +72,14 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "clipboard.copyImageLink",
+  async run(context) {
+    await copy(context, "copyImageLink");
+    context.displayText("Image copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
     const activeTab = await context.activeTab();

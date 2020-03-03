@@ -94,6 +94,17 @@ this.contentScript = (function() {
     copyImage(url);
   };
 
+  types.copyImageLink = function() {
+    const img = document.querySelectorAll("img");
+    const imgHeight = [];
+    img.forEach(function(items) {
+      imgHeight.push(items.clientHeight);
+    });
+    const index = imgHeight.indexOf(Math.max(...imgHeight));
+    const url = img[index].src;
+    copyImage(url);
+  };
+
   function isPasteable(el) {
     while (el && el.tagName) {
       if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
