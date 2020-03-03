@@ -118,3 +118,14 @@ match = """
 
 [[navigation.followLink.example]]
 phrase = "follow link latest news"
+
+[navigation.internetArchive]
+description = "Search current url on archive.org"
+match = """
+  (open | search) (for |) (this |) (page |) (on | in |) (the |) (internet archive{s} | archive.org | wayback | wayback machine)
+  Wayback (machine |) (this |) (page | tab)
+  What (did | does |) (this |) (page | tab | site | website) used (to |) (be | look) like
+"""
+
+[[navigation.internetArchive.example]]
+phrase = "open this page in the internet archive"

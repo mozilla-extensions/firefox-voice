@@ -103,6 +103,20 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "tabs.undoCloseTab",
+  async run(context) {
+    await browser.experiments.voice.undoCloseTab();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.undoCloseWindow",
+  async run(context) {
+    await browser.experiments.voice.undoCloseWindow();
+  },
+});
+
+intentRunner.registerIntent({
   name: "tabs.open",
   async run(context) {
     // context.createTab is the normal way to do this, but it sometimes doesn't open a new tab
@@ -345,5 +359,15 @@ intentRunner.registerIntent({
       throw exc;
     }
     await switchSide(tabs, context.parameters.dir);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.moveSelectedToNewWindow",
+  async run(context) {
+    const tabs = await browser.tabs.query({ highlighted: true });
+    const tabsIds = tabs.map(tabInfo => tabInfo.id);
+    const newWindow = await browser.windows.create({});
+    await browser.tabs.move(tabsIds, { windowId: newWindow.id, index: 0 });
   },
 });
