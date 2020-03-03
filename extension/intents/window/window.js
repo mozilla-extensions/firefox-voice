@@ -1,0 +1,39 @@
+import * as intentRunner from "../../background/intentRunner.js";
+
+function findTargetWindowId(windowArray, currentWindowId, direction) {
+  const len = windowArray.length;
+  // find currentWindowId postion in array
+  const currentWindowIndex = windowArray.findIndex(
+    window => window.id === currentWindowId
+  );
+  let targetIndex;
+  if (direction === "next") {
+    targetIndex = (currentWindowIndex + 1) % len;
+  } else {
+    targetIndex = (currentWindowIndex - 1 + len) % len;
+  }
+  return windowArray[targetIndex].id;
+}
+
+intentRunner.registerIntent({
+  name: "window.switch",
+  async run(context) {
+    // get current activeTab.windowId
+    const activeTab = await context.activeTab();
+    const currentWindowId = activeTab.windowId;
+    // get direction parameter
+    const direction = context.parameters.direction;
+    // getAll normal window
+    const gettingAll = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+    // find target windowId
+    const targetWindowId = findTargetWindowId(
+      gettingAll,
+      currentWindowId,
+      direction
+    );
+    // set target window focuse true
+    await browser.windows.update(targetWindowId, { focused: true });
+  },
+});
