@@ -79,8 +79,17 @@ intentRunner.registerIntent({
     const activeTab = await context.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const bookmarks = await browser.bookmarks.search({ url: metadata.url });
-    for (const bookmark of bookmarks) {
-      await browser.bookmarks.remove(bookmark.id);
+
+    const selected = bookmarks.filter(
+      bookmark => activeTab.url === bookmark.url
+    );
+
+    if (!selected.length) {
+      const e = new Error("This page wasn't bookmarked");
+      e.displayMessage = "This page wasn't bookmarked";
+      throw e;
     }
+
+    await browser.bookmarks.remove(selected[0].id);
   },
 });
