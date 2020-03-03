@@ -17,13 +17,18 @@ class FullPhrase(
             var result = it
             while (!result.utteranceExhausted() && result.utteranceWord().isStopWord()) {
                 result = result.clone(
-                    parameters = parameters,
-                    intentName = intentName,
                     addIndex = 1,
                     addSkipped = 1
                 )
             }
-            if (result.utteranceExhausted()) result else null
+            if (result.utteranceExhausted()) {
+                result.clone(
+                    parameters = parameters,
+                    intentName = intentName
+                )
+            } else {
+                null
+            }
         }
     }
 

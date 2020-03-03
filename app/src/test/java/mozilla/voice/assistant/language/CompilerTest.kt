@@ -77,7 +77,10 @@ class CompilerTest {
         listOf(
             Pair("hello world", "MatchResult(\"hello world^^\", capturedWords: 2)"),
             Pair("hi world!!!", "MatchResult(\"hi world!!!^^\", capturedWords: 2)"),
-            Pair("hello, my world", "MatchResult(\"hello, my world^^\", skippedWords: 1, capturedWords: 2)")
+            Pair(
+                "hello, my world",
+                "MatchResult(\"hello, my world^^\", skippedWords: 1, capturedWords: 2)"
+            )
         ).forEach {
             verifyExpectedMatch(phrase, it.first, it.second)
         }
@@ -90,8 +93,14 @@ class CompilerTest {
         val phrase = "(launch | open) (new |) (tab | page)"
         listOf(
             Pair("launch new tab", "MatchResult(\"launch new tab^^\", capturedWords: 3)"),
-            Pair("open new tab for me", "MatchResult(\"open new tab for me^^\", skippedWords: 2, capturedWords: 3)"),
-            Pair("for me open new tab", "MatchResult(\"for me open new tab^^\", skippedWords: 2, capturedWords: 3)")
+            Pair(
+                "open new tab for me",
+                "MatchResult(\"open new tab for me^^\", skippedWords: 2, capturedWords: 3)"
+            ),
+            Pair(
+                "for me open new tab",
+                "MatchResult(\"for me open new tab^^\", skippedWords: 2, capturedWords: 3)"
+            )
         ).forEach {
             verifyExpectedMatch(phrase, it.first, it.second)
         }
@@ -121,6 +130,29 @@ class CompilerTest {
             "scroll upward",
             "scroll up ward",
             "MatchResult(\"scroll up ward^^\", aliasedWords: 2, capturedWords: 3)"
+        )
+    }
+
+    @Test
+    fun testEquations() {
+        verifyExpectedMatch(
+            "calculate [equation]",
+            "calculate 2 + 3",
+            "MatchResult(\"calculate 2 + 3^^\", slots: {equation: \"2 + 3\"}, capturedWords: 1)"
+        )
+    }
+
+    @Test
+    fun testPrioritizingMatches() {
+        val matchSet = PhraseSet(
+            listOf(
+                Compiler.compile("[query]", intentName = "fallback"),
+                Compiler.compile("search (for |) [query]", intentName = "search")
+            )
+        )
+        assertEquals(
+            "MatchResult(\"search for a test^^\", slots: {query: \"a test\"}, intentName: search, capturedWords: 2)",
+            matchSet.match("search for a test").toString()
         )
     }
 }
