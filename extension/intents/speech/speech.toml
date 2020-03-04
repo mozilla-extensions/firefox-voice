@@ -1,8 +1,8 @@
 [speech.readTitle]
 description = "Read page title via speech synthesis"
 match = """
-  read (page | tab |) (title | name)
-  what is the (title | name) (of this page |)
+  read (the |) (page | tab | site | page's | tab's | site's |) (title | name)
+  (what is | what's | read | tell me) the (title | name) (of |) (this |) (page | tab |)
 """
 
 [[speech.readTitle.example]]
