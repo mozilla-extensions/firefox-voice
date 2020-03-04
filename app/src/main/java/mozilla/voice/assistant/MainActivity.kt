@@ -25,6 +25,7 @@ import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.language.Language
 
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
@@ -35,8 +36,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
-        // Register intents
+        // Read TOML files.
+        Language.initialize(this)
         Metadata.initialize(this)
+
+        // Register intents
         Alarm.register()
         /*
         Launch.register()
