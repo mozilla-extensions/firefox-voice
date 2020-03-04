@@ -51,6 +51,18 @@ this.contentScript = (function() {
     });
   }
 
+  function isInViewport(el) {
+    const width = window.innerWidth || document.documentElement.clientWidth;
+    const height = window.innerHeight || document.documentElement.clientHeight;
+    const bounding = el.getBoundingClientRect();
+    return (
+      bounding.top + bounding.height >= 0 &&
+      bounding.left + bounding.width >= 0 &&
+      bounding.right - bounding.width <= width &&
+      bounding.bottom - bounding.height <= height
+    );
+  }
+
   communicate.register("copy", message => {
     const { copyType } = message;
     const result = types[copyType]();
@@ -91,6 +103,19 @@ this.contentScript = (function() {
 
   types.copyFullPageScreenshot = function() {
     const url = screenshotContentScript.fullPageScreenshot();
+    copyImage(url);
+  };
+
+  types.copyImage = function() {
+    const img = document.querySelectorAll("img");
+    const imgHeight = [];
+    img.forEach(function(element) {
+      if (isInViewport(element)) {
+        imgHeight.push(element.clientHeight);
+      }
+    });
+    const index = imgHeight.indexOf(Math.max(...imgHeight));
+    const url = img[index].src;
     copyImage(url);
   };
 
