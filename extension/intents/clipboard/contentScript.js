@@ -106,7 +106,7 @@ this.contentScript = (function() {
     copyImage(url);
   };
 
-  types.copyImageLink = function() {
+  types.copyImage = function() {
     const img = document.querySelectorAll("img");
     const imgHeight = [];
     img.forEach(function(element) {
