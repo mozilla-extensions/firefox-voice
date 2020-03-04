@@ -23,7 +23,7 @@ class SlotTest {
         val results = Slot(Wildcard(empty = false), "query").matchUtterance(makeMatch("one two three"))
         assertEquals(3, results.size)
         assertEquals(1, results.count { it.utteranceExhausted() })
-        val slotValues = results.map { it.slots["query"]?.joinToString(separator = " ") { it.source } }
+        val slotValues = results.map { it.slots["query"]?.joinToString(separator = " ") { it.toSource() } }
         assertTrue(slotValues.contains("one"))
         assertTrue(slotValues.contains("one two"))
         assertTrue(slotValues.contains("one two three"))

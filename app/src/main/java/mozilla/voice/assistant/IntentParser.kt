@@ -13,7 +13,7 @@ class IntentParser {
         private val compiledPhrases = mutableListOf<Pattern>()
         private lateinit var phraseSet: PhraseSet
 
-        // Populated by registerMatcher
+        // Populated by registerMatcher()
         @VisibleForTesting
         private val INTENT_NAMES = mutableListOf<String>() // all caps to match JS code
 
@@ -30,7 +30,7 @@ class IntentParser {
             INTENT_NAMES.add(intentName)
             match.forEach {
                 // TODO: Add entity names
-                compiledPhrases.add(Compiler.compile(it, emptyMap(), intentName))
+                compiledPhrases.add(Compiler.compile(it, intentName = intentName))
             }
         }
 

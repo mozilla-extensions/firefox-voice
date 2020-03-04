@@ -6,31 +6,31 @@ import android.provider.AlarmClock
 import androidx.annotation.VisibleForTesting
 import java.util.Calendar
 import java.util.Locale
-import mozilla.voice.assistant.language.MatchResult
+import mozilla.voice.assistant.IntentRunner
+import mozilla.voice.assistant.ParseResult
+import mozilla.voice.assistant.language.TimePattern
 
 class Alarm {
     companion object {
-        private const val HOUR_KEY = "hour"
-        private const val MIN_KEY = "minute"
-        private const val PERIOD_KEY = "period"
+        @VisibleForTesting
+        internal const val HOUR_KEY = "hour"
+        @VisibleForTesting
+        internal const val MIN_KEY = "minute"
+        @VisibleForTesting
+        internal const val TIME_KEY = "time"
+        @VisibleForTesting
+        internal const val PERIOD_KEY = "period"
         private const val HOURS_PER_PERIOD = 12 // AM/PM
 
         fun register() {
-            /*
             IntentRunner.registerIntent(
-                mozilla.voice.assistant.Intent(
-                    "alarm.setAbsolute",
-                    ::createAlarmIntent
-                )
+                "alarm.setAbsolute",
+                ::createAbsoluteAlarmIntent
             )
             IntentRunner.registerIntent(
-                mozilla.voice.assistant.Intent(
-                    "alarm.setRelative",
-                    ::createRelativeAlarmIntent
-                )
+                "alarm.setRelative",
+                ::createRelativeAlarmIntent
             )
-
-             */
         }
 
         @VisibleForTesting
@@ -45,40 +45,49 @@ class Alarm {
                 mins?.toInt()?.let { add(Calendar.MINUTE, it) }
             }
 
-        private fun createAlarmIntent(
-            mr: MatchResult,
+        @VisibleForTesting
+        internal fun getHoursMins(slots: Map<String, String>, parameters: Map<String, String>): Pair<Int, Int> {
+            // One of the following is true:
+            // - One or both of HOUR_KEY and MIN_KEY are defined. PERIOD_KEY may or may not
+            //   be defined.
+            // - TIME_KEY is defined, and neither HOUR_KEY nor MIN_KEY is defined. PERIOD_KEY
+            //   may or may not be defined.
+            // - PERIOD_KEY is the only key defined.
+            val (h, m) = slots[TIME_KEY]?.let { time ->
+                TimePattern.extractTime(time) ?: throw error("Illegal time value $time")
+            } ?: Pair(slots[HOUR_KEY]?.toInt() ?: 0, slots[MIN_KEY]?.toInt() ?: 0)
+            return when (parameters[PERIOD_KEY].toPeriod()) {
+                Period.MIDNIGHT -> Pair(0, m)
+                Period.AM, Period.NONE -> Pair(h, m)
+                Period.NOON -> Pair(12, 0)
+                Period.PM -> Pair((h % HOURS_PER_PERIOD) + HOURS_PER_PERIOD, m)
+            }
+        }
+
+        private fun createAbsoluteAlarmIntent(
+            pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
-                makeAlarmIntent(
-                    (mr.slotString(HOUR_KEY)?.toInt() ?: 0).let {
-                        when (mr.parameters[PERIOD_KEY].toPeriod()) {
-                            Period.MIDNIGHT -> 0
-                            Period.AM, Period.NONE -> it
-                            Period.NOON -> 12
-                            Period.PM -> (it % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
-                        }
-                    },
-                    mr.slotString(MIN_KEY)?.toInt() ?: 0
-                )
+                makeAlarmIntent(getHoursMins(pr.slots, pr.parameters))
             } catch (_: NumberFormatException) {
                 null
             }
 
-        private fun makeAlarmIntent(hour: Int, min: Int) =
+        private fun makeAlarmIntent(pair: Pair<Int, Int>) =
             Intent(AlarmClock.ACTION_SET_ALARM).apply {
-                putExtra(AlarmClock.EXTRA_HOUR, hour)
-                putExtra(AlarmClock.EXTRA_MINUTES, min)
+                putExtra(AlarmClock.EXTRA_HOUR, pair.first)
+                putExtra(AlarmClock.EXTRA_MINUTES, pair.second)
             }
 
         private fun createRelativeAlarmIntent(
-            mr: MatchResult,
+            pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
                 calculateWhenRelative(
-                    mr.slotString(HOUR_KEY),
-                    mr.slotString(MIN_KEY)
+                    pr.slots[HOUR_KEY],
+                    pr.slots[MIN_KEY]
                 ).toAlarmIntent()
             } catch (_: NumberFormatException) {
                 null
@@ -87,7 +96,7 @@ class Alarm {
 }
 
 fun String?.toPeriod() =
-    when (this?.toLowerCase(Locale.getDefault())) {
+    when (this?.toLowerCase(Locale.getDefault())?.replace(".", "")) {
         "midnight" -> Period.MIDNIGHT
         "am" -> Period.AM
         "noon" -> Period.NOON

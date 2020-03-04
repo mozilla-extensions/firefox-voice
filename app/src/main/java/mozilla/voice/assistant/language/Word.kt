@@ -17,7 +17,7 @@ internal fun String.toWordList() = trim()
 /**
  * A representation of both a word in a user utterance and a word to match in a phrase.
  */
-class Word(val source: String) : Pattern {
+class Word(private val source: String) : Pattern {
     private val word: String = source.normalize()
     private val aliases = Language.getAliases(word)
     private val multiwordAliases: List<List<String>>? = Language.getMultiwordAliases(word)

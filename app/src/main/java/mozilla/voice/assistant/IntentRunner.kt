@@ -6,7 +6,7 @@ class IntentRunner {
     companion object {
         private val intents: MutableMap<String, Intent> = mutableMapOf()
 
-        internal fun registerIntent(intentName: String, createIntent: (ParseResult, Context?) -> android.content.Intent) {
+        internal fun registerIntent(intentName: String, createIntent: (ParseResult, Context?) -> android.content.Intent?) {
             if (intents[intentName] != null) {
                 throw Error("Attempt to reregister intent: $intentName")
             }
@@ -25,7 +25,7 @@ class IntentRunner {
             IntentParser.registerMatcher(intent.name, intent.match)
         }
 
-        internal fun runUtterance(utterance: String, context: Context): android.content.Intent? =
+        internal fun runUtterance(utterance: String, context: Context? = null): android.content.Intent? =
             // TODO: Add nicknames
             IntentParser.parse(utterance)?.let {
                 intents[it.name]?.createIntent?.invoke(it, context)

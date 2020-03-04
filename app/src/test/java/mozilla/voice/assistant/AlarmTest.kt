@@ -1,13 +1,9 @@
 package mozilla.voice.assistant
 
-import android.provider.AlarmClock
 import java.util.Calendar
 import mozilla.voice.assistant.intents.alarm.Alarm
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -17,57 +13,64 @@ class AlarmTest {
     private val calendar330PM = Calendar.getInstance()
 
     @Before
-    fun setCalendar() {
+    fun setup() {
         calendar330PM.set(Calendar.HOUR_OF_DAY, 15)
         calendar330PM.set(Calendar.MINUTE, 30)
     }
 
-    private fun testAbsoluteHelper(time: String, hour: Int, min: Int) {
-        /*
-        val utterance = "set alarm for $time"
-        IntentRunner.processUtterance(utterance)?.let {
-            assertEquals(AlarmClock.ACTION_SET_ALARM, it.action)
-            assertTrue(it.hasExtra(AlarmClock.EXTRA_HOUR))
-            assertEquals(hour, it.getIntExtra(AlarmClock.EXTRA_HOUR, UNUSED_DEFAULT))
-            assertTrue(it.hasExtra(AlarmClock.EXTRA_MINUTES))
-            assertEquals(min, it.getIntExtra(AlarmClock.EXTRA_MINUTES, UNUSED_DEFAULT))
-        } ?: fail("Did not parse as alarm request: $utterance")
-
-         */
+    private fun testGetHoursMins(
+        expectedHours: Int,
+        expectedMinutes: Int,
+        hours: String? = null,
+        minutes: String? = null,
+        time: String? = null,
+        period: String? = null
+    ) {
+        val slots = mutableMapOf<String, String>()
+        hours?.let { slots[Alarm.HOUR_KEY] = hours }
+        minutes?.let { slots[Alarm.MIN_KEY] = minutes }
+        time?.let { slots[Alarm.TIME_KEY] = time }
+        period?.let { slots[Alarm.PERIOD_KEY] = period }
+        val parameters = if (period == null) emptyMap() else mapOf(Alarm.PERIOD_KEY to period)
+        val pair = Alarm.getHoursMins(slots, parameters)
+        assertEquals(expectedHours, pair.first)
+        assertEquals(expectedMinutes, pair.second)
     }
 
     @Test
     fun testMidnight() {
-        testAbsoluteHelper("midnight", 0, 0)
-        testAbsoluteHelper("12 midnight", 0, 0)
+        testGetHoursMins(0, 0, period = "midnight")
+        testGetHoursMins(0, 0, hours = "12", period = "midnight")
     }
 
     @Test
     fun testNoon() {
-        testAbsoluteHelper("noon", 12, 0)
-        testAbsoluteHelper("12 noon", 12, 0)
+        testGetHoursMins(12, 0, period = "noon")
+        testGetHoursMins(12, 0, "12", period = "noon")
     }
 
     @Test
     fun testNoPeriod() {
-        testAbsoluteHelper("6", 6, 0)
-        testAbsoluteHelper("13", 13, 0)
-        testAbsoluteHelper("5:15", 5, 15)
+        testGetHoursMins(6, 0, hours = "6")
+        testGetHoursMins(6, 0, time = "6:00")
+        testGetHoursMins(13, 0, hours = "13")
+        testGetHoursMins(13, 0, time = "13:00")
+        testGetHoursMins(5, 15, hours = "5", minutes = "15")
+        testGetHoursMins(5, 15, time = "5:15")
     }
 
     @Test
     fun testAM() {
-        testAbsoluteHelper("3 a.m.", 3, 0)
-        testAbsoluteHelper("11 a.m.", 11, 0)
-        testAbsoluteHelper("11:30 a.m.", 11, 30)
+        testGetHoursMins(3, 0, time = "3:00", period = "a.m.")
+        testGetHoursMins(11, 0, time = "11:00", period = "a.m.")
+        testGetHoursMins(11, 30, time = "11:30", period = "a.m.")
     }
 
     @Test
     fun testPM() {
-        testAbsoluteHelper("3 p.m.", 15, 0)
-        testAbsoluteHelper("11 p.m.", 23, 0)
-        testAbsoluteHelper("11:30 p.m.", 23, 30)
-        testAbsoluteHelper("13 p.m.", 13, 0)
+        testGetHoursMins(15, 0, time = "3:00", period = "p.m.")
+        testGetHoursMins(23, 0, time = "11:00", period = "p.m.")
+        testGetHoursMins(23, 30, time = "11:30", period = "p.m.")
     }
 
     private fun testRelativeHelper(hour: String?, min: String?, h: Int, m: Int) =
@@ -84,14 +87,7 @@ class AlarmTest {
     }
 
     companion object {
-        const val UNUSED_DEFAULT = -1 // default argument to Intent.getIntExtra()
         const val CURRENT_HOUR = 15
         const val CURRENT_MIN = 30
-
-        @BeforeClass
-        @JvmStatic
-        fun setup() {
-            Alarm.register()
-        }
     }
 }

@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
         Launch.register()
         Maps.register()
         Music.register()
-
          */
+        IntentParser.initialize() // after everything registered
     }
 
     override fun onStart() {

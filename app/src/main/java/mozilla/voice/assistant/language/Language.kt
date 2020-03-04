@@ -64,7 +64,7 @@ class Language {
 
         internal fun initialize(context: Context) {
             var section: String? = null
-            context.assets.openFd("raw/english.toml").use { file ->
+            context.assets.openFd("[aliases]\n# Each item is a possible word we'll see in the transcript, and the \"correct\" version of\n# that word. I.e., if we see \"open app\" maybe the right transcription is \"open tab\"\napp = \"tab\"\ncat = \"tab\"\ntap = \"tab\"\ntech = \"tab\"\ntop = \"tab\"\nin = \"on\"\nnest = \"next\"\nclosest = \"close\"\nwebpage = \"page\"\nwebsite = \"site\"\nintense = \"intents\"\ninterns = \"intents\"\nhaste = \"paste\"\ntaste = \"paste\"\npace = \"paste\"\nbest = \"paste\"\n\"down ward\" = \"downward\"\n\"up ward\" = \"upward\"\nlike = \"link\"\ntext = \"next\"\n# Seems like a bad substitution, but see in the wild...\npooping = \"open\"\npoop = \"open\"\n\n[stopwords]\nwords = ").use { file ->
                 file.createInputStream()
                     .bufferedReader()
                     .readLines()

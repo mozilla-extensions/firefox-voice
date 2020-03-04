@@ -20,10 +20,15 @@ class Compiler {
         private val alternativesRegex = Regex("""^\(([^)]*)\)\s*(.*)$""")
 
         // matches something like: seek{s}
-        private val altWordRegex = Regex("""\{([^}]+)}""")
+        private val altWordRegex = Regex("""\{(.*)\}""")
 
         // matches everything before the next left parenthesis/brace and the remainder
         private val wordsRegex = Regex("""\s*([^(\[ ]+)\s*(.*)""")
+
+        private val standardEntities = mapOf(
+            "number" to NumberPattern(),
+            "time" to TimePattern()
+        )
 
         @VisibleForTesting
         internal fun getParameter(phrase: String): Triple<String, String, String>? =
@@ -34,7 +39,7 @@ class Compiler {
             }
 
         // Entities should be processed by this method before being passed to compile().
-        internal fun convertEntities(entityMapping: Map<String, List<String>>) =
+        internal fun convertEntities(entityMapping: Map<String, List<String>>): Map<String, Pattern> =
             entityMapping.entries.associate { (key, value) ->
                 key to Alternatives(value.map { makeWordMatcher(it) })
             }
@@ -65,7 +70,7 @@ class Compiler {
 
         internal fun compile(
             string: String,
-            entities: Map<String, Pattern>? = null,
+            entities: Map<String, Pattern>? = standardEntities,
             intentName: String? = null
         ): Pattern {
             var toParse = string

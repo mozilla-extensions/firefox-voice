@@ -33,7 +33,7 @@ class MatchResult(
                 } else if (isNotEmpty()) {
                     append(' ')
                 }
-                append(utterance[i].source)
+                append(utterance[i].toSource())
             }
 
             if (index >= utterance.size) {
@@ -53,7 +53,7 @@ class MatchResult(
                         prefix = "$name: \"",
                         postfix = "\"",
                         separator = " "
-                    ) { word -> word.source }
+                    ) { word -> word.toSource() }
                 } ?: throw Error("Slot name $name not associated with any values")
             }
         }
@@ -78,13 +78,13 @@ class MatchResult(
     internal fun slotString(slotName: String) =
         slots[slotName] ?.let {
             it.joinToString(separator = " ") { word ->
-                word.source
+                word.toSource()
             }
         }
 
     internal fun stringSlots(): Map<String, String> = slots.mapValues {
         it.value.joinToString(separator = " ") { w ->
-            w.source
+            w.toSource()
         }
     }
 

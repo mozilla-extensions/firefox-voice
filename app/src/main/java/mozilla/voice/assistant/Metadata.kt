@@ -26,7 +26,7 @@ class Metadata {
                 it.getArray("$intentName.example") ?: it.getArray("$intentName.examples")
                 ?: throw Error("Unable to get examples for $intentName")
             }
-            val tables: List<TomlTable> = examples.toList() as List<TomlTable>
+            val tables: List<TomlTable> = examples.toList() as? List<TomlTable> ?: throw error("Error parsing TOML")
 
             return tables.map { table: TomlTable ->
                 table.getString("phrase") ?: "Unable to get example phrase for $intentName"
@@ -49,7 +49,7 @@ class Metadata {
         }
 
         internal fun initialize(context: Context) {
-            context.assets.list("raw/").forEach {
+            context.assets?.list("")?.forEach {
                 if (it.contains(".toml")) {
                     addResult(it.split('.')[0], Toml.parse(context.assets.open(it)))
                 }
