@@ -36,8 +36,8 @@ phrase = "save screenshot as an example"
 [saving.downloadFullPageScreenshot]
 description = "Saves a PNG screenshot of the entire page"
 match = """
-  (save | download) full (page |) screenshot (of |) (this | the |) | active |) (page | tab | article | site |)
-  (save | download) full (page |) screenshot (of |) (this | the |) | active |) (page | tab | article | site |) as [name]
+  (save | download) full (page |) screenshot (of |) (this | the |) (active |) (page | tab | article | site |)
+  (save | download) full (page |) screenshot (of |) (this | the |) (active |) (page | tab | article | site |) as [name]
   (save | download) (the |) (tab's |) full (page |) (screenshot |)
   (save | download) (the |) (tab's |) full (page |) (screenshot |) as [name]
 """
