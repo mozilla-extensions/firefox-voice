@@ -25,6 +25,14 @@
         "description": "Undo close window",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "quitApplication",
+        "type": "function",
+        "description": "Close Firefox",
+        "parameters": [],
+        "async": true
       }
     ]
   }

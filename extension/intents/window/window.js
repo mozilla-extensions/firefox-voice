@@ -37,3 +37,10 @@ intentRunner.registerIntent({
     await browser.windows.update(targetWindowId, { focused: true });
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.quitApplication",
+  async run(context) {
+    await browser.experiments.voice.quitApplication();
+  },
+});

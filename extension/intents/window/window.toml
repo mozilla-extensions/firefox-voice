@@ -4,3 +4,9 @@ match = """
   (switch | activate | focus) (the | to |) next window [direction=next]
   (switch | activate | focus) (the | to |) (previous | last) window [direction=back]
 """
+
+[window.quitApplication]
+description = "Close Firefox"
+match = """
+  (close | quit | exit | shutdown) firefox
+"""

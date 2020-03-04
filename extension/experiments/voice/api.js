@@ -46,6 +46,10 @@ this.voice = class extends ExtensionAPI {
           async undoCloseWindow() {
             return runCommand("History:UndoCloseWindow");
           },
+
+          async quitApplication() {
+            return runCommand("cmd_quitApplication");
+          },
         },
       },
     };
