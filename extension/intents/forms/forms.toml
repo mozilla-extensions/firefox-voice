@@ -21,6 +21,7 @@ description = "Focus the next field"
 match = """
   focus next (field | input | text | textarea | element |)
   next (field | input | textarea | element)
+  (start typing | type)
 """
 
 [[forms.focusNext.example]]
