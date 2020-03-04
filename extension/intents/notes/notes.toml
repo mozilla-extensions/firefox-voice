@@ -17,13 +17,13 @@ match = """
 phrase = "Make note of this page"
 
 [notes.paste]
-description = "Focus the tab where you want to paste"
+description = "Pastes the clipboard into your note"
 match = """
   paste (on | in | into |) note{s} (for me |)
 """
 
 [[notes.paste.example]]
-phrase = "Paste everything present on the clipboard to notes"
+phrase = "Paste into notes"
 
 [notes.setPlace]
 description = "Indicate where note should be written, both the tab and the element on the tab where text will go"
