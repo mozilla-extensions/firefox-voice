@@ -25,9 +25,6 @@ import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.alarm.Alarm
-import mozilla.voice.assistant.intents.launch.Launch
-import mozilla.voice.assistant.intents.maps.Maps
-import mozilla.voice.assistant.intents.music.Music
 
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
@@ -39,10 +36,14 @@ class MainActivity : AppCompatActivity() {
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         // Register intents
+        Metadata.initialize(this)
         Alarm.register()
+        /*
         Launch.register()
         Maps.register()
         Music.register()
+
+         */
     }
 
     override fun onStart() {
@@ -247,7 +248,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getIntent(utterance: String): Intent =
-        IntentRunner.processUtterance(utterance, this)?.let { intent ->
+        IntentRunner.runUtterance(utterance, this)?.let { intent ->
             intent.resolveActivityInfo(packageManager, intent.flags)?.let { activityInfo ->
                 if (activityInfo.exported) intent else null
             }

@@ -6,8 +6,7 @@ import android.provider.AlarmClock
 import androidx.annotation.VisibleForTesting
 import java.util.Calendar
 import java.util.Locale
-import mozilla.voice.assistant.IntentRunner
-import mozilla.voice.assistant.MatcherResult
+import mozilla.voice.assistant.language.MatchResult
 
 class Alarm {
     companion object {
@@ -17,38 +16,21 @@ class Alarm {
         private const val HOURS_PER_PERIOD = 12 // AM/PM
 
         fun register() {
+            /*
             IntentRunner.registerIntent(
                 mozilla.voice.assistant.Intent(
-                    "Alarm - set absolute",
-                    "Set an alarm for the specified time",
-                    listOf("Set alarm for 11:50 am", "Set alarm for 1", "Set alarm for midnight"),
-                    listOf(
-                        // Periods at ends of words get removed, so use "a.m" instead of "a.m.".
-                        "set (the| ) alarm for [$HOUR_KEY:number]",
-                        "set (the| ) alarm for [$HOUR_KEY:number] a.m [$PERIOD_KEY=am]",
-                        "set (the| ) alarm for [$HOUR_KEY:number] p.m [$PERIOD_KEY=pm]",
-                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number]",
-                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] a.m [$PERIOD_KEY=am]",
-                        "set (the| ) alarm for [$HOUR_KEY:number]:[$MIN_KEY:number] p.m [$PERIOD_KEY=pm]",
-                        "set (the| ) alarm for (12|) noon [$PERIOD_KEY=noon]",
-                        "set (the| ) alarm for (12|) midnight [$PERIOD_KEY=midnight]"
-                    ),
+                    "alarm.setAbsolute",
                     ::createAlarmIntent
                 )
             )
             IntentRunner.registerIntent(
                 mozilla.voice.assistant.Intent(
-                    "Alarm - set relative",
-                    "Set an alarm for the specified time",
-                    listOf("Set alarm for 1 hour from now", "Set alarm 90 minutes from now"),
-                    listOf(
-                        "set (the| ) alarm (for| ) [$HOUR_KEY:number] (hours|hour) from now",
-                        "set (the| ) alarm (for| ) [$MIN_KEY:number] (minutes|minute) from now",
-                        "set (the| ) alarm (for| ) [$HOUR_KEY:number] (hours|hour) [$MIN_KEY:number] (minutes|minute) from now"
-                    ),
+                    "alarm.setRelative",
                     ::createRelativeAlarmIntent
                 )
             )
+
+             */
         }
 
         @VisibleForTesting
@@ -64,12 +46,12 @@ class Alarm {
             }
 
         private fun createAlarmIntent(
-            mr: MatcherResult,
+            mr: MatchResult,
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
                 makeAlarmIntent(
-                    (mr.slots[HOUR_KEY]?.toInt() ?: 0).let {
+                    (mr.slotString(HOUR_KEY)?.toInt() ?: 0).let {
                         when (mr.parameters[PERIOD_KEY].toPeriod()) {
                             Period.MIDNIGHT -> 0
                             Period.AM, Period.NONE -> it
@@ -77,7 +59,7 @@ class Alarm {
                             Period.PM -> (it % HOURS_PER_PERIOD) + HOURS_PER_PERIOD
                         }
                     },
-                    mr.slots[MIN_KEY]?.toInt() ?: 0
+                    mr.slotString(MIN_KEY)?.toInt() ?: 0
                 )
             } catch (_: NumberFormatException) {
                 null
@@ -90,13 +72,13 @@ class Alarm {
             }
 
         private fun createRelativeAlarmIntent(
-            mr: MatcherResult,
+            mr: MatchResult,
             @Suppress("UNUSED_PARAMETER") context: Context?
         ): android.content.Intent? =
             try {
                 calculateWhenRelative(
-                    mr.slots[HOUR_KEY],
-                    mr.slots[MIN_KEY]
+                    mr.slotString(HOUR_KEY),
+                    mr.slotString(MIN_KEY)
                 ).toAlarmIntent()
             } catch (_: NumberFormatException) {
                 null

@@ -8,7 +8,7 @@ package mozilla.voice.assistant.language
  */
 class PhraseSet(private val matchPhrases: List<Pattern>) {
     internal fun match(utterance: String): MatchResult? {
-        val matchUtterance = MatchResult(string = utterance)
+        val matchUtterance = MatchResult(utterance)
         val allMatches = matchPhrases.flatMap { it.matchUtterance(matchUtterance) }
         return if (allMatches.isEmpty()) {
             null

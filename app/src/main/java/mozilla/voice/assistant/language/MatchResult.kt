@@ -21,7 +21,7 @@ class MatchResult(
     internal val capturedWords: Int = 0,
     internal val skippedWords: Int = 0,
     internal val aliasedWords: Int = 0,
-    private val intentName: String? = null
+    internal val intentName: String? = null
 ) {
     internal constructor(string: String) : this(utterance = string.toWordList())
 
@@ -75,7 +75,14 @@ class MatchResult(
             utterance[index]
         }
 
-    internal fun stringSlots() = slots.mapValues {
+    internal fun slotString(slotName: String) =
+        slots[slotName] ?.let {
+            it.joinToString(separator = " ") { word ->
+                word.source
+            }
+        }
+
+    internal fun stringSlots(): Map<String, String> = slots.mapValues {
         it.value.joinToString(separator = " ") { w ->
             w.source
         }
