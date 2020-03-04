@@ -4,6 +4,22 @@ Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://rese
 
 Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "what is the weather?" or "find the gmail tab". Ultimately the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions. Initially the goal is to provide _any_ useful interactions.
 
+## Launcher Usage
+
+Launcher is located in the top right corner of the browser window having mic icon like shown below.
+
+![launcher location doc](/docs/images/extension.png)
+
+
+Launcher contains 2 input modes :
+
+- **Voice** : You can give voice commands to your browser if the popup is open and listening.
+
+- **Text** : You can paste text or start typing the command when the popup is open. An input box and __Go__ button appears when you start typing.
+
+**How it works** -  [Demo video](https://www.youtube.com/watch?v=3sqKsfj8WRE&feature=emb_title)
+
+
 ## Discussion
 
 If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit any kind of feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in whatever feedback you have about using this tool!
@@ -13,6 +29,11 @@ If you'd like to discuss the tool, development, or contributions, we are in the 
 ## Developing
 
 There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
+
+Note:
+
+1. Download the latest LTS version of NodeJs before running above npm commands.
+2. After downloading Firefox Nightly, change its name to FirefoxNightly (no space), otherwise the project wont be able to spawn the firefox.
 
 The developer installation is:
 
@@ -32,6 +53,19 @@ By default this will use Firefox Nightly, but you can override this with the env
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
 Any changes you make should cause any .jsx files to be recompiled and the extension will be reloaded.
+
+After the project successfully starts, firefox will be automatically opened along with a console window. The console window consoles various kind of information.
+The following errors or warnings should not concern you as these are not related to our project. So these can be ignored.
+
+1. Manifest warnings
+
+You will probably see manifest warnings of the format:
+
+```sh
+<long number>	addons.webextension.doh-rollout@mozilla.org	WARN	Loading extension 'doh-rollout@mozilla.org': Reading manifest: Invalid extension permission: networkStatus
+```
+
+2. Any error that comes from file ending with .jsm
 
 ### Developing in Windows
 

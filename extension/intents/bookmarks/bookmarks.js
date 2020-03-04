@@ -72,3 +72,24 @@ intentRunner.registerIntent({
     }
   },
 });
+
+intentRunner.registerIntent({
+  name: "bookmarks.remove",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const metadata = await pageMetadata.getMetadata(activeTab.id);
+    const bookmarks = await browser.bookmarks.search({ url: metadata.url });
+
+    const selected = bookmarks.filter(
+      bookmark => activeTab.url === bookmark.url
+    );
+
+    if (!selected.length) {
+      const e = new Error("This page wasn't bookmarked");
+      e.displayMessage = "This page wasn't bookmarked";
+      throw e;
+    }
+
+    await browser.bookmarks.remove(selected[0].id);
+  },
+});

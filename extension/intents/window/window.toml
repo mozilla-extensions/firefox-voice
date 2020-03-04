@@ -1,0 +1,6 @@
+[window.switch]
+description = "Switch the current window"
+match = """
+  (switch | activate | focus) (the | to |) next window [direction=next]
+  (switch | activate | focus) (the | to |) (previous | last) window [direction=back]
+"""

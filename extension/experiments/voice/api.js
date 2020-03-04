@@ -12,6 +12,16 @@ XPCOMUtils.defineLazyGetter(this, "browserActionFor", () => {
   return ExtensionParent.apiManager.global.browserActionFor;
 });
 
+function runCommand(commandName) {
+  const windowTracker = ChromeUtils.import(
+    "resource://gre/modules/Extension.jsm",
+    {}
+  ).Management.global.windowTracker;
+  const window = windowTracker.topWindow;
+  const command = window.document.getElementById(commandName);
+  return command.click();
+}
+
 this.voice = class extends ExtensionAPI {
   getAPI(context) {
     const { extension } = context;
@@ -27,6 +37,14 @@ this.voice = class extends ExtensionAPI {
             ).Management.global.windowTracker;
             const window = windowTracker.topWindow;
             browserAction.triggerAction(window);
+          },
+
+          async undoCloseTab() {
+            return runCommand("History:UndoCloseTab");
+          },
+
+          async undoCloseWindow() {
+            return runCommand("History:UndoCloseWindow");
           },
         },
       },
