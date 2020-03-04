@@ -30,6 +30,11 @@ If you'd like to discuss the tool, development, or contributions, we are in the 
 
 There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
 
+Note:
+
+1. Download the latest LTS version of NodeJs before running above npm commands.
+2. After downloading Firefox Nightly, change its name to FirefoxNightly (no space), otherwise the project wont be able to spawn the firefox.
+
 The developer installation is:
 
 ```sh
@@ -48,6 +53,19 @@ By default this will use Firefox Nightly, but you can override this with the env
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
 Any changes you make should cause any .jsx files to be recompiled and the extension will be reloaded.
+
+After the project successfully starts, firefox will be automatically opened along with a console window. The console window consoles various kind of information.
+The following errors or warnings should not concern you as these are not related to our project. So these can be ignored.
+
+1. Manifest warnings
+
+You will probably see manifest warnings of the format:
+
+```sh
+<long number>	addons.webextension.doh-rollout@mozilla.org	WARN	Loading extension 'doh-rollout@mozilla.org': Reading manifest: Invalid extension permission: networkStatus
+```
+
+2. Any error that comes from file ending with .jsm
 
 ### Developing in Windows
 
