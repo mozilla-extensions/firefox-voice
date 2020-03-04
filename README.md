@@ -17,6 +17,9 @@ Launcher contains 2 input modes :
 
 - **Text** : You can paste text or start typing the command when the popup is open. An input box and __Go__ button appears when you start typing.
 
+**How it works** -  [Demo video](https://www.youtube.com/watch?v=3sqKsfj8WRE&feature=emb_title)
+
+
 ## Discussion
 
 If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit any kind of feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in whatever feedback you have about using this tool!
