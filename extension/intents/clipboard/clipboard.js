@@ -72,9 +72,9 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "clipboard.copyImageLink",
+  name: "clipboard.copyImage",
   async run(context) {
-    await copy(context, "copyImageLink");
+    await copy(context, "copyImage");
     context.displayText("Image copied to clipboard");
   },
 });

@@ -100,13 +100,13 @@ match = """
 [[clipboard.copyTitle.example]]
 phrase = "Copy tab title"
 
-[clipboard.copyImageLink]
-description = "Copies the link of the best image in the current tab" 
+[clipboard.copyImage]
+description = "Copies the best image in the current tab" 
 match = """ 
   copy (the | this |) image (to clipboard |)
 """ 
 
-[[clipboard.copyImageLink.example]] 
+[[clipboard.copyImage.example]] 
 phrase = "Copy image"
 
 [clipboard.paste]
