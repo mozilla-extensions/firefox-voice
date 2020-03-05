@@ -1,0 +1,30 @@
+[music.search]
+description = "Do a search on a music service"
+match = """
+  (search | query | look up| look | look up | lookup) [service:musicServiceName] (for | for the |) [query]
+  (search | query ) my [service:musicServiceName] (for |) [query]
+  (search | query ) (on |) [service:musicServiceName] (for |) [query]
+  (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:musicServiceName]
+"""
+
+[[music.search.example]]
+phrase = "Search for David Bowie on Spotify"
+
+[[music.search.example]]
+phrase = "Find the Wiggles on Google Play"
+
+[music.play]
+description = "Play music"
+match = """
+  Play [query] (on|in) [service:musicServiceName]
+  Play [query]
+"""
+
+[[music.play.example]]
+phrase = "Play 'I want to be sedated' on Spotify"
+
+[[music.play.example]]
+phrase = "Play Yellow Submarine"
+
+[[music.play.example]]
+phrase = "Play 'Heroes' by David Bowie on Google Play"

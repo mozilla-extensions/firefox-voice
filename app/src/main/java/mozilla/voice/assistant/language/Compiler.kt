@@ -14,7 +14,7 @@ class Compiler {
         private val typedSlotRegex = Regex("""^\[(\w+)\s*:\s*(\w+)\s*]\s*(.*)$""")
 
         // matches something like: [query]
-        private val untypedSlotRegex = Regex("""^\[(\w+)\w*](.*)$""")
+        private val untypedSlotRegex = Regex("""^\[(\w+)\w*]\s*(.*)$""")
 
         // matches something like: (find | search | look for |)
         private val alternativesRegex = Regex("""^\(([^)]*)\)\s*(.*)$""")
@@ -27,7 +27,10 @@ class Compiler {
 
         private val standardEntities = mapOf(
             "number" to NumberPattern(),
-            "time" to TimePattern()
+            "time" to TimePattern(),
+            "musicServiceName" to Alternatives(listOf("Google Play Music", "YouTube", "Spotify", "Google Play")
+                .map { makeWordMatcher(it) }
+            )
         )
 
         @VisibleForTesting
@@ -73,7 +76,7 @@ class Compiler {
             entities: Map<String, Pattern>? = standardEntities,
             intentName: String? = null
         ): Pattern {
-            var toParse = string
+            var toParse = string.trim()
             val parameters = mutableMapOf<String, String>()
             val seq = mutableListOf<Pattern>()
 
