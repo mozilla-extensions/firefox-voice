@@ -1,12 +1,16 @@
 package mozilla.voice.assistant.language
 
 import androidx.annotation.VisibleForTesting
+import mozilla.voice.assistant.Metadata
+import mozilla.voice.assistant.Metadata.Companion.getAppNames
 
 /**
  * Compiler for converting phrases into [Pattern]s.
  */
 class Compiler {
     companion object {
+        private var initialized = false
+
         // matches something like: [direction=up]
         private val parameterRegex = Regex("""^\[(\w+)\s*=\s*(\w+)\s*](.*)$""")
 
@@ -25,13 +29,20 @@ class Compiler {
         // matches everything before the next left parenthesis/brace and the remainder
         private val wordsRegex = Regex("""\s*([^(\[ ]+)\s*(.*)""")
 
-        private val standardEntities = mapOf(
+        private fun makeStandardEntities(): Map<String, Pattern> = mapOf(
             "number" to NumberPattern(),
             "time" to TimePattern(),
-            "musicServiceName" to Alternatives(listOf("Google Play Music", "YouTube", "Spotify", "Google Play")
-                .map { makeWordMatcher(it) }
-            )
+            "appName" to Alternatives(Metadata.getAppNames().map { Compiler.makeWordMatcher(it) }),
+            "musicServiceName" to Alternatives(listOf(
+                "Google Play Music",
+                "YouTube",
+                "Spotify",
+                "Google Play"
+            ).map { Compiler.makeWordMatcher(it) }),
+            "appName" to Alternatives(getAppNames().map { Compiler.makeWordMatcher(it) })
         )
+
+        private lateinit var standardEntities: Map<String, Pattern>
 
         @VisibleForTesting
         internal fun getParameter(phrase: String): Triple<String, String, String>? =
@@ -71,11 +82,25 @@ class Compiler {
                 )
             } ?: listOf(s)
 
+        internal fun initialize() {
+            require(!initialized)
+            standardEntities = makeStandardEntities()
+            initialized = true
+        }
+
+        @VisibleForTesting // exists for testing
+        internal fun initializeForTest() {
+            require(!initialized)
+            standardEntities = emptyMap()
+            initialized = true
+        }
+
         internal fun compile(
             string: String,
             entities: Map<String, Pattern>? = standardEntities,
             intentName: String? = null
         ): Pattern {
+            require(initialized)
             var toParse = string.trim()
             val parameters = mutableMapOf<String, String>()
             val seq = mutableListOf<Pattern>()

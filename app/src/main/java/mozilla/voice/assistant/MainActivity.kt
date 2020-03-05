@@ -25,8 +25,10 @@ import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.intents.launch.Launch
 import mozilla.voice.assistant.intents.maps.Maps
 import mozilla.voice.assistant.intents.music.Music
+import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
 class MainActivity : AppCompatActivity() {
@@ -40,16 +42,15 @@ class MainActivity : AppCompatActivity() {
 
         // Read TOML files.
         Language.initialize(this)
-        Metadata.initialize(this)
+        Metadata.initialize(this) // this must precede registering intents because it sets entities
+        Compiler.initialize()
 
         // Register intents
         Alarm.register()
+        Launch.register()
         Maps.register()
         Music.register()
 
-        /*
-        Launch.register()
-         */
         IntentParser.initialize() // after everything registered
     }
 
