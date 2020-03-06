@@ -8,5 +8,5 @@ match = """
 [window.downloads]
 description = "Open downloads"
 match = """
-  (show | open) downloads
+  (show | open |) downloads (menu |)
 """
