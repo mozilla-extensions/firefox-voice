@@ -21,7 +21,6 @@ plugins:
   - class-property
   - jsx-a11y
   - react-hooks
-  - prettier
 
 rules:
   eqeqeq: error
