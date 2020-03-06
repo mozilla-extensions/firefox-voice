@@ -14,7 +14,7 @@ extends:
   - eslint:recommended
   - plugin:mozilla/recommended
   - plugin:jsx-a11y/recommended
-  - prettier
+  - plugin:prettier/recommended
 
 plugins:
   - mozilla
@@ -32,7 +32,6 @@ rules:
   no-warning-comments: off
   prefer-const: error
   mozilla/no-import-into-var-and-global: off
-  prettier/prettier: off
   comma-dangle: off
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
