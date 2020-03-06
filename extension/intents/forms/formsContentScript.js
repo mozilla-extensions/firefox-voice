@@ -177,11 +177,8 @@ this.dictationContentScript = (function() {
   });
 
   communicate.register("formSubmit", async message => {
-    onInputKeyPress = event => {
-      if (event.key === "Enter") {
-        document.activeElement.form.submit();
-      }
-    };
+    document.activeElement.form.submit();
+    return true;
   });
 
   communicate.register("focusPrevious", async message => {
