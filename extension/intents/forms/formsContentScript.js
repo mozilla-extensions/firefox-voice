@@ -176,6 +176,14 @@ this.dictationContentScript = (function() {
     return focusDirection(1);
   });
 
+  communicate.register("formSubmit", async message => {
+    onInputKeyPress = event(e) => {
+      if (event.key === "Enter") {
+        e.submitTextInput();
+      }
+    };
+  });
+
   communicate.register("focusPrevious", async message => {
     return focusDirection(-1);
   });
