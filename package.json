@@ -102,6 +102,7 @@
     "lint:html": "htmllint extension/**/*.html",
     "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
+    "lint:prettier": "prettylint 'extension/**/*.{js,jsx,css}'",
     "once": "web-ext run -s extension",
     "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
     "calculate-version": "node bin/calculate-version.js",
