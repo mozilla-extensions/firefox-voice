@@ -13,28 +13,36 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query;
+    const where = context.slots.where;
     const cached = queryDatabase.get(query.toLowerCase());
-    if (cached) {
-      await context.openOrFocusTab(cached.url);
-    } else {
-      const tab = await context.createTabGoogleLucky(query);
-      const url = tab.url;
-      queryDatabase.set(query.toLowerCase(), {
-        url,
-        date: Date.now(),
-      });
-      // Sometimes there's a very quick redirect
-      setTimeout(async () => {
-        const newTab = await browser.tabs.get(tab.id);
-        if (newTab.url !== url) {
+    if (where === "window") {
+       if (cached) {
+        await browser.windows.create({url: cached.url});
+      } else {
+        await browser.windows.create({});
+        await context.createTabGoogleLucky(query);
+      }
+    } else if (cached) {
+        await context.openOrFocusTab(cached.url);
+      } else {
+          const tab = await context.createTabGoogleLucky(query);
+          const url = tab.url;
           queryDatabase.set(query.toLowerCase(), {
-            url: newTab.url,
+            url,
             date: Date.now(),
           });
+          // Sometimes there's a very quick redirect
+          setTimeout(async () => {
+            const newTab = await browser.tabs.get(tab.id);
+            if (newTab.url !== url) {
+              queryDatabase.set(query.toLowerCase(), {
+                url: newTab.url,
+                date: Date.now(),
+              });
+            }
+          }, 1000);
+          saveQueryDatabase();
         }
-      }, 1000);
-      saveQueryDatabase();
-    }
     context.done();
   },
 });
