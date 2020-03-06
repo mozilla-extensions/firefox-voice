@@ -29,7 +29,7 @@ phrase = "Focus next field"
 [forms.formSubmit]
 description = "Submit the form field"
 match = """
-  focus submit (form |)
+  submit (form |)
 """
 
 [[forms.formSubmit.example]]

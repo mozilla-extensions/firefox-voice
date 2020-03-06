@@ -177,9 +177,9 @@ this.dictationContentScript = (function() {
   });
 
   communicate.register("formSubmit", async message => {
-    onInputKeyPress = event(e) => {
+    onInputKeyPress = event => {
       if (event.key === "Enter") {
-        e.submitTextInput();
+        document.activeElement.form.submit();
       }
     };
   });
