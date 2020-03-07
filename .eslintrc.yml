@@ -35,5 +35,5 @@ rules:
   comma-dangle: off
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
-  prettier/prettier: [error,{},{"fileInfoOptions": {
-    ".gitignore": false}}]
+  prettier/prettier: [error,{},{fileInfoOptions: {
+    .gitignore: false}}]
