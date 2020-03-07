@@ -36,4 +36,4 @@ rules:
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
   prettier/prettier: [error,{},{fileInfoOptions: {
-    .gitignore: false}}]
+    .gitignore: true}}]
