@@ -9,7 +9,7 @@ import * as browserUtil from "../../browserUtil.js";
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
 
-function database(query, tab, url) {
+function saveTabQueryToDatabase(query, tab, url) {
   queryDatabase.set(query.toLowerCase(), {
     url,
     date: Date.now(),
@@ -22,9 +22,10 @@ function database(query, tab, url) {
         url: newTab.url,
         date: Date.now(),
       });
+      saveQueryDatabase();
     }
-    saveQueryDatabase();
   }, 1000);
+  saveQueryDatabase();
 }
 
 intentRunner.registerIntent({
@@ -34,21 +35,21 @@ intentRunner.registerIntent({
     const where = context.slots.where;
     const cached = queryDatabase.get(query.toLowerCase());
     if (where === "window") {
-       if (cached) {
-        await browser.windows.create({url: cached.url});
+      if (cached) {
+        await browser.windows.create({ url: cached.url });
       } else {
         await browser.windows.create({});
         const tab = await context.createTabGoogleLucky(query);
         const url = tab.url;
-        database(query, tab, url);
+        saveTabQueryToDatabase(query, tab, url);
       }
     } else if (cached) {
-        await context.openOrFocusTab(cached.url);
-      } else {
-          const tab = await context.createTabGoogleLucky(query);
-          const url = tab.url;
-          database(query, tab, url);
-        }
+      await context.openOrFocusTab(cached.url);
+    } else {
+      const tab = await context.createTabGoogleLucky(query);
+      const url = tab.url;
+      saveTabQueryToDatabase(query, tab, url);
+    }
     context.done();
   },
 });
