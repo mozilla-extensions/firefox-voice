@@ -177,12 +177,11 @@ this.dictationContentScript = (function() {
   });
 
   communicate.register("formSubmit", async message => {
-    if(document.activeElement.form == NULL) {
+    if (document.activeElement.form === null) {
       const e = new Error("No input field has been focussed");
       e.displayMessage = "Please focus on an input field before trying to submit";
       throw e;
-    }
-    else {
+    } else {
       document.activeElement.form.submit();
     }
     return true;
