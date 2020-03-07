@@ -39,5 +39,4 @@ rules:
    - error
    - {}
    - fileInfoOptions:
-       .gitignore: false
-
+      ignorePath: '.gitignore'
