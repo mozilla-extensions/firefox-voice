@@ -41,6 +41,9 @@ expectSlots = {service = "google images"}
 phrase = "Find website work plan on my Google Drive"
 test = true
 
+[[navigation.bangSearch.example]]
+phrase = "Search ScrollAnywhere on addons"
+
 [navigation.clearQueryDatabase]
 description = "Debugging command to clear the cache of 'open' queries"
 match = """
