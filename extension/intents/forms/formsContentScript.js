@@ -177,7 +177,14 @@ this.dictationContentScript = (function() {
   });
 
   communicate.register("formSubmit", async message => {
-    document.activeElement.form.submit();
+    if(document.activeElement.form == NULL) {
+      const e = new Error("No input field has been focussed");
+      e.displayMessage = "Please focus on an input field before trying to submit";
+      throw e;
+    }
+    else {
+      document.activeElement.form.submit();
+    }
     return true;
   });
 
