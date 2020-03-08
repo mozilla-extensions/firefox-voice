@@ -112,6 +112,10 @@ expectSlots = {language = "Hungarian"}
 phrase = "translate the selected text to Slovak"
 test = true
 
+[[navigation.translateSelection.example]]
+phrase = "translate this selection to French"
+expectSlots = {language = "French"}
+
 [navigation.followLink]
 description = "Follow the named link"
 match = """

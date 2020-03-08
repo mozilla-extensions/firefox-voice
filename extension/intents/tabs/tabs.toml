@@ -228,6 +228,12 @@ expectParameters = {dir = "first"}
 phrase = "Go to the last tab"
 expectParameters = {dir = "last"}
 
+[[tabs.switchDir.example]]
+phrase = "Go to the right tab"
+expectParameters = {dir = "next"}
+
+
+
 [tabs.switchDirPinned]
 description = "Go in some direction of the pinned tabs"
 match = """
