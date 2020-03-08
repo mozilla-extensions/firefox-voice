@@ -201,24 +201,32 @@ async function moveResult(context, step) {
     e.displayMessage = "You haven't made a search";
     throw e;
   }
+
+  // We are on an initial search results page and trying to navigate to a
+  // non-existent previous result
+  if (searchInfo.index === undefined && step < 0) {
+    const e = new Error("No previous search result");
+    e.displayMessage = "No previous search result";
+    throw e;
+  }
+
   if (
     (searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
     (searchInfo.index <= 0 && step < 0)
   ) {
     const tabId = await openSearchTab();
-    await context.makeTabActive(tabId);
+    await browserUtil.loadUrl(tabId, searchInfo.searchUrl);
+
+    // reset the index to an initial search result
+    searchInfo.index = undefined;
+    tabSearchResults.set(tabId, searchInfo);
     return;
   }
 
-  // Initial search results do not have an index property and we want
+  // Initial search results do not have an index property and at this point
+  // we wish to start navigating
   searchInfo.index =
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
-
-  if (!(searchInfo.index >= 0)) {
-    const e = new Error("No previous search result");
-    e.displayMessage = "No previous search result";
-    throw e;
-  }
 
   const item = searchInfo.searchResults[searchInfo.index];
   await browser.runtime.sendMessage({
