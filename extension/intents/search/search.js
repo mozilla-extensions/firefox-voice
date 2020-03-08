@@ -361,7 +361,12 @@ intentRunner.registerIntent({
   async run(context) {
     await performSearch(context.slots.query);
 
-    if (!buildSettings.android) await focusSearchTab();
+    if (!buildSettings.android) {
+      await focusSearchTab();
+
+      const searchInfo = await callScript({ type: "searchResultInfo" });
+      tabSearchResults.set(_searchTabId, searchInfo);
+    }
   },
 });
 
