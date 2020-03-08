@@ -7,7 +7,6 @@ import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { metadata } from "../../services/metadata.js";
 
-
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
 
@@ -78,29 +77,27 @@ intentRunner.registerIntent({
     }
 
     if (service !== null) {
-      myurl = await searching.ddgBangSearchUrl(
-        context.slots.query,
-        service
-      );
+      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
 
       context.addTelemetryServiceName(
         `ddg:${serviceList.ddgBangServiceName(service)}`
       );
     } else {
       myurl = await searching.googleSearchUrl(
-        context.slots.query + " site:" + new URL(tab.url).origin);
+        context.slots.query + " site:" + new URL(tab.url).origin
+      );
     }
 
     if (tab !== undefined && service !== null) {
-      browser.tabs.update(tab.id, {url: myurl});
+      browser.tabs.update(tab.id, { url: myurl });
     } else {
       await context.createTab({ url: myurl });
     }
 
-      browser.runtime.sendMessage({
-        type: "closePopup",
-        sender: "find",
-      });
+    browser.runtime.sendMessage({
+      type: "closePopup",
+      sender: "find",
+    });
   },
 });
 

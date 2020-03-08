@@ -180,6 +180,9 @@ names = ["duck duck go images"]
 iax = "images"
 ia = "images"
 
+["google"]
+bangSearch = "google"
+baseUrl = "https://www.google.com"
 
 ["google images"]
 bangSearch = "gi"
