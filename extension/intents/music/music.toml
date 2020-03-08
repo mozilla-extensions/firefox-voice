@@ -144,11 +144,11 @@ phrase = "play music"
 phrase = "play spotify"
 test = true
 
-[music.find]
- description = "Find the tab that's currently making sound"
+[music.showTitle]
+description = "Show the title of the tab that's currently playing a video/audio"
 match = """
-  (what | what's | which ) ( tab | song | music | title ) ( is ) playing 
+  (what | what's | ) ( tab | song | music | title | ) ( is | ) playing
 """
 
-[[music.find.example]]
-phrase = "What song is playing"
+[[music.showTitle.example]]
+phrase = "What is playing"

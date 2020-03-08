@@ -116,7 +116,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "music.find",
+  name: "music.showTitle",
   async run(context) {
     const tabs = await browser.tabs.query({ audible: true });
     if (!tabs.length) {
