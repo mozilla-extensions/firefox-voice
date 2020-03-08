@@ -91,6 +91,11 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
+
+### Testing
+1. Jest testing has been excluded from CI because CI couldn't handle the module rewrites. 
+2.  You can use `npm test`  which would still run `npm run jest` locally on Node v13.8.0 but it should be excluded in CI. 
+
 ### Debugging
 
 In Firefox Voice there are several separate processes where things run (see also [Anatomy of an extension](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension)):
