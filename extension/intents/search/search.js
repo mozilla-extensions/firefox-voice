@@ -359,13 +359,9 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
-    if (buildSettings.android) {
-      await performSearch(context.slots.query);
-    } else {
-      await browser.search.search({
-        query: context.slots.query,
-      });
-    }
+    await performSearch(context.slots.query);
+
+    if (!buildSettings.android) await focusSearchTab();
   },
 });
 
