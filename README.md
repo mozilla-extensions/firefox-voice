@@ -101,7 +101,7 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 #### Installation
 Before cloning the repo, using the terminal in Git-bash:
 
-1. Run `git config core.autocrlf false` to prevent git from converting line endings
+1. Run `git config --global core.autocrlf false` to prevent git from converting line endings from LF to CRLF
 2. Run `npm config set script-shell "path\\to\\bash.exe"`. Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
 3. Clone the [repository](https://github.com/mozilla/firefox-voice.git) `git clone https://github.com/mozilla/firefox-voice.git`
 4. To create the environment variable `FIREFOX`, run `export FIREFOX=normalized/path/to/firefox.exe`. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then normalized path is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, the environment variable set to the normalized path can be created using the Windows system dialog.
