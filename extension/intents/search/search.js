@@ -195,6 +195,7 @@ function pollForCard(maxTime) {
 async function moveResult(context, step) {
   stopCardPoll();
   const { tabId, searchInfo } = await getSearchInfo();
+
   if (!searchInfo) {
     const e = new Error("No search made");
     e.displayMessage = "You haven't made a search";
@@ -208,12 +209,17 @@ async function moveResult(context, step) {
     await context.makeTabActive(tabId);
     return;
   }
-  if (!(searchInfo.index + step >= 0)) {
+
+  // Initial search results do not have an index property and we want
+  searchInfo.index =
+    searchInfo.index === undefined ? 0 : searchInfo.index + step;
+
+  if (!(searchInfo.index >= 0)) {
     const e = new Error("No previous search result");
     e.displayMessage = "No previous search result";
     throw e;
   }
-  searchInfo.index += step;
+
   const item = searchInfo.searchResults[searchInfo.index];
   await browser.runtime.sendMessage({
     type: "showSearchResults",
