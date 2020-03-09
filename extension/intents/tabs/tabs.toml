@@ -308,3 +308,13 @@ phrase = "Close all selected tabs"
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
 test = true
+
+[tabs.gotoTabNumber]
+description = "go to the Nth tab"
+match = """
+  (Go | switch | change | activate |) (to |) (the |) [tabNumber:numberOrCardinal] tab
+  (Go | switch | change | activate |) (to |) (the |) tab [tabNumber:numberOrCardinal]
+"""
+
+[[tabs.gotoTabNumber.example]]
+phrase = "go to the second tab"
