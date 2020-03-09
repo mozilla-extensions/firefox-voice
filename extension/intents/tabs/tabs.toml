@@ -262,3 +262,27 @@ match = """
 
 [[tabs.moveSelectedToNewWindow.example]]
 phrase = "Move selected tabs to new window"
+
+[tabs.collectAllTabs]
+description = "Collect all tabs by url"
+match = """
+  collect (all | the|) tabs in all (the|) windows [currentWindow=false]
+  collect (all | the|) tabs [currentWindow=true]
+"""
+
+[[tabs.collectAllTabs.example]]
+phrase = "Collect all tabs"
+
+[tabs.collectMentionedTabs]
+description = "Collect tabs similar to active tab or by query"
+match = """
+  collect these tabs [currentWindow=true]
+  collect these tabs in all (the|) windows [currentWindow=false]
+
+  collect (all|) [query] tabs [currentWindow=true]
+  collect (all|) [query] tabs in all (the|) windows [currentWindow=false]
+
+"""
+
+[[tabs.collectMentionedTabs.example]]
+phrase = "Collect these tabs"
