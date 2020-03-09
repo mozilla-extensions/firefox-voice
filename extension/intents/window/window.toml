@@ -23,6 +23,8 @@ phrase = "combine all windows"
 
 [[window.combine.example]]
 phrase = "combine all windows into one"
+test = true
 
 [[window.combine.example]]
 phrase = "combine tabs into one window"
+test = true
