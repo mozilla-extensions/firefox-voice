@@ -544,3 +544,15 @@ intentRunner.registerIntent({
     }
   },
 });
+
+if (!buildSettings.android) {
+  intentRunner.registerIntent({
+    name: "tabs.closeSelectedTabs",
+    async run(context) {
+      const tabs = await browser.tabs.query({ highlighted: true });
+      const tabIds = tabs.map(tab => tab.id);
+
+      await browser.tabs.remove(tabIds);
+    },
+  });
+}
