@@ -132,8 +132,29 @@ class TomlParserTest {
         parser.tables["alarm.setAbsolute"]?.let {
             assertEquals(2, it.size)
             assertEquals("Set an alarm for the specified time", it["description"])
-            assertTrue(it.containsKey("match"))
+            it["match"]?.trim()?.let {
+                assertTrue(
+                    "Unexpected value for it['match']: /$it/",
+                    it.startsWith("set alarm") && it.endsWith("[period=pm]")
+                )
+            } ?: throw Error("Unable to find alarm.setAbsolute.match")
         } ?: throw Error("Unable to find table 'alarm.setAbsolute'")
+        parser.tableLists["alarm.setAbsolute.example"]?.let {
+            assertEquals(3, it.size)
+            assertEquals("Set alarm for 11:50 am", it[0]["phrase"])
+            assertEquals("Set alarm for 1", it[1]["phrase"])
+            assertEquals("Set alarm for midnight", it[2]["phrase"])
+        } ?: throw Error("Unable to find table list 'alarm.setAbsolute.example")
+        parser.tables["alarm.setRelative"]?.let {
+            assertEquals(2, it.size)
+            assertEquals("Set an alarm for the specified time", it["description"])
+            it["match"]?.trim()?.let {
+                assertTrue(
+                    "Unexpected value for it['match']: /$it/",
+                    it.startsWith("set alarm") && it.endsWith("from now")
+                )
+            } ?: throw Error("Unable to find alarm.setRelative.match")
+        }
     }
 
     companion object {
@@ -166,28 +187,28 @@ class TomlParserTest {
                 set alarm (for|to) [hour:number] p.m [period=pm]
             ""${'"'}
 
-        [[alarm.setAbsolute.example]]
-        phrase = "Set alarm for 11:50 am"
+            [[alarm.setAbsolute.example]]
+            phrase = "Set alarm for 11:50 am"
 
-        [[alarm.setAbsolute.example]]
-        phrase = "Set alarm for 1"
+            [[alarm.setAbsolute.example]]
+            phrase = "Set alarm for 1"
 
-        [[alarm.setAbsolute.example]]
-        phrase = "Set alarm for midnight"
+            [[alarm.setAbsolute.example]]
+            phrase = "Set alarm for midnight"
 
-        [alarm.setRelative]
-        description = "Set an alarm for the specified time"
-        match = ""${'"'}
-            set alarm (for|to| ) [hour:number] (hours|hour) from now
-            set alarm (for|to| ) [minute:number] (minutes|minute) from now
-            set alarm (for|to| ) [hour:number] (hours|hour) [minute:number] (minutes|minute) from now
-        ""${'"'}
+            [alarm.setRelative]
+            description = "Set an alarm for the specified time"
+            match = ""${'"'}
+                set alarm (for|to| ) [hour:number] (hours|hour) from now
+                set alarm (for|to| ) [minute:number] (minutes|minute) from now
+                set alarm (for|to| ) [hour:number] (hours|hour) [minute:number] (minutes|minute) from now
+            ""${'"'}
 
-        [[alarm.setRelative.example]]
-        phrase = "Set alarm for 1 hour from now"
+            [[alarm.setRelative.example]]
+            phrase = "Set alarm for 1 hour from now"
 
-        [[alarm.setRelative.example]]
-        phrase = "Set alarm 90 minutes from now"
+            [[alarm.setRelative.example]]
+            phrase = "Set alarm 90 minutes from now"
         """.trimIndent()
     }
 }
