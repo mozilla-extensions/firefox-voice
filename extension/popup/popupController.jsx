@@ -142,6 +142,16 @@ export const PopupController = function() {
         setErrorMessage(message.message);
         break;
       }
+      case "startSavingPage": {
+        setPopupView("startSavingPage");
+        setDisplayText(message.message);
+        break;
+      }
+      case "endSavingPage": {
+        setPopupView("endSavingPage");
+        setDisplayText(message.message);
+        break;
+      }
       case "displayText": {
         setDisplayText(message.message);
         overrideTimeout = TEXT_TIMEOUT;

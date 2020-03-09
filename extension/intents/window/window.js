@@ -51,3 +51,13 @@ intentRunner.registerIntent({
     await browser.experiments.voice.quitApplication();
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.combine",
+  async run(context) {
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({ currentWindow: false });
+    const tabsIds = tabs.map(tabInfo => tabInfo.id);
+    await browser.tabs.move(tabsIds, { windowId: currentWindow.id, index: -1 });
+  },
+});
