@@ -1,6 +1,7 @@
 package mozilla.voice.assistant
 
 import androidx.annotation.VisibleForTesting
+import java.io.InputStream
 import java.lang.IllegalArgumentException
 
 /**
@@ -50,6 +51,9 @@ class TomlParser {
         return toParse
     }
 
+    internal fun parse(inputStream: InputStream) =
+        parse(inputStream.bufferedReader().use(java.io.BufferedReader::readText))
+
     internal fun parse(s: String) {
         var toParse = s.replace(commentRegex, "\n").trim()
         while (toParse.isNotEmpty()) {
@@ -90,16 +94,22 @@ class TomlParser {
         }
         return Pair(fields.dropLast(1).joinToString(separator = "."), fields.last())
     }
+
     internal fun getString(key: String): String? {
         val (tableName, fieldName) = splitDottedString(key)
-        return tables[tableName]?.get(fieldName)
+        return getString(tableName, fieldName)
     }
+
+    internal fun getString(tableName: String, fieldName: String) = tables[tableName]?.get(fieldName)
 
     internal fun getTables(tableName: String): List<TomlTable>? = tableLists[tableName]
 
+    internal fun getStrings(tableName: String, fieldName: String) =
+        getTables(tableName)?.mapNotNull { it[fieldName] }
+
     internal fun getStrings(key: String): List<String>? {
         val (tableName, fieldName) = splitDottedString(key)
-        return getTables(tableName)?.mapNotNull { it[fieldName] }
+        return getStrings(tableName, fieldName)
     }
 }
 

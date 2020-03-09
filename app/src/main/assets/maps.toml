@@ -35,7 +35,7 @@ match = """
   (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing] (in|near) [location]
   (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing]
   (search for|look for|find) [thing] (in|near) [location]
-  (search for|look for|find) nearby [thing]"
+  (search for|look for|find) nearby [thing]
 """
 
 [[maps.recommend.example]]
