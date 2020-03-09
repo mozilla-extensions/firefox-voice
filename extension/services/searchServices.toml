@@ -143,3 +143,6 @@ names = ["images"]
 
 [imdb]
 bangSearch = "imdb"
+
+[add-ons]
+bangSearch = "mozaddon"

@@ -91,7 +91,6 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
-
 ### Running Tests
 1. For running tests, run `npm test`.
    This command does the following:
@@ -108,11 +107,22 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
    * ESLint spots problems and errors, also saving everyone's energy and time. 
    * Stylelint helps to avoid errors and enforce conventions in style sheets. 
 
+### Developing in Windows without WSL
 
+#### Prerequisites
+1. Latest LTS version of NodeJS
+2. Git and Git-bash
+3. Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
 
+#### Installation
+Before cloning the repo, using the terminal in Git-bash:
 
-
-
+1. Run `git config --global core.autocrlf false` to prevent git from converting line endings from LF to CRLF
+2. Run `npm config set script-shell "path\\to\\bash.exe"`. Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
+3. Clone the [repository](https://github.com/mozilla/firefox-voice.git) `git clone https://github.com/mozilla/firefox-voice.git`
+4. To create the environment variable `FIREFOX`, run `export FIREFOX=normalized/path/to/firefox.exe`. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then normalized path is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, the environment variable set to the normalized path can be created using the Windows system dialog.
+5. Now run `npm install`
+6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
 
 ### Debugging
 

@@ -228,6 +228,12 @@ expectParameters = {dir = "first"}
 phrase = "Go to the last tab"
 expectParameters = {dir = "last"}
 
+[[tabs.switchDir.example]]
+phrase = "Go to the right tab"
+expectParameters = {dir = "next"}
+
+
+
 [tabs.switchDirPinned]
 description = "Go in some direction of the pinned tabs"
 match = """
@@ -256,3 +262,16 @@ match = """
 
 [[tabs.moveSelectedToNewWindow.example]]
 phrase = "Move selected tabs to new window"
+
+[tabs.closeSelectedTabs]
+description = "Close selected tabs"
+match = """
+  (close | remove) (all |) (the |) selected tabs
+"""
+
+[[tabs.closeSelectedTabs.example]]
+phrase = "Close all selected tabs"
+
+[[tabs.closeSelectedTabs.example]]
+phrase = "Remove the selected tabs"
+test = true
