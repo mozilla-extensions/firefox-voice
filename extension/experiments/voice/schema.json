@@ -28,6 +28,14 @@
       },
 
       {
+        "name": "openDownloads",
+        "type": "function",
+        "description": "Open downloads",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "quitApplication",
         "type": "function",
         "description": "Close Firefox",
