@@ -262,3 +262,16 @@ match = """
 
 [[tabs.moveSelectedToNewWindow.example]]
 phrase = "Move selected tabs to new window"
+
+[tabs.closeSelectedTabs]
+description = "Close selected tabs"
+match = """
+  (close | remove) (all |) (the |) selected tabs
+"""
+
+[[tabs.closeSelectedTabs.example]]
+phrase = "Close all selected tabs"
+
+[[tabs.closeSelectedTabs.example]]
+phrase = "Remove the selected tabs"
+test = true
