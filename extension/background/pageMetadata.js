@@ -26,12 +26,12 @@ function cleanURL(details) {
 
   function getParams(URL) {
     const splitURL = URL.split("?");
-    if (splitURL.length == 1) {
+    if (splitURL.length === 1) {
       return null;
     }
 
-    let params = {};
-    rawParams = URL.split("?")[1].split("&");
+    const params = {};
+    const rawParams = URL.split("?")[1].split("&");
 
     for (let i = 0; i < rawParams.length; i++) {
       const rawParam = rawParams[i].split("=");
@@ -42,13 +42,13 @@ function cleanURL(details) {
   }
 
   function buildURL(baseURL, params) {
-    if (Object.keys(params).length == 0) {
+    if (Object.keys(params).length === 0) {
       return baseURL;
     }
 
     let newURL = baseURL + "?";
 
-    for (let key in params) {
+    for (const key in params) {
       newURL += key + "=" + params[key] + "&";
     }
     newURL = newURL.slice(0, newURL.length - 1);
@@ -69,18 +69,18 @@ function cleanURL(details) {
   const baseURL = details.split("?")[0];
 
   const params = getParams(details);
-  if (params == null) {
+  if (params === null) {
     return;
   }
 
   const domain = getDomain(details);
-  if (domain == null) {
+  if (domain === null) {
     return;
   }
 
-  let blockedParams = [];
-  for (let gbp of globalBlockedParams) {
-    if (gbp.indexOf("@") == -1) {
+  const blockedParams = [];
+  for (const gbp of globalBlockedParams) {
+    if (!gbp.includes("@")) {
       blockedParams.push(gbp);
       continue;
     }
@@ -88,23 +88,23 @@ function cleanURL(details) {
     const keyValue = gbp.split("@")[0];
     const keyDomain = gbp.split("@")[1];
 
-    if (domain == keyDomain) {
+    if (domain === keyDomain) {
       blockedParams.push(keyValue);
     }
   }
 
-  let reducedParams = {};
-  for (let key in params) {
+  const reducedParams = {};
+  for (const key in params) {
     if (!blockedParams.includes(key)) {
       reducedParams[key] = params[key];
     }
   }
 
-  if (Object.keys(reducedParams).length == Object.keys(params).length) {
+  if (Object.keys(reducedParams).length === Object.keys(params).length) {
     return;
   }
 
-  leanURL = buildURL(baseURL, reducedParams);
+  const leanURL = buildURL(baseURL, reducedParams);
   return { redirectUrl: leanURL };
 }
 
