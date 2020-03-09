@@ -69,6 +69,19 @@ export class IntentContext {
     });
   }
 
+  savingPage(message) {
+    if (message === "startSavingPage") {
+      return browser.runtime.sendMessage({
+        type: "startSavingPage",
+        message,
+      });
+    }
+    return browser.runtime.sendMessage({
+      type: "endSavingPage",
+      message,
+    });
+  }
+
   displayText(message) {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
