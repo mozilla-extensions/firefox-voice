@@ -46,6 +46,13 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "window.quitApplication",
+  async run(context) {
+    await browser.experiments.voice.quitApplication();
+  },
+});
+
+intentRunner.registerIntent({
   name: "window.combine",
   async run(context) {
     const currentWindow = await browser.windows.getCurrent();

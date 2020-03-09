@@ -11,6 +11,12 @@ match = """
   (show | open |) downloads (menu |)
 """
 
+[window.quitApplication]
+description = "Close Firefox"
+match = """
+  (close | quit | exit | shutdown) firefox
+"""
+
 [window.combine]
 description = "Combine all windows"
 match = """
