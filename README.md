@@ -92,9 +92,27 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
 
-### Testing
-1. Jest testing has been excluded from CI because CI couldn't handle the module rewrites. 
-2.  You can use `npm test`  which would still run `npm run jest` locally on Node v13.8.0 but it should be excluded in CI. 
+### Running Tests
+1. For running tests, run `npm test`.
+   This command does the following:
+   * Compiles JavaScript.
+   * Runs all tests.
+   * Checks the code formatting using `prettier`[https://prettier.io/].
+   * Lints the code using `eslint` [https://github.com/eslint/eslint].
+2. `firefox-voice` makes use of `jest` but it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites. 
+3. `npm test` would still run `npm run jest` locally on `node v13.8.0` in the development process.
+4. New `jest` unit tests can still be added because `npm test` still runs `jest` locally. Look at files with `.test.js` extension for examples to guide you.
+5. Many formatting and linting problems can be automatically fixed by running  `npm run lint:fix`.
+ In order to keep the `firefox-voice` codebase healthy and running properly, these tools are used:
+   * Prettier formats and keeps the code the same way, saving energy and time.
+   * ESLint spots problems and errors, also saving everyone's energy and time. 
+   * Stylelint helps to avoid errors and enforce conventions in style sheets. 
+
+
+
+
+
+
 
 ### Debugging
 
