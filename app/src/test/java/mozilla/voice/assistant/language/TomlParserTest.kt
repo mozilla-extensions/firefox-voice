@@ -1,10 +1,12 @@
 package mozilla.voice.assistant.language
 
+import java.lang.IllegalArgumentException
 import mozilla.voice.assistant.TomlParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -115,21 +117,46 @@ class TomlParserTest {
     }
 
     @Test
-    fun parseSimpleTable() {
+    fun testParseSimpleTable() {
         parser.parse(SIMPLE_TABLE_TEST_STRING)
         assertTrue(parser.tables.containsKey("tableName"))
-        parser.tables["tableName"]?.let {
+        parser.getTable("tableName")?.let {
             assertEquals("value1", it["key1"])
             assertEquals("value2", it["key2"])
             assertEquals("value3", it["key3"])
             assertEquals(" value 4", it["key 4"])
-        }
+        } ?: throw Error("Unable to get table 'tableName'")
     }
 
     @Test
-    fun parseComplexTable() {
+    fun testGetStringSimpleTable() {
+        parser.parse(SIMPLE_TABLE_TEST_STRING)
+        assertEquals("value1", parser.getString("tableName.key1"))
+        assertEquals("value2", parser.getString("tableName.key2"))
+        assertEquals("value3", parser.getString("tableName.key3"))
+        assertEquals(" value 4", parser.getString("tableName.key 4"))
+    }
+
+    @Test
+    fun testGetStringBadArgument() {
+        listOf(
+            "onefield",
+            "no dots"
+        ).forEach {
+            try {
+                parser.getString(it)
+                fail("parser.getString('$it') should have thrown an error")
+            } catch (e: IllegalArgumentException) {
+                // expected
+            }
+        }
+        assertNull(parser.getString("foo.bar")) // legal string, not in table
+    }
+
+    @Test
+    fun testParseComplexTable() {
         parser.parse(TABLE_LIST_TEST_STRING)
-        parser.tables["alarm.setAbsolute"]?.let {
+        parser.getTable("alarm.setAbsolute")?.let {
             assertEquals(2, it.size)
             assertEquals("Set an alarm for the specified time", it["description"])
             it["match"]?.trim()?.let {
@@ -139,15 +166,18 @@ class TomlParserTest {
                 )
             } ?: throw Error("Unable to find alarm.setAbsolute.match")
         } ?: throw Error("Unable to find table 'alarm.setAbsolute'")
-        parser.tableLists["alarm.setAbsolute.example"]?.let {
-            assertEquals(3, it.size)
-            assertEquals("Set alarm for 11:50 am", it[0]["phrase"])
-            assertEquals("Set alarm for 1", it[1]["phrase"])
-            assertEquals("Set alarm for midnight", it[2]["phrase"])
+        parser.tableLists["alarm.setAbsolute.example"]?.let { tableList ->
+            assertEquals(3, tableList.size)
+            for (i in tableList.indices) {
+                assertEquals(ABSOLUTE_EXAMPLE_STRINGS[i], tableList[i]["phrase"])
+            }
         } ?: throw Error("Unable to find table list 'alarm.setAbsolute.example")
-        parser.tables["alarm.setRelative"]?.let {
+        parser.getTable("alarm.setRelative")?.let {
             assertEquals(2, it.size)
-            assertEquals("Set an alarm for the specified time", it["description"])
+            assertEquals(
+                "Set an alarm for the specified offset from the current time",
+                it["description"]
+            )
             it["match"]?.trim()?.let {
                 assertTrue(
                     "Unexpected value for it['match']: /$it/",
@@ -157,9 +187,53 @@ class TomlParserTest {
         }
     }
 
+    @Test
+    fun testGetStringFromComplexInput() {
+        parser.parse(TABLE_LIST_TEST_STRING)
+        assertEquals(
+            "Set an alarm for the specified time",
+            parser.getString("alarm.setAbsolute.description")
+        )
+        parser.getString("alarm.setAbsolute.match")?.matches(
+            Regex("set alarm.*\\[period=pm\\]")
+        ) ?: throw Error("Unable to retrieve alarm.setAbsolute.match")
+        assertEquals(
+                "Set an alarm for the specified offset from the current time",
+            parser.getString("alarm.setRelative.description")
+        )
+        parser.getString("alarm.setRelative.match")?.matches(
+            Regex("set alarm.*from now")
+        ) ?: throw Error("Unable to retrieve alarm.setRelative.match")
+    }
+
+    @Test
+    fun testGetStringsFromComplexInput() {
+        parser.parse(TABLE_LIST_TEST_STRING)
+        assertEquals(
+            ABSOLUTE_EXAMPLE_STRINGS,
+            parser.getStrings("alarm.setAbsolute.example.phrase")
+        )
+        assertEquals(
+            RELATIVE_EXAMPLE_STRINGS,
+            parser.getStrings("alarm.setRelative.example.phrase")
+        )
+
+        @Test
+        fun testGetTablesFromComplexInput() {
+            parser.parse(TABLE_LIST_TEST_STRING)
+            parser.getTables("alarm.setAbsolute.example")?.let { tableList ->
+                assertEquals(3, tableList.size)
+                for (i in tableList.indices) {
+                    assertEquals(ABSOLUTE_EXAMPLE_STRINGS[i], tableList[i]["phrase"])
+                }
+            } ?: throw Error("Unable to find table list 'alarm.setAbsolute.example")
+        }
+    }
+
     companion object {
         private const val Q = '"'
-        private const val QQQ = "\"\"\""
+        private const val QQQ = "$Q$Q$Q"
+
         private val simpleKeys = listOf("f", "foo")
         private val quotedKeys = listOf("k", "key", "foo bar").map { "\"$it\"" }
         private val tripleQuotedKeys = listOf(
@@ -177,6 +251,16 @@ class TomlParserTest {
             # I'm a full-line comment.
             key3=value3
             "key 4" = $QQQ value 4$QQQ""".trimIndent()
+
+        private val ABSOLUTE_EXAMPLE_STRINGS = listOf(
+            "Set alarm for 11:50 am",
+            "Set alarm for 1",
+            "Set alarm for midnight"
+        )
+        private val RELATIVE_EXAMPLE_STRINGS = listOf(
+            "Set alarm for 1 hour from now",
+            "Set alarm 90 minutes from now"
+        )
 
         private val TABLE_LIST_TEST_STRING = """
             [alarm.setAbsolute]
@@ -197,7 +281,7 @@ class TomlParserTest {
             phrase = "Set alarm for midnight"
 
             [alarm.setRelative]
-            description = "Set an alarm for the specified time"
+            description = "Set an alarm for the specified offset from the current time"
             match = ""${'"'}
                 set alarm (for|to| ) [hour:number] (hours|hour) from now
                 set alarm (for|to| ) [minute:number] (minutes|minute) from now

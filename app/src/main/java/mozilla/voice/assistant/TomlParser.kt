@@ -1,6 +1,7 @@
 package mozilla.voice.assistant
 
 import androidx.annotation.VisibleForTesting
+import java.lang.IllegalArgumentException
 
 /**
  * A parser for a subset of TOML.
@@ -75,6 +76,30 @@ class TomlParser {
             }
             throw Error("Cannot parse: $toParse")
         }
+    }
+
+    internal fun getTable(tableName: String): Map<String, String>? = tables[tableName]
+
+    private fun splitDottedString(key: String): Pair<String, String> {
+        // In the subset of TOML that we are parsing, tables hold only strings, not tables.
+        // Table names may contain dots, but a dot is also the separator between table name
+        // and the key within the table.
+        val fields = key.split(".")
+        if (fields.size < 2) {
+            throw IllegalArgumentException(key)
+        }
+        return Pair(fields.dropLast(1).joinToString(separator = "."), fields.last())
+    }
+    internal fun getString(key: String): String? {
+        val (tableName, fieldName) = splitDottedString(key)
+        return tables[tableName]?.get(fieldName)
+    }
+
+    internal fun getTables(tableName: String): List<TomlTable>? = tableLists[tableName]
+
+    internal fun getStrings(key: String): List<String>? {
+        val (tableName, fieldName) = splitDottedString(key)
+        return getTables(tableName)?.mapNotNull { it[fieldName] }
     }
 }
 

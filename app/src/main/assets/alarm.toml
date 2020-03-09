@@ -21,7 +21,7 @@ phrase = "Set alarm for 1"
 phrase = "Set alarm for midnight"
 
 [alarm.setRelative]
-description = "Set an alarm for the specified time"
+description = "Set an alarm for the specified offset from the current time"
 match = """
   set alarm (for|to| ) [hour:number] (hours|hour) from now
   set alarm (for|to| ) [minute:number] (minutes|minute) from now
