@@ -389,7 +389,8 @@ export const PopupController = function() {
         return;
       }
       setHasHadSuccessfulUtterance();
-      const capText = json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
+      const capText =
+        json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
       setTranscript(capText);
       browser.runtime.sendMessage({
         type: "addTelemetry",
