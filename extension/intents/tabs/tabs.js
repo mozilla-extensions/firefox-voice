@@ -439,9 +439,10 @@ async function getMatchingTabs(options) {
 
   if (options.query !== undefined) {
     matchingTabs = matchingTabs.filter(tab => {
+      const query = options.query.toLowerCase();
       return (
-        new URL(tab.url).origin.includes(options.query) ||
-        tab.title.toLowerCase().includes(options.query)
+        new URL(tab.url).origin.includes(query) ||
+        tab.title.toLowerCase().includes(query)
       );
     });
   }
