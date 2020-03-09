@@ -373,10 +373,6 @@ intentRunner.registerIntent({
 });
 
 async function collectTabsAround(center, tabs) {
-  if (tabs === undefined) {
-    return;
-  }
-
   const tabsLeft = tabs.filter(tab => {
     return tab.index < center.index;
   });
@@ -397,10 +393,6 @@ async function collectTabsAround(center, tabs) {
 }
 
 async function collectRightTabs(tabs) {
-  if (tabs === undefined || tabs.length === 0) {
-    return;
-  }
-
   const leftestTab = tabs[0];
   const tabsRight = tabs.slice(1);
 
@@ -412,10 +404,6 @@ async function collectRightTabs(tabs) {
 }
 
 function groupTabs(tabs, keyGetter) {
-  if (tabs === undefined) {
-    return {};
-  }
-
   const groupedTabs = {};
 
   for (let i = 0; i < tabs.length; i++) {
@@ -437,7 +425,7 @@ async function getMatchingTabs(options) {
     windowType: "normal",
   };
 
-  if (options.currentWindow === "true") {
+  if (options.allWindows === false) {
     tabQuery.currentWindow = true;
   }
 
@@ -451,7 +439,10 @@ async function getMatchingTabs(options) {
 
   if (options.query !== undefined) {
     matchingTabs = matchingTabs.filter(tab => {
-      return new URL(tab.url).origin.includes(options.query);
+      return (
+        new URL(tab.url).origin.includes(options.query) ||
+        tab.title.toLowerCase().includes(options.query)
+      );
     });
   }
 
@@ -477,7 +468,7 @@ intentRunner.registerIntent({
       query: context.slots.query,
       activeTab,
       sort_by_index: true,
-      currentWindow: context.parameters.currentWindow,
+      allWindows: context.parameters.allWindows === "true",
     });
 
     if (matchingTabs.length === 0) {
@@ -491,6 +482,9 @@ intentRunner.registerIntent({
 
     for (let i = 0; i < allWindows.length; i++) {
       const tabsThisWindow = tabsByWindow[allWindows[i].id];
+      if (tabsThisWindow === undefined) {
+        continue;
+      }
 
       if (useActiveTab === true && allWindows[i].id === currentWindow.id) {
         await collectTabsAround(activeTab, tabsThisWindow);
@@ -526,14 +520,16 @@ intentRunner.registerIntent({
 
     const matchingTabs = await getMatchingTabs({
       sort_by_index: true,
-      currentWindow: context.parameters.currentWindow,
+      allWindows: context.parameters.allWindows === "true",
     });
 
     const tabsByWindow = groupTabs(matchingTabs, tab => tab.windowId);
 
     for (let i = 0; i < allWindows.length; i++) {
       const tabsThisWindow = tabsByWindow[allWindows[i].id];
-
+      if (tabsThisWindow === undefined) {
+        continue;
+      }
       const tabsByOrigin = groupTabs(
         tabsThisWindow,
         tab => new URL(tab.url).origin
