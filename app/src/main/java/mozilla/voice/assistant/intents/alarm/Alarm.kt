@@ -6,8 +6,8 @@ import android.provider.AlarmClock
 import androidx.annotation.VisibleForTesting
 import java.util.Calendar
 import java.util.Locale
-import mozilla.voice.assistant.IntentRunner
-import mozilla.voice.assistant.ParseResult
+import mozilla.voice.assistant.intents.Metadata
+import mozilla.voice.assistant.intents.ParseResult
 import mozilla.voice.assistant.language.TimePattern
 
 class Alarm {
@@ -22,16 +22,16 @@ class Alarm {
         internal const val PERIOD_KEY = "period"
         private const val HOURS_PER_PERIOD = 12 // AM/PM
 
-        fun register() {
-            IntentRunner.registerIntent(
+        internal fun getIntents() = listOf(
+            Pair(
                 "alarm.setAbsolute",
                 ::createAbsoluteAlarmIntent
-            )
-            IntentRunner.registerIntent(
+            ),
+            Pair(
                 "alarm.setRelative",
                 ::createRelativeAlarmIntent
             )
-        }
+        )
 
         @VisibleForTesting
         fun calculateWhenRelative(
@@ -66,7 +66,8 @@ class Alarm {
 
         private fun createAbsoluteAlarmIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent? =
             try {
                 makeAlarmIntent(getHoursMins(pr.slots, pr.parameters))
@@ -82,7 +83,8 @@ class Alarm {
 
         private fun createRelativeAlarmIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent? =
             try {
                 calculateWhenRelative(

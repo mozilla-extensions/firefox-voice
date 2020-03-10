@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -11,9 +12,15 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class TimePatternTest {
     private val timePattern = TimePattern()
+    private lateinit var language: Language
+
+    @Before
+    fun setup() {
+        language = LanguageTest.getLanguage()
+    }
 
     private fun expectMatch(s: String, expectedHours: Int = 0, expectedMinutes: Int = 0) {
-        val results = timePattern.matchUtterance(MatchResult(s))
+        val results = timePattern.matchUtterance(MatchResult(s, language))
         assertFalse("Expected time $s to be matched by TimePattern", results.isEmpty())
         assertEquals("Expected a single MatchResult for $s", 1, results.size)
         val time = TimePattern.extractTime(s)
@@ -23,7 +30,7 @@ class TimePatternTest {
     }
 
     private fun expectNoMatch(s: String) {
-        assertTrue(timePattern.matchUtterance(MatchResult(s)).isEmpty())
+        assertTrue(timePattern.matchUtterance(MatchResult(s, language)).isEmpty())
     }
 
     @Test

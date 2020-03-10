@@ -2,16 +2,17 @@ package mozilla.voice.assistant.language
 
 import org.junit.Assert
 
-internal fun String.toWordList() =
+internal fun String.toWordList(language: Language) =
     trim().let {
         if (it.isEmpty()) {
             emptyList()
         } else {
-            it.split(' ').map { word -> Word(word) }
+            it.split(' ').map { word -> Word(word, language) }
         }
     }
 
-internal fun makeMatch(s: String) = MatchResult(utterance = s.toWordList())
+internal fun makeMatch(s: String, language: Language) =
+    MatchResult(utterance = s.toWordList(language))
 
 internal fun List<MatchResult>.getOnly(pred: (MatchResult) -> Boolean): MatchResult {
     val matches = this.filter(pred)

@@ -1,4 +1,4 @@
-package mozilla.voice.assistant
+package mozilla.voice.assistant.intents
 
 import java.util.Calendar
 import mozilla.voice.assistant.intents.alarm.Alarm
@@ -81,8 +81,11 @@ class AlarmTest {
 
     @Test
     fun testCalculateWhenRelative() {
-        testRelativeHelper("1", null, CURRENT_HOUR + 1, CURRENT_MIN)
-        testRelativeHelper(null, "20", CURRENT_HOUR, CURRENT_MIN + 20)
+        testRelativeHelper("1", null, CURRENT_HOUR + 1,
+            CURRENT_MIN
+        )
+        testRelativeHelper(null, "20",
+            CURRENT_HOUR, CURRENT_MIN + 20)
         testRelativeHelper("2", "10", CURRENT_HOUR + 2, CURRENT_MIN + 10)
     }
 

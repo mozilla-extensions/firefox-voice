@@ -15,7 +15,7 @@ class FullPhrase(
         require(match.index == 0)
         return words.matchUtterance(match).mapNotNull {
             var result = it
-            while (!result.utteranceExhausted() && result.utteranceWord().isStopWord()) {
+            while (!result.utteranceExhausted() && result.utteranceWord().isStopWord) {
                 result = result.clone(
                     addIndex = 1,
                     addSkipped = 1

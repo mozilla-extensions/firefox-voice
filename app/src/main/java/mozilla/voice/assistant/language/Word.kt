@@ -8,19 +8,20 @@ private val nonAlphaNumRegex = Regex("[^a-z0-9]")
 internal fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace(nonAlphaNumRegex, "")
 
-internal fun String.toWordList() = trim()
+internal fun String.toWordList(language: Language) = trim()
     .split(Regex("\\s+"))
     .map { it.trim() }
     .filterNot { it.isEmpty() }
-    .map { Word(it) }
+    .map { Word(it, language) }
 
 /**
  * A representation of both a word in a user utterance and a word to match in a phrase.
  */
-class Word(private val source: String) : Pattern {
+class Word(private val source: String, private val language: Language) : Pattern {
     private val word: String = source.normalize()
-    private val aliases = Language.getAliases(word)
-    private val multiwordAliases: List<List<String>>? = Language.getMultiwordAliases(word)
+    private val aliases = language.getAliases(word)
+    private val multiwordAliases: List<List<String>>? = language.getMultiwordAliases(word)
+    internal val isStopWord = language.isStopword(word)
 
     private fun getMultiwordResults(match: MatchResult): List<MatchResult> {
         val results = mutableListOf<MatchResult>()
@@ -50,7 +51,7 @@ class Word(private val source: String) : Pattern {
 
         val results = mutableListOf<MatchResult>()
         val otherWord = match.utteranceWord()
-        if (otherWord.isStopWord()) {
+        if (otherWord.isStopWord) {
             results.addAll(matchUtterance(match.clone(addIndex = 1, addSkipped = 1)).toMutableList())
         }
 
@@ -69,8 +70,6 @@ class Word(private val source: String) : Pattern {
 
         return results
     }
-
-    internal fun isStopWord() = Language.isStopword(word)
 
     override fun toString() =
         if (source == word) {

@@ -1,4 +1,4 @@
-package mozilla.voice.assistant
+package mozilla.voice.assistant.intents
 
 import androidx.annotation.VisibleForTesting
 import java.io.InputStream

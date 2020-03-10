@@ -6,9 +6,9 @@ package mozilla.voice.assistant.language
  * skipped stopwords. For equal number of both, the match that uses the fewest alias
  * substitutions.
  */
-class PhraseSet(private val matchPhrases: List<Pattern>) {
+class PhraseSet(private val matchPhrases: List<Pattern>, private val language: Language) {
     internal fun match(utterance: String): MatchResult? {
-        val matchUtterance = MatchResult(utterance)
+        val matchUtterance = MatchResult(utterance.toWordList(language))
         val allMatches = matchPhrases.flatMap { it.matchUtterance(matchUtterance) }
         return if (allMatches.isEmpty()) {
             null

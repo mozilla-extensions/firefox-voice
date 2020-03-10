@@ -24,34 +24,25 @@ import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
 import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
-import mozilla.voice.assistant.intents.alarm.Alarm
-import mozilla.voice.assistant.intents.launch.Launch
-import mozilla.voice.assistant.intents.maps.Maps
-import mozilla.voice.assistant.intents.music.Music
+import mozilla.voice.assistant.intents.IntentRunner
+import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
     private lateinit var suggestions: List<String>
+    private lateinit var intentRunner: IntentRunner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
-        // Read TOML files.
-        Language.initialize(this)
-        Metadata.initialize(this) // this must precede registering intents because it sets entities
-        Compiler.initialize()
-
-        // Register intents
-        Alarm.register()
-        Launch.register()
-        Maps.register()
-        Music.register()
-
-        IntentParser.initialize() // after everything registered
+        val language = Language(this)
+        val metadata = Metadata(this)
+        val compiler = Compiler(metadata, language)
+        intentRunner = IntentRunner(compiler)
     }
 
     override fun onStart() {
@@ -256,7 +247,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getIntent(utterance: String): Intent =
-        IntentRunner.runUtterance(utterance, this)?.let { intent ->
+        intentRunner.runUtterance(utterance, this)?.let { intent ->
             intent.resolveActivityInfo(packageManager, intent.flags)?.let { activityInfo ->
                 if (activityInfo.exported) intent else null
             }

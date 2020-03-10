@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
-import mozilla.voice.assistant.IntentRunner
-import mozilla.voice.assistant.ParseResult
+import mozilla.voice.assistant.intents.Metadata
+import mozilla.voice.assistant.intents.ParseResult
 
 class Maps {
     companion object {
@@ -24,21 +24,22 @@ class Maps {
         @VisibleForTesting
         internal const val WALK_MODE = "walk"
 
-        fun register() {
-            IntentRunner.registerIntent(
+        internal fun getIntents() = listOf(
+            Pair(
                 "maps.navigate",
                 ::createNavigateIntent
-            )
+            ),
 
-            IntentRunner.registerIntent(
+            Pair(
                 "maps.recommend",
                 ::createSearchIntent
             )
-        }
+        )
 
         private fun createNavigateIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent? =
             pr.slots[LOCATION_KEY]?.let {
                 Intent(
@@ -49,7 +50,8 @@ class Maps {
 
         private fun createSearchIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent? =
             pr.slots[THING_KEY]?.let { thing ->
                 val suffix = pr.slots[LOCATION_KEY]?.let { " in $it" } ?: ""

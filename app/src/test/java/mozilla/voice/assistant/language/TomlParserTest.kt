@@ -1,7 +1,7 @@
 package mozilla.voice.assistant.language
 
 import java.lang.IllegalArgumentException
-import mozilla.voice.assistant.TomlParser
+import mozilla.voice.assistant.intents.TomlParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull

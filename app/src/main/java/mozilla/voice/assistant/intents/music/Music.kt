@@ -3,8 +3,8 @@ package mozilla.voice.assistant.intents.music
 import android.app.SearchManager
 import android.content.Context
 import android.provider.MediaStore
-import mozilla.voice.assistant.IntentRunner
-import mozilla.voice.assistant.ParseResult
+import mozilla.voice.assistant.intents.Metadata
+import mozilla.voice.assistant.intents.ParseResult
 
 fun String.firstWord() = substringBefore(' ')
 
@@ -28,22 +28,22 @@ class Music {
             )
         )
 
-        fun register() {
-            IntentRunner.registerIntent(
+        internal fun getIntents() = listOf(
+            Pair(
                 "music.search",
                 ::createSearchIntent
-            )
-
-            IntentRunner.registerIntent(
+            ),
+            Pair(
                 "music.play",
                 ::createPlayIntent
             )
-        }
+        )
 
         // Both query and service are defined.
         private fun createSearchIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent {
             val query = pr.slots[QUERY_KEY]
             val service = pr.slots[SERVICE_KEY]?.firstWord()
@@ -67,7 +67,8 @@ class Music {
 
         private fun createPlayIntent(
             pr: ParseResult,
-            @Suppress("UNUSED_PARAMETER") context: Context?
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metdata: Metadata
         ): android.content.Intent {
             val intent = pr.slots[SERVICE_KEY]?.let {
                 // Use only the first word of service name ("Google Play" -> "Google")

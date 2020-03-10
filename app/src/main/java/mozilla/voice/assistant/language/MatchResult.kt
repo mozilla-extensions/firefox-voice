@@ -23,7 +23,7 @@ class MatchResult(
     internal val aliasedWords: Int = 0,
     internal val intentName: String? = null
 ) {
-    internal constructor(string: String) : this(utterance = string.toWordList())
+    internal constructor(string: String, language: Language) : this(utterance = string.toWordList(language))
 
     override fun toString(): String {
         val s = buildString {

@@ -1,19 +1,21 @@
 package mozilla.voice.assistant.language
 
+import mozilla.voice.assistant.intents.MetadataTest
 import org.junit.Assert.assertEquals
-import org.junit.BeforeClass
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class CompilerTest {
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun init() {
-            Compiler.initializeForTest()
-        }
+    private lateinit var compiler: Compiler
+    private lateinit var language: Language
+
+    @Before
+    fun setup() {
+        language = LanguageTest.getLanguage()
+        compiler = Compiler(MetadataTest.getMetadata(), language)
     }
 
     @Test
@@ -21,7 +23,7 @@ class CompilerTest {
         // The below test was in the JS code.
         assertEquals(
             "FullPhrase(\"(bring me | take me | go | navigate | show me | open) (to | find | ) (page | ) [query:+]\")",
-            Compiler.compile("(bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]").toString()
+            compiler.compile("(bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]").toString()
         )
     }
 
@@ -29,9 +31,9 @@ class CompilerTest {
     fun testCompilePhraseWithEntities() {
         assertEquals(
             "FullPhrase(\"translate (this | ) (page | tab | article | site | ) to [language:(Spanish | English)] (for me | )\")",
-            Compiler.compile(
+            compiler.compile(
                 "translate (this |) (page | tab | article | site |) to [language:lang] (for me |)",
-                entities = Compiler.convertEntities(mapOf("lang" to listOf("Spanish", "English")))
+                entities = compiler.convertEntities(mapOf("lang" to listOf("Spanish", "English")))
             ).toString()
         )
     }
@@ -40,12 +42,12 @@ class CompilerTest {
     fun testCompileOptionalBits() {
         assertEquals(
             "FullPhrase(\"next (result | results)\")",
-            Compiler.compile("next result{s}").toString()
+            compiler.compile("next result{s}").toString()
         )
     }
 
     private fun match(utterance: String, phrase: String) =
-        Compiler.compile(phrase).matchUtterance(MatchResult(string = utterance))
+        compiler.compile(phrase).matchUtterance(MatchResult(utterance, language))
 
     @Test
     fun testBasicMatches1() {
@@ -73,15 +75,14 @@ class CompilerTest {
     }
 
     private fun verifyExpectedMatch(phrase: String, utterance: String, expectedString: String) {
-        val results = Compiler.compile(phrase).matchUtterance(MatchResult(string = utterance))
+        val results = compiler.compile(phrase).matchUtterance(MatchResult(utterance, language))
         assertEquals("Expected 1 match for: $utterance", 1, results.size)
         assertEquals(expectedString, results[0].toString())
     }
 
     @Test
     fun testAlternativeMatches() {
-        Language.clear()
-        Language.addStopwords("my")
+        language.addStopwords("my")
         val phrase = "(hi | hello) world"
         listOf(
             Pair("hello world", "MatchResult(\"hello world^^\", capturedWords: 2)"),
@@ -97,8 +98,7 @@ class CompilerTest {
 
     @Test
     fun testStopwords() {
-        Language.clear()
-        Language.addStopwords("me for please")
+        language.addStopwords("me for please")
         val phrase = "(launch | open) (new |) (tab | page)"
         listOf(
             Pair("launch new tab", "MatchResult(\"launch new tab^^\", capturedWords: 3)"),
@@ -117,8 +117,7 @@ class CompilerTest {
 
     @Test
     fun testAliases() {
-        Language.clear()
-        Language.addAlias("app = tab")
+        language.addAlias("app = tab")
         verifyExpectedMatch(
             "(launch | open) (new |) (tab | page)",
             "open new app",
@@ -128,8 +127,7 @@ class CompilerTest {
 
     @Test
     fun testMultiwordAliases() {
-        Language.clear()
-        Language.addAlias("\"up ward\" = \"upward\"")
+        language.addAlias("\"up ward\" = \"upward\"")
         verifyExpectedMatch(
             "scroll upward",
             "scroll upward",
@@ -155,9 +153,10 @@ class CompilerTest {
     fun testPrioritizingMatches() {
         val matchSet = PhraseSet(
             listOf(
-                Compiler.compile("[query]", intentName = "fallback"),
-                Compiler.compile("search (for |) [query]", intentName = "search")
-            )
+                compiler.compile("[query]", intentName = "fallback"),
+                compiler.compile("search (for |) [query]", intentName = "search")
+            ),
+            language
         )
         assertEquals(
             "MatchResult(\"search for a test^^\", slots: {query: \"a test\"}, intentName: search, capturedWords: 2)",

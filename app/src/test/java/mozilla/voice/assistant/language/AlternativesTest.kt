@@ -1,17 +1,27 @@
 package mozilla.voice.assistant.language
 
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class AlternativesTest {
+    private lateinit var language: Language
+
+    @Before
+    fun setup() {
+        language = LanguageTest.getLanguage()
+    }
+
+    private fun word(source: String) = Word(source, language)
+
     @Test
     fun testWordVsNonEmptyWildcard() {
-        val results = Alternatives(listOf(Word("hello"), Wildcard(empty = false)))
+        val results = Alternatives(listOf(word("hello"), Wildcard(empty = false)))
             .matchUtterance(
-                makeMatch("hello")
+                makeMatch("hello", language)
             )
         assertEquals(2, results.size)
 
@@ -26,9 +36,9 @@ class AlternativesTest {
 
     @Test
     fun testWordVsEmptyWildcard() {
-        val results = Alternatives(listOf(Word("hello"), Wildcard(empty = true)))
+        val results = Alternatives(listOf(Word("hello", language), Wildcard(empty = true)))
             .matchUtterance(
-                makeMatch("hello")
+                makeMatch("hello", language)
             )
         assertEquals(3, results.size)
 
@@ -52,7 +62,7 @@ class AlternativesTest {
         assertEquals(
             "(bring | take)",
             Alternatives(
-                listOf(Word("bring"), Word("take")),
+                listOf(word("bring"), word("take")),
                 empty = false
             ).toSource()
         )
@@ -60,7 +70,7 @@ class AlternativesTest {
         assertEquals(
             "(bring | take | )",
             Alternatives(
-                listOf(Word("bring"), Word("take")),
+                listOf(word("bring"), word("take")),
                 empty = true
             ).toSource()
         )
