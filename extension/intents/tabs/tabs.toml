@@ -294,6 +294,7 @@ phrase = "Collect these tabs"
 
 [[tabs.collectMentionedTabs.example]]
 phrase = "Collect all Google Docs tabs"
+test = true
 
 [tabs.closeSelectedTabs]
 description = "Close selected tabs"
