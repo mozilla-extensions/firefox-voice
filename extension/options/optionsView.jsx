@@ -29,12 +29,14 @@ const LeftSidebar = ({ version }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
+      <Tabs />
       <div className="version-info">
         <p>Version {version}</p>
         <p>
           <a href="/views/CHANGELOG.html">What's New</a>
         </p>
       </div>
+
     </div>
   );
 };
@@ -498,3 +500,20 @@ const AboutSection = () => {
     </fieldset>
   );
 };
+
+const Tabs = () => {
+  return (
+    <fieldset id="tabs">
+      <ul>
+        <li><a className="styled-button" href="#">Preferences</a></li>
+        <li><a className="styled-button" href="#">Shortcuts</a></li>
+        <li><a className="styled-button" href="#">Wakeword</a></li>
+        <li><a className="styled-button" href="#">Music Service</a></li>
+        <li><a className="styled-button" href="#">Privacy</a></li>
+        <li><a className="styled-button" href="#">Development </a></li>
+        <li><a className="styled-button" href="#">About</a></li>
+      </ul>
+    </fieldset>
+  );
+
+}
