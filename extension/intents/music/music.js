@@ -115,5 +115,18 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "music.showTitle",
+  async run(context) {
+    const tabs = await browser.tabs.query({ audible: true });
+    if (!tabs.length) {
+      const e = new Error("Nothing is playing");
+      e.displayMessage = "Nothing is playing";
+      throw e;
+    }
+    context.displayText(tabs[0].title);
+  },
+});
+
 // FIXME: workaround for a legacy module needing access to this function:
 window.music_getServiceNamesAndTitles = getServiceNamesAndTitles;

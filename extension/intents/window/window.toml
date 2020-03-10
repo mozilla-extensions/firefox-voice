@@ -10,3 +10,27 @@ description = "Open downloads"
 match = """
   (show | open |) downloads (menu |)
 """
+
+[window.quitApplication]
+description = "Close Firefox"
+match = """
+  (close | quit | exit | shutdown) firefox
+"""
+
+[window.combine]
+description = "Combine all windows"
+match = """
+  combine all windows (into |) (one |) (window |)
+  combine tabs (into |) (one |) window
+"""
+
+[[window.combine.example]]
+phrase = "combine all windows"
+
+[[window.combine.example]]
+phrase = "combine all windows into one"
+test = true
+
+[[window.combine.example]]
+phrase = "combine tabs into one window"
+test = true
