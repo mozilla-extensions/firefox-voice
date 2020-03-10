@@ -15,14 +15,12 @@ this.player = (function() {
 
     async action_search({ query, thenPlay }) {
       const searchInput = this.querySelector("form .headerSearch__input");
-      const submitInput = this.querySelector(
-        "form .headerSearch__submit"
-      );
+      const submitInput = this.querySelector("form .headerSearch__submit");
       this.setReactInputValue(searchInput, query);
       submitInput.click();
       if (thenPlay) {
         const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 3000
+          timeout: 3000,
         });
         playerButton.click();
       }
