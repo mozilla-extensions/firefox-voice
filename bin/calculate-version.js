@@ -1,5 +1,14 @@
 const package_json = require(__dirname + "/../package.json");
+import semver from "semver";
+import { engines } from "./package";
 
+const version = engines.node;
+if (!semver.satisfies(process.version, version)) {
+  console.log(
+    `Required node version ${version} not satisfied with current version ${process.version}.`
+  );
+  process.exit(1);
+}
 exports.getVersionNumber = function() {
   const BASELINE = 1567715368897; // Date.now() when this was first developed
   const timeDiff = Date.now() - BASELINE;
