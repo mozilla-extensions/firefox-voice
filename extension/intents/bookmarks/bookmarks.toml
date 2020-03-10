@@ -64,3 +64,11 @@ test = true
 [[bookmarks.remove.example]]
 phrase = "Delete bookmark from this page"
 test = true
+
+[[bookmarks.remove.example]]
+phrase = "Remove bookmarks"
+test = true
+
+[[bookmarks.remove.example]]
+phrase = "Delete bookmarks from this page"
+test = true
