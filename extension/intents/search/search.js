@@ -373,13 +373,22 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
-    await performSearch(context.slots.query);
+    if (buildSettings.android) {
+      await performSearch(context.slots.query);
+    } else {
+      const tabId = await openSearchTab();
 
-    if (!buildSettings.android) {
+      await browser.search.search({
+        query: context.slots.query,
+        tabId,
+      });
+
       await focusSearchTab();
 
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
       const searchInfo = await callScript({ type: "searchResultInfo" });
-      tabSearchResults.set(_searchTabId, searchInfo);
+
+      tabSearchResults.set(tabId, searchInfo);
     }
   },
 });
