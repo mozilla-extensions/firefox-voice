@@ -1,10 +1,7 @@
 import * as music from "../../intents/music/music.js";
 import MusicService from "../../background/musicService.js";
 
-class Spotify extends MusicService {
-  titleId = "spotify";
-  title = "Spotify";
-}
+class Spotify extends MusicService {}
 
 Object.assign(Spotify, {
   id: "spotify",

@@ -1,13 +1,9 @@
 /* globals helpers */
 
 this.player = (function() {
-  // Play button Reference
   const SEARCH_PLAY = ".searchList__item .playButton";
 
   class Player extends helpers.Runner {
-    // Play control buttons - Play/Pause, Next, Previous buttons.
-    playControlsBtn = this.querySelectorAll(".playControls__control");
-
     action_play() {
       const button = this.querySelector(SEARCH_PLAY);
       button.click();
@@ -27,19 +23,22 @@ this.player = (function() {
     }
 
     action_pause() {
-      this.playControlsBtn[1].click();
+      const playControlsBtn = this.querySelectorAll(".playControls__control");
+      playControlsBtn[1].click();
     }
 
     action_unpause() {
-      this.playControlsBtn[1].click();
+      const playControlsBtn = this.querySelectorAll(".playControls__control");
+      playControlsBtn[1].click();
     }
 
     action_move({ direction }) {
+      const playControlsBtn = this.querySelectorAll(".playControls__control");
       if (direction === "next") {
-        this.playControlsBtn[2].click();
+        playControlsBtn[2].click();
       } else if (direction === "back") {
-        this.playControlsBtn[0].click();
-        this.playControlsBtn[0].click();
+        playControlsBtn[0].click();
+        playControlsBtn[0].click();
       }
     }
   }

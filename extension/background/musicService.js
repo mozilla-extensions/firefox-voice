@@ -4,7 +4,7 @@ import { shouldDisplayWarning } from "../limiter.js";
 
 class MusicService extends serviceList.Service {
   async playQuery(query) {
-    await this.initTab(`/services/${this.titleId}/player.js`);
+    await this.initTab(`/services/${this.id}/player.js`);
     await this.callTab("search", { query, thenPlay: true });
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
@@ -14,7 +14,7 @@ class MusicService extends serviceList.Service {
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (
           nowAudible ||
-          !(await shouldDisplayWarning(`${this.titleId}Audible`, {
+          !(await shouldDisplayWarning(`${this.id}Audible`, {
             times: 3,
             frequency: 1000,
           }))
@@ -37,18 +37,18 @@ class MusicService extends serviceList.Service {
       throw e;
     }
     for (const tab of tabs) {
-      await content.lazyInject(tab.id, `/services/${this.titleId}/player.js`);
+      await content.lazyInject(tab.id, `/services/${this.id}/player.js`);
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
 
   async pause() {
-    await this.initTab(`/services/${this.titleId}/player.js`);
+    await this.initTab(`/services/${this.id}/player.js`);
     await this.callTab("pause");
   }
 
   async unpause() {
-    await this.initTab(`/services/${this.titleId}/player.js`);
+    await this.initTab(`/services/${this.id}/player.js`);
     await this.callTab("unpause");
   }
 
@@ -58,7 +58,7 @@ class MusicService extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.lazyInject(tab.id, `/services/${this.titleId}/player.js`);
+      await content.lazyInject(tab.id, `/services/${this.id}/player.js`);
       await this.callOneTab(tab.id, "pause");
     }
   }
