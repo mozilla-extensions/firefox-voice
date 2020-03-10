@@ -2,46 +2,48 @@
 
 this.player = (function() {
   // Play button Reference
-  const SEARCH_PLAY = ".sound__header a[title='Play']";
+  const SEARCH_PLAY = ".sound__content .playButton";
 
   class Player extends helpers.Runner {
+    // Play control buttons - Play/Pause, Next, Previous buttons.
+    playControlsBtn = this.querySelectorAll(".playControls__control");
+
     action_play() {
-      const button = this.querySelector("button[aria-label='Play current']");
+      const button = this.querySelector(SEARCH_PLAY);
       button.click();
     }
 
     async action_search({ query, thenPlay }) {
-      const searchInput = this.querySelector("input[aria-label='Search']");
+      const searchInput = this.querySelector("form .headerSearch__input");
       const submitInput = this.querySelector(
-        ".headerSearch__submit[type='submit']"
+        "form .headerSearch__submit"
       );
       this.setReactInputValue(searchInput, query);
       submitInput.click();
       if (thenPlay) {
         const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 2000,
+          timeout: 3000,
+          // There seem to be 2 fixed buttons that appear early before the search results
+          minCount: 2,
         });
         playerButton.click();
       }
     }
 
     action_pause() {
-      const button = this.querySelector("button[aria-label='Pause current']");
-      button.click();
+      this.playControlsBtn[1].click();
     }
 
     action_unpause() {
-      const button = this.querySelector("button[aria-label='Play current']");
-      button.click();
+      this.playControlsBtn[1].click();
     }
 
     action_move({ direction }) {
-      const playControls = this.querySelectorAll(".playControls__control");
       if (direction === "next") {
-        playControls[2].click();
+        this.playControlsBtn[2].click();
       } else if (direction === "back") {
-        playControls[0].click();
-        playControls[0].click();
+        this.playControlsBtn[0].click();
+        this.playControlsBtn[0].click();
       }
     }
   }

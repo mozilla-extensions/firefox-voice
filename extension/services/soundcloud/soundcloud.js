@@ -33,8 +33,8 @@ class Soundcloud extends serviceList.Service {
   async move(direction) {
     const tabs = await this.getAllTabs();
     if (!tabs.length) {
-      const e = new Error("Spotify is not open");
-      e.displayMessage = "Spotify is not open";
+      const e = new Error("Soundcloud is not open");
+      e.displayMessage = "Soundcloud is not open";
       throw e;
     }
     for (const tab of tabs) {
@@ -67,7 +67,7 @@ class Soundcloud extends serviceList.Service {
 
 Object.assign(Soundcloud, {
   id: "soundcloud",
-  title: "SoundCloud",
+  title: "Sound Cloud",
   baseUrl: "https://soundcloud.com/",
 });
 
