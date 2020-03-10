@@ -2,7 +2,7 @@
 
 this.player = (function() {
   // Play button Reference
-  const SEARCH_PLAY = ".sound__content .playButton";
+  const SEARCH_PLAY = ".searchList__item .playButton";
 
   class Player extends helpers.Runner {
     // Play control buttons - Play/Pause, Next, Previous buttons.
@@ -22,9 +22,7 @@ this.player = (function() {
       submitInput.click();
       if (thenPlay) {
         const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 3000,
-          // There seem to be 2 fixed buttons that appear early before the search results
-          minCount: 2,
+          timeout: 3000
         });
         playerButton.click();
       }
