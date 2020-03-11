@@ -307,18 +307,22 @@ a#lexicon {
 
 .feedback-controls .happy-icon {
   mask: url("./images/icon-happy.svg");
+  cursor: pointer;
 }
 
 .feedback-controls .sad-icon {
   mask: url("./images/icon-sad.svg");
+  cursor: pointer;
 }
 
 .feedback-controls .happy-icon:hover {
   mask: url("./images/icon-happy-hover.svg");
+  cursor: pointer;
 }
 
 .feedback-controls .sad-icon:hover {
   mask: url("./images/icon-sad-hover.svg");
+  cursor: pointer;
 }
 
 #next-result {
