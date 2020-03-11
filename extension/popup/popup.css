@@ -317,12 +317,10 @@ a#lexicon {
 
 .feedback-controls .happy-icon:hover {
   mask: url("./images/icon-happy-hover.svg");
-  cursor: pointer;
 }
 
 .feedback-controls .sad-icon:hover {
   mask: url("./images/icon-sad-hover.svg");
-  cursor: pointer;
 }
 
 #next-result {
