@@ -92,23 +92,52 @@ this.queryScript = (function() {
   }
 
   communicate.register("searchResultInfo", message => {
-    const cards = findCards();
-    const searchHeaders = document.querySelectorAll("a > h3");
+    const GOOGLE_SELECTOR = "a > h3";
+    const DDG_SELECTOR = "#links .results_links_deep .result__a";
+    const BING_SELECTOR = ".b_algo h2 a";
+    let searchEngine = "google";
+    let cards;
+
+    if (message && message.searchEngine && message.searchEngine.toLowerCase()) {
+      searchEngine = message.searchEngine.toLowerCase();
+    }
+
+    let selector;
+
+    switch (searchEngine) {
+      case "duckduckgo":
+        selector = DDG_SELECTOR;
+        break;
+      case "bing":
+        selector = BING_SELECTOR;
+        break;
+      default:
+        cards = findCards();
+        selector = GOOGLE_SELECTOR;
+    }
+
+    const searchHeaders = document.querySelectorAll(selector);
     const searchResults = [];
+
     for (const searchHeader of searchHeaders) {
       const parent = findParent(searchHeader, el => el.tagName === "LI");
       if (parent && parent.querySelector(".ad_cclk, .ads-visurl")) {
-        // It's an ad
+        // It's a google ad
         continue;
       }
+
       searchResults.push({
-        url: searchHeader.parentNode.href,
+        url:
+          searchEngine === "google"
+            ? searchHeader.parentNode.href
+            : searchHeader.href,
         title: searchHeader.textContent,
       });
     }
+
     return {
-      hasSidebarCard: !!cards.sidebarCard,
-      hasCard: !!cards.card,
+      hasSidebarCard: cards && !!cards.sidebarCard,
+      hasCard: cards && !!cards.card,
       searchResults,
       searchUrl: location.href,
     };
