@@ -188,7 +188,8 @@ The scripts are written as key-value pairs where
 **Value:** The script you can execute.
 
 **Scripts** 
-`"start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
+```js
+"start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
 "start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-extension",
 "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console --pref=extensions.experiments.enabled=true",
 "start-android": "concurrently --kill-others --success first --names watch,android 'npm run watch' 'npm run start-and-build-android'",
@@ -218,5 +219,6 @@ The scripts are written as key-value pairs where
 "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
 "calculate-version": "node bin/calculate-version.js",
 "enumerate-phrases": "babel-node --plugins @babel/plugin-transform-modules-commonjs bin/enumerate-phrases.js",
-"postinstall": "npm-run-all build:*"`
+"postinstall": "npm-run-all build:*"
+```
 
