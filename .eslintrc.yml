@@ -14,6 +14,7 @@ extends:
   - eslint:recommended
   - plugin:mozilla/recommended
   - plugin:jsx-a11y/recommended
+  - plugin:prettier/recommended
 
 plugins:
   - mozilla
@@ -21,6 +22,7 @@ plugins:
   - class-property
   - jsx-a11y
   - react-hooks
+  - prettier
 
 rules:
   eqeqeq: error
@@ -30,7 +32,11 @@ rules:
   no-warning-comments: off
   prefer-const: error
   mozilla/no-import-into-var-and-global: off
-  prettier/prettier: off
   comma-dangle: off
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: warn
+  prettier/prettier:
+   - error
+   - {}
+   - fileInfoOptions:
+      ignorePath: '.gitignore'

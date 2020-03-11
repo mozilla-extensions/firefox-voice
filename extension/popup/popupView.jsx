@@ -81,10 +81,6 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "Type your request";
       case "searchResults":
         return transcript;
-      case "startSavingPage":
-        return "Saving page...";
-      case "endSavingPage":
-        return "Success";
       case "feedback":
         return (
           <React.Fragment>
@@ -114,8 +110,6 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
     currentView === "error" ||
     currentView === "searchResults" ||
     currentView === "typing" ||
-    currentView === "startSavingPage" ||
-    currentView === "endSavingPage" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks"
       ? ""
@@ -227,12 +221,6 @@ const PopupContent = ({
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
           />
-        );
-      case "startSavingPage":
-        return <SavingPageContent transcript={transcript} />;
-      case "endSavingPage":
-        return (
-          <SuccessContent transcript={transcript} displayText={displayText} />
         );
       case "feedback":
         return (
@@ -548,14 +536,6 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
   );
 };
 
-const SavingPageContent = ({ transcript }) => {
-  return (
-    <React.Fragment>
-      <Transcript transcript={transcript} />
-    </React.Fragment>
-  );
-};
-
 const SearchResultsContent = ({
   search,
   cardImage,
@@ -679,11 +659,6 @@ class Zap extends Component {
       },
       error: {
         segments: [this.animationSegmentTimes.error],
-        loop: false,
-        interrupt: true,
-      },
-      startSavingPage: {
-        segments: [this.animationSegmentTimes.waiting],
         loop: false,
         interrupt: true,
       },

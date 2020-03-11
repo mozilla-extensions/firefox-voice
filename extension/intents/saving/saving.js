@@ -5,7 +5,6 @@ import * as browserUtil from "../../browserUtil.js";
 intentRunner.registerIntent({
   name: "saving.save",
   async run(context) {
-    context.savingPage("startSavingPage");
     let filename;
     const activeTab = await browserUtil.activeTab();
     await content.lazyInject(activeTab.id, [
@@ -26,7 +25,7 @@ intentRunner.registerIntent({
       filename = filename + ".html";
     }
     const blob = htmlToBlob(html);
-    await downloadData(context, blob, filename);
+    await downloadData(blob, filename);
     context.displayText("Page saved to downloads folder");
   },
 });
@@ -105,7 +104,7 @@ function htmlToBlob(text) {
   return new Blob([text], { type: "text/html" });
 }
 
-async function downloadData(context, blob, filename) {
+async function downloadData(blob, filename) {
   const url = URL.createObjectURL(blob);
   let downloadId;
   function onChanged(change) {
@@ -122,7 +121,6 @@ async function downloadData(context, blob, filename) {
     url,
     filename,
   });
-  context.savingPage("endSavingPage");
 }
 
 function getDomain(url) {
