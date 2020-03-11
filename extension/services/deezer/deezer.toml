@@ -1,0 +1,4 @@
+[Deezer]
+type = "music"
+title = "deezer"
+baseUrl = "https://www.deezer.com"
