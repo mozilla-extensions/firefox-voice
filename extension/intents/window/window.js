@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
   const len = windowArray.length;
-  // find currentWindowId postion in array
+  // find currentWindowId position in array
   const currentWindowIndex = windowArray.findIndex(
     window => window.id === currentWindowId
   );

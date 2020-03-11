@@ -346,7 +346,7 @@ intentRunner.registerIntent({
     if (!googleIsDefaultProvider) {
       await browser.tabs.update(searchTabId, { url: "about:blank" });
       await browser.search.search({
-        query: searchInfo.query || "unkonwn",
+        query: searchInfo.query || "unknown",
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
