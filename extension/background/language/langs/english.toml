@@ -26,6 +26,7 @@ text = "next"
 pooping = "open"
 poop = "open"
 pint = "pinned"
+"book mark" = "bookmark"
 
 [stopwords]
 words = """

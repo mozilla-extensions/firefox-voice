@@ -21,10 +21,20 @@ description = "Focus the next field"
 match = """
   focus next (field | input | text | textarea | element |)
   next (field | input | textarea | element)
+  (start typing | type)
 """
 
 [[forms.focusNext.example]]
 phrase = "Focus next field"
+
+[forms.formSubmit]
+description = "Submit the form field"
+match = """
+  submit (form |)
+"""
+
+[[forms.formSubmit.example]]
+phrase = "Submit Form"
 
 [forms.focusPrevious]
 description = "Focus the previous field"

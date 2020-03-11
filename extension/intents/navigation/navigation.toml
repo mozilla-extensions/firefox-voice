@@ -41,6 +41,9 @@ expectSlots = {service = "google images"}
 phrase = "Find website work plan on my Google Drive"
 test = true
 
+[[navigation.bangSearch.example]]
+phrase = "Search ScrollAnywhere on addons"
+
 [navigation.clearQueryDatabase]
 description = "Debugging command to clear the cache of 'open' queries"
 match = """
@@ -63,6 +66,7 @@ match = """
 description = "Navigate directly to a site, using Google's I'm Feeling Luck and the query"
 match = """
   (bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]
+  (bring me | take me | go | navigate | show me | open) (to | find |) (page |) (in |) (a |) (new |) [where] (and go | and |) (to | find | open) [query]
 """
 
 [[navigation.navigate.example]]
@@ -73,6 +77,21 @@ phrase = "Show me the 49ers schedule"
 
 [[navigation.navigate.example]]
 phrase = "Go to the Health section of the BBC"
+
+[[navigation.navigate.example]]
+phrase = "open a new tab to the New York Times"
+test = true
+expectSlots = {where = "tab"}
+
+[[navigation.navigate.example]]
+phrase = "open a new window to Washington Post"
+test = true
+expectSlots = {where = "window"}
+
+[[navigation.navigate.example]]
+phrase = "Go to a new window and find the New York Times"
+test = true
+expectSlots = {where = "window"}
 
 [navigation.translate]
 description = "Translate the given page to the chosen language, using Google Translate"
@@ -108,6 +127,10 @@ expectSlots = {language = "Hungarian"}
 [[navigation.translateSelection.example]]
 phrase = "translate the selected text to Slovak"
 test = true
+
+[[navigation.translateSelection.example]]
+phrase = "translate this selection to French"
+expectSlots = {language = "French"}
 
 [navigation.followLink]
 description = "Follow the named link"

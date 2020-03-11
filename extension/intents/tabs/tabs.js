@@ -371,3 +371,188 @@ intentRunner.registerIntent({
     await browser.tabs.move(tabsIds, { windowId: newWindow.id, index: 0 });
   },
 });
+
+async function collectTabsAround(center, tabs) {
+  const tabsLeft = tabs.filter(tab => {
+    return tab.index < center.index;
+  });
+
+  const tabsRight = tabs.filter(tab => {
+    return tab.index > center.index;
+  });
+
+  for (let i = 0; i < tabsLeft.length; i++) {
+    await browser.tabs.move(tabsLeft[tabsLeft.length - i - 1].id, {
+      index: center.index - i - 1,
+    });
+  }
+
+  for (let i = 0; i < tabsRight.length; i++) {
+    await browser.tabs.move(tabsRight[i].id, { index: center.index + i + 1 });
+  }
+}
+
+async function collectRightTabs(tabs) {
+  const leftestTab = tabs[0];
+  const tabsRight = tabs.slice(1);
+
+  for (let i = 0; i < tabsRight.length; i++) {
+    await browser.tabs.move(tabsRight[i].id, {
+      index: leftestTab.index + i + 1,
+    });
+  }
+}
+
+function groupTabs(tabs, keyGetter) {
+  const groupedTabs = {};
+
+  for (let i = 0; i < tabs.length; i++) {
+    const key = keyGetter(tabs[i]);
+
+    if (groupedTabs[key] === undefined) {
+      groupedTabs[key] = [tabs[i]];
+    } else {
+      groupedTabs[key].push(tabs[i]);
+    }
+  }
+
+  return groupedTabs;
+}
+
+async function getMatchingTabs(options) {
+  const tabQuery = {
+    pinned: false,
+    windowType: "normal",
+  };
+
+  if (options.allWindows === false) {
+    tabQuery.currentWindow = true;
+  }
+
+  if (options.query === undefined && options.activeTab !== undefined) {
+    const activeTab = options.activeTab;
+    const activeHostname = new URL(activeTab.url).hostname;
+    tabQuery.url = "*://*." + activeHostname + "/*";
+  }
+
+  let matchingTabs = await browser.tabs.query(tabQuery);
+
+  if (options.query !== undefined) {
+    matchingTabs = matchingTabs.filter(tab => {
+      const query = options.query.toLowerCase();
+      return (
+        new URL(tab.url).origin.includes(query) ||
+        tab.title.toLowerCase().includes(query)
+      );
+    });
+  }
+
+  if (options.sort_by_index === true) {
+    matchingTabs.sort((a, b) => {
+      return a.index > b.index;
+    });
+  }
+
+  return matchingTabs;
+}
+
+intentRunner.registerIntent({
+  name: "tabs.collectMentionedTabs",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const currentWindow = await browser.windows.getCurrent();
+    const allWindows = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      query: context.slots.query,
+      activeTab,
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "true",
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    const useActiveTab = matchingTabs.map(tab => tab.id).includes(activeTab.id);
+    const tabsByWindow = groupTabs(matchingTabs, tab => tab.windowId);
+
+    for (let i = 0; i < allWindows.length; i++) {
+      const tabsThisWindow = tabsByWindow[allWindows[i].id];
+      if (tabsThisWindow === undefined) {
+        continue;
+      }
+
+      if (useActiveTab === true && allWindows[i].id === currentWindow.id) {
+        await collectTabsAround(activeTab, tabsThisWindow);
+      } else {
+        await collectRightTabs(tabsThisWindow);
+      }
+    }
+
+    // if active does not match query, i should focus on
+    // a tab that does
+    if (useActiveTab === false) {
+      const tabsCurrentWindow = tabsByWindow[currentWindow.id];
+
+      // prefer staying in current window
+      if (tabsCurrentWindow !== undefined) {
+        await context.makeTabActive(tabsCurrentWindow[0]);
+      } else {
+        await context.makeTabActive(matchingTabs[0]);
+        await browser.windows.update(matchingTabs[0].windowId, {
+          focused: true,
+        });
+      }
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.collectAllTabs",
+  async run(context) {
+    const allWindows = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "true",
+    });
+
+    const tabsByWindow = groupTabs(matchingTabs, tab => tab.windowId);
+
+    for (let i = 0; i < allWindows.length; i++) {
+      const tabsThisWindow = tabsByWindow[allWindows[i].id];
+      if (tabsThisWindow === undefined) {
+        continue;
+      }
+      const tabsByOrigin = groupTabs(
+        tabsThisWindow,
+        tab => new URL(tab.url).origin
+      );
+
+      let tabs = [];
+      for (const origin in tabsByOrigin) {
+        tabs = tabs.concat(tabsByOrigin[origin]);
+      }
+      await collectRightTabs(tabs);
+    }
+  },
+});
+
+if (!buildSettings.android) {
+  intentRunner.registerIntent({
+    name: "tabs.closeSelectedTabs",
+    async run(context) {
+      const tabs = await browser.tabs.query({ highlighted: true });
+      const tabIds = tabs.map(tab => tab.id);
+
+      await browser.tabs.remove(tabIds);
+    },
+  });
+}

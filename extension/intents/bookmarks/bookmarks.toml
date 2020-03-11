@@ -45,8 +45,8 @@ expectSlots = { query = "query" }
 [bookmarks.remove]
 description = "Remove bookmark from the default folder (Other Bookmarks)"
 match = """
-  (remove | delete) bookmark (from |) (this |) (page | site | tab |) (for me |)
-  (remove | delete) (this |) (page | site | tab |) from bookmarks
+  (remove | delete) bookmark{s} (from |) (this |) (page | site | tab |) (for me |)
+  (remove | delete) (this |) (page | site | tab |) from bookmark{s}
 """
 
 [[bookmarks.remove.example]]
@@ -63,4 +63,12 @@ test = true
 
 [[bookmarks.remove.example]]
 phrase = "Delete bookmark from this page"
+test = true
+
+[[bookmarks.remove.example]]
+phrase = "Remove bookmarks"
+test = true
+
+[[bookmarks.remove.example]]
+phrase = "Delete bookmarks from this page"
 test = true

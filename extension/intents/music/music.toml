@@ -58,7 +58,7 @@ description = "Pause all supported services (regardless of tab or window)"
 match = """
   (stop | pause) (play | playing |) video [service=youtube]
   pause [service:musicServiceName]
-  pause (play | playing |) (music |)
+  pause (play | playing |) (music |) 
   stop (play | playing |) (music |)
 """
 
@@ -68,7 +68,8 @@ phrase = "Pause music"
 [[music.pause.example]]
 phrase = "pause spotify"
 test = true
-expectParamters = {service = "spotify"}
+expectParameters = {}
+expectSlots = {service = "spotify"}
 
 [[music.pause.example]]
 phrase = "stop"
@@ -77,17 +78,16 @@ test = true
 [[music.pause.example]]
 phrase = "stop video"
 test = true
-expectParamters = {service = "youtube"}
+expectParameters = {service = "youtube"}
 
 [[music.pause.example]]
 phrase = "stop playing video"
 test = true
-expectParamters = {service = "youtube"}
+expectParameters = {service = "youtube"}
 
 [[music.pause.example]]
 phrase = "stop playing music"
 test = true
-expectParamters = {service = "youtube"}
 
 [music.play]
 description = "Play music on an explicit service, a default service, or the service in the active tab"
@@ -143,3 +143,12 @@ phrase = "play music"
 [[music.unpause.example]]
 phrase = "play spotify"
 test = true
+
+[music.showTitle]
+description = "Show the title of the tab that's currently playing a video/audio"
+match = """
+  (what | what's | ) ( tab | song | music | title | ) ( is | ) playing
+"""
+
+[[music.showTitle.example]]
+phrase = "What is playing"

@@ -6,6 +6,7 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await context.activeTab();
     await content.lazyInject(activeTab.id, [
+      "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, {
@@ -45,6 +46,18 @@ intentRunner.registerIntent({
       "/intents/forms/formsContentScript.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, { type: "focusNext" });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "forms.formSubmit",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/js/vendor/fuse.js",
+      "/intents/forms/formsContentScript.js",
+    ]);
+    await browser.tabs.sendMessage(activeTab.id, { type: "formSubmit" });
   },
 });
 

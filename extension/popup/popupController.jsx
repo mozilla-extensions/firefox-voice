@@ -142,6 +142,16 @@ export const PopupController = function() {
         setErrorMessage(message.message);
         break;
       }
+      case "startSavingPage": {
+        setPopupView("startSavingPage");
+        setDisplayText(message.message);
+        break;
+      }
+      case "endSavingPage": {
+        setPopupView("endSavingPage");
+        setDisplayText(message.message);
+        break;
+      }
       case "displayText": {
         setDisplayText(message.message);
         overrideTimeout = TEXT_TIMEOUT;
@@ -209,7 +219,8 @@ export const PopupController = function() {
 
   const submitTextInput = async text => {
     if (text) {
-      setTranscript(text);
+      const capText = text.charAt(0).toUpperCase() + text.slice(1);
+      setTranscript(capText);
       setPopupView("success");
       executedIntent = true;
       await browser.runtime.sendMessage({ type: "microphoneStopped" });
@@ -378,7 +389,9 @@ export const PopupController = function() {
         return;
       }
       setHasHadSuccessfulUtterance();
-      setTranscript(json.data[0].text);
+      const capText =
+        json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
+      setTranscript(capText);
       browser.runtime.sendMessage({
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
