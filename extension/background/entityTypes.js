@@ -1,6 +1,7 @@
 import { languageNames, smallNumbers, numbers } from "./languages.js";
 import { metadata } from "../services/metadata.js";
 import { convertEntities } from "./language/compiler.js";
+import { numbers, ordinals, cardinals, numberedOrdinals } from "./numbers.js";
 
 export const allServiceNames = [];
 
