@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="anim_top_margin">64dp</dimen>
+    <dimen name="anim_left_margin">16dp</dimen>
+    <dimen name="anim_right_margin">16dp</dimen>
+    <dimen name="anim_bottom_margin">64dp</dimen>
+</resources>
