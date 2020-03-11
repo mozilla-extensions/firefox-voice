@@ -91,6 +91,39 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
+### Running Tests
+1. For running tests, run `npm test`.
+   This command does the following:
+   * Compiles JavaScript.
+   * Runs all tests.
+   * Checks the code formatting using `prettier`[https://prettier.io/].
+   * Lints the code using `eslint` [https://github.com/eslint/eslint].
+2. `firefox-voice` makes use of `jest` but it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites. 
+3. `npm test` would still run `npm run jest` locally on `node v13.8.0` in the development process.
+4. New `jest` unit tests can still be added because `npm test` still runs `jest` locally. Look at files with `.test.js` extension for examples to guide you.
+5. Many formatting and linting problems can be automatically fixed by running  `npm run lint:fix`.
+ In order to keep the `firefox-voice` codebase healthy and running properly, these tools are used:
+   * Prettier formats and keeps the code the same way, saving energy and time.
+   * ESLint spots problems and errors, also saving everyone's energy and time. 
+   * Stylelint helps to avoid errors and enforce conventions in style sheets. 
+
+### Developing in Windows without WSL
+
+#### Prerequisites
+1. Latest LTS version of NodeJS
+2. Git and Git-bash
+3. Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
+
+#### Installation
+Before cloning the repo, using the terminal in Git-bash:
+
+1. Run `git config --global core.autocrlf false` to prevent git from converting line endings from LF to CRLF
+2. Run `npm config set script-shell "path\\to\\bash.exe"`. Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
+3. Clone the [repository](https://github.com/mozilla/firefox-voice.git) `git clone https://github.com/mozilla/firefox-voice.git`
+4. To create the environment variable `FIREFOX`, run `export FIREFOX=normalized/path/to/firefox.exe`. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then normalized path is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, the environment variable set to the normalized path can be created using the Windows system dialog.
+5. Now run `npm install`
+6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
+
 ### Debugging
 
 In Firefox Voice there are several separate processes where things run (see also [Anatomy of an extension](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension)):
