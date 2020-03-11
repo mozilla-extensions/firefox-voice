@@ -91,6 +91,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     // FIXME: consider focusing the window too
     browserUtil.makeTabActive(recorderTabId || sender.tab.id);
     return null;
+  } else if (message.type === "getRegisteredNicknames") {
+    return intentRunner.getRegisteredNicknames();
+  } else if (message.type === "registerNickname") {
+    return intentRunner.registerNickname(message.name, message.context);
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`

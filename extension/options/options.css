@@ -8,6 +8,18 @@ html {
 body {
   background-color: #fafafc;
 }
+.tab-button {
+  height: 50px;
+  padding: 0 0;
+  width: 200px;
+  position: relative;
+  top: 50px;
+  margin-top: 30px;
+}
+
+.tab-list {
+  list-style-type: none;
+}
 
 .settings-page {
   display: flex;

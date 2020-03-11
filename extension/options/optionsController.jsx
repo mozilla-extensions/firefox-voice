@@ -3,6 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as optionsView from "./optionsView.js";
 import * as settings from "../settings.js";
+//import {getRegisteredNicknames} from "../background/intentRunner.js";
 
 const { useState, useEffect } = React;
 const optionsContainer = document.getElementById("options-container");
@@ -25,6 +26,8 @@ export const OptionsController = function() {
   );
   const [userSettings, setUserSettings] = useState({});
   const [userOptions, setUserOptions] = useState({});
+  const [tabValue, setTabValue] = useState(0);
+  const [registeredNicknames, setRegisteredNicknames] = useState({});
 
   onKeyboardShortcutError = setKeyboardShortcutError;
 
@@ -38,6 +41,8 @@ export const OptionsController = function() {
   const init = async () => {
     await initVersionInfo();
     await initSettings();
+    await initTab();
+    await initRegisteredNicknames();
   };
 
   const initVersionInfo = async () => {
@@ -55,9 +60,28 @@ export const OptionsController = function() {
     setUserOptions(result.options);
   };
 
+  const initRegisteredNicknames = async () => {
+    const registeredNicknames = await browser.runtime.sendMessage({type: "getRegisteredNicknames"});
+    setRegisteredNicknames(registeredNicknames);
+  };
+
+  const initTab = async () => {
+    setTabValue(optionsView.TABS.GENERAL);
+  };
+
   const updateUserSettings = async userSettings => {
     await settings.saveSettings(userSettings);
     setUserSettings(userSettings);
+  };
+
+  const updateNickname = async nickname => {
+    await browser.runtime.sendMessage({type: "registerNickname", name: nickname.name, context: nickname.context});
+    const registeredNicknames = await browser.runtime.sendMessage({type: "getRegisteredNicknames"});
+    setRegisteredNicknames(registeredNicknames);
+  };
+
+  const updateTabValue = tabValue => {
+    setTabValue(tabValue);
   };
 
   return (
@@ -68,6 +92,10 @@ export const OptionsController = function() {
       userOptions={userOptions}
       userSettings={{ ...userSettings }}
       updateUserSettings={updateUserSettings}
+      updateTabValue={updateTabValue}
+      tabValue={tabValue}
+      updateNickname={updateNickname}
+      registeredNicknames={registeredNicknames}
     />
   );
 };

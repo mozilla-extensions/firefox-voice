@@ -3,6 +3,11 @@
 
 import * as browserUtil from "../browserUtil.js";
 
+export const TABS = {
+  "GENERAL": 0,
+  "NICKNAMES": 1
+};
+
 export const Options = ({
   inDevelopment,
   version,
@@ -10,22 +15,39 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  updateTabValue,
+  tabValue,
+  updateNickname,
+  registeredNicknames
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
-      <RightContent
+      <LeftSidebar version={version} updateTabValue={updateTabValue} />
+      <General
         inDevelopment={inDevelopment}
         keyboardShortcutError={keyboardShortcutError}
         userOptions={userOptions}
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
-      />
+        active = {tabValue === TABS.GENERAL}
+      ></General>
+      <Nicknames
+        userOptions={userOptions}
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        active={tabValue === TABS.NICKNAMES}
+        updateNickname={updateNickname}
+        registeredNicknames={registeredNicknames}
+      ></Nicknames>
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, updateTabValue}) => {
+  const clickTab = (tab) => {
+    updateTabValue(tab);
+  };
+
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
@@ -35,17 +57,79 @@ const LeftSidebar = ({ version }) => {
           <a href="/views/CHANGELOG.html">What's New</a>
         </p>
       </div>
+      <div>
+        <ul className="tab-list">
+          <li>
+            <button className="tab-button styled-button" onClick={() => clickTab(TABS.GENERAL)}>General</button>
+          </li>
+          <li>
+            <button className="tab-button styled-button" onClick={() => clickTab(TABS.NICKNAMES)}>Nicknames</button>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-const RightContent = ({
+
+const Nicknames = ({
+  active,
+  updateNickname,
+  registeredNicknames
+}) => {
+  if (active === false) {
+    return null;
+  }
+
+  return (
+    <div className="settings-content">
+      <NicknamesList
+      registeredNicknames={registeredNicknames}
+      updateNickname={updateNickname}>
+      </NicknamesList>
+    </div>
+  );
+};
+
+const NicknamesList = ({
+  registeredNicknames,
+  updateNickname
+}) => {
+  const allNicks = [];
+  for (const nick in registeredNicknames) {
+    allNicks.push(
+      <li key={`nick-${nick}`}>
+        <div>
+          <h2>
+            {nick}
+          </h2>
+        </div>
+      </li>
+    );
+  }
+
+  return (
+    <fieldset>
+      <legend>Nicknames</legend>
+        <ul>
+          {allNicks}
+        </ul>
+    </fieldset>
+  );
+};
+
+const General = ({
   inDevelopment,
   keyboardShortcutError,
   userOptions,
   userSettings,
   updateUserSettings,
+  active
 }) => {
+  if (active === false) {
+    return null;
+  }
+
   return (
     <div className="settings-content">
       <ChimeSettings
