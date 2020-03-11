@@ -274,8 +274,8 @@ export function isSearchTab(tab) {
 intentRunner.registerIntent({
   name: "search.defaultSearchEngine",
   async run(context) {
-    await browser.search.search({query: ""});
-  }
+    await browser.search.search({ query: "" });
+  },
 });
 
 intentRunner.registerIntent({
