@@ -4,8 +4,8 @@
 import * as browserUtil from "../browserUtil.js";
 
 export const TABS = {
-  "GENERAL": 0,
-  "NICKNAMES": 1
+  GENERAL: 0,
+  NICKNAMES: 1,
 };
 
 export const Options = ({
@@ -18,7 +18,7 @@ export const Options = ({
   updateTabValue,
   tabValue,
   updateNickname,
-  registeredNicknames
+  registeredNicknames,
 }) => {
   return (
     <div className="settings-page">
@@ -29,7 +29,7 @@ export const Options = ({
         userOptions={userOptions}
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
-        active = {tabValue === TABS.GENERAL}
+        active={tabValue === TABS.GENERAL}
       ></General>
       <Nicknames
         userOptions={userOptions}
@@ -43,8 +43,8 @@ export const Options = ({
   );
 };
 
-const LeftSidebar = ({ version, updateTabValue}) => {
-  const clickTab = (tab) => {
+const LeftSidebar = ({ version, updateTabValue }) => {
+  const clickTab = tab => {
     updateTabValue(tab);
   };
 
@@ -60,10 +60,20 @@ const LeftSidebar = ({ version, updateTabValue}) => {
       <div>
         <ul className="tab-list">
           <li>
-            <button className="tab-button styled-button" onClick={() => clickTab(TABS.GENERAL)}>General</button>
+            <button
+              className="tab-button styled-button"
+              onClick={() => clickTab(TABS.GENERAL)}
+            >
+              General
+            </button>
           </li>
           <li>
-            <button className="tab-button styled-button" onClick={() => clickTab(TABS.NICKNAMES)}>Nicknames</button>
+            <button
+              className="tab-button styled-button"
+              onClick={() => clickTab(TABS.NICKNAMES)}
+            >
+              Nicknames
+            </button>
           </li>
         </ul>
       </div>
@@ -71,12 +81,7 @@ const LeftSidebar = ({ version, updateTabValue}) => {
   );
 };
 
-
-const Nicknames = ({
-  active,
-  updateNickname,
-  registeredNicknames
-}) => {
+const Nicknames = ({ active, updateNickname, registeredNicknames }) => {
   if (active === false) {
     return null;
   }
@@ -84,25 +89,20 @@ const Nicknames = ({
   return (
     <div className="settings-content">
       <NicknamesList
-      registeredNicknames={registeredNicknames}
-      updateNickname={updateNickname}>
-      </NicknamesList>
+        registeredNicknames={registeredNicknames}
+        updateNickname={updateNickname}
+      ></NicknamesList>
     </div>
   );
 };
 
-const NicknamesList = ({
-  registeredNicknames,
-  updateNickname
-}) => {
+const NicknamesList = ({ registeredNicknames, updateNickname }) => {
   const allNicks = [];
   for (const nick in registeredNicknames) {
     allNicks.push(
       <li key={`nick-${nick}`}>
         <div>
-          <h2>
-            {nick}
-          </h2>
+          <h2>{nick}</h2>
         </div>
       </li>
     );
@@ -111,9 +111,7 @@ const NicknamesList = ({
   return (
     <fieldset>
       <legend>Nicknames</legend>
-        <ul>
-          {allNicks}
-        </ul>
+      <ul>{allNicks}</ul>
     </fieldset>
   );
 };
@@ -124,7 +122,7 @@ const General = ({
   userOptions,
   userSettings,
   updateUserSettings,
-  active
+  active,
 }) => {
   if (active === false) {
     return null;

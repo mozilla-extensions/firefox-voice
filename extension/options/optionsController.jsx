@@ -3,7 +3,6 @@
 // eslint-disable-next-line no-unused-vars
 import * as optionsView from "./optionsView.js";
 import * as settings from "../settings.js";
-//import {getRegisteredNicknames} from "../background/intentRunner.js";
 
 const { useState, useEffect } = React;
 const optionsContainer = document.getElementById("options-container");
@@ -61,7 +60,9 @@ export const OptionsController = function() {
   };
 
   const initRegisteredNicknames = async () => {
-    const registeredNicknames = await browser.runtime.sendMessage({type: "getRegisteredNicknames"});
+    const registeredNicknames = await browser.runtime.sendMessage({
+      type: "getRegisteredNicknames",
+    });
     setRegisteredNicknames(registeredNicknames);
   };
 
@@ -75,8 +76,14 @@ export const OptionsController = function() {
   };
 
   const updateNickname = async nickname => {
-    await browser.runtime.sendMessage({type: "registerNickname", name: nickname.name, context: nickname.context});
-    const registeredNicknames = await browser.runtime.sendMessage({type: "getRegisteredNicknames"});
+    await browser.runtime.sendMessage({
+      type: "registerNickname",
+      name: nickname.name,
+      context: nickname.context,
+    });
+    const registeredNicknames = await browser.runtime.sendMessage({
+      type: "getRegisteredNicknames",
+    });
     setRegisteredNicknames(registeredNicknames);
   };
 
