@@ -272,6 +272,13 @@ export function isSearchTab(tab) {
 }
 
 intentRunner.registerIntent({
+  name: "search.defaultSearchEngine",
+  async run(context) {
+    await browser.search.search({ query: "" });
+  },
+});
+
+intentRunner.registerIntent({
   name: "search.search",
   async run(context) {
     stopCardPoll();
