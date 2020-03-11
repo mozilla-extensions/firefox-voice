@@ -317,6 +317,7 @@ phrase = "Close all selected tabs"
 phrase = "Remove the selected tabs"
 test = true
 
+<<<<<<< HEAD
 [tabs.countTabs]
 description = "Count tabs"
 match = """
@@ -348,3 +349,15 @@ test = true
 
 [[tabs.countTabs.example]]
 phrase = "How many tabs are open"
+
+[tabs.findOnPage]
+description = "Find on page content"
+match = """
+  find [query] on (this |) (page | tab)
+  search (this |) (page | tab) for [query]
+"""
+
+[[tabs.findOnPage.example]]
+phrase = "Find query on this page"
+test = true
+
