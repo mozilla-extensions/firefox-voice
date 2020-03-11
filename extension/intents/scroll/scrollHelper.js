@@ -3,10 +3,10 @@
 const scrollAmount = 0.9;
 
 function scrollVertically(dy, smooth) {
-  let toBeScrolled = window;
+  let toBeScrolled = document.activeElement;
 
-  if (document.contentType === "application/pdf") {
-    toBeScrolled = document.activeElement;
+  if (document.contentType === "text/html") {
+    toBeScrolled = window;
   }
 
   toBeScrolled.scrollBy({
