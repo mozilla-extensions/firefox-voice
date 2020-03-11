@@ -406,8 +406,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
       <legend>Firefox Voice Data Collection and Use</legend>
       <ul>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="technical-data"
               type="checkbox"
               checked={!userSettings.disableTelemetry}
@@ -426,8 +427,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="transcripts-data"
               type="checkbox"
               checked={userSettings.utterancesTelemetry}
@@ -447,8 +449,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="collect-audio"
               type="checkbox"
               checked={userSettings.collectAudio}

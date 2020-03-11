@@ -56,7 +56,8 @@ Example markup to use this styled native checkbox
   position: relative;
 }
 
-.styled-checkbox label {
+.styled-checkbox label,
+.styled-toggleswitch label {
   padding-left: 40px;
   line-height: 1.875rem;
   display: block;
@@ -141,4 +142,67 @@ a:active {
 
 strong {
   font-weight: 600;
+}
+
+.styled-toggleswitch input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  position: absolute;
+}
+
+input[type="checkbox"].toggle-button {
+  --button-height: 16px;
+  --button-half-height: 8px;
+  --button-width: 26px;
+  --button-border-width: 1px;
+  --dot-size: 10px;
+  --dot-margin: 2px;
+  --dot-transform-x: 10px;
+  --border-color: #181a1b24;
+}
+
+input[type="checkbox"].toggle-button {
+  -moz-appearance: none;
+  padding: 0;
+  margin-top: 7px;
+  outline: 0;
+  border: var(--button-border-width) solid var(--border-color);
+  height: var(--button-height);
+  width: var(--button-width);
+  border-radius: var(--button-half-height);
+  background: rgba(12, 12, 13, 0.1);
+  box-sizing: border-box;
+}
+
+input[type="checkbox"].toggle-button:hover {
+  background: rgba(12, 12, 13, 0.2);
+  border-color: var(--border-color);
+}
+
+input[type="checkbox"]:checked {
+  background: #0060df;
+  -moz-context-properties: fill;
+  fill: #2292d0;
+}
+
+input[type="checkbox"].toggle-button:checked:hover {
+  background: #003eaa;
+  border-color: #002275;
+}
+
+input[type="checkbox"].toggle-button::before {
+  display: block;
+  content: "";
+  background: #fff;
+  height: var(--dot-size);
+  width: var(--dot-size);
+  margin: var(--dot-margin);
+  border-radius: 50%;
+  outline: 1px solid var(--border-color);
+  -moz-outline-radius: 50%;
+  transition: transform 100ms;
+}
+
+input[type="checkbox"].toggle-button:checked::before {
+  transform: translateX(var(--dot-transform-x));
 }
