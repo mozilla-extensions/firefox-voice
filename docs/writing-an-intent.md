@@ -184,10 +184,10 @@ If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm
 NPM scripts are simply terminal commands. The npm scripts which are available to use with this project are listed below. 
 
 The scripts are written as key-value pairs where 
-**Key:** Name of the script. 
+**Key:** Name of the script.
 **Value:** The script you can execute.
 
-**Scripts** 
+**Scripts:** 
 ```js
 "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
 "start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-extension",
