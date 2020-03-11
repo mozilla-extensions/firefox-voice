@@ -178,3 +178,45 @@ Use `log.info()` (debug, etc) for any logging you plan to leave in the code. `lo
 If you are doing debugging, use `console.log()`. These are _not_ allowed in the code (and `npm test` will fail), but that's intentional: you should remove any debugging before committing the code, and only leave deliberate log messages.
 
 If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm start`.
+
+## NPM scripts:
+
+NPM scripts are simply terminal commands. The npm scripts which are available to use with this project are listed below. 
+
+The scripts are written as key-value pairs where 
+**Key:** Name of the script. 
+**Value:** The script you can execute.
+
+**Scripts** 
+`"start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
+"start-and-build": "NO_SENTRY=1 DEV_ICON=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-extension",
+"start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console --pref=extensions.experiments.enabled=true",
+"start-android": "concurrently --kill-others --success first --names watch,android 'npm run watch' 'npm run start-and-build-android'",
+"start-and-build-android": "NO_SENTRY=1 DEV_ICON=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-android-extension",
+"start-android-extension": "web-ext run --target=firefox-android --source-dir extension/ --android-device ${ANDROID_DEVICE:-please_set_ANDROID_DEVICE} --firefox-apk ${FIREFOX_APK:-org.mozilla.firefox}",
+"test": "npm-run-all build:manifest build:intent-metadata lint jest",
+"test-ci": "npm-run-all build:manifest build:intent-metadata lint",
+"jest": "npm run build:intent-metadata && jest",
+"build:templates": "mkdir -p extension/views && node bin/fill-templates.js",
+"build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in lottie-web/build/player/lottie.min.js webextension-polyfill/dist/browser-polyfill.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js ; do cp node_modules/$file extension/js/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
+"build:deps_porcupine": "mkdir -p extension/js/vendor/porcupine/ ; for file in porcupine_manager/src/porcupine_manager.js web-voice-processor/src/web_voice_processor.js porcupine_manager/src/porcupine_worker.js web-voice-processor/src/downsampling_worker.js porcupine_manager/src/pv_porcupine.js porcupine_manager/src/porcupine.js porcupine_manager/src/pv_porcupine.wasm ; do cp node_modules/@picovoice/$file extension/js/vendor/porcupine/ ; done",
+"build:manifest": "node bin/substitute-manifest.js",
+"build:intent-metadata": "node bin/parse-intent-toml.js",
+"build:ppn-listing": "node bin/generate-ppn-listing.js > extension/js/vendor/ppnListing.js",
+"build:jsx": "babel --relative --out-dir . '**/*.jsx'",
+"build:browserify": "browserify --require freeze-dry --standalone freezeDry > extension/js/vendor/freezeDry.js",
+"watch-rebuild": "npm-run-all build:jsx build:intent-metadata build:manifest",
+"watch": "nodemon --on-change-only -e toml,jsx,ejs --exec 'npm run watch-rebuild'",
+"maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
+"format": "prettier 'extension/**/*.{js,jsx,css}' --write",
+"lint": "npm-run-all lint:*",
+"lint:css": "stylelint 'extension/**/*.css'",
+"lint:html": "htmllint extension/**/*.html",
+"lint:extension": "web-ext lint -s extension --self-hosted",
+"lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
+"once": "web-ext run -s extension",
+"package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
+"calculate-version": "node bin/calculate-version.js",
+"enumerate-phrases": "babel-node --plugins @babel/plugin-transform-modules-commonjs bin/enumerate-phrases.js",
+"postinstall": "npm-run-all build:*"`
+
