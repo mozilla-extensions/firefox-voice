@@ -1,7 +1,6 @@
-import { languageNames } from "./languages.js";
+import { languageNames, smallNumbers, numbers } from "./languages.js";
 import { metadata } from "../services/metadata.js";
 import { convertEntities } from "./language/compiler.js";
-import { numbers, ordinals, cardinals, numberedOrdinals } from "./numbers.js";
 
 export const allServiceNames = [];
 
@@ -25,11 +24,6 @@ export const entityTypes = convertEntities({
   serviceName: allServiceNames,
   musicServiceName: musicServiceNames,
   lang: languageNames(),
-  smallNumber: [...numbers.slice(0, 9), ...cardinals.slice(0, 9)],
-  numberOrCardinal: [
-    ...numbers,
-    ...ordinals,
-    ...cardinals,
-    ...numberedOrdinals,
-  ],
+  smallNumber: [...Object.keys(smallNumbers)],
+  numberOrCardinal: [...Object.keys(numbers)],
 });

@@ -1,6 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
-import { findMatchingIndex } from "../../background/numbers.js";
+import { parseNumber } from "../../background/languages.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -561,17 +561,17 @@ if (!buildSettings.android) {
 intentRunner.registerIntent({
   name: "tabs.gotoTabNumber",
   async run(context) {
-    const userInput = context.slots.tabNumber;
-    const tabNumber = findMatchingIndex(userInput);
+    const userInputAsString = context.slots.tabNumber;
+    const userInputAsNumber = parseNumber(userInputAsString);
 
-    if (tabNumber < 0) {
-      const erroMessage = userInput + " is not a vliad tab number";
-      const e = new Error(erroMessage);
-      e.displayMessage = erroMessage;
+    if (userInputAsNumber === undefined) {
+      const e = new Error("Invalid tab number");
+      e.displayMessage = `"${userInputAsString}" is not a valid number`;
       throw e;
     }
 
     const tabs = await browser.tabs.query({});
-    context.makeTabActive(tabs[tabNumber]);
+    const tabToActivate = tabs[userInputAsNumber - 1];
+    context.makeTabActive(tabToActivate);
   },
 });
