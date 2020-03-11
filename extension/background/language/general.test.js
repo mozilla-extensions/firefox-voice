@@ -19,7 +19,7 @@ test("compiler", () => {
   );
 
   expect(
-    compile("(unmute|turn on) (tab{s} |page{s}) (for me |)").toString()
+    compile("(unmute | turn on) (tab{s} | page{s}) (for me |)").toString()
   ).toBe(
     'FullPhrase("(unmute | turn on) (tab | tabs | page | pages) (for me | )")'
   );

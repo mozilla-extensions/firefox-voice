@@ -40,7 +40,7 @@ test = true
 [muting.unmute]
 description = "Unmute all tabs"
 match = """
-  (unmute|turn on) (tab{s} |page{s}) (for me |)
+  (unmute | turn on) (tab{s} | page{s}) (for me |)
    unmute
 """
 
