@@ -13,7 +13,7 @@ intentRunner.registerIntent({
       bookmarksById.set(bookmark.id, bookmark.url);
       bookmarkContent.push({
         id: bookmark.id,
-        title: bookmark.title.split(" "),
+        title: bookmark.title,
         url: bookmark.url,
       });
     }

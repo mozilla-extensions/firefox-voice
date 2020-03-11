@@ -25,22 +25,6 @@
         "description": "Undo close window",
         "parameters": [],
         "async": true
-      },
-
-      {
-        "name": "openDownloads",
-        "type": "function",
-        "description": "Open downloads",
-        "parameters": [],
-        "async": true
-      },
-
-      {
-        "name": "quitApplication",
-        "type": "function",
-        "description": "Close Firefox",
-        "parameters": [],
-        "async": true
       }
     ]
   }
