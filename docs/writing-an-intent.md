@@ -184,7 +184,9 @@ If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm
 NPM scripts are simply terminal commands. The npm scripts which are available to use with this project are listed below. 
 
 The scripts are written as key-value pairs where 
+
 **Key:** Name of the script.
+
 **Value:** The script you can execute.
 
 **Scripts:** 
