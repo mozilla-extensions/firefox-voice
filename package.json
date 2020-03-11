@@ -57,6 +57,7 @@
     "lottie-web": "^5.5.7",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
     "webextension-polyfill": "^0.3.1",
     "webrtcvad_js": "^1.0.0"
   },
