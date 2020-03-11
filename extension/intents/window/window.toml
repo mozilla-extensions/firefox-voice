@@ -17,6 +17,9 @@ match = """
   (close | quit | exit | shutdown) firefox
 """
 
+[[window.quitApplication.example]]
+phrase = "Close Firefox"
+
 [window.combine]
 description = "Combine all windows"
 match = """

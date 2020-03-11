@@ -21,6 +21,10 @@ match = """
 [[tabs.undoCloseTab.example]]
 phrase = "Undo close tab"
 
+[[tabs.undoCloseTab.example]]
+phrase = "Undo last closed tab"
+test = true
+
 [tabs.undoCloseWindow]
 description = "Undo close window"
 match = """
@@ -288,6 +292,9 @@ match = """
 
 [[tabs.collectMentionedTabs.example]]
 phrase = "Collect these tabs"
+
+[[tabs.collectMentionedTabs.example]]
+phrase = "Collect all Google Docs tabs"
 
 [tabs.closeSelectedTabs]
 description = "Close selected tabs"
