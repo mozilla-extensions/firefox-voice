@@ -2,14 +2,28 @@
 
 const scrollAmount = 0.9;
 
-function scrollVertically(dy, smooth) {
-  let toBeScrolled = document.activeElement;
+function getScrollableElement() {
+  let element = document.activeElement;
+  let height = element.offsetHeight;
+  let scrollPos = element.scrollTop;
+  const scrollHeight = element.scrollHeight;
 
   if (document.contentType === "text/html") {
-    toBeScrolled = window;
+    element = window;
+    height = element.innerHeight;
+    scrollPos = element.scrollY;
   }
 
-  toBeScrolled.scrollBy({
+  return {
+    element,
+    height,
+    scrollPos,
+    scrollHeight
+  };
+}
+
+function scrollVertically(dy, smooth, element) {
+  element.scrollBy({
     left: 0,
     top: dy,
     behavior: smooth ? "smooth" : "auto",
@@ -18,25 +32,44 @@ function scrollVertically(dy, smooth) {
 }
 
 function scrollUp() {
-  return scrollVertically(-scrollAmount * window.innerHeight, true);
+  const toBeScrolled = getScrollableElement();
+  return scrollVertically(
+    -scrollAmount * toBeScrolled.height,
+    true,
+    toBeScrolled.element
+  );
 }
 
 communicate.register("scrollUp", scrollUp);
 
 function scrollDown() {
-  return scrollVertically(scrollAmount * window.innerHeight, true);
+  const toBeScrolled = getScrollableElement();
+  return scrollVertically(
+    scrollAmount * toBeScrolled.height,
+    true,
+    toBeScrolled.element);
 }
 
 communicate.register("scrollDown", scrollDown);
 
 function scrollToTop() {
-  return scrollVertically(-window.scrollY, false);
+  const toBeScrolled = getScrollableElement();
+  return scrollVertically(
+    -toBeScrolled.scrollPos,
+    false,
+    toBeScrolled.element
+  );
 }
 
 communicate.register("scrollToTop", scrollToTop);
 
 function scrollToBottom() {
-  return scrollVertically(document.body.scrollHeight - window.scrollY, false);
+  const toBeScrolled = getScrollableElement();
+  return scrollVertically(
+    toBeScrolled.scrollHeight - toBeScrolled.scrollPos,
+    false,
+    toBeScrolled.element
+  );
 }
 
 communicate.register("scrollToBottom", scrollToBottom);
