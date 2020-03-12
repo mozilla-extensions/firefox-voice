@@ -4,11 +4,12 @@
 import * as optionsView from "./optionsView.js";
 import * as settings from "../settings.js";
 
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 const optionsContainer = document.getElementById("options-container");
 
 let isInitialized = false;
 let onKeyboardShortcutError = () => {};
+let onTabChange = () => {};
 
 browser.runtime.onMessage.addListener(message => {
   if (message.type !== "keyboardShortcutError") {
@@ -16,6 +17,32 @@ browser.runtime.onMessage.addListener(message => {
   }
   onKeyboardShortcutError(message.error);
 });
+
+window.onhashchange = () => {
+  let tab = undefined;
+
+  if (location.hash === "#routines") {
+    tab = (optionsView.TABS.ROUTINES);
+  } else if (location.hash === "#general") {
+    tab = optionsView.TABS.GENERAL;
+  }
+
+  onTabChange(tab);
+};
+
+window.onload = () => {
+  let tab = undefined;
+
+  if (location.hash === "#routines") {
+    tab = (optionsView.TABS.ROUTINES);
+  } else {
+    tab = optionsView.TABS.GENERAL;
+  }
+
+  onTabChange(tab);
+};
+
+
 
 export const OptionsController = function() {
   const [inDevelopment, setInDevelopment] = useState(false);
@@ -25,10 +52,11 @@ export const OptionsController = function() {
   );
   const [userSettings, setUserSettings] = useState({});
   const [userOptions, setUserOptions] = useState({});
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(optionsView.TABS.GENERAL);
   const [registeredNicknames, setRegisteredNicknames] = useState({});
 
   onKeyboardShortcutError = setKeyboardShortcutError;
+  onTabChange = setTabValue;
 
   useEffect(() => {
     if (!isInitialized) {
@@ -40,7 +68,6 @@ export const OptionsController = function() {
   const init = async () => {
     await initVersionInfo();
     await initSettings();
-    await initTab();
     await initRegisteredNicknames();
   };
 
@@ -66,10 +93,6 @@ export const OptionsController = function() {
     setRegisteredNicknames(registeredNicknames);
   };
 
-  const initTab = async () => {
-    setTabValue(optionsView.TABS.GENERAL);
-  };
-
   const updateUserSettings = async userSettings => {
     await settings.saveSettings(userSettings);
     setUserSettings(userSettings);
@@ -87,8 +110,22 @@ export const OptionsController = function() {
     setRegisteredNicknames(registeredNicknames);
   };
 
-  const updateTabValue = tabValue => {
-    setTabValue(tabValue);
+  const useDropdown = (initialIsVisible) => {
+    const [isDropdownVisible, setDropdownVisible] = useState(initialIsVisible);
+    const ref = useRef(null);
+
+    const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            setDropdownVisible(false);
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutside, true);
+        return () => {
+            document.removeEventListener("click", handleClickOutside, true);
+        };
+    });
+    return { ref, isDropdownVisible, setDropdownVisible };
   };
 
   return (
@@ -99,10 +136,10 @@ export const OptionsController = function() {
       userOptions={userOptions}
       userSettings={{ ...userSettings }}
       updateUserSettings={updateUserSettings}
-      updateTabValue={updateTabValue}
       tabValue={tabValue}
       updateNickname={updateNickname}
       registeredNicknames={registeredNicknames}
+      useDropdown={useDropdown}
     />
   );
 };

@@ -4,8 +4,8 @@
 import * as browserUtil from "../browserUtil.js";
 
 export const TABS = {
-  GENERAL: 0,
-  NICKNAMES: 1,
+  GENERAL: "GENERAL",
+  ROUTINES: "ROUTINES",
 };
 
 export const Options = ({
@@ -15,38 +15,38 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
-  updateTabValue,
   tabValue,
   updateNickname,
   registeredNicknames,
+  useDropdown
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} updateTabValue={updateTabValue} />
-      <General
-        inDevelopment={inDevelopment}
-        keyboardShortcutError={keyboardShortcutError}
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        active={tabValue === TABS.GENERAL}
-      ></General>
-      <Nicknames
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        active={tabValue === TABS.NICKNAMES}
-        updateNickname={updateNickname}
-        registeredNicknames={registeredNicknames}
-      ></Nicknames>
+      <LeftSidebar version={version} />
+      {tabValue === TABS.GENERAL ?
+        <General
+          inDevelopment={inDevelopment}
+          keyboardShortcutError={keyboardShortcutError}
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        ></General> : null
+        }
+        {tabValue === TABS.ROUTINES ?
+          <Routines
+            userOptions={userOptions}
+            userSettings={userSettings}
+            updateUserSettings={updateUserSettings}
+            updateNickname={updateNickname}
+            registeredNicknames={registeredNicknames}
+            useDropdown={useDropdown}
+          ></Routines> : null
+        }
     </div>
   );
 };
 
-const LeftSidebar = ({ version, updateTabValue }) => {
-  const clickTab = tab => {
-    updateTabValue(tab);
-  };
+const LeftSidebar = ({ version }) => {
 
   return (
     <div className="settings-sidebar">
@@ -60,20 +60,10 @@ const LeftSidebar = ({ version, updateTabValue }) => {
       <div>
         <ul className="tab-list">
           <li>
-            <button
-              className="tab-button styled-button"
-              onClick={() => clickTab(TABS.GENERAL)}
-            >
-              General
-            </button>
+            <a className="tab-button styled-button" href="#general"> General </a>
           </li>
           <li>
-            <button
-              className="tab-button styled-button"
-              onClick={() => clickTab(TABS.NICKNAMES)}
-            >
-              Nicknames
-            </button>
+            <a className="tab-button styled-button" href="#routines"> Routines </a>
           </li>
         </ul>
       </div>
@@ -81,37 +71,78 @@ const LeftSidebar = ({ version, updateTabValue }) => {
   );
 };
 
-const Nicknames = ({ active, updateNickname, registeredNicknames }) => {
-  if (active === false) {
-    return null;
-  }
-
+const Routines = ({updateNickname, registeredNicknames, useDropdown }) => {
   return (
     <div className="settings-content">
-      <NicknamesList
+      <RoutinesList
         registeredNicknames={registeredNicknames}
         updateNickname={updateNickname}
-      ></NicknamesList>
+        useDropdown={useDropdown}
+      ></RoutinesList>
     </div>
   );
 };
 
-const NicknamesList = ({ registeredNicknames, updateNickname }) => {
+
+const RoutineMenu = ({
+  context,
+  useDropdown,
+  updateNickname
+}) => {
+  const {ref, isDropdownVisible, setDropdownVisible} = useDropdown(false);
+  return (
+    <div className="card-menu" ref={ref}>
+    <button class="no-style-button" onClick={() => setDropdownVisible(!isDropdownVisible)}><img src="images/more-horizontal.svg" alt="Routine Actions"></img></button>
+    {isDropdownVisible === true ?
+      <div className="menu-box">
+      <div className="menu-button">
+        <span> Edit </span>
+      </div>
+      <div className="menu-button">
+        <span> Remove </span>
+      </div>
+      </div> : null
+    }
+    </div>
+  );
+};
+
+const RoutinesList = ({ registeredNicknames, updateNickname, useDropdown }) => {
   const allNicks = [];
   for (const nick in registeredNicknames) {
+
+
+    const allUtterances = [];
+    const contexts = registeredNicknames[nick].contexts;
+    for (let i = 0; i < contexts.length - 1; i++) {
+      allUtterances.push(
+        contexts[i].utterance + ", "
+      );
+    }
+    allUtterances.push(
+      contexts[contexts.length - 1].utterance
+    );
+
     allNicks.push(
-      <li key={`nick-${nick}`}>
-        <div>
-          <h2>{nick}</h2>
-        </div>
-      </li>
+      <div className="card">
+        <RoutineMenu
+          useDropdown={useDropdown}
+          context={registeredNicknames[nick]}
+          updateNickname={updateNickname}
+        ></RoutineMenu>
+        <h2 className="card-name" >"{nick}"</h2>
+        <h3 className="card-text">{allUtterances}</h3>
+      </div>
     );
   }
 
   return (
     <fieldset>
-      <legend>Nicknames</legend>
-      <ul>{allNicks}</ul>
+      <legend>Manage your Routines</legend>
+      <h2>Create a custom phrase to execute one or more actions</h2>
+      <div >
+        {allNicks}
+      </div>
     </fieldset>
   );
 };

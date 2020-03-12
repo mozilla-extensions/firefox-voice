@@ -8,6 +8,14 @@ html {
 body {
   background-color: #fafafc;
 }
+
+.no-style-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+}
+
 .tab-button {
   height: 50px;
   padding: 0 0;
@@ -15,6 +23,60 @@ body {
   position: relative;
   top: 50px;
   margin-top: 30px;
+}
+.card {
+  border: 1px solid #f4f1f1;
+  border-radius: 4px;
+  box-shadow: 3px 3px 3px #bfbaba;
+  margin: 0 0 8px;
+  margin-bottom: 8px;
+  margin-bottom: 8px;
+  padding: 5px;
+  transition: box-shadow 150ms;
+  width: 1200px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.card-name {
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.card-text {
+  color: rgb(102, 101, 101);
+  font-weight: 100;
+  margin-top: -20px;
+}
+
+
+.card:hover {
+  box-shadow: 5px 5px 5px #bdbdbd;
+}
+
+.card-menu {
+  float: right;
+  top: 10px;
+  position: relative;
+  width:25px;
+  height:25px;
+}
+
+.menu-box {
+  border: 1px solid #f4f1f1;
+  border-radius: 4px;
+  box-shadow: 3px 3px 3px #bfbaba;
+  margin: 0 0 8px;
+  display: inline-block;
+  padding: 20px;
+  background-color: #fafafc;
+  z-index: 9999;
+  position: relative;
+}
+
+.menu-button {
+  padding: 5px;
+  cursor: pointer;
 }
 
 .tab-list {
