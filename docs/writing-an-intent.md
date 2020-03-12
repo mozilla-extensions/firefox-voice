@@ -179,7 +179,7 @@ If you are doing debugging, use `console.log()`. These are _not_ allowed in the 
 
 If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm start`.
 
-## NPM scripts:
+## NPM scripts
 
 NPM scripts are simply terminal commands. The npm scripts which are available to use are listed in package.json file. 
 One project specific/custom npm script is `enumerate-phrases`.
