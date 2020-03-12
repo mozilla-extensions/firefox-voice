@@ -97,7 +97,7 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
 
-### Matting an utterance to an intent
+### Matching an utterance to an intent
 
 Sometimes more than one phrase will match the utterance. If more than one intent matches an utterance then Firefox Voice has to decide which one to execute.
 

@@ -121,3 +121,13 @@ test = true
 [[search.show.example]]
 phrase = "focus result"
 test = true
+
+[search.defaultSearchEngine]
+description = "Opens the default search engine"
+match = """
+  search
+"""
+
+[[search.defaultSearchEngine.example]]
+phrase = "search"
+test = true

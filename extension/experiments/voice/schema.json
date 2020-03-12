@@ -33,6 +33,14 @@
         "description": "Open downloads",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "quitApplication",
+        "type": "function",
+        "description": "Close Firefox",
+        "parameters": [],
+        "async": true
       }
     ]
   }

@@ -50,6 +50,18 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "forms.formSubmit",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/js/vendor/fuse.js",
+      "/intents/forms/formsContentScript.js",
+    ]);
+    await browser.tabs.sendMessage(activeTab.id, { type: "formSubmit" });
+  },
+});
+
+intentRunner.registerIntent({
   name: "forms.focusPrevious",
   async run(context) {
     const activeTab = await context.activeTab();

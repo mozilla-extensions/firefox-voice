@@ -272,6 +272,13 @@ export function isSearchTab(tab) {
 }
 
 intentRunner.registerIntent({
+  name: "search.defaultSearchEngine",
+  async run(context) {
+    await browser.search.search({ query: "" });
+  },
+});
+
+intentRunner.registerIntent({
   name: "search.search",
   async run(context) {
     stopCardPoll();
@@ -346,7 +353,7 @@ intentRunner.registerIntent({
     if (!googleIsDefaultProvider) {
       await browser.tabs.update(searchTabId, { url: "about:blank" });
       await browser.search.search({
-        query: searchInfo.query || "unkonwn",
+        query: searchInfo.query || "unknown",
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
