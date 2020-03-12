@@ -187,6 +187,6 @@ NPM scripts are simply terminal commands. The npm scripts which are available t
 
 You can execute this script as:
 ```js 
-npm run enumerate-phrases --someIntent.command
+npm run enumerate-phrases -- someIntent.command
 ```
-For example, Running the command `npm run enumerate-phrases --navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.
+For example, Running the command `npm run enumerate-phrases -- navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.
