@@ -48,7 +48,8 @@ npm start
 
 Should you encounter any errors running ```npm install```, make sure you are using the latest version of Node by looking at this [update guide](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
-If Firefox Nightly does not open after `npm start`, it might be because the path to Nightly is incorrect you could do `echo $FIREFOX` and double check that it is right or just use the release version if you have it installed by running  `FIREFOX="/usr/bin/firefox" npm start`.
+If Firefox Nightly does not open a new browser after `npm start`, it might be because the path to the Firefox Nightly binary is incorrect. You could do `echo $FIREFOX` and double check that it is right.
+You could use the release version if you have it installed by running  `FIREFOX="/usr/bin/firefox" npm start`.
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
