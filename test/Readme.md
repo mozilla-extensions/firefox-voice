@@ -3,7 +3,7 @@
 
  ## How to Run
  In the main directory
- `npm run build:selenium`
+ `npm run test:selenium`
  If console output is "Extension Present"
  then the test has successfully completed
 
