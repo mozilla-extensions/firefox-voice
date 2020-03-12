@@ -26,7 +26,7 @@ If you have a bug or idea you want to develop, you can open a new issue in this 
 
 If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://matrix.to/#/!qzDBOUrnxuFFNQRaIo:mozilla.org?via=mozilla.org)). Note that the team mostly works weekdays, North American work hours, so questions outside of that time may take a while to get a response.
 
-## Developing
+## Developing in Linux
 
 Documentation on the various parts and aspects of firefox-voice could be found in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md). 
 
@@ -45,6 +45,8 @@ Finally, install dependencies and start firefox voice by running:
 npm install
 npm start
 ```
+
+This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
 Should you encounter any errors running ```npm install```, make sure you are using the latest version of Node by looking at this [update guide](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
