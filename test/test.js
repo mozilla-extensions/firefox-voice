@@ -3,7 +3,7 @@ const webdriver = require("selenium-webdriver");
 const { By, until, Builder } = webdriver;
 const path = require("path");
 const firefox = require("selenium-webdriver/firefox");
-const addonFileLocation = path.join(process.cwd(), "web-ext-artifacts", "firefox_voice_beta-0.19.4502.zip");
+const addonFileLocation = path.join(process.cwd(), "web-ext-artifacts", "firefox_voice_beta-2.zip");
 
 (async function example() {
 
