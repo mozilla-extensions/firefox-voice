@@ -35,7 +35,7 @@ However to quickly get started with the development environment, you would need 
 1. Download the latest LTS version of [NodeJs](https://nodejs.org/) before running any of the provided npm commands.
 2. Download [Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/) which is a pre-release version of Firefox that is updated every now and then just so you are developing and testing with the latest firefox features.
 3. Use `tar xjvf` to extract the binaries for FireFox Nightly into a location of your choice could be `/opt/FireFoxNightly/` folder or just your download folder, wherever is fine. 
-4. Let firefox-voice know where you kept the binary for FireFox Nightly typically by runing `export FIREFOX=/path/to/FireFoxNightly/firefox` and using our example location would be `export FIREFOX=/opt/FireFoxNightly/`
+4. Let firefox-voice know where you kept the binary (firefox) for FireFox Nightly typically by running `export FIREFOX=/path/to/FireFoxNightly/firefox` and using our example location would be `export FIREFOX=/opt/FireFoxNightly/firefox`. This creates a temporary export (environment variable) called FIREFOX for your current session.
 
 You would have to run this everytime you have a new session so may want to look [how to let the export stick permanently](https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux)
 
