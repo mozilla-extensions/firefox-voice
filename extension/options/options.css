@@ -38,10 +38,10 @@ body {
 }
 
 .settings-sidebar #tabs ul {
- list-style: none;
+  list-style: none;
 }
 
-.settings-sidebar #tabs ul li a { 
+.settings-sidebar #tabs ul li a {
   display: block;
   margin-top: 5px;
   padding: 5px 15px;
@@ -53,8 +53,8 @@ body {
 }
 
 .settings-sidebar #tabs ul li a:hover {
-   text-decoration:none; 
-   cursor:pointer;  
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .settings-content {
