@@ -11,7 +11,7 @@ export const Options = ({
   userSettings,
   updateUserSettings,
   activeTab,
-  updateActiveTab
+  updateActiveTab,
 }) => {
   return (
     <div className="settings-page">
@@ -36,10 +36,9 @@ const LeftSidebar = ({ version, updateActiveTab }) => {
       <div className="version-info">
         <p>Version {version}</p>
         <p>
-          <a href="/views/CHANGELOG.html">What"s New</a>
+          <a href="/views/CHANGELOG.html">What's New</a>
         </p>
       </div>
-
     </div>
   );
 };
@@ -128,10 +127,10 @@ const RightContent = ({
 
   return (
     <div className="settings-content">
-      <fieldset id="keyboard-shortcut">
-        <legend>Error</legend>
+      <section>
+        <h1>Error</h1>
         <p>Unknown option</p>
-      </fieldset>
+      </section>
     </div>
   );
 };
@@ -558,48 +557,51 @@ const AboutSection = () => {
   );
 };
 
-const Tabs = ({
-  updateActiveTab
-}) => {
+const Tabs = ({ updateActiveTab }) => {
+  const onHashChange = event => {
+    updateActiveTab(event.newURL.split("#")[1]);
+  };
+
+  window.addEventListener("hashchange", onHashChange);
   return (
-    <fieldset id="tabs">
+    <nav id="tabs">
       <ul>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("chime-settings")}>
+          <a className="styled-button" href="#chime-settings">
             Preferences
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("shortcut-settings")}>
+          <a className="styled-button" href="#shortcut-settings">
             Shortcuts
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("wakeword-settings")}>
+          <a className="styled-button" href="#wakeword-settings">
             Wakeword
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("music-settings")}>
+          <a className="styled-button" href="#music-settings">
             Services
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("data-settings")}>
+          <a className="styled-button" href="#data-settings">
             Privacy
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("development-settings")}>
+          <a className="styled-button" href="#development-settings">
             Development
-          </button>
+          </a>
         </li>
         <li>
-          <button className="styled-button" onClick={() => updateActiveTab("about")}>
+          <a className="styled-button" href="#about">
             About
-          </button>
+          </a>
         </li>
       </ul>
-    </fieldset>
+    </nav>
   );
 };
