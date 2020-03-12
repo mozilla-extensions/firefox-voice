@@ -89,6 +89,9 @@ body,
   font-size: 1.125rem;
   letter-spacing: 0.05rem;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #popup-footer {
@@ -175,6 +178,7 @@ body,
 #transcript,
 #text-display {
   text-align: center;
+  word-wrap: break-word;
 }
 
 #transcript {
@@ -307,10 +311,12 @@ a#lexicon {
 
 .feedback-controls .happy-icon {
   mask: url("./images/icon-happy.svg");
+  cursor: pointer;
 }
 
 .feedback-controls .sad-icon {
   mask: url("./images/icon-sad.svg");
+  cursor: pointer;
 }
 
 .feedback-controls .happy-icon:hover {

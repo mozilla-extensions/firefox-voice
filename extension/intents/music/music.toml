@@ -152,3 +152,7 @@ match = """
 
 [[music.showTitle.example]]
 phrase = "What is playing"
+
+[[music.showTitle.example]]
+phrase = "What's playing?"
+test = true

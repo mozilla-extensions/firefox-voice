@@ -101,7 +101,8 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 2. `firefox-voice` makes use of `jest` but it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites. 
 3. `npm test` would still run `npm run jest` locally on `node v13.8.0` in the development process.
 4. New `jest` unit tests can still be added because `npm test` still runs `jest` locally. Look at files with `.test.js` extension for examples to guide you.
-5. Many formatting and linting problems can be automatically fixed by running  `npm run lint:fix`.
+5. `npm run test:selenium` will run selenium tests. To run tests locally first run `web-ext build -s extension --overwrite-dest` which builds the extenion as a zip file then run `node test/test.js`
+6. Many formatting and linting problems can be automatically fixed by running  `npm run lint:fix`.
  In order to keep the `firefox-voice` codebase healthy and running properly, these tools are used:
    * Prettier formats and keeps the code the same way, saving energy and time.
    * ESLint spots problems and errors, also saving everyone's energy and time. 
