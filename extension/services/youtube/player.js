@@ -8,14 +8,17 @@ this.player = (function() {
     }
 
     isChannelOrUser() {
-      const baseURI = (this.querySelectorAll("video"))[0].baseURI;
-      const isChannel = /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
+      const baseURI = this.querySelectorAll("video")[0].baseURI;
+      const isChannel =
+        /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
       if (isChannel) {
         this.videoPlayer = "ytd-channel-video-player-renderer video";
         this.selector = "ytd-channel-video-player-renderer";
       } else {
-        this.videoPlayer = "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH'] video";
-        this.selector = "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH']";
+        this.videoPlayer =
+          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH'] video";
+        this.selector =
+          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH']";
       }
     }
 
