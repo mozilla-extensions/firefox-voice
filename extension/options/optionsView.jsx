@@ -10,30 +10,33 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  activeTab,
+  updateActiveTab
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
+      <LeftSidebar version={version} updateActiveTab={updateActiveTab} />
       <RightContent
         inDevelopment={inDevelopment}
         keyboardShortcutError={keyboardShortcutError}
         userOptions={userOptions}
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        activeTab={activeTab}
       />
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, updateActiveTab }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
-      <Tabs />
+      <Tabs updateActiveTab={updateActiveTab} />
       <div className="version-info">
         <p>Version {version}</p>
         <p>
-          <a href="/views/CHANGELOG.html">What's New</a>
+          <a href="/views/CHANGELOG.html">What"s New</a>
         </p>
       </div>
 
@@ -47,34 +50,88 @@ const RightContent = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  activeTab,
 }) => {
+  if (activeTab === "chime-settings") {
+    return (
+      <div className="settings-content">
+        <ChimeSettings
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "shortcut-settings") {
+    return (
+      <div className="settings-content">
+        <KeyboardShortcutSettings
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          keyboardShortcutError={keyboardShortcutError}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "wakeword-settings") {
+    return (
+      <div className="settings-content">
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "music-settings") {
+    return (
+      <div className="settings-content">
+        <MusicServiceSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "data-settings") {
+    return (
+      <div className="settings-content">
+        <DataCollection
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "development-settings") {
+    return (
+      <div className="settings-content">
+        <DevelopmentSettings inDevelopment={inDevelopment} />
+      </div>
+    );
+  }
+
+  if (activeTab === "about") {
+    return (
+      <div className="settings-content">
+        <AboutSection />
+      </div>
+    );
+  }
+
   return (
     <div className="settings-content">
-      <ChimeSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <KeyboardShortcutSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        keyboardShortcutError={keyboardShortcutError}
-      />
-      <WakewordSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <MusicServiceSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <DataCollection
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <DevelopmentSettings inDevelopment={inDevelopment} />
-      <AboutSection />
+      <fieldset id="keyboard-shortcut">
+        <legend>Error</legend>
+        <p>Unknown option</p>
+      </fieldset>
     </div>
   );
 };
@@ -355,7 +412,7 @@ const WakewordSettings = ({
             </label>
           </div>
           <p>
-            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
+            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don"t
             listen)
           </p>
         </li>
@@ -501,19 +558,48 @@ const AboutSection = () => {
   );
 };
 
-const Tabs = () => {
+const Tabs = ({
+  updateActiveTab
+}) => {
   return (
     <fieldset id="tabs">
       <ul>
-        <li><a className="styled-button" href="#">Preferences</a></li>
-        <li><a className="styled-button" href="#">Shortcuts</a></li>
-        <li><a className="styled-button" href="#">Wakeword</a></li>
-        <li><a className="styled-button" href="#">Music Service</a></li>
-        <li><a className="styled-button" href="#">Privacy</a></li>
-        <li><a className="styled-button" href="#">Development </a></li>
-        <li><a className="styled-button" href="#">About</a></li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("chime-settings")}>
+            Preferences
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("shortcut-settings")}>
+            Shortcuts
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("wakeword-settings")}>
+            Wakeword
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("music-settings")}>
+            Services
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("data-settings")}>
+            Privacy
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("development-settings")}>
+            Development
+          </button>
+        </li>
+        <li>
+          <button className="styled-button" onClick={() => updateActiveTab("about")}>
+            About
+          </button>
+        </li>
       </ul>
     </fieldset>
   );
-
-}
+};

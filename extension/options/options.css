@@ -41,19 +41,20 @@ body {
   list-style: none;
 }
 
-.settings-sidebar #tabs ul li a {
+.settings-sidebar #tabs ul li button {
   display: block;
   margin-top: 5px;
   padding: 5px 15px;
-  height: 30px;
+  height: 50px;
+  width: 200px;
   background: radial-gradient(#0f8aef 5%, #9347e3 90%, #fc5257);
   font-family: inherit;
   font-size: 20px;
   font-weight: 500;
 }
 
-.settings-sidebar #tabs ul li a:hover {
-  text-decoration: none;
+.settings-sidebar #tabs ul li button:hover {
+  font-size: 25px;
   cursor: pointer;
 }
 
