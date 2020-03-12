@@ -6,7 +6,6 @@ const firefox = require("selenium-webdriver/firefox");
 const extension_manifest_path=path.join(process.cwd(),"extension","manifest.json")
 const version_name= require(extension_manifest_path).version
 const extension_name="firefox_voice_beta-"+version_name+".zip"
-console.log(extension_name)
 const addonFileLocation = path.join(process.cwd(), "web-ext-artifacts",extension_name);
 (async function example() {
 
