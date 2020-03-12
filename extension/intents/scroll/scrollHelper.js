@@ -2,8 +2,13 @@
 
 const scrollAmount = 0.9;
 
+let url = location.href;
+let pdf = url.slice(-4) === ".pdf";
+let activeEl = document.activeElement;
+let targetEl = pdf ? activeEl : window;
+
 function scrollVertically(dy, smooth) {
-  window.scrollBy({
+  targetEl.scrollBy({
     left: 0,
     top: dy,
     behavior: smooth ? "smooth" : "auto",
@@ -24,13 +29,15 @@ function scrollDown() {
 communicate.register("scrollDown", scrollDown);
 
 function scrollToTop() {
-  return scrollVertically(-window.scrollY, false);
+  let topHeight = pdf ? targetEl.scrollHeight : window.scrollY;
+  return scrollVertically(-topHeight, false);
 }
 
 communicate.register("scrollToTop", scrollToTop);
 
 function scrollToBottom() {
-  return scrollVertically(document.body.scrollHeight - window.scrollY, false);
+  let bottomHeight = pdf ? targetEl.scrollHeight : document.body.scrollHeight;
+  return scrollVertically(bottomHeight - window.scrollY, false);
 }
 
 communicate.register("scrollToBottom", scrollToBottom);
