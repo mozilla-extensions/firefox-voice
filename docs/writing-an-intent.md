@@ -183,7 +183,7 @@ If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm
 
 NPM scripts are simply terminal commands. The npm scripts which are available to use are listed in package.json file. `enumerate-phrases` is a project specific/custom npm script.
 
-**enumerate-phrases:** lists all the matched phrases for the specified intent by using `extension/intents/metadata.js` for matching. You can execute this script as:
+**enumerate-phrases:** lists all the matched phrases for the specified intent by using `extension/intents/metadata.js` for finding matches. You can execute this script as:
 ```js 
 npm run enumerate-phrases --someIntent.command
 ```
