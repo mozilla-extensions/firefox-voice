@@ -411,7 +411,7 @@ const WakewordSettings = ({
             </label>
           </div>
           <p>
-            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don"t
+            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
             listen)
           </p>
         </li>
