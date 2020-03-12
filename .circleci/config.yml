@@ -16,6 +16,16 @@ jobs:
           name: Install Node Modules
           command: npm install
       - run:
+          name: create docker network
+          command: docker network create grid
+      - run:
+          name: install selenium-hub
+          command: docker run -d --rm -p 4444:4444 --net grid --name selenium-hub selenium/hub:3.141.59 
+          
+      - run:
+          name: install selenium-node
+          command: docker run -d --rm --net grid -e HUB_HOST=selenium-hub -v /dev/shm:/dev/shm selenium/node-firefox:3.141.59 
+      - run:
           name: Build XPI
           command: npm run package
       - persist_to_workspace:
@@ -30,6 +40,7 @@ jobs:
     executor: docker
     docker:
       - image: circleci/node:13.8.0-stretch
+      - image: selenium/standalone-firefox:3.141.59 
     environment:
       - NODE_ENV: dev
     steps:
@@ -44,6 +55,7 @@ jobs:
     executor: docker
     docker:
       - image: circleci/node:13.8.0-stretch
+      - image: selenium/standalone-firefox:3.141.59 
     environment:
       - NODE_ENV: dev
       - GECKODRIVER: 0.23.0
@@ -67,6 +79,7 @@ jobs:
   deploy_dev:
     docker:
       - image: circleci/node:13.8.0-stretch
+      - image: selenium/standalone-firefox:3.141.59 
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -97,6 +110,7 @@ jobs:
   deploy_stage:
     docker:
       - image: circleci/node:13.8.0-stretch
+      - image: selenium/standalone-firefox:3.141.59 
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -116,6 +130,7 @@ jobs:
   deploy_prod:
     docker:
       - image: circleci/node:13.8.0-stretch
+      - image: selenium/standalone-firefox:3.141.59 
     steps:
       - setup_remote_docker
       - attach_workspace:
