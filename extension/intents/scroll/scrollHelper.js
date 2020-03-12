@@ -18,7 +18,7 @@ function getScrollableElement() {
     element,
     height,
     scrollPos,
-    scrollHeight
+    scrollHeight,
   };
 }
 
@@ -47,18 +47,15 @@ function scrollDown() {
   return scrollVertically(
     scrollAmount * toBeScrolled.height,
     true,
-    toBeScrolled.element);
+    toBeScrolled.element
+  );
 }
 
 communicate.register("scrollDown", scrollDown);
 
 function scrollToTop() {
   const toBeScrolled = getScrollableElement();
-  return scrollVertically(
-    -toBeScrolled.scrollPos,
-    false,
-    toBeScrolled.element
-  );
+  return scrollVertically(-toBeScrolled.scrollPos, false, toBeScrolled.element);
 }
 
 communicate.register("scrollToTop", scrollToTop);
