@@ -102,6 +102,9 @@ function trackTabHide() {
 
 async function performSearch(query) {
   const tabId = await openSearchTab();
+  // Slicing query string to follow google query standard
+  // For more information, https://support.google.com/gsa/answer/4411411#requests
+  query = query.slice(0, 128);
   const url = searching.googleSearchUrl(query) + "&voice";
   await browserUtil.loadUrl(tabId, url);
   if (buildSettings.android) {
