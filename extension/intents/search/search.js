@@ -304,6 +304,13 @@ intentRunner.registerIntent({
     await performSearch(context.slots.query);
     const searchInfo = await callScript({ type: "searchResultInfo" });
     searchInfo.query = context.slots.query;
+
+    if (!searchInfo.searchResults) {      
+      const e = new Error("No result found for "+searchInfo.query);
+      e.displayMessage = "No result found for "+searchInfo.query;
+      throw e;
+    }
+
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
       context.keepPopup();
