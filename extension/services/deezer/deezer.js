@@ -5,13 +5,11 @@ import { shouldDisplayWarning } from "../../limiter.js";
 
 class Deezer extends serviceList.Service {
   async playQuery(query) {
+    console.log("Pls login or signup");
     await this.initTab("/services/deezer/player.js");
     await this.callTab("search", { query, thenPlay: true });
-    console.log("Deezer==>", this.tabCreated);
-      console.log("deezer", query);
-      
+  
     if (this.tabCreated) {
-      
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
         const activeTabId = (await this.context.activeTab()).id;
@@ -19,7 +17,7 @@ class Deezer extends serviceList.Service {
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (
           nowAudible ||
-          !(await shouldDisplayWarning("Audible", {
+          !(await shouldDisplayWarning("deezerAudible", {
             times: 3,
             frequency: 1000,
           }))
@@ -28,7 +26,7 @@ class Deezer extends serviceList.Service {
             this.context.makeTabActive(activeTabId);
           }
         } else {
-          this.context.failedAutoplay(this.tab);
+          this.context.failedAutoplay(this.tab); 
         }
       }
     }
@@ -71,8 +69,8 @@ class Deezer extends serviceList.Service {
 
 Object.assign(Deezer, {
   id: "deezer",
-  title: "Deezer",
-  baseUrl: "https://www.deezer.com/en/",
+  title: "deezer",
+  baseUrl: "https://www.deezer.com/",
 });
 
 music.register(Deezer);

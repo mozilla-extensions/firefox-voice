@@ -24,6 +24,7 @@ export function ddgBangServiceName(name) {
 const MUSIC_SERVICE_ALIASES = {
   youtube: "youtube",
   spotify: "spotify",
+  deezer:"deezer",
   video: "youtube",
 };
 
