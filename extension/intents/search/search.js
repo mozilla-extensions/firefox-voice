@@ -305,9 +305,9 @@ intentRunner.registerIntent({
     const searchInfo = await callScript({ type: "searchResultInfo" });
     searchInfo.query = context.slots.query;
 
-    if (!searchInfo.searchResults) {      
-      const e = new Error("No result found for "+searchInfo.query);
-      e.displayMessage = "No result found for "+searchInfo.query;
+    if (!searchInfo.searchResults) {
+      const e = new Error("No result found for " + searchInfo.query);
+      e.displayMessage = "No result found for " + searchInfo.query;
       throw e;
     }
 
