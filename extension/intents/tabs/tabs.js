@@ -562,9 +562,11 @@ intentRunner.registerIntent({
   async run(context) {
     context.keepPopup();
     const tabs = await browser.tabs.query({ currentWindow: true });
+    const hiddenTabs = await browser.tabs.query({ hidden: true });
+    const numOfOpenTabs = tabs.length - hiddenTabs.length;
     const card = {
       answer: {
-        num: `${tabs.length}`,
+        num: `${numOfOpenTabs}`,
         text: "Open tabs",
         eduText: "Click mic and say 'gather all Google tabs'",
       },
