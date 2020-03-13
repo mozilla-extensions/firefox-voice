@@ -566,9 +566,9 @@ intentRunner.registerIntent({
     const numOfOpenTabs = tabs.length - hiddenTabs.length;
     const card = {
       answer: {
-        num: `${numOfOpenTabs}`,
+        largeText: `${numOfOpenTabs}`,
         text: "Open tabs",
-        eduText: "Click mic and say 'gather all Google tabs'",
+        eduText: `Click mic and say "gather all Google tabs"`,
       },
     };
     await browser.runtime.sendMessage({
