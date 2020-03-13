@@ -194,7 +194,7 @@ this.dictationContentScript = (function() {
   });
 
   communicate.register("turnSelectionIntoLink", async message => {
-    const url  = message.url;
+    const url = message.url;
     let el;
     if (!isPasteable(document.activeElement)) {
       for (const selector of PASTE_SELECTORS) {
@@ -209,10 +209,10 @@ this.dictationContentScript = (function() {
     if (el.hasAttribute("contenteditable")) {
       replaceSelectedText(url);
     } else if (el.hasAttribute("textarea")) {
-        const m = meta();
-        const markdownLink = `[${m.title}](${m.canonical || m.url})`;
-        replaceSelectedText(markdownLink);
-      }
+      const m = meta();
+      const markdownLink = `[${m.title}](${m.canonical || m.url})`;
+      replaceSelectedText(markdownLink);
+    }
   });
 
   function focus(element) {
@@ -260,15 +260,15 @@ this.dictationContentScript = (function() {
   function replaceSelectedText(replacementText) {
     let sel, range;
     if (window.getSelection) {
-        sel = window.getSelection();
-        if (sel.rangeCount) {
-            range = sel.getRangeAt(0);
-            range.deleteContents();
-            range.insertNode(document.createTextNode(replacementText));
-        }
+      sel = window.getSelection();
+      if (sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode(replacementText));
+      }
     } else if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        range.text = replacementText;
+      range = document.selection.createRange();
+      range.text = replacementText;
     }
-}
+  }
 })();

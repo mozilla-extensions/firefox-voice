@@ -7,7 +7,7 @@ import * as searching from "../../searching.js";
 
 function createTabGoogleLucky(query, options = {}) {
   const searchUrl = searching.googleSearchUrl(query, true);
-  const tab =  browser.tabs.create({ url: searchUrl });
+  const tab = browser.tabs.create({ url: searchUrl });
   if (options.hide && !buildSettings.android) {
     browser.tabs.hide(tab.id);
   }
@@ -102,8 +102,8 @@ intentRunner.registerIntent({
       "/intents/forms/formsContentScript.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, {
-       type: "turnSelectionIntoLink",
-       url,
+      type: "turnSelectionIntoLink",
+      url,
     });
   },
 });
