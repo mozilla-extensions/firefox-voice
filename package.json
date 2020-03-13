@@ -94,7 +94,7 @@
     "build:manifest": "node bin/substitute-manifest.js",
     "build:intent-metadata": "node bin/parse-intent-toml.js",
     "build:ppn-listing": "node bin/generate-ppn-listing.js > extension/js/vendor/ppnListing.js",
-    "build:jsx": "babel --relative --out-dir . '**/*.jsx'",
+    "build:jsx": "babel --relative --out-dir . --ignore gh-pages '**/*.jsx'",
     "build:browserify": "browserify --require freeze-dry --standalone freezeDry > extension/js/vendor/freezeDry.js",
     "test:selenium": "web-ext build -s extension --overwrite-dest && node test/test",
     "watch-rebuild": "npm-run-all build:jsx build:intent-metadata build:manifest",
