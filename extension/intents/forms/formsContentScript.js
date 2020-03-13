@@ -1,4 +1,4 @@
-/* globals communicate, Fuse */
+/* globals communicate, pageMetadataContentScript, Fuse */
 
 this.dictationContentScript = (function() {
   const PASTE_SELECTORS = [
@@ -18,6 +18,7 @@ this.dictationContentScript = (function() {
   ];
   const COMBINED_SELECTORS = PASTE_SELECTORS.join(", ");
   const DEFAULT_FOCUS_TIME = 500;
+  const meta = pageMetadataContentScript.getMetadata;
 
   function isPasteable(el) {
     while (el && el.tagName) {
@@ -192,6 +193,28 @@ this.dictationContentScript = (function() {
     return focusDirection(-1);
   });
 
+  communicate.register("turnSelectionIntoLink", async message => {
+    const url  = message.url;
+    let el;
+    if (!isPasteable(document.activeElement)) {
+      for (const selector of PASTE_SELECTORS) {
+        el = document.querySelector(selector);
+        if (el && isInViewport(el)) {
+          break;
+        }
+      }
+    } else {
+      el = document.activeElement;
+    }
+    if (el.hasAttribute("contenteditable")) {
+      replaceSelectedText(url);
+    } else if (el.hasAttribute("textarea")) {
+        const m = meta();
+        const markdownLink = `[${m.title}](${m.canonical || m.url})`;
+        replaceSelectedText(markdownLink);
+      }
+  });
+
   function focus(element) {
     element.focus();
     highlightElement(element);
@@ -233,4 +256,19 @@ this.dictationContentScript = (function() {
     // think of as "editable"
     focus(elements[0]);
   }
+
+  function replaceSelectedText(replacementText) {
+    let sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(replacementText));
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.text = replacementText;
+    }
+}
 })();
