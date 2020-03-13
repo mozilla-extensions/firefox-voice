@@ -308,3 +308,35 @@ phrase = "Close all selected tabs"
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
 test = true
+
+[tabs.countTabs]
+description = "Count tabs"
+match = """
+ count (my| my open| open | how many |) tabs (I have open|)
+ how many (of my|) tabs (are | do I have |) open
+"""
+
+[[tabs.countTabs.example]]
+phrase = "Count tabs"
+
+[[tabs.countTabs.example]]
+phrase = "Count my tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count open tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count my open tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count how many tabs I have open"
+
+[[tabs.countTabs.example]]
+phrase = "How many tabs do I have open"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "How many tabs are open"
