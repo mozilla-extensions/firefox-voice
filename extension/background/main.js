@@ -13,6 +13,7 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
+import * as intentParser from "./intentParser.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
@@ -94,7 +95,15 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "getRegisteredNicknames") {
     return intentRunner.getRegisteredNicknames();
   } else if (message.type === "registerNickname") {
-    return intentRunner.registerNickname(message.name, message.context);
+    let context = message.context;
+    if (context !== null) {
+      context = new intentRunner.IntentContext(context);
+    }
+    return intentRunner.registerNickname(message.name, context);
+  } else if (message.type === "parseUtterance") {
+    return new intentRunner.IntentContext(
+      intentParser.parse(message.utterance, message.disableFallback)
+    );
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`

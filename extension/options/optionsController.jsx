@@ -22,7 +22,7 @@ window.onhashchange = () => {
   let tab = undefined;
 
   if (location.hash === "#routines") {
-    tab = (optionsView.TABS.ROUTINES);
+    tab = optionsView.TABS.ROUTINES;
   } else if (location.hash === "#general") {
     tab = optionsView.TABS.GENERAL;
   }
@@ -34,15 +34,13 @@ window.onload = () => {
   let tab = undefined;
 
   if (location.hash === "#routines") {
-    tab = (optionsView.TABS.ROUTINES);
+    tab = optionsView.TABS.ROUTINES;
   } else {
     tab = optionsView.TABS.GENERAL;
   }
 
   onTabChange(tab);
 };
-
-
 
 export const OptionsController = function() {
   const [inDevelopment, setInDevelopment] = useState(false);
@@ -90,6 +88,7 @@ export const OptionsController = function() {
     const registeredNicknames = await browser.runtime.sendMessage({
       type: "getRegisteredNicknames",
     });
+
     setRegisteredNicknames(registeredNicknames);
   };
 
@@ -98,34 +97,96 @@ export const OptionsController = function() {
     setUserSettings(userSettings);
   };
 
-  const updateNickname = async nickname => {
-    await browser.runtime.sendMessage({
-      type: "registerNickname",
-      name: nickname.name,
-      context: nickname.context,
-    });
+  const updateNickname = async (nicknameContext, oldNickname) => {
+    // delete if necessary
+    if (
+      oldNickname !== undefined &&
+      (nicknameContext === undefined ||
+        oldNickname !== nicknameContext.nickname)
+    ) {
+      await browser.runtime.sendMessage({
+        type: "registerNickname",
+        name: oldNickname,
+        context: null,
+      });
+    }
+
+    if (nicknameContext !== undefined) {
+      await browser.runtime.sendMessage({
+        type: "registerNickname",
+        name: nicknameContext.nickname,
+        context: {
+          slots: {},
+          parameters: {},
+          ...nicknameContext,
+          utterance: `Combined actions named ${nicknameContext.nickname}`,
+        },
+      });
+    }
+
     const registeredNicknames = await browser.runtime.sendMessage({
       type: "getRegisteredNicknames",
     });
+
     setRegisteredNicknames(registeredNicknames);
+    return true;
   };
 
-  const useDropdown = (initialIsVisible) => {
-    const [isDropdownVisible, setDropdownVisible] = useState(initialIsVisible);
+  const useToggle = initialIsVisible => {
+    const [isVisible, setVisible] = useState(initialIsVisible);
     const ref = useRef(null);
 
-    const handleClickOutside = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-            setDropdownVisible(false);
-        }
+    const handleClickOutside = event => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setVisible(false);
+      }
     };
+
+    const handleEscape = event => {
+      if (event.key === "Escape") {
+        setVisible(false);
+      }
+      event.preventDefault();
+    };
+
     useEffect(() => {
-        document.addEventListener("click", handleClickOutside, true);
-        return () => {
-            document.removeEventListener("click", handleClickOutside, true);
-        };
+      document.addEventListener("keyup", handleEscape, true);
+      document.addEventListener("click", handleClickOutside, true);
+      return () => {
+        document.removeEventListener("click", handleClickOutside, true);
+      };
     });
-    return { ref, isDropdownVisible, setDropdownVisible };
+    return { ref, isVisible, setVisible };
+  };
+
+  const parseUtterance = async utterance => {
+    return browser.runtime.sendMessage({
+      type: "parseUtterance",
+      utterance,
+      disableFallback: true,
+    });
+  };
+
+  const useEditNicknameModal = (initialIsVisible, initialContext) => {
+    const { ref, isVisible, setVisible } = useToggle(initialIsVisible);
+    const [tempEditableNickname, setTempEditableNickname] = useState({});
+    const copyNickname = {
+      ...tempEditableNickname,
+    };
+
+    const setModalVisibile = visible => {
+      // deep copy inital context and use that as temporary nickname for edit
+      setTempEditableNickname(JSON.parse(JSON.stringify(initialContext)));
+      setVisible(visible);
+    };
+
+    return {
+      ref,
+      isVisible,
+      setVisible: setModalVisibile,
+      tempEditableNickname: copyNickname,
+      setTempEditableNickname,
+    };
   };
 
   return (
@@ -139,7 +200,9 @@ export const OptionsController = function() {
       tabValue={tabValue}
       updateNickname={updateNickname}
       registeredNicknames={registeredNicknames}
-      useDropdown={useDropdown}
+      useToggle={useToggle}
+      useEditNicknameModal={useEditNicknameModal}
+      parseUtterance={parseUtterance}
     />
   );
 };

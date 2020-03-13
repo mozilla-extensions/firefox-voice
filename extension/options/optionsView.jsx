@@ -2,6 +2,7 @@
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 import * as browserUtil from "../browserUtil.js";
+import * as routinesView from "./routinesView.js";
 
 export const TABS = {
   GENERAL: "GENERAL",
@@ -18,36 +19,39 @@ export const Options = ({
   tabValue,
   updateNickname,
   registeredNicknames,
-  useDropdown
+  useToggle,
+  useEditNicknameModal,
+  parseUtterance,
 }) => {
   return (
     <div className="settings-page">
       <LeftSidebar version={version} />
-      {tabValue === TABS.GENERAL ?
+      {tabValue === TABS.GENERAL ? (
         <General
           inDevelopment={inDevelopment}
           keyboardShortcutError={keyboardShortcutError}
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
-        ></General> : null
-        }
-        {tabValue === TABS.ROUTINES ?
-          <Routines
-            userOptions={userOptions}
-            userSettings={userSettings}
-            updateUserSettings={updateUserSettings}
-            updateNickname={updateNickname}
-            registeredNicknames={registeredNicknames}
-            useDropdown={useDropdown}
-          ></Routines> : null
-        }
+        ></General>
+      ) : null}
+      {tabValue === TABS.ROUTINES ? (
+        <routinesView.Routines
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          updateNickname={updateNickname}
+          registeredNicknames={registeredNicknames}
+          useToggle={useToggle}
+          useEditNicknameModal={useEditNicknameModal}
+          parseUtterance={parseUtterance}
+        ></routinesView.Routines>
+      ) : null}
     </div>
   );
 };
 
 const LeftSidebar = ({ version }) => {
-
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
@@ -60,90 +64,28 @@ const LeftSidebar = ({ version }) => {
       <div>
         <ul className="tab-list">
           <li>
-            <a className="tab-button styled-button" href="#general"> General </a>
+            <a className="tab-button" href="#general">
+              <img
+                src="./images/general.svg"
+                alt="General"
+                className="tab-icon"
+              ></img>
+              <span> General </span>
+            </a>
           </li>
           <li>
-            <a className="tab-button styled-button" href="#routines"> Routines </a>
+            <a className="tab-button" href="#routines">
+              <img
+                src="./images/routines.svg"
+                alt="Routines"
+                className="tab-icon"
+              ></img>
+              <span> Routines </span>
+            </a>
           </li>
         </ul>
       </div>
     </div>
-  );
-};
-
-const Routines = ({updateNickname, registeredNicknames, useDropdown }) => {
-  return (
-    <div className="settings-content">
-      <RoutinesList
-        registeredNicknames={registeredNicknames}
-        updateNickname={updateNickname}
-        useDropdown={useDropdown}
-      ></RoutinesList>
-    </div>
-  );
-};
-
-
-const RoutineMenu = ({
-  context,
-  useDropdown,
-  updateNickname
-}) => {
-  const {ref, isDropdownVisible, setDropdownVisible} = useDropdown(false);
-  return (
-    <div className="card-menu" ref={ref}>
-    <button class="no-style-button" onClick={() => setDropdownVisible(!isDropdownVisible)}><img src="images/more-horizontal.svg" alt="Routine Actions"></img></button>
-    {isDropdownVisible === true ?
-      <div className="menu-box">
-      <div className="menu-button">
-        <span> Edit </span>
-      </div>
-      <div className="menu-button">
-        <span> Remove </span>
-      </div>
-      </div> : null
-    }
-    </div>
-  );
-};
-
-const RoutinesList = ({ registeredNicknames, updateNickname, useDropdown }) => {
-  const allNicks = [];
-  for (const nick in registeredNicknames) {
-
-
-    const allUtterances = [];
-    const contexts = registeredNicknames[nick].contexts;
-    for (let i = 0; i < contexts.length - 1; i++) {
-      allUtterances.push(
-        contexts[i].utterance + ", "
-      );
-    }
-    allUtterances.push(
-      contexts[contexts.length - 1].utterance
-    );
-
-    allNicks.push(
-      <div className="card">
-        <RoutineMenu
-          useDropdown={useDropdown}
-          context={registeredNicknames[nick]}
-          updateNickname={updateNickname}
-        ></RoutineMenu>
-        <h2 className="card-name" >"{nick}"</h2>
-        <h3 className="card-text">{allUtterances}</h3>
-      </div>
-    );
-  }
-
-  return (
-    <fieldset>
-      <legend>Manage your Routines</legend>
-      <h2>Create a custom phrase to execute one or more actions</h2>
-      <div >
-        {allNicks}
-      </div>
-    </fieldset>
   );
 };
 
