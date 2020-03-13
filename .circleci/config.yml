@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:13.8.0-stretch
+    working_directory: ~/firefox-voice
+    steps:
+      - checkout
+      - run:
+          command: |
+            echo Running Sample Build
+            set +e      
+      
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
