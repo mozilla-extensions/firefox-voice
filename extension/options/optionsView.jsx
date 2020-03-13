@@ -95,12 +95,7 @@ const General = ({
   userOptions,
   userSettings,
   updateUserSettings,
-  active,
 }) => {
-  if (active === false) {
-    return null;
-  }
-
   return (
     <div className="settings-content">
       <ChimeSettings
