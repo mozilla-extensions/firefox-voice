@@ -595,13 +595,13 @@ const SearchResultsContent = ({
     onNextSearchResultClick();
   };
 
-  const searchCard = () => (
+  const SearchCard = () => (
     <button class="invisible-button" onClick={onSearchCardClick}>
       <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
     </button>
   );
 
-  const qaCard = () => (
+  const AnswerCard = () => (
     <div className="results-set">
       {card.answer.imgSrc ? (
         <img
@@ -612,8 +612,8 @@ const SearchResultsContent = ({
       ) : null}
       <div className="results-text">
         <em>
-          {card.answer.num ? (
-            <div className="results-number">{card.answer.num}</div>
+          {card.answer.largeText ? (
+            <div className="results-number">{card.answer.largeText}</div>
           ) : null}
           <div>{card.answer.text}</div>
         </em>
@@ -623,9 +623,9 @@ const SearchResultsContent = ({
 
   const renderCard = () => {
     if (card && card.answer) {
-      return qaCard();
+      return AnswerCard();
     } else if (card) {
-      return searchCard();
+      return SearchCard();
     }
     return null;
   };
