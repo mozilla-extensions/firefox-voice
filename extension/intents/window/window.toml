@@ -10,3 +10,20 @@ description = "Open downloads"
 match = """
   (show | open |) downloads (menu |)
 """
+
+[window.exit]
+description = "Closes the window"
+match = """
+  close (the |) (this |) (all |) (window{s}) (for me |)
+"""
+
+[[window.exit.example]]
+phrase = "Close window"
+
+[[window.exit.example]]
+phrase = "Close this window"
+text = true
+
+[[window.exit.example]]
+phrase = "Close all windows"
+text = true

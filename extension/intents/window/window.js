@@ -44,3 +44,24 @@ intentRunner.registerIntent({
     await browser.experiments.voice.openDownloads();
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.exit",
+  async run(context) {
+    // get current activeTab.windowId
+    const activeTab = await context.activeTab();
+    const currentWindowId = activeTab.windowId;
+    // getAll normal window
+    const gettingAll = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+    // find target windowId
+    const targetWindowId = findTargetWindowId(
+      gettingAll,
+      currentWindowId,
+    );
+    // remove all windows by id   
+    await browser.windows.remove(targetWindowId);
+    context.displayText("Closing window");
+  },
+});
