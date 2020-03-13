@@ -97,7 +97,9 @@ intentRunner.registerIntent({
   async run(context) {
     for (const ServiceClass of Object.values(SERVICES)) {
       const service = new ServiceClass(context);
-      await service.pauseAny({exceptTabId: (await browserUtil.activeTab()).id});
+      await service.pauseAny({
+        exceptTabId: (await browserUtil.activeTab()).id,
+      });
     }
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.unpause();

@@ -37,15 +37,33 @@ this.player = (function() {
       button.click();
     }
 
-    action_move({ direction }) {
+    async action_move({ direction }) {
       let selector;
       if (direction === "next") {
-        selector = ".control-button[title='Next']";
+        const selector = ".control-button[title='Next']";
+        const button = this.querySelector(selector);
+        button.click();
       } else if (direction === "previous") {
-        selector = ".control-button[title='Previous']";
+        const selector = ".control-button[title='Previous']";
+        // Player time
+        const time = this.querySelector(".playback-bar__progress-time")
+          .innerHTML;
+        //log.info(time);
+        if (
+          /\b0:00\b/gi.test(time) ||
+          /\b0:01\b/gi.test(time) ||
+          /\b0:02\b/gi.test(time)
+        ) {
+          const firstClickBtn = this.querySelector(selector);
+          firstClickBtn.click();
+          return;
+        }
+        const firstClickBtn = this.querySelector(selector);
+        firstClickBtn.click();
+        // Since after the first click there is a delay in the selector
+        const secondClickBtn = await this.waitForSelector(selector);
+        secondClickBtn.click();
       }
-      const button = this.querySelector(selector);
-      button.click();
     }
   }
 
