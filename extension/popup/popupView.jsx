@@ -421,7 +421,12 @@ const IntentFeedback = ({ eduText, onSubmitFeedback }) => {
           onClick={onNegative}
         ></button>
       </div>
-      { eduText ? <div><hr/><em>{eduText}</em></div> : null }
+      {eduText ? (
+        <div>
+          <hr />
+          <em>{eduText}</em>
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -592,25 +597,24 @@ const SearchResultsContent = ({
 
   const searchCard = () => (
     <button class="invisible-button" onClick={onSearchCardClick}>
-      <img
-        id="search-image"
-        alt={imgAlt}
-        style={cardStyles}
-        src={card.src}
-      />
+      <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
     </button>
   );
 
   const qaCard = () => (
     <div className="results-set">
-      { card.answer.imgSrc ?
-          <img className="results-image" src={card.answer.imgSrc} alt={card.answer.alt} />
-          : null}
+      {card.answer.imgSrc ? (
+        <img
+          className="results-image"
+          src={card.answer.imgSrc}
+          alt={card.answer.alt}
+        />
+      ) : null}
       <div className="results-text">
         <em>
-          { card.answer.num ?
+          {card.answer.num ? (
             <div className="results-number">{card.answer.num}</div>
-            : null }
+          ) : null}
           <div>{card.answer.text}</div>
         </em>
       </div>
@@ -629,11 +633,12 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      <div id="search-results">
-        { renderCard() }
-      </div>
+      <div id="search-results">{renderCard()}</div>
       <div id="search-footer">
-        <IntentFeedback onSubmitFeedback={onSubmitFeedback} eduText={card && card.answer ? card.answer.eduText : null } />
+        <IntentFeedback
+          onSubmitFeedback={onSubmitFeedback}
+          eduText={card && card.answer ? card.answer.eduText : null}
+        />
         {next ? (
           <div id="next-result">
             <p>

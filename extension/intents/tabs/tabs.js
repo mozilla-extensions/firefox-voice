@@ -566,8 +566,8 @@ intentRunner.registerIntent({
       answer: {
         num: `${tabs.length}`,
         text: "Open tabs",
-        eduText: "Click mic and say 'gather all Google tabs'"
-      }
+        eduText: "Click mic and say 'gather all Google tabs'",
+      },
     };
     await browser.runtime.sendMessage({
       type: "showSearchResults",
