@@ -112,6 +112,18 @@ export const OptionsController = function() {
     }
 
     if (nicknameContext !== undefined) {
+      // check again for validity of utterances and redo contexts
+      for (let i = 0; i < nicknameContext.contexts.length; i++) {
+        const context = await parseUtterance(
+          nicknameContext.contexts[i].utterance
+        );
+        if (context === undefined || context.utterance === undefined) {
+          return false;
+        }
+
+        nicknameContext.contexts[i] = context;
+      }
+
       await browser.runtime.sendMessage({
         type: "registerNickname",
         name: nicknameContext.nickname,
