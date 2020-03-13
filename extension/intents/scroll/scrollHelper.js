@@ -2,17 +2,25 @@
 
 const scrollAmount = 0.9;
 
-function getScrollableElement() {
-  let element = document.activeElement;
-  let height = element.offsetHeight;
-  let scrollPos = element.scrollTop;
-  const scrollHeight = element.scrollHeight;
-
-  if (document.contentType === "text/html") {
-    element = window;
-    height = element.innerHeight;
-    scrollPos = element.scrollY;
+function getScrollParent(node) {
+  if (node === null) {
+    return null;
   }
+
+  if (node.scrollHeight > node.clientHeight) {
+    return node;
+  }
+  return getScrollParent(node.parentNode);
+}
+
+function getScrollableElement() {
+  const element = getScrollParent(document.activeElement);
+  if (element === null) {
+    return null;
+  }
+  const height = element.clientHeight;
+  const scrollPos = element.scrollTop;
+  const scrollHeight = element.scrollHeight;
 
   return {
     element,
@@ -33,6 +41,9 @@ function scrollVertically(dy, smooth, element) {
 
 function scrollUp() {
   const toBeScrolled = getScrollableElement();
+  if (toBeScrolled === null) {
+    return null;
+  }
   return scrollVertically(
     -scrollAmount * toBeScrolled.height,
     true,
@@ -44,6 +55,9 @@ communicate.register("scrollUp", scrollUp);
 
 function scrollDown() {
   const toBeScrolled = getScrollableElement();
+  if (toBeScrolled === null) {
+    return null;
+  }
   return scrollVertically(
     scrollAmount * toBeScrolled.height,
     true,
@@ -55,6 +69,9 @@ communicate.register("scrollDown", scrollDown);
 
 function scrollToTop() {
   const toBeScrolled = getScrollableElement();
+  if (toBeScrolled === null) {
+    return null;
+  }
   return scrollVertically(-toBeScrolled.scrollPos, false, toBeScrolled.element);
 }
 
@@ -62,6 +79,9 @@ communicate.register("scrollToTop", scrollToTop);
 
 function scrollToBottom() {
   const toBeScrolled = getScrollableElement();
+  if (toBeScrolled === null) {
+    return null;
+  }
   return scrollVertically(
     toBeScrolled.scrollHeight - toBeScrolled.scrollPos,
     false,
