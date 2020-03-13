@@ -49,8 +49,8 @@ phrase = "Close window"
 
 [[window.exit.example]]
 phrase = "Close this window"
-text = true
+test = true
 
 [[window.exit.example]]
 phrase = "Close all windows"
-text = true
+test = true
