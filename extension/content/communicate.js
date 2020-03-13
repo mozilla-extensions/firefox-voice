@@ -6,7 +6,7 @@ this.communicate = (function() {
 
   exports.register = function(type, handler, noConflict = false) {
     if (!noConflict && HANDLERS[type]) {
-      throw new Error(`There is already a handler registerd for ${type}`);
+      throw new Error(`There is already a handler registered for ${type}`);
     }
     HANDLERS[type] = handler;
   };
