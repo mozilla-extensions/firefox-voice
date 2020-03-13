@@ -99,7 +99,7 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await context.activeTab();
     await browser.tabs.remove(activeTab.id);
-    context.displayText("Closing current tab");
+    context.displayText("Tab closed");
   },
 });
 
