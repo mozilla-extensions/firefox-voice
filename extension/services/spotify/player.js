@@ -11,7 +11,7 @@ this.player = (function() {
     }
 
     async action_search({ query, thenPlay }) {
-      // try to find the error page; if found, throw a DRM error; otherwise play
+      // try to find the error page; if found, throw a DRM error; otherwise search
       const errorDiv = document.querySelector("div.ErrorPage");
       if (errorDiv) {
         throw new Error("You must enable DRM.");
