@@ -20,12 +20,11 @@ export const Options = ({
   updateNickname,
   registeredNicknames,
   useToggle,
-  useEditNicknameModal,
-  parseUtterance,
+  useEditNicknameDraft,
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
+      <LeftSidebar version={version} tabValue={tabValue} />
       {tabValue === TABS.GENERAL ? (
         <General
           inDevelopment={inDevelopment}
@@ -43,15 +42,14 @@ export const Options = ({
           updateNickname={updateNickname}
           registeredNicknames={registeredNicknames}
           useToggle={useToggle}
-          useEditNicknameModal={useEditNicknameModal}
-          parseUtterance={parseUtterance}
+          useEditNicknameDraft={useEditNicknameDraft}
         ></routinesView.Routines>
       ) : null}
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, tabValue }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
@@ -64,7 +62,13 @@ const LeftSidebar = ({ version }) => {
       <div>
         <ul className="tab-list">
           <li>
-            <a className="tab-button" href="#general">
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.GENERAL ? "selected-tab" : "")
+              }
+              href="#general"
+            >
               <img
                 src="./images/general.svg"
                 alt="General"
@@ -74,7 +78,13 @@ const LeftSidebar = ({ version }) => {
             </a>
           </li>
           <li>
-            <a className="tab-button" href="#routines">
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.ROUTINES ? "selected-tab" : "")
+              }
+              href="#routines"
+            >
               <img
                 src="./images/routines.svg"
                 alt="Routines"

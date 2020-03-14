@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
+/* globals log */
 
 export const Routines = ({
   updateNickname,
   registeredNicknames,
   useToggle,
-  useEditNicknameModal,
-  parseUtterance,
+  useEditNicknameDraft,
 }) => {
-  const editModal = useEditNicknameModal(false, {
+  const draft = useEditNicknameDraft(false, {
     name: "nicknames.combined",
     contexts: [],
   });
 
   const createRoutine = () => {
-    editModal.setVisible(true);
+    draft.setVisible(true);
   };
 
   return (
@@ -36,21 +36,62 @@ export const Routines = ({
           </div>
         </div>
         <br></br>
+        {draft.isVisible === true ? (
+          <EditRoutineDraft
+            draft={draft}
+            updateNickname={updateNickname}
+          ></EditRoutineDraft>
+        ) : null}
         <RoutinesList
           registeredNicknames={registeredNicknames}
           updateNickname={updateNickname}
           useToggle={useToggle}
-          useEditNicknameModal={useEditNicknameModal}
-          parseUtterance={parseUtterance}
+          useEditNicknameDraft={useEditNicknameDraft}
         ></RoutinesList>
-        {editModal.isVisible === true ? (
-          <EditRoutineModal
-            modal={editModal}
-            updateNickname={updateNickname}
-            parseUtterance={parseUtterance}
-          ></EditRoutineModal>
-        ) : null}
       </fieldset>
+    </div>
+  );
+};
+
+const RoutineCard = ({
+  nicknameContext,
+  useToggle,
+  updateNickname,
+  useEditNicknameDraft,
+}) => {
+  const draft = useEditNicknameDraft(false, nicknameContext);
+  const allUtterances = [];
+  const utterancesContexts = nicknameContext.contexts;
+  if (utterancesContexts !== undefined) {
+    for (let i = 0; i < utterancesContexts.length - 1; i++) {
+      allUtterances.push(utterancesContexts[i].utterance + ", ");
+    }
+    if (utterancesContexts.length > 0) {
+      allUtterances.push(
+        utterancesContexts[utterancesContexts.length - 1].utterance
+      );
+    }
+  }
+  return (
+    <div className="card">
+      <RoutineMenu
+        useToggle={useToggle}
+        nicknameContext={nicknameContext}
+        updateNickname={updateNickname}
+        useEditNicknameDraft={useEditNicknameDraft}
+        draft={draft}
+      ></RoutineMenu>
+      <h2 className="card-name">"{nicknameContext.nickname}"</h2>
+      <h3 className="card-text">{allUtterances}</h3>
+      <div>
+        {draft.isVisible === true ? (
+          <EditRoutineDraft
+            draft={draft}
+            updateNickname={updateNickname}
+            oldNicknameContext={nicknameContext}
+          ></EditRoutineDraft>
+        ) : null}
+      </div>
     </div>
   );
 };
@@ -59,122 +100,86 @@ const RoutinesList = ({
   registeredNicknames,
   updateNickname,
   useToggle,
-  useEditNicknameModal,
-  parseUtterance,
+  useEditNicknameDraft,
 }) => {
   const allNicks = [];
-  for (const nick in registeredNicknames) {
-    const allUtterances = [];
-    const utterancesContexts = registeredNicknames[nick].contexts;
-    if (utterancesContexts !== undefined) {
-      for (let i = 0; i < utterancesContexts.length - 1; i++) {
-        allUtterances.push(utterancesContexts[i].utterance + ", ");
-      }
-      if (utterancesContexts.length > 0) {
-        allUtterances.push(
-          utterancesContexts[utterancesContexts.length - 1].utterance
-        );
-      }
-    }
 
+  for (const nick in registeredNicknames) {
     allNicks.push(
-      <div className="card">
-        <RoutineMenu
-          useToggle={useToggle}
-          nicknameContext={{ ...registeredNicknames[nick] }}
-          updateNickname={updateNickname}
-          useEditNicknameModal={useEditNicknameModal}
-          parseUtterance={parseUtterance}
-        ></RoutineMenu>
-        <h2 className="card-name">"{registeredNicknames[nick].nickname}"</h2>
-        <h3 className="card-text">{allUtterances}</h3>
-      </div>
+      <RoutineCard
+        nicknameContext={registeredNicknames[nick]}
+        useToggle={useToggle}
+        updateNickname={updateNickname}
+        useEditNicknameDraft={useEditNicknameDraft}
+      ></RoutineCard>
     );
   }
 
   return <div>{allNicks}</div>;
 };
 
-const RoutineMenu = ({
-  useToggle,
-  nicknameContext,
-  updateNickname,
-  useEditNicknameModal,
-  parseUtterance,
-}) => {
+const RoutineMenu = ({ useToggle, nicknameContext, updateNickname, draft }) => {
   const menu = useToggle(false);
-  const editModal = useEditNicknameModal(false, nicknameContext);
 
   const removeNickname = () => {
     updateNickname(undefined, nicknameContext.nickname);
     menu.setVisible(false);
   };
 
-  const toggleModal = () => {
-    editModal.setVisible(true);
+  const toggleDraft = () => {
+    draft.setVisible(true);
     menu.setVisible(false);
   };
 
   return (
     <div>
-      {editModal.isVisible === true ? (
-        <EditRoutineModal
-          modal={editModal}
-          updateNickname={updateNickname}
-          oldNicknameContext={nicknameContext}
-          parseUtterance={parseUtterance}
-        ></EditRoutineModal>
-      ) : null}
-      <div className="card-menu" ref={menu.ref}>
-        <button
-          className="no-style-button"
-          onClick={() => menu.setVisible(!menu.isVisible)}
-        >
-          <img src="images/more-horizontal.svg" alt="Routine Actions"></img>
-        </button>
-        {menu.isVisible === true ? (
-          <div className="menu-box">
-            <button
-              className="no-style-button menu-button"
-              onClick={() => toggleModal()}
-            >
-              <img
-                src="./images/edit.svg"
-                alt="Edit"
-                className="menu-icon"
-              ></img>
-              <span> Edit </span>
-            </button>
-            <button
-              className="no-style-button menu-button"
-              onClick={() => removeNickname()}
-            >
-              <img
-                src="./images/delete.svg"
-                alt="Remove"
-                className="menu-icon"
-              ></img>
-              <span> Remove </span>
-            </button>
-          </div>
-        ) : null}
+      <div>
+        <div className="card-menu" ref={menu.ref}>
+          <button
+            className="no-style-button"
+            onClick={() => menu.setVisible(!menu.isVisible)}
+          >
+            <img src="images/more-horizontal.svg" alt="Routine Actions"></img>
+          </button>
+          {menu.isVisible === true ? (
+            <div className="menu-box">
+              <button
+                className="no-style-button menu-button"
+                onClick={() => toggleDraft()}
+              >
+                <img
+                  src="./images/edit.svg"
+                  alt="Edit"
+                  className="menu-icon"
+                ></img>
+                <span> Edit </span>
+              </button>
+              <button
+                className="no-style-button menu-button"
+                onClick={() => removeNickname()}
+              >
+                <img
+                  src="./images/delete.svg"
+                  alt="Remove"
+                  className="menu-icon"
+                ></img>
+                <span> Remove </span>
+              </button>
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );
 };
 
-const EditRoutineModal = ({
-  modal,
-  updateNickname,
-  oldNicknameContext,
-  parseUtterance,
-}) => {
+const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
   const save = async () => {
-    if (modal.tempEditableNickname.nickname.length === 0) {
-      return;
-    }
-
-    if (modal.tempEditableNickname.contexts.length === 0) {
+    if (
+      draft.tempEditableNickname.nickname === undefined ||
+      draft.tempEditableNickname.nickname.length === 0
+    ) {
+      log.error("This routine should have a name");
       return;
     }
 
@@ -184,24 +189,28 @@ const EditRoutineModal = ({
     }
 
     const allowed = await updateNickname(
-      modal.tempEditableNickname,
+      draft.tempEditableNickname,
       oldNickname
     );
-    if (allowed === true) modal.setVisible(false);
+    if (allowed === true) {
+      draft.setVisible(false);
+    } else {
+      log.error("The intent was not saved");
+    }
   };
 
   const changeNickname = nickname => {
-    const nicknameContext = modal.tempEditableNickname;
+    const nicknameContext = draft.tempEditableNickname;
     nicknameContext.nickname = nickname;
-    modal.setTempEditableNickname(nicknameContext);
+    draft.setTempEditableNickname(nicknameContext);
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content" ref={modal.ref}>
+    <div className="draft">
+      <div className="draft-content">
         <div className="nickname-container">
-          <label htmlFor="nickname" className="nickname-label">
-            Routine
+          <label htmlFor="nickname" className="label-nickname">
+            When you say this:
           </label>
           <input
             id="nickname"
@@ -209,15 +218,21 @@ const EditRoutineModal = ({
             type="text"
             placeholder="Add name here"
             onChange={event => changeNickname(event.target.value)}
-            value={modal.tempEditableNickname.nickname}
+            value={draft.tempEditableNickname.nickname}
           />
         </div>
-        <UtteranceList
-          modal={modal}
-          parseUtterance={parseUtterance}
-        ></UtteranceList>
+        <UtteranceList draft={draft}></UtteranceList>
         <button
-          className="styled-button modal-button"
+          className="styled-button cancel-button"
+          onClick={() => {
+            draft.setVisible(false);
+          }}
+        >
+          {" "}
+          Cancel{" "}
+        </button>
+        <button
+          className="styled-button save-button"
           onClick={() => {
             save();
           }}
@@ -230,93 +245,28 @@ const EditRoutineModal = ({
   );
 };
 
-const UtteranceList = ({ modal, parseUtterance }) => {
+const UtteranceList = ({ draft }) => {
   const updateUtterance = (utterance, utteranceContext) => {
     if (utteranceContext !== undefined) {
       utteranceContext.utterance = utterance;
     } else {
-      modal.tempEditableNickname.temporaryUtterance = utterance;
+      draft.tempEditableNickname.intents = utterance;
     }
-    modal.setTempEditableNickname(modal.tempEditableNickname);
-  };
-  const deleteUtterance = utteranceContext => {
-    const utteranceContexts = modal.tempEditableNickname.contexts;
-
-    modal.tempEditableNickname.contexts = utterancesContexts.filter(
-      nicknameContext => {
-        return nicknameContext !== utteranceContext;
-      }
-    );
-
-    modal.setTempEditableNickname(modal.tempEditableNickname);
+    draft.setTempEditableNickname(draft.tempEditableNickname);
   };
 
-  const addUtterance = async () => {
-    const utteranceContext = await parseUtterance(
-      modal.tempEditableNickname.temporaryUtterance
-    );
-    if (
-      utteranceContext === undefined ||
-      utteranceContext.utterance === undefined
-    ) {
-      return;
-    }
-    modal.tempEditableNickname.contexts.push(utteranceContext);
-    modal.tempEditableNickname.temporaryUtterance = "";
-    modal.setTempEditableNickname(modal.tempEditableNickname);
-  };
-
-  const utterances = [];
-  const utterancesContexts = modal.tempEditableNickname.contexts;
-  for (let i = 0; i < utterancesContexts.length; i++) {
-    utterances.push(
-      <li>
-        <input
-          className="styled-input"
-          type="text"
-          onChange={event => {
-            updateUtterance(event.target.value, utterancesContexts[i]);
-          }}
-          value={utterancesContexts[i].utterance}
-        />
-        <button
-          className="no-style-button"
-          onClick={() => {
-            deleteUtterance(utterancesContexts[i]);
-          }}
-        >
-          <img
-            src="./images/delete.svg"
-            alt="Remove"
-            className="menu-icon delete-utterance"
-          ></img>
-        </button>
-      </li>
-    );
-  }
   return (
-    <div id="utterance-list">
-      <ul>{utterances}</ul>
-      <input
-        className="styled-input"
+    <div className="utterances-container">
+      <p className="label-nickname">Do this: </p>
+      <textarea
+        id="utterances"
+        className="styled-input textarea-container"
         type="text"
         onChange={event => {
           updateUtterance(event.target.value);
         }}
-        value={modal.tempEditableNickname.temporaryUtterance}
+        value={draft.tempEditableNickname.intents}
       />
-      <button
-        className="no-style-button"
-        onClick={() => {
-          addUtterance();
-        }}
-      >
-        <img
-          src="./images/new.svg"
-          alt="New"
-          className="menu-icon delete-utterance"
-        ></img>
-      </button>
     </div>
   );
 };

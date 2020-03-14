@@ -21,6 +21,7 @@ body {
   font-size: 22px;
   top: 10px;
   position: relative;
+  border-radius: 0px;
 }
 
 .no-style-button {
@@ -29,38 +30,57 @@ body {
   cursor: pointer;
 }
 
-.modal {
-  position: fixed;
+.draft {
   z-index: 1;
-  padding-top: 100px;
+  padding-top: 40px;
   top: 0;
-  width: 100%;
-  height: 100%;
   overflow: auto;
-  background-color: rgb(196, 196, 196);
-  background-color: rgba(207, 207, 207, 0.4);
   left: 0px;
+  position: relative;
+  padding-bottom: 20px;
+  transition: max-height 0.3s ease-out;
 }
 
-/* Modal Content */
-.modal-content {
+/* draft Content */
+.draft-content {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 40%;
+  width: 70%;
   box-shadow: 3px 3px 3px #bfbaba;
   border: 1px solid #f4f1f1;
   padding: 50px;
 }
 
-.modal-button {
+.save-button {
   padding: 5px 8px;
-  font-size: 20px;
+  font-size: 16px;
   height: 45px;
   float: right;
   bottom: 15px;
   position: relative;
+  right: 10px;
+  background-color: rgb(175, 175, 175);
+  border-radius: 0px;
+}
+
+.save-button:hover {
+  background-color: grey;
+}
+
+.cancel-button {
+  padding: 5px 8px;
+  font-size: 16px;
+  height: 45px;
+  float: right;
+  bottom: 15px;
+  position: relative;
+  background-color: rgb(175, 175, 175);
+  border-radius: 0px;
+}
+.cancel-button:hover {
+  background-color: grey;
 }
 
 .tab-button {
@@ -86,6 +106,17 @@ body {
   padding: 10px;
   width: 25px;
   height: 25px;
+  fill: currentColor;
+  -moz-context-properties: fill, fill-opacity;
+}
+
+.selected-tab {
+  color: #0a84ff;
+  transition: background-color 150ms;
+}
+
+.selected-tab:hover {
+  color: #0a84ff;
 }
 
 .card {
@@ -147,10 +178,6 @@ body {
   padding: 6px;
 }
 
-.nickname-label {
-  padding: 20px;
-}
-
 .nickname-container {
   outline: 0;
 }
@@ -168,6 +195,22 @@ body {
 
 #utterance-list {
   padding: 30px;
+}
+
+.utterances-container {
+  padding: 20px 0px;
+  display: flex;
+}
+
+.textarea-container {
+  resize: vertical;
+  height: max-content;
+  max-height: 140px;
+  width: 63%;
+}
+
+.label-nickname {
+  padding: 10px 20px;
 }
 
 .settings-page {

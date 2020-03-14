@@ -1,4 +1,4 @@
-/* globals React, ReactDOM */
+/* globals React, ReactDOM, log */
 
 // eslint-disable-next-line no-unused-vars
 import * as optionsView from "./optionsView.js";
@@ -10,6 +10,7 @@ const optionsContainer = document.getElementById("options-container");
 let isInitialized = false;
 let onKeyboardShortcutError = () => {};
 let onTabChange = () => {};
+let DEFAULT_TAB = optionsView.TABS.GENERAL;
 
 browser.runtime.onMessage.addListener(message => {
   if (message.type !== "keyboardShortcutError") {
@@ -31,15 +32,10 @@ window.onhashchange = () => {
 };
 
 window.onload = () => {
-  let tab = undefined;
-
   if (location.hash === "#routines") {
-    tab = optionsView.TABS.ROUTINES;
-  } else {
-    tab = optionsView.TABS.GENERAL;
+    DEFAULT_TAB = optionsView.TABS.ROUTINES;
   }
-
-  onTabChange(tab);
+  onTabChange(DEFAULT_TAB);
 };
 
 export const OptionsController = function() {
@@ -50,7 +46,7 @@ export const OptionsController = function() {
   );
   const [userSettings, setUserSettings] = useState({});
   const [userOptions, setUserOptions] = useState({});
-  const [tabValue, setTabValue] = useState(optionsView.TABS.GENERAL);
+  const [tabValue, setTabValue] = useState(DEFAULT_TAB);
   const [registeredNicknames, setRegisteredNicknames] = useState({});
 
   onKeyboardShortcutError = setKeyboardShortcutError;
@@ -98,31 +94,41 @@ export const OptionsController = function() {
   };
 
   const updateNickname = async (nicknameContext, oldNickname) => {
-    // delete if necessary
-    if (
-      oldNickname !== undefined &&
-      (nicknameContext === undefined ||
-        oldNickname !== nicknameContext.nickname)
-    ) {
-      await browser.runtime.sendMessage({
-        type: "registerNickname",
-        name: oldNickname,
-        context: null,
-      });
-    }
+    const registeredNicknames = await browser.runtime.sendMessage({
+      type: "getRegisteredNicknames",
+    });
 
     if (nicknameContext !== undefined) {
-      // check again for validity of utterances and redo contexts
-      for (let i = 0; i < nicknameContext.contexts.length; i++) {
-        const context = await parseUtterance(
-          nicknameContext.contexts[i].utterance
-        );
+      if (
+        registeredNicknames[nicknameContext.nickname] !== undefined &&
+        (oldNickname === undefined || oldNickname !== nicknameContext.nickname)
+      ) {
+        log.error("There already is a routine with this name");
+        return false;
+      }
+      const contexts = [];
+      const intents = nicknameContext.intents.split("\n");
+
+      for (let i = 0; i < intents.length; i++) {
+        const intent = intents[i].trim();
+        if (intent.length === 0) {
+          continue;
+        }
+        const context = await parseUtterance(intent);
         if (context === undefined || context.utterance === undefined) {
+          log.error(`The intent number ${i} is not a valid intent`);
           return false;
         }
 
-        nicknameContext.contexts[i] = context;
+        contexts.push(context);
       }
+
+      if (contexts.length === 0) {
+        log.error("No actions added for this routine");
+        return false;
+      }
+      delete nicknameContext.intents;
+      nicknameContext.contexts = contexts;
 
       await browser.runtime.sendMessage({
         type: "registerNickname",
@@ -134,11 +140,23 @@ export const OptionsController = function() {
           utterance: `Combined actions named ${nicknameContext.nickname}`,
         },
       });
+      // perform the same operation on local nickname
+      registeredNicknames[nicknameContext.nickname] = nicknameContext;
     }
-
-    const registeredNicknames = await browser.runtime.sendMessage({
-      type: "getRegisteredNicknames",
-    });
+    // delete if necessary
+    if (
+      oldNickname !== undefined &&
+      (nicknameContext === undefined ||
+        oldNickname !== nicknameContext.nickname)
+    ) {
+      await browser.runtime.sendMessage({
+        type: "registerNickname",
+        name: oldNickname,
+        context: null,
+      });
+      // perform the same operation on local nickname
+      delete registeredNicknames[oldNickname];
+    }
 
     setRegisteredNicknames(registeredNicknames);
     return true;
@@ -179,23 +197,34 @@ export const OptionsController = function() {
     });
   };
 
-  const useEditNicknameModal = (initialIsVisible, initialContext) => {
+  const useEditNicknameDraft = (initialIsVisible, initialContext) => {
     const { ref, isVisible, setVisible } = useToggle(initialIsVisible);
     const [tempEditableNickname, setTempEditableNickname] = useState({});
     const copyNickname = {
       ...tempEditableNickname,
     };
 
-    const setModalVisibile = visible => {
+    const setDraftVisibile = visible => {
+      if (visible === false) {
+        setVisible(false);
+        return;
+      }
+      const copyInitialContext = JSON.parse(JSON.stringify(initialContext));
+      let intents = "";
       // deep copy inital context and use that as temporary nickname for edit
-      setTempEditableNickname(JSON.parse(JSON.stringify(initialContext)));
+      for (let i = 0; i < initialContext.contexts.length; i++) {
+        intents += initialContext.contexts[i].utterance + "\n";
+      }
+      copyInitialContext.intents = intents;
+
+      setTempEditableNickname(copyInitialContext);
       setVisible(visible);
     };
 
     return {
       ref,
       isVisible,
-      setVisible: setModalVisibile,
+      setVisible: setDraftVisibile,
       tempEditableNickname: copyNickname,
       setTempEditableNickname,
     };
@@ -213,8 +242,7 @@ export const OptionsController = function() {
       updateNickname={updateNickname}
       registeredNicknames={registeredNicknames}
       useToggle={useToggle}
-      useEditNicknameModal={useEditNicknameModal}
-      parseUtterance={parseUtterance}
+      useEditNicknameDraft={useEditNicknameDraft}
     />
   );
 };
