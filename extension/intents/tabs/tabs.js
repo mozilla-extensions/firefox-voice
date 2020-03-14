@@ -556,3 +556,25 @@ if (!buildSettings.android) {
     },
   });
 }
+
+intentRunner.registerIntent({
+  name: "tabs.countTabs",
+  async run(context) {
+    context.keepPopup();
+    const tabs = await browser.tabs.query({ currentWindow: true });
+    const hiddenTabs = await browser.tabs.query({ hidden: true });
+    const numOfOpenTabs = tabs.length - hiddenTabs.length;
+    const card = {
+      answer: {
+        largeText: `${numOfOpenTabs}`,
+        text: "Open tabs",
+        eduText: `Click mic and say "gather all Google tabs"`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
+  },
+});
