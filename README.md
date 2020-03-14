@@ -89,6 +89,7 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
 
+<<<<<<< HEAD
 ### Running Tests
 
 1. For running tests, run `npm test`.
@@ -126,6 +127,8 @@ Before cloning the repo, using the terminal in Git-bash:
 5. Now run `npm install`
 6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
 
+=======
+>>>>>>> 10f5e9c3a39bb6ef4e48081fe99410216482126a
 ### Debugging
 
 In Firefox Voice there are several separate processes where things run (see also [Anatomy of an extension](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension)):
