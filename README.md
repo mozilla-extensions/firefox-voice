@@ -10,21 +10,19 @@ Launcher is located in the top right corner of the browser window having mic ico
 
 ![launcher location doc](/docs/images/extension.png)
 
-
 Launcher contains 2 input modes :
 
-- **Voice** : You can give voice commands to your browser if the popup is open and listening.
+- **Voice**: You can give voice commands to your browser if the popup is open and listening.
 
-- **Text** : You can paste text or start typing the command when the popup is open. An input box and __Go__ button appears when you start typing.
+- **Text**: You can paste text or start typing the command when the popup is open. An input box and **Go** button appears when you start typing.
 
-**How it works** -  [Demo video](https://www.youtube.com/watch?v=3sqKsfj8WRE&feature=emb_title)
-
+- **How it works**: [Demo video](https://www.youtube.com/watch?v=3sqKsfj8WRE&feature=emb_title)
 
 ## Discussion
 
 If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit any kind of feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in whatever feedback you have about using this tool!
 
-If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://matrix.to/#/!qzDBOUrnxuFFNQRaIo:mozilla.org?via=mozilla.org)). Note that the team mostly works weekdays, North American work hours, so questions outside of that time may take a while to get a response.
+If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://chat.mozilla.org/#/room/#firefox-voice:mozilla.org)). Note that the team mostly works weekdays, North American work hours, so questions outside of that time may take a while to get a response.
 
 ## Developing
 
@@ -44,7 +42,7 @@ npm start
 
 This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
-You may face errors on performing ```npm install``` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
+You may face errors on performing `npm install` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
 If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
 
@@ -90,6 +88,43 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 15. Update the sources using `sudo apt-get update`.
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
+
+### Running Tests
+
+1. For running tests, run `npm test`.
+   This command does the following:
+   - Compiles JavaScript.
+   - Runs all tests.
+   - Checks the code formatting using `prettier`[https://prettier.io/].
+   - Lints the code using `eslint` [https://github.com/eslint/eslint].
+2. `firefox-voice` makes use of `jest` but it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites.
+3. `npm test` would still run `npm run jest` locally on `node v13.8.0` in the development process.
+4. New `jest` unit tests can still be added because `npm test` still runs `jest` locally. Look at files with `.test.js` extension for examples to guide you.
+5. `npm run test:selenium` will run selenium tests. To run tests locally first run `web-ext build -s extension --overwrite-dest` which builds the extenion as a zip file then run `node test/test.js`
+6. Many formatting and linting problems can be automatically fixed by running `npm run lint:fix`.
+   In order to keep the `firefox-voice` codebase healthy and running properly, these tools are used:
+   - Prettier formats and keeps the code the same way, saving energy and time.
+   - ESLint spots problems and errors, also saving everyone's energy and time.
+   - Stylelint helps to avoid errors and enforce conventions in style sheets.
+
+### Developing in Windows without WSL
+
+#### Prerequisites
+
+1. Latest LTS version of NodeJS
+2. Git and Git-bash
+3. Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
+
+#### Installation
+
+Before cloning the repo, using the terminal in Git-bash:
+
+1. Run `git config --global core.autocrlf false` to prevent git from converting line endings from LF to CRLF
+2. Run `npm config set script-shell "path\\to\\bash.exe"`. Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
+3. Clone the [repository](https://github.com/mozilla/firefox-voice.git) `git clone https://github.com/mozilla/firefox-voice.git`
+4. To create the environment variable `FIREFOX`, run `export FIREFOX=normalized/path/to/firefox.exe`. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then normalized path is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, the environment variable set to the normalized path can be created using the Windows system dialog.
+5. Now run `npm install`
+6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
 
 ### Debugging
 
@@ -182,7 +217,7 @@ See the [guidelines](docs/contributing.md) for contributing to this project.
 
 This project is governed by a [Code Of Conduct](docs/code_of_conduct.md).
 
-To disclose potential a security vulnerability please see our [security](docs/security.md) documentation.
+To disclose any potential security vulnerability please see our [security](docs/security.md) documentation.
 
 ### Contributors
 

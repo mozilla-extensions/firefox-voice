@@ -91,13 +91,13 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Alternatives:** an example of alternatives is `(test | example)`. Or for example it could have been written `(a test | an example)`. This is also how _optional_ words are handled, with an empty alternative. For instance `the (best |) example` will match both `the best example` and `the example`.
 
-**Slots:** a slot is a wildcard, and puts the matched words in a named slot. E.g., `play [query]` puts everything after "play" into `content.slots.query`. The matcher tries to put as little text as necessary into a slot, so `play [query] (on |) the radio` will match `play something on the radio` with the `something` in the slot, even though `something on` would also match.
+**Slots:** a slot is a wildcard, and puts the matched words in a named slot. E.g., `play [query]` puts everything after "play" into `context.slots.query`. The matcher tries to put as little text as necessary into a slot, so `play [query] (on |) the radio` will match `play something on the radio` with the `something` in the slot, even though `something on` would also match.
 
 **Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `background/entityTypes.js` module. Right now this system isn't very extensible.
 
 **Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
 
-### Matting an utterance to an intent
+### Matching an utterance to an intent
 
 Sometimes more than one phrase will match the utterance. If more than one intent matches an utterance then Firefox Voice has to decide which one to execute.
 
@@ -178,3 +178,15 @@ Use `log.info()` (debug, etc) for any logging you plan to leave in the code. `lo
 If you are doing debugging, use `console.log()`. These are _not_ allowed in the code (and `npm test` will fail), but that's intentional: you should remove any debugging before committing the code, and only leave deliberate log messages.
 
 If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm start`.
+
+## NPM scripts
+
+NPM scripts are simply terminal commands. The npm scripts which are available to use are listed in package.json file. `enumerate-phrases` is a project specific/custom npm script.
+
+**enumerate-phrases:** lists all the matched phrases for the specified intent using the auto-generated metadata for finding matches. This metadata is generated from all the .toml files containing intents description. 
+
+You can execute this script as:
+```js 
+npm run enumerate-phrases -- someIntent.command
+```
+For example, Running the command `npm run enumerate-phrases -- navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.

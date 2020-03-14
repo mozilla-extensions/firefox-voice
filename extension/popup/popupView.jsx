@@ -81,6 +81,10 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "Type your request";
       case "searchResults":
         return transcript;
+      case "startSavingPage":
+        return "Saving page...";
+      case "endSavingPage":
+        return "Success";
       case "feedback":
         return (
           <React.Fragment>
@@ -110,6 +114,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
     currentView === "error" ||
     currentView === "searchResults" ||
     currentView === "typing" ||
+    currentView === "startSavingPage" ||
+    currentView === "endSavingPage" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks"
       ? ""
@@ -221,6 +227,12 @@ const PopupContent = ({
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
           />
+        );
+      case "startSavingPage":
+        return <SavingPageContent transcript={transcript} />;
+      case "endSavingPage":
+        return (
+          <SuccessContent transcript={transcript} displayText={displayText} />
         );
       case "feedback":
         return (
@@ -387,7 +399,7 @@ const VoiceInput = ({ suggestions, onClickLexicon }) => {
   );
 };
 
-const IntentFeedback = ({ onSubmitFeedback }) => {
+const IntentFeedback = ({ eduText, onSubmitFeedback }) => {
   function onPositive() {
     onSubmitFeedback({ rating: 1, feedback: null });
   }
@@ -409,6 +421,12 @@ const IntentFeedback = ({ onSubmitFeedback }) => {
           onClick={onNegative}
         ></button>
       </div>
+      {eduText ? (
+        <div>
+          <hr />
+          <em>{eduText}</em>
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -536,6 +554,14 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
   );
 };
 
+const SavingPageContent = ({ transcript }) => {
+  return (
+    <React.Fragment>
+      <Transcript transcript={transcript} />
+    </React.Fragment>
+  );
+};
+
 const SearchResultsContent = ({
   search,
   cardImage,
@@ -569,23 +595,50 @@ const SearchResultsContent = ({
     onNextSearchResultClick();
   };
 
+  const SearchCard = () => (
+    <button class="invisible-button" onClick={onSearchCardClick}>
+      <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
+    </button>
+  );
+
+  const AnswerCard = () => (
+    <div className="results-set">
+      {card.answer.imgSrc ? (
+        <img
+          className="results-image"
+          src={card.answer.imgSrc}
+          alt={card.answer.alt}
+        />
+      ) : null}
+      <div className="results-text">
+        <em>
+          {card.answer.largeText ? (
+            <div className="results-largeText">{card.answer.largeText}</div>
+          ) : null}
+          <div>{card.answer.text}</div>
+        </em>
+      </div>
+    </div>
+  );
+
+  const renderCard = () => {
+    if (card && card.answer) {
+      return AnswerCard();
+    } else if (card) {
+      return SearchCard();
+    }
+    return null;
+  };
+
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      <div id="search-results">
-        {card ? (
-          <button class="invisible-button" onClick={onSearchCardClick}>
-            <img
-              id="search-image"
-              alt={imgAlt}
-              style={cardStyles}
-              src={card.src}
-            />
-          </button>
-        ) : null}
-      </div>
+      <div id="search-results">{renderCard()}</div>
       <div id="search-footer">
-        <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
+        <IntentFeedback
+          onSubmitFeedback={onSubmitFeedback}
+          eduText={card && card.answer ? card.answer.eduText : null}
+        />
         {next ? (
           <div id="next-result">
             <p>
@@ -659,6 +712,11 @@ class Zap extends Component {
       },
       error: {
         segments: [this.animationSegmentTimes.error],
+        loop: false,
+        interrupt: true,
+      },
+      startSavingPage: {
+        segments: [this.animationSegmentTimes.waiting],
         loop: false,
         interrupt: true,
       },
