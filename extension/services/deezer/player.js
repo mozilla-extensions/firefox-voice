@@ -22,7 +22,7 @@ this.player = (function() {
             // There seem to be 3 fixed buttons that appear early before the search results
             minCount: 4,
           });
-          playerButton.click();
+          playerButton.click(); 
         }
       } catch (e) {
        const unlogged = this.querySelector("div[class='unlogged-homepage']")
