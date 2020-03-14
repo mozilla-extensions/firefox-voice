@@ -10,41 +10,48 @@ this.player = (function() {
     }
 
     async action_search({ query, thenPlay }) {
-      const querySubmit = this.querySelector("form .topbar-search-submit");
-      const queryInput = this.querySelector("form .topbar-search-input");
-      console.log(queryInput);
+      try {
+        const querySubmit = this.querySelector("form .topbar-search-submit");
+        const queryInput = this.querySelector("form .topbar-search-input");
+        console.log(queryInput);
+        this.setReactInputValue(queryInput, query);
+        querySubmit.click();
+        if (thenPlay) {
+          const playerButton = await this.waitForSelector(SEARCH_PLAY, {
+            timeout: 2000,
+            // There seem to be 3 fixed buttons that appear early before the search results
+            minCount: 4,
+          });
+          playerButton.click();
+        }
+      } catch (e) {
+       const unlogged = this.querySelector("div[class='unlogged-homepage']")
+        if (unlogged) {
+          console.log("im alive");
+          e = new Error ("Pls log in to use this service.");
+          throw e;
 
-      this.setReactInputValue(queryInput, query);
-      querySubmit.click();
-      if (thenPlay) {
-        const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 2000,
-          // There seem to be 3 fixed buttons that appear early before the search results
-          minCount: 4,
-        });
-        playerButton.click();
+        }
       }
     }
 
     action_pause() {
-      const pauseButton = this.querySelector("button[aria-label='Pause']");
-      pauseButton.click();
+      const group_btn = this.querySelector("button[aria-label='Pause']");
+      group_btn.click();
     }
 
     action_unpause() {
-      const playButton = this.querySelector("button[aria-label='Play']");
-      playButton.click();
+      const group_btn = this.querySelector("button[aria-label='Play']");
+      group_btn.click();
     }
 
     action_move({ direction }) {
-      let selector;
-      if (direction === "next") {
-        selector = "button[aria-label='Next']";
-      } else if (direction === "previous") {
-        selector = "button[aria-label='Previous']";
+      let group_btn;
+      if (direction === "Next") {
+        group_btn = "button[aria-label='Next']";
+      } else if (direction === "Previous") {
+        group_btn = "button[aria-label='Previous']";
       }
-      const moveButton = this.querySelector(selector);
-      moveButton.click();
     }
   }
 
