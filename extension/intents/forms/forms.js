@@ -88,7 +88,7 @@ intentRunner.registerIntent({
       hide: true,
     });
     const url = newTab.url;
-    const title = newTab.title;
+    const text = selection.text;
     await browser.tabs.remove(newTab.id);
     await content.lazyInject(activeTab.id, [
       "/js/vendor/fuse.js",
@@ -97,7 +97,7 @@ intentRunner.registerIntent({
     await browser.tabs.sendMessage(activeTab.id, {
       type: "turnSelectionIntoLink",
       url,
-      title,
+      text,
     });
   },
 });

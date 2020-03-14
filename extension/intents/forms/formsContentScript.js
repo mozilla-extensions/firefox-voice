@@ -194,7 +194,7 @@ this.dictationContentScript = (function() {
 
   communicate.register("turnSelectionIntoLink", async message => {
     const url = message.url;
-    const title = message.title;
+    const text = message.text;
     let el;
     if (!isPasteable(document.activeElement)) {
       for (const selector of PASTE_SELECTORS) {
@@ -207,10 +207,10 @@ this.dictationContentScript = (function() {
       el = document.activeElement;
     }
     if (el.hasAttribute("contenteditable")) {
-      replaceSelectedText(title, url);
+      replaceSelectedText(text, url);
     } else if (el.hasAttribute("textarea")) {
-      const markdownLink = `[${title}](${url})`;
-      replaceSelectedText(title, markdownLink);
+      const markdownLink = `[${text}](${url})`;
+      replaceSelectedText(text, markdownLink);
     }
   });
 
@@ -256,7 +256,7 @@ this.dictationContentScript = (function() {
     focus(elements[0]);
   }
 
-  function replaceSelectedText(title, url) {
+  function replaceSelectedText(text, url) {
     let sel, range;
     if (window.getSelection) {
       sel = window.getSelection();
@@ -264,13 +264,13 @@ this.dictationContentScript = (function() {
         range = sel.getRangeAt(0);
         range.deleteContents();
         const anchor = document.createElement("a");
-        anchor.textContent = title;
+        anchor.textContent = text;
         anchor.href = url;
         range.insertNode(anchor);
       }
     } else if (document.selection && document.selection.createRange) {
       range = document.selection.createRange();
-      range.text = title;
+      range.text = text;
     }
   }
 })();
