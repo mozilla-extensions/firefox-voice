@@ -217,7 +217,7 @@ See the [guidelines](docs/contributing.md) for contributing to this project.
 
 This project is governed by a [Code Of Conduct](docs/code_of_conduct.md).
 
-To disclose potential a security vulnerability please see our [security](docs/security.md) documentation.
+To disclose any potential security vulnerability please see our [security](docs/security.md) documentation.
 
 ### Contributors
 
