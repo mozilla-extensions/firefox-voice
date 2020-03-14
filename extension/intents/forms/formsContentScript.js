@@ -1,4 +1,4 @@
-/* globals communicate, pageMetadataContentScript, Fuse */
+/* globals communicate, Fuse */
 
 this.dictationContentScript = (function() {
   const PASTE_SELECTORS = [
@@ -18,7 +18,6 @@ this.dictationContentScript = (function() {
   ];
   const COMBINED_SELECTORS = PASTE_SELECTORS.join(", ");
   const DEFAULT_FOCUS_TIME = 500;
-  const meta = pageMetadataContentScript.getMetadata;
 
   function isPasteable(el) {
     while (el && el.tagName) {
@@ -195,6 +194,7 @@ this.dictationContentScript = (function() {
 
   communicate.register("turnSelectionIntoLink", async message => {
     const url = message.url;
+    const title = message.title;
     let el;
     if (!isPasteable(document.activeElement)) {
       for (const selector of PASTE_SELECTORS) {
@@ -207,11 +207,10 @@ this.dictationContentScript = (function() {
       el = document.activeElement;
     }
     if (el.hasAttribute("contenteditable")) {
-      replaceSelectedText(url);
+      replaceSelectedText(title, url);
     } else if (el.hasAttribute("textarea")) {
-      const m = meta();
-      const markdownLink = `[${m.title}](${m.canonical || m.url})`;
-      replaceSelectedText(markdownLink);
+      const markdownLink = `[${title}](${url})`;
+      replaceSelectedText(title, markdownLink);
     }
   });
 
@@ -257,18 +256,21 @@ this.dictationContentScript = (function() {
     focus(elements[0]);
   }
 
-  function replaceSelectedText(replacementText) {
+  function replaceSelectedText(title, url) {
     let sel, range;
     if (window.getSelection) {
       sel = window.getSelection();
       if (sel.rangeCount) {
         range = sel.getRangeAt(0);
         range.deleteContents();
-        range.insertNode(document.createTextNode(replacementText));
+        const anchor = document.createElement("a");
+        anchor.textContent = title;
+        anchor.href = url;
+        range.insertNode(anchor);
       }
     } else if (document.selection && document.selection.createRange) {
       range = document.selection.createRange();
-      range.text = replacementText;
+      range.text = title;
     }
   }
 })();

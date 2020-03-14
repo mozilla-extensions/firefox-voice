@@ -1,18 +1,6 @@
-/* globals buildSettings */
-
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
-import * as searching from "../../searching.js";
-
-function createTabGoogleLucky(query, options = {}) {
-  const searchUrl = searching.googleSearchUrl(query, true);
-  const tab = browser.tabs.create({ url: searchUrl });
-  if (options.hide && !buildSettings.android) {
-    browser.tabs.hide(tab.id);
-  }
-  return searchUrl;
-}
 
 intentRunner.registerIntent({
   name: "forms.dictate",
@@ -96,7 +84,12 @@ intentRunner.registerIntent({
       e.displayMessage = "No text selected";
       throw e;
     }
-    const url = createTabGoogleLucky(selection.text);
+    const newTab = await context.createTabGoogleLucky(selection.text, {
+      hide: true,
+    });
+    const url = newTab.url;
+    const title = newTab.title;
+    await browser.tabs.remove(newTab.id);
     await content.lazyInject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -104,6 +97,7 @@ intentRunner.registerIntent({
     await browser.tabs.sendMessage(activeTab.id, {
       type: "turnSelectionIntoLink",
       url,
+      title,
     });
   },
 });
