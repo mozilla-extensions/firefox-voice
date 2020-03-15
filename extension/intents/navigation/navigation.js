@@ -78,6 +78,9 @@ intentRunner.registerIntent({
         : await serviceList.detectServiceFromActiveTab(metadata.search);
     if (service) {
       myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+      context.addTelemetryServiceName(
+        `ddg:${serviceList.ddgBangServiceName(service)}`
+      );
       if (serviceType === "mentioned") {
         await context.createTab({ url: myurl });
       } else {
@@ -89,12 +92,6 @@ intentRunner.registerIntent({
           context.slots.query +
           ` site:${new URL((await browserUtil.activeTab()).url).origin}`,
       });
-    }
-
-    if (service) {
-      context.addTelemetryServiceName(
-        `ddg:${serviceList.ddgBangServiceName(service)}`
-      );
     }
 
     browser.runtime.sendMessage({
