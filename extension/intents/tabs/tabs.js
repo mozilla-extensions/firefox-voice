@@ -584,7 +584,7 @@ intentRunner.registerIntent({
   async run(context) {
     let message;
     const results = await browser.find.find(context.slots.query);
-    await browser.find.highlightResults({ 
+    await browser.find.highlightResults({
       noScroll: false,
       rangeIndex: 0,
     });
