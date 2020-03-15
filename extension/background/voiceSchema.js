@@ -1193,7 +1193,7 @@ export const schema = {
           "type": "boolean"
         },
         "inputLength": {
-          "minumum": 0,
+          "minimum": 0,
           "title": "Number of characters in text/voice input",
           "type": "integer"
         },

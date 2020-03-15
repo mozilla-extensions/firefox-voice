@@ -50,6 +50,10 @@ this.voice = class extends ExtensionAPI {
           async openDownloads() {
             return runCommand("Tools:Downloads");
           },
+
+          async quitApplication() {
+            return runCommand("cmd_quitApplication");
+          },
         },
       },
     };

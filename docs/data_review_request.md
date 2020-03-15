@@ -47,7 +47,7 @@ Mobile vs. desktop use for those who have an Android
 
 4) Can current instrumentation answer these questions?
 
-* No, but we will be able to utilitze existing telemetry around environemntal variables (version of Firefox) to supplement the new data we will start to collect. 
+* No, but we will be able to utilitze existing telemetry around environmental variables (version of Firefox) to supplement the new data we will start to collect. 
 
 5) List all proposed measurements and indicate the category of data collection for each measurement, using the Firefox [data collection categories](https://wiki.mozilla.org/Firefox/Data_Collection) on the Mozilla wiki.   
 
