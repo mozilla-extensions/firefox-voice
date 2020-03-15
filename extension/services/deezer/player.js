@@ -7,7 +7,7 @@ this.player = (function() {
     action_play() {
       const button = this.querySelector("button[aria-label='Play']");
       button.click();
-    }
+    };
 
     async action_search({ query, thenPlay }) {
       try {
@@ -32,12 +32,12 @@ this.player = (function() {
           throw e;
         }
       }
-    }
+    };
 
     action_pause() {
       const button = this.querySelector("button[aria-label='Pause']");
       button.click();
-    }
+    };
 
     action_unpause() {
       const button = this.querySelector("button[aria-label='Play']");
