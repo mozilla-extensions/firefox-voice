@@ -89,8 +89,10 @@ intentRunner.registerIntent({
     } else {
       await browser.search.search({
         query:
-          context.slots.query +
-          ` site:${new URL((await browserUtil.activeTab()).url).origin}`,
+          await browserUtil.activeTab().url
+          ? context.slots.query +
+          ` site:${new URL((await browserUtil.activeTab()).url).origin}`
+          : context.slots.query
       });
     }
 

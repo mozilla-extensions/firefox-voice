@@ -148,3 +148,6 @@ bangSearch = "imdb"
 
 [add-ons]
 bangSearch = "mozaddon"
+
+[github]
+bangSearch = "github"
