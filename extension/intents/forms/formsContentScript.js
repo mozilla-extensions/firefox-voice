@@ -206,11 +206,16 @@ this.dictationContentScript = (function() {
     } else {
       el = document.activeElement;
     }
-    if (el.hasAttribute("contenteditable")) {
-      replaceSelectedText(text, url);
-    } else if (el.hasAttribute("textarea")) {
-      const markdownLink = `[${text}](${url})`;
-      replaceSelectedText(text, markdownLink);
+    while (el) {
+      if (el.hasAttribute("contenteditable")) {
+        replaceSelectedText(text, url);
+        break;
+      } else if (el.hasAttribute("textarea")) {
+        const markdownLink = `[${text}](${url})`;
+        replaceSelectedText(text, markdownLink);
+        break;
+      }
+      el = el.parentNode;
     }
   });
 
