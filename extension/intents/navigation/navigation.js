@@ -5,6 +5,7 @@ import * as pageMetadata from "../../background/pageMetadata.js";
 import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
+import { metadata } from "../../services/metadata.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -66,15 +67,36 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.bangSearch",
   async run(context) {
-    const service = context.slots.service || context.parameters.service;
-    const myurl = await searching.ddgBangSearchUrl(
-      context.slots.query,
-      service
-    );
-    context.addTelemetryServiceName(
-      `ddg:${serviceList.ddgBangServiceName(service)}`
-    );
-    await context.createTab({ url: myurl });
+    const serviceType =
+      context.slots.service || context.parameters.service
+        ? "mentioned"
+        : "notMentioned";
+    let myurl;
+    const service =
+      serviceType === "mentioned"
+        ? context.slots.service || context.parameters.service
+        : await serviceList.detectServiceFromActiveTab(metadata.search);
+    if (service) {
+      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+      if (serviceType === "mentioned") {
+        await context.createTab({ url: myurl });
+      } else {
+        await browser.tabs.update({ url: myurl });
+      }
+    } else {
+      await browser.search.search({
+        query:
+          context.slots.query +
+          ` site:${new URL((await browserUtil.activeTab()).url).origin}`,
+      });
+    }
+
+    if (service) {
+      context.addTelemetryServiceName(
+        `ddg:${serviceList.ddgBangServiceName(service)}`
+      );
+    }
+
     browser.runtime.sendMessage({
       type: "closePopup",
       sender: "find",

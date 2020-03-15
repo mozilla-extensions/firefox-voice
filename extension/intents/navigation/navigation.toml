@@ -6,6 +6,9 @@ match = """
   (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
   (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
   (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
+  (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in |)  (this | the |) (current | active |) ( site | tab |) (here |) (for me |)
+  (do a |) (search | query | find | look up | lookup | look on) (in |) (this | the |) (current | active |) (site | tab |) (here |) (for | for the |) [query] (for me |)
+
 """
 
 [[navigation.bangSearch.example]]
@@ -43,6 +46,12 @@ test = true
 
 [[navigation.bangSearch.example]]
 phrase = "Search ScrollAnywhere on addons"
+
+[[navigation.bangSearch.example]]
+phrase = "search for Electronics in this tab"
+
+[[navigation.bangSearch.example]]
+phrase = "search this site for Smart TV"
 
 [navigation.clearQueryDatabase]
 description = "Debugging command to clear the cache of 'open' queries"
@@ -90,11 +99,6 @@ expectSlots = {where = "window"}
 
 [[navigation.navigate.example]]
 phrase = "Go to a new window and find the New York Times"
-test = true
-expectSlots = {where = "window"}
-
-[[navigation.navigate.example]]
-phrase = "Open a new window and go to Wikipedia"
 test = true
 expectSlots = {where = "window"}
 
