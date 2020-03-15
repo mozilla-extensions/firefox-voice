@@ -92,8 +92,8 @@ class YouTube extends serviceList.Service {
   }
 
   async fullScreenVideo(tabId) {
-      await content.lazyInject(tabId, "/services/youtube/player.js");
-      await this.callOneTab(tabId, "fullScreenVideo");
+    await content.lazyInject(tabId, "/services/youtube/player.js");
+    await this.callOneTab(tabId, "fullScreenVideo");
   }
 }
 

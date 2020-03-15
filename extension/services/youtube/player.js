@@ -62,7 +62,9 @@ this.player = (function() {
     }
 
     action_fullScreenVideo() {
-      const button = this.querySelector(`${this.selector} .ytp-fullscreen-button`);
+      const button = this.querySelector(
+        `${this.selector} .ytp-fullscreen-button`
+      );
       button.click();
       // const video = this.querySelector(this.videoPlayer);
       // return video.mozRequestFullScreen();

@@ -130,7 +130,10 @@ intentRunner.registerIntent({
       exc.displayMessage = exc.message;
       throw exc;
     }
-    const audibleTab = await browser.tabs.query({ active: true, audible: true });
+    const audibleTab = await browser.tabs.query({
+      active: true,
+      audible: true,
+    });
     if (!audibleTab.length) {
       const currentWindow = await browser.windows.getCurrent();
       await browser.windows.update(currentWindow.id, { state: "fullscreen" });
