@@ -578,3 +578,21 @@ intentRunner.registerIntent({
     });
   },
 });
+
+intentRunner.registerIntent({
+  name: "tabs.findOnPage",
+  async run(context) {
+    let message;
+    const results = await browser.find.find(context.slots.query);
+    await browser.find.highlightResults({
+      noScroll: false,
+      rangeIndex: 0,
+    });
+    if (results.count > 0) {
+      message = `"${context.slots.query}" found ${results.count} times`;
+    } else {
+      message = `"${context.slots.query}" not found`;
+    }
+    context.displayText(message);
+  },
+});
