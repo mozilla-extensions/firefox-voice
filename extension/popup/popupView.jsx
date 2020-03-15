@@ -350,6 +350,33 @@ const ListeningContent = ({
         <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
+      <div className={expandListeningView ? "expanded" : ""}>
+        <p>Developer tip:</p>
+        <a
+          target="_blank"
+          rel="noopener"
+          id="lexicon"
+          href="../views/lexicon.html"
+          onClick={browserUtil.activateTabClickHandler}
+        >
+          <p>Start typing to make a request using a keyboard</p>
+        </a>
+      </div>
+      <div className={expandListeningView ? "expanded" : ""}>
+        <p>You can say things like:</p>
+        <h4>Go to The New York Times</h4>
+        <h4>Search for hiking in Denver</h4>
+        <h4>Find the calendar tab</h4>
+        <a
+          target="_blank"
+          rel="noopener"
+          id="lexicon"
+          href="../views/lexicon.html"
+          onClick={browserUtil.activateTabClickHandler}
+        >
+          <p>More things you can say</p>
+        </a>
+      </div>
     </React.Fragment>
   );
 };
