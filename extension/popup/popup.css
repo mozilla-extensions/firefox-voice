@@ -402,3 +402,11 @@ a#lexicon {
 .feedback-thanks {
   text-align: center;
 }
+
+.popup-tips{
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.85em;
+  margin-bottom: 2em;
+  display: block;
+}

@@ -343,6 +343,10 @@ const ListeningContent = ({
   onInputStarted,
   expandListeningView,
 }) => {
+  const onClickType = () => {
+    <TypingInput />;
+  };
+
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
@@ -350,19 +354,18 @@ const ListeningContent = ({
         <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
-      <div className={expandListeningView ? "expanded" : ""}>
+      <div className="popup-tips">
         <p>Developer tip:</p>
         <a
           target="_blank"
           rel="noopener"
-          id="lexicon"
-          href="../views/lexicon.html"
-          onClick={browserUtil.activateTabClickHandler}
+          href="./"
+          onClick={onClickType}
         >
-          <p>Start typing to make a request using a keyboard</p>
+          Start typing to make a request using a keyboard
         </a>
       </div>
-      <div className={expandListeningView ? "expanded" : ""}>
+      <div className="popup-tips">
         <p>You can say things like:</p>
         <h4>Go to The New York Times</h4>
         <h4>Search for hiking in Denver</h4>
@@ -370,11 +373,10 @@ const ListeningContent = ({
         <a
           target="_blank"
           rel="noopener"
-          id="lexicon"
           href="../views/lexicon.html"
-          onClick={browserUtil.activateTabClickHandler}
+          onClick={TypingInput}
         >
-          <p>More things you can say</p>
+          More things you can say
         </a>
       </div>
     </React.Fragment>
