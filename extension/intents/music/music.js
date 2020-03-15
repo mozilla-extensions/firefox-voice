@@ -1,4 +1,4 @@
-/* globals log */
+/* globals buildSettings, log */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
@@ -119,6 +119,25 @@ intentRunner.registerIntent({
   async run(context) {
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.move(context.parameters.direction);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.fullScreen",
+  async run(context) {
+    if (buildSettings.android) {
+      const exc = new Error("Full screen not supported on Android");
+      exc.displayMessage = exc.message;
+      throw exc;
+    }
+    const audibleTab = await browser.tabs.query({ active: true, audible: true });
+    if (!audibleTab.length) {
+      const currentWindow = await browser.windows.getCurrent();
+      await browser.windows.update(currentWindow.id, { state: "fullscreen" });
+    } else {
+      const service = await getService(context, { lookAtCurrentTab: true });
+      await service.fullScreenVideo(audibleTab[0].id);
+    }
   },
 });
 

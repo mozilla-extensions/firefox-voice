@@ -45,15 +45,6 @@ match = """
 [[tabs.duplicate.example]]
 phrase = "Duplicate this page"
 
-[tabs.fullScreen]
-description = "Full screen mode"
-match = """
-  (make |) (full screen | fullscreen)
-"""
-
-[[tabs.fullScreen.example]]
-phrase = "full screen"
-
 [tabs.moveToWindow]
 description = "Move tab in a new window"
 match = """

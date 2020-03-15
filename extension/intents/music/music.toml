@@ -156,3 +156,21 @@ phrase = "What is playing"
 [[music.showTitle.example]]
 phrase = "What's playing?"
 test = true
+
+[music.fullScreen]
+description = "Full screen mode"
+match = """
+  (make |) (full screen | fullscreen)
+"""
+
+[[music.fullScreen.example]]
+phrase = "full screen"
+
+[music.exitFullScreen]
+description = "Full screen mode"
+match = """
+  (exit |) (full screen | fullscreen)
+"""
+
+[[music.exitFullScreen.example]]
+phrase = "exit screen"

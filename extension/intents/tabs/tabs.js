@@ -217,19 +217,6 @@ intentRunner.registerIntent({
   },
 });
 
-intentRunner.registerIntent({
-  name: "tabs.fullScreen",
-  async run(context) {
-    if (buildSettings.android) {
-      const exc = new Error("Full screen not supported on Android");
-      exc.displayMessage = exc.message;
-      throw exc;
-    }
-    const currentWindow = await browser.windows.getCurrent();
-    await browser.windows.update(currentWindow.id, { state: "fullscreen" });
-  },
-});
-
 const tabHistory = [];
 let lastActivate;
 

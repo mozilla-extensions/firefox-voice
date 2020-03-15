@@ -60,6 +60,13 @@ this.player = (function() {
       const button = this.querySelector(`${this.selector} .ytp-next-button`);
       button.click();
     }
+
+    action_fullScreenVideo() {
+      const button = this.querySelector(`${this.selector} .ytp-fullscreen-button`);
+      button.click();
+      // const video = this.querySelector(this.videoPlayer);
+      // return video.mozRequestFullScreen();
+    }
   }
 
   Player.register();

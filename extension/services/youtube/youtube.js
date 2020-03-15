@@ -90,6 +90,11 @@ class YouTube extends serviceList.Service {
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
+
+  async fullScreenVideo(tabId) {
+      await content.lazyInject(tabId, "/services/youtube/player.js");
+      await this.callOneTab(tabId, "fullScreenVideo");
+  }
 }
 
 Object.assign(YouTube, {
