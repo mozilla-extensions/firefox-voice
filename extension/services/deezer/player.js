@@ -46,10 +46,10 @@ this.player = (function() {
 
     action_move({ direction }) {
       if (direction === 'Next') {
-        const button = "button[aria-label='Next']";
+        const button = this.querySelector("button[aria-label='Next']");
         button.click();
       } else if (direction === "Previous") {
-        const button = "button[aria-label='Previous']";
+        const button = this.querySelector("button[aria-label='Previous']");
         button.click();
       }
     }
