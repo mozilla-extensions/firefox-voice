@@ -32,9 +32,3 @@ credentials
 manifest.json
 /addon.xpi
 /gh-pages
-extension/background/numbers.js
-extension/background/language/langs/english.toml
-extension/background/intentRunner.js
-extension/background/entityTypes.js
-extension/intents/tabs/tabs.toml
-extension/intents/tabs/tabs.toml
