@@ -1,0 +1,11 @@
+[launch.launch]
+description = "Launch the named app"
+match = """
+  (open|launch|start|run) [app:appName]
+"""
+
+[[launch.launch.example]]
+phrase = "Open Google Maps"
+
+[[launch.launch.example]]
+phrase = "Launch Spotify"
