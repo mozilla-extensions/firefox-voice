@@ -17,6 +17,14 @@ phrase = "close all tabs"
 test = true
 
 [[tabs.close.example]]
+phrase = "close active tab"
+test = true
+
+[[tabs.close.example]]
+phrase = "close the active tab"
+test = true
+
+[[tabs.close.example]]
 phrase = "close the current top"
 test = true
 
