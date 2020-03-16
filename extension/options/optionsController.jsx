@@ -25,7 +25,7 @@ export const OptionsController = function() {
   );
   const [userSettings, setUserSettings] = useState({});
   const [userOptions, setUserOptions] = useState({});
-  const [activeTab, setActiveTab] = useState("chime-settings");
+
   onKeyboardShortcutError = setKeyboardShortcutError;
 
   useEffect(() => {
@@ -60,10 +60,6 @@ export const OptionsController = function() {
     setUserSettings(userSettings);
   };
 
-  const updateActiveTab = async activeTab => {
-    setActiveTab(activeTab);
-  };
-
   return (
     <optionsView.Options
       inDevelopment={inDevelopment}
@@ -72,8 +68,6 @@ export const OptionsController = function() {
       userOptions={userOptions}
       userSettings={{ ...userSettings }}
       updateUserSettings={updateUserSettings}
-      activeTab={activeTab}
-      updateActiveTab={updateActiveTab}
     />
   );
 };
