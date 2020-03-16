@@ -495,7 +495,6 @@ class TypingInput extends PureComponent {
   };
 
   render() {
-      
     return (
       <div id="text-input">
         <textarea
