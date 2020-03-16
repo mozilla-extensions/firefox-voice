@@ -21,7 +21,7 @@ phrase = "close active tab"
 test = true
 
 [[tabs.close.example]]
-phrase = "close the active tab"
+phrase = "close the tabs"
 test = true
 
 [[tabs.close.example]]
