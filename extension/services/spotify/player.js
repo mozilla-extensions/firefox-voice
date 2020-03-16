@@ -1,8 +1,7 @@
 /* globals helpers */
 
 this.player = (function() {
-  const SEARCH_PLAY =
-    "#searchPage button[aria-label='Play'], .tracklist .tracklist-play-pause";
+  const SEARCH_PLAY = "#searchPage div button[style='--size:48px;']";
 
   class Player extends helpers.Runner {
     action_play() {
@@ -19,9 +18,9 @@ this.player = (function() {
       this.setReactInputValue(input, query);
       if (thenPlay) {
         const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 2000,
-          // There seem to be 3 fixed buttons that appear early before the search results
-          minCount: 4,
+          timeout: 10000,
+          // There is no need to wait for this as there is only one selector
+          minCount: 0,
         });
         playerButton.click();
       }
@@ -46,6 +45,10 @@ this.player = (function() {
       }
       const button = this.querySelector(selector);
       button.click();
+    }
+
+    action_playAlbum({ query, thenPlay }) {
+      this.action_search({ query, thenPlay });
     }
   }
 

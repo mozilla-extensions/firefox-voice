@@ -90,6 +90,15 @@ class YouTube extends serviceList.Service {
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
+
+  playAlbum() {
+    const e = new Error(
+      "Sorry, Youtube playlist or album support is not currently available in Firefox Voice."
+    );
+    e.displayMessage =
+      "Sorry, Youtube playlist or album support is not currently available in Firefox Voice.";
+    throw e;
+  }
 }
 
 Object.assign(YouTube, {

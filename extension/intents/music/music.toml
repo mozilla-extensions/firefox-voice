@@ -156,3 +156,15 @@ phrase = "What is playing"
 [[music.showTitle.example]]
 phrase = "What's playing?"
 test = true
+
+[music.playAlbum]
+description = "Play albums or playlists from a music service"
+match = """
+  (play | open) (album | playlist) [query] (on | in) [service:musicServiceName]
+  (play | open) [query] (album | playlist) (on | in) [service:musicServiceName]
+  (play | open) (album | playlist) [query]
+  (play | open) [query] (album | playlist)
+"""
+
+[[music.playAlbum.example]]
+phrase = "play album Thriller on spotify"
