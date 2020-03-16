@@ -1,67 +1,68 @@
 .fv-lightbox-container {
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0,0,0,0.8);
-    z-index: 100;
-    position: fixed;
-    top:0;
-    left: 0;
-    display: none;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
 }
 
-.fv-slideshow-container {  
-    display: flex;     
-    position: relative;
-    height: 80%;    
-    width: 60%;
-    border: 12px solid whitesmoke;
-    border-radius: 7px;
-    background-color: dimgray; 
-    margin: 3% auto; 
-    justify-content: center;
+.fv-slideshow-container {
+  display: flex;
+  position: relative;
+  height: 80%;
+  width: 60%;
+  border: 12px solid whitesmoke;
+  border-radius: 7px;
+  background-color: dimgray;
+  margin: 3% auto;
+  justify-content: center;
 }
 
 .fv-slide-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;  
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .fv-slide-image video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .fv-slide-image iframe {
-    margin-top: 5%;
+  margin-top: 5%;
 }
 
-.fv-prev, .fv-next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    margin-top: -22px;
-    padding: 16px;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.6s ease;    
-    user-select: none;
+.fv-prev,
+.fv-next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  user-select: none;
 }
 
 .fv-next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
+  right: 0;
+  border-radius: 3px 0 0 3px;
 }
 
 .fv-prev {
-    left: 0;
-    border-radius:  0 3px 3px 0;
+  left: 0;
+  border-radius: 0 3px 3px 0;
 }
 
-.fv-next:hover, .fv-prev:hover {
-    background-color: rgba(0,0,0,0.8);
+.fv-next:hover,
+.fv-prev:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
