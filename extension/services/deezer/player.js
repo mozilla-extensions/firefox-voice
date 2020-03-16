@@ -7,7 +7,7 @@ this.player = (function() {
     action_play() {
       const button = this.querySelector("button[aria-label='Play']");
       button.click();
-    };
+    }
 
     async action_search({ query, thenPlay }) {
       try {
@@ -24,28 +24,26 @@ this.player = (function() {
           });
           playerButton.click();
         }
-      } 
-      catch(e) {
+      } catch (e) {
         const unlogged = this.querySelector("div[class='unlogged-homepage']");
         if (unlogged) {
           e = new Error("Please log in to use this service.");
-          throw e;
         }
+        throw e
       }
-    };
+    }
 
     action_pause() {
       const button = this.querySelector("button[aria-label='Pause']");
       button.click();
-    };
-
+    }
     action_unpause() {
       const button = this.querySelector("button[aria-label='Play']");
       button.click();
     }
 
     action_move({ direction }) {
-      if (direction === 'Next') {
+      if (direction === "Next") {
         const button = this.querySelector("button[aria-label='Next']");
         button.click();
       } else if (direction === "Previous") {
