@@ -1,13 +1,12 @@
 /* globals log */
 
-export class database {
+export class Database {
   constructor(dbName) {
     this.DBName = dbName;
+    this.readonly = "readonly";
+    this.readwrite = "readwrite";
   }
-  transactionModes = {
-    readonly: "readonly",
-    readwrite: "readwrite",
-  };
+
   createTable(TBName, primaryKey) {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.DBName);
@@ -77,7 +76,7 @@ export class database {
       request.onsuccess = e => {
         const database = e.target.result;
         const add = database
-          .transaction([TBName], this.transactionModes.readwrite)
+          .transaction([TBName], this.readwrite)
           .objectStore(TBName)
           .add(obj);
         add.onsuccess = event => {
@@ -96,7 +95,7 @@ export class database {
       request.onsuccess = e => {
         const database = e.target.result;
         const remove = database
-          .transaction([TBName], this.transactionModes.readwrite)
+          .transaction([TBName], this.readwrite)
           .objectStore(TBName)
           .delete(primaryKey);
         remove.onerror = event =>
@@ -114,7 +113,7 @@ export class database {
       request.onsuccess = e => {
         const database = e.target.result;
         const objectStore = database
-          .transaction(TBName, this.transactionModes.readwrite)
+          .transaction(TBName, this.readwrite)
           .objectStore(TBName);
         const clear = objectStore.clear();
         clear.onsuccess = event => {
