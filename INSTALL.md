@@ -30,7 +30,7 @@ Before cloning the repo, using the terminal in Git-bash:
 1. Run `git config --global core.autocrlf false` to prevent git from automatically converting line endings from LF to CRLF
 2. Run `npm config set script-shell "path\\to\\bash.exe"`. Point to the path where you have git-bash installed(using double backslashes). Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
 3. Fork and clone the [repository](https://github.com/mozilla/firefox-voice.git)
-4. To enable the npm scripts find your firefox installation, you need to create the environment variable `FIREFOX`. The easiest way to do this is to create the environment variable set to a **normalized path** using _System properties->Advanced->Environment Variables_. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then **normalized path** is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, run `setx FIREFOX="normalized/path/to/firefox.exe"`. _Note: You may need to open a new terminal to detect the new environment variable._
+4. To enable the npm scripts find your firefox installation, you need to create the environment variable `FIREFOX`. The easiest way to do this is to create the environment variable set to a **normalized path** using _System properties->Advanced->Environment Variables_. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then **normalized path** is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, run `setx FIREFOX="normalized/path/to/firefox.exe"`. You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`). (_Note: You may need to open a new terminal to detect the new environment variable._)
 5. Now run `npm install` to install dependencies
 6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
 
@@ -41,6 +41,8 @@ Before cloning the repo, using the terminal in Git-bash:
 
 1. Latest LTS version of NodeJS
 2. Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) on WSL
+
+#### Installation
 
 If you are using Windows and wish to use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), you will need to setup Firefox Nightly or Developer on WSL before running `firefox-voice` using the following steps:
 
