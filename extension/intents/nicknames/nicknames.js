@@ -1,6 +1,7 @@
 /* globals log */
 
 import * as intentRunner from "../../background/intentRunner.js";
+import * as pageMetadata from "../../background/pageMetadata.js";
 
 intentRunner.registerIntent({
   name: "nicknames.name",
@@ -114,5 +115,22 @@ intentRunner.registerIntent({
         break;
       }
     }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "nicknames.namePage",
+  async run(context) {
+    const name = context.slots.name;
+    const activeTab = await context.activeTab();
+    const metadata = await pageMetadata.getMetadata(activeTab.id);
+    const result = await browser.storage.sync.get("pageNames");
+    let pageNames = result.pageNames;
+    if (!pageNames) {
+      pageNames = {[name]: metadata.url};
+    } else {
+      pageNames[name] = metadata.url;
+    }
+    await browser.storage.sync.set({ pageNames });
   },
 });

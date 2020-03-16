@@ -34,3 +34,17 @@ match = """
 
 [[nicknames.remove.example]]
 phrase = "Remove name calendar"
+
+[nicknames.namePage]
+description = "Name page"
+match = """
+ name (this |) (this | page | tab) [name]
+ give (the |) name [name] to (this |) (page | tab)
+"""
+
+[[nicknames.namePage.example]]
+phrase = "name this page news"
+
+[[nicknames.namePage.example]]
+phrase = "give the name news to this tab"
+test = true
