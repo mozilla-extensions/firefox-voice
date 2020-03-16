@@ -343,10 +343,6 @@ const ListeningContent = ({
   onInputStarted,
   expandListeningView,
 }) => {
-  const onClickType = () => {
-    <TypingInput />;
-  };
-
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
@@ -356,14 +352,12 @@ const ListeningContent = ({
       </div>
       <div className="popup-tips">
         <p>Developer tip:</p>
-        <a
-          target="_blank"
-          rel="noopener"
-          href="./"
-          onClick={onClickType}
+        <button
+          className="type-input-button"
+          onClick={TypingContent}
         >
-          Start typing to make a request using a keyboard
-        </a>
+          <h3>Start typing to make a request using a keyboard</h3>
+        </button>
       </div>
       <div className="popup-tips">
         <p>You can say things like:</p>
