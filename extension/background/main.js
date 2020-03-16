@@ -103,11 +103,8 @@ export function inDevelopment() {
   return _inDevelopment || false;
 }
 
-let _extensionTemporaryInstall;
+let _extensionTemporaryInstall = buildSettings.inDevelopment;
 export function extensionTemporaryInstall() {
-  if (_extensionTemporaryInstall === undefined) {
-    throw new Error("Temporary installation status not yet established");
-  }
   return _extensionTemporaryInstall;
 }
 
