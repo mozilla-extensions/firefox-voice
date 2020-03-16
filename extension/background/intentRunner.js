@@ -8,7 +8,7 @@ import { PhraseSet } from "./language/matching.js";
 import { compile, splitPhraseLines } from "./language/compiler.js";
 import { metadata } from "../intents/metadata.js";
 import { entityTypes } from "./entityTypes.js";
-
+import {database} from "../history.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -22,6 +22,10 @@ const METADATA_ATTRIBUTES = new Set([
 export const intents = {};
 let lastIntent;
 const intentHistory = [];
+const db = new database("myDB");
+const utteranceTable = "utterance";
+const primaryKey = "timestamp";
+db.createTable(utteranceTable, primaryKey).then(result => log.info("CREATE TABLE:", result));
 
 export class IntentContext {
   constructor(desc) {
@@ -354,6 +358,7 @@ export function getIntentSummary() {
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
+  db.add(context, utteranceTable);
 }
 
 export function getIntentHistory() {
