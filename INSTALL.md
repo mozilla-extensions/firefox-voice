@@ -3,8 +3,8 @@
 This document contains instructions for setting up your local development environment and installing the dependencies required for contributing to the **firefox-voice** extension project. 
 
 Depending on your operating system the sections below outline the various installation steps, however in any case you need to have Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed. A release version, localized or unbranded version of Firefox will still suffice **but some things may not work**:
-1. Linux OS
-2. Windows OS
+1. [Linux OS](#linux-os)
+2. [Windows OS](#windows-os)
 
 
 ## Linux OS
