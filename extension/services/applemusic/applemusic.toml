@@ -1,0 +1,4 @@
+[applemusic]
+type = "music"
+title = "Apple Music"
+baseUrl = "https://beta.music.apple.com/"
