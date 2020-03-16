@@ -29,6 +29,7 @@ phrase = "Copy link"
 
 [[clipboard.copyLink.example]]
 phrase = "Copy links"
+test = "true"
 
 [clipboard.copyMarkdownLink]
 description = "Copies the Markdown [title](link)"
@@ -73,6 +74,10 @@ test = true
 
 [[clipboard.copyScreenshot.example]]
 phrase = "Take a screenshot"
+test = true
+
+[[clipboard.copyScreenshot.example]]
+phrase = "Take a screenshot of the page"
 test = true
 
 [[clipboard.copyScreenshot.example]]
