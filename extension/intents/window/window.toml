@@ -38,19 +38,19 @@ test = true
 phrase = "combine tabs into one window"
 test = true
 
-[window.exit]
+[window.close]
 description = "Closes the window"
 match = """
   close (the |) (this |) (all |) (window{s}) (for me |)
 """
 
-[[window.exit.example]]
+[[window.close.example]]
 phrase = "Close window"
 
-[[window.exit.example]]
+[[window.close.example]]
 phrase = "Close this window"
 test = true
 
-[[window.exit.example]]
+[[window.close.example]]
 phrase = "Close all windows"
 test = true
