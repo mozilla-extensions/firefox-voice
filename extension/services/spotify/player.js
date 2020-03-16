@@ -33,10 +33,7 @@ this.player = (function() {
           playerButton.click();
         } catch (e) {
           if (e.name === "TimeoutError") {
-            const e = new Error("No search results");
-            e.name = "EmptyResults";
-            e.displayMessage = `No results found for ${query}`;
-            throw e;
+            throw new Error("No search results");
           }
         }
       }
