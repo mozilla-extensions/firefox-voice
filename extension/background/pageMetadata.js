@@ -25,28 +25,14 @@ function cleanURL(string) {
     "utm_term",
     "utm_content",
   ];
+  const url = new URL(string);
+  const params = url.searchParams;
 
-  function getReducedParams(str) {
-    const url = new URL(str);
-    const params = url.searchParams;
-
-    globalBlockedParams.map(blockedParam => {
-      if (params.get(blockedParam)) {
-        params.delete(blockedParam);
-      }
-    });
-    return params.toString();
-  }
-
-  function buildURL(baseURL, params) {
-    if (Object.keys(params).length === 0) {
-      return baseURL;
+  globalBlockedParams.map(blockedParam => {
+    if (params.get(blockedParam)) {
+      params.delete(blockedParam);
     }
-    const newURL = baseURL + "?" + params;
-    return newURL;
-  }
+  });
 
-  const baseURL = string.split("?")[0];
-  const params = getReducedParams(string);
-  return buildURL(baseURL, params);
+  return url.toString();
 }
