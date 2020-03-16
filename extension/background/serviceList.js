@@ -26,7 +26,7 @@ const MUSIC_SERVICE_ALIASES = {
   spotify: "spotify",
   soundcloud: "soundcloud",
   deezer: "deezer",
-  video: "youtube"
+  video: "youtube",
 };
 
 const DEFAULT_MUSIC_SERVICE = "spotify";

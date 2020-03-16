@@ -29,7 +29,6 @@ this.player = (function() {
         if (unlogged) {
           throw new Error("Please log in to use this service.");
         }
-       
       }
     }
 

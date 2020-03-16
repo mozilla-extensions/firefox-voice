@@ -1,4 +1,3 @@
-
 import * as music from "../../intents/music/music.js";
 import MusicService from "../../background/musicService.js";
 
@@ -11,5 +10,3 @@ Object.assign(Deezer, {
 });
 
 music.register(Deezer);
-
-
