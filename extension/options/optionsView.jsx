@@ -10,25 +10,29 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  activeTab,
+  updateActiveTab,
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
+      <LeftSidebar version={version} updateActiveTab={updateActiveTab} />
       <RightContent
         inDevelopment={inDevelopment}
         keyboardShortcutError={keyboardShortcutError}
         userOptions={userOptions}
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        activeTab={activeTab}
       />
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, updateActiveTab }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
+      <Tabs updateActiveTab={updateActiveTab} />
       <div className="version-info">
         <p>Version {version}</p>
         <p>
@@ -45,34 +49,88 @@ const RightContent = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  activeTab,
 }) => {
+  if (activeTab === "chime-settings") {
+    return (
+      <div className="settings-content">
+        <ChimeSettings
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "shortcut-settings") {
+    return (
+      <div className="settings-content">
+        <KeyboardShortcutSettings
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          keyboardShortcutError={keyboardShortcutError}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "wakeword-settings") {
+    return (
+      <div className="settings-content">
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "music-settings") {
+    return (
+      <div className="settings-content">
+        <MusicServiceSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "data-settings") {
+    return (
+      <div className="settings-content">
+        <DataCollection
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === "development-settings") {
+    return (
+      <div className="settings-content">
+        <DevelopmentSettings inDevelopment={inDevelopment} />
+      </div>
+    );
+  }
+
+  if (activeTab === "about") {
+    return (
+      <div className="settings-content">
+        <AboutSection />
+      </div>
+    );
+  }
+
   return (
     <div className="settings-content">
-      <ChimeSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <KeyboardShortcutSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        keyboardShortcutError={keyboardShortcutError}
-      />
-      <WakewordSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <MusicServiceSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <DataCollection
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      <DevelopmentSettings inDevelopment={inDevelopment} />
-      <AboutSection />
+      <section>
+        <h1>Error</h1>
+        <p>Unknown option</p>
+      </section>
     </div>
   );
 };
@@ -499,5 +557,54 @@ const AboutSection = () => {
         </li>
       </ul>
     </fieldset>
+  );
+};
+
+const Tabs = ({ updateActiveTab }) => {
+  const onHashChange = event => {
+    updateActiveTab(event.newURL.split("#")[1]);
+  };
+
+  window.addEventListener("hashchange", onHashChange);
+  return (
+    <nav id="tabs">
+      <ul>
+        <li>
+          <a className="styled-button" href="#chime-settings">
+            Preferences
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#shortcut-settings">
+            Shortcuts
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#wakeword-settings">
+            Wakeword
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#music-settings">
+            Services
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#data-settings">
+            Privacy
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#development-settings">
+            Development
+          </a>
+        </li>
+        <li>
+          <a className="styled-button" href="#about">
+            About
+          </a>
+        </li>
+      </ul>
+    </nav>
   );
 };
