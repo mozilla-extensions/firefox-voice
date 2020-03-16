@@ -46,7 +46,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "window.exit",
+  name: "window.close",
   async run(context) {
     // get current activeTab.windowId
     const activeTab = await context.activeTab();
@@ -56,10 +56,7 @@ intentRunner.registerIntent({
       windowTypes: ["normal"],
     });
     // find target windowId
-    const targetWindowId = findTargetWindowId(
-      gettingAll,
-      currentWindowId,
-    );
+    const targetWindowId = findTargetWindowId(gettingAll, currentWindowId);
     await browser.windows.remove(targetWindowId);
     context.displayText("Window closed");
   },
