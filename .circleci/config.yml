@@ -78,7 +78,7 @@ jobs:
             export VERSION="$(node bin/calculate-version.js)"
             export UPDATE_BASE="https://va.allizom.org/releases/dev"
             export INSTALL_CHANNEL=dev
-            export DEV_ICON=1
+            export IN_DEVELOPMENT=1
             mkdir -p artifacts/dev/
             npm run package
             mv addon.xpi artifacts/dev/firefox-voice.xpi
@@ -138,13 +138,13 @@ workflows:
   version: 2
   build_test_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+              branches:
+                ignore: gh-pages
       - test:
           requires:
             - build
-          filters:
-            branches:
-              ignore: gh-pages
       - deploy_dev:
           requires:
             - test

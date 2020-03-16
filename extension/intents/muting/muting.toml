@@ -40,5 +40,18 @@ test = true
 [muting.unmute]
 description = "Unmute all tabs"
 match = """
-  unmute (tab{s} |) (for me |)
+  (unmute | turn on) (tab{s} | page{s}) (for me |)
+   unmute
 """
+
+[[muting.unmute.example]]
+phrase = "unmute this page"
+test = true
+
+[[muting.unmute.example]]
+phrase = "unmute"
+test = true
+
+[[muting.unmute.example]]
+phrase = "turn on this tab"
+test = true
