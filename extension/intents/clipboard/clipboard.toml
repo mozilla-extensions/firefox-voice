@@ -77,6 +77,10 @@ phrase = "Take a screenshot"
 test = true
 
 [[clipboard.copyScreenshot.example]]
+phrase = "Take a screenshot of the page"
+test = true
+
+[[clipboard.copyScreenshot.example]]
 phrase = "copy a screenshot of the page"
 test = true
 

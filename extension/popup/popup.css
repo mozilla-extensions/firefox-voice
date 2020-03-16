@@ -89,6 +89,9 @@ body,
   font-size: 1.125rem;
   letter-spacing: 0.05rem;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #popup-footer {
@@ -167,6 +170,27 @@ body,
   padding: 1em 0 6em;
 }
 
+.results-set {
+  min-height: 100px;
+  padding-top: 25px;
+  font-weight: bold;
+}
+
+.results-image {
+  width: 100px;
+  height: auto;
+  padding-bottom: 35px;
+}
+
+.results-largeText {
+  font-size: 72px;
+  padding-bottom: 35px;
+}
+
+.results-text {
+  font-size: 1.5em;
+}
+
 #voice-input,
 #text-input,
 #search-results,
@@ -175,6 +199,7 @@ body,
 #transcript,
 #text-display {
   text-align: center;
+  word-wrap: break-word;
 }
 
 #transcript {

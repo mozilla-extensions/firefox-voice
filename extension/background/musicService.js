@@ -28,9 +28,16 @@ class MusicService extends serviceList.Service {
   }
 
   async playQuery(query) {
-    await this.initTab(`/services/${this.id}/player.js`);
-    await this.callTab("search", { query, thenPlay: true });
-    await this.tabActivation();
+    try {
+      await this.initTab(`/services/${this.id}/player.js`);
+      await this.callTab("search", { query, thenPlay: true });
+      await this.tabActivation();
+    } catch (e) {
+      if (e.message === "You must enable DRM.") {
+        e.displayMessage = "You must enable DRM.";
+      }
+      throw e;
+    }
   }
 
   async move(direction) {

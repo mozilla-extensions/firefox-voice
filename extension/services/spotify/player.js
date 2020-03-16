@@ -10,8 +10,14 @@ this.player = (function() {
     }
 
     async action_search({ query, thenPlay }) {
+      // try to find the error page; if found, throw a DRM error; otherwise search
+      const errorDiv = document.querySelector("div.ErrorPage");
+      if (errorDiv) {
+        throw new Error("You must enable DRM.");
+      }
       const searchButton = this.querySelector("a[aria-label='Search']");
       searchButton.click();
+
       const input = await this.waitForSelector(
         "div[role=search] input, input.SearchInputBox__input"
       );
