@@ -3,4 +3,3 @@
 
  ## How to Run
  Run `npm run test:selenium`
-
