@@ -27,9 +27,9 @@ this.player = (function() {
       } catch (e) {
         const unlogged = this.querySelector("div[class='unlogged-homepage']");
         if (unlogged) {
-          e = new Error("Please log in to use this service.");
+          throw new Error("Please log in to use this service.");
         }
-        throw e
+       
       }
     }
 
