@@ -1,0 +1,4 @@
+[soundcloud]
+type = "music"
+title = "SoundCloud"
+baseUrl = "https://soundcloud.com/"

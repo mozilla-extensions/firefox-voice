@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
   const len = windowArray.length;
-  // find currentWindowId postion in array
+  // find currentWindowId position in array
   const currentWindowIndex = windowArray.findIndex(
     window => window.id === currentWindowId
   );
@@ -42,5 +42,22 @@ intentRunner.registerIntent({
   name: "window.downloads",
   async run(context) {
     await browser.experiments.voice.openDownloads();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.quitApplication",
+  async run(context) {
+    await browser.experiments.voice.quitApplication();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.combine",
+  async run(context) {
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({ currentWindow: false });
+    const tabsIds = tabs.map(tabInfo => tabInfo.id);
+    await browser.tabs.move(tabsIds, { windowId: currentWindow.id, index: -1 });
   },
 });

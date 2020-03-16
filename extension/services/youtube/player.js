@@ -2,8 +2,28 @@
 
 this.player = (function() {
   class Player extends helpers.Runner {
+    constructor() {
+      super();
+      this.isChannelOrUser();
+    }
+
+    isChannelOrUser() {
+      const baseURI = this.querySelectorAll("video")[0].baseURI;
+      const isChannel =
+        /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
+      if (isChannel) {
+        this.videoPlayer = "ytd-channel-video-player-renderer video";
+        this.selector = "ytd-channel-video-player-renderer";
+      } else {
+        this.videoPlayer =
+          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH'] video";
+        this.selector =
+          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH']";
+      }
+    }
+
     isPaused() {
-      const video = this.querySelector("video");
+      const video = this.querySelector(this.videoPlayer);
       return video.paused;
     }
 
@@ -13,18 +33,18 @@ this.player = (function() {
         return;
       }
       const button = this.querySelector(
-        "button.ytp-large-play-button[aria-label^='Play']"
+        `${this.selector} button.ytp-large-play-button[aria-label^='Play']`
       );
       button.click();
     }
 
     action_pause() {
       if (this.isPaused()) {
-        log.info("Attempting to paused a video that is already paused");
+        log.info("Attempting to pause a video that is already paused");
         return;
       }
       const button = this.querySelector(
-        "button.ytp-play-button[aria-label^='Pause']"
+        `${this.selector} button.ytp-play-button[aria-label^='Pause']`
       );
       button.click();
     }
@@ -37,7 +57,7 @@ this.player = (function() {
       if (direction !== "next") {
         throw new Error("Unexpected direction");
       }
-      const button = this.querySelector(".ytp-next-button");
+      const button = this.querySelector(`${this.selector} .ytp-next-button`);
       button.click();
     }
   }
