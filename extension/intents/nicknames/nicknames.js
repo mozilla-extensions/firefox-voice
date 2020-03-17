@@ -121,13 +121,13 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "nicknames.namePage",
   async run(context) {
-    const name = context.slots.name;
+    const name = context.slots.name.toLowerCase();
     const activeTab = await context.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const result = await browser.storage.sync.get("pageNames");
     let pageNames = result.pageNames;
     if (!pageNames) {
-      pageNames = {[name]: metadata.url};
+      pageNames = { [name]: metadata.url };
     } else {
       pageNames[name] = metadata.url;
     }
