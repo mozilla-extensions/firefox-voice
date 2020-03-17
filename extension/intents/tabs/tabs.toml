@@ -1,7 +1,7 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (the | this |) (active current |) (tab{s} | site | page) (for me |)
+  close (the | this |) (active | current |) (tab{s} | site | page) (for me |)
   close (the | this | that)
 """
 
