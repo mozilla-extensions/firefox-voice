@@ -210,7 +210,7 @@ this.dictationContentScript = (function() {
       if (el.hasAttribute("contenteditable")) {
         replaceSelectedText(text, url);
         break;
-      } else if (el.tagName === "textarea") {
+      } else if (el.tagName === "TEXTAREA" || el.tagName === "INPUT") {
         const markdownLink = `[${text}](${url})`;
         replaceSelectedText(text, markdownLink);
         break;
