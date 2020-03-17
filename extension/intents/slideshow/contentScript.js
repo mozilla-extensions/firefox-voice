@@ -12,6 +12,21 @@ this.slideshowScript = (function() {
   const lbContainer = document.body.querySelector(".fv-lightbox-container");
   const slideContainer = document.body.querySelector(".fv-slide-image");
 
+  window.onresize = function() {
+    if (slideContainer.hasChildNodes()) {
+      if (slideContainer.firstChild.tagName === "IFRAME") {
+        slideContainer.firstChild.setAttribute(
+          "width",
+          document.documentElement.clientWidth
+        );
+        slideContainer.firstChild.setAttribute(
+          "height",
+          document.documentElement.clientHeight
+        );
+      }
+    }
+  };
+
   function buildSlideStructure() {
     const lightboxElement = document.createElement("div");
     lightboxElement.className = "fv-lightbox-container";
@@ -20,8 +35,13 @@ this.slideshowScript = (function() {
     const slideshowContainer = document.createElement("div");
     slideshowContainer.className = "fv-slideshow-container";
 
-    const slideImage = document.createElement("div");
-    slideImage.className = "fv-slide-image";
+    const navbar = document.createElement("div");
+    navbar.className = "fv-navbar";
+
+    const tagClose = document.createElement("a");
+    tagClose.className = "fv-close";
+    tagClose.textContent = String.fromCharCode(0x274c);
+    tagClose.onclick = hideSlideShow;
 
     const tagPrev = document.createElement("a");
     tagPrev.className = "fv-prev";
@@ -33,17 +53,25 @@ this.slideshowScript = (function() {
     tagNext.textContent = String.fromCharCode(10095);
     tagNext.onclick = nextSlide;
 
+    const slideImage = document.createElement("div");
+    slideImage.className = "fv-slide-image";
+
     slideshowContainer.appendChild(slideImage);
     slideshowContainer.appendChild(tagPrev);
     slideshowContainer.appendChild(tagNext);
 
+    navbar.appendChild(tagClose);
+    navbar.appendChild(tagNext);
+    navbar.appendChild(tagPrev);
+
+    lightboxElement.appendChild(navbar);
     lightboxElement.appendChild(slideshowContainer);
 
     document.body.appendChild(lightboxElement);
   }
 
   function hideSlideShow(event) {
-    if (event.target === lbContainer) {
+    if (event.target === document.body.querySelector(".fv-close")) {
       lbContainer.style.display = "none";
       swapSlide();
     }
@@ -95,8 +123,11 @@ this.slideshowScript = (function() {
           if (isVideoSourceUrl(element.getAttribute("src"))) {
             const iframe = document.createElement("iframe");
             iframe.setAttribute("src", element.getAttribute("src"));
-            iframe.setAttribute("width", 640);
-            iframe.setAttribute("height", 400);
+            iframe.setAttribute("width", document.documentElement.clientWidth);
+            iframe.setAttribute(
+              "height",
+              document.documentElement.clientHeight
+            );
             slideElements.push(iframe);
           }
 
@@ -138,6 +169,11 @@ this.slideshowScript = (function() {
       slideContainer.firstChild.remove();
     }
     if (newSlide) {
+      if (newSlide.tagName === "IFRAME") {
+        // enable iframe to resize first
+        newSlide.setAttribute("width", document.documentElement.clientWidth);
+        newSlide.setAttribute("height", document.documentElement.clientHeight);
+      }
       slideContainer.appendChild(newSlide);
     }
   }
