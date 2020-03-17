@@ -24,16 +24,20 @@ If you have a bug or idea you want to develop, you can open a new issue in this 
 
 If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://chat.mozilla.org/#/room/#firefox-voice:mozilla.org)). Note that the team mostly works weekdays, North American work hours, so you may experience a delay in response.
 
-## Developing
+## Developing in Linux
 
-There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
+Documentation on the various parts and aspects of firefox-voice could be found in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md). 
 
-Note:
+However to quickly get started with the development environment, you would need to:
 
-1. Download the latest LTS version of NodeJs before running above npm commands.
-2. After downloading Firefox Nightly, change its name to FirefoxNightly (no space), otherwise the project wont be able to spawn the firefox.
+1. Download the latest LTS version of [NodeJs](https://nodejs.org/) before running any of the provided npm commands.
+2. Download [Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/) which is a pre-release version of Firefox that is updated every now and then just so you are developing and testing with the latest firefox features.
+3. Use `tar xjvf` to extract the binaries for FireFox Nightly into a location of your choice could be `/opt/FireFoxNightly/` folder or just your download folder, wherever is fine. 
+4. Let firefox-voice know where you kept the binary (firefox) for FireFox Nightly typically by running `export FIREFOX=/path/to/FireFoxNightly/firefox` and using our example location would be `export FIREFOX=/opt/FireFoxNightly/firefox`. This creates a temporary export (environment variable) called FIREFOX for your current session.
 
-The developer installation is:
+You would have to run this everytime you have a new session so may want to look [how to let the export stick permanently](https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux)
+
+Finally, install dependencies and start firefox voice by running:
 
 ```sh
 npm install
@@ -42,11 +46,12 @@ npm start
 
 This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
-You may face errors on performing `npm install` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
+Should you encounter any errors running ```npm install```, make sure you are using the latest version of Node by looking at this [update guide](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
 If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
 
-By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
+If Firefox Nightly does not open a new browser after `npm start`, it might be because the path to the Firefox Nightly binary is incorrect. You could do `echo $FIREFOX` and double check that it is right.
+You could use the release version if you have it installed by running  `FIREFOX="/usr/bin/firefox" npm start`.
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
