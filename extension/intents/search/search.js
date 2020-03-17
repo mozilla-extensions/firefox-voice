@@ -6,15 +6,12 @@ import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
 
-// Close the search tab after this amount of time:
-const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
 // Hide the search tab after this amount of unfocused time:
 const HIDE_TIME = 1000 * 60; // 1 minute
 // Check this often for a new image in a search tab:
 const CARD_POLL_INTERVAL = 200; // milliseconds
 // If we don't believe the card is animated, still get new images for this amount of time:
 const CARD_POLL_LIMIT = 1000; // milliseconds
-let closeTabTimeout = null;
 let lastImage = null;
 let _searchTabId;
 const START_URL = "https://www.google.com/?voice";
@@ -27,23 +24,8 @@ const tabSearchResults = new browserUtil.TabDataMap(5 * 60 * 1000); // only dele
 let googleIsDefaultProvider;
 
 async function openSearchTab() {
-  if (closeTabTimeout) {
-    clearTimeout(closeTabTimeout);
-    closeTabTimeout = null;
-  }
-  closeTabTimeout = setTimeout(() => {
-    closeSearchTab();
-  }, CLOSE_TIME);
-  if (_searchTabId) {
-    try {
-      await browser.tabs.get(_searchTabId);
-      return _searchTabId;
-    } catch (e) {
-      // Presumably the tab doesn't exist
-      log.info("Error getting tab:", String(e));
-      _searchTabId = null;
-    }
-  }
+  _searchTabId = null;
+
   for (const tab of await browser.tabs.query({
     url: ["https://www.google.com/*"],
   })) {
@@ -63,18 +45,6 @@ async function openSearchTab() {
   return _searchTabId;
 }
 
-async function closeSearchTab() {
-  if (!_searchTabId) {
-    return;
-  }
-  const tabId = _searchTabId;
-  await browser.tabs.remove(tabId);
-  browser.tabs.onActivated.removeListener(_tabHideListener);
-  // Technically there is a race condition here, but without some lock this is just going to be racy,
-  // so this race is better than the other one
-  // eslint-disable-next-line require-atomic-updates
-  _searchTabId = null;
-}
 
 async function focusSearchTab() {
   await browser.tabs.show(_searchTabId);
