@@ -26,7 +26,7 @@ If you'd like to discuss the tool, development, or contributions, we are in the 
 
 ## Developing
 
-To setup your local development environment, read the installation instructions [here](https://github.com/dave-ok/firefox-voice/blob/create-install-md/INSTALL.md)
+To setup your local development environment, read the installation instructions [here](./INSTALL.md)
 
 There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
 
