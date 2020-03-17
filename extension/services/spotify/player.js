@@ -24,12 +24,18 @@ this.player = (function() {
       );
       this.setReactInputValue(input, query);
       if (thenPlay) {
-        const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-          timeout: 2000,
-          // There seem to be 3 fixed buttons that appear early before the search results
-          minCount: 4,
-        });
-        playerButton.click();
+        try {
+          const playerButton = await this.waitForSelector(SEARCH_PLAY, {
+            timeout: 2000,
+            // There seem to be 3 fixed buttons that appear early before the search results
+            minCount: 4,
+          });
+          playerButton.click();
+        } catch (e) {
+          if (e.name === "TimeoutError") {
+            throw new Error("No search results");
+          }
+        }
       }
     }
 
