@@ -131,3 +131,32 @@ intentRunner.registerIntent({
     await browser.storage.sync.set({ pageNames });
   },
 });
+
+intentRunner.registerIntent({
+  name: "nicknames.removePageName",
+  async run(context) {
+    const result = await browser.storage.sync.get("pageNames");
+    const pageNames = result.pageNames || {};
+    const getName = async () => {
+      const activeTab = await context.activeTab();
+      const metadata = await pageMetadata.getMetadata(activeTab.id);
+      return Object
+        .keys(pageNames)
+        .find(key => pageNames[key] === metadata.url);
+    };
+    const name = context.slots.name || await getName();
+    if (!name) {
+      const exc = new Error("No page name to remove");
+      exc.displayMessage = `This page does not have a name`;
+      throw exc;
+    }
+    if (!pageNames[name]) {
+      const exc = new Error("No page name to remove");
+      exc.displayMessage = `No page name "${name}" found`;
+      throw exc;
+    }
+    delete pageNames[name];
+    log.info("Removed page name", name);
+    await browser.storage.sync.set({ pageNames });
+  },
+});
