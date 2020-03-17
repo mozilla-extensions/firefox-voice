@@ -17,14 +17,14 @@ jobs:
           command: npm install
       - run:
           name: create docker network
-          command: docker network create grid
+          command: sudo docker network create grid
       - run:
           name: install selenium-hub
-          command: docker run -d --rm -p 4444:4444 --net grid --name selenium-hub selenium/hub:3.141.59 
+          command: sudo docker run -d --rm -p 4444:4444 --net grid --name selenium-hub selenium/hub:3.141.59 
           
       - run:
           name: install selenium-node
-          command: docker run -d --rm --net grid -e HUB_HOST=selenium-hub -v /dev/shm:/dev/shm selenium/node-firefox:3.141.59 
+          command: sudo docker run -d --rm --net grid -e HUB_HOST=selenium-hub -v /dev/shm:/dev/shm selenium/node-firefox:3.141.59 
       - run:
           name: Build XPI
           command: npm run package
