@@ -264,6 +264,22 @@ body {
   line-height: 2rem;
 }
 
+#default-services p {
+  margin: -30px 0 30px 4px;
+}
+
+#default-services label {
+  width: 60px;
+  display: inline-block;
+}
+
+#default-services select {
+  margin-left: 40px;
+  padding: 5px;
+  font-size: 1em;
+}
+
+#default-services li:not(:last-child),
 #data-collection li:not(:last-child) {
   margin-bottom: 35px;
 }

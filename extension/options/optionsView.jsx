@@ -122,7 +122,7 @@ const General = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
       />
-      <MusicServiceSettings
+      <DefaultServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
@@ -134,6 +134,31 @@ const General = ({
       <DevelopmentSettings inDevelopment={inDevelopment} />
       <AboutSection />
     </div>
+  );
+};
+
+const DefaultServiceSettings = ({
+  userOptions,
+  userSettings,
+  updateUserSettings,
+}) => {
+  return (
+    <fieldset id="default-services">
+      <legend>Default Services</legend>
+      <p>Choose the default service to use when you make a request.</p>
+      <ul>
+        <MusicServiceSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+        <WeatherServiceSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      </ul>
+    </fieldset>
   );
 };
 
@@ -149,8 +174,8 @@ const MusicServiceSettings = ({
     }
   };
   return (
-    <fieldset id="music-services">
-      <legend>Music service</legend>
+    <li>
+      <label htmlFor="music-services">Music</label>
       <select
         value={userSettings.musicService}
         onChange={onMusicServiceChange}
@@ -163,7 +188,38 @@ const MusicServiceSettings = ({
             </option>
           ))}
       </select>
-    </fieldset>
+    </li>
+  );
+};
+
+const WeatherServiceSettings = ({
+  userOptions,
+  userSettings,
+  updateUserSettings,
+}) => {
+  const onWeatherServiceChange = event => {
+    if (event) {
+      userSettings.weatherService = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <li>
+      <label htmlFor="weather service">Weather</label>
+      <select
+        class=""
+        value={userSettings.weatherService}
+        onChange={onWeatherServiceChange}
+        onBlur={onWeatherServiceChange}
+      >
+        {userOptions.weatherServices &&
+          userOptions.weatherServices.map(weatherOption => (
+            <option key={weatherOption.name} value={weatherOption.name}>
+              {weatherOption.name}
+            </option>
+          ))}
+      </select>
+    </li>
   );
 };
 
