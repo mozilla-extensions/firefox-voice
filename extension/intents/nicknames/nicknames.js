@@ -125,12 +125,9 @@ intentRunner.registerIntent({
     const activeTab = await context.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const result = await browser.storage.sync.get("pageNames");
-    let pageNames = result.pageNames;
-    if (!pageNames) {
-      pageNames = { [name]: metadata.url };
-    } else {
-      pageNames[name] = metadata.url;
-    }
+    const pageNames = result.pageNames || {};
+    pageNames[name] = metadata.url;
+    log.info("Added page name", name);
     await browser.storage.sync.set({ pageNames });
   },
 });
