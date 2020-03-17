@@ -101,6 +101,11 @@ phrase = "Go to a new window and find the New York Times"
 test = true
 expectSlots = {where = "window"}
 
+[[navigation.navigate.example]]
+phrase = "Open a new window and go to Wikipedia"
+test = true
+expectSlots = {where = "window"}
+
 [navigation.translate]
 description = "Translate the given page to the chosen language, using Google Translate"
 match = """

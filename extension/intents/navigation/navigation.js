@@ -90,12 +90,13 @@ intentRunner.registerIntent({
       myurl = new URL((await browserUtil.activeTab()).url);
       const tab = await context.activeTab();
       await browser.search.search({
-        query: (myurl.origin !== "null" && myurl.href !== "about:blank")
-          ? context.slots.query + ` site:${myurl.origin}`
-          : context.slots.query,
-        tabId : tab.id
-      }); 
-    } 
+        query:
+          myurl.origin !== "null" && myurl.href !== "about:blank"
+            ? context.slots.query + ` site:${myurl.origin}`
+            : context.slots.query,
+        tabId: tab.id,
+      });
+    }
 
     browser.runtime.sendMessage({
       type: "closePopup",
