@@ -1,12 +1,28 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (this |) (current |) (tab | site | page) (for me |)
-  close (this | that)
+  close (the | this |) (active | current |) (tab{s} | site | page) (for me |)
+  close (the | this | that)
 """
 
 [[tabs.close.example]]
 phrase = "close tab"
+
+[[tabs.close.example]]
+phrase = "close tabs"
+test = true
+
+[[tabs.close.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.close.example]]
+phrase = "close active tab"
+test = true
+
+[[tabs.close.example]]
+phrase = "close the active tabs"
+test = true
 
 [[tabs.close.example]]
 phrase = "close the current top"
@@ -20,6 +36,10 @@ match = """
 
 [[tabs.undoCloseTab.example]]
 phrase = "Undo close tab"
+
+[[tabs.undoCloseTab.example]]
+phrase = "Undo last closed tab"
+test = true
 
 [tabs.undoCloseWindow]
 description = "Undo close window"
@@ -266,28 +286,39 @@ phrase = "Move selected tabs to new window"
 [tabs.collectAllTabs]
 description = "Collect all tabs by url"
 match = """
-  collect (all | the|) tabs (in | from) all (the|) window{s} [allWindows=true]
-  collect (all | the|) tabs [allWindows=false]
+  (collect | gather) (all | the|) tabs (in | from) all (the|) window{s} [allWindows=true]
+  (collect | gather) (all | the|) tabs [allWindows=false]
 """
 
 [[tabs.collectAllTabs.example]]
 phrase = "Collect all tabs"
 
+[[tabs.collectAllTabs.example]]
+phrase = "Gather all tabs"
+test = true
+
 [tabs.collectMentionedTabs]
 description = "Collect tabs similar to active tab or by query"
 match = """
-  collect these tabs [allWindows=false]
-  collect these tabs (in | from) all (the|) window{s} [allWindows=true]
-  collect tabs (like | from |) (this |) (site | page | url | domain | host |) [allWindows=false]
-  collect tabs (like | from |) (this |) (site | page | url | domain | host |) (in | from) all (the|) window{s} [allWindows=true]
+  (collect | gather) these tabs [allWindows=false]
+  (collect | gather) these tabs (in | from) all (the|) window{s} [allWindows=true]
+  (collect | gather) tabs (like | from |) (this |) (site | page | url | domain | host |) [allWindows=false]
+  (collect | gather) tabs (like | from |) (this |) (site | page | url | domain | host |) (in | from) all (the|) window{s} [allWindows=true]
 
-  collect (all|) [query] tabs [allWindows=false]
-  collect (all|) [query] tabs (in | from) all (the|) window{s} [allWindows=true]
+  (collect | gather) (all|) [query] tabs [allWindows=false]
+  (collect | gather) (all|) [query] tabs (in | from) all (the|) window{s} [allWindows=true]
 
 """
 
 [[tabs.collectMentionedTabs.example]]
 phrase = "Collect these tabs"
+
+[[tabs.collectMentionedTabs.example]]
+phrase = "Collect all Google Docs tabs"
+
+[[tabs.collectMentionedTabs.example]]
+phrase = "Gather all Google Docs tabs"
+test = true
 
 [tabs.closeSelectedTabs]
 description = "Close selected tabs"
@@ -300,4 +331,47 @@ phrase = "Close all selected tabs"
 
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
+test = true
+
+[tabs.countTabs]
+description = "Count tabs"
+match = """
+ count (my| my open| open | how many |) tabs (I have open|)
+ how many (of my|) tabs (are | do I have |) open
+"""
+
+[[tabs.countTabs.example]]
+phrase = "Count tabs"
+
+[[tabs.countTabs.example]]
+phrase = "Count my tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count open tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count my open tabs"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "Count how many tabs I have open"
+
+[[tabs.countTabs.example]]
+phrase = "How many tabs do I have open"
+test = true
+
+[[tabs.countTabs.example]]
+phrase = "How many tabs are open"
+
+[tabs.findOnPage]
+description = "Find on page content"
+match = """
+  find [query] on (this |) (page | tab)
+  search (this |) (page | tab) for [query]
+"""
+
+[[tabs.findOnPage.example]]
+phrase = "Find query on this page"
 test = true

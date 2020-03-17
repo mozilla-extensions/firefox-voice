@@ -144,9 +144,12 @@ export class IntentContext {
     }
   }
 
-  async createTabGoogleLucky(query) {
+  async createTabGoogleLucky(query, options = {}) {
     const searchUrl = searching.googleSearchUrl(query, true);
     const tab = await this.createTab({ url: searchUrl });
+    if (options.hide && !buildSettings.android) {
+      await browser.tabs.hide(tab.id);
+    }
     return new Promise((resolve, reject) => {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {

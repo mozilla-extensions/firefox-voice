@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
   const len = windowArray.length;
-  // find currentWindowId postion in array
+  // find currentWindowId position in array
   const currentWindowIndex = windowArray.findIndex(
     window => window.id === currentWindowId
   );
@@ -42,6 +42,23 @@ intentRunner.registerIntent({
   name: "window.downloads",
   async run(context) {
     await browser.experiments.voice.openDownloads();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.close",
+  async run(context) {
+    // get current activeTab.windowId
+    const activeTab = await context.activeTab();
+    const currentWindowId = activeTab.windowId;
+    // getAll normal window
+    const gettingAll = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+    // find target windowId
+    const targetWindowId = findTargetWindowId(gettingAll, currentWindowId);
+    await browser.windows.remove(targetWindowId);
+    context.displayText("Window closed");
   },
 });
 

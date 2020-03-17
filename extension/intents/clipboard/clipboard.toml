@@ -21,11 +21,15 @@ test = true
 [clipboard.copyLink]
 description = "Copies the link of the current tab"
 match = """
-  copy (the |) (this |) (tab's |) (link | url) (of this tab |) (to clipboard |)
+  copy (the |) (this |) (tab's |) (link{s} | url) (of this tab |) (to clipboard |)
 """
 
 [[clipboard.copyLink.example]]
 phrase = "Copy link"
+
+[[clipboard.copyLink.example]]
+phrase = "Copy links"
+test = "true"
 
 [clipboard.copyMarkdownLink]
 description = "Copies the Markdown [title](link)"
@@ -70,6 +74,10 @@ test = true
 
 [[clipboard.copyScreenshot.example]]
 phrase = "Take a screenshot"
+test = true
+
+[[clipboard.copyScreenshot.example]]
+phrase = "Take a screenshot of the page"
 test = true
 
 [[clipboard.copyScreenshot.example]]

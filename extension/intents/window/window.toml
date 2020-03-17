@@ -17,6 +17,9 @@ match = """
   (close | quit | exit | shutdown) firefox
 """
 
+[[window.quitApplication.example]]
+phrase = "Close Firefox"
+
 [window.combine]
 description = "Combine all windows"
 match = """
@@ -33,4 +36,21 @@ test = true
 
 [[window.combine.example]]
 phrase = "combine tabs into one window"
+test = true
+
+[window.close]
+description = "Closes the window"
+match = """
+  close (the |) (this |) (all |) (window{s}) (for me |)
+"""
+
+[[window.close.example]]
+phrase = "Close window"
+
+[[window.close.example]]
+phrase = "Close this window"
+test = true
+
+[[window.close.example]]
+phrase = "Close all windows"
 test = true

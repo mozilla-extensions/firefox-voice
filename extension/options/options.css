@@ -9,6 +9,210 @@ body {
   background-color: #fafafc;
 }
 
+.description-container {
+  display: flex;
+  justify-content: space-between;
+  width: 1000px;
+}
+
+.new-routine-button {
+  padding: 0px 15px;
+  height: 50px;
+  font-size: 22px;
+  top: 10px;
+  position: relative;
+  border-radius: 0px;
+}
+
+.no-style-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.draft {
+  z-index: 1;
+  padding-top: 40px;
+  top: 0;
+  overflow: auto;
+  left: 0px;
+  position: relative;
+  padding-bottom: 20px;
+  transition: max-height 0.3s ease-out;
+}
+
+/* draft Content */
+.draft-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  box-shadow: 3px 3px 3px #bfbaba;
+  border: 1px solid #f4f1f1;
+  padding: 50px;
+}
+
+.save-button {
+  padding: 5px 8px;
+  font-size: 16px;
+  height: 45px;
+  float: right;
+  bottom: 15px;
+  position: relative;
+  right: 10px;
+  background-color: rgb(175, 175, 175);
+  border-radius: 0px;
+}
+
+.save-button:hover {
+  background-color: grey;
+}
+
+.cancel-button {
+  padding: 5px 8px;
+  font-size: 16px;
+  height: 45px;
+  float: right;
+  bottom: 15px;
+  position: relative;
+  background-color: rgb(175, 175, 175);
+  border-radius: 0px;
+}
+.cancel-button:hover {
+  background-color: grey;
+}
+
+.tab-button {
+  height: 50px;
+  padding: 0 0;
+  width: 200px;
+  position: relative;
+  top: 50px;
+  margin-top: 5px;
+  color: black;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+}
+
+.tab-button:hover {
+  background-color: rgb(199, 199, 199);
+  text-decoration: none;
+  color: black;
+}
+
+.tab-icon {
+  padding: 10px;
+  width: 25px;
+  height: 25px;
+  fill: currentColor;
+  -moz-context-properties: fill, fill-opacity;
+}
+
+.selected-tab {
+  color: #0a84ff;
+  transition: background-color 150ms;
+}
+
+.selected-tab:hover {
+  color: #0a84ff;
+}
+
+.card {
+  border: 1px solid #f4f1f1;
+  border-radius: 4px;
+  box-shadow: 3px 3px 3px #bfbaba;
+  margin: 0 0 8px;
+  margin-bottom: 8px;
+  margin-bottom: 8px;
+  padding: 5px;
+  transition: box-shadow 150ms;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.card-name {
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.card-text {
+  color: rgb(102, 101, 101);
+  font-weight: 100;
+  margin-top: -20px;
+}
+
+.card:hover {
+  box-shadow: 5px 5px 5px #bdbdbd;
+}
+
+.card-menu {
+  float: right;
+  top: 10px;
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.menu-box {
+  border: 1px solid #f4f1f1;
+  border-radius: 4px;
+  box-shadow: 3px 3px 3px #bfbaba;
+  margin: 0 0 8px;
+  display: inline-block;
+  padding: 20px;
+  background-color: #fafafc;
+  z-index: 1;
+  position: relative;
+}
+
+.menu-button {
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  padding: 6px;
+}
+
+.nickname-container {
+  outline: 0;
+}
+
+.tab-list {
+  list-style-type: none;
+}
+
+.delete-utterance {
+  width: 25px;
+  height: 25px;
+  top: 10px;
+  position: relative;
+}
+
+#utterance-list {
+  padding: 30px;
+}
+
+.utterances-container {
+  padding: 20px 0px;
+  display: flex;
+}
+
+.textarea-container {
+  resize: vertical;
+  height: max-content;
+  max-height: 140px;
+  width: 63%;
+}
+
+.label-nickname {
+  padding: 10px 20px;
+}
+
 .settings-page {
   display: flex;
   flex-direction: row;
@@ -65,7 +269,7 @@ body {
 }
 
 #data-collection li p {
-  margin: 15px 0 0 40px;
+  margin: 0 0 0 40px;
   line-height: 1.875rem;
 }
 

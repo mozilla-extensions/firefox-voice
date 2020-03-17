@@ -18,6 +18,12 @@ test("compiler", () => {
     'FullPhrase("(bring me | take me | go | navigate | show me | open) (to | find | ) (page | ) [query:+]")'
   );
 
+  expect(
+    compile("(unmute | turn on) (tab{s} | page{s}) (for me |)").toString()
+  ).toBe(
+    'FullPhrase("(unmute | turn on) (tab | tabs | page | pages) (for me | )")'
+  );
+
   expect(compile("clear query (database | cache)").toString()).toBe(
     'FullPhrase("clear query (database | cache)")'
   );
