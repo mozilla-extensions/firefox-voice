@@ -2,11 +2,11 @@
 
 Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://research.mozilla.org/).
 
-Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "what is the weather?" or "find the gmail tab". Ultimately the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions. Initially the goal is to provide _any_ useful interactions.
+Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "What is the weather?" or "Find the gmail tab". Initially, the goal is to provide _any_ useful interactions. Ultimately, the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions.
 
 ## Launcher Usage
 
-Launcher is located in the top right corner of the browser window having mic icon like shown below.
+Launcher is located in the top right corner of the browser window having mic icon, as shown below.
 
 ![launcher location doc](/docs/images/extension.png)
 
@@ -20,20 +20,24 @@ Launcher contains 2 input modes :
 
 ## Discussion
 
-If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit any kind of feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in whatever feedback you have about using this tool!
+If you have a bug or idea you want to develop, you can open a new issue in this repository. You can also submit feedback [using this feedback form](https://firefox-voice-feedback.herokuapp.com/). We are very interested in any feedback you have about using this tool!
 
-If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://chat.mozilla.org/#/room/#firefox-voice:mozilla.org)). Note that the team mostly works weekdays, North American work hours, so questions outside of that time may take a while to get a response.
+If you'd like to discuss the tool, development, or contributions, we are in the `firefox-voice` channel on [chat.mozilla.org](https://chat.mozilla.org) ([direct link to channel](https://chat.mozilla.org/#/room/#firefox-voice:mozilla.org)). Note that the team mostly works weekdays, North American work hours, so you may experience a delay in response.
 
-## Developing
+## Developing in Linux
 
-There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
+Documentation on the various parts and aspects of firefox-voice could be found in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md). 
 
-Note:
+However to quickly get started with the development environment, you would need to:
 
-1. Download the latest LTS version of NodeJs before running above npm commands.
-2. After downloading Firefox Nightly, change its name to FirefoxNightly (no space), otherwise the project wont be able to spawn the firefox.
+1. Download the latest LTS version of [NodeJs](https://nodejs.org/) before running any of the provided npm commands.
+2. Download [Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/) which is a pre-release version of Firefox that is updated every now and then just so you are developing and testing with the latest firefox features.
+3. Use `tar xjvf` to extract the binaries for FireFox Nightly into a location of your choice could be `/opt/FireFoxNightly/` folder or just your download folder, wherever is fine. 
+4. Let firefox-voice know where you kept the binary (firefox) for FireFox Nightly typically by running `export FIREFOX=/path/to/FireFoxNightly/firefox` and using our example location would be `export FIREFOX=/opt/FireFoxNightly/firefox`. This creates a temporary export (environment variable) called FIREFOX for your current session.
 
-The developer installation is:
+You would have to run this everytime you have a new session so may want to look [how to let the export stick permanently](https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux)
+
+Finally, install dependencies and start firefox voice by running:
 
 ```sh
 npm install
@@ -42,18 +46,18 @@ npm start
 
 This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
 
-You may face errors on performing `npm install` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
+Should you encounter any errors running ```npm install```, make sure you are using the latest version of Node by looking at this [update guide](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
 If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
 
-By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
+If Firefox Nightly does not open a new browser after `npm start`, it might be because the path to the Firefox Nightly binary is incorrect. You could do `echo $FIREFOX` and double check that it is right.
+You could use the release version if you have it installed by running  `FIREFOX="/usr/bin/firefox" npm start`.
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
 Any changes you make should cause any .jsx files to be recompiled and the extension will be reloaded.
 
-After the project successfully starts, firefox will be automatically opened along with a console window. The console window consoles various kind of information.
-The following errors or warnings should not concern you as these are not related to our project. So these can be ignored.
+After the project successfully starts, Firefox will be automatically opened along with a console window. While the console window displays various data, the following errors or warnings should not concern you - they are not related to our project and, therefore, can be ignored.
 
 1. Manifest warnings
 
@@ -93,19 +97,19 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
 
 1. For running tests, run `npm test`.
    This command does the following:
-   - Compiles JavaScript.
-   - Runs all tests.
-   - Checks the code formatting using `prettier`[https://prettier.io/].
-   - Lints the code using `eslint` [https://github.com/eslint/eslint].
-2. `firefox-voice` makes use of `jest` but it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites.
-3. `npm test` would still run `npm run jest` locally on `node v13.8.0` in the development process.
-4. New `jest` unit tests can still be added because `npm test` still runs `jest` locally. Look at files with `.test.js` extension for examples to guide you.
-5. `npm run test:selenium` will run selenium tests. To run tests locally first run `web-ext build -s extension --overwrite-dest` which builds the extenion as a zip file then run `node test/test.js`
+   - Compiles JavaScript
+   - Runs all tests
+   - Checks the code formatting using `prettier`[https://prettier.io/]
+   - Lints the code using `eslint` [https://github.com/eslint/eslint]
+2. While `firefox-voice` makes use of `jest`, it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites.
+3. `npm test` runs `npm run jest` locally on `node v13.8.0` in the development process.
+4. New `jest` unit tests can be added because `npm test` still runs `jest` locally. For examples to guide you, refer to files with the `.test.js` extension.
+5. `npm run test:selenium` runs Selenium tests.
 6. Many formatting and linting problems can be automatically fixed by running `npm run lint:fix`.
    In order to keep the `firefox-voice` codebase healthy and running properly, these tools are used:
-   - Prettier formats and keeps the code the same way, saving energy and time.
-   - ESLint spots problems and errors, also saving everyone's energy and time.
-   - Stylelint helps to avoid errors and enforce conventions in style sheets.
+   - Prettier formats and keeps the code the same way, saving energy and time
+   - ESLint spots problems and errors, also saving everyone's energy and time
+   - Stylelint helps to avoid errors and enforce conventions in stylesheets
 
 ### Developing in Windows without WSL
 
@@ -188,7 +192,7 @@ export ANDROID_DEVICE=99EAP164UC
 npm run start-android
 ```
 
-You might have to install `adb` and enable some permissions as well, look in the console for more instructions.
+You might have to install `adb` and enable some permissions as well. For more instructions, please refer to the console.
 
 For some more information:
 
@@ -200,14 +204,14 @@ For some more information:
 
 On Android we're experimenting with collecting voice outside Firefox and then sending the text of the command into Firefox.
 
-For demonstration purposes only there is an option to see a URL being opened and use that as the source of an intent. To enable this set the environmental variable `$EXECUTE_INTENT_URL` to the base URL, and use `?text=...` to pass in the text. For instance:
+For demonstration purposes only, there is an option to see a URL being opened and use that as the source of an intent. To enable this, set the environmental variable `$EXECUTE_INTENT_URL` to the base URL, and use `?text=...` to pass in the text. For instance:
 
 ```sh
 export EXECUTE_INTENT_URL=https://mozilla.github.io/firefox-voice/assets/execute.html
 npm run start-android
 ```
 
-Then open `https://mozilla.github.io/firefox-voice/assets/execute.html?text=open%20tab`
+Then, open `https://mozilla.github.io/firefox-voice/assets/execute.html?text=open%20tab`
 
 While we may enable something similar on desktop, it will use a [different mechanism](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 

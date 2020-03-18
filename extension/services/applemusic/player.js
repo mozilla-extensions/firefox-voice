@@ -13,10 +13,7 @@ this.player = (function() {
         const searchInput = this.querySelector("#search-box .dt-search-box__input");
         searchInput.focus();
         this.setReactInputValue(searchInput, query);
-        const pressEnter = new KeyboardEvent("keydown", {
-            bubbles: true, cancelable: true, keyCode: 13
-        });
-       // document.dispatchEvent(pressEnter);
+        searchInput.form.submit();
         if (thenPlay) {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
             timeout: 3000,

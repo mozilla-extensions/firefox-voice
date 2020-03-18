@@ -5,7 +5,7 @@ class AppleMusic extends MusicService {}
 
 Object.assign(AppleMusic, {
   id: "applemusic",
-  title: "AppleMusic",
+  title: "Apple Music",
   baseUrl: "https://beta.music.apple.com/",
 });
 
