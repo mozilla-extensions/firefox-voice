@@ -418,11 +418,11 @@ intentRunner.registerIntent({
     } else {
       await browser.search.search({
         query: context.slots.query,
-        engine: "Google"
+        engine: "Google",
       });
     }
   },
-}); 
+});
 
 async function init() {
   const engines = await browser.search.get();
