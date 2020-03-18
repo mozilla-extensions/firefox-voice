@@ -130,7 +130,7 @@ test = true
 [search.searchGoogle]
 description = "Give search results from google"
 match = """
-  (google) (for |) [query]
+  (search | query | find | look up | lookup | look on |) (google) (for |) [query] (for me |)
 """
 
 [[search.searchGoogle.example]]
