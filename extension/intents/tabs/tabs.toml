@@ -13,10 +13,6 @@ phrase = "close tabs"
 test = true
 
 [[tabs.close.example]]
-phrase = "close all tabs"
-test = true
-
-[[tabs.close.example]]
 phrase = "close active tab"
 test = true
 
@@ -323,15 +319,18 @@ test = true
 [tabs.closeSelectedTabs]
 description = "Close selected tabs"
 match = """
-  (close | remove) (all |) (the |) selected tabs
+  (close | remove) (all |) (the |) [query] tab{s}
 """
 
 [[tabs.closeSelectedTabs.example]]
 phrase = "Close all selected tabs"
+test = true
+expectSlots = {query = "selected"}
 
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
 test = true
+expectSlots = {query = "selected"}
 
 [tabs.countTabs]
 description = "Count tabs"
