@@ -38,7 +38,6 @@ this.player = (function() {
     }
 
     async action_move({ direction }) {
-      let selector;
       if (direction === "next") {
         const selector = ".control-button[title='Next']";
         const button = this.querySelector(selector);
@@ -48,7 +47,6 @@ this.player = (function() {
         // Player time
         const time = this.querySelector(".playback-bar__progress-time")
           .innerHTML;
-        //log.info(time);
         if (
           /\b0:00\b/gi.test(time) ||
           /\b0:01\b/gi.test(time) ||
