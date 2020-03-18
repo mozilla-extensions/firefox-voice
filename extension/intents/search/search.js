@@ -392,13 +392,7 @@ intentRunner.registerIntent({
 
       await focusSearchTab();
       await content.lazyInject(tabId, "/intents/search/queryScript.js");
-
-      const engines = await browser.search.get();
-
-      const searchInfo = await callScript({
-        type: "searchResultInfo",
-        searchEngine: engines.find(engine => engine.isDefault).name,
-      });
+      const searchInfo = await callScript({ type: "searchResultInfo" });
 
       if (
         searchInfo.searchResults === undefined ||

@@ -95,26 +95,12 @@ this.queryScript = (function() {
     const GOOGLE_SELECTOR = "a > h3";
     const DDG_SELECTOR = "#links .results_links_deep .result__a";
     const BING_SELECTOR = ".b_algo h2 a";
-    let searchEngine = "google";
+    const origin = window.location.origin;
+    let selector = GOOGLE_SELECTOR;
     let cards;
 
-    if (message && message.searchEngine && message.searchEngine.toLowerCase()) {
-      searchEngine = message.searchEngine.toLowerCase();
-    }
-
-    let selector;
-
-    switch (searchEngine) {
-      case "duckduckgo":
-        selector = DDG_SELECTOR;
-        break;
-      case "bing":
-        selector = BING_SELECTOR;
-        break;
-      default:
-        cards = findCards();
-        selector = GOOGLE_SELECTOR;
-    }
+    if (/duckduckgo/i.test(origin)) selector = DDG_SELECTOR;
+    else if (/bing/i.test(origin)) selector = BING_SELECTOR;
 
     const searchHeaders = document.querySelectorAll(selector);
     const searchResults = [];
@@ -128,7 +114,7 @@ this.queryScript = (function() {
 
       searchResults.push({
         url:
-          searchEngine === "google"
+          selector === GOOGLE_SELECTOR
             ? searchHeader.parentNode.href
             : searchHeader.href,
         title: searchHeader.textContent,
