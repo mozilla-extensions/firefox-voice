@@ -213,6 +213,7 @@ body,
   font-weight: 600;
   padding: 1.5rem 0;
   color: #800;
+  white-space: pre-wrap;
 }
 
 .typing #text-input-field {

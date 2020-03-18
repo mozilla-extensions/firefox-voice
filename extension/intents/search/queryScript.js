@@ -92,23 +92,38 @@ this.queryScript = (function() {
   }
 
   communicate.register("searchResultInfo", message => {
-    const cards = findCards();
-    const searchHeaders = document.querySelectorAll("a > h3");
+    const GOOGLE_SELECTOR = "a > h3";
+    const DDG_SELECTOR = "#links .results_links_deep .result__a";
+    const BING_SELECTOR = ".b_algo h2 a";
+    const origin = window.location.origin;
+    let selector = GOOGLE_SELECTOR;
+    let cards;
+
+    if (/duckduckgo/i.test(origin)) selector = DDG_SELECTOR;
+    else if (/bing/i.test(origin)) selector = BING_SELECTOR;
+
+    const searchHeaders = document.querySelectorAll(selector);
     const searchResults = [];
+
     for (const searchHeader of searchHeaders) {
       const parent = findParent(searchHeader, el => el.tagName === "LI");
       if (parent && parent.querySelector(".ad_cclk, .ads-visurl")) {
-        // It's an ad
+        // It's a google ad
         continue;
       }
+
       searchResults.push({
-        url: searchHeader.parentNode.href,
+        url:
+          selector === GOOGLE_SELECTOR
+            ? searchHeader.parentNode.href
+            : searchHeader.href,
         title: searchHeader.textContent,
       });
     }
+
     return {
-      hasSidebarCard: !!cards.sidebarCard,
-      hasCard: !!cards.card,
+      hasSidebarCard: cards && !!cards.sidebarCard,
+      hasCard: cards && !!cards.card,
       searchResults,
       searchUrl: location.href,
     };
