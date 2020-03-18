@@ -280,6 +280,22 @@ const PopupContent = ({
   );
 };
 
+const FollowUpContainer = ({ children }) => {
+  return (
+    <div id="followup-container">
+      <IntentFeedback />
+      <div id="followup-wrapper">
+        <div id="mic-container">Mic On</div>
+        {children ? (
+          children
+        ) : (
+          <div style={{ color: "white" }}>Waiting on Follow up</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Feedback = ({ feedback, onSubmitFeedback }) => {
   const textarea = React.createRef();
   function onSubmit() {
