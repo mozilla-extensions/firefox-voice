@@ -46,7 +46,7 @@ this.player = (function() {
         const selector = ".control-button[title='Previous']";
         // Player time
         const time = this.querySelector(".playback-bar__progress-time")
-          .innerHTML; 
+          .innerHTML;
         if (
           /\b0:00\b/gi.test(time) ||
           /\b0:01\b/gi.test(time) ||
