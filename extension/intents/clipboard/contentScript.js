@@ -91,9 +91,13 @@ this.contentScript = (function() {
   types.copyRichLink = function() {
     const m = meta();
     const anchor = document.createElement("a");
+    if (window.location.href.includes("google")) {
+      return (m.title + " : " + m.canonical );
+    }
     anchor.href = m.canonical;
     anchor.textContent = m.title;
     copyElement(anchor);
+    return false;
   };
 
   types.copyScreenshot = function() {
