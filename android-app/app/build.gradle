@@ -36,6 +36,15 @@ android {
     }
 }
 
+// https://stackoverflow.com/a/34334534/631051
+task copyFiles(type: Copy) {
+    from '../../../../extension/background/language/langs'
+    into 'assets/lang'
+    include '*.toml'
+}
+
+preBuild.dependsOn(copyFiles)
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
