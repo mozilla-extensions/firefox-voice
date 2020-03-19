@@ -109,7 +109,8 @@ this.contentScript = (function() {
   types.copyImage = function() {
     const img = document.querySelectorAll("img");
     let maxHeightIndex = 0;
-    const isValidSrc = (src) => src.startsWith("data:") || /png|jpe?g/.test(src.split(".").pop());
+    const isValidSrc = src =>
+      src.startsWith("data:") || /png|jpe?g/.test(src.split(".").pop());
     img.forEach((element, index) => {
       if (isInViewport(element) && isValidSrc(element.src)) {
         if (element.clientHeight > img[maxHeightIndex].clientHeight) {
