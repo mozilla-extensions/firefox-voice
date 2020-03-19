@@ -2,7 +2,7 @@
 
 ## Installation
 
-We recommend opening this page (https://bit.ly/2RGxzrB) in Firefox on Android.
+We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
 
 ### Install Firefox and the extension
 
