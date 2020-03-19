@@ -1,0 +1,8 @@
+[borderify.open]
+description = "Open Borderify Extension to run some intent"
+match = """
+borderify extension
+"""
+
+[[borderify.open.example]]
+phrase = "borderify extension"
