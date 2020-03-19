@@ -1,0 +1,20 @@
+[someIntent.command]
+description = "Add more examples so they will appear randomly at Doorhanger"
+match = """
+  a{n} (test | example) intent
+"""
+
+[[Doorhanger.AddMoreExamples.example]]
+phrase = "A test intent"
+
+[[Doorhanger.AddMoreExamples.example]]
+phrase = "Find spaghetti on page"
+test = true
+
+[[Doorhanger.AddMoreExamples.example]]
+phrase = "Count my open tabs"
+test = true
+
+[[Doorhanger.AddMoreExamples.example]]
+phrase = "Open downloads"
+test = true
