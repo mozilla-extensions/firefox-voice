@@ -118,12 +118,12 @@ const General = ({
         keyboardShortcutError={keyboardShortcutError}
       />
       {buildSettings.inDevelopment ? (
-      <WakewordSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
-      ): null}
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      ) : null}
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
