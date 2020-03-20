@@ -38,6 +38,7 @@ async function setHasHadSuccessfulUtterance() {
   }
 }
 
+
 export const PopupController = function() {
   const [currentView, setCurrentView] = useState("waiting");
   const [suggestions, setSuggestions] = useState([]);
@@ -51,6 +52,9 @@ export const PopupController = function() {
   const [cardImage, setCardImage] = useState(null);
   const [recorderVolume, setRecorderVolume] = useState(null);
   const [expandListeningView, setExpandedListeningView] = useState(false);
+  const [timerInSeconds, setTimerInSeconds] = useState(0);
+  const [timerTotalInSeconds, setTimerTotalInSeconds] = useState(0);
+
 
   let executedIntent = false;
   let stream = null;
@@ -65,6 +69,7 @@ export const PopupController = function() {
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
+  let timer = null;
 
   useEffect(() => {
     if (!isInitialized) {
@@ -73,7 +78,9 @@ export const PopupController = function() {
     }
   });
 
+
   const init = async () => {
+    let skipRecording = false;
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
@@ -81,6 +88,28 @@ export const PopupController = function() {
       await browserUtil.openOrActivateTab("onboarding/onboard.html");
       window.close();
       return;
+    }
+
+    const {startTimestamp, totalInSeconds} = await browser.runtime.sendMessage({
+      type: "getTimer"
+    });
+
+    if (startTimestamp !== undefined) {
+      let waitFor = Math.floor(totalInSeconds - (new Date().getTime() - startTimestamp) / 1000);
+      if (waitFor > 0) {
+        timer = setInterval(() => {
+          waitFor -= 1;
+
+          if (waitFor >= 0) {
+            setTimerInSeconds(waitFor);
+          } else {
+            clearInterval(timer);
+          }
+        }, 1000);
+      } else {
+        clearTimer({startTimestamp, totalInSeconds});
+        skipRecording = true;
+      }
     }
 
     incrementVisits();
@@ -96,7 +125,9 @@ export const PopupController = function() {
     addListeners();
     updateExamples();
     updateLastIntent();
-    startRecorder();
+
+    if (skipRecording === false)
+      startRecorder();
   };
 
   const incrementVisits = () => {
@@ -180,10 +211,57 @@ export const PopupController = function() {
         }, 50);
         return Promise.resolve(true);
       }
+      case "timer": {
+        startTimer(message.timerInSeconds);
+        return Promise.resolve(true);
+      }
+      case "stopTimer": {
+        clearTimer(message.timerObject);
+        return Promise.resolve(true);
+      }
       default:
         break;
     }
     return undefined;
+  };
+
+  const clearTimer = async ({totalInSeconds}) => {
+    playListeningChime();
+    setPopupView("timer");
+
+    if (totalInSeconds === undefined) {
+      return;
+    }
+
+    setTimerTotalInSeconds(totalInSeconds);
+    browser.runtime.sendMessage({
+      type: "resetTimer"
+    });
+
+  };
+
+  const startTimer = async (inSeconds) => {
+    setPopupView("timer");
+    clearInterval(timer);
+
+
+    const startTimestamp = new Date().getTime();
+
+    browser.runtime.sendMessage({
+      type: "setTimer",
+      startTimestamp,
+      totalInSeconds: inSeconds
+    });
+
+    setTimerInSeconds(inSeconds);
+    timer = setInterval(() => {
+      inSeconds -= 1;
+      if (inSeconds >= 0) {
+        setTimerInSeconds(inSeconds);
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
   };
 
   const updateExamples = async () => {
@@ -515,6 +593,8 @@ export const PopupController = function() {
       onSubmitFeedback={onSubmitFeedback}
       setMinPopupSize={setMinPopupSize}
       expandListeningView={expandListeningView}
+      timerInSeconds={timerInSeconds}
+      timerTotalInSeconds={timerTotalInSeconds}
     />
   );
 };

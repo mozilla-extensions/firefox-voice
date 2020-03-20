@@ -1,0 +1,10 @@
+[timer.set]
+description = "Set timer"
+match = """
+    (set | open | show | start ) (timer | countdown) (for |) [hours] hour{s}
+    (set | open | show | start ) (timer | countdown) (for |) [minutes] minute{s} 
+    (set | open | show | start ) (timer | countdown) (for |) [seconds] second{s}
+"""
+
+[[timer.set.example]]
+phrase = "Set timer for 5 minutes"

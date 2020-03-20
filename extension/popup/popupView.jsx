@@ -27,6 +27,8 @@ export const Popup = ({
   onSubmitFeedback,
   setMinPopupSize,
   expandListeningView,
+  timerInSeconds,
+  timerTotalInSeconds
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -62,8 +64,13 @@ export const Popup = ({
         onSubmitFeedback={onSubmitFeedback}
         setMinPopupSize={setMinPopupSize}
         expandListeningView={expandListeningView}
+        timerInSeconds={timerInSeconds}
+        timerTotalInSeconds={timerTotalInSeconds}
       />
-      <PopupFooter currentView={currentView} showSettings={showSettings} />
+      <PopupFooter currentView={currentView} showSettings={showSettings} timerInSeconds={timerInSeconds}/>
+      {timerInSeconds > 0 ?
+      <TimerFooter timerInSeconds={timerInSeconds}
+      ></TimerFooter> : null}
     </div>
   );
 };
@@ -96,6 +103,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "";
       case "waiting":
         return "One moment...";
+      case "timer":
+        return transcript;
       case "listening":
       default:
         return "Listening";
@@ -117,7 +126,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
     currentView === "startSavingPage" ||
     currentView === "endSavingPage" ||
     currentView === "feedback" ||
-    currentView === "feedbackThanks"
+    currentView === "feedbackThanks" ||
+    currentView === "timer"
       ? ""
       : "hidden";
 
@@ -176,6 +186,8 @@ const PopupContent = ({
   onSubmitFeedback,
   setMinPopupSize,
   expandListeningView,
+  timerInSeconds,
+  timerTotalInSeconds
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -240,6 +252,13 @@ const PopupContent = ({
         );
       case "feedbackThanks":
         return <FeedbackThanks />;
+      case "timer":
+        return (
+          <TimerCard
+          timerInSeconds={timerInSeconds}
+          timerTotalInSeconds={timerTotalInSeconds}
+          ></TimerCard>
+          );
       default:
         return null;
     }
@@ -300,7 +319,7 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings }) => {
+const PopupFooter = ({ currentView, showSettings, timerInSeconds }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
@@ -335,6 +354,82 @@ const PopupFooter = ({ currentView, showSettings }) => {
     </div>
   );
 };
+
+const getHourMinuteSecond = (timerInSeconds) => {
+  const time = parseFloat(timerInSeconds).toFixed(3);
+  const hours = Math.floor(time / 60 / 60);
+  const minutes = Math.floor(time / 60) % 60;
+  const seconds = Math.floor(time - minutes * 60);
+
+  return {hours, minutes, seconds};
+};
+const parseTimer = (timerInSeconds) => {
+  const pad = (num, size) => {
+    return ("000" + num).slice(size * -1);
+  };
+  const {hours, minutes, seconds} = getHourMinuteSecond(timerInSeconds);
+
+  if (hours > 0)
+    return pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
+  return pad(minutes, 2) + ":" + pad(seconds, 2);
+};
+
+const TimerCard = ({
+  timerInSeconds,
+  timerTotalInSeconds
+}) => {
+  const getNotificationExpression = (timerTotalInSeconds) => {
+    const {hours, minutes, seconds} = getHourMinuteSecond(timerTotalInSeconds);
+    let expression = "";
+
+    if (hours !== 0) {
+      expression += `${hours} hours`;
+    }
+    if (minutes !== 0) {
+      if (expression.length > 0) {
+        expression += " and ";
+      }
+      expression += `${minutes} minutes`;
+    }
+
+    if (seconds !== 0) {
+      if (expression.length > 0) {
+        expression += " and ";
+      }
+      expression += `${seconds} seconds`;
+    }
+    return `It's been ${expression}`;
+  };
+
+  const notificationExpression = getNotificationExpression(timerTotalInSeconds);
+  return (
+    <React.Fragment>
+        <div className="timer">
+            <div className="circle-timer">
+              <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+            </div>
+          <div className="timer-notification-text">
+          {timerInSeconds <= 0 ?
+          <p>{notificationExpression}</p> : null
+          }</div>
+        </div>
+    </React.Fragment>
+  );
+};
+
+
+const TimerFooter = ({
+  timerInSeconds
+}) => {
+  return (
+    <div className="timer-footer">
+      <div className="circle-timer-footer">
+        <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+      </div>
+    </div>
+  );
+};
+
 
 const ListeningContent = ({
   displayText,

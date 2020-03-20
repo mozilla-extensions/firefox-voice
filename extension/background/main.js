@@ -17,6 +17,57 @@ import { copyImage } from "../intents/clipboard/clipboard.js";
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
 
+
+class Timer {
+  startListening() {
+    browser.runtime.onMessage.addListener(async (message) => {
+      if (message.type === "setTimer") {
+        this.startTimestamp = message.startTimestamp;
+        this.totalInSeconds = message.totalInSeconds;
+        this.start();
+      } else if (message.type === "resetTimer") {
+        this.reset();
+      } else if (message.type === "getTimer") {
+        return {
+          startTimestamp: this.startTimestamp,
+          totalInSeconds: this.totalInSeconds
+        };
+      }
+      return null;
+    });
+  }
+
+  reset() {
+    this.startTimestamp = undefined;
+    this.totalInSeconds = undefined;
+  }
+
+  async start() {
+    const waitFor = this.totalInSeconds * 1000 -
+                (new Date().getTime() - this.startTimestamp);
+    await util.sleep(waitFor);
+    try {
+      const result = await browser.runtime.sendMessage({
+        type: "stopTimer",
+        timerObject: { // piggyback
+          startTimestamp: this.startTimestamp,
+          totalInSeconds: this.totalInSeconds
+        }
+      });
+      if (result) {
+        return null;
+      }
+    } catch (e) {
+      catcher.capture(e);
+    }
+
+    return browser.experiments.voice.openPopup();
+  }
+}
+
+const timer = new Timer();
+timer.startListening();
+
 browser.runtime.onMessage.addListener(async (message, sender) => {
   const properties = Object.assign({}, message);
   delete properties.type;
