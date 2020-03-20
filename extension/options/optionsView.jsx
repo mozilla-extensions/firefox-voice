@@ -117,7 +117,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      {buildSettings.inDevelopment ? (
+      {inDevelopment ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}

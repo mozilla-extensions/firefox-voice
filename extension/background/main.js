@@ -128,6 +128,8 @@ const temporaryInstallId = setTimeout(() => {
   if (_extensionTemporaryInstall === undefined) {
     _extensionTemporaryInstall = false;
   }
+
+  _inDevelopment = buildSettings.inDevelopment;
 }, 5000);
 
 browser.runtime.onInstalled.addListener(details => {
