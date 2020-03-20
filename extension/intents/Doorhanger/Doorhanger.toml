@@ -1,4 +1,4 @@
-[someIntent.command]
+[Doorhanger.command]
 description = "Add more examples so they will appear randomly at Doorhanger"
 match = """
   a{n} (test | example) intent

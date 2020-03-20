@@ -18,3 +18,7 @@ test = true
 [[find.find.example]]
 phrase = "bring up my calendar"
 test = true
+
+[[find.find.example]]
+phrase = "Find spaghetti on page"
+test = true
