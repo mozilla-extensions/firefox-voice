@@ -156,3 +156,15 @@ phrase = "What is playing"
 [[music.showTitle.example]]
 phrase = "What's playing?"
 test = true
+
+[music.say]
+description = "Say the word on linguee"
+match = """
+(say | speak | utter | ) [ query ] (on | in | ) [service:linguee]
+"""
+
+[[music.say.example]]
+phrase = "say fox on linguee"
+test = true
+expectParameters = {service = "linguee"}
+expectSlots = {query = "query"}

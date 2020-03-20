@@ -26,6 +26,7 @@ const MUSIC_SERVICE_ALIASES = {
   spotify: "spotify",
   soundcloud: "soundcloud",
   deezer: "deezer",
+  linguee: "linguee",
   video: "youtube",
 };
 
