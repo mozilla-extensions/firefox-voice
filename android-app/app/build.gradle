@@ -36,10 +36,9 @@ android {
     }
 }
 
-// https://stackoverflow.com/a/34334534/631051
 task copyFiles(type: Copy) {
-    from '../../../../extension/background/language/langs'
-    into 'assets/lang'
+    from '../../extension/background/language/langs'
+    into 'src/main/assets/langs'
     include '*.toml'
 }
 
