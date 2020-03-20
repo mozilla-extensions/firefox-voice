@@ -22,12 +22,13 @@ const METADATA_ATTRIBUTES = new Set([
 export const intents = {};
 let lastIntent;
 const intentHistory = [];
-const db = new Database("myDB");
+const db = new Database("voice");
 const utteranceTable = "utterance";
 const primaryKey = "timestamp";
-db.createTable(utteranceTable, primaryKey).then(result =>
-  log.info("CREATE TABLE:", result)
-);
+const voiceVersion = 1;
+db.createTable(utteranceTable, primaryKey, voiceVersion)
+  .then(result => log.info("CREATE TABLE:", result))
+  .catch(error => log.error(error));
 
 export class IntentContext {
   constructor(desc) {
@@ -360,7 +361,7 @@ export function getIntentSummary() {
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
-  db.add(context, utteranceTable);
+  db.add(utteranceTable, context).catch(error => log.error(error));
 }
 
 export function getIntentHistory() {

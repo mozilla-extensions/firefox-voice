@@ -2,17 +2,17 @@
 
 export class Database {
   constructor(dbName) {
-    this.DBName = dbName;
+    this.dbName = dbName;
     this.readonly = "readonly";
     this.readwrite = "readwrite";
   }
 
-  createTable(TBName, primaryKey) {
+  createTable(tbName, primaryKey, version) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DBName);
+      const request = indexedDB.open(this.dbName, version);
       request.onupgradeneeded = e => {
         const database = e.target.result;
-        database.createObjectStore(TBName, {
+        database.createObjectStore(tbName, {
           keyPath: primaryKey,
         });
       };
@@ -20,45 +20,59 @@ export class Database {
         const database = e.target.result;
         resolve(database);
       };
-      request.onerror = function(e) {
-        reject("Error: failed to create a database!");
+      request.onerror = e => {
+        const code = e.target.errorCode;
+        reject(new Error(`Failed to create a database: ${code}`));
       };
     });
   }
 
-  get(primaryKey, TBName) {
+  get(tbName, primaryKey) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DBName);
+      const request = indexedDB.open(this.dbName);
       request.onsuccess = e => {
         const database = e.target.result;
-        const transaction = database.transaction([TBName]);
-        const objectStore = transaction.objectStore(TBName);
+        const transaction = database.transaction([tbName]);
+        const objectStore = transaction.objectStore(tbName);
         const read = objectStore.get(primaryKey);
-
-        read.onerror = function(event) {
-          reject("Unable to retrieve data from database!");
-        };
-
-        read.onsuccess = function(event) {
-          log.info("get result:", read.result);
+        read.onsuccess = e => {
+          log.info("Got result:", read.result);
           resolve(read.result);
+        };
+        read.onerror = e => {
+          const code = e.target.errorCode;
+          reject(new Error(`Unable to retrieve data from database: ${code}`));
         };
         database.close();
       };
-      request.onerror = event => reject("Unable to retrieve from database!");
+      request.onerror = e => {
+        const code = e.target.errorCode;
+        reject(new Error(`Unable to retrieve from database: ${code}`));
+      };
     });
   }
 
-  getAll(TBName) {
-    return new Promise(resolve => {
-      const request = indexedDB.open(this.DBName);
+  /**
+   * Retrieves all documents from the table.
+   * @param {string} tbName - the table name to retrieve documents from
+   * @param {string} direction - "prev" is most recent first (based on
+   * primaryKey), "next" is most recent last (based on primaryKey)
+   * @returns {Promise} The documents
+   */
+  getAll(tbName, direction) {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName);
       request.onsuccess = e => {
         const database = e.target.result;
-        const objectStore = database.transaction(TBName).objectStore(TBName);
+        const objectStore = database.transaction(tbName).objectStore(tbName);
         const list = [];
-
-        objectStore.openCursor().onsuccess = event => {
-          const cursor = event.target.result;
+        // default to descending order (or most recent if
+        // the primary key is timestamp)
+        const request = direction
+          ? objectStore.openCursor(null, direction)
+          : objectStore.openCursor(null, "prev");
+        request.onsuccess = e => {
+          const cursor = e.target.result;
           if (cursor) {
             list.push(cursor.value);
             cursor.continue();
@@ -66,61 +80,74 @@ export class Database {
             resolve(list);
           }
         };
+        request.onerror = e => {
+          const code = e.target.errorCode;
+          reject(new Error(`Unable to retrieve data from database: ${code}`));
+        };
       };
     });
   }
 
-  add(obj, TBName) {
+  add(tbName, obj) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DBName);
+      const request = indexedDB.open(this.dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const add = database
-          .transaction([TBName], this.readwrite)
-          .objectStore(TBName)
+          .transaction([tbName], this.readwrite)
+          .objectStore(tbName)
           .add(obj);
-        add.onsuccess = event => {
-          // log.info("1 record has been added to your database.");
-          resolve("1 record has been added to your database.");
+        add.onsuccess = e => {
+          log.info("1 record has been added to your database.");
+          resolve();
         };
-        add.onerror = event => reject("Unable to add data records");
+        add.onerror = e => {
+          const code = e.target.errorCode;
+          reject(new Error(`Unable to add data records: ${code}`));
+        };
         database.close();
       };
     });
   }
 
-  delete(primaryKey, TBName) {
+  delete(tbName, primaryKey) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DBName);
+      const request = indexedDB.open(this.dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const remove = database
-          .transaction([TBName], this.readwrite)
-          .objectStore(TBName)
+          .transaction([tbName], this.readwrite)
+          .objectStore(tbName)
           .delete(primaryKey);
-        remove.onerror = event =>
-          reject("This entry could not be removed from database.");
-        remove.onsuccess = event =>
-          resolve("This entry has been removed from your database.");
+        remove.onsuccess = e => {
+          log.info("This entry has been removed from your database.");
+          resolve();
+        };
+        remove.onerror = e => {
+          const code = e.target.errorCode;
+          reject(new Error(`Entry could not be removed in databse: ${code}`));
+        };
         database.close();
       };
     });
   }
 
-  clearAll(TBName) {
+  clearAll(tbName) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DBName);
+      const request = indexedDB.open(this.dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const objectStore = database
-          .transaction(TBName, this.readwrite)
-          .objectStore(TBName);
+          .transaction(tbName, this.readwrite)
+          .objectStore(tbName);
         const clear = objectStore.clear();
-        clear.onsuccess = event => {
-          resolve("successfully removed all entries in the table");
+        clear.onsuccess = e => {
+          log.info("Successfully removed all entries in the table");
+          resolve();
         };
-        clear.onerror = error => {
-          reject(error);
+        clear.onerror = e => {
+          const code = e.target.errorCode;
+          reject(new Error(`Failed to remove entries in database: ${code}`));
         };
         database.close();
       };
