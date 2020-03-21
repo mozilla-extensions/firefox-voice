@@ -1,9 +1,9 @@
 [timer.set]
 description = "Set timer"
 match = """
-    (set | open | show | start ) (timer | countdown) (for |) [hours] hour{s}
-    (set | open | show | start ) (timer | countdown) (for |) [minutes] minute{s} 
-    (set | open | show | start ) (timer | countdown) (for |) [seconds] second{s}
+    (set | open | show | start ) (a|) (timer | countdown) (for |) [hours] hour{s}
+    (set | open | show | start ) (a|) (timer | countdown) (for |) [minutes] minute{s} 
+    (set | open | show | start ) (a|) (timer | countdown) (for |) [seconds] second{s}
 """
 
 [[timer.set.example]]
@@ -13,7 +13,7 @@ phrase = "Set timer for 5 minutes"
 [timer.close]
 description = "Close timer"
 match = """
-    (close | exit | stop) timer
+    (close | exit | stop | cancel) (this | the | current |) timer
 """
 
 [[timer.close.example]]
@@ -24,7 +24,7 @@ phrase = "close timer"
 [timer.reset]
 description = "Reset timer"
 match = """
-    (reset | restart) timer
+    (reset | restart) (this | the | current |) timer
 """
 
 [[timer.reset.example]]
@@ -35,7 +35,7 @@ phrase = "reset timer"
 [timer.pause]
 description = "Pause timer"
 match = """
-    pause timer
+    pause (this | the | current |) timer
 """
 
 [[timer.pause.example]]
@@ -44,7 +44,7 @@ phrase = "pause timer"
 [timer.unpause]
 description = "Unpause timer"
 match = """
-    unpause timer
+    unpause (this | the | current |) timer
 """
 
 [[timer.unpause.example]]

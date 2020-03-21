@@ -14,8 +14,10 @@ const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
 let forceCancelRecoder = false;
+let timerElapsed = false;
 let recorder;
 let recorderIntervalId;
+let timerIntervalId;
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -67,7 +69,6 @@ export const PopupController = function() {
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
-  let timer = null;
 
   useEffect(() => {
     if (!isInitialized) {
@@ -87,32 +88,33 @@ export const PopupController = function() {
       return;
     }
 
-    const {startTimestamp, totalInSeconds, paused, remaining} = await browser.runtime.sendMessage({
+    const {
+      startTimestamp,
+      totalInSeconds,
+      paused,
+      remainingInSeconds,
+    } = await browser.runtime.sendMessage({
       type: "timerAction",
       action: {
-        type: "getTimer"
-      }
+        type: "getTimer",
+      },
     });
 
+    // check if timer is active
     if (startTimestamp !== undefined) {
-      let waitFor = Math.floor(remaining - (new Date().getTime() - startTimestamp) / 1000);
+      let waitFor = Math.floor(
+        remainingInSeconds - (new Date().getTime() - startTimestamp) / 1000
+      );
+
       if (paused === true) {
-        waitFor = remaining;
+        waitFor = remainingInSeconds;
         setTimerInSeconds(waitFor);
       } else {
-        timer = setInterval(() => {
-          waitFor -= 1;
-
-          if (waitFor >= 0) {
-            setTimerInSeconds(waitFor);
-          } else {
-            clearInterval(timer);
-          }
-        }, 1000);
+        startTimer(waitFor);
       }
 
       if (waitFor < 0) {
-        clearTimer({startTimestamp, totalInSeconds});
+        clearTimer(totalInSeconds);
         skipRecording = true;
       }
     }
@@ -131,8 +133,7 @@ export const PopupController = function() {
     updateExamples();
     updateLastIntent();
 
-    if (skipRecording === false)
-      startRecorder();
+    if (skipRecording === false) startRecorder();
   };
 
   const incrementVisits = () => {
@@ -217,11 +218,12 @@ export const PopupController = function() {
         return Promise.resolve(true);
       }
       case "setTimer": {
+        setPopupView("timer");
         startTimer(message.timerInSeconds);
         return Promise.resolve(true);
       }
       case "closeTimer": {
-        clearTimer(message.timerObject);
+        clearTimer(message.totalInSeconds);
         return Promise.resolve(true);
       }
       default:
@@ -230,32 +232,40 @@ export const PopupController = function() {
     return undefined;
   };
 
-  const clearTimer = async ({totalInSeconds}) => {
+  const clearTimer = async totalInSeconds => {
     setPopupView("timer");
+
+    // use this variable to stop any other actions and show notifications
+    timerElapsed = true;
 
     cancelRecoder();
     playListeningChime();
 
+    setTranscript("Time's up");
+
+    // set timer to 0
+    setTimerInSeconds(0);
     setTimerTotalInSeconds(totalInSeconds);
+
+    // send message to timer to ack that it can close
     browser.runtime.sendMessage({
       type: "timerAction",
       action: {
-        type: "closeTimer"
-      }
+        type: "closeTimer",
+      },
     });
   };
 
-  const startTimer = async (inSeconds) => {
-    setPopupView("timer");
-    clearInterval(timer);
-
+  const startTimer = async inSeconds => {
+    clearInterval(timerIntervalId);
     setTimerInSeconds(inSeconds);
-    timer = setInterval(() => {
+
+    timerIntervalId = setInterval(() => {
       inSeconds -= 1;
       if (inSeconds >= 0) {
         setTimerInSeconds(inSeconds);
       } else {
-        clearInterval(timer);
+        clearInterval(timerIntervalId);
       }
     }, 1000);
   };
@@ -292,7 +302,9 @@ export const PopupController = function() {
 
   const onExternalInput = async () => {
     await browser.runtime.sendMessage({ type: "microphoneStopped" });
-    recorder.cancel(); // not sure if this is working as expected?
+    if (recorder !== undefined) {
+      recorder.cancel(); // not sure if this is working as expected?
+    }
   };
 
   const submitTextInput = async text => {
@@ -314,8 +326,18 @@ export const PopupController = function() {
   };
 
   const setPopupView = async newView => {
+    // do not change view if timer elapsed; timer has highest priority
+    if (timerElapsed === true) {
+      return;
+    }
+
     setMinPopupSize(350);
     setCurrentView(newView);
+
+    // clear timer interval when not used
+    if (newView !== "timer" && newView !== "listening") {
+      clearInterval(timerIntervalId);
+    }
 
     if (
       recorder &&
@@ -495,6 +517,10 @@ export const PopupController = function() {
       browser.runtime.sendMessage({ type: "microphoneStopped" });
     };
     recorder.onNoVoice = () => {
+      // stop closing if recorder was canceled and popup must be open (eg timer notification)
+      if (forceCancelRecoder) {
+        return;
+      }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       log.debug("Closing popup because of no voice input");
       window.close();

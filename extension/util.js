@@ -13,7 +13,7 @@ export function getSleeperWithClear(ms) {
     clearTimeout(timeout);
   };
 
-  return {sleeper, clear};
+  return { sleeper, clear };
 }
 
 /** If the promise takes longer than the given number of milliseconds, throw a promise error

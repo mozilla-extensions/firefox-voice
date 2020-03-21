@@ -28,7 +28,7 @@ export const Popup = ({
   setMinPopupSize,
   expandListeningView,
   timerInSeconds,
-  timerTotalInSeconds
+  timerTotalInSeconds,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -67,10 +67,17 @@ export const Popup = ({
         timerInSeconds={timerInSeconds}
         timerTotalInSeconds={timerTotalInSeconds}
       />
-      <PopupFooter currentView={currentView} showSettings={showSettings} timerInSeconds={timerInSeconds}/>
-      {timerInSeconds > 0 ?
-      <TimerFooter currentView={currentView} timerInSeconds={timerInSeconds}
-      ></TimerFooter> : null}
+      <PopupFooter
+        currentView={currentView}
+        showSettings={showSettings}
+        timerInSeconds={timerInSeconds}
+      />
+      {timerInSeconds > 0 ? (
+        <TimerFooter
+          currentView={currentView}
+          timerInSeconds={timerInSeconds}
+        ></TimerFooter>
+      ) : null}
     </div>
   );
 };
@@ -187,7 +194,7 @@ const PopupContent = ({
   setMinPopupSize,
   expandListeningView,
   timerInSeconds,
-  timerTotalInSeconds
+  timerTotalInSeconds,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -255,11 +262,11 @@ const PopupContent = ({
       case "timer":
         return (
           <TimerCard
-          timerInSeconds={timerInSeconds}
-          timerTotalInSeconds={timerTotalInSeconds}
-          onSubmitFeedback={onSubmitFeedback}
+            timerInSeconds={timerInSeconds}
+            timerTotalInSeconds={timerTotalInSeconds}
+            onSubmitFeedback={onSubmitFeedback}
           ></TimerCard>
-          );
+        );
       default:
         return null;
     }
@@ -357,19 +364,19 @@ const PopupFooter = ({ currentView, showSettings, timerInSeconds }) => {
   );
 };
 
-const getHourMinuteSecond = (timerInSeconds) => {
+const getHourMinuteSecond = timerInSeconds => {
   const time = parseFloat(timerInSeconds).toFixed(3);
   const hours = Math.floor(time / 60 / 60);
   const minutes = Math.floor(time / 60) % 60;
   const seconds = Math.floor(time - minutes * 60);
 
-  return {hours, minutes, seconds};
+  return { hours, minutes, seconds };
 };
-const parseTimer = (timerInSeconds) => {
+const parseTimer = timerInSeconds => {
   const pad = (num, size) => {
     return ("000" + num).slice(size * -1);
   };
-  const {hours, minutes, seconds} = getHourMinuteSecond(timerInSeconds);
+  const { hours, minutes, seconds } = getHourMinuteSecond(timerInSeconds);
 
   if (hours > 0)
     return pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
@@ -381,8 +388,10 @@ const TimerCard = ({
   timerTotalInSeconds,
   onSubmitFeedback,
 }) => {
-  const getNotificationExpression = (timerTotalInSeconds) => {
-    const {hours, minutes, seconds} = getHourMinuteSecond(timerTotalInSeconds);
+  const getNotificationExpression = timerTotalInSeconds => {
+    const { hours, minutes, seconds } = getHourMinuteSecond(
+      timerTotalInSeconds
+    );
     let expression = "";
 
     if (hours !== 0) {
@@ -407,39 +416,32 @@ const TimerCard = ({
   const notificationExpression = getNotificationExpression(timerTotalInSeconds);
   return (
     <React.Fragment>
-        <div className="timer-card">
-            <div className="circle-timer">
-              <p className="timer-clock">{parseTimer(timerInSeconds)}</p>
-            </div>
-          <div className="timer-notification-text">
-          {timerInSeconds <= 0 ?
-          <p>{notificationExpression}</p> : null
-          }</div>
+      <div className="timer-card">
+        <div className="circle-timer">
+          <p className="timer-clock">{parseTimer(timerInSeconds)}</p>
         </div>
-        <IntentFeedback
-          onSubmitFeedback={onSubmitFeedback}
-        />
+        <div className="timer-notification-text">
+          {timerInSeconds <= 0 ? <p>{notificationExpression}</p> : null}
+        </div>
+      </div>
+      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </React.Fragment>
   );
 };
 
-
-const TimerFooter = ({
-  currentView,
-  timerInSeconds
-}) => {
-  if (currentView !== "listening")
-  return null;
+const TimerFooter = ({ currentView, timerInSeconds }) => {
+  if (currentView !== "listening") return null;
 
   return (
     <div className="search-footer">
       <div className="timer-footer">
-        {timerInSeconds < 3600 ?
-        <div className="circle-timer-footer">
-          <p className="timer-clock">{parseTimer(timerInSeconds)} </p>
-        </div> :
-        <p className="timer-clock-footer">{parseTimer(timerInSeconds)}</p>
-        }
+        {timerInSeconds < 3600 ? (
+          <div className="circle-timer-footer">
+            <p className="timer-clock">{parseTimer(timerInSeconds)} </p>
+          </div>
+        ) : (
+          <p className="timer-clock-footer">{parseTimer(timerInSeconds)}</p>
+        )}
         <div className="timer-text">
           <p>Say "cancel", "pause" or "reset" timer.</p>
         </div>
@@ -447,7 +449,6 @@ const TimerFooter = ({
     </div>
   );
 };
-
 
 const ListeningContent = ({
   displayText,

@@ -13,11 +13,10 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
-import {timer} from "../intents/timer/timer.js";
+import { timer } from "../intents/timer/timer.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
-
 
 browser.runtime.onMessage.addListener(async (message, sender) => {
   const properties = Object.assign({}, message);
