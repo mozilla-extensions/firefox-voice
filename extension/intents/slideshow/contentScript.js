@@ -3,83 +3,103 @@
 this.slideshowScript = (function() {
   let slideElements = [];
   let currentSlideIndex = 0;
+  let iframeContainer, slideContainer, iframeDoc;
 
   const videoSources = ["youtube.com", "vimeo.com"];
-
-  slideElements = detectAllMedia();
   buildSlideStructure();
 
-  const lbContainer = document.body.querySelector(".fv-lightbox-container");
-  const slideContainer = document.body.querySelector(".fv-slide-image");
-
-  window.onresize = function() {
-    if (slideContainer.hasChildNodes()) {
-      if (slideContainer.firstChild.tagName === "IFRAME") {
-        slideContainer.firstChild.setAttribute(
-          "width",
-          document.documentElement.clientWidth
-        );
-        slideContainer.firstChild.setAttribute(
-          "height",
-          document.documentElement.clientHeight
-        );
-      }
-    }
-  };
-
   function buildSlideStructure() {
-    const lightboxElement = document.createElement("div");
-    lightboxElement.className = "fv-lightbox-container";
-    lightboxElement.onclick = hideSlideShow;
+    // create iframe element
+    iframeContainer = document.createElement("iframe");
+    iframeContainer.className = "fv-slideshow-frame";
+    iframeContainer.height = document.documentElement.clientHeight;
+    iframeContainer.width = document.documentElement.clientWidth;
+    iframeContainer.style.display = "none";
+    iframeContainer.style.position = "fixed";
+    iframeContainer.style.top = 0;
+    iframeContainer.style.left = 0;
+    iframeContainer.style.zIndex = 100;
 
-    const slideshowContainer = document.createElement("div");
-    slideshowContainer.className = "fv-slideshow-container";
+    document.body.appendChild(iframeContainer);
 
-    const navbar = document.createElement("div");
-    navbar.className = "fv-navbar";
+    iframeContainer.addEventListener("load", function() {
+      iframeDoc = iframeContainer.contentWindow.document;
 
-    const tagClose = document.createElement("a");
-    tagClose.className = "fv-close";
-    tagClose.textContent = String.fromCharCode(0x274c);
-    tagClose.onclick = hideSlideShow;
+      const iframeLink = iframeDoc.createElement("link");
+      iframeLink.type = "text/css";
+      iframeLink.rel = "stylesheet";
+      iframeLink.href = browser.runtime.getURL("intents/slideshow/contentScript.css");
+      iframeDoc.head.appendChild(iframeLink);
 
-    const tagPrev = document.createElement("a");
-    tagPrev.className = "fv-prev";
-    tagPrev.textContent = String.fromCharCode(10094);
-    tagPrev.onclick = previousSlide;
+      const lightboxElement = document.createElement("div");
+      lightboxElement.className = "fv-lightbox-container";
 
-    const tagNext = document.createElement("a");
-    tagNext.className = "fv-next";
-    tagNext.textContent = String.fromCharCode(10095);
-    tagNext.onclick = nextSlide;
+      const slideshowContainer = iframeDoc.createElement("div");
+      slideshowContainer.className = "fv-slideshow-container";
 
-    const slideImage = document.createElement("div");
-    slideImage.className = "fv-slide-image";
+      const navbar = iframeDoc.createElement("div");
+      navbar.className = "fv-navbar";
 
-    slideshowContainer.appendChild(slideImage);
-    slideshowContainer.appendChild(tagPrev);
-    slideshowContainer.appendChild(tagNext);
+      const tagClose = iframeDoc.createElement("a");
+      tagClose.className = "fv-close";
+      tagClose.textContent = String.fromCharCode(0x274c);
+      tagClose.addEventListener("click", hideSlideShow);
 
-    navbar.appendChild(tagClose);
-    navbar.appendChild(tagNext);
-    navbar.appendChild(tagPrev);
+      const tagPrev = iframeDoc.createElement("a");
+      tagPrev.className = "fv-prev";
+      tagPrev.textContent = String.fromCharCode(10094);
+      tagPrev.addEventListener("click", previousSlide);
 
-    lightboxElement.appendChild(navbar);
-    lightboxElement.appendChild(slideshowContainer);
+      const tagNext = iframeDoc.createElement("a");
+      tagNext.className = "fv-next";
+      tagNext.textContent = String.fromCharCode(10095);
+      tagNext.addEventListener("click", nextSlide);
 
-    document.body.appendChild(lightboxElement);
+      slideContainer = iframeDoc.createElement("div");
+      slideContainer.className = "fv-slide-image";
+
+      slideshowContainer.append(slideContainer);
+
+      navbar.append(tagClose);
+      navbar.append(tagNext);
+      navbar.append(tagPrev);
+
+      lightboxElement.append(navbar);
+      lightboxElement.append(slideshowContainer);
+
+      iframeDoc.body.append(lightboxElement);
+
+      slideElements = detectAllMedia();
+
+      window.addEventListener("resize", function() {
+        iframeContainer.height = document.documentElement.clientHeight;
+        iframeContainer.width = document.documentElement.clientWidth;
+        if (slideContainer.hasChildNodes()) {
+          if (slideContainer.firstChild.tagName === "IFRAME") {
+            slideContainer.firstChild.setAttribute(
+              "width",
+              document.documentElement.clientWidth
+            );
+            slideContainer.firstChild.setAttribute(
+              "height",
+              document.documentElement.clientHeight
+            );
+          }
+        }
+      });
+    });
   }
 
   function hideSlideShow(event) {
-    if (event.target === document.body.querySelector(".fv-close")) {
-      lbContainer.style.display = "none";
+    if (event.target.className === "fv-close") {
+      iframeContainer.style.display = "none";
       swapSlide();
     }
   }
 
   function revealSlideshow() {
     swapSlide(slideElements[0]);
-    lbContainer.style.display = "block";
+    iframeContainer.style.display = "block";
   }
 
   function isVideoSourceUrl(url) {
@@ -105,14 +125,14 @@ this.slideshowScript = (function() {
       element.className = "";
       switch (element.tagName) {
         case "IMG": {
-          const img = document.createElement("img");
+          const img = iframeDoc.createElement("img");
           img.setAttribute("src", element.getAttribute("src"));
           slideElements.push(img);
 
           break;
         }
         case "VIDEO": {
-          const vid = document.createElement("video");
+          const vid = iframeDoc.createElement("video");
           vid.setAttribute("src", element.getAttribute("src"));
           vid.setAttribute("controls", true);
           slideElements.push(vid);
@@ -121,7 +141,7 @@ this.slideshowScript = (function() {
         }
         case "IFRAME": {
           if (isVideoSourceUrl(element.getAttribute("src"))) {
-            const iframe = document.createElement("iframe");
+            const iframe = iframeDoc.createElement("iframe");
             iframe.setAttribute("src", element.getAttribute("src"));
             iframe.setAttribute("width", document.documentElement.clientWidth);
             iframe.setAttribute(
