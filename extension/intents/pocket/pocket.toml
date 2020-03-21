@@ -1,0 +1,18 @@
+[pocket.open]
+description = "Open the pocket page in a new tab"
+match = """
+  (open |show |move) (to|) (my|) pocket
+"""
+
+[[pocket.open.example]]
+phrase = "Open pocket"
+
+[pocket.save]
+description = "This will save the page on active tab to pocket"
+match = """
+    save (this |) (page |) to pocket
+    pocket this
+"""
+
+[[pocket.save.example]]
+phrase = "Save to pocket"
