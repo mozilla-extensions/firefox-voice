@@ -38,7 +38,6 @@ async function setHasHadSuccessfulUtterance() {
   }
 }
 
-
 export const PopupController = function() {
   const [currentView, setCurrentView] = useState("waiting");
   const [suggestions, setSuggestions] = useState([]);
@@ -54,7 +53,6 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInSeconds, setTimerInSeconds] = useState(0);
   const [timerTotalInSeconds, setTimerTotalInSeconds] = useState(0);
-
 
   let executedIntent = false;
   let stream = null;
@@ -77,7 +75,6 @@ export const PopupController = function() {
       init();
     }
   });
-
 
   const init = async () => {
     let skipRecording = false;

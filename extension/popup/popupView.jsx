@@ -404,7 +404,7 @@ const TimerCard = ({
   const notificationExpression = getNotificationExpression(timerTotalInSeconds);
   return (
     <React.Fragment>
-        <div className="timer">
+        <div className="timer-card">
             <div className="circle-timer">
               <p className="timer-text">{parseTimer(timerInSeconds)}</p>
             </div>
@@ -422,9 +422,11 @@ const TimerFooter = ({
   timerInSeconds
 }) => {
   return (
-    <div className="timer-footer">
-      <div className="circle-timer-footer">
-        <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+    <div className="search-footer">
+      <div className="timer-footer">
+        <div className="circle-timer-footer">
+          <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+        </div>
       </div>
     </div>
   );

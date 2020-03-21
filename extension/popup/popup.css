@@ -188,7 +188,6 @@ body,
   padding-bottom: 35px;
 }
 
-
 .results-text {
   font-size: 1.5em;
 }
@@ -452,7 +451,7 @@ a#lexicon {
   z-index:-1;
 }
 
-.timer {
+.timer-card {
   align-self: center;
   padding: 1em 0;
   min-height: 200px;
@@ -499,8 +498,12 @@ a#lexicon {
 }
 
 .timer-footer {
-  color: white;
-  background-color: black;
-  position: relative;
-  
+  padding: 0.5em 0 0;
+  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color:black;
+  margin-bottom:-8px;
+  margin-left:-8px;
+  margin-right:-8px;
 }
