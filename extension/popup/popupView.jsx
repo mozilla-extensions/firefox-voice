@@ -69,7 +69,7 @@ export const Popup = ({
       />
       <PopupFooter currentView={currentView} showSettings={showSettings} timerInSeconds={timerInSeconds}/>
       {timerInSeconds > 0 ?
-      <TimerFooter timerInSeconds={timerInSeconds}
+      <TimerFooter currentView={currentView} timerInSeconds={timerInSeconds}
       ></TimerFooter> : null}
     </div>
   );
@@ -257,6 +257,7 @@ const PopupContent = ({
           <TimerCard
           timerInSeconds={timerInSeconds}
           timerTotalInSeconds={timerTotalInSeconds}
+          onSubmitFeedback={onSubmitFeedback}
           ></TimerCard>
           );
       default:
@@ -323,7 +324,8 @@ const PopupFooter = ({ currentView, showSettings, timerInSeconds }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
-    currentView === "feedbackThanks"
+    currentView === "feedbackThanks" ||
+    currentView === "timer"
   )
     return null;
   return (
@@ -376,7 +378,8 @@ const parseTimer = (timerInSeconds) => {
 
 const TimerCard = ({
   timerInSeconds,
-  timerTotalInSeconds
+  timerTotalInSeconds,
+  onSubmitFeedback,
 }) => {
   const getNotificationExpression = (timerTotalInSeconds) => {
     const {hours, minutes, seconds} = getHourMinuteSecond(timerTotalInSeconds);
@@ -406,26 +409,39 @@ const TimerCard = ({
     <React.Fragment>
         <div className="timer-card">
             <div className="circle-timer">
-              <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+              <p className="timer-clock">{parseTimer(timerInSeconds)}</p>
             </div>
           <div className="timer-notification-text">
           {timerInSeconds <= 0 ?
           <p>{notificationExpression}</p> : null
           }</div>
         </div>
+        <IntentFeedback
+          onSubmitFeedback={onSubmitFeedback}
+        />
     </React.Fragment>
   );
 };
 
 
 const TimerFooter = ({
+  currentView,
   timerInSeconds
 }) => {
+  if (currentView !== "listening")
+  return null;
+
   return (
     <div className="search-footer">
       <div className="timer-footer">
+        {timerInSeconds < 3600 ?
         <div className="circle-timer-footer">
-          <p className="timer-text">{parseTimer(timerInSeconds)}</p>
+          <p className="timer-clock">{parseTimer(timerInSeconds)} </p>
+        </div> :
+        <p className="timer-clock-footer">{parseTimer(timerInSeconds)}</p>
+        }
+        <div className="timer-text">
+          <p>Say "cancel", "pause" or "reset" timer.</p>
         </div>
       </div>
     </div>

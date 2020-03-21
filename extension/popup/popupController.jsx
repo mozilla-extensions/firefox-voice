@@ -13,7 +13,7 @@ import * as popupView from "./popupView.js";
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
-let textInputDetected = false;
+let forceCancelRecoder = false;
 let recorder;
 let recorderIntervalId;
 // This is feedback that the user started, but hasn't submitted;
@@ -87,13 +87,19 @@ export const PopupController = function() {
       return;
     }
 
-    const {startTimestamp, totalInSeconds} = await browser.runtime.sendMessage({
-      type: "getTimer"
+    const {startTimestamp, totalInSeconds, paused, remaining} = await browser.runtime.sendMessage({
+      type: "timerAction",
+      action: {
+        type: "getTimer"
+      }
     });
 
     if (startTimestamp !== undefined) {
-      let waitFor = Math.floor(totalInSeconds - (new Date().getTime() - startTimestamp) / 1000);
-      if (waitFor > 0) {
+      let waitFor = Math.floor(remaining - (new Date().getTime() - startTimestamp) / 1000);
+      if (paused === true) {
+        waitFor = remaining;
+        setTimerInSeconds(waitFor);
+      } else {
         timer = setInterval(() => {
           waitFor -= 1;
 
@@ -103,7 +109,9 @@ export const PopupController = function() {
             clearInterval(timer);
           }
         }, 1000);
-      } else {
+      }
+
+      if (waitFor < 0) {
         clearTimer({startTimestamp, totalInSeconds});
         skipRecording = true;
       }
@@ -208,11 +216,11 @@ export const PopupController = function() {
         }, 50);
         return Promise.resolve(true);
       }
-      case "timer": {
+      case "setTimer": {
         startTimer(message.timerInSeconds);
         return Promise.resolve(true);
       }
-      case "stopTimer": {
+      case "closeTimer": {
         clearTimer(message.timerObject);
         return Promise.resolve(true);
       }
@@ -223,32 +231,23 @@ export const PopupController = function() {
   };
 
   const clearTimer = async ({totalInSeconds}) => {
-    playListeningChime();
     setPopupView("timer");
 
-    if (totalInSeconds === undefined) {
-      return;
-    }
+    cancelRecoder();
+    playListeningChime();
 
     setTimerTotalInSeconds(totalInSeconds);
     browser.runtime.sendMessage({
-      type: "resetTimer"
+      type: "timerAction",
+      action: {
+        type: "closeTimer"
+      }
     });
-
   };
 
   const startTimer = async (inSeconds) => {
     setPopupView("timer");
     clearInterval(timer);
-
-
-    const startTimestamp = new Date().getTime();
-
-    browser.runtime.sendMessage({
-      type: "setTimer",
-      startTimestamp,
-      totalInSeconds: inSeconds
-    });
 
     setTimerInSeconds(inSeconds);
     timer = setInterval(() => {
@@ -281,13 +280,17 @@ export const PopupController = function() {
 
   const onInputStarted = () => {
     setPopupView("typing");
-    if (!textInputDetected) {
-      textInputDetected = true;
-      onStartTextInput();
+    cancelRecoder();
+  };
+
+  const cancelRecoder = () => {
+    if (!forceCancelRecoder) {
+      forceCancelRecoder = true;
+      onExternalInput();
     }
   };
 
-  const onStartTextInput = async () => {
+  const onExternalInput = async () => {
     await browser.runtime.sendMessage({ type: "microphoneStopped" });
     recorder.cancel(); // not sure if this is working as expected?
   };
@@ -451,8 +454,8 @@ export const PopupController = function() {
     };
     recorder.onEnd = json => {
       clearInterval(recorderIntervalId);
-      if (textInputDetected) {
-        // The recorder ended because it was cancelled when typing began
+      if (forceCancelRecoder) {
+        // The recorder ended because it was cancelled when typing began or timer has ended
         return;
       }
       setPopupView("success");
@@ -553,7 +556,7 @@ export const PopupController = function() {
     setFeedback(feedback);
     pendingFeedback = feedback;
     // This cancels the voice input:
-    onStartTextInput();
+    onExternalInput();
     if (feedback.rating === 1) {
       setPopupView("feedbackThanks");
       sendFeedback(feedback);
