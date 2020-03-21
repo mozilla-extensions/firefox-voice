@@ -153,8 +153,10 @@ export class IntentContext {
 
   async createTabGoogleLucky(query, options = {}) {
     const searchUrl = searching.googleSearchUrl(query, true);
-    const tab = !!options.youtubeTabId && options.youtubeTabId > -1? 
-    await browserUtil.loadUrl(options.youtubeTabId,searchUrl) : await this.createTab({ url: searchUrl });
+    const tab =
+      !!options.youtubeTabId && options.youtubeTabId > -1
+        ? await browserUtil.loadUrl(options.youtubeTabId, searchUrl)
+        : await this.createTab({ url: searchUrl });
     if (options.hide && !buildSettings.android) {
       await browser.tabs.hide(tab.id);
     }
