@@ -13,6 +13,7 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
+import * as intentParser from "./intentParser.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
@@ -91,6 +92,18 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     // FIXME: consider focusing the window too
     browserUtil.makeTabActive(recorderTabId || sender.tab.id);
     return null;
+  } else if (message.type === "getRegisteredNicknames") {
+    return intentRunner.getRegisteredNicknames();
+  } else if (message.type === "registerNickname") {
+    let context = message.context;
+    if (context !== null) {
+      context = new intentRunner.IntentContext(context);
+    }
+    return intentRunner.registerNickname(message.name, context);
+  } else if (message.type === "parseUtterance") {
+    return new intentRunner.IntentContext(
+      intentParser.parse(message.utterance, message.disableFallback)
+    );
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
@@ -103,11 +116,8 @@ export function inDevelopment() {
   return _inDevelopment || false;
 }
 
-let _extensionTemporaryInstall;
+let _extensionTemporaryInstall = buildSettings.inDevelopment;
 export function extensionTemporaryInstall() {
-  if (_extensionTemporaryInstall === undefined) {
-    throw new Error("Temporary installation status not yet established");
-  }
   return _extensionTemporaryInstall;
 }
 
@@ -118,6 +128,8 @@ const temporaryInstallId = setTimeout(() => {
   if (_extensionTemporaryInstall === undefined) {
     _extensionTemporaryInstall = false;
   }
+
+  _inDevelopment = buildSettings.inDevelopment;
 }, 5000);
 
 browser.runtime.onInstalled.addListener(details => {

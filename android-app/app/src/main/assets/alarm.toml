@@ -1,0 +1,35 @@
+[alarm.setAbsolute]
+description = "Set an alarm for the specified time"
+match = """
+  set alarm (for|to) [hour:number]
+  set alarm (for|to) [hour:number] a.m [period=am]
+  set alarm (for|to) [hour:number] p.m [period=pm]
+  set alarm (for|to) [time:time]
+  set alarm (for|to) [time:time] a.m [period=am]
+  set alarm (for|to) [time:time] p.m [period=pm]
+  set alarm (for|to) (12|) noon [period=noon]
+  set alarm (for|to) (12|) midnight [period=midnight]
+"""
+
+[[alarm.setAbsolute.example]]
+phrase = "Set alarm for 11:50 am"
+
+[[alarm.setAbsolute.example]]
+phrase = "Set alarm for 1"
+
+[[alarm.setAbsolute.example]]
+phrase = "Set alarm for midnight"
+
+[alarm.setRelative]
+description = "Set an alarm for the specified offset from the current time"
+match = """
+  set alarm (for|to| ) [hour:number] (hours|hour) from now
+  set alarm (for|to| ) [minute:number] (minutes|minute) from now
+  set alarm (for|to| ) [hour:number] (hours|hour) [minute:number] (minutes|minute) from now
+"""
+
+[[alarm.setRelative.example]]
+phrase = "Set alarm for 1 hour from now"
+
+[[alarm.setRelative.example]]
+phrase = "Set alarm 90 minutes from now"
