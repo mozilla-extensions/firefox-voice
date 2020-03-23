@@ -192,6 +192,33 @@ this.dictationContentScript = (function() {
     return focusDirection(-1);
   });
 
+  communicate.register("turnSelectionIntoLink", async message => {
+    const url = message.url;
+    const text = message.text;
+    let el;
+    if (!isPasteable(document.activeElement)) {
+      for (const selector of PASTE_SELECTORS) {
+        el = document.querySelector(selector);
+        if (el && isInViewport(el)) {
+          break;
+        }
+      }
+    } else {
+      el = document.activeElement;
+    }
+    while (el) {
+      if (el.hasAttribute("contenteditable")) {
+        replaceSelectedText(text, url);
+        break;
+      } else if (el.tagName === "TEXTAREA" || el.tagName === "INPUT") {
+        const markdownLink = `[${text}](${url})`;
+        replaceSelectedText(text, markdownLink);
+        break;
+      }
+      el = el.parentNode;
+    }
+  });
+
   function focus(element) {
     element.focus();
     highlightElement(element);
@@ -232,5 +259,23 @@ this.dictationContentScript = (function() {
     // The active element isn't in the list, probably it's something that we dont'
     // think of as "editable"
     focus(elements[0]);
+  }
+
+  function replaceSelectedText(text, url) {
+    let sel, range;
+    if (window.getSelection) {
+      sel = window.getSelection();
+      if (sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+        const anchor = document.createElement("a");
+        anchor.textContent = text;
+        anchor.href = url;
+        range.insertNode(anchor);
+      }
+    } else if (document.selection && document.selection.createRange) {
+      range = document.selection.createRange();
+      range.text = text;
+    }
   }
 })();
