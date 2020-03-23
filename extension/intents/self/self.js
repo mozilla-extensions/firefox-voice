@@ -11,7 +11,19 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    await browserUtil.openOrActivateTab("/views/lexicon.html");
+    const imageCard = '../../assets/images/'
+    const card = {
+      answer: {
+        largeText: `${numOfOpenTabs}`,
+        text: "Open tabs",
+        eduText: `Click mic and say "gather all Google tabs"`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
   },
 });
 
