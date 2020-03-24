@@ -41,7 +41,7 @@ match = """
 """
 
 [[clipboard.copyMarkdownLink.example]]
-phrase = "Copy Markdown link"
+phrase = "Find spaghetti on page"
 
 [clipboard.copyRichLink]
 description = "Copies the HTML title and link"
