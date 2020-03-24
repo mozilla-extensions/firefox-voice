@@ -59,6 +59,7 @@ phrase = "What can I do?"
 
 [[self.openLexicon.example]]
 phrase = "what should I do"
+test = true
 
 [self.openOptions]
 description = "Opens the options page"
