@@ -175,16 +175,21 @@ body,
   padding-top: 25px;
   font-weight: bold;
 }
-
+.padding-bottom-35{
+  padding-bottom: 35px;
+}
 .results-image {
   width: 100px;
   height: auto;
-  padding-bottom: 35px;
 }
 
 .results-largeText {
   font-size: 72px;
-  padding-bottom: 35px;
+}
+
+.results-mediumText {
+  font-size: 25px;
+  padding-bottom: 2px;
 }
 
 .results-text {

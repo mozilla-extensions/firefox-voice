@@ -11,10 +11,12 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    const imageCard = '../../assets/images/hello-card.jpg'
+    context.keepPopup();
+    const imageCard = '../../assets/images/hello-card.jpg';
     const card = {
       answer: {
-        largeText: `${imageCard}`,
+        imgSrc: `${imageCard}`,
+        alt: 'lionel richie',
         text: "Is it me you're looking for?",
         eduText: `Click mic and say 'help' for things to say`,
       },

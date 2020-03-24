@@ -605,7 +605,7 @@ const SearchResultsContent = ({
     <div className="results-set">
       {card.answer.imgSrc ? (
         <img
-          className="results-image"
+          className="results-image padding-bottom-35"
           src={card.answer.imgSrc}
           alt={card.answer.alt}
         />
@@ -613,9 +613,9 @@ const SearchResultsContent = ({
       <div className="results-text">
         <em>
           {card.answer.largeText ? (
-            <div className="results-largeText">{card.answer.largeText}</div>
+            <div className="results-largeText padding-bottom-35">{card.answer.largeText}</div>
           ) : null}
-          <div>{card.answer.text}</div>
+          <div className="results-mediumText">{card.answer.text}</div>
         </em>
       </div>
     </div>
