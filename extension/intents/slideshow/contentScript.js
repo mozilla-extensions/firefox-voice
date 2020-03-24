@@ -17,7 +17,8 @@ this.slideshowScript = (function() {
 
       switch (element.tagName) {
         case "VIDEO": {
-          thumbnailElement.className = "fv-image-thumbnail-container fv-thumbnail";
+          thumbnailElement.className =
+            "fv-image-thumbnail-container fv-thumbnail";
 
           thumbnail = iframeDoc.createElement(element.tagName);
           thumbnail.className = "fv-image-thumbnail";
@@ -31,7 +32,8 @@ this.slideshowScript = (function() {
           break;
         }
         case "IMG": {
-          thumbnailElement.className = "fv-image-thumbnail-container fv-thumbnail";
+          thumbnailElement.className =
+            "fv-image-thumbnail-container fv-thumbnail";
 
           thumbnail = iframeDoc.createElement(element.tagName);
           thumbnail.className = "fv-image-thumbnail";
@@ -42,7 +44,8 @@ this.slideshowScript = (function() {
           break;
         }
         case "IFRAME": {
-          thumbnailElement.className = "fv-iframe-thumbnail-container fv-thumbnail";
+          thumbnailElement.className =
+            "fv-iframe-thumbnail-container fv-thumbnail";
 
           iframeBlocker = iframeDoc.createElement("div");
           iframeBlocker.style.position = "absolute";
@@ -110,7 +113,9 @@ this.slideshowScript = (function() {
       const iframeLink = iframeDoc.createElement("link");
       iframeLink.type = "text/css";
       iframeLink.rel = "stylesheet";
-      iframeLink.href = browser.runtime.getURL("intents/slideshow/contentScript.css");
+      iframeLink.href = browser.runtime.getURL(
+        "intents/slideshow/contentScript.css"
+      );
       iframeDoc.head.appendChild(iframeLink);
 
       // containers for slideshow and gallery
