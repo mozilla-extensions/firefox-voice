@@ -95,6 +95,10 @@ phrase = "open top for me"
 test = true
 
 [[tabs.open.example]]
+phrase = "create tab"
+test = true
+
+[[tabs.open.example]]
 phrase = "open the tab"
 test = true
 
