@@ -5,9 +5,7 @@ package mozilla.voice.assistant.language
  * base-ten digits. This could be modified in the future to optionally match
  * other types of numbers.
  */
-class NumberPattern(
-    // Add options for different types of numbers if needed
-) : Pattern {
+class NumberPattern : Pattern {
     override fun matchUtterance(match: MatchResult): List<MatchResult> =
         if (match.utteranceExhausted() || !NATURAL_NUM_REGEX.matches(match.utteranceWord().toSource())) {
             emptyList()
