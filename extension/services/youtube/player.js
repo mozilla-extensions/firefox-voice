@@ -4,21 +4,33 @@ this.player = (function() {
   class Player extends helpers.Runner {
     constructor() {
       super();
-      this.isChannelOrUser();
+      this.isChannelOrUserOrPlaylist();
     }
 
-    isChannelOrUser() {
-      const baseURI = this.querySelectorAll("video")[0].baseURI;
-      const isChannel =
-        /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
-      if (isChannel) {
-        this.videoPlayer = "ytd-channel-video-player-renderer video";
-        this.selector = "ytd-channel-video-player-renderer";
-      } else {
-        this.videoPlayer =
-          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH'] video";
-        this.selector =
-          "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH']";
+    isChannelOrUserOrPlaylist() {
+      try {
+        if (this.querySelector("ytd-miniplayer video")) {
+          this.videoPlayer = "ytd-miniplayer video";
+          this.selector = ".miniplayer .ytp-miniplayer-controls";
+          return;
+        }
+      } catch (e) {
+        log.info(e);
+      }
+
+      if (this.querySelectorAll("video") && this.querySelectorAll("video")[0] && this.querySelectorAll("video")[0].baseURI) {
+        const baseURI = this.querySelectorAll("video")[0].baseURI;
+        const isChannel =
+          /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
+        if (isChannel) {
+          this.videoPlayer = "ytd-channel-video-player-renderer video";
+          this.selector = "ytd-channel-video-player-renderer";
+        } else {
+          this.videoPlayer =
+            "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH'] video";
+          this.selector =
+            "ytd-player[context='WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH']";
+        }
       }
     }
 
@@ -33,7 +45,7 @@ this.player = (function() {
         return;
       }
       const button = this.querySelector(
-        `${this.selector} button.ytp-large-play-button[aria-label^='Play']`
+        `${this.selector} button[aria-label='Play (k)']`
       );
       button.click();
     }
@@ -44,7 +56,7 @@ this.player = (function() {
         return;
       }
       const button = this.querySelector(
-        `${this.selector} button.ytp-play-button[aria-label^='Pause']`
+        `${this.selector} button[aria-label='Pause (k)']`
       );
       button.click();
     }
@@ -58,6 +70,11 @@ this.player = (function() {
         throw new Error("Unexpected direction");
       }
       const button = this.querySelector(`${this.selector} .ytp-next-button`);
+      button.click();
+    }
+
+    action_playAlbum() {
+      const button = this.querySelectorAll("ytd-playlist-renderer a")[0];
       button.click();
     }
   }
