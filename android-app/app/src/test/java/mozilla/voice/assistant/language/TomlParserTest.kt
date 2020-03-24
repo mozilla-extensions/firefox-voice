@@ -1,6 +1,6 @@
 package mozilla.voice.assistant.language
 
-import java.lang.IllegalArgumentException
+import mozilla.voice.assistant.intents.TomlException
 import mozilla.voice.assistant.intents.TomlParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -146,7 +146,7 @@ class TomlParserTest {
             try {
                 parser.getString(it)
                 fail("parser.getString('$it') should have thrown an error")
-            } catch (e: IllegalArgumentException) {
+            } catch (e: TomlException) {
                 // expected
             }
         }

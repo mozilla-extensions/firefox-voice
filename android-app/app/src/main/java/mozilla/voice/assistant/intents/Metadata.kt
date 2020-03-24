@@ -25,16 +25,16 @@ class Metadata(context: Context) {
 
     internal fun getDescription(intentName: String) =
         parser.getString(intentName, "description")
-            ?: throw Error("Unable to get description for $intentName")
+            ?: throw TomlException("Unable to get description for $intentName")
 
     internal fun getExamples(intentName: String): List<String> =
         parser.getStrings("$intentName.example", "phrase")
             ?: parser.getStrings("$intentName.examples", "phrase")
-            ?: throw Error("Unable to get examples for $intentName")
+            ?: throw TomlException("Unable to get examples for $intentName")
 
     internal fun getPhrases(intentName: String): List<String> =
         parser.getString(intentName, "match")?.trim()?.split('\n', '\r')
-            ?: throw Error("Unable to get phrases for $intentName")
+            ?: throw TomlException("Unable to get phrases for $intentName")
 
     private fun buildAppMap(context: Context): Map<String, String> =
         context.packageManager.let { pm ->

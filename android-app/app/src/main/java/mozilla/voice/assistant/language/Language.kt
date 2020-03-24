@@ -3,11 +3,12 @@ package mozilla.voice.assistant.language
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import java.lang.IllegalArgumentException
+import mozilla.voice.assistant.intents.TomlException
 
 private fun <K, V> MutableMap<K, MutableList<V>>.add(key: K, value: V) =
     this[key]?.run {
         if (this.contains(value)) {
-            throw Error("Redundant attempt to add $key -> $value")
+            throw IllegalArgumentException("Redundant attempt to add $key -> $value")
         }
         add(value)
     } ?: set(key, mutableListOf(value))
@@ -40,8 +41,8 @@ class Language(context: Context) {
                         when (section) {
                             "aliases" -> addAlias(line)
                             "stopwords" -> addStopwords(line)
-                            null -> throw Error("Data encountered before section heading")
-                            else -> throw Error("Unexpected section $section")
+                            null -> throw TomlException("Data encountered before section heading")
+                            else -> throw TomlException("Unexpected section $section")
                         }
                     }
                 }
