@@ -13,7 +13,7 @@ phrase = "next"
 test = true
 
 [[search.next.example]]
-phrase = "next result result"
+phrase = "next result"
 test = true
 
 [[search.next.example]]
