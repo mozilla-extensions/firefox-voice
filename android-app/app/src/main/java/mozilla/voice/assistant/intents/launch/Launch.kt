@@ -23,6 +23,7 @@ class Launch {
             pr.slots[APP_KEY]?.let {
                 context?.packageManager?.getLaunchIntentForPackage(
                     metadata.getPackageForAppName(it)
+                        ?: throw Error("Unable to find app $it")
                 )
             }
     }
