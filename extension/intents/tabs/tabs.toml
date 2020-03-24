@@ -205,7 +205,7 @@ phrase = "Reset zoom"
 [tabs.previous]
 description = "Go to a previously active tab"
 match = """
-  (Go | switch | change | activate |) (the | my |) previous tab
+  (Go | switch | change | activate |) (to |) (the | my |) previous tab
 """
 
 [[tabs.previous.example]]
