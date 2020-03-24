@@ -1,16 +1,23 @@
 .fv-lightbox-container {
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 100;
+  background-color: rgba(37, 17, 17, 0.8);
+  z-index: 10;
   position: fixed;
   top: 0;
   left: 0;
   display: block;
 }
 
+.fv-gallery-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: rgb(38, 38, 39);
+}
+
 .fv-slideshow-container {
-  display: flex;
+  display: none;
   position: relative;
   height: 100%;
   width: 100%;
@@ -28,7 +35,7 @@
   position: fixed;
   top: 0;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
 }
 
@@ -65,8 +72,78 @@
   text-decoration: none;
 }
 
+.fv-close {
+  padding: 12px;
+}
+
+.fv-view-gallery, 
+.fv-view-slide {
+  cursor: pointer;
+  width: auto;
+  padding: 2px 10px;
+  color: white;
+  font-size: 24px;
+  transition: 0.6s ease;    
+  user-select: none;
+  display: table-cell;
+  float: left;
+  vertical-align: middle;
+}
+
+.fv-view-slide {
+  font-size: 28px;
+}
+
+.fv-view-gallery{
+  padding: 5px 10px;
+}
+
 .fv-next:hover,
 .fv-prev:hover,
-.fv-close:hover {
+.fv-close:hover,
+.fv-view-gallery:hover, 
+.fv-view-slide:hover {
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.fv-thumbnail-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 0.5fr));
+  grid-auto-rows: minmax(10vw, 15vw);
+  gap: 10px;
+  z-index: 2;
+  margin: 16px;
+  justify-content: center;
+}
+
+.fv-image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  
+  cursor: pointer;
+}
+
+.fv-thumbnail {
+  background-color: dimgray;
+  border: 2px solid whitesmoke;
+}
+
+.fv-thumbnail:hover {
+  background-color: rgb(224, 212, 212);
+  border: 10px solid whitesmoke;;
+}
+
+.fv-iframe-thumbnail-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25%;
+}
+
+.fv-iframe-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }

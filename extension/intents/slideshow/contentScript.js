@@ -3,10 +3,90 @@
 this.slideshowScript = (function() {
   let slideElements = [];
   let currentSlideIndex = 0;
+  const galleryElements = [];
   let iframeContainer, slideContainer, iframeDoc;
+  let iframeBlocker, galleryContainer, slideshowContainer;
 
   const videoSources = ["youtube.com", "vimeo.com"];
   buildSlideStructure();
+
+  function buildThumbnailGallery() {
+    let thumbnailElement, thumbnail;
+    slideElements.forEach(function(element, index) {
+      thumbnailElement = iframeDoc.createElement("div");
+
+      switch (element.tagName) {
+        case "VIDEO": {
+          thumbnailElement.className = "fv-image-thumbnail-container fv-thumbnail";
+
+          thumbnail = iframeDoc.createElement(element.tagName);
+          thumbnail.className = "fv-image-thumbnail";
+          thumbnail.setAttribute("src", element.getAttribute("src"));
+          if (element.hasAttribute("poster")) {
+            thumbnail.setAttribute("poster", element.getAttribute("poster"));
+          }
+          thumbnail.setAttribute("data-thumb-index", index);
+          thumbnail.addEventListener("click", thumbnailClick);
+
+          break;
+        }
+        case "IMG": {
+          thumbnailElement.className = "fv-image-thumbnail-container fv-thumbnail";
+
+          thumbnail = iframeDoc.createElement(element.tagName);
+          thumbnail.className = "fv-image-thumbnail";
+          thumbnail.setAttribute("src", element.getAttribute("src"));
+          thumbnail.setAttribute("data-thumb-index", index);
+          thumbnail.addEventListener("click", thumbnailClick);
+
+          break;
+        }
+        case "IFRAME": {
+          thumbnailElement.className = "fv-iframe-thumbnail-container fv-thumbnail";
+
+          iframeBlocker = iframeDoc.createElement("div");
+          iframeBlocker.style.position = "absolute";
+          iframeBlocker.style.top = 0;
+          iframeBlocker.style.left = 0;
+          iframeBlocker.style.zIndex = 2;
+          iframeBlocker.style.width = "100%";
+          iframeBlocker.style.height = "100%";
+          iframeBlocker.setAttribute("data-thumb-index", index);
+          iframeBlocker.addEventListener("click", thumbnailClick);
+          iframeBlocker.style.cursor = "pointer";
+          thumbnailElement.append(iframeBlocker);
+
+          thumbnail = iframeDoc.createElement(element.tagName);
+          thumbnail.className = "fv-iframe-thumbnail";
+          thumbnail.setAttribute("src", element.getAttribute("src"));
+
+          break;
+        }
+      }
+
+      thumbnailElement.append(thumbnail);
+      galleryElements.push(thumbnailElement);
+    });
+  }
+
+  // event handler to switch from selected thumbnail to slide
+  function thumbnailClick(event) {
+    event.preventDefault();
+    const thumbIndex = parseInt(event.target.dataset.thumbIndex, 10);
+    showSlide(thumbIndex);
+    toggleGallery();
+  }
+
+  // toggle between gallery and slide
+  function toggleGallery(event) {
+    if (!event || event.target.className === "fv-view-slide") {
+      galleryContainer.style.display = "none";
+      slideshowContainer.style.display = "flex";
+    } else if (event.target.className === "fv-view-gallery") {
+      galleryContainer.style.display = "block";
+      slideshowContainer.style.display = "none";
+    }
+  }
 
   function buildSlideStructure() {
     // create iframe element
@@ -23,20 +103,33 @@ this.slideshowScript = (function() {
     document.body.appendChild(iframeContainer);
 
     iframeContainer.addEventListener("load", function() {
+      // contentWindow is first accessible here
       iframeDoc = iframeContainer.contentWindow.document;
 
+      // add css file link in header
       const iframeLink = iframeDoc.createElement("link");
       iframeLink.type = "text/css";
       iframeLink.rel = "stylesheet";
       iframeLink.href = browser.runtime.getURL("intents/slideshow/contentScript.css");
       iframeDoc.head.appendChild(iframeLink);
 
+      // containers for slideshow and gallery
       const lightboxElement = document.createElement("div");
       lightboxElement.className = "fv-lightbox-container";
 
-      const slideshowContainer = iframeDoc.createElement("div");
+      // slideshow container
+      slideshowContainer = iframeDoc.createElement("div");
       slideshowContainer.className = "fv-slideshow-container";
 
+      // gallery container
+      galleryContainer = iframeDoc.createElement("div");
+      galleryContainer.className = "fv-gallery-container";
+
+      // thumbnail gallery
+      const thumbnailGallery = document.createElement("div");
+      thumbnailGallery.className = "fv-thumbnail-gallery";
+
+      // navigation bar
       const navbar = iframeDoc.createElement("div");
       navbar.className = "fv-navbar";
 
@@ -55,22 +148,49 @@ this.slideshowScript = (function() {
       tagNext.textContent = String.fromCharCode(10095);
       tagNext.addEventListener("click", nextSlide);
 
+      const tagViewSlide = document.createElement("a");
+      tagViewSlide.className = "fv-view-slide";
+      tagViewSlide.textContent = String.fromCharCode(10696);
+      tagViewSlide.onclick = toggleGallery;
+
+      const tagViewGallery = document.createElement("a");
+      tagViewGallery.className = "fv-view-gallery";
+      tagViewGallery.textContent = String.fromCharCode(9638);
+      tagViewGallery.onclick = toggleGallery;
+
+      // images and video container
       slideContainer = iframeDoc.createElement("div");
       slideContainer.className = "fv-slide-image";
 
+      // putting it all together
       slideshowContainer.append(slideContainer);
 
+      navbar.appendChild(tagViewGallery);
+      navbar.appendChild(tagViewSlide);
       navbar.append(tagClose);
       navbar.append(tagNext);
       navbar.append(tagPrev);
 
+      galleryContainer.appendChild(thumbnailGallery);
+
       lightboxElement.append(navbar);
       lightboxElement.append(slideshowContainer);
+      lightboxElement.appendChild(galleryContainer);
 
       iframeDoc.body.append(lightboxElement);
 
+      // find images and videos on current tab
       slideElements = detectAllMedia();
 
+      // generate thumbnail gallery elements
+      buildThumbnailGallery();
+
+      // join gallery elements to build gallery
+      galleryElements.forEach(function(element) {
+        thumbnailGallery.append(element);
+      });
+
+      // make iframes responsive
       window.addEventListener("resize", function() {
         iframeContainer.height = document.documentElement.clientHeight;
         iframeContainer.width = document.documentElement.clientWidth;
@@ -135,6 +255,22 @@ this.slideshowScript = (function() {
           const vid = iframeDoc.createElement("video");
           vid.setAttribute("src", element.getAttribute("src"));
           vid.setAttribute("controls", true);
+          if (element.hasAttribute("poster")) {
+            vid.setAttribute("poster", element.getAttribute("poster"));
+          }
+          if (element.hasChildNodes()) {
+            element.childNodes.forEach(function(childElement) {
+              if (childElement.tagName === "SOURCE") {
+                const srcElement = iframeDoc.createElement("source");
+                srcElement.setAttribute("src", childElement.src);
+                if (childElement.hasAttribute("type")) {
+                  srcElement.setAttribute("type", childElement.type);
+                }
+
+                vid.appendChild(srcElement);
+              }
+            });
+          }
           slideElements.push(vid);
 
           break;
