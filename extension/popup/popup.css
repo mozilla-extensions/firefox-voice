@@ -181,6 +181,7 @@ body,
 .results-image {
   width: 100px;
   height: auto;
+  object-fit: fit
 }
 
 .results-largeText {
