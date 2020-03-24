@@ -11,12 +11,12 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    const imageCard = '../../assets/images/'
+    const imageCard = '../../assets/images/hello-card.jpg'
     const card = {
       answer: {
-        largeText: `${numOfOpenTabs}`,
-        text: "Open tabs",
-        eduText: `Click mic and say "gather all Google tabs"`,
+        largeText: `${imageCard}`,
+        text: "Is it me you're looking for?",
+        eduText: `Click mic and say 'help' for things to say`,
       },
     };
     await browser.runtime.sendMessage({
