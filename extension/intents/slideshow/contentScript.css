@@ -14,10 +14,11 @@
   height: 100%;
   overflow-y: scroll;
   background-color: rgb(38, 38, 39);
+  display: none;
 }
 
 .fv-slideshow-container {
-  display: none;
+  display: flex;
   position: relative;
   height: 100%;
   width: 100%;

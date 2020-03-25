@@ -118,6 +118,22 @@ this.slideshowScript = (function() {
 
       // contentWindow is first accessible here
       iframeDoc = iframeContainer.contentWindow.document;
+      iframeDoc.addEventListener("keyup", function(event) {
+        switch (event.key) {
+          case "ArrowLeft": {
+            previousSlide();
+            break;
+          }
+          case "ArrowRight": {
+            nextSlide();
+            break;
+          }
+          case "Escape" : {
+            hideSlideShow(null);
+            break;
+          }
+        }
+      });
 
       // add css file link in header
       const iframeLink = iframeDoc.createElement("link");
@@ -152,26 +168,31 @@ this.slideshowScript = (function() {
       tagClose.className = "fv-close";
       tagClose.textContent = String.fromCharCode(0x274c);
       tagClose.addEventListener("click", hideSlideShow);
+      tagClose.title = "Close Slideshow";
 
       const tagPrev = iframeDoc.createElement("a");
       tagPrev.className = "fv-prev";
       tagPrev.textContent = String.fromCharCode(10094);
       tagPrev.addEventListener("click", previousSlide);
+      tagPrev.title = "Previous Slide";
 
       const tagNext = iframeDoc.createElement("a");
       tagNext.className = "fv-next";
       tagNext.textContent = String.fromCharCode(10095);
       tagNext.addEventListener("click", nextSlide);
+      tagNext.title = "Next Slide";
 
       const tagViewSlide = document.createElement("a");
       tagViewSlide.className = "fv-view-slide";
       tagViewSlide.textContent = String.fromCharCode(10696);
       tagViewSlide.onclick = toggleGallery;
+      tagViewSlide.title = "View Slide";
 
       const tagViewGallery = document.createElement("a");
       tagViewGallery.className = "fv-view-gallery";
       tagViewGallery.textContent = String.fromCharCode(9638);
       tagViewGallery.onclick = toggleGallery;
+      tagViewGallery.title = "View Gallery";
 
       // images and video container
       slideContainer = iframeDoc.createElement("div");
@@ -226,7 +247,7 @@ this.slideshowScript = (function() {
   }
 
   function hideSlideShow(event) {
-    if (event.target.className === "fv-close") {
+    if (event === null || event.target.className === "fv-close") {
       iframeContainer.style.display = "none";
       swapSlide();
     }
@@ -235,6 +256,7 @@ this.slideshowScript = (function() {
   function revealSlideshow() {
     swapSlide(slideElements[0]);
     iframeContainer.style.display = "block";
+    iframeContainer.focus();
   }
 
   function isVideoSourceUrl(url) {
