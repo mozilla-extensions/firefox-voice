@@ -2,17 +2,15 @@ package mozilla.voice.assistant.intents
 
 import java.util.Calendar
 import mozilla.voice.assistant.intents.alarm.Alarm
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 class AlarmTest {
     private val calendar330PM = Calendar.getInstance()
 
-    @Before
+    @BeforeEach
     fun setup() {
         calendar330PM.set(Calendar.HOUR_OF_DAY, 15)
         calendar330PM.set(Calendar.MINUTE, 30)

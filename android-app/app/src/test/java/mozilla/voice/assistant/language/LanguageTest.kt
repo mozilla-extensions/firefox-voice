@@ -1,30 +1,28 @@
 package mozilla.voice.assistant.language
 
 import android.content.Context
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
+import io.mockk.every
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockKExtension::class)
 class LanguageTest {
     private lateinit var language: Language
 
     companion object {
         fun getLanguage(): Language {
-            val context = mock(Context::class.java)
-            `when`(context.assets).thenReturn(null)
+            val context = mockk<Context>()
+            every { context.assets } returns null
             return Language(context)
         }
     }
 
-    @Before
+    @BeforeEach
     fun reset() {
         language = getLanguage()
     }
@@ -39,11 +37,22 @@ class LanguageTest {
         assertFalse(language.isStopword("bar"))
     }
 
+    @Test
+    fun testRemoveStopwords() {
+        language.addStopwords("please show me the")
+        listOf(
+            "please please show me the washington post",
+            "washington show post",
+            "washington post please show me"
+        ).map {
+            assertEquals("washington post", language.stripStopwords(it))
+        }
+    }
+
     private fun testFailingAlias(alias: String) {
-        try {
+        assertThrows(java.lang.IllegalArgumentException::class.java) {
             language.addAlias(alias)
-            fail("There should have been an error when this was passed to addAlias(): $alias")
-        } catch (_: IllegalArgumentException) {}
+        }
     }
 
     @Test

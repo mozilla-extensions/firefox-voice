@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         val language = Language(this)
-        val metadata = Metadata(this)
+        val metadata = Metadata(this, language)
         val compiler = Compiler(metadata, language)
         intentRunner = IntentRunner(compiler)
     }

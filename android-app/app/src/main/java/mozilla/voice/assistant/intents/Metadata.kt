@@ -3,17 +3,23 @@ package mozilla.voice.assistant.intents
 import android.content.Context
 import android.content.Intent
 import java.util.Locale
+import mozilla.voice.assistant.language.Language
 
-class Metadata(context: Context) {
+class Metadata(context: Context, private val language: Language) {
     private val parser = TomlParser()
-    private val appMap: Map<String, String>
+    private val appMap: Map<String, String> // app names -> package names
+    private val unstoppedAppMap: Map<String, String> // app names w/o stop words -> package names
     internal fun getAppNames() = appMap.keys
-    internal fun getPackageForAppName(appName: String) =
-        appMap[appName.toLowerCase(Locale.getDefault())]
+
+    internal fun getPackageForAppName(appName: String): String? {
+        val lower = appName.toLowerCase(Locale.getDefault())
+        return appMap[lower] ?: unstoppedAppMap[lower]
+    }
 
     init {
         // Determine which apps are installed, in order to set entity appNames.
         appMap = buildAppMap(context)
+        unstoppedAppMap = appMap.mapKeys { language.stripStopwords(it.key) }
 
         // Read in each intent's .toml file.
         context.assets?.list("")?.forEach {

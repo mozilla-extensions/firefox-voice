@@ -1,17 +1,14 @@
 package mozilla.voice.assistant.language
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(JUnit4::class)
 class WildcardTest {
     private lateinit var language: Language
 
-    @Before
+    @BeforeEach
     fun setup() {
         language = LanguageTest.getLanguage()
     }

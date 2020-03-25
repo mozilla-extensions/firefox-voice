@@ -19,6 +19,15 @@ class Language(context: Context) {
         mutableMapOf()
     private val stopwords: MutableSet<String> = mutableSetOf()
 
+    // stopwordsRegex is initialized when stripStopwords() is first called,
+    // so no new stopwords should be added after the first call. Initialization
+    // is not done in init because tests might call addStopwords() after init has run.
+    private var stopwordsRegexInitialized = false
+    private val stopwordsRegex: Regex by lazy {
+        stopwordsRegexInitialized = true
+        Regex(stopwords.joinToString(separator = "|"))
+    }
+
     internal fun getAliases(s: String): List<String>? = aliases[s]
     internal fun getMultiwordAliases(s: String): List<List<String>>? = multiwordAliases[s]
     internal fun isStopword(word: String) = stopwords.contains(word)
@@ -51,8 +60,14 @@ class Language(context: Context) {
 
     @VisibleForTesting
     internal fun addStopwords(line: String) {
-        line.trim().split(spacesRegex).forEach() { stopwords.add(it) }
+        require(!stopwordsRegexInitialized)
+        line.trim().split(spacesRegex).forEach { stopwords.add(it) }
     }
+
+    internal fun stripStopwords(s: String) =
+        s.replace(stopwordsRegex, "")
+            .replace(spacesRegex, " ")
+            .trim()
 
     @VisibleForTesting
     internal fun addAlias(line: String) {

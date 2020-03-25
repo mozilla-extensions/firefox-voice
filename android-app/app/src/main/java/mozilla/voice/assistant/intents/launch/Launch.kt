@@ -1,6 +1,7 @@
 package mozilla.voice.assistant.intents.launch
 
 import android.content.Context
+import android.util.Log
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.ParseResult
 
@@ -23,10 +24,11 @@ class Launch {
             pr.slots[APP_KEY]?.let {
                 context?.packageManager?.getLaunchIntentForPackage(
                     metadata.getPackageForAppName(it)
-                        ?: throw Error("Unable to find app $it")
-                )
+                ) ?: let {
+                    // This should happen only if the app was uninstalled after this one started up.
+                    Log.e("Launch", "Unable to find package for app named $it")
+                    null
+                }
             }
     }
 }
-
-fun String?.toModeSuffix() = if (this.isNullOrEmpty()) "" else "&mode=$this"
