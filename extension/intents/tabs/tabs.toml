@@ -318,5 +318,5 @@ match = """
 phrase = "Find Spaghetti"
 
 [[tabs.findspaghetti.example]]
-phrase = "Find Spaghetti page"
+phrase = "Find Spaghetti on page"
 test = true
