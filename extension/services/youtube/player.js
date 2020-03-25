@@ -71,14 +71,14 @@ this.player = (function() {
       const volumeSliderHandle = this.querySelector(
         `${this.selector} .ytp-volume-slider-handle`
       );
-      let vol = ytVideo.volume;
+      let volumeNow = ytVideo.volume;
       let ariaValueNow = parseInt(volumePanel.getAttribute("aria-valuenow"));
       let volumeSliderValue = ariaValueNow / 2.5;
 
-      if (level === "levelUp" && vol < 1.0) {
-        vol = vol <= maxVolume - 0.2 ? vol + 0.2 : maxVolume;
-        ytVideo.volume = vol;
-        ariaValueNow = Math.round(vol / 0.01);
+      if (level === "levelUp" && volumeNow < 1.0) {
+        volumeNow = volumeNow <= maxVolume - 0.2 ? volumeNow + 0.2 : maxVolume;
+        ytVideo.volume = volumeNow;
+        ariaValueNow = Math.round(volumeNow / 0.01);
         volumeSliderValue = ariaValueNow / 2.5;
 
         ytVideo.onvolumechange = () => {
@@ -86,10 +86,10 @@ this.player = (function() {
           volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
           volumeSliderHandle.style.left = `${volumeSliderValue}px`;
         };
-      } else if (level === "levelDown" && vol > 0.0) {
-        vol = vol >= minVolume + 0.2 ? vol - 0.2 : minVolume;
-        ytVideo.volume = vol;
-        ariaValueNow = Math.round(vol / 0.01);
+      } else if (level === "levelDown" && volumeNow > 0.0) {
+        volumeNow = volumeNow >= minVolume + 0.2 ? volumeNow - 0.2 : minVolume;
+        ytVideo.volume = volumeNow;
+        ariaValueNow = Math.round(volumeNow / 0.01);
         volumeSliderValue = ariaValueNow / 2.5;
 
         ytVideo.onvolumechange = () => {
@@ -100,17 +100,15 @@ this.player = (function() {
       }
     }
 
-    getVolume() {
+    isMuted() {
       const volumePanel = document.querySelector(".ytp-volume-panel");
-      const vol = parseInt(volumePanel.getAttribute("aria-valuenow"));
-      const isMuted =
+      const muted =
         volumePanel.getAttribute("aria-valuetext").match(/muted/) !== null;
-
-      return isMuted ? 0 : vol;
+      return muted ? 0 : 1;
     }
 
     action_mute() {
-      if (this.getVolume()) {
+      if (this.isMuted()) {
         const muteButton = this.querySelector(
           `${this.selector} .ytp-mute-button[aria-label^='Mute']`
         );
@@ -119,7 +117,7 @@ this.player = (function() {
     }
 
     action_unmute() {
-      if (!this.getVolume()) {
+      if (!this.isMuted()) {
         const unmuteButton = this.querySelector(
           `${this.selector} .ytp-mute-button[aria-label^='Unmute']`
         );
