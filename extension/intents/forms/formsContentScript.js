@@ -89,7 +89,11 @@ this.dictationContentScript = (function() {
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
         // eslint-disable-next-line no-unsanitized/property
-        el.innerHTML = insertString(el.innerHTML, quoteHtml(text), el.selectionStart);
+        el.innerHTML = insertString(
+          el.innerHTML,
+          quoteHtml(text),
+          el.selectionStart
+        );
       } else {
         el.value = insertString(el.value, text, el.selectionStart);
       }
