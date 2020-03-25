@@ -28,6 +28,19 @@ this.player = (function() {
           // There is no need to wait for this as there is only one selector
           minCount: 0,
         });
+
+        // playerButton onclick() listener is used to
+        // notify the clicking on card after clicking
+        // the playerButton.
+        // Clicking on the card shows
+        // songs in the playlist.
+        playerButton.onclick(() => {
+          return new Promise((res) => {
+            res(true);
+          });
+        });
+
+        // Clickng on PlayerButton.
         playerButton.click();
       }
     }
@@ -53,8 +66,13 @@ this.player = (function() {
       button.click();
     }
 
-    action_playAlbum({ query, thenPlay }) {
-      this.action_search({ query, thenPlay });
+    async action_playAlbum({ query, thenPlay }) {
+      await this.action_search({ query, thenPlay });
+
+      // Clicking on card to get into album playlist.
+      // Important: The selectors to be changed when spotify updates their website.
+      const cards = this.querySelectorAll("#searchPage .react-contextmenu-wrapper")[0];
+      cards.childNodes[3].click();
     }
   }
 
