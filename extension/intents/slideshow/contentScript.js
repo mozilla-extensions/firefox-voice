@@ -270,6 +270,21 @@ this.slideshowScript = (function() {
           } else {
             img.setAttribute("src", element.getAttribute("src"));
           }
+
+          // bypass jquery lazy-loading
+          if (/lazy/.test(element.className)) {
+            if (element.hasAttribute("data-lazy-src")) {
+              img.setAttribute("src", element.getAttribute("data-lazy-src"));
+            }
+            if (element.hasAttribute("data-src")) {
+              img.setAttribute("src", element.getAttribute("data-lazy-src"));
+            }
+          } else if (element.hasAttribute("data-lazy-src")) {
+            img.setAttribute("src", element.getAttribute("data-lazy-src"));
+          }
+
+
+
           slideElements.push(img);
 
           break;
