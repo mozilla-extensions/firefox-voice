@@ -45,3 +45,12 @@ match = """
 
 [[forms.focusPrevious.example]]
 phrase = "Focus previous field"
+
+[forms.turnSelectionIntoLink]
+description = "Turns the selected text into markdown or html link"
+match = """
+  turn (current |this |) selection (in |into) link
+"""
+
+[[forms.turnSelectionIntoLink.example]]
+phrase = "Turn selection into link"

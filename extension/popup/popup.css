@@ -170,6 +170,27 @@ body,
   padding: 1em 0 6em;
 }
 
+.results-set {
+  min-height: 100px;
+  padding-top: 25px;
+  font-weight: bold;
+}
+
+.results-image {
+  width: 100px;
+  height: auto;
+  padding-bottom: 35px;
+}
+
+.results-largeText {
+  font-size: 72px;
+  padding-bottom: 35px;
+}
+
+.results-text {
+  font-size: 1.5em;
+}
+
 #voice-input,
 #text-input,
 #search-results,
@@ -192,6 +213,7 @@ body,
   font-weight: 600;
   padding: 1.5rem 0;
   color: #800;
+  white-space: pre-wrap;
 }
 
 .typing #text-input-field {

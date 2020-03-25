@@ -54,7 +54,7 @@ Then in `extension/intents/someIntent/someIntent.js`:
 ```js
 import * as intentRunner from "../../background/intentRunner.js";
 
-intentRunner.register({
+intentRunner.registerIntent({
   name: "someIntent.command",
   async run(context) {
     // Run the command
@@ -91,7 +91,7 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Alternatives:** an example of alternatives is `(test | example)`. Or for example it could have been written `(a test | an example)`. This is also how _optional_ words are handled, with an empty alternative. For instance `the (best |) example` will match both `the best example` and `the example`.
 
-**Slots:** a slot is a wildcard, and puts the matched words in a named slot. E.g., `play [query]` puts everything after "play" into `content.slots.query`. The matcher tries to put as little text as necessary into a slot, so `play [query] (on |) the radio` will match `play something on the radio` with the `something` in the slot, even though `something on` would also match.
+**Slots:** a slot is a wildcard, and puts the matched words in a named slot. E.g., `play [query]` puts everything after "play" into `context.slots.query`. The matcher tries to put as little text as necessary into a slot, so `play [query] (on |) the radio` will match `play something on the radio` with the `something` in the slot, even though `something on` would also match.
 
 **Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `background/entityTypes.js` module. Right now this system isn't very extensible.
 

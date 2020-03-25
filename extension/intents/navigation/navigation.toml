@@ -140,7 +140,7 @@ expectSlots = {language = "French"}
 [navigation.followLink]
 description = "Follow the named link"
 match = """
-  (follow | click | click on | openlink) (link |) [query]
+  (follow | click | click on | openlink | clicklink) (link |) [query]
   (open | go to) link [query]
 """
 

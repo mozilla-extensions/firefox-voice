@@ -1,6 +1,8 @@
 [aliases]
 # Each item is a possible word we'll see in the transcript, and the "correct" version of
 # that word. I.e., if we see "open app" maybe the right transcription is "open tab"
+# Note if you have a combined word that should be separated (e.g., "clicklink" should be "click link")
+# that you'll need to put that into the pattern, and not here
 app = "tab"
 cat = "tab"
 tap = "tab"
@@ -18,6 +20,7 @@ haste = "paste"
 taste = "paste"
 pace = "paste"
 best = "paste"
+coffee = "copy"
 "down ward" = "downward"
 "up ward" = "upward"
 like = "link"

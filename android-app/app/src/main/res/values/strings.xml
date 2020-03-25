@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Mozilla Assistant</string>
+    <string name="initializing">One moment...</string>
+    <string name="listening">Listening</string>
+    <string name="processing">Processing</string>
+    <string name="got_it">One second...</string>
+    <string name="suggestion_prefix">You can say things like</string>
+    <string name="no_match">I didn\'t understand that. Try again.</string>
+    <string name="no_speech">I didn\'t catch that. Try again.</string>
+    <string-array name="sample_phrases">
+      <item>Translate \"ich bin ein berliner\" into English</item>
+      <item>How is sausage made?</item>
+      <item>Where can I get good Bratwurst in Berlin?</item>
+      <item>Who created breaking bad?</item>
+      <item>Who won the World Series game last night?</item>
+      <item>How deep is the Marianas Trench?</item>
+      <item>Weather in Flagstaff, Arizona</item>
+      <item>What\'s the temperature in San Antonio?</item>
+      <item>What time is it?</item>
+      <item>What time is it in Berlin?</item>
+      <item>How long will it take to get to Springfield?</item>
+      <item>How do I get to the hardware store?</item>
+      <item>Search for hiking in Denver</item>
+      <item>Look up The Book Thief on GoodReads</item>
+      <item>Search CSS grid on MDN</item>
+      <item>Go to the New York Times</item>
+      <item>Show me the 49ers schedule</item>
+      <item>Go to the Health section of the BBC</item>
+    </string-array>
+</resources>
