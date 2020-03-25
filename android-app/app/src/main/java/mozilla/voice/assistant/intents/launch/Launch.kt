@@ -21,9 +21,11 @@ class Launch {
             metadata: Metadata
         ) =
             pr.slots[APP_KEY]?.let {
-                context?.packageManager?.getLaunchIntentForPackage(
-                    metadata.getPackageForAppName(it)
-                )
+                metadata.getPackageForAppName(it)?.run {
+                    context?.packageManager?.getLaunchIntentForPackage(
+                        this
+                    )
+                }
             }
     }
 }
