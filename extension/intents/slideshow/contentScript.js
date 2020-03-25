@@ -101,7 +101,7 @@ this.slideshowScript = (function() {
     iframeContainer.style.position = "fixed";
     iframeContainer.style.top = 0;
     iframeContainer.style.left = 0;
-    iframeContainer.style.zIndex = 100;
+    iframeContainer.style.zIndex = 99999999999;
 
     document.body.appendChild(iframeContainer);
 
