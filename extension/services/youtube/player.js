@@ -104,11 +104,11 @@ this.player = (function() {
       const volumePanel = document.querySelector(".ytp-volume-panel");
       const muted =
         volumePanel.getAttribute("aria-valuetext").match(/muted/) !== null;
-      return muted ? 0 : 1;
+      return muted ? 1 : 0;
     }
 
     action_mute() {
-      if (this.isMuted()) {
+      if (!this.isMuted()) {
         const muteButton = this.querySelector(
           `${this.selector} .ytp-mute-button[aria-label^='Mute']`
         );
@@ -117,7 +117,7 @@ this.player = (function() {
     }
 
     action_unmute() {
-      if (!this.isMuted()) {
+      if (this.isMuted()) {
         const unmuteButton = this.querySelector(
           `${this.selector} .ytp-mute-button[aria-label^='Unmute']`
         );
