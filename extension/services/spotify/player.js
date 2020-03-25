@@ -35,7 +35,7 @@ this.player = (function() {
         // Clicking on the card shows
         // songs in the playlist.
         playerButton.onclick(() => {
-          return new Promise((res) => {
+          return new Promise(res => {
             res(true);
           });
         });
@@ -59,7 +59,7 @@ this.player = (function() {
       let selector;
       if (direction === "next") {
         selector = ".control-button[title='Next']";
-      } else if (direction === "previous") {
+      } else if (direction === "back") {
         selector = ".control-button[title='Previous']";
       }
       const button = this.querySelector(selector);
@@ -71,7 +71,9 @@ this.player = (function() {
 
       // Clicking on card to get into album playlist.
       // Important: The selectors to be changed when spotify updates their website.
-      const cards = this.querySelectorAll("#searchPage .react-contextmenu-wrapper")[0];
+      const cards = this.querySelectorAll(
+        "#searchPage .react-contextmenu-wrapper"
+      )[0];
       cards.childNodes[3].click();
     }
   }

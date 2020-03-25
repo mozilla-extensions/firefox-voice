@@ -24,11 +24,11 @@ description = "Go to the next or previous song on a service"
 match = """
   (play |) next video               [direction=next] [service=youtube]
   skip video                        [direction=next] [service=youtube]
-  (play |) previous video           [direction=previous] [service=youtube]
+  (play |) previous video           [direction=back] [service=youtube]
   play next (song | track |)        [direction=next]
   next (song | track)             [direction=next]
-  play previous (song | track |)    [direction=previous]
-  previous (song | track)         [direction=previous]
+  play previous (song | track |)    [direction=back]
+  previous (song | track)         [direction=back]
   (skip | forward) (song | track |) [direction=next]
 """
 

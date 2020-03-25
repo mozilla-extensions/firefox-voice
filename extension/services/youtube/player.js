@@ -18,7 +18,11 @@ this.player = (function() {
         log.info(e);
       }
 
-      if (this.querySelectorAll("video") && this.querySelectorAll("video")[0] && this.querySelectorAll("video")[0].baseURI) {
+      if (
+        this.querySelectorAll("video") &&
+        this.querySelectorAll("video")[0] &&
+        this.querySelectorAll("video")[0].baseURI
+      ) {
         const baseURI = this.querySelectorAll("video")[0].baseURI;
         const isChannel =
           /\bchannel\b/gi.test(baseURI) || /\buser\b/gi.test(baseURI);
