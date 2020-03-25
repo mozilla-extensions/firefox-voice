@@ -94,6 +94,9 @@ this.slideshowScript = (function() {
   function buildSlideStructure() {
     // create iframe element
     iframeContainer = document.createElement("iframe");
+    iframeContainer.src = browser.runtime.getURL(
+      "intents/slideshow/slideshow.html"
+    );
     iframeContainer.className = "fv-slideshow-frame";
     iframeContainer.height = document.documentElement.clientHeight;
     iframeContainer.width = document.documentElement.clientWidth;
