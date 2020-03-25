@@ -53,8 +53,8 @@ export const PopupController = function() {
   const [cardImage, setCardImage] = useState(null);
   const [recorderVolume, setRecorderVolume] = useState(null);
   const [expandListeningView, setExpandedListeningView] = useState(false);
-  const [timerInSeconds, setTimerInSeconds] = useState(0);
-  const [timerTotalInSeconds, setTimerTotalInSeconds] = useState(0);
+  const [timerInMS, setTimerInMS] = useState(0);
+  const [timerTotalInMS, setTimerTotalInMS] = useState(0);
 
   let executedIntent = false;
   let stream = null;
@@ -78,7 +78,6 @@ export const PopupController = function() {
   });
 
   const init = async () => {
-    let skipRecording = false;
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
@@ -88,34 +87,26 @@ export const PopupController = function() {
       return;
     }
 
-    const {
-      startTimestamp,
-      totalInSeconds,
-      paused,
-      remainingInSeconds,
-    } = await browser.runtime.sendMessage({
+    const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
-      action: {
-        type: "getTimer",
-      },
+      method: "getActiveTimer",
     });
 
     // check if timer is active
-    if (startTimestamp !== undefined) {
-      let waitFor = Math.floor(
-        remainingInSeconds - (new Date().getTime() - startTimestamp) / 1000
-      );
+    if (activeTimer !== null) {
+      const { startTimestamp, totalInMS, paused, remainingInMS } = activeTimer;
+
+      let waitFor = remainingInMS - (new Date().getTime() - startTimestamp);
 
       if (paused === true) {
-        waitFor = remainingInSeconds;
-        setTimerInSeconds(waitFor);
+        waitFor = remainingInMS;
+        setTimerInMS(waitFor);
       } else {
         startTimer(waitFor);
       }
 
       if (waitFor < 0) {
-        clearTimer(totalInSeconds);
-        skipRecording = true;
+        clearTimer(totalInMS);
       }
     }
 
@@ -133,7 +124,7 @@ export const PopupController = function() {
     updateExamples();
     updateLastIntent();
 
-    if (skipRecording === false) startRecorder();
+    startRecorder();
   };
 
   const incrementVisits = () => {
@@ -219,11 +210,11 @@ export const PopupController = function() {
       }
       case "setTimer": {
         setPopupView("timer");
-        startTimer(message.timerInSeconds);
+        startTimer(message.timerInMS);
         return Promise.resolve(true);
       }
       case "closeTimer": {
-        clearTimer(message.totalInSeconds);
+        clearTimer(message.totalInMS);
         return Promise.resolve(true);
       }
       default:
@@ -232,7 +223,7 @@ export const PopupController = function() {
     return undefined;
   };
 
-  const clearTimer = async totalInSeconds => {
+  const clearTimer = async totalInMS => {
     setPopupView("timer");
 
     // use this variable to stop any other actions and show notifications
@@ -244,26 +235,26 @@ export const PopupController = function() {
     setTranscript("Time's up");
 
     // set timer to 0
-    setTimerInSeconds(0);
-    setTimerTotalInSeconds(totalInSeconds);
+    setTimerInMS(0);
+    setTimerTotalInMS(totalInMS);
 
     // send message to timer to ack that it can close
     browser.runtime.sendMessage({
       type: "timerAction",
-      action: {
-        type: "closeTimer",
-      },
+      method: "closeActiveTimer",
     });
+
+    closePopup();
   };
 
-  const startTimer = async inSeconds => {
+  const startTimer = async duration => {
     clearInterval(timerIntervalId);
-    setTimerInSeconds(inSeconds);
+    setTimerInMS(duration);
 
     timerIntervalId = setInterval(() => {
-      inSeconds -= 1;
-      if (inSeconds >= 0) {
-        setTimerInSeconds(inSeconds);
+      duration -= 1000;
+      if (duration >= 0) {
+        setTimerInMS(duration);
       } else {
         clearInterval(timerIntervalId);
       }
@@ -619,8 +610,8 @@ export const PopupController = function() {
       onSubmitFeedback={onSubmitFeedback}
       setMinPopupSize={setMinPopupSize}
       expandListeningView={expandListeningView}
-      timerInSeconds={timerInSeconds}
-      timerTotalInSeconds={timerTotalInSeconds}
+      timerInMS={timerInMS}
+      timerTotalInMS={timerTotalInMS}
     />
   );
 };

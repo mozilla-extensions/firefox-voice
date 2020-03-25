@@ -1,79 +1,77 @@
 /* globals catcher */
 
 import * as intentRunner from "../../background/intentRunner.js";
-import * as util from "../../util.js";
+
+class TimerController {
+  constructor() {
+    this.activeTimer = null;
+  }
+
+  getActiveTimer() {
+    return this.activeTimer;
+  }
+
+  closeActiveTimer() {
+    this.activeTimer.close();
+    this.activeTimer = null;
+  }
+
+  setActiveTimer(totalInMS) {
+    this.activeTimer = new Timer(totalInMS);
+    this.activeTimer.start();
+  }
+}
 
 class Timer {
-  async doAction(action) {
-    if (action.type === "setTimer") {
-      this.totalInSeconds = action.totalInSeconds;
-      return this.start(action.totalInSeconds);
-    } else if (action.type === "closeTimer") {
-      this.close();
-      return true;
-    } else if (action.type === "getTimer") {
-      return {
-        startTimestamp: this.startTimestamp,
-        totalInSeconds: this.totalInSeconds,
-        paused: this.paused,
-        remainingInSeconds: this.remainingInSeconds,
-      };
-    }
-    return null;
-  }
-
-  isSet() {
-    return this.startTimestamp !== undefined;
-  }
-
-  isPaused() {
-    return this.paused === true;
+  constructor(totalInMS) {
+    this.totalInMS = totalInMS;
+    this.startTimestamp = undefined;
+    this.remainingInMS = undefined;
+    this.paused = undefined;
   }
 
   close() {
     this.startTimestamp = undefined;
-    this.totalInSeconds = undefined;
-    this.remainingInSeconds = undefined;
-    if (this.sleeperWithClear !== undefined) this.sleeperWithClear.clear();
+    this.totalInMS = undefined;
+    this.remainingInMS = undefined;
+    if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
   }
 
   pause() {
     this.paused = true;
-    this.remainingInSeconds = this.calculateRemainingMs() / 1000;
-    if (this.sleeperWithClear !== undefined) this.sleeperWithClear.clear();
+    this.remainingInMS = this.remainingMs();
+    if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
   }
 
   async unpause() {
     this.paused = false;
-    return this.start(this.remainingInSeconds);
+    return this.start(this.remainingInMS);
   }
 
-  calculateRemainingMs() {
-    return (
-      this.totalInSeconds * 1000 - (new Date().getTime() - this.startTimestamp)
-    );
+  remainingMs() {
+    return this.totalInMS - (new Date().getTime() - this.startTimestamp);
   }
 
   reset() {
-    if (this.sleeperWithClear !== undefined) this.sleeperWithClear.clear();
+    if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
 
-    return this.start(this.totalInSeconds);
+    return this.start(this.totalInMS);
   }
 
-  async start(inSeconds) {
+  async start(duration = this.totalInMS) {
     this.startTimestamp = new Date().getTime();
-    this.remainingInSeconds = inSeconds;
+    this.remainingInMS = duration;
 
-    const waitFor = inSeconds * 1000;
-    this.sleeperWithClear = util.getSleeperWithClear(waitFor);
-    await this.sleeperWithClear.sleeper;
+    this.timeoutId = setTimeout(() => this.openPopup(), duration);
+  }
 
+  async openPopup() {
     // send message to popup and open it if no response;
     // do not close timeout now; make popup do it
     try {
       const result = await browser.runtime.sendMessage({
         type: "closeTimer",
-        totalInSeconds: this.totalInSeconds, // piggyback
+        totalInMS: this.totalInMS, // piggyback
       });
       if (result) {
         return null;
@@ -86,14 +84,14 @@ class Timer {
   }
 }
 
-export const timer = new Timer();
+export const timerController = new TimerController();
 
 intentRunner.registerIntent({
   name: "timer.set",
   async run(context) {
     let seconds = 0;
-    const set = timer.isSet();
-    if (set === true) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer !== null) {
       const e = new Error("Failed to set timer");
       e.displayMessage = "Only one timer can be active.";
       throw e;
@@ -111,23 +109,23 @@ intentRunner.registerIntent({
       seconds += parseInt(context.slots.hours, 10) * 60 * 60;
     }
 
-    // 'Set timer for 0 seconds' does nothing
     if (seconds === 0) {
-      return;
+      throw new Error("Cannot set timer for 0 seconds");
     }
 
     if (Number.isNaN(seconds)) {
-      throw new Error(`Cannot understand number: ${seconds}`);
+      throw new Error(
+        `Cannot understand number: ${context.slots.seconds || ""} ${context
+          .slots.minutes || ""} ${context.slots.hours || ""}`
+      );
     }
 
-    timer.doAction({
-      type: "setTimer",
-      totalInSeconds: seconds,
-    });
+    const ms = seconds * 1000;
+    timerController.setActiveTimer(ms);
 
     await browser.runtime.sendMessage({
       type: "setTimer",
-      timerInSeconds: seconds,
+      timerInMS: ms,
     });
   },
 });
@@ -135,52 +133,51 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "timer.close",
   async run() {
-    const set = timer.isSet();
-    if (set === false) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null) {
       const e = new Error("Failed to close timer");
       e.displayMessage = "No timer is set.";
       throw e;
     }
-    timer.close();
+    activeTimer.close();
   },
 });
 
 intentRunner.registerIntent({
   name: "timer.reset",
   async run() {
-    const set = timer.isSet();
-    if (set === false) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null) {
       const e = new Error("Failed to reset timer");
       e.displayMessage = "No timer is set.";
       throw e;
     }
-    timer.reset();
+    activeTimer.reset();
   },
 });
 
 intentRunner.registerIntent({
   name: "timer.pause",
   async run() {
-    const set = timer.isSet();
-    if (set === false) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null) {
       const e = new Error("Failed to pause timer");
       e.displayMessage = "No timer is set.";
       throw e;
     }
-    timer.pause();
+    activeTimer.pause();
   },
 });
 
 intentRunner.registerIntent({
   name: "timer.unpause",
   async run() {
-    const set = timer.isSet();
-    const paused = timer.isPaused();
-    if (set === false || paused === false) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null || activeTimer.paused === false) {
       const e = new Error("Failed to unpause timer");
       e.displayMessage = "No active timer.";
       throw e;
     }
-    timer.unpause();
+    activeTimer.unpause();
   },
 });
