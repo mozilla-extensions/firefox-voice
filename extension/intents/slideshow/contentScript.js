@@ -109,6 +109,13 @@ this.slideshowScript = (function() {
     document.body.appendChild(iframeContainer);
 
     iframeContainer.addEventListener("load", function() {
+      // security check to confirm src
+      if (iframeContainer.src !== browser.runtime.getURL("intents/slideshow/slideshow.html")) {
+        const err = new Error("Iframe source is invalid");
+        err.displayMessage = "Iframe source is invalid";
+        throw err;
+      }
+
       // contentWindow is first accessible here
       iframeDoc = iframeContainer.contentWindow.document;
 
