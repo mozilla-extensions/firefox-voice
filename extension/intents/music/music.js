@@ -135,5 +135,28 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "music.volume",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.adjustVolume(context.parameters.level);
+  },
+});
+intentRunner.registerIntent({
+  name: "music.mute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.mute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.unmute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.unmute();
+  },
+});
+
 // FIXME: workaround for a legacy module needing access to this function:
 window.music_getServiceNamesAndTitles = getServiceNamesAndTitles;

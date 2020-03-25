@@ -90,6 +90,21 @@ class YouTube extends serviceList.Service {
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
+
+  async adjustVolume(level) {
+    await this.initTab("/services/youtube/player.js");
+    await this.callTab("adjustVolume", {level});
+  }
+
+  async mute() {
+    await this.initTab(`/services/youtube/player.js`);
+    await this.callTab("mute");
+  }
+
+  async unmute() {
+    await this.initTab(`/services/youtube/player.js`);
+    await this.callTab("unmute");
+  }
 }
 
 Object.assign(YouTube, {

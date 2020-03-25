@@ -156,3 +156,36 @@ phrase = "What is playing"
 [[music.showTitle.example]]
 phrase = "What's playing?"
 test = true
+
+[music.volume]
+description = "Adjust music volume"
+match = """
+  (increase | turn up) (music | audio | video |) (volume | the volume) [level=levelUp] 
+  (make it louder | louder) [level=levelUp] 
+  (decrease | turn down) (music | audio | video |) (volume | the volume) [level=levelDown] 
+  (make it softer | softer) [level=levelDown] 
+"""
+
+[music.volume.example]
+phrase = "increase volume"
+expectParameters = {level = "levelUp"}
+
+[music.mute]
+description = "mute music volume"
+match = """
+  mute (music | audio | video) (volume |)
+  mute (volume | the volume)
+"""
+
+[music.mute.example]
+phrase = "mute music"
+
+[music.unmute]
+description = "unmute music volume"
+match = """
+  unmute (music | audio | video) (volume |)
+  unmute (volume | the volume) 
+"""
+
+[music.unmute.example]
+phrase = "unmute video"
