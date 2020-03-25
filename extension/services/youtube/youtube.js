@@ -24,15 +24,18 @@ async function waitForUrl(tabId, options) {
 
 class YouTube extends serviceList.Service {
   async getYoutubeTabId() {
-    const youtubeTabs = await this.getAllTabs({ currentWindow: true });
-    return !!youtubeTabs && youtubeTabs[0] && youtubeTabs[0].id
+    const youtubeTabs = await this.getAllTabs({
+      currentWindow: true,
+      active: true,
+    });
+    return !!youtubeTabs && !!youtubeTabs[0] && !!youtubeTabs[0].id
       ? youtubeTabs[0].id
       : -1;
   }
   async playQuery(query) {
     const tabId = await this.getYoutubeTabId();
     this.tab = await this.context.createTabGoogleLucky(`${query} youtube.com`, {
-      youtubeTabId: tabId,
+      openInTabId: tabId,
     });
     this.tabCreated = true;
     // We only test for audibility if the URL seems correct
