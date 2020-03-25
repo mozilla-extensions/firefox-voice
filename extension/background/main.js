@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* globals log, buildSettings, catcher */
 
 import * as intentRunner from "./intentRunner.js";
@@ -13,6 +14,7 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
+import { timerController } from "../intents/timer/timer.js";
 import * as intentParser from "./intentParser.js";
 
 const UNINSTALL_SURVEY =
@@ -92,6 +94,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     // FIXME: consider focusing the window too
     browserUtil.makeTabActive(recorderTabId || sender.tab.id);
     return null;
+  } else if (message.type === "timerAction") {
+    return timerController[message.method](...(message.args || []));
   } else if (message.type === "getRegisteredNicknames") {
     return intentRunner.getRegisteredNicknames();
   } else if (message.type === "registerNickname") {
