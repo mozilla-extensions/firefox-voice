@@ -1,0 +1,486 @@
+
+<!doctype html>
+
+<html class="windows x86 no-js" lang="en" dir="ltr" data-latest-firefox="74.0" data-esr-versions="68.6.0" data-gtm-container-id="GTM-MW3R8V"  data-stub-attribution-rate="1.0" >
+  <head>
+    <meta charset="utf-8">
+
+    <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/site.133e404d326d.js" charset="utf-8"></script>
+
+    <!--[if !IE]><!-->
+    
+    <!--<![endif]-->
+
+<!--
+             _.-~-.
+           7''  Q..\
+        _7         (_
+      _7  _/    _q.  /
+    _7 . ___  /VVvv-'_                                            .
+   7/ / /~- \_\\      '-._     .-'                      /       //
+  ./ ( /-~-/||'=.__  '::. '-~'' {             ___   /  //     ./{
+ V   V-~-~| ||   __''_   ':::.   ''~-~.___.-'' _/  // / {_   /  {  /
+  VV/-~-~-|/ \ .'__'. '.    '::                     _ _ _        ''.
+  / /~~~~||VVV/ /  \ )  \        _ __ ___   ___ ___(_) | | __ _   .::'
+ / (~-~-~\\.-' /    \'   \::::. | '_ ` _ \ / _ \_  / | | |/ _` | :::'
+/..\    /..\__/      '     '::: | | | | | | (_) / /| | | | (_| | ::'
+vVVv    vVVv                 ': |_| |_| |_|\___/___|_|_|_|\__,_| ''
+
+Hi there, nice to meet you!
+
+Interested in having a direct impact on hundreds of millions of users? Join
+Mozilla, and become part of a global community that’s helping to build a
+brighter future for the Web.
+
+Visit https://careers.mozilla.org to learn about our current job openings.
+Visit https://www.mozilla.org/contribute for more ways to get involved and
+help support Mozilla.
+-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    
+    <title>You’ve just been upgraded to Firefox Nightly 76!</title>
+    <meta name="description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Mozilla">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://www.mozilla.org/en-US/firefox/all/#product-desktop-nightly">
+    <meta property="og:image" content="https://www.mozilla.org/media/protocol/img/logos/firefox/browser/nightly/og.3190903353c3.png">
+    <meta property="og:title" content="You’ve just been upgraded to Firefox Nightly 76!">
+    <meta property="og:description" content="">
+    <meta property="fb:page_id" content="14696440021">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@firefox">
+    <meta name="twitter:domain" content="mozilla.org">
+    <meta name="twitter:app:name:googleplay" content="Firefox">
+    <meta name="twitter:app:id:googleplay" content="org.mozilla.firefox">
+    <meta name="twitter:app:name:iphone" content="Firefox">
+    <meta name="twitter:app:id:iphone" content="989804926">
+    <meta name="twitter:app:name:ipad" content="Firefox">
+    <meta name="twitter:app:id:ipad" content="989804926">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="https://www.mozilla.org/media/img/favicons/firefox/browser/nightly/apple-touch-icon.d0bdd11a17e1.png">
+    <link rel="icon" type="image/png" sizes="196x196" href="https://www.mozilla.org/media/img/favicons/firefox/browser/nightly/favicon-196x196.f6d874cabab4.png">
+    <link rel="shortcut icon" href="https://www.mozilla.org/media/img/favicons/firefox/browser/nightly/favicon.6acfd297310a.ico">
+    <meta name="robots" content="noindex,follow">
+    
+
+    
+
+    <!--[if lt IE 9]>
+      
+      <script src="https://www.mozilla.org/media/js/libs/html5shiv.98460818858d.js"></script>
+    <![endif]-->
+
+    <!--[if IE]>
+      
+      
+  <link href="https://www.mozilla.org/media/css/BUNDLES/protocol-oldIE.51dd7d895b5f.css" rel="stylesheet" type="text/css" />
+
+    <![endif]-->
+
+    <!--[if !IE]><!-->
+    
+    
+  <link href="https://www.mozilla.org/media/css/BUNDLES/protocol-core.0b1417ef97fa.css" rel="stylesheet" type="text/css" />
+
+
+    
+    
+  <link href="https://www.mozilla.org/media/css/BUNDLES/nightly_whatsnew.276c522ac875.css" rel="stylesheet" type="text/css" />
+
+    <!--<![endif]-->
+
+    
+      
+    
+
+    
+    
+      <!--
+Read more about our custom configuration and use of Google Analytics here:
+https://bugzilla.mozilla.org/show_bug.cgi?id=1122305#c8
+-->
+
+<!-- Google Tag Manager -->
+<!-- Customized for Mozilla.org-->
+<!-- Region Container: NONE -->
+<!-- Rollup Container: System Filtered -->
+<!-- Site Container: NONE -->
+
+
+  <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/gtm-snippet.9f9cf2026c5f.js" charset="utf-8"></script>
+
+<!-- End Google Tag Manager -->
+    
+  </head>
+
+  <body id="nightly-whatsnew" class="html-ltr  mzp-t-firefox"  data-global-nav-current-link="firefox">
+    <div id="strings"
+      data-global-close="Close"
+      data-global-next="Next"
+      data-global-previous="Previous"
+      data-global-update-firefox="Update your Firefox"
+      data-global-fx-out-of-date-banner-heading="Your Firefox is out-of-date."
+      data-global-fx-out-of-date-banner-message="Get the most recent version to keep browsing securely."
+      data-global-fx-out-of-date-banner-confirm="Update Firefox"
+      ></div>
+
+    
+
+    
+
+    <div id="outer-wrapper">
+      
+<main class="content-wrapper mzp-t-firefox mzp-t-dark">
+  
+  <header class="c-page-header">
+    <div class="mzp-l-content c-page-header-inner">
+      <img class="c-page-header-logo-fx" src="https://www.mozilla.org/media/protocol/img/logos/firefox/browser/nightly/logo-word-hor-white-sm.cde918e922fb.png" srcset="https://www.mozilla.org/media/protocol/img/logos/firefox/browser/nightly/logo-word-hor-white-sm-high-res.8076ccaa53a3.png 1.5x" alt="Firefox Nightly" width="216" height="40">
+      <div class="mzp-c-notification-bar mzp-t-success up-to-date">
+        <p>Your Firefox Nightly has been updated.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="mzp-l-content">
+    <div class="mzp-c-emphasis-box">
+      <h2 class="c-emphasis-box-title">You’ve just been upgraded to Firefox Nightly 76!</h2>
+      <p>
+        
+          Every 4 to 5 weeks, a new major version of Firefox is released and as a result, the Nightly version increases as well.
+        
+      </p>
+
+      <p>
+        This is a good time to thank you for helping us make Firefox better and to give you some pointers to documentation, communication channels and news sites related to Nightly that may be of interest to you.
+      </p>
+      <p>
+        If you want to know what’s happening around Nightly and its community, reading our <a href="https://blog.nightly.mozilla.org/">blog</a> and following us on <a href="https://twitter.com/FirefoxNightly">Twitter</a> are good starting points!
+      </p>
+      <p>
+        Want to know which platform features you could test on Nightly and can’t see yet on other Firefox channels? Then have a look at the <a href="https://developer.mozilla.org/en-US/Firefox/Experimental_features?utm_source=firefox&amp;utm_medium=whatsnew&amp;utm_campaign=nightly">Experimental Features</a> page on <abbr title="Mozilla Developer Network">MDN</abbr>.
+      </p>
+      <p>
+        Do you experience crashes? Unexpected behavior? Web compatibility regressions? We’d love to get them filed in <a href="https://bugzilla.mozilla.org">Bugzilla</a> to make sure they don’t make it to the final release (extra karma if you add the <em>nightly-community</em> keyword to your bug reports)!
+      </p>
+      <p>Go community!</p>
+    </div>
+  </div>
+</main>
+
+
+      
+  
+
+<footer class="mzp-c-footer mzp-t-firefox" id="colophon">
+  <div class="mzp-l-content">
+    <nav class="mzp-c-footer-primary">
+      <div class="mzp-c-footer-sections">
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">
+            Firefox
+          </h5>
+          <ul class="mzp-c-footer-list">
+            <li><a href="/en-US/firefox/privacy/" data-link-type="footer" data-link-name="Privacy">Privacy</a></li>
+            <li><a href="https://blog.mozilla.org/press/" data-link-type="footer" data-link-name="Press">Press</a>
+            <li><a href="https://mozilla.design/?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=footer&utm_content=design" data-link-type="footer" data-link-name="Brand Standards">Brand Standards</a>
+          </ul>
+        </section>
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">
+            Browsers
+          </h5>
+          <ul class="mzp-c-footer-list">
+            <li><a href="/en-US/firefox/new/" data-link-type="footer" data-link-name="Desktop">Desktop</a></li>
+            <li><a href="/en-US/firefox/mobile/" data-link-type="footer" data-link-name="Mobile">Mobile</a></li>
+            <li><a href="https://mixedreality.mozilla.org/?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=footer&utm_content=reality" data-link-type="footer" data-link-name="Reality">Reality</a></li>
+            <li><a href="/en-US/firefox/enterprise/" data-link-type="footer" data-link-name="Enterprise">Enterprise</a></li>
+          </ul>
+        </section>
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">
+            Products
+          </h5>
+          <ul class="mzp-c-footer-list">
+            <li><a href="/en-US/firefox/lockwise/" data-link-type="footer" data-link-name="Lockwise">Lockwise</a></li>
+            <li><a href="https://monitor.firefox.com/?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=footer&utm_content=monitor" data-link-type="footer" data-link-name="Monitor">Monitor</a></li>
+            <li><a href="https://send.firefox.com/?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=footer&utm_content=send" data-link-type="footer" data-link-name="Send">Send</a></li>
+            <li><a href="/en-US/firefox/browsers/" data-link-type="footer" data-link-name="Browsers">Browsers</a></li>
+            <li><a href="https://getpocket.com/?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=footer&utm_content=pocket" data-link-type="footer" data-link-name="Pocket">Pocket</a></li>
+          </ul>
+        </section>
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">
+            Join
+          </h5>
+          <ul class="mzp-c-footer-list">
+            <li class="fxa-signin"><a 
+  
+
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  href="https://accounts.firefox.com/signup?form_type=button&amp;entrypoint=mozilla.org-firefoxfooter&amp;utm_source=mozilla.org-firefoxfooter&amp;utm_medium=referral&amp;utm_campaign=footer&amp;utm_content=join-sign-up" data-mozillaonline-link="https://accounts.firefox.com.cn/signup?form_type=button&amp;entrypoint=mozilla.org-firefoxfooter&amp;utm_source=mozilla.org-firefoxfooter&amp;utm_medium=referral&amp;utm_campaign=footer&amp;utm_content=join-sign-up" class="js-fxa-cta-link" rel="external noopener"  data-link-type="footer" data-link-name="Sign Up">Sign Up</a></li>
+            <li class="fxa-signin"><a 
+  
+
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+    
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  href="https://accounts.firefox.com/signin?form_type=button&amp;entrypoint=mozilla.org-firefoxfooter&amp;utm_source=mozilla.org-firefoxfooter&amp;utm_medium=referral&amp;utm_campaign=footer&amp;utm_content=join-sign-in" data-mozillaonline-link="https://accounts.firefox.com.cn/signin?form_type=button&amp;entrypoint=mozilla.org-firefoxfooter&amp;utm_source=mozilla.org-firefoxfooter&amp;utm_medium=referral&amp;utm_campaign=footer&amp;utm_content=join-sign-in" class="js-fxa-cta-link" rel="external noopener"  data-link-type="footer" data-link-name="Sign In">Sign In</a></li>
+            <li><a href="/en-US/firefox/accounts/" data-link-type="footer" data-link-name="Benefits">Benefits</a></li>
+          </ul>
+        </section>
+        <section class="mzp-c-footer-section">
+          <h5 class="mzp-c-footer-heading">
+            Developers
+          </h5>
+          <ul class="mzp-c-footer-list">
+            <li><a href="/en-US/firefox/developer/" data-link-type="footer" data-link-name="Developer Edition">Developer Edition</a></li>
+            <li><a href="/en-US/firefox/channel/desktop/#beta" data-link-type="footer" data-link-name="Beta">Beta</a></li>
+            
+            <li><a href="/en-US/firefox/channel/android/#beta" data-link-type="footer" data-link-name="Beta for Android">Beta for Android</a></li>
+            <li><a href="/en-US/firefox/channel/desktop/#nightly" data-link-type="footer" data-link-name="Nightly">Nightly</a></li>
+            
+            <li><a href="/en-US/firefox/channel/android/#nightly" data-link-type="footer" data-link-name="Nightly for Android">Nightly for Android</a></li>
+          </ul>
+        </section>
+        <section class="mzp-c-footer-section mzp-c-has-lang">
+          <div class="mzp-c-footer-language">
+            
+ <form id="lang_form" class="mzp-c-language-switcher mzp-t-dark" method="get" action="#">
+  <a class="mzp-c-language-switcher-link" href="/locales/">Language</a>
+  <label for="page-language-select">Language</label>
+  <select id="page-language-select" class="mzp-js-language-switcher-select" name="lang" dir="ltr">
+    
+      <option lang="bn" value="bn">বাংলা</option>
+    
+      <option lang="bs" value="bs">Bosanski</option>
+    
+      <option lang="cak" value="cak">Maya Kaqchikel</option>
+    
+      <option lang="cs" value="cs">Čeština</option>
+    
+      <option lang="cy" value="cy">Cymraeg</option>
+    
+      <option lang="de" value="de">Deutsch</option>
+    
+      <option lang="dsb" value="dsb">Dolnoserbšćina</option>
+    
+      <option lang="en-CA" value="en-CA">English (Canadian)</option>
+    
+      <option lang="en-GB" value="en-GB">English (British)</option>
+    
+      <option lang="en-US" value="en-US" selected>English</option>
+    
+      <option lang="eo" value="eo">Esperanto</option>
+    
+      <option lang="es-CL" value="es-CL">Español (de Chile)</option>
+    
+      <option lang="es-ES" value="es-ES">Español (de España)</option>
+    
+      <option lang="es-MX" value="es-MX">Español (de México)</option>
+    
+      <option lang="fr" value="fr">Français</option>
+    
+      <option lang="fy-NL" value="fy-NL">Frysk</option>
+    
+      <option lang="ga-IE" value="ga-IE">Gaeilge</option>
+    
+      <option lang="hi-IN" value="hi-IN">हिन्दी (भारत)</option>
+    
+      <option lang="hsb" value="hsb">Hornjoserbsce</option>
+    
+      <option lang="ia" value="ia">Interlingua</option>
+    
+      <option lang="ja" value="ja">日本語</option>
+    
+      <option lang="kab" value="kab">Taqbaylit</option>
+    
+      <option lang="ko" value="ko">한국어</option>
+    
+      <option lang="nl" value="nl">Nederlands</option>
+    
+      <option lang="nn-NO" value="nn-NO">Norsk nynorsk</option>
+    
+      <option lang="pl" value="pl">Polski</option>
+    
+      <option lang="pt-BR" value="pt-BR">Português (do Brasil)</option>
+    
+      <option lang="pt-PT" value="pt-PT">Português (Europeu)</option>
+    
+      <option lang="ro" value="ro">Română</option>
+    
+      <option lang="ru" value="ru">Русский</option>
+    
+      <option lang="sk" value="sk">slovenčina</option>
+    
+      <option lang="sl" value="sl">Slovenščina</option>
+    
+      <option lang="sq" value="sq">Shqip</option>
+    
+      <option lang="uk" value="uk">Українська</option>
+    
+      <option lang="zh-CN" value="zh-CN">中文 (简体)</option>
+    
+      <option lang="zh-TW" value="zh-TW">正體中文 (繁體)</option>
+    
+  </select>
+  <button type="submit">Go</button>
+ </form>
+ 
+          </div>
+          <ul class="mzp-c-footer-links-social">
+            <li><a class="twitter" href="https://twitter.com/firefox" data-link-type="footer" data-link-name="Twitter (@firefox)">Twitter<span> (@firefox)</span></a></li>
+            <li><a class="instagram" href="https://www.instagram.com/firefox/" data-link-type="footer" data-link-name="Instagram (@firefox)">Instagram<span> (@firefox)</span></a></li>
+            <li><a class="youtube" href="https://www.youtube.com/user/firefoxchannel" data-link-type="footer" data-link-name="YouTube (@firefoxchannel)">YouTube<span> (@firefoxchannel)</span></a></li>
+          </ul>
+        </section>
+      </div>
+    </nav>
+    <nav class="mzp-c-footer-secondary">
+      <div class="mzp-c-footer-primary-logo">
+        <a href="/en-US/" data-link-type="footer" data-link-name="Mozilla">Mozilla</a>
+      </div>
+      <div class="mzp-c-footer-legal">
+        <div class="mzp-c-footer-license">
+          
+          
+          <p>
+          Visit <a href="/en-US/" data-link-type="footer" data-link-name="Mozilla Corporation">Mozilla Corporation’s</a> not-for-profit parent, the <a href="https://foundation.mozilla.org" rel="external noopener" data-link-type="footer" data-link-name="Mozilla Foundation">Mozilla Foundation</a>.
+          </p>
+          <p>Portions of this content are ©1998–2020 by individual mozilla.org contributors. Content available under a <a rel="license" href="/en-US/foundation/licensing/website-content/">Creative Commons license</a>.</p>
+        </div>
+        <ul class="mzp-c-footer-terms">
+          <li><a href="/en-US/" data-link-type="footer" data-link-name="mozilla.org">mozilla.org</a></li>
+          <li><a href="/en-US/privacy/" data-link-type="footer" data-link-name="Privacy">Privacy</a></li>
+          <li><a href="/en-US/privacy/websites/" data-link-type="footer" data-link-name="Privacy">Website Privacy Notice</a></li>
+          <li><a href="/en-US/privacy/websites/#cookies" data-link-type="footer" data-link-name="Cookies">Cookies</a></li>
+          <li><a href="/en-US/about/legal/" data-link-type="footer" data-link-name="Legal">Legal</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+
+    
+<!--[if !IE]><!-->
+  <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/common-protocol.7dbe588589cc.js" charset="utf-8"></script>
+<!--<![endif]-->
+
+<!--[if IE]>
+  <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/common-ie.e26f4caf05ae.js" charset="utf-8"></script>
+<![endif]-->
+
+
+    
+    
+      
+        <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/stub-attribution.4e24eb9b8c65.js" charset="utf-8"></script>
+      
+    
+
+    <!--[if !IE]><!-->
+    
+  <script type="text/javascript" src="https://www.mozilla.org/media/js/BUNDLES/firefox_whatsnew.f73310c65f8b.js" charset="utf-8"></script>
+
+
+    
+    
+    
+
+    
+    <!--<![endif]-->
+
+    
+    
+    <img src="https://mozilla.org/set_hsts.gif" class="hidden">
+  </body>
+</html>.ӎ ��      ^l�U^l�Asm^l��   M    :https://www.mozilla.org/en-US/firefox/76.0a1/whatsnew/all/?oldversion=75.0a1 necko:classified 1 strongly-framed 1 security-info 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 request-method GET request-Accept-Encoding gzip, deflate, br response-head HTTP/2 200 OK
+date: Sat, 14 Mar 2020 15:29:08 GMT
+content-type: text/html; charset=utf-8
+content-length: 18538
+cf-ray: 573f074d1e2b9eb5-ATH
+accept-ranges: bytes
+cache-control: max-age=600
+etag: "0d12700c424ef5404102eb5fe3112e96"
+expires: Sat, 14 Mar 2020 15:39:08 GMT
+strict-transport-security: max-age=31536000
+vary: Accept-Encoding
+cf-cache-status: REVALIDATED
+content-security-policy: style-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com 'unsafe-inline' app.convert.com; default-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com; img-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com data: mozilla.org www.googletagmanager.com www.google-analytics.com adservice.google.com adservice.google.de adservice.google.dk creativecommons.org cdn-3.convertexperiments.com logs.convertexperiments.com ad.doubleclick.net; script-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com 'unsafe-inline' 'unsafe-eval' www.googletagmanager.com www.google-analytics.com tagmanager.google.com www.youtube.com s.ytimg.com cdn-3.convertexperiments.com app.convert.com data.track.convertexperiments.com 1003350.track.convertexperiments.com 1003343.track.convertexperiments.com; connect-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com www.googletagmanager.com www.google-analytics.com logs.convertexperiments.com https://accounts.firefox.com/ https://accounts.firefox.com.cn/; child-src www.googletagmanager.com www.google-analytics.com www.youtube-nocookie.com trackertest.org www.surveygizmo.com accounts.firefox.com accounts.firefox.com.cn www.youtube.com; frame-src www.googletagmanager.com www.google-analytics.com www.youtube-nocookie.com trackertest.org www.surveygizmo.com accounts.firefox.com accounts.firefox.com.cn www.youtube.com
+expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+x-backend-server: bedrock-prod-web-57d459bbd5-lldwc.frankfurt
+x-clacks-overhead: GNU Terry Pratchett
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-robots-tag: noodp
+x-xss-protection: 1; mode=block
+server: cloudflare
+X-Firefox-Spdy: h2
+ original-response-headers date: Sat, 14 Mar 2020 15:29:08 GMT
+content-type: text/html; charset=utf-8
+content-length: 18538
+cf-ray: 573f074d1e2b9eb5-ATH
+accept-ranges: bytes
+cache-control: max-age=600
+etag: "0d12700c424ef5404102eb5fe3112e96"
+expires: Sat, 14 Mar 2020 15:39:08 GMT
+strict-transport-security: max-age=31536000
+vary: Accept-Encoding
+cf-cache-status: REVALIDATED
+content-security-policy: style-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com 'unsafe-inline' app.convert.com; default-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com; img-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com data: mozilla.org www.googletagmanager.com www.google-analytics.com adservice.google.com adservice.google.de adservice.google.dk creativecommons.org cdn-3.convertexperiments.com logs.convertexperiments.com ad.doubleclick.net; script-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com 'unsafe-inline' 'unsafe-eval' www.googletagmanager.com www.google-analytics.com tagmanager.google.com www.youtube.com s.ytimg.com cdn-3.convertexperiments.com app.convert.com data.track.convertexperiments.com 1003350.track.convertexperiments.com 1003343.track.convertexperiments.com; connect-src 'self' *.mozilla.net *.mozilla.org *.mozilla.com www.googletagmanager.com www.google-analytics.com logs.convertexperiments.com https://accounts.firefox.com/ https://accounts.firefox.com.cn/; child-src www.googletagmanager.com www.google-analytics.com www.youtube-nocookie.com trackertest.org www.surveygizmo.com accounts.firefox.com accounts.firefox.com.cn www.youtube.com; frame-src www.googletagmanager.com www.google-analytics.com www.youtube-nocookie.com trackertest.org www.surveygizmo.com accounts.firefox.com accounts.firefox.com.cn www.youtube.com
+expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+x-backend-server: bedrock-prod-web-57d459bbd5-lldwc.frankfurt
+x-clacks-overhead: GNU Terry Pratchett
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-robots-tag: noodp
+x-xss-protection: 1; mode=block
+server: cloudflare
+X-Firefox-Spdy: h2
+ ctid 1 uncompressed-len 0 net-response-time-onstart 487 net-response-time-onstop 947 predictor::resource-count 21 predictor::https://www.mozilla.org/media/js/BUNDLES/site.133e404d326d.js 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/css/BUNDLES/protocol-core.0b1417ef97fa.css 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/css/BUNDLES/nightly_whatsnew.276c522ac875.css 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/js/BUNDLES/gtm-snippet.9f9cf2026c5f.js 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/protocol/img/logos/firefox/browser/nightly/logo-word-hor-white-sm-high-res.8076ccaa53a3.png 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/js/BUNDLES/common-protocol.7dbe588589cc.js 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/js/BUNDLES/stub-attribution.4e24eb9b8c65.js 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/js/BUNDLES/firefox_whatsnew.f73310c65f8b.js 1,1,1584199765,4096 predictor::https://mozilla.org/set_hsts.gif 1,1,1584199765,4097 predictor::https://www.googletagmanager.com/gtm.js?id=GTM-MW3R8V&l=dataLayer 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/img/firefox/whatsnew/whatsnew_background.7e93ca7bdc6b.svg 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/protocol/img/icons/social/twitter/white.3dbd28e41ea3.svg 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/protocol/img/icons/social/instagram/white.7ca00b3abbfd.svg 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/protocol/img/icons/social/youtube/white.0c853775ae15.svg 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/protocol/img/logos/mozilla/white.612a25fa976b.svg 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/fonts/Metropolis-Bold.6a80125e795a.woff2 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/fonts/Inter-Regular.d55e957612a3.woff2 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/fonts/Inter-Italic.d6a4e2b82a0b.woff2 1,1,1584199765,4096 predictor::https://www.mozilla.org/media/fonts/Inter-Bold.0564381b22b2.woff2 1,1,1584199765,4096 predictor::https://www.google-analytics.com/analytics.js 1,1,1584199765,4096 predictor::https://www.google-analytics.com/plugins/ua/linkid.js 1,1,1584199765,4096   Hj

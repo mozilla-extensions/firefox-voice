@@ -308,3 +308,15 @@ phrase = "Close all selected tabs"
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
 test = true
+
+[tabs.findspaghetti]
+description = "Find the new page Spaghetti"
+match = """
+  ()
+"""
+[[tabs.findspaghetti.example]]
+phrase = "Find Spaghetti"
+
+[[tabs.findspaghetti.example]]
+phrase = "Find Spaghetti page"
+test = true

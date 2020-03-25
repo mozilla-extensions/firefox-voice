@@ -1,0 +1,126 @@
+1584609906080	Sync.LogManager	DEBUG	Flushing file log
+1584609906082	Sync.SyncScheduler	DEBUG	Next sync in 3600000 ms. (why=schedule)
+1584609944688	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584609944876	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584609944876	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584609944878	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610045899	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610046466	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610046467	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610046469	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610063379	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610063623	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610063624	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610063626	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610932515	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610932727	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610932727	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610932730	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610941025	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610941243	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610941244	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610941245	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610954096	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610954556	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610954556	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610954558	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610962725	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610962987	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610962987	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610962988	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610975152	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610975375	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610975375	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610975376	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584610990145	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584610990315	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584610990316	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584610990316	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611017267	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611017435	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611017436	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611017439	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611030416	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611030620	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611030620	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611030621	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611052579	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611052778	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611052778	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611052779	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611065956	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611066127	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611066127	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611066128	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611084034	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611084348	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611084348	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611084351	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611095331	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611095548	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611095549	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611095550	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611109448	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611109621	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611109621	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611109622	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611173518	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611173699	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611173700	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611173702	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611220179	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611220331	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611220332	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611220334	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584611230328	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584611230525	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584611230525	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584611230526	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584612819838	Sync.SyncScheduler	DEBUG	Going to sleep, doing a quick sync.
+1584612819853	Sync.Service	DEBUG	User-Agent: Firefox/76.0a1 (Windows NT 10.0; Win64; x64) FxSync/1.78.0.20200317214918.desktop
+1584612819853	Sync.Service	INFO	Starting sync at 2020-03-19 15:13:39 in browser session eTHUNWgcO3jU
+1584612819854	Sync.SyncScheduler	DEBUG	Clearing sync triggers and the global score.
+1584612820522	Sync.Status	INFO	Resetting Status.
+1584612820522	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1584612820724	FirefoxAccounts	DEBUG	FxAccountsProfileClient: Requested profile
+1584612820724	FirefoxAccounts	DEBUG	getOAuthToken enter
+1584612820725	FirefoxAccounts	TRACE	getCachedToken returning cached token
+1584612820725	FirefoxAccounts	DEBUG	getOAuthToken returning a cached token
+1584612820725	Sync.BrowserIDManager	INFO	Getting keys
+1584612820758	Services.Common.RESTRequest	DEBUG	GET request to https://profile.accounts.firefox.com/v1/profile
+1584612820759	Sync.BrowserIDManager	INFO	Getting an assertion from: https://token.services.mozilla.com/1.0/sync/1.5
+1584612820760	FirefoxAccounts	DEBUG	enter getAssertion()
+1584612820805	FirefoxAccounts	DEBUG	getKeypairAndCertificate: already have keyPair and certificate
+1584612820806	FirefoxAccounts	DEBUG	getAssertionFromCert
+1584612820875	FirefoxAccounts	DEBUG	getAssertionFromCert returning signed: true
+1584612820876	Sync.BrowserIDManager	DEBUG	Getting a token
+1584612820876	Services.Common.TokenServerClient	DEBUG	Beginning BID assertion exchange: https://token.services.mozilla.com/1.0/sync/1.5
+1584612820876	Services.Common.RESTRequest	DEBUG	GET request to https://token.services.mozilla.com/1.0/sync/1.5
+1584612822103	Services.Common.RESTRequest	DEBUG	GET https://token.services.mozilla.com/1.0/sync/1.5 200
+1584612822148	Services.Common.TokenServerClient	DEBUG	Got token response: 200
+1584612822178	Services.Common.TokenServerClient	DEBUG	Successful token response
+1584612822178	Sync.Status	DEBUG	Status.login: success.login => success.login
+1584612822178	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1584612822757	Sync.Resource	DEBUG	GET success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/info/collections
+1584612822792	Sync.Service	DEBUG	Fetching global metadata record
+1584612822792	Sync.Service	DEBUG	Weave Version: 1.78.0 Local Storage: 5 Remote Storage: 5
+1584612822814	Sync.Service	DEBUG	Fetching and verifying -- or generating -- symmetric keys.
+1584612822814	Sync.Service	INFO	Testing info/collections: {"prefs":1584388765.02,"clients":1584606264.79,"crypto":1584388757.8,"passwords":1584388765.8,"tabs":1584606265.59,"meta":1584388815.94,"forms":1584609881.21,"bookmarks":1584388768.49,"history":1584529246.46}
+1584612822814	Sync.CollectionKeyManager	INFO	Testing for updateNeeded. Last modified: 1584388757.8
+1584612822814	Sync.Synchronizer	INFO	Updating enabled engines: 1 clients.
+1584612822839	Sync.Synchronizer	INFO	Syncing specified engines: ["tabs"]
+1584612822872	Sync.Engine.Tabs	INFO	1 outgoing items pre-reconciliation
+1584612822928	Sync.Engine.Tabs	INFO	Records: 0 applied, 0 successfully, 0 failed to apply, 0 newly failed to apply, 0 reconciled.
+1584612822989	Services.Common.RESTRequest	DEBUG	GET https://profile.accounts.firefox.com/v1/profile 304
+1584612822990	Sync.Engine.Tabs.Store	WARN	Failed to fetch favicon for view-source:moz-extension://1fcecf08-63ed-4073-9627-5a2c24727ba7/popup/popup.html
+1584612823267	Sync.Engine.Tabs	INFO	Posting 1 records of 953 bytes with batch=true
+1584612823268	FirefoxAccounts	TRACE	not checking freshness of profile as it remains recent
+1584612823269	Sync.Collection	DEBUG	POST Length: 953
+1584612826336	Sync.Collection	DEBUG	POST success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/storage/tabs?batch=true&commit=true
+1584612826365	Sync.Status	DEBUG	Status.sync: success.sync => success.sync
+1584612826365	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1584612826365	Sync.Synchronizer	INFO	Sync completed at 2020-03-19 15:13:46 after 5.84 secs.
+1584612826366	Sync.Declined	DEBUG	Handling remote declined: []
+1584612826366	Sync.Declined	DEBUG	Handling local declined: []
+1584612826542	Sync.Declined	DEBUG	Declined changed? false
+1584612826543	Sync.Service	INFO	No change to declined engines. Not reuploading meta/global.

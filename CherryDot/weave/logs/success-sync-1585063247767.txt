@@ -1,0 +1,33 @@
+1585062506252	Sync.LogManager	DEBUG	Flushing file log
+1585062506253	Sync.SyncScheduler	DEBUG	Next sync in 3600000 ms. (why=schedule)
+1585063244940	Sync.SyncScheduler	DEBUG	Going to sleep, doing a quick sync.
+1585063244940	Sync.Service	DEBUG	User-Agent: Firefox/76.0a1 (Windows NT 10.0; Win64; x64) FxSync/1.78.0.20200323213856.desktop
+1585063244941	Sync.Service	INFO	Starting sync at 2020-03-24 20:20:44 in browser session FQy1X8GWn_Ow
+1585063244941	Sync.SyncScheduler	DEBUG	Clearing sync triggers and the global score.
+1585063244945	Sync.Status	INFO	Resetting Status.
+1585063244945	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1585063244947	FirefoxAccounts	DEBUG	FxAccountsProfileClient: Requested profile
+1585063244948	FirefoxAccounts	DEBUG	getOAuthToken enter
+1585063244955	FirefoxAccounts	TRACE	getCachedToken returning cached token
+1585063244955	FirefoxAccounts	DEBUG	getOAuthToken returning a cached token
+1585063244956	Services.Common.RESTRequest	DEBUG	GET request to https://profile.accounts.firefox.com/v1/profile
+1585063247260	Sync.Resource	DEBUG	GET success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/info/collections
+1585063247261	Sync.Service	DEBUG	Fetching global metadata record
+1585063247261	Sync.Service	DEBUG	Weave Version: 1.78.0 Local Storage: 5 Remote Storage: 5
+1585063247261	Sync.Service	DEBUG	Fetching and verifying -- or generating -- symmetric keys.
+1585063247261	Sync.Service	INFO	Testing info/collections: {"meta":1584388815.94,"prefs":1584388765.02,"clients":1585059394.12,"history":1585045533.98,"crypto":1584388757.8,"forms":1585062480.69,"tabs":1585059395,"bookmarks":1584388768.49,"passwords":1584388765.8}
+1585063247261	Sync.CollectionKeyManager	INFO	Testing for updateNeeded. Last modified: 1584388757.8
+1585063247261	Sync.Synchronizer	INFO	Updating enabled engines: 1 clients.
+1585063247262	Sync.Synchronizer	INFO	Syncing specified engines: ["tabs"]
+1585063247263	Sync.Engine.Tabs	INFO	1 outgoing items pre-reconciliation
+1585063247264	Sync.Engine.Tabs	INFO	Records: 0 applied, 0 successfully, 0 failed to apply, 0 newly failed to apply, 0 reconciled.
+1585063247266	Sync.Engine.Tabs	INFO	Posting 1 records of 313 bytes with batch=true
+1585063247267	Sync.Collection	DEBUG	POST Length: 313
+1585063247764	Sync.Collection	DEBUG	POST success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/storage/tabs?batch=true&commit=true
+1585063247765	Sync.Status	DEBUG	Status.sync: success.sync => success.sync
+1585063247766	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1585063247766	Sync.Synchronizer	INFO	Sync completed at 2020-03-24 20:20:47 after 2.82 secs.
+1585063247767	Sync.Declined	DEBUG	Handling remote declined: []
+1585063247767	Sync.Declined	DEBUG	Handling local declined: []
+1585063247767	Sync.Declined	DEBUG	Declined changed? false
+1585063247767	Sync.Service	INFO	No change to declined engines. Not reuploading meta/global.

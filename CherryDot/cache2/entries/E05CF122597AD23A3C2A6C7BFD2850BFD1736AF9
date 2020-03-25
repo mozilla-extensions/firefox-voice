@@ -1,0 +1,348 @@
+{
+  "TYPES": [
+    "phones",
+    "tablets",
+    "laptops",
+    "televisions"
+  ],
+  "phones": [
+    {
+      "name": "Galaxy Note 3",
+      "featured": false,
+      "width": 360,
+      "userAgent": "Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-N900T Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3,
+      "height": 640
+    },
+    {
+      "name": "Galaxy Note 9",
+      "width": 414,
+      "height": 846,
+      "pixelRatio": 3.5,
+      "userAgent": "Mozilla/5.0 (Linux; Android 7.0; SM-G892A Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "Android"
+    },
+    {
+      "name": "Galaxy S5",
+      "featured": false,
+      "width": 360,
+      "userAgent": "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3,
+      "height": 640
+    },
+    {
+      "name": "Galaxy S9/S9+",
+      "featured": true,
+      "width": 360,
+      "userAgent": "Mozilla/5.0 (Linux; Android 7.0; SM-G892A Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "Android",
+      "pixelRatio": 4,
+      "height": 740
+    },
+    {
+      "name": "LG Optimus L70",
+      "featured": false,
+      "width": 384,
+      "userAgent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; LGMS323 Build/KOT49I.MS32310c) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 1.25,
+      "height": 640
+    },
+    {
+      "name": "Microsoft Lumia 550",
+      "featured": false,
+      "width": 360,
+      "userAgent": "Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 550) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/14.14263",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 640
+    },
+    {
+      "name": "Microsoft Lumia 950",
+      "featured": false,
+      "width": 360,
+      "userAgent": "Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 950) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/14.14263",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 4,
+      "height": 640
+    },
+    {
+      "name": "Nexus 5X",
+      "featured": false,
+      "width": 412,
+      "userAgent": "Mozilla/5.0 (Linux; Android 8.0.0; Nexus 5X Build/OPR4.170623.006) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2.625,
+      "height": 732
+    },
+    {
+      "name": "Nexus 6P",
+      "featured": false,
+      "width": 412,
+      "userAgent": "Mozilla/5.0 (Linux; Android 8.0.0; Nexus 6P Build/OPP3.170518.006) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3.5,
+      "height": 732
+    },
+    {
+      "name": "Nokia 8110 4G",
+      "width": 240,
+      "height": 320,
+      "pixelRatio": 1,
+      "userAgent": "Mozilla/5.0 (Mobile; Nokia 8110 4G; rv:48.0) Gecko/48.0 Firefox/48.0 KAIOS/2.5",
+      "touch": true,
+      "os": "KaiOS"
+    },
+    {
+      "name": "Pixel 2",
+      "featured": false,
+      "width": 411,
+      "userAgent": "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2.625,
+      "height": 731
+    },
+    {
+      "name": "Pixel 2 XL",
+      "featured": false,
+      "width": 411,
+      "userAgent": "Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3.5,
+      "height": 823
+    },
+    {
+      "name": "iPhone 5/SE",
+      "featured": false,
+      "width": 320,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 568
+    },
+    {
+      "name": "iPhone 6/7/8",
+      "featured": true,
+      "width": 375,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 667
+    },
+    {
+      "name": "iPhone 6/7/8 Plus",
+      "featured": true,
+      "width": 414,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3,
+      "height": 736
+    },
+    {
+      "name": "iPhone X/XS",
+      "featured": true,
+      "width": 375,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/12.0 Mobile/15A372 Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3,
+      "height": 812
+    },
+    {
+      "name": "iPhone XR",
+      "featured": false,
+      "width": 414,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/12.0 Mobile/15A372 Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 896
+    },
+    {
+      "name": "iPhone XS Max",
+      "featured": false,
+      "width": 414,
+      "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/12.0 Mobile/15A372 Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 3,
+      "height": 896
+    }
+  ],
+  "tablets": [
+    {
+      "name": "Kindle Fire HDX",
+      "featured": true,
+      "width": 800,
+      "userAgent": "Mozilla/5.0 (Linux; U; en-us; KFAPWI Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Silk/3.13 Safari/535.19 Silk-Accelerated=true",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 1280
+    },
+    {
+      "name": "Nexus 10",
+      "featured": false,
+      "width": 800,
+      "userAgent": "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 10 Build/MOB31T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 1280
+    },
+    {
+      "name": "Nexus 7",
+      "featured": false,
+      "width": 600,
+      "userAgent": "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MOB30X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 960
+    },
+    {
+      "name": "iPad",
+      "featured": true,
+      "width": 768,
+      "userAgent": "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 1024
+    },
+    {
+      "name": "iPad Mini",
+      "featured": false,
+      "width": 768,
+      "userAgent": "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 2,
+      "height": 1024
+    },
+    {
+      "name": "iPad Pro (10.5-inch)",
+      "width": 834,
+      "height": 1112,
+      "pixelRatio": 2,
+      "userAgent": "Mozilla/5.0 (iPad; CPU OS 11_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1",
+      "touch": true,
+      "os": "iOS"
+    },
+    {
+      "name": "iPad Pro (12.9-inch)",
+      "width": 1024,
+      "height": 1366,
+      "pixelRatio": 2,
+      "userAgent": "Mozilla/5.0 (iPad; CPU OS 11_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.0 Mobile/15E148 Safari/604.1",
+      "touch": true,
+      "os": "iOS"
+    }
+  ],
+  "laptops": [
+    {
+      "name": "Laptop with HiDPI screen",
+      "featured": false,
+      "width": 1440,
+      "height": 900,
+      "userAgent": "",
+      "touch": false,
+      "os": "",
+      "pixelRatio": 2
+    },
+    {
+      "name": "Laptop with MDPI screen",
+      "featured": false,
+      "width": 1280,
+      "height": 800,
+      "userAgent": "",
+      "touch": false,
+      "os": "",
+      "pixelRatio": 1
+    },
+    {
+      "name": "Laptop with touch",
+      "featured": false,
+      "width": 1280,
+      "height": 950,
+      "userAgent": "",
+      "touch": true,
+      "os": "",
+      "pixelRatio": 1
+    }
+  ],
+  "televisions": [
+    {
+      "name": "1080p Full HD Television",
+      "width": 1920,
+      "height": 1080,
+      "pixelRatio": 1,
+      "userAgent": "",
+      "touch": false,
+      "os": "custom"
+    },
+    {
+      "name": "4K Ultra HD Television",
+      "width": 3840,
+      "height": 2160,
+      "pixelRatio": 1,
+      "userAgent": "",
+      "touch": false,
+      "os": "custom"
+    },
+    {
+      "name": "720p HD Television",
+      "width": 1280,
+      "height": 720,
+      "pixelRatio": 1,
+      "userAgent": "",
+      "touch": false,
+      "os": "custom"
+    }
+  ]
+}
+)bõV{      ^pƒı^pƒˆAv=^qêü   2    :https://code.cdn.mozilla.net/devices/devices.json strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 9479
+Last-Modified: Mon, 14 Oct 2019 12:05:28 GMT
+Accept-Ranges: bytes
+Server: AmazonS3
+Date: Tue, 17 Mar 2020 03:08:16 GMT
+ETag: "a29e6071baea46f62d38ff6c1e3245ec"
+Cache-Control: max-age=86400
+X-Cache: Hit from cloudfront
+Via: 1.1 e7b895fd3bb39cae82eb3570b1e92637.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: DXB50-C1
+X-Amz-Cf-Id: -Y1wv7n7gwVhy_CVFFXpkgDsfABT8lo4IW954ydy71MhcJjMxqJb5Q==
+Age: 34245
+ original-response-headers Content-Type: application/json
+Content-Length: 9479
+Connection: keep-alive
+Last-Modified: Mon, 14 Oct 2019 12:05:28 GMT
+Accept-Ranges: bytes
+Server: AmazonS3
+Date: Tue, 17 Mar 2020 03:08:16 GMT
+ETag: "a29e6071baea46f62d38ff6c1e3245ec"
+Cache-Control: max-age=86400
+X-Cache: Hit from cloudfront
+Via: 1.1 e7b895fd3bb39cae82eb3570b1e92637.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: DXB50-C1
+X-Amz-Cf-Id: -Y1wv7n7gwVhy_CVFFXpkgDsfABT8lo4IW954ydy71MhcJjMxqJb5Q==
+Age: 34245
+ ctid 1   %

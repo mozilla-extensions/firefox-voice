@@ -1,0 +1,51 @@
+1584612884510	Sync.LogManager	DEBUG	Flushing file log
+1584612884669	Sync.LogManager	DEBUG	Log cleanup threshold time: 1583748884669
+1584612884787	Sync.LogManager	DEBUG	Done deleting files.
+1584612919174	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584612920463	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584612920463	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584612920465	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584612974299	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584612974565	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584612974566	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584612974567	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584613034227	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584613034489	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584613034490	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584613034492	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584613064141	addons.xpi	WARN	Addon with ID firefox-voice@mozilla.org already installed, older version will be disabled
+1584613064309	Sync.AddonsReconciler	DEBUG	Add-on change: onInstalled to firefox-voice@mozilla.org
+1584613064309	Sync.AddonsReconciler	DEBUG	Rectifying state for addon Firefox Voice Beta (version=0.19.4691, id=firefox-voice@mozilla.org)
+1584613064311	Sync.AddonsReconciler	INFO	Saving reconciler state to file: addonsreconciler
+1584613134655	Sync.SyncScheduler	DEBUG	Going to sleep, doing a quick sync.
+1584613134655	Sync.Service	DEBUG	User-Agent: Firefox/76.0a1 (Windows NT 10.0; Win64; x64) FxSync/1.78.0.20200317214918.desktop
+1584613134656	Sync.Service	INFO	Starting sync at 2020-03-19 15:18:54 in browser session eTHUNWgcO3jU
+1584613134656	Sync.SyncScheduler	DEBUG	Clearing sync triggers and the global score.
+1584613134673	Sync.Status	INFO	Resetting Status.
+1584613134673	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1584613134674	FirefoxAccounts	DEBUG	FxAccountsProfileClient: Requested profile
+1584613134674	FirefoxAccounts	DEBUG	getOAuthToken enter
+1584613134726	FirefoxAccounts	TRACE	getCachedToken returning cached token
+1584613134726	FirefoxAccounts	DEBUG	getOAuthToken returning a cached token
+1584613134727	Services.Common.RESTRequest	DEBUG	GET request to https://profile.accounts.firefox.com/v1/profile
+1584613137752	Sync.Resource	DEBUG	GET success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/info/collections
+1584613137753	Sync.Service	DEBUG	Fetching global metadata record
+1584613137753	Sync.Service	DEBUG	Weave Version: 1.78.0 Local Storage: 5 Remote Storage: 5
+1584613137753	Sync.Service	DEBUG	Fetching and verifying -- or generating -- symmetric keys.
+1584613137753	Sync.Service	INFO	Testing info/collections: {"meta":1584388815.94,"bookmarks":1584388768.49,"prefs":1584388765.02,"clients":1584606264.79,"passwords":1584388765.8,"forms":1584609881.21,"tabs":1584612807.49,"history":1584529246.46,"crypto":1584388757.8}
+1584613137753	Sync.CollectionKeyManager	INFO	Testing for updateNeeded. Last modified: 1584388757.8
+1584613137754	Sync.Synchronizer	INFO	Updating enabled engines: 1 clients.
+1584613137755	Sync.Synchronizer	INFO	Syncing specified engines: ["tabs"]
+1584613137756	Sync.Engine.Tabs	INFO	1 outgoing items pre-reconciliation
+1584613137757	Sync.Engine.Tabs	INFO	Records: 0 applied, 0 successfully, 0 failed to apply, 0 newly failed to apply, 0 reconciled.
+1584613137759	Sync.Engine.Tabs.Store	WARN	Failed to fetch favicon for view-source:moz-extension://1fcecf08-63ed-4073-9627-5a2c24727ba7/popup/popup.html
+1584613137761	Sync.Engine.Tabs	INFO	Posting 1 records of 953 bytes with batch=true
+1584613137763	Sync.Collection	DEBUG	POST Length: 953
+1584613138137	Sync.Collection	DEBUG	POST success 200 https://sync-1-us-west1-g.sync.services.mozilla.com/1.5/140075166/storage/tabs?batch=true&commit=true
+1584613138139	Sync.Status	DEBUG	Status.sync: success.sync => success.sync
+1584613138139	Sync.Status	DEBUG	Status.service: success.status_ok => success.status_ok
+1584613138140	Sync.Synchronizer	INFO	Sync completed at 2020-03-19 15:18:58 after 3.47 secs.
+1584613138140	Sync.Declined	DEBUG	Handling remote declined: []
+1584613138140	Sync.Declined	DEBUG	Handling local declined: []
+1584613138140	Sync.Declined	DEBUG	Declined changed? false
+1584613138140	Sync.Service	INFO	No change to declined engines. Not reuploading meta/global.
