@@ -260,8 +260,16 @@ this.slideshowScript = (function() {
       element.className = "";
       switch (element.tagName) {
         case "IMG": {
+          if (element.clientHeight < 200 || element.clientWidth < 200) {
+            break;
+          }
+
           const img = iframeDoc.createElement("img");
-          img.setAttribute("src", element.getAttribute("src"));
+          if (/^\/\//.test(element.getAttribute("src"))) {
+            img.setAttribute("src", "https:" + element.getAttribute("src"));
+          } else {
+            img.setAttribute("src", element.getAttribute("src"));
+          }
           slideElements.push(img);
 
           break;
