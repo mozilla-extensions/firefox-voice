@@ -1,4 +1,7 @@
-javascript: (function() {
+/* This function is retrieved by inspecting the pocket 
+bookmarklet button from https://getpocket.com/add?sb=1  */
+
+(function() {
   var e = function(t, n, r, i, s) {
     var o = [
       2623563,

@@ -1,12 +1,11 @@
 [pocket.open]
 description = "Open pocket in a new tab"
 match = """
-  (open | ) (my |) pocket ( for me|)
+  open (my |) pocket ( for me|)
 """
 
 [[pocket.open.example]]
-phrase = "Open pocket"
-
+phrase = "open pocket"
 
 [pocket.save]
 description = "Save the page to pocket"
