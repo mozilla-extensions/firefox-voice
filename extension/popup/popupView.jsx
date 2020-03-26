@@ -1,4 +1,4 @@
-/* globals lottie, React */
+/* globals lottie, buildSettings React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
@@ -455,7 +455,7 @@ const ListeningContent = ({
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <div id="extra-content" className={expandListeningView ? "expanded" : ""}>
-        <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
+        <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} onInputStarted={onInputStarted} />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
     </React.Fragment>
@@ -471,7 +471,7 @@ const TypingContent = ({ displayText, submitTextInput, inputValue }) => {
   );
 };
 
-const VoiceInput = ({ suggestions, onClickLexicon }) => {
+const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
   const onMoreSuggestions = event => {
     if (event) {
       event.preventDefault();
@@ -480,17 +480,18 @@ const VoiceInput = ({ suggestions, onClickLexicon }) => {
   };
   return (
     <div id="voice-input">
-      {suggestions ? (
+      {buildSettings.inDevelopment ? (
         <div id="suggestions">
-          <div className="popup-tips">
-            <p>Developer tip:</p>
-            <button
-              className="type-input-button"
-              onClick={TypingContent}
-            >
-              <h3>Start typing to make a request using a keyboard</h3>
-            </button>
-          </div>
+          <p>Developer tip:</p>
+          <a
+            target="_blank"
+            rel="noopener"
+            id="lexicon"
+            href="../views/lexicon.html"
+            onClick={onInputStarted}
+          >
+            Start typing to make a request using a keyboard
+          </a>
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">
             {suggestions.map(suggestion => (
