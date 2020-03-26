@@ -84,6 +84,6 @@ intentRunner.registerIntent({
   async run(context) {
     await browser.experiments.voice.quitApplication();
     await browser.windows.create({});
-    await browser.experiments.voice.restoreLastSession();
+    await browser.experiments.voice.restorePreviousSession();
   },
 });

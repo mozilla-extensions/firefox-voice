@@ -41,7 +41,16 @@
         "description": "Close Firefox",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "restorePreviousSession",
+        "type": "function",
+        "description": "Restart Firefox",
+        "parameters": [],
+        "async": true
       }
+
     ]
   }
 ]
