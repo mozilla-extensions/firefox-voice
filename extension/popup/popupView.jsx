@@ -480,18 +480,19 @@ const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
   };
   return (
     <div id="voice-input">
-      {buildSettings.inDevelopment ? (
+      {suggestions ? (
         <div id="suggestions">
-          <p>Developer tip:</p>
-          <a
-            target="_blank"
-            rel="noopener"
-            id="lexicon"
-            href="../views/lexicon.html"
-            onClick={onInputStarted}
-          >
-            Start typing to make a request using a keyboard
-          </a>
+          {buildSettings.inDevelopment ? (
+            <div>
+              <p>Developer tip:</p>
+              <button
+                className="type-input-button"
+                onClick={onInputStarted}
+              >
+                Start typing to make a request using a keyboard
+              </button>
+            </div>
+          ) : null}
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">
             {suggestions.map(suggestion => (
