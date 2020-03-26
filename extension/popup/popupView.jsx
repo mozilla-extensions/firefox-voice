@@ -458,29 +458,6 @@ const ListeningContent = ({
         <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
-      <div className="popup-tips">
-        <p>Developer tip:</p>
-        <button
-          className="type-input-button"
-          onClick={TypingContent}
-        >
-          <h3>Start typing to make a request using a keyboard</h3>
-        </button>
-      </div>
-      <div className="popup-tips">
-        <p>You can say things like:</p>
-        <h4>Go to The New York Times</h4>
-        <h4>Search for hiking in Denver</h4>
-        <h4>Find the calendar tab</h4>
-        <a
-          target="_blank"
-          rel="noopener"
-          href="../views/lexicon.html"
-          onClick={TypingInput}
-        >
-          More things you can say
-        </a>
-      </div>
     </React.Fragment>
   );
 };
@@ -505,6 +482,15 @@ const VoiceInput = ({ suggestions, onClickLexicon }) => {
     <div id="voice-input">
       {suggestions ? (
         <div id="suggestions">
+          <div className="popup-tips">
+            <p>Developer tip:</p>
+            <button
+              className="type-input-button"
+              onClick={TypingContent}
+            >
+              <h3>Start typing to make a request using a keyboard</h3>
+            </button>
+          </div>
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">
             {suggestions.map(suggestion => (
