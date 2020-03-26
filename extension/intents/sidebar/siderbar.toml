@@ -1,0 +1,8 @@
+[sidebar.open]
+description = "Open the sidebar with the last opened content"
+match = """
+ (open | show |) (my | the |) sidebar (for me|)
+"""
+
+[[sidebar.open.example]]
+phrase = "open the sidebar"
