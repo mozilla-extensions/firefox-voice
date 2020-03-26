@@ -139,7 +139,7 @@ intentRunner.registerIntent({
       e.displayMessage = "No timer is set.";
       throw e;
     }
-    activeTimer.close();
+    timerController.closeActiveTimer();
   },
 });
 
