@@ -54,3 +54,12 @@ test = true
 [[window.close.example]]
 phrase = "Close all windows"
 test = true
+
+[window.restartApplication]
+description = "Close Firefox"
+match = """
+  (restart | reopen ) firefox
+"""
+
+[[window.restartApplication.example]]
+phrase = "Restart Firefox"
