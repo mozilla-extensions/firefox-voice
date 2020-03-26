@@ -7,7 +7,7 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await browserUtil.activeTab();
     await content.lazyInject(activeTab.id, [
-      "/intents/pocket/contentScript1.js",
+      "/intents/pocket/contentScript.js",
     ]);
   },
 });

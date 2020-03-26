@@ -1,24 +1,23 @@
 javascript: (function() {
-  let e = function(t, n, r, i, s) {
-    let o = [
-      5671614,
-      6078827,
-      2718634,
-      1042238,
-      4905060,
-      5668005,
-      3048706,
-      3527201,
-      5824429,
-      1550215,
+  var e = function(t, n, r, i, s) {
+    var o = [
+      2623563,
+      1675452,
+      2840828,
+      6098032,
+      3089014,
+      4391128,
+      7775450,
+      2052014,
+      1534259,
+      2610420,
     ];
-
-    let i1 = i || 0,
+    var i = i || 0,
       u = 0,
-      n1 = n || [],
-      r1 = r || 0,
-      s1 = s || 0;
-    const a = {
+      n = n || [],
+      r = r || 0,
+      s = s || 0;
+    var a = {
       a: 97,
       b: 98,
       c: 99,
@@ -92,50 +91,51 @@ javascript: (function() {
       "!": 33,
       ".": 46,
     };
-    if (!s1 || s1 === 0) {
+    if (!s || s == 0) {
       t = o[0] + t;
     }
-    for (let f = 0; f < t.length; f++) {
-      let l = (function(e, t) {
+    for (var f = 0; f < t.length; f++) {
+      var l = (function(e, t) {
         return a[e[t]] ? a[e[t]] : e.charCodeAt(t);
       })(t, f);
       if (!l * 1) l = 3;
-      const c = l * (o[i1] + l * o[u % o.length]);
-      n1[r1] = (n1[r1] ? n1[r1] + c : c) + s1 + u;
-      const p = c % (50 * 1);
-      if (n1[p]) {
-        const d = n1[r1];
-        n1[r1] = n1[p];
-        n1[p] = d;
+      var c = l * (o[i] + l * o[u % o.length]);
+      n[r] = (n[r] ? n[r] + c : c) + s + u;
+      var p = c % (50 * 1);
+      if (n[p]) {
+        var d = n[r];
+        n[r] = n[p];
+        n[p] = d;
       }
       u += c;
-      r1 = r1 === 50 ? 0 : r1 + 1;
-      i1 = i1 === o.length - 1 ? 0 : i1 + 1;
+      r = r == 50 ? 0 : r + 1;
+      i = i == o.length - 1 ? 0 : i + 1;
     }
-    if (s1 === 104) {
-      let v = "";
-      for (let f = 0; f < n1.length; f++) {
-        v += String.fromCharCode((n1[f] % (25 * 1)) + 97);
+    if (s == 229) {
+      var v = "";
+      for (var f = 0; f < n.length; f++) {
+        v += String.fromCharCode((n[f] % (25 * 1)) + 97);
       }
       o = function() {};
-      return v + "61799c7020";
+      return v + "201e128138";
+    } else {
+      return e(u + "", n, r, i, s + 1);
     }
-    return e(u + "", n1, r1, i1, s1 + 1);
   };
-  const t1 = document,
-    n1 = t1.location.href,
-    r1 = t1.title;
-  let i2 = e(n1);
-  const s2 = t1.createElement("script");
-  s2.type = "text/javascript";
-  s2.src =
+  var t = document,
+    n = t.location.href,
+    r = t.title;
+  var i = e(n);
+  var s = t.createElement("script");
+  s.type = "text/javascript";
+  s.src =
     "https://getpocket.com/b/r4.js?h=" +
-    i2 +
+    i +
     "&u=" +
-    encodeURIComponent(n1) +
+    encodeURIComponent(n) +
     "&t=" +
-    encodeURIComponent(r1);
-  e = i2 = function() {};
-  const o = t1.getElementsByTagName("head")[0] || t1.documentElement;
-  o.appendChild(s2);
+    encodeURIComponent(r);
+  e = i = function() {};
+  var o = t.getElementsByTagName("head")[0] || t.documentElement;
+  o.appendChild(s);
 })();
