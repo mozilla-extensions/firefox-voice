@@ -77,7 +77,9 @@
 }
 
 .fv-view-gallery,
-.fv-view-slide {
+.fv-view-slide,
+.fv-update-gallery,
+.fv-reload-gallery {
   cursor: pointer;
   width: auto;
   padding: 2px 10px;
@@ -102,7 +104,9 @@
 .fv-prev:hover,
 .fv-close:hover,
 .fv-view-gallery:hover,
-.fv-view-slide:hover {
+.fv-view-slide:hover,
+.fv-update-gallery:hover,
+.fv-reload-gallery:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
 

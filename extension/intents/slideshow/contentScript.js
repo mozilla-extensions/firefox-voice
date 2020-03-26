@@ -2,17 +2,30 @@
 
 this.slideshowScript = (function() {
   let slideElements = [];
+  let lastElementIndex = -1;
+  let lastGalleryIndex = -1;
   let currentSlideIndex = 0;
   const galleryElements = [];
   let iframeContainer, slideContainer, iframeDoc;
-  let iframeBlocker, galleryContainer, slideshowContainer;
+  let iframeBlocker, galleryContainer, slideshowContainer, thumbnailGallery;
 
   const videoSources = ["youtube.com", "vimeo.com"];
   buildSlideStructure();
 
-  function buildThumbnailGallery() {
+  function buildThumbnailGallery({fromIndex = -1, rebuild = false} = {}) {
     let thumbnailElement, thumbnail;
-    slideElements.forEach(function(element, index) {
+
+    if (rebuild) {
+      galleryElements.splice(0, galleryElements.length);
+    }
+
+    for (let elementIndex = 0; elementIndex < slideElements.length; elementIndex++) {
+      if (fromIndex >= elementIndex) {
+        continue;
+      }
+
+      const element = slideElements[elementIndex];
+
       thumbnailElement = iframeDoc.createElement("div");
 
       switch (element.tagName) {
@@ -26,7 +39,7 @@ this.slideshowScript = (function() {
           if (element.hasAttribute("poster")) {
             thumbnail.setAttribute("poster", element.getAttribute("poster"));
           }
-          thumbnail.setAttribute("data-thumb-index", index);
+          thumbnail.setAttribute("data-thumb-index", elementIndex);
           thumbnail.addEventListener("click", thumbnailClick);
 
           break;
@@ -38,7 +51,7 @@ this.slideshowScript = (function() {
           thumbnail = iframeDoc.createElement(element.tagName);
           thumbnail.className = "fv-image-thumbnail";
           thumbnail.setAttribute("src", element.getAttribute("src"));
-          thumbnail.setAttribute("data-thumb-index", index);
+          thumbnail.setAttribute("data-thumb-index", elementIndex);
           thumbnail.addEventListener("click", thumbnailClick);
 
           break;
@@ -54,7 +67,7 @@ this.slideshowScript = (function() {
           iframeBlocker.style.zIndex = 2;
           iframeBlocker.style.width = "100%";
           iframeBlocker.style.height = "100%";
-          iframeBlocker.setAttribute("data-thumb-index", index);
+          iframeBlocker.setAttribute("data-thumb-index", elementIndex);
           iframeBlocker.addEventListener("click", thumbnailClick);
           iframeBlocker.style.cursor = "pointer";
           thumbnailElement.append(iframeBlocker);
@@ -69,7 +82,9 @@ this.slideshowScript = (function() {
 
       thumbnailElement.append(thumbnail);
       galleryElements.push(thumbnailElement);
-    });
+
+      lastGalleryIndex = elementIndex;
+    }
   }
 
   // event handler to switch from selected thumbnail to slide
@@ -131,7 +146,7 @@ this.slideshowScript = (function() {
       galleryContainer.className = "fv-gallery-container";
 
       // thumbnail gallery
-      const thumbnailGallery = document.createElement("div");
+      thumbnailGallery = document.createElement("div");
       thumbnailGallery.className = "fv-thumbnail-gallery";
 
       // navigation bar
@@ -163,6 +178,16 @@ this.slideshowScript = (function() {
       tagViewGallery.textContent = String.fromCharCode(9638);
       tagViewGallery.onclick = toggleGallery;
 
+      const tagUpdateGallery = document.createElement("a");
+      tagUpdateGallery.className = "fv-update-gallery";
+      tagUpdateGallery.textContent = String.fromCharCode(8635);
+      tagUpdateGallery.onclick = updateMediaElements;
+
+      const tagRebuildGallery = document.createElement("a");
+      tagRebuildGallery.className = "fv-reload-gallery";
+      tagRebuildGallery.textContent = String.fromCharCode(8409);
+      tagRebuildGallery.onclick = rebuildMediaElements;
+
       // images and video container
       slideContainer = iframeDoc.createElement("div");
       slideContainer.className = "fv-slide-image";
@@ -172,6 +197,8 @@ this.slideshowScript = (function() {
 
       navbar.appendChild(tagViewGallery);
       navbar.appendChild(tagViewSlide);
+      navbar.appendChild(tagUpdateGallery);
+      navbar.appendChild(tagRebuildGallery);
       navbar.append(tagClose);
       navbar.append(tagNext);
       navbar.append(tagPrev);
@@ -237,17 +264,24 @@ this.slideshowScript = (function() {
     return result;
   }
 
-  function detectAllMedia() {
+  function detectAllMedia({fromIndex = -1, rebuild = false} = {}) {
     const selector = "img, video, iframe";
     // detect all supported elements
     const mediaElements = document.body.querySelectorAll(selector);
 
+    if (rebuild) {
+      // clear slideElements array
+      slideElements.splice(0, slideElements.length);
+    }
+
     // iterate thru list and add to array
+    for (let elementIndex = 0; elementIndex < mediaElements.length; elementIndex++) {
+      if (fromIndex >= elementIndex) {
+        continue;
+      }
 
-    mediaElements.forEach(element => {
-      // strip their current classes
+      const element = mediaElements[elementIndex];
 
-      element.className = "";
       switch (element.tagName) {
         case "IMG": {
           const img = iframeDoc.createElement("img");
@@ -295,7 +329,9 @@ this.slideshowScript = (function() {
           break;
         }
       }
-    });
+
+      lastElementIndex = elementIndex;
+    }
 
     return slideElements;
   }
@@ -337,6 +373,34 @@ this.slideshowScript = (function() {
       }
       slideContainer.appendChild(newSlide);
     }
+  }
+
+  function updateMediaElements() {
+    // detect media from the last index stopped
+    detectAllMedia({fromIndex: lastElementIndex});
+    buildThumbnailGallery({fromIndex: lastGalleryIndex});
+
+    // append elements to gallery
+    for (let index = lastGalleryIndex + 1; index < galleryElements.length; index++) {
+      const element = galleryElements[index];
+      thumbnailGallery.append(element);
+    }
+  }
+
+  function rebuildMediaElements() {
+    // detect media from the last index stopped
+    detectAllMedia({rebuild: true});
+    buildThumbnailGallery({rebuild: true});
+
+    // empty gallery
+    while (thumbnailGallery.hasChildNodes()) {
+      thumbnailGallery.firstChild.remove();
+    }
+
+    // join gallery elements to build gallery
+    galleryElements.forEach(function(element) {
+      thumbnailGallery.append(element);
+    });
   }
 
   communicate.register("openSlide", async message => {
