@@ -66,11 +66,11 @@ class MetadataTest {
     private fun makeResolveInfo(appName: String, packageName: String, exported: Boolean = true):
             ResolveInfo {
         val activityInfo = mockk<ActivityInfo>(relaxed = true)
-        every { activityInfo.exported } returns exported
-        every { activityInfo.packageName } returns packageName
+        activityInfo.exported = exported
+        activityInfo.packageName = packageName
         appNames[packageName] = appName
         val resolveInfo = mockk<ResolveInfo>(relaxed = true)
-        every { resolveInfo.activityInfo } returns activityInfo
+        resolveInfo.activityInfo = activityInfo
         return resolveInfo
     }
 }
