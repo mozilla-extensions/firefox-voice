@@ -30,6 +30,7 @@ pooping = "open"
 poop = "open"
 pint = "pinned"
 "book mark" = "bookmark"
+"slide shoe" = "slideshow"
 
 [stopwords]
 words = """
