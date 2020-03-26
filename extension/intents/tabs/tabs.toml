@@ -99,9 +99,6 @@ phrase = "open the tab"
 test = true
 
 [[tabs.open.example]]
-phrase = "open downloads"
-
-[[tabs.open.example]]
 phrase = "open a blank tap for me"
 test = true
 
