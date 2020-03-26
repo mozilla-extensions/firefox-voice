@@ -13,8 +13,7 @@ class WordTest {
 
     @Before
     fun setAliases() {
-        language = LanguageTest.getLanguage()
-        language.addStopwords("the")
+        language = LanguageTest.getLanguage("the")
         language.addAlias("ello=hello") // "ello" is an alias for "hello"
         language.addAlias("\"hell oh\" = hello") // "hell oh" is an alias for "hello"
     }
