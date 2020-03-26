@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import java.util.Locale
 
 private val nonAlphaNumRegex = Regex("[^a-z0-9]")
+
 @VisibleForTesting
 internal fun String.normalize() =
     toLowerCase(Locale.getDefault()).replace(nonAlphaNumRegex, "")
@@ -29,8 +30,11 @@ class Word(private val source: String, private val language: Language) : Pattern
         multiwordAliases?.forEach() { alias: List<String> ->
             var multiwordResult: MatchResult? = match
             for (word in alias) {
-                if (multiwordResult != null && !multiwordResult.utteranceExhausted() && multiwordResult.utteranceWord().word == word) {
-                    multiwordResult = multiwordResult.clone(addIndex = 1, addWords = 1, addAliased = 1)
+                if (multiwordResult != null &&
+                    !multiwordResult.utteranceExhausted() &&
+                    multiwordResult.utteranceWord().word == word) {
+                    multiwordResult =
+                        multiwordResult.clone(addIndex = 1, addWords = 1, addAliased = 1)
                 } else {
                     multiwordResult = null
                     break
@@ -41,6 +45,7 @@ class Word(private val source: String, private val language: Language) : Pattern
         return results.toList()
     }
 
+    @SuppressWarnings("ReturnCount")
     override fun matchUtterance(match: MatchResult): List<MatchResult> {
         if (word.isEmpty()) {
             return listOf(match)
@@ -52,7 +57,14 @@ class Word(private val source: String, private val language: Language) : Pattern
         val results = mutableListOf<MatchResult>()
         val otherWord = match.utteranceWord()
         if (otherWord.isStopWord) {
-            results.addAll(matchUtterance(match.clone(addIndex = 1, addSkipped = 1)).toMutableList())
+            results.addAll(
+                matchUtterance(
+                    match.clone(
+                        addIndex = 1,
+                        addSkipped = 1
+                    )
+                ).toMutableList()
+            )
         }
 
         results.addAll(getMultiwordResults(match))

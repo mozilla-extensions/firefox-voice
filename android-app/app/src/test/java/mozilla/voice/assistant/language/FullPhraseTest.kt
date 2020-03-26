@@ -12,7 +12,7 @@ class FullPhraseTest {
 
     @Before
     fun setup() {
-        language = LanguageTest.getLanguage()
+        language = LanguageTest.getLanguage(stopwords = "the")
     }
 
     @Test
@@ -27,7 +27,6 @@ class FullPhraseTest {
 
     @Test
     fun testPhraseWithTrailingStopwords() {
-        language.addStopwords("the")
         val results =
             FullPhrase(Sequence("hello world".toWordList(language))).matchUtterance(
                 makeMatch("hello world the", language)

@@ -3,6 +3,7 @@ package mozilla.voice.assistant.intents.music
 import android.app.SearchManager
 import android.content.Context
 import android.provider.MediaStore
+import java.lang.AssertionError
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.ParseResult
 
@@ -49,7 +50,7 @@ class Music {
             val service = pr.slots[SERVICE_KEY]?.firstWord()
             if (query == null || service == null) {
                 // This should never happen.
-                throw Exception("Slot values were not present")
+                throw AssertionError("Slot values were not present")
             }
             return android.content.Intent(
                 when (service) {

@@ -17,26 +17,36 @@ class LanguageTest {
     private lateinit var language: Language
 
     companion object {
-        fun getLanguage(): Language {
+        fun getLanguage(stopwords: String = ""): Language {
             val context = mock(Context::class.java)
             `when`(context.assets).thenReturn(null)
-            return Language(context)
+            return Language(context).apply {
+                addAllStopwords(listOf(stopwords))
+            }
         }
     }
 
     @Before
     fun reset() {
-        language = getLanguage()
+        language = getLanguage("fee fie fum")
     }
 
     @Test
-    fun testAddStopwords() {
-        language.addStopwords("fee fie fum")
+    fun testStopwords() {
         assertEquals(3, language.getStopwordsSize())
         assertTrue(language.isStopword("fee"))
         assertTrue(language.isStopword("fie"))
         assertTrue(language.isStopword("fum"))
         assertFalse(language.isStopword("bar"))
+    }
+
+    @Test
+    fun testContainsStopwords() {
+        listOf("one fee two", "fee fie foe fum", "fum fum bar").forEach {
+            assertTrue(
+                "language.containsStopWords(\"$it\") should have returned true",
+                language.containsStopwords(it))
+        }
     }
 
     private fun testFailingAlias(alias: String) {

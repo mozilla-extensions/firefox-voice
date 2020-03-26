@@ -15,3 +15,5 @@
 .externalNativeBuild
 .cxx
 *~
+/app/src/main/assets/langs/*
+/app/build/outputs/apk/debug/*
