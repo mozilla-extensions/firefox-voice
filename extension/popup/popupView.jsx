@@ -1,4 +1,4 @@
-/* globals lottie, buildSettings React */
+/* globals lottie, buildSettings, React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
