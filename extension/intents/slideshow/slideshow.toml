@@ -1,7 +1,7 @@
 [slideshow.open]
 description = "Opens the slideshow"
 match = '''
-    (open | display | launch | start) (the |) (slideshow | slide shoe)
+    (open | display | launch | start|) (the |) slideshow
 '''
 
 [[slideshow.open.example]]
