@@ -12,14 +12,18 @@ this.slideshowScript = (function() {
   const videoSources = ["youtube.com", "vimeo.com"];
   buildSlideStructure();
 
-  function buildThumbnailGallery({fromIndex = -1, rebuild = false} = {}) {
+  function buildThumbnailGallery({ fromIndex = -1, rebuild = false } = {}) {
     let thumbnailElement, thumbnail;
 
     if (rebuild) {
       galleryElements.splice(0, galleryElements.length);
     }
 
-    for (let elementIndex = 0; elementIndex < slideElements.length; elementIndex++) {
+    for (
+      let elementIndex = 0;
+      elementIndex < slideElements.length;
+      elementIndex++
+    ) {
       if (fromIndex >= elementIndex) {
         continue;
       }
@@ -125,7 +129,10 @@ this.slideshowScript = (function() {
 
     iframeContainer.addEventListener("load", function() {
       // security check to confirm src
-      if (iframeContainer.src !== browser.runtime.getURL("intents/slideshow/slideshow.html")) {
+      if (
+        iframeContainer.src !==
+        browser.runtime.getURL("intents/slideshow/slideshow.html")
+      ) {
         const err = new Error("Iframe source is invalid");
         err.displayMessage = "Iframe source is invalid";
         throw err;
@@ -143,7 +150,7 @@ this.slideshowScript = (function() {
             nextSlide();
             break;
           }
-          case "Escape" : {
+          case "Escape": {
             hideSlideShow(null);
             break;
           }
@@ -213,11 +220,13 @@ this.slideshowScript = (function() {
       tagUpdateGallery.className = "fv-update-gallery";
       tagUpdateGallery.textContent = String.fromCharCode(8635);
       tagUpdateGallery.onclick = updateMediaElements;
+      tagUpdateGallery.title = "Update Gallery with New Images";
 
       const tagRebuildGallery = document.createElement("a");
       tagRebuildGallery.className = "fv-reload-gallery";
       tagRebuildGallery.textContent = String.fromCharCode(8409);
       tagRebuildGallery.onclick = rebuildMediaElements;
+      tagRebuildGallery.title = "Reload Gallery";
 
       // images and video container
       slideContainer = iframeDoc.createElement("div");
@@ -257,7 +266,7 @@ this.slideshowScript = (function() {
       window.addEventListener("resize", function() {
         iframeContainer.height = document.documentElement.clientHeight;
         iframeContainer.width = document.documentElement.clientWidth;
-        if (slideContainer.hasChildNodes()) {
+        if (slideContainer && slideContainer.hasChildNodes()) {
           if (slideContainer.firstChild.tagName === "IFRAME") {
             slideContainer.firstChild.setAttribute(
               "width",
@@ -296,7 +305,7 @@ this.slideshowScript = (function() {
     return result;
   }
 
-  function detectAllMedia({fromIndex = -1, rebuild = false} = {}) {
+  function detectAllMedia({ fromIndex = -1, rebuild = false } = {}) {
     const selector = "img, video, iframe";
     // detect all supported elements
     const mediaElements = document.body.querySelectorAll(selector);
@@ -307,7 +316,11 @@ this.slideshowScript = (function() {
     }
 
     // iterate thru list and add to array
-    for (let elementIndex = 0; elementIndex < mediaElements.length; elementIndex++) {
+    for (
+      let elementIndex = 0;
+      elementIndex < mediaElements.length;
+      elementIndex++
+    ) {
       if (fromIndex >= elementIndex) {
         continue;
       }
@@ -338,8 +351,6 @@ this.slideshowScript = (function() {
           } else if (element.hasAttribute("data-lazy-src")) {
             img.setAttribute("src", element.getAttribute("data-lazy-src"));
           }
-
-
 
           slideElements.push(img);
 
@@ -417,6 +428,9 @@ this.slideshowScript = (function() {
   }
 
   function swapSlide(newSlide) {
+    if (!slideContainer) {
+      return;
+    }
     if (slideContainer.hasChildNodes()) {
       slideContainer.firstChild.remove();
     }
@@ -430,22 +444,28 @@ this.slideshowScript = (function() {
     }
   }
 
+  // update gallery for pages with infinite scroll
   function updateMediaElements() {
     // detect media from the last index stopped
-    detectAllMedia({fromIndex: lastElementIndex});
-    buildThumbnailGallery({fromIndex: lastGalleryIndex});
+    detectAllMedia({ fromIndex: lastElementIndex });
+    buildThumbnailGallery({ fromIndex: lastGalleryIndex });
 
     // append elements to gallery
-    for (let index = lastGalleryIndex + 1; index < galleryElements.length; index++) {
+    for (
+      let index = lastGalleryIndex + 1;
+      index < galleryElements.length;
+      index++
+    ) {
       const element = galleryElements[index];
       thumbnailGallery.append(element);
     }
   }
 
+  // full gallery reload to help with lazy loaded sites or render errors
   function rebuildMediaElements() {
     // detect media from the last index stopped
-    detectAllMedia({rebuild: true});
-    buildThumbnailGallery({rebuild: true});
+    detectAllMedia({ rebuild: true });
+    buildThumbnailGallery({ rebuild: true });
 
     // empty gallery
     while (thumbnailGallery.hasChildNodes()) {

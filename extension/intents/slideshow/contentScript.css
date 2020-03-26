@@ -61,10 +61,10 @@
 .fv-close {
   cursor: pointer;
   width: auto;
-  padding: 10px;
+  padding: 12px;
   color: white;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   transition: 0.6s ease;
   user-select: none;
   display: table-cell;
@@ -74,7 +74,7 @@
 }
 
 .fv-close {
-  padding: 12px;
+  padding: 13px;
 }
 
 .fv-view-gallery,
@@ -82,23 +82,16 @@
 .fv-update-gallery,
 .fv-reload-gallery {
   cursor: pointer;
-  width: auto;
-  padding: 2px 10px;
+  width: 20px;
+  padding: 5px 10px;
   color: white;
-  font-size: 24px;
+  font-size: 28px;
   transition: 0.6s ease;
   user-select: none;
-  display: table-cell;
+  display: flex;
   float: left;
-  vertical-align: middle;
-}
-
-.fv-view-slide {
-  font-size: 28px;
-}
-
-.fv-view-gallery {
-  padding: 5px 10px;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .fv-next:hover,
@@ -108,7 +101,8 @@
 .fv-view-slide:hover,
 .fv-update-gallery:hover,
 .fv-reload-gallery:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgb(224, 213, 213);
+  color: black;
 }
 
 .fv-thumbnail-gallery {
