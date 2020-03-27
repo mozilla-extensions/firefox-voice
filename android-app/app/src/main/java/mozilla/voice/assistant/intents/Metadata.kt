@@ -2,22 +2,15 @@ package mozilla.voice.assistant.intents
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.VisibleForTesting
 import java.util.Locale
 import mozilla.voice.assistant.language.Language
 
 class Metadata(context: Context, private val language: Language) {
     private val parser = TomlParser()
 
-    // These get initialized in buildAppMap(), which is called from init
-    // and possibly again from test classes.
-    @VisibleForTesting
-    internal lateinit var appMap: Map<String, String> // app name -> package name
-        private set
-
-    @VisibleForTesting
-    internal lateinit var unstoppedAppMap: Map<String, List<String>> // app name w/o stop words -> app names
-        private set
+    // These get initialized in buildAppMap(), which is called from init.
+    private lateinit var appMap: Map<String, String> // app name -> package name
+    private lateinit var unstoppedAppMap: Map<String, List<String>> // app name w/o stop words -> app names
 
     internal fun getAppNames() = appMap.keys
 
@@ -65,8 +58,7 @@ class Metadata(context: Context, private val language: Language) {
         parser.getString(intentName, "match")?.trim()?.split('\n', '\r')
             ?: throw TomlException("Unable to get phrases for $intentName")
 
-    @VisibleForTesting
-    internal fun buildAppMap(entries: List<Pair<String, String>>) {
+    private fun buildAppMap(entries: List<Pair<String, String>>) {
         appMap = entries.map {
             Pair(it.first.toLowerCase(Locale.getDefault()), it.second)
         }.toMap()

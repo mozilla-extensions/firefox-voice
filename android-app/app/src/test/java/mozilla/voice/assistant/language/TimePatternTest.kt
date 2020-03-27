@@ -1,32 +1,29 @@
 package mozilla.voice.assistant.language
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(JUnit4::class)
 class TimePatternTest {
     private val timePattern = TimePattern()
     private lateinit var language: Language
 
-    @Before
+    @BeforeEach
     fun setup() {
         language = LanguageTest.getLanguage()
     }
 
     private fun expectMatch(s: String, expectedHours: Int = 0, expectedMinutes: Int = 0) {
         val results = timePattern.matchUtterance(MatchResult(s, language))
-        assertFalse("Expected time $s to be matched by TimePattern", results.isEmpty())
-        assertEquals("Expected a single MatchResult for $s", 1, results.size)
+        assertFalse(results.isEmpty(), "Expected time $s to be matched by TimePattern")
+        assertEquals(1, results.size, "Expected a single MatchResult for $s")
         val time = TimePattern.extractTime(s)
-        assertNotNull("TimePattern.extractTime(\"$s\") failed", time)
-        assertEquals("Unexpected hour extracted from $s", expectedHours, time?.first)
-        assertEquals("Unexpected minutes extracted from $s", expectedMinutes, time?.second)
+        assertNotNull(time, "TimePattern.extractTime(\"$s\") failed")
+        assertEquals(expectedHours, time?.first, "Unexpected hour extracted from $s")
+        assertEquals(expectedMinutes, time?.second, "Unexpected minutes extracted from $s")
     }
 
     private fun expectNoMatch(s: String) {

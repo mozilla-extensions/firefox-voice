@@ -1,35 +1,26 @@
 package mozilla.voice.assistant.intents
 
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
 import mozilla.voice.assistant.language.Language
 import mozilla.voice.assistant.language.LanguageTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class MetadataTest {
     private lateinit var metadata: Metadata
+    private val language = LanguageTest.getLanguage()
 
-    @Before
+    @BeforeEach
     fun setup() {
         metadata = getMetadata(LanguageTest.getLanguage(STOPWORDS))
-        metadata.buildAppMap(apps)
-    }
-
-    @Test
-    fun testBuildAppMap() {
-        apps.map {
-            assertEquals(it.second, metadata.appMap[it.first.toLowerCase()])
-        }
-        assertEquals(3, metadata.unstoppedAppMap.size)
-        assertEquals(setOf("be my eyes", "the eyes", "eyes"), metadata.unstoppedAppMap["eyes"]?.toSet())
-        assertEquals(listOf("washington post"), metadata.unstoppedAppMap["washington post"])
-        assertEquals(listOf("my my"), metadata.unstoppedAppMap[""])
     }
 
     @Test
@@ -51,25 +42,15 @@ class MetadataTest {
             "my my my" to "com.mymy"
         ).map {
             assertEquals(
-                "expected metadata.getPackageForAppName(\"${it.first}\") to return \"${it.second}\"",
                 it.second,
-                metadata.getPackageForAppName(it.first))
+                metadata.getPackageForAppName(it.first),
+                "expected metadata.getPackageForAppName(\"${it.first}\") to return \"${it.second}\""
+            )
         }
     }
 
     companion object {
-        internal fun getMetadata(language: Language): Metadata {
-            val context = mock(Context::class.java)
-            val pm = mock(PackageManager::class.java)
-            `when`(context.packageManager).thenReturn(pm)
-            `when`(
-                pm.queryIntentActivities(
-                    any(android.content.Intent::class.java), anyInt()
-                )
-            ).thenReturn(emptyList())
-            return Metadata(context, language)
-        }
-        private const val STOPWORDS = "be my please the"
+        private const val STOPWORDS = "be for my please the"
         private val apps = listOf(
             Pair("Be My Eyes", "com.bemyeyes"),
             Pair("The Eyes", "org.theeyes"),
@@ -77,5 +58,37 @@ class MetadataTest {
             Pair("Washington Post", "com.wapo"),
             Pair("My My", "com.mymy")
         )
+
+        // TODO: Populate these data structures.
+        private val appInfo = mutableMapOf<String, ApplicationInfo>() // for mocking pm.getApplicationInfo()
+        private val appLabels = mutableMapOf<ApplicationInfo, String>() // for mocking pm.getApplicationLabel()
+
+        internal fun getMetadata(language: Language = LanguageTest.getLanguage()): Metadata {
+            val context = mockk<Context>(relaxed = true)
+            val pm = mockk<PackageManager>(relaxed = true)
+            every { context.packageManager } returns pm
+            val resolveInfoList = apps.map {
+                makeResolveInfo(it.first, it.second)
+            }
+            every { pm.queryIntentActivities(any(), any()) } returns resolveInfoList
+            val packageName = slot<String>()
+            every { pm.getApplicationInfo(capture(packageName), 0) } answers { appInfo[packageName.captured] }
+            val appInfo = slot<ApplicationInfo>()
+            every { pm.getApplicationLabel(capture(appInfo)) } answers { appLabels[appInfo.captured] }
+            return Metadata(context, language)
+        }
+
+        private fun makeResolveInfo(appName: String, packageName: String, exported: Boolean = true):
+                ResolveInfo {
+            val activityInfo = mockk<ActivityInfo>(relaxed = true)
+            activityInfo.exported = exported
+            activityInfo.packageName = packageName
+            val resolveInfo = mockk<ResolveInfo>(relaxed = true)
+            resolveInfo.activityInfo = activityInfo
+            val applicationInfo = mockk<ApplicationInfo>()
+            appInfo[packageName] = applicationInfo
+            appLabels[applicationInfo] = appName
+            return resolveInfo
+        }
     }
 }

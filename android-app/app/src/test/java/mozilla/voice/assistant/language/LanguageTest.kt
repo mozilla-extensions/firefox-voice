@@ -1,32 +1,19 @@
 package mozilla.voice.assistant.language
 
 import android.content.Context
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(MockitoJUnitRunner::class)
 class LanguageTest {
     private lateinit var language: Language
 
-    companion object {
-        fun getLanguage(stopwords: String = ""): Language {
-            val context = mock(Context::class.java)
-            `when`(context.assets).thenReturn(null)
-            return Language(context).apply {
-                addAllStopwords(listOf(stopwords))
-            }
-        }
-    }
-
-    @Before
+    @BeforeEach
     fun reset() {
         language = getLanguage("fee fie fum")
     }
@@ -41,19 +28,30 @@ class LanguageTest {
     }
 
     @Test
+    fun testRemoveStopwords() {
+        listOf(
+            "fee fie washington post fum",
+            "washington post fum",
+            "washington fee post"
+        ).map {
+            assertEquals("washington post", language.stripStopwords(it))
+        }
+    }
+
+    @Test
     fun testContainsStopwords() {
         listOf("one fee two", "fee fie foe fum", "fum fum bar").forEach {
             assertTrue(
-                "language.containsStopWords(\"$it\") should have returned true",
-                language.containsStopwords(it))
+                language.containsStopwords(it),
+                "language.containsStopWords(\"$it\") should have returned true"
+            )
         }
     }
 
     private fun testFailingAlias(alias: String) {
-        try {
+        assertThrows(java.lang.IllegalArgumentException::class.java) {
             language.addAlias(alias)
-            fail("There should have been an error when this was passed to addAlias(): $alias")
-        } catch (_: IllegalArgumentException) {}
+        }
     }
 
     @Test
@@ -90,5 +88,15 @@ class LanguageTest {
         ), language.getMultiwordAliases("downward"))
         assertEquals(0, language.getAliasesSize())
         assertEquals(1, language.getMultiwordAliasesSize())
+    }
+
+    companion object {
+        fun getLanguage(stopwords: String = ""): Language {
+            val context = mockk<Context>()
+            every { context.assets } returns null
+            return Language(context).apply {
+                addAllStopwords(listOf(stopwords))
+            }
+        }
     }
 }
