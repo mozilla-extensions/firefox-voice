@@ -2,7 +2,11 @@ package mozilla.voice.assistant.language
 
 import mozilla.voice.assistant.intents.TomlException
 import mozilla.voice.assistant.intents.TomlParser
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -136,11 +140,8 @@ class TomlParserTest {
             "onefield",
             "no dots"
         ).forEach {
-            try {
+            assertThrows(TomlException::class.java) {
                 parser.getString(it)
-                fail("parser.getString('$it') should have thrown an error")
-            } catch (e: TomlException) {
-                // expected
             }
         }
         assertNull(parser.getString("foo.bar")) // legal string, not in table

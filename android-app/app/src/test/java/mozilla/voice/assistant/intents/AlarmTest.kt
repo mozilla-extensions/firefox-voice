@@ -5,7 +5,6 @@ import mozilla.voice.assistant.intents.alarm.Alarm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.robolectric.RobolectricTestRunner
 
 class AlarmTest {
     private val calendar330PM = Calendar.getInstance()

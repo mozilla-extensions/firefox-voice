@@ -6,13 +6,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CompilerTest {
+    companion object {
+        private val STOPWORDS = "me my for please"
+    }
     private lateinit var compiler: Compiler
     private lateinit var language: Language
 
     @BeforeEach
     fun setup() {
-        language = LanguageTest.getLanguage()
-     //   compiler = Compiler(MetadataTest.getMetadata(), language)
+        language = LanguageTest.getLanguage(STOPWORDS)
+        compiler = Compiler(MetadataTest.getMetadata(language), language)
     }
 
     @Test
@@ -79,7 +82,7 @@ class CompilerTest {
 
     @Test
     fun testAlternativeMatches() {
-        language.addStopwords("my")
+        // stopwords include "my"
         val phrase = "(hi | hello) world"
         listOf(
             Pair("hello world", "MatchResult(\"hello world^^\", capturedWords: 2)"),
@@ -95,7 +98,7 @@ class CompilerTest {
 
     @Test
     fun testStopwords() {
-        language.addStopwords("me for please")
+        // stopwords include "for", "me", and "my"
         val phrase = "(launch | open) (new |) (tab | page)"
         listOf(
             Pair("launch new tab", "MatchResult(\"launch new tab^^\", capturedWords: 3)"),

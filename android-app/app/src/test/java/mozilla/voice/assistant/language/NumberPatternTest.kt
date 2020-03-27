@@ -15,7 +15,7 @@ class NumberPatternTest {
 
     private fun expectMatch(s: String) {
         val results = numberPattern.matchUtterance(MatchResult(s, language))
-        assertEquals( 1, results.size, "$s was not recognized as a number")
+        assertEquals(1, results.size, "$s was not recognized as a number")
     }
 
     private fun expectNoMatch(s: String) {

@@ -1,7 +1,7 @@
 package mozilla.voice.assistant.intents.launch
 
 import android.content.Context
-import android.util.Log
+import java.lang.AssertionError
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.ParseResult
 
@@ -22,13 +22,11 @@ class Launch {
             metadata: Metadata
         ) =
             pr.slots[APP_KEY]?.let {
-                context?.packageManager?.getLaunchIntentForPackage(
-                    metadata.getPackageForAppName(it)
-                ) ?: let {
-                    // This should happen only if the app was uninstalled after this one started up.
-                    Log.e("Launch", "Unable to find package for app named $it")
-                    null
-                }
-            }
+                metadata.getPackageForAppName(it)?.let {
+                    // This could be null if the app was uninstalled after the
+                    // helper app started.
+                    context?.packageManager?.getLaunchIntentForPackage(it)
+                } ?: throw AssertionError("Unable to find app named '$it'")
+            } ?: throw AssertionError("No app slot available in openApp?!?!")
     }
 }

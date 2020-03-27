@@ -17,22 +17,16 @@ class Language(context: Context) {
     private val aliases: MutableMap<String, MutableList<String>> = mutableMapOf()
     private val multiwordAliases: MutableMap<String, MutableList<List<String>>> =
         mutableMapOf()
-    private val stopwords: MutableSet<String> = mutableSetOf()
-
-    // stopwordsRegex is initialized when stripStopwords() is first called,
-    // so no new stopwords should be added after the first call. Initialization
-    // is not done in init because tests might call addStopwords() after init has run.
-    private var stopwordsRegexInitialized = false
-    private val stopwordsRegex: Regex by lazy {
-        stopwordsRegexInitialized = true
-        Regex(stopwords.joinToString(separator = "|"))
-    }
+    // These are initialized in addAllStopwords().
+    private lateinit var stopwords: List<String>
+    private lateinit var stopwordsRegex: Regex
 
     internal fun getAliases(s: String): List<String>? = aliases[s]
     internal fun getMultiwordAliases(s: String): List<List<String>>? = multiwordAliases[s]
     internal fun isStopword(word: String) = stopwords.contains(word)
 
     init {
+        val stopwordLines = mutableSetOf<String>()
         var section: String? = null
         // While I could use the TOML parser, the file is simple enough to parse directly.
         context.assets?.open("langs/english.toml")?.run {
@@ -49,25 +43,25 @@ class Language(context: Context) {
                     } else {
                         when (section) {
                             "aliases" -> addAlias(line)
-                            "stopwords" -> addStopwords(line)
+                            "stopwords" -> stopwordLines.add(line)
                             null -> throw TomlException("Data encountered before section heading")
                             else -> throw TomlException("Unexpected section $section")
                         }
                     }
                 }
+            addAllStopwords(stopwordLines)
         }
     }
 
+    // This should be called exactly once, either from init (for real execution)
+    // or from a test method.
     @VisibleForTesting
-    internal fun addStopwords(line: String) {
-        require(!stopwordsRegexInitialized)
-        line.trim().split(spacesRegex).forEach { stopwords.add(it) }
+    internal fun addAllStopwords(lines: Collection<String>) {
+        stopwords = lines.flatMap {
+            it.trim().split(spacesRegex)
+        }
+        stopwordsRegex = Regex(stopwords.joinToString(separator = "|"))
     }
-
-    internal fun stripStopwords(s: String) =
-        s.replace(stopwordsRegex, "")
-            .replace(spacesRegex, " ")
-            .trim()
 
     @VisibleForTesting
     internal fun addAlias(line: String) {
@@ -84,6 +78,13 @@ class Language(context: Context) {
             aliases.add(proper, alias)
         }
     }
+
+    internal fun stripStopwords(s: String) =
+        s.replace(stopwordsRegex, "")
+            .replace(spacesRegex, " ")
+            .trim()
+
+    internal fun containsStopwords(s: String) = stopwordsRegex.find(s) != null
 
     // The below methods exist only for testing.
 

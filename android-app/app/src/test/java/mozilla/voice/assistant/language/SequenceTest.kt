@@ -9,7 +9,7 @@ class SequenceTest {
 
     @BeforeEach
     fun setup() {
-        language = LanguageTest.getLanguage()
+        language = LanguageTest.getLanguage(stopwords = "the")
     }
 
     @Test
@@ -46,7 +46,6 @@ class SequenceTest {
 
     @Test
     fun testWildcardSequence3() {
-        language.addStopwords("the")
         val sequence = Sequence(
             listOf(
                 Wildcard(empty = true),

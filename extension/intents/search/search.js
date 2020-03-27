@@ -420,6 +420,20 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "search.searchGoogle",
+  async run(context) {
+    if (buildSettings.android) {
+      await performSearch(context.slots.query);
+    } else {
+      await browser.search.search({
+        query: context.slots.query,
+        engine: "Google",
+      });
+    }
+  },
+});
+
 async function init() {
   const engines = await browser.search.get();
   for (const engine of engines) {

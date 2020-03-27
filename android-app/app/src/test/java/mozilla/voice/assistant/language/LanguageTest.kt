@@ -2,34 +2,24 @@ package mozilla.voice.assistant.language
 
 import android.content.Context
 import io.mockk.every
-import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(MockKExtension::class)
 class LanguageTest {
     private lateinit var language: Language
 
-    companion object {
-        fun getLanguage(): Language {
-            val context = mockk<Context>()
-            every { context.assets } returns null
-            return Language(context)
-        }
-    }
-
     @BeforeEach
     fun reset() {
-        language = getLanguage()
+        language = getLanguage("fee fie fum")
     }
 
     @Test
-    fun testAddStopwords() {
-        language.addStopwords("fee fie fum")
+    fun testStopwords() {
         assertEquals(3, language.getStopwordsSize())
         assertTrue(language.isStopword("fee"))
         assertTrue(language.isStopword("fie"))
@@ -39,13 +29,22 @@ class LanguageTest {
 
     @Test
     fun testRemoveStopwords() {
-        language.addStopwords("please show me the")
         listOf(
-            "please please show me the washington post",
-            "washington show post",
-            "washington post please show me"
+            "fee fie washington post fum",
+            "washington post fum",
+            "washington fee post"
         ).map {
             assertEquals("washington post", language.stripStopwords(it))
+        }
+    }
+
+    @Test
+    fun testContainsStopwords() {
+        listOf("one fee two", "fee fie foe fum", "fum fum bar").forEach {
+            assertTrue(
+                language.containsStopwords(it),
+                "language.containsStopWords(\"$it\") should have returned true"
+            )
         }
     }
 
@@ -89,5 +88,15 @@ class LanguageTest {
         ), language.getMultiwordAliases("downward"))
         assertEquals(0, language.getAliasesSize())
         assertEquals(1, language.getMultiwordAliasesSize())
+    }
+
+    companion object {
+        fun getLanguage(stopwords: String = ""): Language {
+            val context = mockk<Context>()
+            every { context.assets } returns null
+            return Language(context).apply {
+                addAllStopwords(listOf(stopwords))
+            }
+        }
     }
 }
