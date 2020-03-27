@@ -19,7 +19,7 @@ let timerElapsed = false;
 let recorder;
 // this needs to be global to avoid a weird race condition that occurs
 // when setting it as internal state.
-let isFirstRecording = true;
+let shouldListen = true;
 const listenForFollowUp = true;
 let recorderIntervalId;
 let timerIntervalId;
@@ -459,13 +459,13 @@ export const PopupController = function() {
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
-      isFirstRecording = true;
+      shouldListen = true;
     });
   };
 
   const startRecorder = () => {
     recorder.onBeginRecording = () => {
-      if (isFirstRecording) {
+      if (shouldListen) {
         setPopupView("listening");
         userSettingsPromise.then(userSettings => {
           if (userSettings.chime) {
@@ -502,8 +502,8 @@ export const PopupController = function() {
         text: json.data[0].text,
       });
       if (listenForFollowUp) {
-        if (isFirstRecording) {
-          isFirstRecording = false;
+        if (shouldListen) {
+          shouldListen = false;
         }
         updateLastIntent();
         recorder.startRecording();
