@@ -23,6 +23,7 @@ let shouldListen = true;
 const listenForFollowUp = true;
 let recorderIntervalId;
 let timerIntervalId;
+let closePopupId;
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -73,6 +74,7 @@ export const PopupController = function() {
   const DEFAULT_TIMEOUT = 2500;
   // Timeout for the popup when there's text displaying:
   const TEXT_TIMEOUT = 7000;
+  const FOLLOWUP_TIMEOUT = 5000;
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
@@ -169,7 +171,9 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        closePopup(message.time);
+        if (!listenForFollowUp && !lastIntent.runFollowUp) {
+          closePopup(message.time);
+        }
         break;
       }
       case "displayFailure": {
@@ -190,6 +194,9 @@ export const PopupController = function() {
       case "displayText": {
         setDisplayText(message.message);
         overrideTimeout = TEXT_TIMEOUT;
+        if (lastIntent.closePopupOnFinish) {
+          closePopup();
+        }
         break;
       }
       case "displayAutoplayFailure": {
@@ -428,9 +435,14 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-
+    if (listenForFollowUp || lastIntent.runFollowUp) {
+      ms = FOLLOWUP_TIMEOUT;
+    }
+    if (closePopupId) {
+      clearTimeout(closePopupId);
+    }
     // TODO: offload mic and other resources before closing?
-    setTimeout(() => {
+    closePopupId = setTimeout(() => {
       window.close();
     }, ms);
   };
@@ -507,6 +519,7 @@ export const PopupController = function() {
         }
         updateLastIntent();
         recorder.startRecording();
+        closePopup();
       }
     };
     recorder.onError = error => {
@@ -535,6 +548,7 @@ export const PopupController = function() {
     };
     recorder.onStartVoice = () => {
       clearInterval(noVoiceInterval);
+      clearTimeout(closePopupId);
     };
     recorder.startRecording();
   };
