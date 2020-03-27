@@ -493,13 +493,15 @@ export const PopupController = function() {
         type: "runIntent",
         text: json.data[0].text,
       });
-      if (isFirstRecording) {
-        isFirstRecording = false;
-        setPopupView("success");
-      }
       if (listenForFollowUp) {
+        if (isFirstRecording) {
+          isFirstRecording = false;
+          setPopupView("success");
+        }
         updateLastIntent();
         recorder.startRecording();
+      } else {
+        setPopupView("success");
       }
       executedIntent = true;
     };
