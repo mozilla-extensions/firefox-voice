@@ -9,6 +9,7 @@ import * as browserUtil from "../browserUtil.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
+import * as hooks from "./hooks.js";
 
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
@@ -16,6 +17,8 @@ let isInitialized = false;
 let forceCancelRecoder = false;
 let timerElapsed = false;
 let recorder;
+// this needs to be global to avoid a weird race condition that occurs
+// when setting it as internal state.
 let isFirstRecording = true;
 const listenForFollowUp = true;
 let recorderIntervalId;
@@ -57,6 +60,8 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
+
+  const debouncedCurrentView = hooks.useDebounce(currentView, 500);
 
   let executedIntent = false;
   let stream = null;
@@ -454,6 +459,7 @@ export const PopupController = function() {
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
+      isFirstRecording = true;
     });
   };
 
@@ -475,6 +481,8 @@ export const PopupController = function() {
         // The recorder ended because it was cancelled when typing began or timer has ended
         return;
       }
+      setPopupView("success");
+      executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       if (json === null) {
@@ -496,14 +504,10 @@ export const PopupController = function() {
       if (listenForFollowUp) {
         if (isFirstRecording) {
           isFirstRecording = false;
-          setPopupView("success");
         }
         updateLastIntent();
         recorder.startRecording();
-      } else {
-        setPopupView("success");
       }
-      executedIntent = true;
     };
     recorder.onError = error => {
       if (String(error) === "Error: Failed response from server: 500") {
@@ -517,9 +521,6 @@ export const PopupController = function() {
       log.error("Got recorder error:", String(error), error);
     };
     recorder.onProcessing = () => {
-      // setting to null here prevents stale text from being displayed
-      setDisplayText(null);
-      setTranscript(null);
       setPopupView("processing");
       browser.runtime.sendMessage({ type: "microphoneStopped" });
     };
@@ -606,7 +607,7 @@ export const PopupController = function() {
 
   return (
     <popupView.Popup
-      currentView={currentView}
+      currentView={debouncedCurrentView}
       suggestions={suggestions}
       feedback={feedback}
       lastIntent={lastIntent}

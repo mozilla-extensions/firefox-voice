@@ -4,7 +4,7 @@
 
 import * as browserUtil from "../browserUtil.js";
 
-const { Component, useState, useEffect, PureComponent } = React;
+const { useState, useEffect, PureComponent } = React;
 
 export const Popup = ({
   currentView,
@@ -82,6 +82,7 @@ export const Popup = ({
       ) : null}
       {listenForFollowUp &&
         currentView !== "listening" &&
+        currentView !== "waiting" &&
         currentView !== "processing" && (
           <FollowUpContainer lastIntent={lastIntent} />
         )}
@@ -229,6 +230,7 @@ const PopupContent = ({
           <ProcessingContent
             transcript={transcript}
             displayText={displayText}
+            listenForFollowUp={listenForFollowUp}
           />
         );
       case "success":
@@ -656,11 +658,11 @@ class TypingInput extends PureComponent {
   }
 }
 
-const ProcessingContent = ({ transcript, displayText }) => {
+const ProcessingContent = ({ transcript, displayText, listenForFollowUp }) => {
   return (
     <React.Fragment>
-      <Transcript transcript={transcript} />
-      <TextDisplay displayText={displayText} />
+      <Transcript transcript={listenForFollowUp ? "" : transcript} />
+      <TextDisplay displayText={listenForFollowUp ? "" : displayText} />
     </React.Fragment>
   );
 };
@@ -810,7 +812,7 @@ const TextDisplay = ({ displayText }) => {
   return displayText ? <div id="text-display">{displayText}</div> : null;
 };
 
-class Zap extends Component {
+class Zap extends PureComponent {
   constructor(props) {
     super(props);
 
