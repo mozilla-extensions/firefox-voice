@@ -57,9 +57,8 @@ this.player = (function() {
         }
         const volumeup = new KeyboardEvent("keydown", {
           bubbles: true,
-          key: 38,
+          key: "ArrowUp",
           keyCode: 38,
-          which: 38,
           shiftKey: true,
         });
         for (let step = 0; step < volumeChangeSteps; step++) {
@@ -68,9 +67,8 @@ this.player = (function() {
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
         const volumedown = new KeyboardEvent("keydown", {
           bubbles: true,
-          key: 40,
+          key: "ArrowDown",
           keyCode: 40,
-          which: 40,
           shiftKey: true,
         });
         for (let step = 0; step < volumeChangeSteps; step++) {
