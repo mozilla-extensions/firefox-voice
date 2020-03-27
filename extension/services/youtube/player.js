@@ -65,7 +65,7 @@ this.player = (function() {
       const maxVolume = 1.0;
       const minVolume = 0.0;
       const ariaValueFactor = 0.01;
-      const heightFactor = 2.5; 
+      const heightFactor = 2.5;
       const ytVideo = this.querySelector(`${this.selector} .html5-main-video`);
       const volumePanel = this.querySelector(
         `${this.selector} .ytp-volume-panel`
@@ -76,13 +76,16 @@ this.player = (function() {
       let volumeNow = ytVideo.volume;
       let ariaValueNow = parseInt(volumePanel.getAttribute("aria-valuenow"));
       let volumeSliderValue = ariaValueNow / heightFactor;
-      let volumeChange = 0.2;
+      const volumeChange = 0.2;
 
       if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
         if (this.isMuted()) {
           this.action_unmute();
         }
-        volumeNow = volumeNow <= maxVolume - volumeChange ? volumeNow + volumeChange : maxVolume;
+        volumeNow =
+          volumeNow <= maxVolume - volumeChange
+            ? volumeNow + volumeChange
+            : maxVolume;
         ytVideo.volume = volumeNow;
         ariaValueNow = Math.round(volumeNow / ariaValueFactor);
         volumeSliderValue = ariaValueNow / heightFactor;
@@ -93,7 +96,10 @@ this.player = (function() {
           volumeSliderHandle.style.left = `${volumeSliderValue}px`;
         };
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
-        volumeNow = volumeNow >= minVolume + volumeChange ? volumeNow - volumeChange : minVolume;
+        volumeNow =
+          volumeNow >= minVolume + volumeChange
+            ? volumeNow - volumeChange
+            : minVolume;
         ytVideo.volume = volumeNow;
         ariaValueNow = Math.round(volumeNow / ariaValueFactor);
         volumeSliderValue = ariaValueNow / heightFactor;

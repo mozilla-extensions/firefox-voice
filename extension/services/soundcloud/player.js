@@ -47,34 +47,34 @@ this.player = (function() {
       const minVolume = 0.0;
       const volumeChangeReceiver = this.querySelector(".volume");
       const sliderWrapper = this.querySelector(".volume__sliderWrapper");
-      let volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
-      let volumeChange = 0.2;
-      let volumeChangeSteps = volumeChange * 10;
-      
+      const volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
+      const volumeChange = 0.2;
+      const volumeChangeSteps = volumeChange * 10;
+
       if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
         if (this.isMuted()) {
           this.action_unmute();
         }
-        var keydownEvent = new KeyboardEvent("keydown", {
+        const volumeup = new KeyboardEvent("keydown", {
           bubbles: true,
           key: 38,
           keyCode: 38,
           which: 38,
-          shiftKey: true, 
-        });  
+          shiftKey: true,
+        });
         for (let step = 0; step < volumeChangeSteps; step++) {
-          volumeChangeReceiver.dispatchEvent(keydownEvent);
+          volumeChangeReceiver.dispatchEvent(volumeup);
         }
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
-        var keydownEvent = new KeyboardEvent("keydown", {
+        const volumedown = new KeyboardEvent("keydown", {
           bubbles: true,
           key: 40,
           keyCode: 40,
           which: 40,
-          shiftKey: true, 
-        });  
+          shiftKey: true,
+        });
         for (let step = 0; step < volumeChangeSteps; step++) {
-          volumeChangeReceiver.dispatchEvent(keydownEvent);
+          volumeChangeReceiver.dispatchEvent(volumedown);
         }
       }
     }
@@ -82,7 +82,7 @@ this.player = (function() {
     isMuted() {
       const sliderWrapper = this.querySelector(".volume__sliderWrapper");
       const volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
-      const muted =  volumeNow === 0;
+      const muted = volumeNow === 0;
       return muted ? 1 : 0;
     }
 
