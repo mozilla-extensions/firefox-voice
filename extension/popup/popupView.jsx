@@ -29,6 +29,7 @@ export const Popup = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
+  listenForFollowUp,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -78,6 +79,11 @@ export const Popup = ({
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
+      {listenForFollowUp &&
+        currentView !== "listening" &&
+        currentView !== "processing" && (
+          <FollowUpContainer lastIntent={lastIntent} />
+        )}
     </div>
   );
 };
@@ -280,17 +286,21 @@ const PopupContent = ({
   );
 };
 
-const FollowUpContainer = ({ children }) => {
+const FollowUpContainer = ({ lastIntent }) => {
+  if (!lastIntent) {
+    return null;
+  }
+
   return (
     <div id="followup-container">
       <IntentFeedback />
       <div id="followup-wrapper">
         <div id="mic-container">Mic On</div>
-        {children ? (
-          children
-        ) : (
-          <div style={{ color: "white" }}>Waiting on Follow up</div>
-        )}
+        <div>
+          {lastIntent.followUpHint.map(text => (
+            <div style={{ color: "white" }}>{text}</div>
+          ))}
+        </div>
       </div>
     </div>
   );

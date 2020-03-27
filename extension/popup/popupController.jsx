@@ -16,6 +16,8 @@ let isInitialized = false;
 let forceCancelRecoder = false;
 let timerElapsed = false;
 let recorder;
+let isFirstRecording = true;
+const listenForFollowUp = true;
 let recorderIntervalId;
 let timerIntervalId;
 // This is feedback that the user started, but hasn't submitted;
@@ -457,12 +459,14 @@ export const PopupController = function() {
 
   const startRecorder = () => {
     recorder.onBeginRecording = () => {
-      setPopupView("listening");
-      userSettingsPromise.then(userSettings => {
-        if (userSettings.chime) {
-          playListeningChime();
-        }
-      });
+      if (isFirstRecording) {
+        setPopupView("listening");
+        userSettingsPromise.then(userSettings => {
+          if (userSettings.chime) {
+            playListeningChime();
+          }
+        });
+      }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
     recorder.onEnd = json => {
@@ -471,8 +475,6 @@ export const PopupController = function() {
         // The recorder ended because it was cancelled when typing began or timer has ended
         return;
       }
-      setPopupView("success");
-      executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       if (json === null) {
@@ -491,6 +493,15 @@ export const PopupController = function() {
         type: "runIntent",
         text: json.data[0].text,
       });
+      if (isFirstRecording) {
+        isFirstRecording = false;
+        setPopupView("success");
+      }
+      if (listenForFollowUp) {
+        updateLastIntent();
+        recorder.startRecording();
+      }
+      executedIntent = true;
     };
     recorder.onError = error => {
       if (String(error) === "Error: Failed response from server: 500") {
@@ -612,6 +623,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
+      listenForFollowUp={listenForFollowUp}
     />
   );
 };
