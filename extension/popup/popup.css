@@ -67,7 +67,8 @@ body,
   padding-bottom: 3rem;
 }
 
-#popup:not(.searchResults) #popup-content {
+#popup:not(.searchResults) #popup-content,
+#popup:not(.listenForFollowUp) #popup-content {
   padding-bottom: 0;
 }
 
@@ -400,6 +401,9 @@ a#lexicon {
 }
 
 #next-result {
+  margin: 0 0.5em;
+  padding: 0.5em 0 0;
+  border-top: 1px solid #ededf0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

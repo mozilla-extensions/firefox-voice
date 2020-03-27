@@ -39,7 +39,7 @@ export const Popup = ({
     onInputStarted();
   }
   return (
-    <div id="popup" className={currentView}>
+    <div id="popup" className={`${currentView} ${listenForFollowUp}`}>
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -67,6 +67,7 @@ export const Popup = ({
         expandListeningView={expandListeningView}
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
+        listenForFollowUp={listenForFollowUp}
       />
       <PopupFooter
         currentView={currentView}
@@ -201,6 +202,7 @@ const PopupContent = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
+  listenForFollowUp,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -251,6 +253,7 @@ const PopupContent = ({
             onNextSearchResultClick={onNextSearchResultClick}
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
+            listenForFollowUp={listenForFollowUp}
           />
         );
       case "startSavingPage":
@@ -704,6 +707,7 @@ const SearchResultsContent = ({
   onNextSearchResultClick,
   setMinPopupSize,
   onSubmitFeedback,
+  listenForFollowUp,
 }) => {
   if (!search) return null;
 
@@ -767,29 +771,33 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      <div id="search-results">{renderCard()}</div>
-      <div id="search-footer">
-        <IntentFeedback
-          onSubmitFeedback={onSubmitFeedback}
-          eduText={card && card.answer ? card.answer.eduText : null}
-        />
-        {next ? (
-          <div id="next-result">
-            <p>
-              <strong>
-                Click mic and say <i>'next'</i> to view
-              </strong>
-            </p>
-            <a
-              href={next.url}
-              id="search-show-next"
-              onClick={onNextResultClick}
-            >
-              {new URL(next.url).hostname} | {next.title}
-            </a>
+      {listenForFollowUp ? null : (
+        <React.Fragment>
+          <div id="search-results">{renderCard()}</div>
+          <div id="search-footer">
+            <IntentFeedback
+              onSubmitFeedback={onSubmitFeedback}
+              eduText={card && card.answer ? card.answer.eduText : null}
+            />
+            {next ? (
+              <div id="next-result">
+                <p>
+                  <strong>
+                    Click mic and say <i>'next'</i> to view
+                  </strong>
+                </p>
+                <a
+                  href={next.url}
+                  id="search-show-next"
+                  onClick={onNextResultClick}
+                >
+                  {new URL(next.url).hostname} | {next.title}
+                </a>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
