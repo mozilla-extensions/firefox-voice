@@ -160,15 +160,15 @@ test = true
 [music.volume]
 description = "Adjust music volume"
 match = """
-  (increase | turn up) (music | audio | video |) (volume | the volume) [level=levelUp] 
-  (make it louder | louder) [level=levelUp] 
-  (decrease | turn down) (music | audio | video |) (volume | the volume) [level=levelDown] 
-  (make it softer | softer) [level=levelDown] 
+  (increase | turn up) (music | audio | video |) (volume | the volume) [volumeLevel=levelUp] 
+  (make it louder | louder) [volumeLevel=levelUp] 
+  (decrease | turn down) (music | audio | video |) (volume | the volume) [volumeLevel=levelDown] 
+  (make it softer | softer) [volumeLevel=levelDown] 
 """
 
 [music.volume.example]
 phrase = "increase volume"
-expectParameters = {level = "levelUp"}
+expectParameters = {volumeLevel = "levelUp"}
 
 [music.mute]
 description = "mute music volume"

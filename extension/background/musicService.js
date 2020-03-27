@@ -76,6 +76,21 @@ class MusicService extends serviceList.Service {
       await this.callOneTab(tab.id, "pause");
     }
   }
+
+  async adjustVolume(volumeLevel) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("adjustVolume", { volumeLevel });
+  }
+
+  async mute() {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("mute");
+  }
+
+  async unmute() {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("unmute");
+  }
 }
 
 export default MusicService;

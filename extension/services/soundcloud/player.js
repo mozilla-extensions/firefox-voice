@@ -41,6 +41,64 @@ this.player = (function() {
         playControlsBtn[0].click();
       }
     }
+
+    action_adjustVolume({ volumeLevel }) {
+      const maxVolume = 1.0;
+      const minVolume = 0.0;
+      const volumeChangeReceiver = this.querySelector(".volume");
+      const sliderWrapper = this.querySelector(".volume__sliderWrapper");
+      let volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
+      let volumeChange = 0.2;
+      let volumeChangeSteps = volumeChange * 10;
+      
+      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
+        if (this.isMuted()) {
+          this.action_unmute();
+        }
+        var keydownEvent = new KeyboardEvent("keydown", {
+          bubbles: true,
+          key: 38,
+          keyCode: 38,
+          which: 38,
+          shiftKey: true, 
+        });  
+        for (let step = 0; step < volumeChangeSteps; step++) {
+          volumeChangeReceiver.dispatchEvent(keydownEvent);
+        }
+      } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
+        var keydownEvent = new KeyboardEvent("keydown", {
+          bubbles: true,
+          key: 40,
+          keyCode: 40,
+          which: 40,
+          shiftKey: true, 
+        });  
+        for (let step = 0; step < volumeChangeSteps; step++) {
+          volumeChangeReceiver.dispatchEvent(keydownEvent);
+        }
+      }
+    }
+
+    isMuted() {
+      const sliderWrapper = this.querySelector(".volume__sliderWrapper");
+      const volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
+      const muted =  volumeNow === 0;
+      return muted ? 1 : 0;
+    }
+
+    action_mute() {
+      if (!this.isMuted()) {
+        const muteButton = this.querySelector(".volume__button");
+        muteButton.click();
+      }
+    }
+
+    action_unmute() {
+      if (this.isMuted()) {
+        const unmuteButton = this.querySelector(".volume__button");
+        unmuteButton.click();
+      }
+    }
   }
   Player.register();
 })();

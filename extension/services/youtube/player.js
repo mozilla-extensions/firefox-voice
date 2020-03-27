@@ -61,9 +61,11 @@ this.player = (function() {
       button.click();
     }
 
-    action_adjustVolume({ level }) {
+    action_adjustVolume({ volumeLevel }) {
       const maxVolume = 1.0;
       const minVolume = 0.0;
+      const ariaValueFactor = 0.01;
+      const heightFactor = 2.5; 
       const ytVideo = this.querySelector(`${this.selector} .html5-main-video`);
       const volumePanel = this.querySelector(
         `${this.selector} .ytp-volume-panel`
@@ -73,24 +75,28 @@ this.player = (function() {
       );
       let volumeNow = ytVideo.volume;
       let ariaValueNow = parseInt(volumePanel.getAttribute("aria-valuenow"));
-      let volumeSliderValue = ariaValueNow / 2.5;
+      let volumeSliderValue = ariaValueNow / heightFactor;
+      let volumeChange = 0.2;
 
-      if (level === "levelUp" && volumeNow < 1.0) {
-        volumeNow = volumeNow <= maxVolume - 0.2 ? volumeNow + 0.2 : maxVolume;
+      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
+        if (this.isMuted()) {
+          this.action_unmute();
+        }
+        volumeNow = volumeNow <= maxVolume - volumeChange ? volumeNow + volumeChange : maxVolume;
         ytVideo.volume = volumeNow;
-        ariaValueNow = Math.round(volumeNow / 0.01);
-        volumeSliderValue = ariaValueNow / 2.5;
+        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
+        volumeSliderValue = ariaValueNow / heightFactor;
 
         ytVideo.onvolumechange = () => {
           volumePanel.setAttribute("aria-valuenow", ariaValueNow);
           volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
           volumeSliderHandle.style.left = `${volumeSliderValue}px`;
         };
-      } else if (level === "levelDown" && volumeNow > 0.0) {
-        volumeNow = volumeNow >= minVolume + 0.2 ? volumeNow - 0.2 : minVolume;
+      } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
+        volumeNow = volumeNow >= minVolume + volumeChange ? volumeNow - volumeChange : minVolume;
         ytVideo.volume = volumeNow;
-        ariaValueNow = Math.round(volumeNow / 0.01);
-        volumeSliderValue = ariaValueNow / 2.5;
+        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
+        volumeSliderValue = ariaValueNow / heightFactor;
 
         ytVideo.onvolumechange = () => {
           volumePanel.setAttribute("aria-valuenow", ariaValueNow);
