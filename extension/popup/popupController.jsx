@@ -515,6 +515,9 @@ export const PopupController = function() {
       log.error("Got recorder error:", String(error), error);
     };
     recorder.onProcessing = () => {
+      // setting to null here prevents stale text from being displayed
+      setDisplayText(null);
+      setTranscript(null);
       setPopupView("processing");
       browser.runtime.sendMessage({ type: "microphoneStopped" });
     };
