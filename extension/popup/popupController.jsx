@@ -61,6 +61,7 @@ export const PopupController = function() {
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
   const [expectsFollowup, setExpectsFollowup] = useState(false);
+  const [followupText, setFollowupText] = useState(null);
 
   let executedIntent = false;
   let stream = null;
@@ -194,6 +195,16 @@ export const PopupController = function() {
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
           closePopup();
+        }
+        break;
+      }
+      case "handleFollowup": {
+        if (message.method === "enable") {
+          setExpectsFollowup(true);
+          setFollowupText(message.message);
+        } else {
+          setExpectsFollowup(false);
+          setFollowupText(null);
         }
         break;
       }
@@ -463,7 +474,7 @@ export const PopupController = function() {
         });
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
-      browser.runtime.sendMessage({ type: "resetFollowup" });
+      browser.runtime.sendMessage({ type: "resetFollowup", notifyUI: false });
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
@@ -483,7 +494,7 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = async json => {
+    recorder.onEnd = json => {
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
@@ -505,20 +516,17 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
-      const intent = await browser.runtime.sendMessage({
+      browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
-      if (listenForFollowup || intent.expectsFollowup) {
+      updateLastIntent();
+      if (listenForFollowup || expectsFollowup) {
         if (shouldListen) {
           shouldListen = false;
         }
-        setExpectsFollowup(true);
-        setLastIntent(intent);
         recorder.startRecording();
         closePopup(FOLLOWUP_TIMEOUT);
-      } else {
-        setExpectsFollowup(false);
       }
     };
     recorder.onError = error => {
@@ -643,6 +651,7 @@ export const PopupController = function() {
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
       renderFollowup={listenForFollowup || expectsFollowup}
+      followupText={followupText}
     />
   );
 };

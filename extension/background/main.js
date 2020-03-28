@@ -109,7 +109,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       intentParser.parse(message.utterance, message.disableFallback)
     );
   } else if (message.type === "resetFollowup") {
-    return intentRunner.resetFollowup();
+    return intentRunner.resetFollowup(message.notifyUI);
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`

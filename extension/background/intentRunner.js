@@ -91,12 +91,25 @@ export class IntentContext {
     });
   }
 
-  waitOnFollowup() {
+  async waitOnFollowup(message) {
     this.expectsFollowup = true;
+    return browser.runtime.sendMessage({
+      type: "handleFollowup",
+      method: "enable",
+      message,
+    });
   }
 
-  resetFollowup() {
+  async resetFollowup(notifyUI = true) {
     this.expectsFollowup = false;
+    if (notifyUI) {
+      browser.runtime.sendMessage({
+        type: "handleFollowup",
+        method: "disable",
+      });
+    }
+  }
+
   }
 
   displayText(message) {
@@ -435,9 +448,9 @@ export function clearFeedbackIntent() {
   lastIntent = null;
 }
 
-export function resetFollowup() {
+export function resetFollowup(notifyUI = true) {
   if (lastIntent) {
-    lastIntent.resetFollowup();
+    lastIntent.resetFollowup(notifyUI);
   }
 }
 
