@@ -368,36 +368,58 @@ a#lexicon {
   border-top: 1px solid #ededf073;
 }
 
-#mic-container {
-  margin-right: 4px;
+#followup_mic-container {
+  display: flex;
+  align-items: center;
   min-width: 80px;
-  width: calc(100vw * 0.25);
   color: #30e60b;
-  height: 21px;
+  height: 24px;
   font-size: 14px;
-  padding-top: 2px;
+  padding-right: 8px;
 }
 
-#mic-container:before {
+#followup_mic-container:before {
   display: inline-block;
+  align-self: start;
+  position: relative;
+  top: 3px;
   content: "";
   background-image: url("./images/mic-small.svg");
   background-repeat: no-repeat;
   background-size: 26px auto;
-  height: 15px;
+  height: 26px;
   width: 14px;
 }
 
-#mic-container:after {
+#followup_mic-container:after {
   display: inline-block;
   content: "";
   background-image: url("./images/right-arrow.svg");
-  background-size: 10px auto;
+  background-size: 11px auto;
   background-repeat: no-repeat;
-  height: 10px;
+  height: 12px;
   width: 12px;
   position: relative;
   left: 6px;
+  top: 1px;
+}
+
+#followup_headings-wrapper {
+  /* hack to allow text overflow ellipsis on children */
+  min-width: 1%;
+}
+
+#followup_heading,
+#followup_subheading {
+  color: white;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#followup_subheading {
+  font-size: 12px;
+  padding-top: 8px;
 }
 
 #next-result {

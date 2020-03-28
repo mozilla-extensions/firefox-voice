@@ -30,6 +30,7 @@ export const Popup = ({
   timerInMS,
   timerTotalInMS,
   renderFollowup,
+  followupText,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -72,11 +73,13 @@ export const Popup = ({
         timerTotalInMS={timerTotalInMS}
         renderFollowup={renderFollowup}
       />
-      <PopupFooter
-        currentView={currentView}
-        showSettings={showSettings}
-        timerInMS={timerInMS}
-      />
+      {!renderFollowup && (
+        <PopupFooter
+          currentView={currentView}
+          showSettings={showSettings}
+          timerInMS={timerInMS}
+        />
+      )}
       {timerInMS > 0 ? (
         <TimerFooter
           currentView={currentView}
@@ -87,7 +90,10 @@ export const Popup = ({
         currentView !== "listening" &&
         currentView !== "waiting" &&
         currentView !== "processing" && (
-          <FollowupContainer lastIntent={lastIntent} />
+          <FollowupContainer
+            lastIntent={lastIntent}
+            followupText={followupText}
+          />
         )}
     </div>
   );
@@ -294,20 +300,25 @@ const PopupContent = ({
   );
 };
 
-const FollowupContainer = ({ lastIntent }) => {
+const FollowupContainer = ({ lastIntent, followupText }) => {
   if (!lastIntent) {
     return null;
   }
 
+  let heading;
+  let subheading;
+  if (followupText) {
+    heading = followupText.heading ? followupText.heading : "Listening";
+    subheading = followupText.subheading ? followupText.subheading : null;
+  }
   return (
     <div id="followup-container">
       <IntentFeedback />
       <div id="followup-wrapper">
-        <div id="mic-container">Mic On</div>
-        <div>
-          {lastIntent.followUpHint.map(text => (
-            <div style={{ color: "white" }}>{text}</div>
-          ))}
+        <div id="followup_mic-container">Mic On</div>
+        <div id="followup_headings-wrapper">
+          <div id="followup_heading">{heading}</div>
+          {subheading && <div id="followup_subheading">{subheading}</div>}
         </div>
       </div>
     </div>
