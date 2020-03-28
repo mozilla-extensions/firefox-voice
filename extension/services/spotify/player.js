@@ -42,6 +42,18 @@ this.player = (function() {
 
         // Clickng on PlayerButton.
         playerButton.click();
+        try {
+          const playerButton = await this.waitForSelector(SEARCH_PLAY, {
+            timeout: 2000,
+            // There seem to be 3 fixed buttons that appear early before the search results
+            minCount: 4,
+          });
+          playerButton.click();
+        } catch (e) {
+          if (e.name === "TimeoutError") {
+            throw new Error("No search results");
+          }
+        }
       }
     }
 
@@ -55,26 +67,42 @@ this.player = (function() {
       button.click();
     }
 
-    action_move({ direction }) {
-      let selector;
+    async action_move({ direction }) {
       if (direction === "next") {
-        selector = ".control-button[title='Next']";
-      } else if (direction === "back") {
-        selector = ".control-button[title='Previous']";
+        const selector = ".control-button[title='Next']";
+        const button = this.querySelector(selector);
+        button.click();
+      } else if (direction === "previous") {
+        const selector = ".control-button[title='Previous']";
+        // Player time
+        const time = this.querySelector(".playback-bar__progress-time")
+          .innerHTML;
+        if (
+          /\b0:00\b/gi.test(time) ||
+          /\b0:01\b/gi.test(time) ||
+          /\b0:02\b/gi.test(time)
+        ) {
+          const firstClickBtn = this.querySelector(selector);
+          firstClickBtn.click();
+          return;
+        }
+        const firstClickBtn = this.querySelector(selector);
+        firstClickBtn.click();
+        // Since after the first click there is a delay in the selector
+        const secondClickBtn = await this.waitForSelector(selector);
+        secondClickBtn.click();
       }
-      const button = this.querySelector(selector);
-      button.click();
     }
 
-    async action_playAlbum({ query, thenPlay }) {
-      await this.action_search({ query, thenPlay });
+  async action_playAlbum({ query, thenPlay }) {
+    await this.action_search({ query, thenPlay });
 
-      // Clicking on card to get into album playlist.
-      // Important: The selectors to be changed when spotify updates their website.
-      const cards = this.querySelectorAll(
-        "#searchPage .react-contextmenu-wrapper"
-      )[0];
-      cards.childNodes[3].click();
+    // Clicking on card to get into album playlist.
+    // Important: The selectors to be changed when spotify updates their website.
+    const cards = this.querySelectorAll(
+      "#searchPage .react-contextmenu-wrapper"
+    )[0];
+    cards.childNodes[3].click();
     }
   }
 

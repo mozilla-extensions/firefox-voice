@@ -46,6 +46,23 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "window.close",
+  async run(context) {
+    // get current activeTab.windowId
+    const activeTab = await context.activeTab();
+    const currentWindowId = activeTab.windowId;
+    // getAll normal window
+    const gettingAll = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+    // find target windowId
+    const targetWindowId = findTargetWindowId(gettingAll, currentWindowId);
+    await browser.windows.remove(targetWindowId);
+    context.displayText("Window closed");
+  },
+});
+
+intentRunner.registerIntent({
   name: "window.quitApplication",
   async run(context) {
     await browser.experiments.voice.quitApplication();
