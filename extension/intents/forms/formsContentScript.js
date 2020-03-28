@@ -89,11 +89,7 @@ this.dictationContentScript = (function() {
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
         // eslint-disable-next-line no-unsanitized/property
-        el.innerHTML = insertString(
-          el.innerHTML,
-          quoteHtml(text),
-          el.selectionStart
-        );
+        insertStringContentEditable(quoteHtml(text), el);
       } else {
         el.value = insertString(el.value, text, el.selectionStart);
       }
@@ -246,6 +242,51 @@ this.dictationContentScript = (function() {
     }
 
     return `${startSlice}${spaceBefore}${snippet}${spaceAfter}${endSlice}`;
+  }
+
+  function insertStringContentEditable(snippet, containerElement) {
+    if (window.getSelection) {
+        const sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            let range = sel.getRangeAt(0);
+            // range.deleteContents(); TODO Maybe: overwrite selection
+
+            const modSnippet = prependAppendSpace(snippet, containerElement, range);
+
+            const snippetNode = document.createTextNode(modSnippet);
+            range.insertNode(snippetNode);
+
+            range = range.cloneRange();
+            range.setStartAfter(snippetNode);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+  }
+
+  function prependAppendSpace(snippet, containerElement, range) {
+    let strAfter, strBefore;
+    const preRange = range.cloneRange();
+    const postRange = range.cloneRange();
+    preRange.collapse(true);
+    preRange.setStart(containerElement, 0);
+    if (preRange.toString().slice(-1) === "" || preRange.toString().slice(-1) === " ") {
+      strBefore = "";
+    } else {
+      strBefore = " ";
+    }
+
+    postRange.collapse(false);
+    postRange.setEndAfter(containerElement);
+
+    if (postRange.toString().startsWith(" ")) {
+      strAfter = "";
+    } else {
+      strAfter = " ";
+    }
+
+    return `${strBefore}${snippet}${strAfter}`;
   }
 
   function focusDirection(dir) {
