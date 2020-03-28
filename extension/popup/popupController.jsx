@@ -171,7 +171,7 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        if (!listenForFollowup && !lastIntent.runFollowup) {
+        if (!listenForFollowup && (lastIntent && !lastIntent.runFollowup)) {
           closePopup(message.time);
         }
         break;
@@ -194,7 +194,7 @@ export const PopupController = function() {
       case "displayText": {
         setDisplayText(message.message);
         overrideTimeout = TEXT_TIMEOUT;
-        if (lastIntent.closePopupOnFinish) {
+        if (lastIntent && lastIntent.closePopupOnFinish) {
           closePopup();
         }
         break;
@@ -435,7 +435,7 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-    if (listenForFollowup || lastIntent.runFollowup) {
+    if (listenForFollowup || (lastIntent && lastIntent.runFollowup)) {
       ms = FOLLOWUP_TIMEOUT;
     }
     if (closePopupId) {

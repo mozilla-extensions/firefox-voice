@@ -17,6 +17,7 @@ const METADATA_ATTRIBUTES = new Set([
   "example",
   "examples",
   "match",
+  "followup",
 ]);
 
 export const intents = {};
@@ -34,6 +35,7 @@ export class IntentContext {
   constructor(desc) {
     this.closePopupOnFinish = true;
     this.timestamp = Date.now();
+    this.expectsFollowup = false;
     Object.assign(this, desc);
   }
 
@@ -87,6 +89,10 @@ export class IntentContext {
       type: "endSavingPage",
       message,
     });
+  }
+
+  waitOnFollowup() {
+    this.expectsFollowup = true;
   }
 
   displayText(message) {
@@ -244,6 +250,10 @@ export function registerIntent(intent) {
         `Metadata for ${intent.name} contains illegal attribute ${attr}`
       );
     }
+  }
+  if (data.followup) {
+    data.followupMatch = data.followup.match;
+    delete data.followup;
   }
   Object.assign(intent, data);
   intents[intent.name] = intent;
