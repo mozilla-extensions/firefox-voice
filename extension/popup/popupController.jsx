@@ -61,6 +61,7 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
+  const [expectsFollowup, setExpectsFollowup] = useState(false);
 
   const debouncedCurrentView = hooks.useDebounce(currentView, 500);
 
@@ -171,7 +172,7 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        if (!listenForFollowup && (lastIntent && !lastIntent.runFollowup)) {
+        if (!listenForFollowup && (lastIntent && !lastIntent.expectsFollowup)) {
           closePopup(message.time);
         }
         break;
@@ -435,7 +436,7 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-    if (listenForFollowup || (lastIntent && lastIntent.runFollowup)) {
+    if (listenForFollowup || (lastIntent && lastIntent.expectsFollowup)) {
       ms = FOLLOWUP_TIMEOUT;
     }
     if (closePopupId) {
@@ -468,6 +469,7 @@ export const PopupController = function() {
         });
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
+      browser.runtime.sendMessage({ type: "resetFollowup" });
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
@@ -487,7 +489,7 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = json => {
+    recorder.onEnd = async json => {
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
@@ -509,17 +511,20 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
-      browser.runtime.sendMessage({
+      const intent = await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
-      if (listenForFollowup) {
+      if (listenForFollowup || intent.expectsFollowup) {
         if (shouldListen) {
           shouldListen = false;
         }
-        updateLastIntent();
+        setExpectsFollowup(true);
+        setLastIntent(intent);
         recorder.startRecording();
         closePopup();
+      } else {
+        setExpectsFollowup(false);
       }
     };
     recorder.onError = error => {

@@ -95,6 +95,10 @@ export class IntentContext {
     this.expectsFollowup = true;
   }
 
+  resetFollowup() {
+    this.expectsFollowup = false;
+  }
+
   displayText(message) {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
@@ -328,6 +332,8 @@ export async function runIntent(desc) {
       catcher.capture(e);
     }
   }
+
+  return lastIntent;
 }
 
 export function getIntentSummary() {
