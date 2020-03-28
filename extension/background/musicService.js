@@ -76,6 +76,12 @@ class MusicService extends serviceList.Service {
     await this.tabActivation();
   }
 
+  async playPlaylist(query) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("playPlaylist", { query, thenPlay: true });
+    await this.tabActivation();
+  }
+
   async pauseAny(options) {
     const exceptTabId = options && options.exceptTabId;
     for (const tab of await this.getAllTabs({ audible: true })) {

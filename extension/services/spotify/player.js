@@ -104,6 +104,32 @@ this.player = (function() {
       }
     }
     }
+
+    async action_playPlaylist({ query, thenPlay }) {
+      await this.search(query);
+      const PLAYLIST_SECTION = "section[aria-label='Playlists']";
+      if (thenPlay) {
+        try {
+          const playerButton = await this.waitForSelector(PLAYLIST_SECTION + " button", {
+            timeout: 10000,
+            // There is no need to wait for this as there is only one selector
+            minCount: 0,
+          });
+          playerButton.click();
+
+          // Clicking on card to get into album playlist.
+          // Important: The selectors to be changed when spotify updates their website.
+          const cards = this.querySelectorAll(
+            PLAYLIST_SECTION + " .react-contextmenu-wrapper"
+          )[0];
+          cards.childNodes[3].click();
+        } catch (e) {
+          if (e.name === "TimeoutError") {
+            throw new Error("No search results");
+          }
+        }
+      }
+      }
   }
 
   Player.register();

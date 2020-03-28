@@ -148,5 +148,18 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "music.playPlaylist",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.playPlaylist(context.slots.query);
+    if (service.tab) {
+      await pauseAnyButTab(context, service.tab.id);
+    } else {
+      await pauseAnyButService(context, service.id);
+    }
+  },
+});
+
 // FIXME: workaround for a legacy module needing access to this function:
 window.music_getServiceNamesAndTitles = getServiceNamesAndTitles;
