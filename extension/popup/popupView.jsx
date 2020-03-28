@@ -29,7 +29,7 @@ export const Popup = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
-  listenForFollowUp,
+  listenForFollowup,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -39,7 +39,7 @@ export const Popup = ({
     onInputStarted();
   }
   return (
-    <div id="popup" className={`${currentView} ${listenForFollowUp}`}>
+    <div id="popup" className={`${currentView} ${listenForFollowup}`}>
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -67,7 +67,7 @@ export const Popup = ({
         expandListeningView={expandListeningView}
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
-        listenForFollowUp={listenForFollowUp}
+        listenForFollowup={listenForFollowup}
       />
       <PopupFooter
         currentView={currentView}
@@ -80,11 +80,11 @@ export const Popup = ({
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
-      {listenForFollowUp &&
+      {listenForFollowup &&
         currentView !== "listening" &&
         currentView !== "waiting" &&
         currentView !== "processing" && (
-          <FollowUpContainer lastIntent={lastIntent} />
+          <FollowupContainer lastIntent={lastIntent} />
         )}
     </div>
   );
@@ -203,7 +203,7 @@ const PopupContent = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
-  listenForFollowUp,
+  listenForFollowup,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -230,7 +230,7 @@ const PopupContent = ({
           <ProcessingContent
             transcript={transcript}
             displayText={displayText}
-            listenForFollowUp={listenForFollowUp}
+            listenForFollowup={listenForFollowup}
           />
         );
       case "success":
@@ -255,7 +255,7 @@ const PopupContent = ({
             onNextSearchResultClick={onNextSearchResultClick}
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
-            listenForFollowUp={listenForFollowUp}
+            listenForFollowup={listenForFollowup}
           />
         );
       case "startSavingPage":
@@ -291,7 +291,7 @@ const PopupContent = ({
   );
 };
 
-const FollowUpContainer = ({ lastIntent }) => {
+const FollowupContainer = ({ lastIntent }) => {
   if (!lastIntent) {
     return null;
   }
@@ -658,11 +658,11 @@ class TypingInput extends PureComponent {
   }
 }
 
-const ProcessingContent = ({ transcript, displayText, listenForFollowUp }) => {
+const ProcessingContent = ({ transcript, displayText, listenForFollowup }) => {
   return (
     <React.Fragment>
-      <Transcript transcript={listenForFollowUp ? "" : transcript} />
-      <TextDisplay displayText={listenForFollowUp ? "" : displayText} />
+      <Transcript transcript={listenForFollowup ? "" : transcript} />
+      <TextDisplay displayText={listenForFollowup ? "" : displayText} />
     </React.Fragment>
   );
 };
@@ -709,7 +709,7 @@ const SearchResultsContent = ({
   onNextSearchResultClick,
   setMinPopupSize,
   onSubmitFeedback,
-  listenForFollowUp,
+  listenForFollowup,
 }) => {
   if (!search) return null;
 
@@ -773,7 +773,7 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      {listenForFollowUp ? null : (
+      {listenForFollowup ? null : (
         <React.Fragment>
           <div id="search-results">{renderCard()}</div>
           <div id="search-footer">

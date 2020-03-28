@@ -20,7 +20,7 @@ let recorder;
 // this needs to be global to avoid a weird race condition that occurs
 // when setting it as internal state.
 let shouldListen = true;
-const listenForFollowUp = true;
+const listenForFollowup = true;
 let recorderIntervalId;
 let timerIntervalId;
 let closePopupId;
@@ -171,7 +171,7 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        if (!listenForFollowUp && !lastIntent.runFollowUp) {
+        if (!listenForFollowup && !lastIntent.runFollowup) {
           closePopup(message.time);
         }
         break;
@@ -435,7 +435,7 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-    if (listenForFollowUp || lastIntent.runFollowUp) {
+    if (listenForFollowup || lastIntent.runFollowup) {
       ms = FOLLOWUP_TIMEOUT;
     }
     if (closePopupId) {
@@ -513,7 +513,7 @@ export const PopupController = function() {
         type: "runIntent",
         text: json.data[0].text,
       });
-      if (listenForFollowUp) {
+      if (listenForFollowup) {
         if (shouldListen) {
           shouldListen = false;
         }
@@ -643,7 +643,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      listenForFollowUp={listenForFollowUp}
+      listenForFollowup={listenForFollowup}
     />
   );
 };

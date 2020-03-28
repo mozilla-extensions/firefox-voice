@@ -68,7 +68,7 @@ body,
 }
 
 #popup:not(.searchResults) #popup-content,
-#popup:not(.listenForFollowUp) #popup-content {
+#popup:not(.listenForFollowup) #popup-content {
   padding-bottom: 0;
 }
 
