@@ -9,7 +9,7 @@ this.player = (function() {
       button.click();
     }
 
-    async action_search({ query, thenPlay }) {
+    async search(query) {
       // try to find the error page; if found, throw a DRM error; otherwise search
       const errorDiv = document.querySelector("div.ErrorPage");
       if (errorDiv) {
@@ -22,6 +22,10 @@ this.player = (function() {
         "div[role=search] input, input.SearchInputBox__input"
       );
       this.setReactInputValue(input, query);
+    }
+
+    async action_search({ query, thenPlay }) {
+      await this.search(query);
       if (thenPlay) {
         try {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
@@ -30,18 +34,6 @@ this.player = (function() {
             minCount: 0,
           });
           playerButton.click();
-
-        // playerButton onclick() listener is used to
-        // notify the clicking on card after clicking
-        // the playerButton.
-        // Clicking on the card shows
-        // songs in the playlist.
-        playerButton.onclick(() => {
-          return new Promise(res => {
-            res(true);
-          });
-        });
-
         } catch (e) {
           if (e.name === "TimeoutError") {
             throw new Error("No search results");
@@ -88,14 +80,29 @@ this.player = (function() {
     }
 
   async action_playAlbum({ query, thenPlay }) {
-    await this.action_search({ query, thenPlay });
+    await this.search(query);
+    const ALBUM_SECTION = "section[aria-label='Albums']";
+    if (thenPlay) {
+      try {
+        const playerButton = await this.waitForSelector(ALBUM_SECTION + " button", {
+          timeout: 10000,
+          // There is no need to wait for this as there is only one selector
+          minCount: 0,
+        });
+        playerButton.click();
 
-    // Clicking on card to get into album playlist.
-    // Important: The selectors to be changed when spotify updates their website.
-    const cards = this.querySelectorAll(
-      "#searchPage .react-contextmenu-wrapper"
-    )[0];
-    cards.childNodes[3].click();
+        // Clicking on card to get into album playlist.
+        // Important: The selectors to be changed when spotify updates their website.
+        const cards = this.querySelectorAll(
+          ALBUM_SECTION + " .react-contextmenu-wrapper"
+        )[0];
+        cards.childNodes[3].click();
+      } catch (e) {
+        if (e.name === "TimeoutError") {
+          throw new Error("No search results");
+        }
+      }
+    }
     }
   }
 
