@@ -9,7 +9,6 @@ import * as browserUtil from "../browserUtil.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
-import * as hooks from "./hooks.js";
 
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
@@ -62,8 +61,6 @@ export const PopupController = function() {
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
   const [expectsFollowup, setExpectsFollowup] = useState(false);
-
-  const debouncedCurrentView = hooks.useDebounce(currentView, 500);
 
   let executedIntent = false;
   let stream = null;
@@ -626,7 +623,7 @@ export const PopupController = function() {
 
   return (
     <popupView.Popup
-      currentView={debouncedCurrentView}
+      currentView={currentView}
       suggestions={suggestions}
       feedback={feedback}
       lastIntent={lastIntent}
