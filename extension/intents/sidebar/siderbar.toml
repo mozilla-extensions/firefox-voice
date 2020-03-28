@@ -1,8 +1,9 @@
-[sidebar.open]
+[sidebar.openSidebar]
 description = "Open the sidebar with the last opened content"
 match = """
- (open | show |) (my | the |) sidebar (for me|)
+  (open | show |) (my | the |) sidebar (for me|)
 """
 
-[[sidebar.open.example]]
-phrase = "open the sidebar"
+[[sidebar.openSidebar.example]]
+phrase = "open sidebar"
+test = true

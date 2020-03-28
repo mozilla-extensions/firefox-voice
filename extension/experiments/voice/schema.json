@@ -41,6 +41,14 @@
         "description": "Close Firefox",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "openSidebar",
+        "type": "function",
+        "description": "Open sidebar",
+        "parameters": [],
+        "async": true
       }
     ]
   }

@@ -1,4 +1,4 @@
-/* globals XPCOMUtils, ExtensionAPI */
+/* globals log, XPCOMUtils, ExtensionAPI */
 
 "use strict";
 
@@ -10,6 +10,10 @@ ChromeUtils.defineModuleGetter(
 
 XPCOMUtils.defineLazyGetter(this, "browserActionFor", () => {
   return ExtensionParent.apiManager.global.browserActionFor;
+});
+
+XPCOMUtils.defineLazyGetter(this, "sidebarActionFor", () => {
+  return ExtensionParent.apiManager.global.sidebarActionFor;
 });
 
 function runCommand(commandName) {
@@ -53,6 +57,19 @@ this.voice = class extends ExtensionAPI {
 
           async quitApplication() {
             return runCommand("cmd_quitApplication");
+          },
+
+          async openSidebar() {
+            const sidebarAction = sidebarActionFor(extension);
+            const windowTracker = ChromeUtils.import(
+              "resource://gre/modules/Extension.jsm",
+              {}
+            ).Management.global.windowTracker;
+            /* https://searchfox.org/mozilla-central/source/browser/components/extensions/parent/ext-sidebarAction.js#495 */
+            const window = windowTracker.topWindow;
+            if (context.canAccessWindow(window)) {
+              sidebarAction.open(window);
+            }
           },
         },
       },
