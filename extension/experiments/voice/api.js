@@ -1,4 +1,4 @@
-/* globals log, XPCOMUtils, ExtensionAPI */
+/* globals , XPCOMUtils, ExtensionAPI */
 
 "use strict";
 
