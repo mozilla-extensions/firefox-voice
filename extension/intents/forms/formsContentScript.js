@@ -246,22 +246,22 @@ this.dictationContentScript = (function() {
 
   function insertStringContentEditable(snippet, containerElement) {
     if (window.getSelection) {
-        const sel = window.getSelection();
-        if (sel.getRangeAt && sel.rangeCount) {
-            let range = sel.getRangeAt(0);
-            // range.deleteContents(); TODO Maybe: overwrite selection
+      const sel = window.getSelection();
+      if (sel.getRangeAt && sel.rangeCount) {
+        let range = sel.getRangeAt(0);
+        // range.deleteContents(); TODO Maybe: overwrite selection
 
-            const modSnippet = prependAppendSpace(snippet, containerElement, range);
+        const modSnippet = prependAppendSpace(snippet, containerElement, range);
 
-            const snippetNode = document.createTextNode(modSnippet);
-            range.insertNode(snippetNode);
+        const snippetNode = document.createTextNode(modSnippet);
+        range.insertNode(snippetNode);
 
-            range = range.cloneRange();
-            range.setStartAfter(snippetNode);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
+        range = range.cloneRange();
+        range.setStartAfter(snippetNode);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
     }
   }
 
@@ -271,7 +271,10 @@ this.dictationContentScript = (function() {
     const postRange = range.cloneRange();
     preRange.collapse(true);
     preRange.setStart(containerElement, 0);
-    if (preRange.toString().slice(-1) === "" || preRange.toString().slice(-1) === " ") {
+    if (
+      preRange.toString().slice(-1) === "" ||
+      preRange.toString().slice(-1) === " "
+    ) {
       strBefore = "";
     } else {
       strBefore = " ";
