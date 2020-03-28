@@ -433,9 +433,6 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-    if (listenForFollowup || (lastIntent && lastIntent.expectsFollowup)) {
-      ms = FOLLOWUP_TIMEOUT;
-    }
     if (closePopupId) {
       clearTimeout(closePopupId);
     }
@@ -519,7 +516,7 @@ export const PopupController = function() {
         setExpectsFollowup(true);
         setLastIntent(intent);
         recorder.startRecording();
-        closePopup();
+        closePopup(FOLLOWUP_TIMEOUT);
       } else {
         setExpectsFollowup(false);
       }

@@ -435,4 +435,10 @@ export function clearFeedbackIntent() {
   lastIntent = null;
 }
 
+export function resetFollowup() {
+  if (lastIntent) {
+    lastIntent.resetFollowup();
+  }
+}
+
 initRegisteredNicknames();
