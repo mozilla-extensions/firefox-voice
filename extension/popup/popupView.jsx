@@ -29,7 +29,7 @@ export const Popup = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
-  listenForFollowup,
+  renderFollowup,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -39,7 +39,10 @@ export const Popup = ({
     onInputStarted();
   }
   return (
-    <div id="popup" className={`${currentView} ${listenForFollowup}`}>
+    <div
+      id="popup"
+      className={`${currentView} ${renderFollowup ? "followup" : ""}`}
+    >
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -67,7 +70,7 @@ export const Popup = ({
         expandListeningView={expandListeningView}
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
-        listenForFollowup={listenForFollowup}
+        renderFollowup={renderFollowup}
       />
       <PopupFooter
         currentView={currentView}
@@ -80,7 +83,7 @@ export const Popup = ({
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
-      {listenForFollowup &&
+      {renderFollowup &&
         currentView !== "listening" &&
         currentView !== "waiting" &&
         currentView !== "processing" && (
@@ -203,7 +206,7 @@ const PopupContent = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
-  listenForFollowup,
+  renderFollowup,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -230,7 +233,7 @@ const PopupContent = ({
           <ProcessingContent
             transcript={transcript}
             displayText={displayText}
-            listenForFollowup={listenForFollowup}
+            renderFollowup={renderFollowup}
           />
         );
       case "success":
@@ -255,7 +258,7 @@ const PopupContent = ({
             onNextSearchResultClick={onNextSearchResultClick}
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
-            listenForFollowup={listenForFollowup}
+            renderFollowup={renderFollowup}
           />
         );
       case "startSavingPage":
@@ -658,11 +661,11 @@ class TypingInput extends PureComponent {
   }
 }
 
-const ProcessingContent = ({ transcript, displayText, listenForFollowup }) => {
+const ProcessingContent = ({ transcript, displayText, renderFollowup }) => {
   return (
     <React.Fragment>
-      <Transcript transcript={listenForFollowup ? "" : transcript} />
-      <TextDisplay displayText={listenForFollowup ? "" : displayText} />
+      <Transcript transcript={renderFollowup ? "" : transcript} />
+      <TextDisplay displayText={renderFollowup ? "" : displayText} />
     </React.Fragment>
   );
 };
@@ -709,7 +712,7 @@ const SearchResultsContent = ({
   onNextSearchResultClick,
   setMinPopupSize,
   onSubmitFeedback,
-  listenForFollowup,
+  renderFollowup,
 }) => {
   if (!search) return null;
 
@@ -773,7 +776,7 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      {listenForFollowup ? null : (
+      {renderFollowup ? null : (
         <React.Fragment>
           <div id="search-results">{renderCard()}</div>
           <div id="search-footer">

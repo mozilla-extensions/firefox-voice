@@ -643,7 +643,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      listenForFollowup={listenForFollowup}
+      renderFollowup={listenForFollowup || expectsFollowup}
     />
   );
 };
