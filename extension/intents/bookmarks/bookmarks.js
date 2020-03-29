@@ -48,7 +48,7 @@ intentRunner.registerIntent({
       throw e;
     }
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const id = matches[i].item;
       const url = bookmarksById.get(id);
 
