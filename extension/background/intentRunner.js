@@ -35,6 +35,7 @@ export class IntentContext {
   constructor(desc) {
     this.closePopupOnFinish = true;
     this.timestamp = Date.now();
+    this.followupPhraseSet;
     this.expectsFollowup = false;
     Object.assign(this, desc);
   }
@@ -91,7 +92,7 @@ export class IntentContext {
     });
   }
 
-  async waitOnFollowup(message) {
+  async startFollowup(message) {
     this.expectsFollowup = true;
     return browser.runtime.sendMessage({
       type: "handleFollowup",
@@ -110,6 +111,31 @@ export class IntentContext {
     }
   }
 
+  parseFollowup(utterance) {
+    if (lastIntent && !this.followupPhraseSet) {
+      const phrases = [];
+      for (const line of splitPhraseLines(lastIntent.followupMatch)) {
+        const compiled = compile(line, {
+          entities: entityTypes,
+          intentName: lastIntent.name,
+        });
+        phrases.push(compiled);
+      }
+      this.followupPhraseSet = new PhraseSet(phrases);
+    }
+
+    const result = this.followupPhraseSet.match(utterance);
+    if (!result) {
+      return null;
+    }
+
+    return {
+      name: result.intentName,
+      slots: result.stringSlots(),
+      parameters: result.parameters,
+      utterance,
+      fallback: false,
+    };
   }
 
   displayText(message) {
@@ -303,8 +329,21 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
-  const desc = intentParser.parse(utterance);
-  desc.noPopup = !!noPopup;
+  let desc;
+  if (lastIntent && lastIntent.expectsFollowup) {
+    const followup = lastIntent.parseFollowup(utterance);
+    if (!followup) {
+      const e = new Error("No previous search result");
+      e.displayMessage = "No previous search result";
+      throw e;
+    }
+    followup.isFollowup = true;
+    desc = followup;
+  } else {
+    desc = intentParser.parse(utterance);
+    desc.noPopup = !!noPopup;
+    desc.followupMatch = intents[desc.name].followupMatch;
+  }
   return runIntent(desc);
 }
 
@@ -328,7 +367,11 @@ export async function runIntent(desc) {
         ? `and parameters: ${JSON.stringify(desc.parameters)}`
         : "and no params"
     );
-    await intent.run(context);
+    if (lastIntent.isFollowup) {
+      await intent.runFollowup(context);
+    } else {
+      await intent.run(context);
+    }
     if (context.closePopupOnFinish) {
       context.done();
     }
@@ -345,8 +388,6 @@ export async function runIntent(desc) {
       catcher.capture(e);
     }
   }
-
-  return lastIntent;
 }
 
 export function getIntentSummary() {

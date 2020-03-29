@@ -49,6 +49,13 @@ match = """
   (remove | delete) (this |) (page | site | tab |) from bookmark{s}
 """
 
+[bookmarks.remove.followup]
+description = "Confirm that the user wishes to remove a bookmark"
+match = """
+   yes      [confirmation=true]
+   cancel   [confirmation=false]
+"""
+
 [[bookmarks.remove.example]]
 phrase = "Remove bookmark"
 test = true

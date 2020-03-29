@@ -18,8 +18,8 @@ let timerElapsed = false;
 let recorder;
 // this needs to be global to avoid a weird race condition that occurs
 // when setting it as internal state.
-let shouldListen = true;
-const listenForFollowup = true;
+let renderListenComp = true;
+const listenForFollowup = false;
 let recorderIntervalId;
 let timerIntervalId;
 let closePopupId;
@@ -60,7 +60,7 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
-  const [expectsFollowup, setExpectsFollowup] = useState(false);
+  const [insistOnFollowup, setInsistOnFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
 
   let executedIntent = false;
@@ -170,7 +170,7 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        if (!listenForFollowup && (lastIntent && !lastIntent.expectsFollowup)) {
+        if (!listenForFollowup && !insistOnFollowup) {
           closePopup(message.time);
         }
         break;
@@ -200,11 +200,13 @@ export const PopupController = function() {
       }
       case "handleFollowup": {
         if (message.method === "enable") {
-          setExpectsFollowup(true);
+          setInsistOnFollowup(true);
           setFollowupText(message.message);
+          runFollowup();
         } else {
-          setExpectsFollowup(false);
+          setInsistOnFollowup(false);
           setFollowupText(null);
+          closePopup();
         }
         break;
       }
@@ -478,13 +480,22 @@ export const PopupController = function() {
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
-      shouldListen = true;
+      renderListenComp = true;
     });
+  };
+
+  const runFollowup = () => {
+    if (renderListenComp) {
+      renderListenComp = false;
+    }
+    updateLastIntent();
+    recorder.startRecording();
+    closePopup(FOLLOWUP_TIMEOUT);
   };
 
   const startRecorder = () => {
     recorder.onBeginRecording = () => {
-      if (shouldListen) {
+      if (renderListenComp) {
         setPopupView("listening");
         userSettingsPromise.then(userSettings => {
           if (userSettings.chime) {
@@ -520,13 +531,9 @@ export const PopupController = function() {
         type: "runIntent",
         text: json.data[0].text,
       });
-      updateLastIntent();
-      if (listenForFollowup || expectsFollowup) {
-        if (shouldListen) {
-          shouldListen = false;
-        }
-        recorder.startRecording();
-        closePopup(FOLLOWUP_TIMEOUT);
+      // intent can run a follow up directly
+      if (listenForFollowup && !insistOnFollowup) {
+        runFollowup();
       }
     };
     recorder.onError = error => {
@@ -650,7 +657,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      renderFollowup={listenForFollowup || expectsFollowup}
+      renderFollowup={listenForFollowup || insistOnFollowup}
       followupText={followupText}
     />
   );
