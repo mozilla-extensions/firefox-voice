@@ -231,5 +231,13 @@ export async function getService(serviceType, serviceMap, options) {
       `detectServiceFromHistory did not return service (${serviceName})`
     );
   }
-  return ServiceClass;
+  const tab = await browserUtil.activeTab();
+  if (!tab.url.startsWith(ServiceClass.baseUrl)) {
+    const title = tab.url.substring(0, tab.url.indexOf(`.com`) + `.com`.length);
+    const e = new Error(`Sorry We Don't Know How to Deal With ${title}`);
+    e.displayMessage = `Sorry We Don't Know How to Deal With ${title}`;
+    throw e;
+  } else {
+    return ServiceClass;
+  }
 }
