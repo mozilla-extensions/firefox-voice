@@ -19,7 +19,6 @@ let recorder;
 // this needs to be global to avoid a weird race condition that occurs
 // when setting it as internal state.
 let renderListenComp = true;
-const listenForFollowup = false;
 let recorderIntervalId;
 let timerIntervalId;
 let closePopupId;
@@ -62,6 +61,7 @@ export const PopupController = function() {
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
   const [insistOnFollowup, setInsistOnFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
+  const [listenForFollowup, setListenForFollowup] = useState(false);
 
   let executedIntent = false;
   let stream = null;
@@ -94,6 +94,8 @@ export const PopupController = function() {
       window.close();
       return;
     }
+
+    setListenForFollowup(userSettings.listenForFollowup);
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
