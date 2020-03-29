@@ -47,13 +47,17 @@ intentRunner.registerIntent({
       e.displayMessage = "No matching bookmark found";
       throw e;
     }
-    const id = matches[0].item;
-    const url = bookmarksById.get(id);
-    if (context.parameters.tab === "this") {
-      const activeTab = await context.activeTab();
-      await browser.tabs.update(activeTab.id, { url });
-    } else {
-      await browser.tabs.create({ url });
+
+    for (let i = 0; i < 5; i++) {
+      const id = matches[i].item;
+      const url = bookmarksById.get(id);
+
+      if (context.parameters.tab === "this") {
+        const activeTab = await context.activeTab();
+        await browser.tabs.update(activeTab.id, { url });
+      } else {
+        await browser.tabs.create({ url });
+      }
     }
   },
 });
