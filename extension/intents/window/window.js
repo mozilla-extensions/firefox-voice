@@ -82,8 +82,8 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "window.restartApplication",
   async run(context) {
-    await browser.experiments.voice.quitApplication();
-    await browser.windows.create({});
-    await browser.experiments.voice.restorePreviousSession();
+    await browser.experiments.voice.closeWindow();
+    await browser.experiments.voice.OpenBrowserWindow();
+    await browser.experiments.voice.restoreLastSession();
   },
 });

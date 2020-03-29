@@ -20,6 +20,14 @@
       },
 
       {
+        "name": "closeWindow",
+        "type": "function",
+        "description": "Close window",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "undoCloseWindow",
         "type": "function",
         "description": "Undo close window",
@@ -44,13 +52,20 @@
       },
 
       {
-        "name": "restorePreviousSession",
+        "name": "restoreLastSession",
         "type": "function",
         "description": "Restart Firefox",
         "parameters": [],
         "async": true
-      }
+      },
 
+      {
+        "name": "OpenBrowserWindow",
+        "type": "function",
+        "description": "Open Firefox",
+        "parameters": [],
+        "async": true
+      }
     ]
   }
 ]

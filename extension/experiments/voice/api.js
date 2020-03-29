@@ -43,8 +43,16 @@ this.voice = class extends ExtensionAPI {
             return runCommand("History:UndoCloseTab");
           },
 
+          async closeWindow() {
+            return runCommand("cmd_closeWindow");
+          },
+
           async undoCloseWindow() {
             return runCommand("History:UndoCloseWindow");
+          },
+
+          async OpenBrowserWindow() {
+            return runCommand("cmd_newNavigator");
           },
 
           async openDownloads() {
@@ -55,7 +63,7 @@ this.voice = class extends ExtensionAPI {
             return runCommand("cmd_quitApplication");
           },
 
-          async restorePreviousSession() {
+          async restoreLastSession() {
             return runCommand("Browser:RestoreLastSession");
           }
         },
