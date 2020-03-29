@@ -16,9 +16,10 @@ let isInitialized = false;
 let forceCancelRecoder = false;
 let timerElapsed = false;
 let recorder;
-// this needs to be global to avoid a weird race condition that occurs
+// this next 2 vars need to be global to avoid a weird race condition that occurs
 // when setting it as internal state.
-let renderListenComp = true;
+let renderListenComponent = true;
+let listenForFollowup = false;
 let recorderIntervalId;
 let timerIntervalId;
 let closePopupId;
@@ -61,7 +62,6 @@ export const PopupController = function() {
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
   const [insistOnFollowup, setInsistOnFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
-  const [listenForFollowup, setListenForFollowup] = useState(false);
 
   let executedIntent = false;
   let stream = null;
@@ -95,7 +95,7 @@ export const PopupController = function() {
       return;
     }
 
-    setListenForFollowup(userSettings.listenForFollowup);
+    listenForFollowup = userSettings.listenForFollowup;
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -485,13 +485,13 @@ export const PopupController = function() {
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
-      renderListenComp = true;
+      renderListenComponent = true;
     });
   };
 
   const runFollowup = () => {
-    if (renderListenComp) {
-      renderListenComp = false;
+    if (renderListenComponent) {
+      renderListenComponent = false;
     }
     updateLastIntent();
     recorder.startRecording();
@@ -500,7 +500,7 @@ export const PopupController = function() {
 
   const startRecorder = () => {
     recorder.onBeginRecording = () => {
-      if (renderListenComp) {
+      if (renderListenComponent) {
         setPopupView("listening");
         userSettingsPromise.then(userSettings => {
           if (userSettings.chime) {
