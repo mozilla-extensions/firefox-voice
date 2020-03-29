@@ -138,6 +138,7 @@ export class IntentContext {
       parameters: result.parameters,
       utterance,
       fallback: false,
+      isFollowup: true,
     };
   }
 
@@ -334,18 +335,16 @@ export async function runUtterance(utterance, noPopup) {
   }
   let desc;
   if (lastIntent && lastIntent.expectsFollowup) {
-    const followup = lastIntent.parseFollowup(utterance);
-    if (!followup) {
-      lastIntent.displayText("Invalid option. Please try again");
-      return lastIntent.startFollowup();
-    }
-    followup.isFollowup = true;
-    desc = followup;
+    desc = lastIntent.parseFollowup(utterance);
   } else {
     desc = intentParser.parse(utterance);
-    desc.noPopup = !!noPopup;
-    desc.followupMatch = intents[desc.name].followupMatch;
   }
+  if (!desc) {
+    lastIntent.displayText("Invalid option. Please try again");
+    return lastIntent.startFollowup();
+  }
+  desc.noPopup = !!noPopup;
+  desc.followupMatch = intents[desc.name].followupMatch;
   return runIntent(desc);
 }
 

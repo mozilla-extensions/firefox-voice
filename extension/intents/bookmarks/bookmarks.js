@@ -77,10 +77,7 @@ intentRunner.registerIntent({
   name: "bookmarks.remove",
   async run(context) {
     await context.displayText("Do you wish to remove this bookmark?");
-    await context.startFollowup({
-      heading: 'Say "YES" or "CANCEL"',
-      subheading: "This is the subheading",
-    });
+    await context.startFollowup({ heading: 'Say "YES" or "CANCEL"' });
   },
   async runFollowup(context) {
     switch (context.parameters.confirmation) {
