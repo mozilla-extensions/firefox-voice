@@ -170,6 +170,7 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
+        // Override closing the popup on follow ups
         if (!listenForFollowup && !insistOnFollowup) {
           closePopup(message.time);
         }
@@ -200,8 +201,10 @@ export const PopupController = function() {
       }
       case "handleFollowup": {
         if (message.method === "enable") {
+          if (message.message) {
+            setFollowupText(message.message);
+          }
           setInsistOnFollowup(true);
-          setFollowupText(message.message);
           runFollowup();
         } else {
           setInsistOnFollowup(false);

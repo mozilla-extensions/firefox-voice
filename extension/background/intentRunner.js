@@ -92,7 +92,7 @@ export class IntentContext {
     });
   }
 
-  async startFollowup(message) {
+  async startFollowup(message = undefined) {
     this.expectsFollowup = true;
     return browser.runtime.sendMessage({
       type: "handleFollowup",
@@ -112,7 +112,10 @@ export class IntentContext {
   }
 
   parseFollowup(utterance) {
-    if (lastIntent && !this.followupPhraseSet) {
+    if (!lastIntent) {
+      return null;
+    }
+    if (!this.followupPhraseSet) {
       const phrases = [];
       for (const line of splitPhraseLines(lastIntent.followupMatch)) {
         const compiled = compile(line, {
@@ -333,9 +336,8 @@ export async function runUtterance(utterance, noPopup) {
   if (lastIntent && lastIntent.expectsFollowup) {
     const followup = lastIntent.parseFollowup(utterance);
     if (!followup) {
-      const e = new Error("No previous search result");
-      e.displayMessage = "No previous search result";
-      throw e;
+      lastIntent.displayText("Invalid option. Please try again");
+      return lastIntent.startFollowup();
     }
     followup.isFollowup = true;
     desc = followup;
