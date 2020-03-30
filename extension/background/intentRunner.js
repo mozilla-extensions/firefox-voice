@@ -340,21 +340,20 @@ export async function runUtterance(utterance, noPopup) {
     }
   }
   let desc = intentParser.parse(utterance);
+  desc.noPopup = !!noPopup;
+  desc.followupMatch = intents[desc.name].followupMatch;
   if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
     const followup = lastIntentForFollowup.parseFollowup(utterance);
     if (followup) {
       desc = followup;
-    } else if (
-      lastIntentForFollowup.acceptFollowupIntent.every(
-        name => name !== desc.name
-      )
-    ) {
+      desc.noPopup = true;
+    } else if (lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)) {
+      desc.noPopup = true;
+    } else {
       lastIntentForFollowup.displayText("Invalid option. Please try again");
       return lastIntentForFollowup.startFollowup();
     }
   }
-  desc.noPopup = !!noPopup;
-  desc.followupMatch = intents[desc.name].followupMatch;
   return runIntent(desc);
 }
 
