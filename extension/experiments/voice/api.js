@@ -54,6 +54,11 @@ this.voice = class extends ExtensionAPI {
           async quitApplication() {
             return runCommand("cmd_quitApplication");
           },
+
+          async viewPageSource() {
+            return runCommand("View:PageInfo");
+          },
+
         },
       },
     };
