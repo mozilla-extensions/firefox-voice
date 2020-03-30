@@ -30,8 +30,6 @@ this.player = (function() {
         try {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
             timeout: 10000,
-            // There is no need to wait for this as there is only one selector
-            minCount: 0,
           });
           playerButton.click();
         } catch (e) {
@@ -88,8 +86,6 @@ this.player = (function() {
             ALBUM_SECTION + " button",
             {
               timeout: 10000,
-              // There is no need to wait for this as there is only one selector
-              minCount: 0,
             }
           );
           playerButton.click();
@@ -117,8 +113,6 @@ this.player = (function() {
             PLAYLIST_SECTION + " button",
             {
               timeout: 10000,
-              // There is no need to wait for this as there is only one selector
-              minCount: 0,
             }
           );
           playerButton.click();
