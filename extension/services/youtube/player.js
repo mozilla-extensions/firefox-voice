@@ -77,6 +77,82 @@ this.player = (function() {
       button.click();
     }
 
+    action_adjustVolume({ volumeLevel }) {
+      const maxVolume = 1.0;
+      const minVolume = 0.0;
+      const ariaValueFactor = 0.01;
+      const heightFactor = 2.5;
+      const ytVideo = this.querySelector(`${this.selector} .html5-main-video`);
+      const volumePanel = this.querySelector(
+        `${this.selector} .ytp-volume-panel`
+      );
+      const volumeSliderHandle = this.querySelector(
+        `${this.selector} .ytp-volume-slider-handle`
+      );
+      let volumeNow = ytVideo.volume;
+      let ariaValueNow = parseInt(volumePanel.getAttribute("aria-valuenow"));
+      let volumeSliderValue = ariaValueNow / heightFactor;
+      const volumeChange = 0.2;
+
+      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
+        if (this.isMuted()) {
+          this.action_unmute();
+        }
+        volumeNow =
+          volumeNow <= maxVolume - volumeChange
+            ? volumeNow + volumeChange
+            : maxVolume;
+        ytVideo.volume = volumeNow;
+        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
+        volumeSliderValue = ariaValueNow / heightFactor;
+
+        ytVideo.onvolumechange = () => {
+          volumePanel.setAttribute("aria-valuenow", ariaValueNow);
+          volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
+          volumeSliderHandle.style.left = `${volumeSliderValue}px`;
+        };
+      } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
+        volumeNow =
+          volumeNow >= minVolume + volumeChange
+            ? volumeNow - volumeChange
+            : minVolume;
+        ytVideo.volume = volumeNow;
+        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
+        volumeSliderValue = ariaValueNow / heightFactor;
+
+        ytVideo.onvolumechange = () => {
+          volumePanel.setAttribute("aria-valuenow", ariaValueNow);
+          volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
+          volumeSliderHandle.style.left = `${volumeSliderValue}px`;
+        };
+      }
+    }
+
+    isMuted() {
+      const volumePanel = document.querySelector(".ytp-volume-panel");
+      const muted =
+        volumePanel.getAttribute("aria-valuetext").match(/muted/) !== null;
+      return muted ? 1 : 0;
+    }
+
+    action_mute() {
+      if (!this.isMuted()) {
+        const muteButton = this.querySelector(
+          `${this.selector} .ytp-mute-button[aria-label^='Mute']`
+        );
+        muteButton.click();
+      }
+    }
+
+    action_unmute() {
+      if (this.isMuted()) {
+        const unmuteButton = this.querySelector(
+          `${this.selector} .ytp-mute-button[aria-label^='Unmute']`
+        );
+        unmuteButton.click();
+      }
+    }
+
     action_playAlbum() {
       const button = this.querySelectorAll("ytd-playlist-renderer a")[0];
       button.click();

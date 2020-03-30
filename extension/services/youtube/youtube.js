@@ -104,6 +104,21 @@ class YouTube extends serviceList.Service {
     }
   }
 
+  async adjustVolume(volumeLevel) {
+    await this.initTab("/services/youtube/player.js");
+    await this.callTab("adjustVolume", { volumeLevel });
+  }
+
+  async mute() {
+    await this.initTab(`/services/youtube/player.js`);
+    await this.callTab("mute");
+  }
+
+  async unmute() {
+    await this.initTab(`/services/youtube/player.js`);
+    await this.callTab("unmute");
+  }
+
   async playAlbum(query) {
     this.tab = await browserUtil.createTab({
       url: `${this.baseUrl}/search?q=${query} album`,

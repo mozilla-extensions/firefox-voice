@@ -136,6 +136,30 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "music.volume",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.adjustVolume(context.parameters.volumeLevel);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.mute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.mute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.unmute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.unmute();
+  },
+});
+
+intentRunner.registerIntent({
   name: "music.playAlbum",
   async run(context) {
     const service = await getService(context, { lookAtCurrentTab: true });

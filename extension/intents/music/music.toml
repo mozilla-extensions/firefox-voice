@@ -58,7 +58,7 @@ description = "Pause all supported services (regardless of tab or window)"
 match = """
   (stop | pause) (play | playing |) video [service=youtube]
   pause [service:musicServiceName]
-  pause (play | playing |) (music |) 
+  pause (play | playing |) (music |)
   stop (play | playing |) (music |)
 """
 
@@ -156,6 +156,39 @@ phrase = "What is playing"
 [[music.showTitle.example]]
 phrase = "What's playing?"
 test = true
+
+[music.volume]
+description = "Adjust music volume"
+match = """
+  (increase | turn up) (music | audio | video |) (volume | the volume) [volumeLevel=levelUp]
+  (make it louder | louder) [volumeLevel=levelUp]
+  (decrease | turn down) (music | audio | video |) (volume | the volume) [volumeLevel=levelDown]
+  (make it softer | softer) [volumeLevel=levelDown]
+"""
+
+[music.volume.example]
+phrase = "increase volume"
+expectParameters = {volumeLevel = "levelUp"}
+
+[music.mute]
+description = "mute music volume"
+match = """
+  mute (music | audio | video) (volume |)
+  mute (volume | the volume)
+"""
+
+[music.mute.example]
+phrase = "mute music"
+
+[music.unmute]
+description = "unmute music volume"
+match = """
+  unmute (music | audio | video) (volume |)
+  unmute (volume | the volume)
+"""
+
+[music.unmute.example]
+phrase = "unmute video"
 
 [music.playAlbum]
 description = "Play albums from a music service"
