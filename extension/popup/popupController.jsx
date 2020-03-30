@@ -60,7 +60,7 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
-  const [requestFollowup, setrequestFollowup] = useState(false);
+  const [requestFollowup, setRequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
 
   let executedIntent = false;
@@ -206,10 +206,10 @@ export const PopupController = function() {
           if (message.message) {
             setFollowupText(message.message);
           }
-          setrequestFollowup(true);
+          setRequestFollowup(true);
           runFollowup();
         } else {
-          setrequestFollowup(false);
+          setRequestFollowup(false);
           setFollowupText(null);
           closePopup();
         }

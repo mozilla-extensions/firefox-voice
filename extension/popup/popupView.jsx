@@ -296,15 +296,8 @@ const PopupContent = ({
   );
 };
 
-const FollowupContainer = ({
-  lastIntent,
-  followupText,
-  renderFollowup,
-  currentView,
-}) => {
+const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
   if (
-    !lastIntent ||
-    !followupText ||
     currentView === "listening" ||
     currentView === "waiting" ||
     currentView === "processing" ||
