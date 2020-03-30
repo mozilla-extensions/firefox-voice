@@ -41,7 +41,16 @@
         "description": "Close Firefox",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "showAllBookmarks",
+        "type": "function",
+        "description": "Open bookmarks",
+        "parameters": [],
+        "async": true
       }
+
     ]
   }
 ]
