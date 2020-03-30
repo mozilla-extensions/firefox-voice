@@ -22,6 +22,8 @@ const METADATA_ATTRIBUTES = new Set([
 
 export const intents = {};
 let lastIntent;
+// This is a copy of lastIntent that gets nullified when the pop up
+// window closes.
 let lastIntentForFollowup;
 const intentHistory = [];
 const db = new Database("voice");
@@ -38,8 +40,10 @@ export class IntentContext {
     this.timestamp = Date.now();
     this.followupPhraseSet;
     this.expectsFollowup = false;
+    this.isFollowup = false;
+    this.isFollowupIntent = false;
     // allows us to reuse an intent's text on retries
-    this.followupText = {};
+    this.followupHint = {};
     // When running follow ups, sometimes a success view is not needed,
     // yet still flashes before the next view. This attribute allows us to
     // force bypassing the success view.
@@ -61,7 +65,7 @@ export class IntentContext {
 
   done(time = undefined) {
     this.closePopupOnFinish = false;
-    if (!this.noPopup) {
+    if (!this.noPopup && !this.isFollowup && !this.isFollowupIntent) {
       return browser.runtime.sendMessage({
         type: "closePopup",
         time,
@@ -71,6 +75,7 @@ export class IntentContext {
   }
 
   failed(message) {
+    this.skipSuccessView = true;
     telemetry.add({ intentSuccess: false });
     telemetry.sendSoon();
     try {
@@ -105,7 +110,7 @@ export class IntentContext {
     if (message) {
       this.acceptFollowupIntent = message.acceptFollowupIntent || [];
       this.skipSuccessView = message.skipSuccessView || false;
-      this.followupText = {
+      this.followupHint = {
         heading: message.heading,
         subheading: message.subheading,
       };
@@ -114,8 +119,8 @@ export class IntentContext {
       type: "handleFollowup",
       method: "enable",
       message: {
-        heading: this.followupText.heading,
-        subheading: this.followupText.subheading,
+        heading: this.followupHint.heading,
+        subheading: this.followupHint.subheading,
       },
     });
   }
@@ -359,12 +364,11 @@ export async function runUtterance(utterance, noPopup) {
     const followup = lastIntentForFollowup.parseFollowup(utterance);
     if (followup) {
       desc = followup;
-      desc.noPopup = true;
     } else if (
       lastIntentForFollowup.acceptFollowupIntent &&
       lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
     ) {
-      desc.noPopup = true;
+      desc.isFollowupIntent = true;
     } else {
       lastIntentForFollowup.displayText("Invalid option. Please try again");
       return lastIntentForFollowup.startFollowup();
