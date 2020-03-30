@@ -49,6 +49,14 @@
         "description": "Open bookmarks",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "showAllHistory",
+        "type": "function",
+        "description": "Open History",
+        "parameters": [],
+        "async": true
       }
 
     ]
