@@ -38,6 +38,8 @@ export class IntentContext {
     this.timestamp = Date.now();
     this.followupPhraseSet;
     this.expectsFollowup = false;
+    // allows us to reuse an intent's text on retries
+    this.followupText = {};
     // When running follow ups, sometimes a success view is not needed,
     // yet still flashes before the next view. This attribute allows us to
     // force bypassing the success view.
@@ -100,18 +102,20 @@ export class IntentContext {
 
   async startFollowup(message = undefined) {
     this.expectsFollowup = true;
-    if (message.acceptFollowupIntent) {
-      this.acceptFollowupIntent = message.acceptFollowupIntent;
-    }
-    if (message.skipSuccessView) {
-      this.skipSuccessView = true;
+    if (message) {
+      this.acceptFollowupIntent = message.acceptFollowupIntent || [];
+      this.skipSuccessView = message.skipSuccessView || false;
+      this.followupText = {
+        heading: message.heading,
+        subheading: message.subheading,
+      };
     }
     return browser.runtime.sendMessage({
       type: "handleFollowup",
       method: "enable",
       message: {
-        heading: message && message.heading,
-        subheading: message && message.subheading,
+        heading: this.followupText.heading,
+        subheading: this.followupText.subheading,
       },
     });
   }
@@ -356,7 +360,10 @@ export async function runUtterance(utterance, noPopup) {
     if (followup) {
       desc = followup;
       desc.noPopup = true;
-    } else if (lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)) {
+    } else if (
+      lastIntentForFollowup.acceptFollowupIntent &&
+      lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
+    ) {
       desc.noPopup = true;
     } else {
       lastIntentForFollowup.displayText("Invalid option. Please try again");
