@@ -73,28 +73,24 @@ export const Popup = ({
         timerTotalInMS={timerTotalInMS}
         renderFollowup={renderFollowup}
       />
-      {!renderFollowup && (
-        <PopupFooter
-          currentView={currentView}
-          showSettings={showSettings}
-          timerInMS={timerInMS}
-        />
-      )}
+      <PopupFooter
+        currentView={currentView}
+        renderFollowup={renderFollowup}
+        showSettings={showSettings}
+        timerInMS={timerInMS}
+      />
       {timerInMS > 0 ? (
         <TimerFooter
           currentView={currentView}
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
-      {renderFollowup &&
-        currentView !== "listening" &&
-        currentView !== "waiting" &&
-        currentView !== "processing" && (
-          <FollowupContainer
-            lastIntent={lastIntent}
-            followupText={followupText}
-          />
-        )}
+      <FollowupContainer
+        lastIntent={lastIntent}
+        followupText={followupText}
+        renderFollowup={renderFollowup}
+        currentView={currentView}
+      />
     </div>
   );
 };
@@ -300,8 +296,20 @@ const PopupContent = ({
   );
 };
 
-const FollowupContainer = ({ lastIntent, followupText }) => {
-  if (!lastIntent) {
+const FollowupContainer = ({
+  lastIntent,
+  followupText,
+  renderFollowup,
+  currentView,
+}) => {
+  if (
+    !lastIntent ||
+    !followupText ||
+    currentView === "listening" ||
+    currentView === "waiting" ||
+    currentView === "processing" ||
+    !renderFollowup
+  ) {
     return null;
   }
 
@@ -372,12 +380,13 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings, timerInMS }) => {
+const PopupFooter = ({ currentView, showSettings, renderFollowup }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer"
+    currentView === "timer" ||
+    renderFollowup
   )
     return null;
   return (
