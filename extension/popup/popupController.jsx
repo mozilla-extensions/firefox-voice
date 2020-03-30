@@ -60,7 +60,7 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
-  const [insistOnFollowup, setInsistOnFollowup] = useState(false);
+  const [requestFollowup, setrequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
 
   let executedIntent = false;
@@ -173,7 +173,7 @@ export const PopupController = function() {
     switch (message.type) {
       case "closePopup": {
         // Override closing the popup on follow ups
-        if (!listenForFollowup && !insistOnFollowup) {
+        if (!listenForFollowup && !requestFollowup) {
           closePopup(message.time);
         }
         break;
@@ -206,10 +206,10 @@ export const PopupController = function() {
           if (message.message) {
             setFollowupText(message.message);
           }
-          setInsistOnFollowup(true);
+          setrequestFollowup(true);
           runFollowup();
         } else {
-          setInsistOnFollowup(false);
+          setrequestFollowup(false);
           setFollowupText(null);
           closePopup();
         }
@@ -537,7 +537,7 @@ export const PopupController = function() {
         text: json.data[0].text,
       });
       // intent can run a follow up directly
-      if (listenForFollowup && !insistOnFollowup) {
+      if (listenForFollowup && !requestFollowup) {
         runFollowup();
       }
     };
@@ -662,7 +662,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      renderFollowup={listenForFollowup || insistOnFollowup}
+      renderFollowup={listenForFollowup || requestFollowup}
       followupText={followupText}
     />
   );
