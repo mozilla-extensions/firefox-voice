@@ -305,7 +305,7 @@ const FollowupContainer = ({ lastIntent, followupText }) => {
     return null;
   }
 
-  let heading = "Listening";
+  let heading = "Waiting...";
   let subheading;
   if (followupText) {
     heading = followupText.heading;

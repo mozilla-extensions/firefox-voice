@@ -37,6 +37,7 @@ export class IntentContext {
     this.timestamp = Date.now();
     this.followupPhraseSet;
     this.expectsFollowup = false;
+    this.acceptFollowupIntent = false;
     Object.assign(this, desc);
   }
 
@@ -94,6 +95,10 @@ export class IntentContext {
 
   async startFollowup(message = undefined) {
     this.expectsFollowup = true;
+    if (message.acceptFollowupIntent) {
+      this.acceptFollowupIntent = true;
+      delete message.acceptFollowupIntent;
+    }
     return browser.runtime.sendMessage({
       type: "handleFollowup",
       method: "enable",
@@ -334,7 +339,11 @@ export async function runUtterance(utterance, noPopup) {
     }
   }
   let desc;
-  if (lastIntent && lastIntent.expectsFollowup) {
+  if (
+    lastIntent &&
+    lastIntent.expectsFollowup &&
+    !lastIntent.acceptFollowupIntent
+  ) {
     desc = lastIntent.parseFollowup(utterance);
   } else {
     desc = intentParser.parse(utterance);

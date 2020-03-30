@@ -421,6 +421,13 @@ intentRunner.registerIntent({
       }
 
       tabSearchResults.set(tabId, searchInfo);
+
+      context.keepPopup();
+      await context.startFollowup({
+        heading: "Say 'next' to view",
+        subheading: searchInfo.searchResults[0].title,
+        acceptFollowupIntent: true,
+      });
     }
   },
 });
