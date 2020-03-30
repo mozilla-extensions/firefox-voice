@@ -382,7 +382,9 @@ export async function runUtterance(utterance, noPopup) {
       !globalListenForFollowup ||
       (globalListenForFollowup && lastIntentForFollowup.insistOnFollowup)
     ) {
-      lastIntentForFollowup.failed("Invalid option. Please try again");
+      lastIntentForFollowup.failed(
+        `The phrase\n\n"${desc.utterance}"\n\nis invalid. Please try again`
+      );
       return lastIntentForFollowup.startFollowup();
     }
   }
