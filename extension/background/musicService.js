@@ -3,23 +3,7 @@ import * as content from "./content.js";
 import { shouldDisplayWarning } from "../limiter.js";
 
 class MusicService extends serviceList.Service {
-  async playQuery(query) {
-    try {
-      await this.initTab(`/services/${this.id}/player.js`);
-      try {
-        await this.callTab("search", { query, thenPlay: true });
-      } catch (e) {
-        if (e.message.includes("No search results")) {
-          e.displayMessage = `No results found for ${query}`;
-        }
-        throw e;
-      }
-    } catch (e) {
-      if (e.message === "You must enable DRM.") {
-        e.displayMessage = "You must enable DRM.";
-      }
-      throw e;
-    }
+  async tabActivation() {
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
@@ -40,6 +24,26 @@ class MusicService extends serviceList.Service {
           this.context.failedAutoplay(this.tab);
         }
       }
+    }
+  }
+
+  async playQuery(query) {
+    try {
+      await this.initTab(`/services/${this.id}/player.js`);
+      try {
+        await this.callTab("search", { query, thenPlay: true });
+        await this.tabActivation();
+      } catch (e) {
+        if (e.message.includes("No search results")) {
+          e.displayMessage = `No results found for ${query}`;
+        }
+        throw e;
+      }
+    } catch (e) {
+      if (e.message === "You must enable DRM.") {
+        e.displayMessage = "You must enable DRM.";
+      }
+      throw e;
     }
   }
 
@@ -64,6 +68,18 @@ class MusicService extends serviceList.Service {
   async unpause() {
     await this.initTab(`/services/${this.id}/player.js`);
     await this.callTab("unpause");
+  }
+
+  async playAlbum(query) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("playAlbum", { query, thenPlay: true });
+    await this.tabActivation();
+  }
+
+  async playPlaylist(query) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("playPlaylist", { query, thenPlay: true });
+    await this.tabActivation();
   }
 
   async pauseAny(options) {

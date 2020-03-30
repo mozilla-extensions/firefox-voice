@@ -41,6 +41,11 @@ this.player = (function() {
         playControlsBtn[0].click();
       }
     }
+
+    action_playAlbum({ query, thenPlay }) {
+      this.action_search({ query, thenPlay });
+    }
   }
+
   Player.register();
 })();

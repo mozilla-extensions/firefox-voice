@@ -2,6 +2,7 @@ import * as util from "../../util.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as content from "../../background/content.js";
 import * as music from "../../intents/music/music.js";
+import * as browserUtil from "../../browserUtil.js";
 import { shouldDisplayWarning } from "../../limiter.js";
 
 const SUPPORTED_URLS = /^https:\/\/www.youtube.com\/watch/i;
@@ -89,6 +90,36 @@ class YouTube extends serviceList.Service {
       await content.lazyInject(tab.id, "/services/youtube/player.js");
       await this.callOneTab(tab.id, "move", { direction });
     }
+  }
+
+  async playAlbum(query) {
+    this.tab = await browserUtil.createTab({
+      url: `${this.baseUrl}/search?q=${query} album`,
+    });
+    this.tabCreated = true;
+    if (this.tabCreated) {
+      const isAudible = await this.pollTabAudible(this.tab.id, 3000);
+      if (!isAudible) {
+        const activeTabId = (await this.context.activeTab()).id;
+        this.context.makeTabActive(this.tab);
+        const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
+        if (
+          nowAudible ||
+          !(await shouldDisplayWarning(`${this.id}Audible`, {
+            times: 3,
+            frequency: 1000,
+          }))
+        ) {
+          if (this.tab.id !== activeTabId) {
+            this.context.makeTabActive(activeTabId);
+          }
+        } else {
+          this.context.failedAutoplay(this.tab);
+        }
+      }
+    }
+    await this.initTab("/services/youtube/player.js");
+    await this.callTab("playAlbum");
   }
 }
 
