@@ -20,9 +20,9 @@ let recorder;
 // when setting it as internal state.
 let renderListenComponent = true;
 let listenForFollowup = false;
+let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
-let closePopupId;
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -538,7 +538,7 @@ export const PopupController = function() {
         text: json.data[0].text,
       });
       const completedIntent = await updateLastIntent();
-      if (!completedIntent.skipSuccessView) {
+      if (completedIntent && !completedIntent.skipSuccessView) {
         setPopupView("success");
       }
       // intent can run a follow up directly

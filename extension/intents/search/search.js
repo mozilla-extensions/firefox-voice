@@ -195,7 +195,7 @@ function pollForCard(maxTime) {
   }, CARD_POLL_INTERVAL);
 }
 
-async function moveResult(context, step, showFollowup) {
+async function moveResult(context, step) {
   stopCardPoll();
   const { tabId, searchInfo } = await getSearchInfo();
 
