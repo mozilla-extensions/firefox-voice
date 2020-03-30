@@ -38,7 +38,7 @@ export class IntentContext {
     this.timestamp = Date.now();
     this.followupPhraseSet;
     this.expectsFollowup = false;
-    this.acceptFollowupIntent = false;
+    this.acceptFollowupIntent = [];
     Object.assign(this, desc);
   }
 
@@ -97,7 +97,7 @@ export class IntentContext {
   async startFollowup(message = undefined) {
     this.expectsFollowup = true;
     if (message.acceptFollowupIntent) {
-      this.acceptFollowupIntent = true;
+      this.acceptFollowupIntent = message.acceptFollowupIntent;
       delete message.acceptFollowupIntent;
     }
     return browser.runtime.sendMessage({
@@ -116,7 +116,7 @@ export class IntentContext {
   }
 
   parseFollowup(utterance) {
-    if (!lastIntentForFollowup) {
+    if (!lastIntentForFollowup || !lastIntentForFollowup.followupMatch) {
       return null;
     }
     if (!this.followupPhraseSet) {
@@ -339,19 +339,19 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
-  let desc;
-  if (
-    lastIntent &&
-    lastIntent.expectsFollowup &&
-    !lastIntent.acceptFollowupIntent
-  ) {
-    desc = lastIntent.parseFollowup(utterance);
-  } else {
-    desc = intentParser.parse(utterance);
-  }
-  if (!desc) {
-    lastIntent.displayText("Invalid option. Please try again");
-    return lastIntent.startFollowup();
+  let desc = intentParser.parse(utterance);
+  if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
+    const followup = lastIntentForFollowup.parseFollowup(utterance);
+    if (followup) {
+      desc = followup;
+    } else if (
+      lastIntentForFollowup.acceptFollowupIntent.every(
+        name => name !== desc.name
+      )
+    ) {
+      lastIntentForFollowup.displayText("Invalid option. Please try again");
+      return lastIntentForFollowup.startFollowup();
+    }
   }
   desc.noPopup = !!noPopup;
   desc.followupMatch = intents[desc.name].followupMatch;
