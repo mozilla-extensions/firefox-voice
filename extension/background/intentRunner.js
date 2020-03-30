@@ -10,7 +10,6 @@ import { metadata } from "../intents/metadata.js";
 import { entityTypes } from "./entityTypes.js";
 import { Database } from "../history.js";
 import * as settings from "../settings.js";
-import * as util from "../util.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
