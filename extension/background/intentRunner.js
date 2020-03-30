@@ -385,6 +385,10 @@ export async function runUtterance(utterance, noPopup) {
         `The phrase\n\n"${desc.utterance}"\n\nis invalid. Please try again`
       );
       return lastIntentForFollowup.startFollowup();
+    } else {
+      // This is a new intent when listening for all follow ups, so we
+      // clear previous follow up hints
+      lastIntentForFollowup.endFollowup();
     }
   }
   return runIntent(desc);
