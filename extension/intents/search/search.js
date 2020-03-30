@@ -397,8 +397,8 @@ intentRunner.registerIntent({
         url: START_URL,
         active: false,
       });
-      const tabId = tab.id ;
-      _searchTabId = tabId ;
+      const tabId = tab.id;
+      _searchTabId = tabId;
 
       await browser.search.search({
         query: context.slots.query,
