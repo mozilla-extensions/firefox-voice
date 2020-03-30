@@ -72,3 +72,12 @@ test = true
 [[bookmarks.remove.example]]
 phrase = "Delete bookmarks from this page"
 test = true
+
+[bookmarks.allTabs]
+description = "This will bookmark all open tabs on your browser"
+match = """
+  bookmark all tabs for me
+"""
+
+[[bookmarks.allTabs.example]]
+phrase = "bookmark all tabs for me"

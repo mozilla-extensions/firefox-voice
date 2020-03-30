@@ -67,6 +67,10 @@ this.voice = class extends ExtensionAPI {
             return runCommand("Browser:ShowAllHistory");
           },
 
+          async bookmarkAllTabs() {
+            return runCommand("Browser:BookmarkAllTabs");
+          },
+
         },
       },
     };

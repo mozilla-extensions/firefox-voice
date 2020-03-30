@@ -93,3 +93,10 @@ intentRunner.registerIntent({
     await browser.bookmarks.remove(selected[0].id);
   },
 });
+
+intentRunner.registerIntent({
+  name: "bookmarks.allTabs",
+  async run(context) {
+    await browser.experiments.voice.bookmarkAllTabs();
+  },
+});

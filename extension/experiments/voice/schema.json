@@ -65,6 +65,14 @@
         "description": "Open History",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "bookmarkAllTabs",
+        "type": "function",
+        "description": "Bookmark All Tabs",
+        "parameters": [],
+        "async": true
       }
 
     ]
