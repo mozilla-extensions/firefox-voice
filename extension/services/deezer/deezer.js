@@ -6,7 +6,7 @@ class Deezer extends MusicService {}
 Object.assign(Deezer, {
   id: "deezer",
   title: "Deezer",
-  baseUrl: "https://deezer.com/",
+  baseUrl: "https://www.deezer.com/",
 });
 
 music.register(Deezer);
