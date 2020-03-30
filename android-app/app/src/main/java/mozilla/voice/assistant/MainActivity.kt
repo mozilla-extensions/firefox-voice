@@ -5,8 +5,10 @@
 package mozilla.voice.assistant
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -38,6 +40,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setTaskDescription(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ActivityManager.TaskDescription(null, R.mipmap.ic_launcher)
+            } else {
+                ActivityManager.TaskDescription(null, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+            }
+        )
+
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         val language = Language(this)

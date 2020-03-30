@@ -393,7 +393,12 @@ intentRunner.registerIntent({
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
-      const tabId = await openSearchTab();
+      const tab = await browser.tabs.create({
+        url: START_URL,
+        active: false,
+      });
+      const tabId = tab.id;
+      _searchTabId = tabId;
 
       await browser.search.search({
         query: context.slots.query,

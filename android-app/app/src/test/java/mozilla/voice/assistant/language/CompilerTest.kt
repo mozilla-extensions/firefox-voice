@@ -1,13 +1,10 @@
 package mozilla.voice.assistant.language
 
 import mozilla.voice.assistant.intents.MetadataTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(JUnit4::class)
 class CompilerTest {
     companion object {
         private val STOPWORDS = "me my for please"
@@ -15,7 +12,7 @@ class CompilerTest {
     private lateinit var compiler: Compiler
     private lateinit var language: Language
 
-    @Before
+    @BeforeEach
     fun setup() {
         language = LanguageTest.getLanguage(STOPWORDS)
         compiler = Compiler(MetadataTest.getMetadata(language), language)
@@ -79,7 +76,7 @@ class CompilerTest {
 
     private fun verifyExpectedMatch(phrase: String, utterance: String, expectedString: String) {
         val results = compiler.compile(phrase).matchUtterance(MatchResult(utterance, language))
-        assertEquals("Expected 1 match for: $utterance", 1, results.size)
+        assertEquals(1, results.size, "Expected 1 match for: $utterance")
         assertEquals(expectedString, results[0].toString())
     }
 
