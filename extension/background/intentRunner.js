@@ -22,6 +22,7 @@ const METADATA_ATTRIBUTES = new Set([
 
 export const intents = {};
 let lastIntent;
+let lastIntentForFollowup;
 const intentHistory = [];
 const db = new Database("voice");
 const utteranceTable = "utterance";
@@ -106,26 +107,26 @@ export class IntentContext {
     });
   }
 
-  async resetFollowup(notifyUI = true) {
+  async resetFollowup() {
     this.expectsFollowup = false;
-    if (notifyUI) {
-      browser.runtime.sendMessage({
-        type: "handleFollowup",
-        method: "disable",
-      });
-    }
+    browser.runtime.sendMessage({
+      type: "handleFollowup",
+      method: "disable",
+    });
   }
 
   parseFollowup(utterance) {
-    if (!lastIntent) {
+    if (!lastIntentForFollowup) {
       return null;
     }
     if (!this.followupPhraseSet) {
       const phrases = [];
-      for (const line of splitPhraseLines(lastIntent.followupMatch)) {
+      for (const line of splitPhraseLines(
+        lastIntentForFollowup.followupMatch
+      )) {
         const compiled = compile(line, {
           entities: entityTypes,
-          intentName: lastIntent.name,
+          intentName: lastIntentForFollowup.name,
         });
         phrases.push(compiled);
       }
@@ -365,6 +366,7 @@ export async function runIntent(desc) {
   const intent = intents[desc.name];
   const context = new IntentContext(desc);
   lastIntent = context;
+  lastIntentForFollowup = lastIntent;
   addIntentHistory(context);
   context.initTelemetry();
   try {
@@ -499,9 +501,9 @@ export function clearFeedbackIntent() {
   lastIntent = null;
 }
 
-export function resetFollowup(notifyUI = true) {
-  if (lastIntent) {
-    lastIntent.resetFollowup(notifyUI);
+export function clearFollowup() {
+  if (lastIntentForFollowup) {
+    lastIntentForFollowup = null;
   }
 }
 

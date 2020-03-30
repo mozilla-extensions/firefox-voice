@@ -481,7 +481,7 @@ export const PopupController = function() {
         });
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
-      browser.runtime.sendMessage({ type: "resetFollowup", notifyUI: false });
+      browser.runtime.sendMessage({ type: "clearFollowup" });
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
