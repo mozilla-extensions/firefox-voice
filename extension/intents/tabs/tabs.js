@@ -586,11 +586,6 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.findOnPage",
   async run(context) {
-    let largeText;
-    let text;
-    let eduText;
-    let image;
-
     context.keepPopup();
     const results = await browser.find.find(context.slots.query, {includeRangeData: true});
     lastIndex = 0;
@@ -602,82 +597,98 @@ intentRunner.registerIntent({
         rangeIndex: 0,
        });
     }
-    
-    if (results.count > 1) {
-       largeText = `1 of ${results.count}`;
-       text = `Matches for '${context.slots.query}'`;
-       eduText = `Say 'next' or 'previous'`;
-    } else if (results.count === 1) {
-        largeText = `1`;
-        text = `Match for '${context.slots.query}'`;
-    } else {
-      text = `'${context.slots.query}' not found`;
-      eduText = `Try looking for another phrase`;
-      image = "./images/icon-no-result.svg";
-    }
 
-    await callResult(largeText, text, eduText, image);
+    let result = getMessage(results.count, context.slots.query)
+
+    await callResult(result.largeText, result.text, result.eduText, result.image);
   },
 });
+
+function getMessage(numberOfResults, query){
+  if (numberOfResults > 1) {
+    return {
+      largeText: `1 of ${numberOfResults}`,
+      text: `Matches for '${query}'`,
+      eduText: `Say 'next' or 'previous'`,
+    };
+ } else if (numberOfResults === 1) {
+   return {
+     largeText: `1`,
+     text: `Match for '${query}'`,
+   };
+ } else {
+   return {
+   text: `'${query}' not found`,
+   eduText: `Try looking for another phrase`,
+   image: "./images/icon-no-result.svg",
+   };
+ }
+}
 
 intentRunner.registerIntent({
   name: "tabs.findOnPageNext",
   async run(context) {
-    let largeText;
-    let text;
-    let eduText;
-    let image;
-    context.keepPopup();
-    
-    if (lastIndex + 1 < rangeData.length ) {
-    await moveResults(lastIndex + 1);
-    largeText = `${lastIndex + 1} of ${rangeData.length}`;
-    text = `Matches for '${rangeData[lastIndex].text}'`;
-    if (lastIndex + 1 === rangeData.length) {
-      eduText = `Say 'previous' or try looking for another phrase `;
-    } else {
-      eduText = `Say 'next' or 'previous'`;
-    }
 
-    await callResult(largeText, text, eduText, image);
-    } else {
-      text = `No more next matches for '${rangeData[lastIndex].text}'`;
-      eduText = `Say 'previous' or try looking for another phrase `;
-      image = "./images/icon-no-result.svg";
-      await callResult(largeText, text, eduText, image);
-    }
+    context.keepPopup();
+
+    let result = await createFindNextAnswer();
+    await callResult(result.largeText, result.text, result.eduText, result.image);
   },
 });
+
+async function createFindNextAnswer(){
+
+  if (lastIndex + 1 < rangeData.length ) {
+
+    await moveResults(lastIndex + 1);
+    let hasMore = lastIndex + 1 === rangeData.length;
+
+    return{ 
+      largeText: `${lastIndex + 1} of ${rangeData.length}`,
+      text: `Matches for '${rangeData[lastIndex].text}'`,
+      eduText: hasMore ? `Say 'previous' or try looking for another phrase ` : `Say 'next' or 'previous'`,
+      };
+
+    } else {
+      return{
+        text:`No more next matches for '${rangeData[lastIndex].text}'`,
+        eduText: `Say 'previous' or try looking for another phrase `,
+        image: "./images/icon-no-result.svg",
+      };
+    }
+}
 
 intentRunner.registerIntent({
   name: "tabs.findOnPagePrevious",
   async run(context) {
-    let largeText;
-    let text;
-    let eduText;
-    let image;
 
-      if (lastIndex - 1 >= 0 ) {
-    await moveResults(lastIndex - 1);
-    largeText = `${lastIndex + 1} of ${rangeData.length}`;
-    text = `Matches for '${rangeData[lastIndex].text}'`;
-
-    if (lastIndex === 0) {
-      eduText = `Say 'next' or try looking for another phrase `;
-    } else {
-      eduText = `Say 'next' or 'previous'`;
-    }
-
-    await callResult(largeText, text, eduText, image);
-    } else {
-      text = `No more previous matches for '${rangeData[lastIndex].text}'`;
-      eduText = `Say 'next' or try looking for another phrase `;
-      image = "./images/icon-no-result.svg";
-      await callResult(largeText, text, eduText, image);
-    }
+    let result = await createFindPreviousAnswer();
+    await callResult(result.largeText, result.text, result.eduText, result.image);
    
   },
 });
+
+async function createFindPreviousAnswer(){
+
+  if (lastIndex - 1 >= 0 ) {
+    await moveResults(lastIndex - 1);
+    let isFirstMatch = lastIndex === 0;
+
+    return{
+      largeText: `${lastIndex + 1} of ${rangeData.length}`,
+      text: `Matches for '${rangeData[lastIndex].text}'`,
+      eduText: isFirstMatch ? `Say 'next' or try looking for another phrase ` : `Say 'next' or 'previous'`,
+    }
+
+    } else {
+      return{
+        text: `No more previous matches for '${rangeData[lastIndex].text}'`,
+        eduText: `Say 'next' or try looking for another phrase `,
+        image: "./images/icon-no-result.svg",
+      }
+      
+    }
+}
 
 async function moveResults(rangeIndex) {
   await browser.find.highlightResults({
