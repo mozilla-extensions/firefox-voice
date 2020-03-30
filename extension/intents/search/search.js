@@ -195,7 +195,7 @@ function pollForCard(maxTime) {
   }, CARD_POLL_INTERVAL);
 }
 
-async function moveResult(context, step) {
+async function moveResult(context, step, showFollowup) {
   stopCardPoll();
   const { tabId, searchInfo } = await getSearchInfo();
 
@@ -232,6 +232,14 @@ async function moveResult(context, step) {
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
 
   const item = searchInfo.searchResults[searchInfo.index];
+  const followupIndex =
+    step === 1 ? searchInfo.index + 1 : Math.max(0, searchInfo.index - 1);
+  const followupItem = searchInfo.searchResults[followupIndex];
+  context.startFollowup({
+    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
+    subheading: followupItem.title,
+    acceptFollowupIntent: true,
+  });
   await browser.runtime.sendMessage({
     type: "showSearchResults",
     searchResults: searchInfo.searchResults,
