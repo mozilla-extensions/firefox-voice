@@ -10,7 +10,7 @@ class Sequence(@VisibleForTesting val patterns: List<Pattern>) : Pattern {
         check(patterns.isNotEmpty())
     }
 
-    // TODO: Change to recursive function.
+    // Consider changing this to recursive function.
     override fun matchUtterance(match: MatchResult): List<MatchResult> {
         var results = listOf(match)
         patterns.forEach { pattern ->

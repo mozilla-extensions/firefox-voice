@@ -26,38 +26,17 @@ If you'd like to discuss the tool, development, or contributions, we are in the 
 
 ## Developing in Linux
 
-Documentation on the various parts and aspects of firefox-voice could be found in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md). 
+To setup your local development environment, read the installation instructions [here](./INSTALL.md)
 
-However to quickly get started with the development environment, you would need to:
-
-1. Download the latest LTS version of [NodeJs](https://nodejs.org/) before running any of the provided npm commands.
-2. Download [Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/) which is a pre-release version of Firefox that is updated every now and then just so you are developing and testing with the latest firefox features.
-3. Use `tar xjvf` to extract the binaries for FireFox Nightly into a location of your choice could be `/opt/FireFoxNightly/` folder or just your download folder, wherever is fine. 
-4. Let firefox-voice know where you kept the binary (firefox) for FireFox Nightly typically by running `export FIREFOX=/path/to/FireFoxNightly/firefox` and using our example location would be `export FIREFOX=/opt/FireFoxNightly/firefox`. This creates a temporary export (environment variable) called FIREFOX for your current session.
-
-You would have to run this everytime you have a new session so may want to look [how to let the export stick permanently](https://stackoverflow.com/questions/13046624/how-to-permanently-export-a-variable-in-linux)
-
-Finally, install dependencies and start firefox voice by running:
-
-```sh
-npm install
-npm start
-```
-
-This will launch a new Firefox browser with the extension installed. You should probably have [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/) installed.
-
-Should you encounter any errors running ```npm install```, make sure you are using the latest version of Node by looking at this [update guide](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
-
-If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
-
-If Firefox Nightly does not open a new browser after `npm start`, it might be because the path to the Firefox Nightly binary is incorrect. You could do `echo $FIREFOX` and double check that it is right.
-You could use the release version if you have it installed by running  `FIREFOX="/usr/bin/firefox" npm start`.
+There is some documentation in the [docs/](./docs/) directory, notably [writing an intent](./docs/writing-an-intent.md).
 
 By default messaging-related logging messages aren't shown, you can turn logging up slightly with `$LOG_LEVEL=messaging` (or like `LOG_LEVEL=messaging npm start`).
 
 Any changes you make should cause any .jsx files to be recompiled and the extension will be reloaded.
 
-After the project successfully starts, Firefox will be automatically opened along with a console window. While the console window displays various data, the following errors or warnings should not concern you - they are not related to our project and, therefore, can be ignored.
+After the project successfully starts, firefox will be automatically opened along with a console window. The console window consoles various kind of information.
+
+The following errors or warnings should not concern you as these are not related to our project. So these can be ignored:
 
 1. Manifest warnings
 
@@ -69,29 +48,13 @@ You will probably see manifest warnings of the format:
 
 2. Any error that comes from file ending with .jsm
 
-### Developing in Windows
+### Startup Issues
 
-If you are using Windows, please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), as the installation won't work from a normal Windows command prompt.
+You may face errors on performing `npm install` that can be resolved by updating the node to its latest version [see here](https://www.hostingadvice.com/how-to/update-node-js-latest-version/)
 
-You will need to setup Firefox Nightly or Developer on WSL before running `firefox-voice`; use the following steps:
+If a new browser does not open, it might be because the path to Nightly is not found. Use the command `FIREFOX="/usr/bin/firefox" npm start` instead.
 
-1. Download `firefox-nightly.tar.bz2` for Linux and move it to a folder of your choice e.g. `/opt`.
-2. Extract it using `tar -xvjf firefox-*.tar.bz2` and move it to `/opt/firefox/`.
-3. Download `VcXsrv` on Windows and launch it with all default settings EXCEPT access control disabled.
-4. At this point, the `DISPLAY` variable is not set, so you may run into issues running GUI apps from XServer. To fix this, run `cat /etc/resolv.conf` to get the IP address of the nameserver, then run `export DISPLAY=IP_ADDRESS_OF_NAMESERVER_HERE:0`. You can also use this one-liner: `export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0`
-5. Test Firefox Nightly by launching `./firefox` in the folder that you extracted the `tar.bz2`; this should open up Firefox Nightly.
-6. In the `firefox-voice` repo, export the variable `FIREFOX` to point the script to your installation of firefox e.g. `export FIREFOX=/opt/firefox/firefox`.
-7. Now, running `npm start` should automatically start `firefox-nightly`, however the sound/microphone might not be working.
-8. Download the [PulseAudio binary for Windows](https://www.freedesktop.org/wiki/Software/PulseAudio/Ports/Windows/Support/).
-9. Extract the files to any location. You should see four folders named `bin`, `etc`, `lib`, and `share`.
-10. Edit the configuration files in `etc`. In `default.pa`, find the line starting with `#load-module module-native-protocol-tcp` and change it to `load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1`
-11. In `daemon.conf`, find the line starting with `; exit-idle-time = 20` and change it to `exit-idle-time = -1` to turn off idle timer.
-12. In admin Powershell, run `pulseaudio.exe` under the `bin` folder, and keep this running.
-13. Now, you will need to install PulseAudio for WSL. Uninstall any current versions of PulseAudio using `sudo apt-get purge pulseaudio`.
-14. Run `sudo add-apt-repository ppa:therealkenc/wsl-pulseaudio` to add the PPA.
-15. Update the sources using `sudo apt-get update`.
-16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
-17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
+By default this will use Firefox Nightly, but you can override this with the environmental variable `$FIREFOX` (you can point it to a release version, but some things may not work; also you can use a localized Firefox or an unbranded Firefox). You can also set `$PROFILE` to a directory where the profile information is kept (it defaults to `./Profile/`).
 
 ### Running Tests
 
@@ -110,25 +73,6 @@ You will need to setup Firefox Nightly or Developer on WSL before running `firef
    - Prettier formats and keeps the code the same way, saving energy and time
    - ESLint spots problems and errors, also saving everyone's energy and time
    - Stylelint helps to avoid errors and enforce conventions in stylesheets
-
-### Developing in Windows without WSL
-
-#### Prerequisites
-
-1. Latest LTS version of NodeJS
-2. Git and Git-bash
-3. Firefox [Nightly or Developer Edition](https://www.mozilla.org/en-US/firefox/channel/desktop/)
-
-#### Installation
-
-Before cloning the repo, using the terminal in Git-bash:
-
-1. Run `git config --global core.autocrlf false` to prevent git from converting line endings from LF to CRLF
-2. Run `npm config set script-shell "path\\to\\bash.exe"`. Example of path is `"C:\\Program Files\\git\\bin\\bash.exe"`. This enables npm to run linux-like commands.
-3. Clone the [repository](https://github.com/mozilla/firefox-voice.git) `git clone https://github.com/mozilla/firefox-voice.git`
-4. To create the environment variable `FIREFOX`, run `export FIREFOX=normalized/path/to/firefox.exe`. For example if the install path is `C:\Program Files\Firefox Nightly\firefox.exe` then normalized path is `/c/Program Files/Firefox Nightly/firefox.exe`. Alternatively, the environment variable set to the normalized path can be created using the Windows system dialog.
-5. Now run `npm install`
-6. Run `npm start`. This will launch a new Firefox browser with the `firefox-voice` extension installed.
 
 ### Debugging
 

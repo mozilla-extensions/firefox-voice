@@ -25,6 +25,7 @@ body,
   width: 350px;
 }
 
+.timer #zap-wrapper,
 .typing #zap-wrapper,
 .feedback #zap-wrapper,
 .searchResults #zap-wrapper {
@@ -423,4 +424,114 @@ a#lexicon {
 
 .feedback-thanks {
   text-align: center;
+}
+
+.circle-timer {
+  width: 185px;
+  height: 180px;
+  background: white;
+  border-radius: 150px;
+  box-sizing: border-box;
+  position: relative;
+  text-align: center;
+  font-size: 40px;
+  display: flex;
+}
+
+.circle-timer:before {
+  border-radius: 100%;
+  content: "";
+  background-image: linear-gradient(#6173ff, #f10366, #ff9100);
+  padding: 7px;
+  width: 185px;
+  height: 180px;
+  top: -7px;
+  left: -7px;
+  position: absolute;
+  z-index: -1;
+}
+
+.timer-card {
+  align-self: center;
+  padding: 1em 0;
+  min-height: 200px;
+  padding-top: 25px;
+  font-weight: bold;
+}
+
+.timer-clock {
+  text-align: center;
+  margin: auto;
+  font-weight: bold;
+}
+
+.timer-notification-text {
+  text-align: center;
+  margin: auto;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.circle-timer-footer {
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  background: rgb(119, 118, 118);
+  border-radius: 150px;
+  box-sizing: border-box;
+  position: relative;
+  text-align: center;
+  font-size: 13px;
+  color: white;
+  display: flex;
+  bottom: 5px;
+}
+
+.circle-timer-footer:before {
+  border-radius: 100%;
+  content: "";
+  background-color: white;
+  padding: 3px;
+  width: 40px;
+  height: 40px;
+  top: -3px;
+  left: -3px;
+  position: absolute;
+  z-index: -1;
+}
+
+.timer-footer {
+  padding: 0.5em 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: black;
+  margin-bottom: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  position: relative;
+  z-index: -2;
+  padding-top: 12px;
+  display: flex;
+}
+
+.timer-clock-footer {
+  text-align: left;
+  margin: auto;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  bottom: 7px;
+  flex: 1;
+  left: 10px;
+}
+
+.timer-text {
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+  left: 30px;
+  color: white;
+  bottom: 7px;
+  flex: 4;
 }

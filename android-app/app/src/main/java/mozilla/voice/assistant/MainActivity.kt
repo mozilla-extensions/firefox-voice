@@ -5,8 +5,10 @@
 package mozilla.voice.assistant
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +31,7 @@ import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
+@SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
     private lateinit var suggestions: List<String>
@@ -37,10 +40,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setTaskDescription(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ActivityManager.TaskDescription(null, R.mipmap.ic_launcher)
+            } else {
+                ActivityManager.TaskDescription(null, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+            }
+        )
+
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         val language = Language(this)
-        val metadata = Metadata(this)
+        val metadata = Metadata(this, language)
         val compiler = Compiler(metadata, language)
         intentRunner = IntentRunner(compiler)
     }
@@ -109,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             shownBurst = true
             animationView.repeatCount = 1
             animationView.addAnimatorUpdateListener { valueAnimator ->
+                @SuppressWarnings("MagicNumber")
                 if (valueAnimator.animatedFraction > .99) { // close enough to 1
                     animationView.setMinFrame(SOUND_MIN)
                     animationView.removeAllUpdateListeners()
@@ -155,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             .joinToString("\n\n")
 
         feedbackView.text = SpannableStringBuilder()
-            .scale(.6f) {
+            .scale(INSTRUCTIONS_SCALE) {
                 italic { append(getString(R.string.suggestion_prefix)) }
                     .append("\n\n")
                     .bold { append(ideas) }
@@ -164,6 +176,7 @@ class MainActivity : AppCompatActivity() {
         suggestionIndex += NUM_SUGGESTIONS
     }
 
+    @SuppressWarnings("EmptyFunctionBlock")
     inner class Listener : RecognitionListener {
         private var speechDetected = false
 
@@ -196,6 +209,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        @SuppressWarnings("ComplexMethod")
         override fun onError(error: Int) {
             animationView.pauseAnimation()
             val errorText = when (error) {
@@ -211,8 +225,7 @@ class MainActivity : AppCompatActivity() {
                 else -> "Unknown error"
             }
 
-            // This appears to be necessary to make the next
-            // attempt at listening work.
+            // This appears to be necessary to make the next attempt at listening work.
             closeRecognizer()
 
             if (error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT ||
@@ -283,27 +296,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        internal var recognizer: SpeechRecognizer? = null
-        internal const val TAG = "MainActivity"
-        internal const val ENCODING = "UTF-8"
-        internal const val SPEECH_RECOGNITION_REQUEST = 1
-        internal const val PERMISSIONS_REQUEST_CODE = 1
-        internal const val BASE_URL =
+        private var recognizer: SpeechRecognizer? = null
+        private const val TAG = "MainActivity"
+        private const val ENCODING = "UTF-8"
+        private const val SPEECH_RECOGNITION_REQUEST = 1
+        private const val PERMISSIONS_REQUEST_CODE = 1
+        private const val BASE_URL =
             "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
-        internal const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
-        internal const val ADVICE_DELAY = 1250L // ms before suggesting utterances
-        internal const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
+        private const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
+        private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
+        private const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
+        private const val INSTRUCTIONS_SCALE = .6f
 
         // Animation frames
-        internal const val SOLICIT_MIN = 0
-        internal const val SOLICIT_MAX = 30
-        internal const val SOUND_MIN = 30
-        internal const val SOUND_MAX = 78
-        internal const val PROCESSING_MIN = 78
-        internal const val PROCESSING_MAX = 134
-        internal const val ERROR_MIN = 134
-        internal const val ERROR_MAX = 153
-        internal const val SUCCESS_MIN = 184
-        internal const val SUCCESS_MAX = 205
+        private const val SOLICIT_MIN = 0
+        private const val SOLICIT_MAX = 30
+        private const val SOUND_MIN = 30
+        private const val SOUND_MAX = 78
+        private const val PROCESSING_MIN = 78
+        private const val PROCESSING_MAX = 134
+        private const val ERROR_MIN = 134
+        private const val ERROR_MAX = 153
+        private const val SUCCESS_MIN = 184
+        private const val SUCCESS_MAX = 205
     }
 }

@@ -97,6 +97,11 @@ this.player = (function() {
         unmuteButton.click();
       }
     }
+
+    action_playAlbum({ query, thenPlay }) {
+      this.action_search({ query, thenPlay });
+    }
   }
+
   Player.register();
 })();

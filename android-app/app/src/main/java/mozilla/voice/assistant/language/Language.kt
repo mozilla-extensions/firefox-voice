@@ -3,11 +3,12 @@ package mozilla.voice.assistant.language
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import java.lang.IllegalArgumentException
+import mozilla.voice.assistant.intents.TomlException
 
 private fun <K, V> MutableMap<K, MutableList<V>>.add(key: K, value: V) =
     this[key]?.run {
         if (this.contains(value)) {
-            throw Error("Redundant attempt to add $key -> $value")
+            throw IllegalArgumentException("Redundant attempt to add $key -> $value")
         }
         add(value)
     } ?: set(key, mutableListOf(value))
@@ -16,13 +17,16 @@ class Language(context: Context) {
     private val aliases: MutableMap<String, MutableList<String>> = mutableMapOf()
     private val multiwordAliases: MutableMap<String, MutableList<List<String>>> =
         mutableMapOf()
-    private val stopwords: MutableSet<String> = mutableSetOf()
+    // These are initialized in addAllStopwords().
+    private lateinit var stopwords: List<String>
+    private lateinit var stopwordsRegex: Regex
 
     internal fun getAliases(s: String): List<String>? = aliases[s]
     internal fun getMultiwordAliases(s: String): List<List<String>>? = multiwordAliases[s]
     internal fun isStopword(word: String) = stopwords.contains(word)
 
     init {
+        val stopwordLines = mutableSetOf<String>()
         var section: String? = null
         // While I could use the TOML parser, the file is simple enough to parse directly.
         context.assets?.open("langs/english.toml")?.run {
@@ -39,18 +43,24 @@ class Language(context: Context) {
                     } else {
                         when (section) {
                             "aliases" -> addAlias(line)
-                            "stopwords" -> addStopwords(line)
-                            null -> throw Error("Data encountered before section heading")
-                            else -> throw Error("Unexpected section $section")
+                            "stopwords" -> stopwordLines.add(line)
+                            null -> throw TomlException("Data encountered before section heading")
+                            else -> throw TomlException("Unexpected section $section")
                         }
                     }
                 }
+            addAllStopwords(stopwordLines)
         }
     }
 
+    // This should be called exactly once, either from init (for real execution)
+    // or from a test method.
     @VisibleForTesting
-    internal fun addStopwords(line: String) {
-        line.trim().split(spacesRegex).forEach() { stopwords.add(it) }
+    internal fun addAllStopwords(lines: Collection<String>) {
+        stopwords = lines.flatMap {
+            it.trim().split(spacesRegex)
+        }
+        stopwordsRegex = Regex(stopwords.joinToString(separator = "|"))
     }
 
     @VisibleForTesting
@@ -68,6 +78,13 @@ class Language(context: Context) {
             aliases.add(proper, alias)
         }
     }
+
+    internal fun stripStopwords(s: String) =
+        s.replace(stopwordsRegex, "")
+            .replace(spacesRegex, " ")
+            .trim()
+
+    internal fun containsStopwords(s: String) = stopwordsRegex.find(s) != null
 
     // The below methods exist only for testing.
 

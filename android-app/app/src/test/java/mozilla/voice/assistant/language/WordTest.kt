@@ -1,20 +1,15 @@
 package mozilla.voice.assistant.language
 
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(JUnit4::class)
 class WordTest {
     private lateinit var language: Language
 
-    @Before
+    @BeforeEach
     fun setAliases() {
-        language = LanguageTest.getLanguage()
-        language.addStopwords("the")
+        language = LanguageTest.getLanguage("the")
         language.addAlias("ello=hello") // "ello" is an alias for "hello"
         language.addAlias("\"hell oh\" = hello") // "hell oh" is an alias for "hello"
     }
@@ -27,7 +22,7 @@ class WordTest {
 
     private fun checkSingleMatch(word: String, utterance: String, aliasedWords: Int = 0, capturedWords: Int = 0, skippedWords: Int = 0) {
         val results = Word(word, language).matchUtterance(makeMatch(utterance, language))
-        Assert.assertEquals("expected a single result: $results", 1, results.size)
+        assertEquals(1, results.size, "expected a single result: $results")
         checkCounts(results[0], aliasedWords = aliasedWords, capturedWords = capturedWords, skippedWords = skippedWords)
     }
 

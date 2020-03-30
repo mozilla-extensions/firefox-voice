@@ -97,7 +97,7 @@ this.queryScript = (function() {
     const BING_SELECTOR = ".b_algo h2 a";
     const origin = window.location.origin;
     let selector = GOOGLE_SELECTOR;
-    let cards;
+    const cards = findCards();
 
     if (/duckduckgo/i.test(origin)) selector = DDG_SELECTOR;
     else if (/bing/i.test(origin)) selector = BING_SELECTOR;

@@ -88,14 +88,14 @@ this.dictationContentScript = (function() {
     }
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
-        const html = el.innerHTML;
         // eslint-disable-next-line no-unsanitized/property
-        el.innerHTML = html + " " + quoteHtml(text);
+        el.innerHTML = insertString(
+          el.innerHTML,
+          quoteHtml(text),
+          el.selectionStart
+        );
       } else {
-        if (el.value && !/\s$/.test(el.value)) {
-          el.value += " ";
-        }
-        el.value += text;
+        el.value = insertString(el.value, text, el.selectionStart);
       }
       highlightElement(el);
     }, timeout);
@@ -222,6 +222,30 @@ this.dictationContentScript = (function() {
   function focus(element) {
     element.focus();
     highlightElement(element);
+  }
+
+  function insertString(sourceString, snippet, position = null) {
+    if (position === null) {
+      position = sourceString.length;
+    }
+
+    const startSlice = sourceString.slice(0, position);
+    const endSlice = sourceString.slice(position);
+
+    let spaceBefore, spaceAfter;
+
+    if (position === 0) {
+      spaceBefore = "";
+      spaceAfter = endSlice.startsWith(" ") ? "" : " ";
+    } else if (position > 0 && position < sourceString.length) {
+      spaceBefore = startSlice.endsWith(" ") ? "" : " ";
+      spaceAfter = endSlice.startsWith(" ") ? "" : " ";
+    } else {
+      spaceBefore = startSlice.endsWith(" ") ? "" : " ";
+      spaceAfter = "";
+    }
+
+    return `${startSlice}${spaceBefore}${snippet}${spaceAfter}${endSlice}`;
   }
 
   function focusDirection(dir) {
