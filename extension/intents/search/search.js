@@ -223,6 +223,18 @@ async function moveResult(context, step, showFollowup) {
     // reset the index to an initial search result
     searchInfo.index = undefined;
     tabSearchResults.set(tabId, searchInfo);
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: 0,
+    });
+    context.startFollowup({
+      heading: "Say 'next' to view",
+      subheading: searchInfo.searchResults[0].title,
+      acceptFollowupIntent: ["search.next", "search.previous"],
+      skipSuccessView: true,
+    });
     return;
   }
 
@@ -232,20 +244,6 @@ async function moveResult(context, step, showFollowup) {
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
 
   const item = searchInfo.searchResults[searchInfo.index];
-  const followupIndex =
-    step === 1 ? searchInfo.index + 1 : Math.max(0, searchInfo.index - 1);
-  const followupItem = searchInfo.searchResults[followupIndex];
-  context.startFollowup({
-    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
-    subheading: followupItem.title,
-    acceptFollowupIntent: true,
-  });
-  await browser.runtime.sendMessage({
-    type: "showSearchResults",
-    searchResults: searchInfo.searchResults,
-    searchUrl: searchInfo.searchUrl,
-    index: searchInfo.index,
-  });
   if (!tabId) {
     const tab = await context.createTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
@@ -275,6 +273,21 @@ async function moveResult(context, step, showFollowup) {
       tabSearchResults.delete(tabId);
     }
   }
+  await browserUtil.waitForDocumentComplete(lastTabId);
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    searchResults: searchInfo.searchResults,
+    searchUrl: searchInfo.searchUrl,
+    index: searchInfo.index,
+  });
+  const nextItemIdx = step === 1 ? searchInfo.index + 1 : searchInfo.index - 1;
+  const nextItem = searchInfo.searchResults[nextItemIdx];
+  context.startFollowup({
+    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
+    subheading: nextItemIdx < 0 ? "Search Results" : nextItem.title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+    skipSuccessView: true,
+  });
 }
 
 export async function focusSearchResults(message) {
@@ -414,6 +427,7 @@ intentRunner.registerIntent({
       });
 
       await focusSearchTab();
+      await browserUtil.waitForDocumentComplete(tabId);
       await content.lazyInject(tabId, "/intents/search/queryScript.js");
       const searchInfo = await callScript({ type: "searchResultInfo" });
 
@@ -434,7 +448,7 @@ intentRunner.registerIntent({
       await context.startFollowup({
         heading: "Say 'next' to view",
         subheading: searchInfo.searchResults[0].title,
-        acceptFollowupIntent: true,
+        acceptFollowupIntent: ["search.next", "search.previous"],
       });
     }
   },
