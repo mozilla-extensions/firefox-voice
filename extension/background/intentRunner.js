@@ -9,6 +9,8 @@ import { compile, splitPhraseLines } from "./language/compiler.js";
 import { metadata } from "../intents/metadata.js";
 import { entityTypes } from "./entityTypes.js";
 import { Database } from "../history.js";
+import * as settings from "../settings.js";
+import * as util from "../util.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -25,6 +27,7 @@ let lastIntent;
 // This is a copy of lastIntent that gets nullified when the pop up
 // window closes.
 let lastIntentForFollowup;
+let globalListenForFollowup = settings.getSettings().listenForFollowup;
 const intentHistory = [];
 const db = new Database("voice");
 const utteranceTable = "utterance";
@@ -33,6 +36,10 @@ const voiceVersion = 1;
 db.createTable(utteranceTable, primaryKey, voiceVersion)
   .then(result => log.info("CREATE TABLE:", result))
   .catch(error => log.error(error));
+
+settings.watch("listenForFollowup", ns => {
+  globalListenForFollowup = ns;
+});
 
 export class IntentContext {
   constructor(desc) {
@@ -369,7 +376,7 @@ export async function runUtterance(utterance, noPopup) {
       lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
     ) {
       desc.isFollowupIntent = true;
-    } else {
+    } else if (!globalListenForFollowup) {
       lastIntentForFollowup.displayText("Invalid option. Please try again");
       return lastIntentForFollowup.startFollowup();
     }
