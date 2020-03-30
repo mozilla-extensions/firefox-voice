@@ -24,6 +24,9 @@ const defaultZoomValues = [
 // get tracked (we assume you just passed over the tab)
 const TRACK_TAB_ACTIVATE_MINIMUM = 1500;
 
+let lastIndex;
+let rangeData;
+
 function nextLevel(levels, current) {
   for (const level of levels) {
     if (current < level) {
@@ -583,17 +586,120 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.findOnPage",
   async run(context) {
-    let message;
-    const results = await browser.find.find(context.slots.query);
-    await browser.find.highlightResults({
-      noScroll: false,
-      rangeIndex: 0,
-    });
+    let largeText;
+    let text;
+    let eduText;
+    let image;
+
+    context.keepPopup();
+    const results = await browser.find.find(context.slots.query, {includeRangeData: true});
+    lastIndex = 0;
+    rangeData = results.rangeData;
+
     if (results.count > 0) {
-      message = `"${context.slots.query}" found ${results.count} times`;
-    } else {
-      message = `"${context.slots.query}" not found`;
+      await browser.find.highlightResults({
+        noScroll: false,
+        rangeIndex: 0,
+       });
     }
-    context.displayText(message);
+    
+    if (results.count > 1) {
+       largeText = `1 of ${results.count}`;
+       text = `Matches for '${context.slots.query}'`;
+       eduText = `Say 'next' or 'previous'`;
+    } else if (results.count === 1) {
+        largeText = `1`;
+        text = `Match for '${context.slots.query}'`;
+    } else {
+      text = `'${context.slots.query}' not found`;
+      eduText = `Try looking for another phrase`;
+      image = "./images/icon-no-result.svg";
+    }
+
+    await callResult(largeText, text, eduText, image);
   },
 });
+
+intentRunner.registerIntent({
+  name: "tabs.findOnPageNext",
+  async run(context) {
+    let largeText;
+    let text;
+    let eduText;
+    let image;
+    context.keepPopup();
+    
+    if (lastIndex + 1 < rangeData.length ) {
+    await moveResults(lastIndex + 1);
+    largeText = `${lastIndex + 1} of ${rangeData.length}`;
+    text = `Matches for '${rangeData[lastIndex].text}'`;
+    if (lastIndex + 1 === rangeData.length) {
+      eduText = `Say 'previous' or try looking for another phrase `;
+    } else {
+      eduText = `Say 'next' or 'previous'`;
+    }
+
+    await callResult(largeText, text, eduText, image);
+    } else {
+      text = `No more next matches for '${rangeData[lastIndex].text}'`;
+      eduText = `Say 'previous' or try looking for another phrase `;
+      image = "./images/icon-no-result.svg";
+      await callResult(largeText, text, eduText, image);
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.findOnPagePrevious",
+  async run(context) {
+    let largeText;
+    let text;
+    let eduText;
+    let image;
+
+      if (lastIndex - 1 >= 0 ) {
+    await moveResults(lastIndex - 1);
+    largeText = `${lastIndex + 1} of ${rangeData.length}`;
+    text = `Matches for '${rangeData[lastIndex].text}'`;
+
+    if (lastIndex === 0) {
+      eduText = `Say 'next' or try looking for another phrase `;
+    } else {
+      eduText = `Say 'next' or 'previous'`;
+    }
+
+    await callResult(largeText, text, eduText, image);
+    } else {
+      text = `No more previous matches for '${rangeData[lastIndex].text}'`;
+      eduText = `Say 'next' or try looking for another phrase `;
+      image = "./images/icon-no-result.svg";
+      await callResult(largeText, text, eduText, image);
+    }
+   
+  },
+});
+
+async function moveResults(rangeIndex) {
+  await browser.find.highlightResults({
+    noScroll: false,
+    rangeIndex,
+   });
+return lastIndex = rangeIndex;
+}
+
+async function callResult(largeText, text, eduText, image) {
+  const card = {
+    answer: {
+      largeText,
+      text,
+      eduText,
+      imgSrc: image,
+    },
+  };
+
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    card,
+    searchResults: card,
+  });
+}
