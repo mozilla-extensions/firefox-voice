@@ -38,6 +38,10 @@ export class IntentContext {
     this.timestamp = Date.now();
     this.followupPhraseSet;
     this.expectsFollowup = false;
+    // When running follow ups, sometimes a success view is not needed,
+    // yet still flashes before the next view. This attribute allows us to
+    // force bypassing the success view.
+    this.skipSuccessView = false;
     this.acceptFollowupIntent = [];
     Object.assign(this, desc);
   }
@@ -98,12 +102,17 @@ export class IntentContext {
     this.expectsFollowup = true;
     if (message.acceptFollowupIntent) {
       this.acceptFollowupIntent = message.acceptFollowupIntent;
-      delete message.acceptFollowupIntent;
+    }
+    if (message.skipSuccessView) {
+      this.skipSuccessView = true;
     }
     return browser.runtime.sendMessage({
       type: "handleFollowup",
       method: "enable",
-      message,
+      message: {
+        heading: message && message.heading,
+        subheading: message && message.subheading,
+      },
     });
   }
 

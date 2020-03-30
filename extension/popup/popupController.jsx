@@ -306,7 +306,10 @@ export const PopupController = function() {
     });
     if (lastIntent) {
       setLastIntent(lastIntent);
+      return lastIntent;
     }
+
+    return null;
   };
 
   const onInputStarted = () => {
@@ -493,7 +496,6 @@ export const PopupController = function() {
     if (renderListenComponent) {
       renderListenComponent = false;
     }
-    updateLastIntent();
     recorder.startRecording();
     closePopup(FOLLOWUP_TIMEOUT);
   };
@@ -510,13 +512,12 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = json => {
+    recorder.onEnd = async json => {
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
         return;
       }
-      setPopupView("success");
       executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
@@ -528,14 +529,18 @@ export const PopupController = function() {
       const capText =
         json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
       setTranscript(capText);
-      browser.runtime.sendMessage({
+      await browser.runtime.sendMessage({
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
-      browser.runtime.sendMessage({
+      await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
+      const completedIntent = await updateLastIntent();
+      if (!completedIntent.skipSuccessView) {
+        setPopupView("success");
+      }
       // intent can run a follow up directly
       if (listenForFollowup && !requestFollowup) {
         runFollowup();
