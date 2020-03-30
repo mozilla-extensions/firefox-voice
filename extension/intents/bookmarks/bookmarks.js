@@ -86,7 +86,7 @@ intentRunner.registerIntent({
     switch (context.parameters.confirmation) {
       case "false":
         await context.displayText("Command cancelled");
-        await context.resetFollowup();
+        await context.endFollowup();
         break;
       default:
         const activeTab = await context.activeTab();
@@ -99,7 +99,7 @@ intentRunner.registerIntent({
 
         if (!selected.length) {
           context.displayText("");
-          context.resetFollowup();
+          context.endFollowup();
           const e = new Error("This page wasn't bookmarked");
           e.displayMessage = "This page wasn't bookmarked";
           throw e;
@@ -107,7 +107,7 @@ intentRunner.registerIntent({
 
         await browser.bookmarks.remove(selected[0].id);
         await context.displayText("Bookmark has been removed");
-        await context.resetFollowup();
+        await context.endFollowup();
     }
   },
 });

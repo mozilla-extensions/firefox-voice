@@ -134,7 +134,7 @@ export class IntentContext {
     });
   }
 
-  async resetFollowup() {
+  async endFollowup() {
     this.expectsFollowup = false;
     browser.runtime.sendMessage({
       type: "handleFollowup",
