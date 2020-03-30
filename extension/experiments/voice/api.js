@@ -56,7 +56,7 @@ this.voice = class extends ExtensionAPI {
           },
 
           async viewPageSource() {
-            return runCommand("View:PageInfo");
+            return runCommand("View:PageSource");
           },
 
         },
