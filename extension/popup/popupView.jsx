@@ -305,10 +305,10 @@ const FollowupContainer = ({ lastIntent, followupText }) => {
     return null;
   }
 
-  let heading;
+  let heading = "Listening";
   let subheading;
   if (followupText) {
-    heading = followupText.heading ? followupText.heading : "Listening";
+    heading = followupText.heading;
     subheading = followupText.subheading ? followupText.subheading : null;
   }
   return (
