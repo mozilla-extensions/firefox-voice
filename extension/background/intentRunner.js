@@ -49,6 +49,7 @@ export class IntentContext {
     this.expectsFollowup = false;
     this.isFollowup = false;
     this.isFollowupIntent = false;
+    this.insistOnFollowup = false;
     // allows us to reuse an intent's text on retries
     this.followupHint = {};
     // When running follow ups, sometimes a success view is not needed,
@@ -117,6 +118,7 @@ export class IntentContext {
     if (message) {
       this.acceptFollowupIntent = message.acceptFollowupIntent || [];
       this.skipSuccessView = message.skipSuccessView || false;
+      this.insistOnFollowup = message.insistOnFollowup || false;
       this.followupHint = {
         heading: message.heading,
         subheading: message.subheading,
@@ -376,8 +378,11 @@ export async function runUtterance(utterance, noPopup) {
       lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
     ) {
       desc.isFollowupIntent = true;
-    } else if (!globalListenForFollowup) {
-      lastIntentForFollowup.displayText("Invalid option. Please try again");
+    } else if (
+      !globalListenForFollowup ||
+      (globalListenForFollowup && lastIntentForFollowup.insistOnFollowup)
+    ) {
+      lastIntentForFollowup.failed("Invalid option. Please try again");
       return lastIntentForFollowup.startFollowup();
     }
   }
