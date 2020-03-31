@@ -30,6 +30,24 @@ for (const filename of glob.sync(INTENT_DIR + "/**/*.toml")) {
     );
     process.exit(1);
   }
+  for (const subcommand in data[intentName]) {
+    const command = data[intentName][subcommand];
+    if (command.example && command.examples) {
+      console.error(
+        `File ${filename} has [[${intentName}.${subcommand}.example]] and [[...examples]]`
+      );
+      process.exit(2);
+    }
+    if (
+      (command.example && !Array.isArray(command.example)) ||
+      (command.examples && !Array.isArray(command.examples))
+    ) {
+      console.error(
+        `File ${filename} does not use [[]] around ${intentName}.${subcommand}.example`
+      );
+      process.exit(3);
+    }
+  }
   if (metadata[intentName]) {
     throw new Error(`Unexpected existing key for ${intentName}`);
   }
