@@ -37,8 +37,13 @@ jobs:
           at: .
       - run:
           name: Run lint tests
+          ignore: integration.test.js
           command: |
             node --version
+            npm run jest -- --showConfig
+            pwd
+            ls -l
+            npm test
             npm run test-ci
   selenium_test:
     executor: docker
@@ -64,6 +69,10 @@ jobs:
           command: |
             export PATH=~/firefox:$PATH
             FIREFOX_CHANNEL=NIGHTLY MOZ_HEADLESS=1 npm run functional-test
+
+jest_test: 
+  executor: docker
+
   deploy_dev:
     docker:
       - image: circleci/node:13.8.0-stretch
