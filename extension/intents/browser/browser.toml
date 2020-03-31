@@ -1,0 +1,33 @@
+[browser.bookmark]
+description = "Open bookmarks"
+match = """
+  (Open | show |) (bookmarks | bookmark |)
+"""
+
+[[browser.bookmark.example]]
+phrase = "open bookmarks"
+
+[[browser.bookmark.example]]
+phrase = "show bookmarks"
+test = true
+
+[[browser.bookmark.example]]
+phrase = "open bookmark"
+test = true
+
+[[browser.bookmark.example]]
+phrase = "show bookmark"
+test = true
+
+[browser.history]
+description = "Open history"
+match = """
+  (Open | show |) history
+"""
+
+[[browser.history.example]]
+phrase = "open history"
+
+[[browser.history.example]]
+phrase = "show history"
+test = true
