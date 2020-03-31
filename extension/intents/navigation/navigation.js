@@ -31,7 +31,7 @@ function saveTabQueryToDatabase(query, tab, url) {
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
-    const query = context.slots.query;
+    const query = context.slots.query.toLowerCase();
     const result = await browser.storage.sync.get("pageNames");
     const pageNames = result.pageNames;
     const savedUrl = pageNames[query];
