@@ -44,14 +44,6 @@ this.dictationContentScript = (function() {
     );
   }
 
-  function quoteHtml(text) {
-    text = text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/"/g, "&quot;");
-    return text;
-  }
-
   function highlightElement(el) {
     const oldBackground = el.style.backgroundColor;
     el.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
@@ -89,7 +81,7 @@ this.dictationContentScript = (function() {
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
         // eslint-disable-next-line no-unsanitized/property
-        insertStringContentEditable(quoteHtml(text), el);
+        insertStringContentEditable(text, el);
       } else {
         el.value = insertString(el.value, text, el.selectionStart);
       }
