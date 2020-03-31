@@ -39,6 +39,7 @@ jobs:
           name: Run lint tests
           command: |
             node --version
+            npm run jest
             npm run test-ci
   selenium_test:
     executor: docker
