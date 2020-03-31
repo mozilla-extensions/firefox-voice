@@ -56,3 +56,16 @@ test = true
 [[window.close.example]]
 phrase = "Close all windows"
 test = true
+
+[window.zoom]
+description = "Zooms the window"
+match = """
+  zoom (the |) (this |) window (for me |)
+"""
+
+[[window.zoom.example]]
+phrase = "Zoom window"
+
+[[window.zoom.example]]
+phrase = "Zoom this window"
+test = true
