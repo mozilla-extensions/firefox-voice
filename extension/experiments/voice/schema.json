@@ -44,6 +44,14 @@
       },
 
       {
+        "name": "viewPageSource",
+        "type": "function",
+        "description": "View Page Source",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "showAllBookmarks",
         "type": "function",
         "description": "Open bookmarks",
