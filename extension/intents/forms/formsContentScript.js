@@ -236,24 +236,25 @@ this.dictationContentScript = (function() {
   }
 
   function insertStringContentEditable(snippet, containerElement) {
-    if (window.getSelection) {
-      const sel = window.getSelection();
-      if (sel.getRangeAt && sel.rangeCount) {
-        let range = sel.getRangeAt(0);
-        // range.deleteContents(); TODO Maybe: overwrite selection
+    const sel = window.getSelection();
 
-        const modSnippet = prependAppendSpace(snippet, containerElement, range);
+    // get cursor location
+    let range = sel.getRangeAt(0);
 
-        const snippetNode = document.createTextNode(modSnippet);
-        range.insertNode(snippetNode);
+    // range.deleteContents(); TODO Maybe: overwrite selection
 
-        range = range.cloneRange();
-        range.setStartAfter(snippetNode);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    }
+    const modSnippet = prependAppendSpace(snippet, containerElement, range);
+
+    // insert text at cursor
+    const snippetNode = document.createTextNode(modSnippet);
+    range.insertNode(snippetNode);
+
+    // place cursor after inserted text
+    range = range.cloneRange();
+    range.setStartAfter(snippetNode);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   function prependAppendSpace(snippet, containerElement, range) {
