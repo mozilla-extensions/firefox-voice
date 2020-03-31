@@ -80,7 +80,6 @@ this.dictationContentScript = (function() {
     }
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
-        // eslint-disable-next-line no-unsanitized/property
         insertStringContentEditable(text, el);
       } else {
         el.value = insertString(el.value, text, el.selectionStart);
