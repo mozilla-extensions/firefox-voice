@@ -264,9 +264,7 @@ this.dictationContentScript = (function() {
     const postRange = range.cloneRange();
     preRange.collapse(true);
     preRange.setStart(containerElement, 0);
-    if (
-      preRange.toString().endsWith(" ") || preRange.toString() === ""
-    ) {
+    if (preRange.toString().endsWith(" ") || preRange.toString() === "") {
       strBefore = "";
     } else {
       strBefore = " ";
