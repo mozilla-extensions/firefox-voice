@@ -69,3 +69,16 @@ phrase = "Zoom window"
 [[window.zoom.example]]
 phrase = "Zoom this window"
 test = true
+
+[window.minimize]
+description = "Minimizes the window"
+match = """
+  minimize (the |) (this |) window (for me |)
+"""
+
+[[window.minimize.example]]
+phrase = "Minimize window"
+
+[[window.minimize.example]]
+phrase = "Minimize this window"
+test = true

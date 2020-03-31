@@ -78,3 +78,10 @@ intentRunner.registerIntent({
     await browser.experiments.voice.zoomWindow();
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.minimize",
+  async run(context) {
+    await browser.experiments.voice.minimizeWindow();
+  },
+});
