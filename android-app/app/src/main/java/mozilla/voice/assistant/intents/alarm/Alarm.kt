@@ -59,7 +59,7 @@ class Alarm {
             return when (parameters[PERIOD_KEY].toPeriod()) {
                 Period.MIDNIGHT -> Pair(0, m)
                 Period.AM, Period.NONE -> Pair(h, m)
-                Period.NOON -> Pair(12, 0)
+                Period.NOON -> Pair(HOURS_PER_PERIOD, 0)
                 Period.PM -> Pair((h % HOURS_PER_PERIOD) + HOURS_PER_PERIOD, m)
             }
         }
@@ -104,7 +104,7 @@ fun String?.toPeriod() =
         "noon" -> Period.NOON
         "pm" -> Period.PM
         null -> Period.NONE
-        else -> throw Error("Illegal argument $this in String.toPeriod()")
+        else -> throw AssertionError("Illegal argument $this in String.toPeriod()")
     }
 
 fun Calendar.toAlarmIntent() =
