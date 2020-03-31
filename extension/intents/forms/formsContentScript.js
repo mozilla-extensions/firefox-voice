@@ -241,7 +241,7 @@ this.dictationContentScript = (function() {
     // get cursor location
     let range = sel.getRangeAt(0);
 
-    // overwrite selection
+    // overwrite if its a selection
     range.deleteContents();
 
     const modSnippet = prependAppendSpace(snippet, containerElement, range);
@@ -265,8 +265,7 @@ this.dictationContentScript = (function() {
     preRange.collapse(true);
     preRange.setStart(containerElement, 0);
     if (
-      preRange.toString().slice(-1) === "" ||
-      preRange.toString().slice(-1) === " "
+      preRange.toString().endsWith(" ") || preRange.toString() === ""
     ) {
       strBefore = "";
     } else {
