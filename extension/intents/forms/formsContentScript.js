@@ -241,7 +241,8 @@ this.dictationContentScript = (function() {
     // get cursor location
     let range = sel.getRangeAt(0);
 
-    // range.deleteContents(); TODO Maybe: overwrite selection
+    // overwrite selection
+    range.deleteContents();
 
     const modSnippet = prependAppendSpace(snippet, containerElement, range);
 
