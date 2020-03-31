@@ -372,6 +372,7 @@ a#lexicon {
 
 #header-title .utterance {
   font-style: italic;
+  white-space: normal;
 }
 
 #feedback-whats-wrong {
