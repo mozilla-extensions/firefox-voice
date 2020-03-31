@@ -119,12 +119,11 @@ body,
 
 #moz-voice-privacy {
   line-height: 20px;
-  margin-left: -17px;
+  margin-left: -16px;
 }
-
 #moz-voice-privacy > a {
   font-weight: 400;
-  font-size: 0.96em;
+  font-size: 0.95em;
 }
 
 #feedback-prompt {
