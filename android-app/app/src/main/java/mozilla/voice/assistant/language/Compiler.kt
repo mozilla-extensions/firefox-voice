@@ -1,7 +1,9 @@
 package mozilla.voice.assistant.language
 
 import androidx.annotation.VisibleForTesting
+import java.lang.IllegalArgumentException
 import mozilla.voice.assistant.intents.Metadata as Metadata
+import mozilla.voice.assistant.intents.TomlException
 
 /**
  * Compiler for converting phrases into [Pattern]s.
@@ -34,7 +36,6 @@ class Compiler(internal val metadata: Metadata, internal val language: Language)
     @VisibleForTesting
     internal fun getParameter(phrase: String): Triple<String, String, String>? =
         parameterRegex.matchEntire(phrase)?.run {
-            require(groupValues.size == 4)
             val (parameter, value, rest) = destructured
             Triple(parameter, value, rest)
         }
@@ -60,6 +61,7 @@ class Compiler(internal val metadata: Metadata, internal val language: Language)
             )
         } ?: listOf(s)
 
+    @SuppressWarnings("LongMethod", "ComplexMethod", "ThrowsCount")
     internal fun compile(
         string: String,
         entities: Map<String, Pattern>? = standardEntities,
@@ -84,7 +86,7 @@ class Compiler(internal val metadata: Metadata, internal val language: Language)
             if (typedSlotMatch != null) {
                 val (slotName, entityName, rest) = typedSlotMatch.destructured
                 val entityPattern =
-                    entities?.get(entityName) ?: throw Error("No entity type $entityName")
+                    entities?.get(entityName) ?: throw TomlException("No entity type $entityName")
                 seq.add(Slot(entityPattern, slotName = slotName))
                 toParse = rest
                 continue
@@ -124,12 +126,13 @@ class Compiler(internal val metadata: Metadata, internal val language: Language)
                         when (alts.size) {
                             1 -> Word(alts[0], language)
                             2 -> Alternatives(alts.map { Word(it, language) })
-                            else -> throw Error("Illegal value returned from splitAlternatives(\"$wordsString\': ${alts.size}")
+                            else -> throw IllegalArgumentException(
+                                "Illegal value returned from splitAlternatives(\"$wordsString\': ${alts.size}")
                         }
                     )
                 }
                 toParse = rest
-            } ?: throw Error("No case matched in compile() for: \"$toParse\"")
+            } ?: throw IllegalArgumentException("No case matched in compile() for: \"$toParse\"")
         }
 
         return FullPhrase(

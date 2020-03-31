@@ -35,11 +35,11 @@ class IntentRunner(private val compiler: Compiler) {
 
     private fun registerIntent(intentName: String, createIntent: IntentBuilder) {
         if (intents[intentName] != null) {
-            throw Error("Attempt to reregister intent: $intentName")
+            throw IllegalArgumentException("Attempt to reregister intent: $intentName")
         }
         val parts = intentName.split('.')
         if (parts.size != 2) {
-            throw Error("Intent $intentName should be named like X.Y")
+            throw IllegalArgumentException("Intent $intentName should be named like X.Y")
         }
         val intent = Intent(
             intentName,
@@ -58,7 +58,6 @@ class IntentRunner(private val compiler: Compiler) {
         utterance: String,
         context: Context? = null
     ): android.content.Intent? =
-        // TODO: Add nicknames
         intentParser.parse(utterance)?.let {
             intents[it.name]?.createIntent?.invoke(it, context, metadata)
         }

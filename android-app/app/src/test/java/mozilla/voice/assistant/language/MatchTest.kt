@@ -1,6 +1,7 @@
 package mozilla.voice.assistant.language
 
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 
 internal fun String.toWordList(language: Language) =
     trim().let {
@@ -16,7 +17,7 @@ internal fun makeMatch(s: String, language: Language) =
 
 internal fun List<MatchResult>.getOnly(pred: (MatchResult) -> Boolean): MatchResult {
     val matches = this.filter(pred)
-    Assert.assertEquals(1, matches.size)
+    assertEquals(1, matches.size)
     return matches[0]
 }
 
@@ -26,20 +27,20 @@ internal fun checkCounts(
     capturedWords: Int = 0,
     skippedWords: Int = 0
 ) {
-    Assert.assertTrue("match not exhausted: $match", match.utteranceExhausted())
-    Assert.assertEquals(
-        "unexpected value for aliasedWords: ",
+    assertTrue(match.utteranceExhausted(), "match not exhausted: $match")
+    assertEquals(
         aliasedWords,
-        match.aliasedWords
+        match.aliasedWords,
+        "unexpected value for aliasedWords "
     )
-    Assert.assertEquals(
-        "unexpected value for capturedWords: ",
+    assertEquals(
         capturedWords,
-        match.capturedWords
+        match.capturedWords,
+        "unexpected value for capturedWords: "
     )
-    Assert.assertEquals(
-        "unexpected value for skippedWords: ",
+    assertEquals(
         skippedWords,
-        match.skippedWords
+        match.skippedWords,
+        "unexpected value for skippedWords: "
     )
 }

@@ -27,7 +27,7 @@ On recent versions of Android, follow the instructions illustrated below, in the
 
 ### Install the Mozilla Assistant app
 
-In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/build/outputs/apk/debug/app-debug.apk?raw=true) (by opening the link) on your Android device. Confirm that you wish to open and install it. If Firefox won't let you, use Chrome for this step.
+In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/release/app-release.apk?raw=true) (by opening the link) on your Android device. Confirm that you wish to open and install it. If Firefox won't let you, use Chrome for this step.
    
 ### Specify your assistant
 

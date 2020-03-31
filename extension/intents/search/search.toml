@@ -136,8 +136,8 @@ match = """
 
 [[search.searchGoogle.example]]
 phrase = "google waterfall"
-expectSlots = {query = "query"}
+expectSlots = { query = "waterfall" }
 
 [[search.searchGoogle.example]]
 phrase = "search for fox news on google"
-expectSlots = {query = "query"}
+expectSlots = { query = "fox news" }

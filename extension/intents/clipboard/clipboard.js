@@ -137,6 +137,16 @@ function blobToArray(blob) {
 }
 
 export async function copyImage(url) {
-  const buffer = await blobToArray(dataUrlToBlob(url));
-  await browser.clipboard.setImageData(buffer, "png");
+  let blob;
+  if (url.startsWith("data:")) {
+    blob = dataUrlToBlob(url);
+  } else {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      throw new Error("Cannot fetch image");
+    }
+    blob = await resp.blob();
+  }
+  const buffer = await blobToArray(blob);
+  await browser.clipboard.setImageData(buffer, blob.type.split("/")[1]);
 }

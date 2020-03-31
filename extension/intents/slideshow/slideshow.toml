@@ -1,0 +1,12 @@
+[slideshow.open]
+description = "Opens the slideshow"
+match = '''
+    (open | display | launch | start|) (the |) slideshow
+'''
+
+[[slideshow.open.example]]
+phrase = "Open slideshow"
+
+[[slideshow.open.example]]
+phrase = "Launch the slideshow"
+test = true
