@@ -1,4 +1,4 @@
-/* globals catcher */
+/* globals catcher, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
 
@@ -89,7 +89,6 @@ export const timerController = new TimerController();
 intentRunner.registerIntent({
   name: "timer.set",
   async run(context) {
-    let seconds = 0;
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       const e = new Error("Failed to set timer");
@@ -98,29 +97,18 @@ intentRunner.registerIntent({
     }
 
     context.keepPopup();
-
-    if (context.slots.seconds !== undefined) {
-      seconds = parseInt(context.slots.seconds, 10);
-    }
-    if (context.slots.minutes !== undefined) {
-      seconds += parseInt(context.slots.minutes, 10) * 60;
-    }
-    if (context.slots.hours !== undefined) {
-      seconds += parseInt(context.slots.hours, 10) * 60 * 60;
+    const result = chrono.parse(context.slots.time);
+    let ms = 0;
+    for (let i = 0; i < result.length; i++) {
+      const startTime = result[i].ref;
+      const endTime = result[i].start.date();
+      // round up to actual number of seconds
+      ms += Math.ceil((endTime - startTime) / 1000.0) * 1000;
     }
 
-    if (seconds === 0) {
+    if (ms === 0) {
       throw new Error("Cannot set timer for 0 seconds");
     }
-
-    if (Number.isNaN(seconds)) {
-      throw new Error(
-        `Cannot understand number: ${context.slots.seconds || ""} ${context
-          .slots.minutes || ""} ${context.slots.hours || ""}`
-      );
-    }
-
-    const ms = seconds * 1000;
     timerController.setActiveTimer(ms);
 
     await browser.runtime.sendMessage({
