@@ -74,9 +74,8 @@
   },
   "jest": {
     "transform": {
-      "\\.js$": [
-        "babel-jest"
-      ]
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.jsx$": "babel-jest"
     }
   },
   "scripts": {

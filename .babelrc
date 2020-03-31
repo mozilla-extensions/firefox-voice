@@ -8,7 +8,9 @@
     // Note this applies to the Jest tests:
     "test": {
       "plugins": ["@babel/plugin-transform-modules-commonjs"],
-      "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]]
+      "presets": [["@babel/preset-env", { "targets": { "node": "current" } },
+				"@babel/preset-react"
+			]]
     }
   }
 }
