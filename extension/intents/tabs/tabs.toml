@@ -422,7 +422,7 @@ match = """
 (find | search |) (the |) next match
 """
 
-[[tabs.findOnPage.example]]
+[[tabs.findOnPageNext.example]]
 phrase = "next match"
 test = true
 
@@ -432,7 +432,7 @@ match = """
 (find | search |) (the |) previous match
 """
 
-[[tabs.findOnPage.example]]
+[[tabs.findOnPagePrevious.example]]
 phrase = "previous match"
 test = true
 >>>>>>> add Next/Previous Match
