@@ -131,7 +131,7 @@ test = true
 description = "Give search results from google"
 match = """
   (do a |) (search | search on | query | find | look up | lookup | look on |) (google) (for | for the |) [query] (for me |)
-  (do a |) (search | query | find | look up | lookup | look on | look for |) (for | for the |) [query] (on |) (google) (for me |)
+  (do a |) (search | query | find | look up | lookup | look on | look for |) (for | for the |) [query] (on google) (for me |)
 """
 
 [[search.searchGoogle.example]]
