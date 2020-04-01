@@ -11,6 +11,10 @@ html {
   }
 }
 
+body {
+  margin: 0px;
+}
+
 body,
 .cls-1 {
   font-family: "Inter" !important;
@@ -507,9 +511,6 @@ a#lexicon {
   overflow: hidden;
   text-overflow: ellipsis;
   background-color: black;
-  margin-bottom: -8px;
-  margin-left: -8px;
-  margin-right: -8px;
   position: relative;
   z-index: -2;
   padding-top: 12px;
