@@ -1,0 +1,48 @@
+[maps.navigate]
+description = "Navigate to a specific destination"
+match = """
+  (give me|show me|i'd like|) (car|driving|) directions to [location]
+  (give me|show me|i'd like|) walking directions to [location] [mode=walk]
+  (give me|show me|i'd like|) (bike|biking|bicycle|bicycling|cycling) directions to [location] [mode=bike]
+  navigate (by car|) to [location]
+  (show|tell) (me|) how to (bike|bicycle|cycle) to [location] [mode=bike]
+  (show|tell) (me|) how to get to [location] by (bike|biking|bicycle|bicycling|cycling) [mode=bike]
+  (show|tell) (me|) how to walk to [location] [mode=walk]
+  (show|tell) (me|) how to get to [location] (on foot|by foot|by walking) [mode=walk]
+  (show|tell) me (how to get|how to drive|directions|the way) to [location]
+  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (by car|)
+  (what's|show me|tell me) the (best|fastest|quickest) way to drive to [location] (by car|)
+  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (on foot|by foot|by walking) [mode=walk]
+  (what's|show me|tell me) the (best|fastest|quickest) way to walk to [location] [mode=walk]
+  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (by|on) (bike|biking|bicycle|bicycling|cycling) [mode=bike]
+  (what's|show me|tell me) the (best|fastest|quickest) way to (bike|bicycle|cycle) to [location] [mode=bike]
+"""
+
+[[maps.navigate.example]]
+phrase = "Show me how to get to Carnegie Hall"
+
+[[maps.navigate.example]]
+phrase = "Navigate to 2 Harrison St."
+
+[[maps.navigate.example]]
+phrase = "What's the best way to walk to the Bay Bridge?"
+
+[maps.recommend]
+description = "Find a certain type of place"
+match = """
+  where (can i|to) (get|find|buy|eat) [thing] (in|near) [location]
+  where (can i|to) (get|find|buy|eat) [thing]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing] (in|near) [location]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing]
+  (search for|look for|find) [thing] (in|near) [location]
+  (search for|look for|find) nearby [thing]
+"""
+
+[[maps.recommend.example]]
+phrase = "Where can I buy pizza?"
+
+[[maps.recommend.example]]
+phrase = "What's a good place to get sushi?"
+
+[[maps.recommend.example]]
+phrase = "Where's good ramen in Oakland?"

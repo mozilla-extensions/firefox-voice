@@ -3,9 +3,7 @@ import * as content from "./content.js";
 import { shouldDisplayWarning } from "../limiter.js";
 
 class MusicService extends serviceList.Service {
-  async playQuery(query) {
-    await this.initTab(`/services/${this.id}/player.js`);
-    await this.callTab("search", { query, thenPlay: true });
+  async tabActivation() {
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
@@ -26,6 +24,26 @@ class MusicService extends serviceList.Service {
           this.context.failedAutoplay(this.tab);
         }
       }
+    }
+  }
+
+  async playQuery(query) {
+    try {
+      await this.initTab(`/services/${this.id}/player.js`);
+      try {
+        await this.callTab("search", { query, thenPlay: true });
+        await this.tabActivation();
+      } catch (e) {
+        if (e.message.includes("No search results")) {
+          e.displayMessage = `No results found for ${query}`;
+        }
+        throw e;
+      }
+    } catch (e) {
+      if (e.message === "You must enable DRM.") {
+        e.displayMessage = "You must enable DRM.";
+      }
+      throw e;
     }
   }
 
@@ -52,6 +70,18 @@ class MusicService extends serviceList.Service {
     await this.callTab("unpause");
   }
 
+  async playAlbum(query) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("playAlbum", { query, thenPlay: true });
+    await this.tabActivation();
+  }
+
+  async playPlaylist(query) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("playPlaylist", { query, thenPlay: true });
+    await this.tabActivation();
+  }
+
   async pauseAny(options) {
     const exceptTabId = options && options.exceptTabId;
     for (const tab of await this.getAllTabs({ audible: true })) {
@@ -61,6 +91,21 @@ class MusicService extends serviceList.Service {
       await content.lazyInject(tab.id, `/services/${this.id}/player.js`);
       await this.callOneTab(tab.id, "pause");
     }
+  }
+
+  async adjustVolume(volumeLevel) {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("adjustVolume", { volumeLevel });
+  }
+
+  async mute() {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("mute");
+  }
+
+  async unmute() {
+    await this.initTab(`/services/${this.id}/player.js`);
+    await this.callTab("unmute");
   }
 }
 

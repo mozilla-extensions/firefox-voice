@@ -2,6 +2,12 @@
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 import * as browserUtil from "../browserUtil.js";
+import * as routinesView from "./routinesView.js";
+
+export const TABS = {
+  GENERAL: "GENERAL",
+  ROUTINES: "ROUTINES",
+};
 
 export const Options = ({
   inDevelopment,
@@ -10,22 +16,40 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  tabValue,
+  updateNickname,
+  registeredNicknames,
+  useToggle,
+  useEditNicknameDraft,
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
-      <RightContent
-        inDevelopment={inDevelopment}
-        keyboardShortcutError={keyboardShortcutError}
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
+      <LeftSidebar version={version} tabValue={tabValue} />
+      {tabValue === TABS.GENERAL ? (
+        <General
+          inDevelopment={inDevelopment}
+          keyboardShortcutError={keyboardShortcutError}
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        ></General>
+      ) : null}
+      {tabValue === TABS.ROUTINES ? (
+        <routinesView.Routines
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          updateNickname={updateNickname}
+          registeredNicknames={registeredNicknames}
+          useToggle={useToggle}
+          useEditNicknameDraft={useEditNicknameDraft}
+        ></routinesView.Routines>
+      ) : null}
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, tabValue }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
@@ -35,11 +59,47 @@ const LeftSidebar = ({ version }) => {
           <a href="/views/CHANGELOG.html">What's New</a>
         </p>
       </div>
+      <div>
+        <ul className="tab-list">
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.GENERAL ? "selected-tab" : "")
+              }
+              href="#general"
+            >
+              <img
+                src="./images/general.svg"
+                alt="General"
+                className="tab-icon"
+              ></img>
+              <span> General </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.ROUTINES ? "selected-tab" : "")
+              }
+              href="#routines"
+            >
+              <img
+                src="./images/routines.svg"
+                alt="Routines"
+                className="tab-icon"
+              ></img>
+              <span> Routines </span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-const RightContent = ({
+const General = ({
   inDevelopment,
   keyboardShortcutError,
   userOptions,
@@ -57,11 +117,13 @@ const RightContent = ({
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      <WakewordSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
+      {inDevelopment ? (
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      ) : null}
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
@@ -406,8 +468,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
       <legend>Firefox Voice Data Collection and Use</legend>
       <ul>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="technical-data"
               type="checkbox"
               checked={!userSettings.disableTelemetry}
@@ -426,8 +489,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="transcripts-data"
               type="checkbox"
               checked={userSettings.utterancesTelemetry}
@@ -447,8 +511,9 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="collect-audio"
               type="checkbox"
               checked={userSettings.collectAudio}

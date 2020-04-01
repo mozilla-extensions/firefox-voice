@@ -6,10 +6,12 @@ match = """
 """
 
 [window.downloads]
-description = "Open downloads"
+description = "Open the downloads"
 match = """
   (show | open |) downloads (menu |)
 """
+[[window.downloads.example]]
+phrase = "open downloads"
 
 [window.quitApplication]
 description = "Close Firefox"
@@ -36,4 +38,21 @@ test = true
 
 [[window.combine.example]]
 phrase = "combine tabs into one window"
+test = true
+
+[window.close]
+description = "Closes the window"
+match = """
+  close (the |) (this |) (all |) (window{s}) (for me |)
+"""
+
+[[window.close.example]]
+phrase = "Close window"
+
+[[window.close.example]]
+phrase = "Close this window"
+test = true
+
+[[window.close.example]]
+phrase = "Close all windows"
 test = true

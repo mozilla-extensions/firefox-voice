@@ -22,7 +22,7 @@ description = "Opens the lexicon: a hand-written help file that indicates things
 match = """
   tell me about (this | firefox voice | this extension | voice)
   help
-  what (else |) can (I | you) (do | say | ask) (you | from you | of you |)
+  what (else |) (can | should) (I | you) (do | say | ask) (you | from you | of you |)
   (hello | hi)
   what commands (can | could | will | would |) (I | you |) (say | follow | use | speak |)
   (hello | hi |) how are you (doing |)
@@ -56,6 +56,10 @@ test = true
 
 [[self.openLexicon.example]]
 phrase = "What can I do?"
+
+[[self.openLexicon.example]]
+phrase = "what should I do"
+test = true
 
 [self.openOptions]
 description = "Opens the options page"

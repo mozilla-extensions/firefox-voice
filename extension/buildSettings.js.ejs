@@ -1,6 +1,6 @@
 this.buildSettings = {
   logLevel: <%= env.LOG_LEVEL || "debug" %>,
-  inDevelopment: null,
+  inDevelopment: <%= !!env.IN_DEVELOPMENT %>,
   sttServer: "https://speaktome-2.services.mozilla.com",
   deepSpeechServer: "https://dev.speaktome.nonprod.cloudops.mozgcp.net",
   sendToDeepSpeech: true,

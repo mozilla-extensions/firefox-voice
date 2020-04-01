@@ -41,7 +41,32 @@
         "description": "Close Firefox",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "viewPageSource",
+        "type": "function",
+        "description": "View Page Source",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "showAllBookmarks",
+        "type": "function",
+        "description": "Open bookmarks",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "showAllHistory",
+        "type": "function",
+        "description": "Open History",
+        "parameters": [],
+        "async": true
       }
+
     ]
   }
 ]

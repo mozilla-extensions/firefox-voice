@@ -54,6 +54,19 @@ this.voice = class extends ExtensionAPI {
           async quitApplication() {
             return runCommand("cmd_quitApplication");
           },
+
+          async viewPageSource() {
+            return runCommand("View:PageSource");
+          },
+
+            async showAllBookmarks() {
+            return runCommand("Browser:ShowAllBookmarks");
+          },
+
+          async showAllHistory() {
+            return runCommand("Browser:ShowAllHistory");
+          },
+
         },
       },
     };

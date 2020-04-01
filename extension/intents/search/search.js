@@ -102,6 +102,9 @@ function trackTabHide() {
 
 async function performSearch(query) {
   const tabId = await openSearchTab();
+  // Slicing query string to follow google query standard
+  // For more information, https://support.google.com/gsa/answer/4411411#requests
+  query = query.slice(0, 128);
   const url = searching.googleSearchUrl(query) + "&voice";
   await browserUtil.loadUrl(tabId, url);
   if (buildSettings.android) {
@@ -301,6 +304,13 @@ intentRunner.registerIntent({
     await performSearch(context.slots.query);
     const searchInfo = await callScript({ type: "searchResultInfo" });
     searchInfo.query = context.slots.query;
+
+    if (!searchInfo.searchResults) {
+      const e = new Error("No result found for " + searchInfo.query);
+      e.displayMessage = "No result found for " + searchInfo.query;
+      throw e;
+    }
+
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
       context.keepPopup();
@@ -383,7 +393,12 @@ intentRunner.registerIntent({
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
-      const tabId = await openSearchTab();
+      const tab = await browser.tabs.create({
+        url: START_URL,
+        active: false,
+      });
+      const tabId = tab.id;
+      _searchTabId = tabId;
 
       await browser.search.search({
         query: context.slots.query,
@@ -391,11 +406,35 @@ intentRunner.registerIntent({
       });
 
       await focusSearchTab();
-
       await content.lazyInject(tabId, "/intents/search/queryScript.js");
       const searchInfo = await callScript({ type: "searchResultInfo" });
 
+      if (
+        searchInfo.searchResults === undefined ||
+        !searchInfo.searchResults.length > 0
+      ) {
+        const msg =
+          "Could not get list of search results.\n\nPlease click feedback to let us know.";
+        const e = new Error(msg);
+        e.displayMessage = msg;
+        throw e;
+      }
+
       tabSearchResults.set(tabId, searchInfo);
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "search.searchGoogle",
+  async run(context) {
+    if (buildSettings.android) {
+      await performSearch(context.slots.query);
+    } else {
+      await browser.search.search({
+        query: context.slots.query,
+        engine: "Google",
+      });
     }
   },
 });
