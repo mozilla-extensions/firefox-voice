@@ -98,6 +98,13 @@ intentRunner.registerIntent({
 
     context.keepPopup();
     const result = chrono.parse(context.slots.time);
+
+    if (result === null || result.length === 0) {
+      const e = new Error("Failed to set timer");
+      e.displayMessage = `Cannot set timer for ${context.slots.time}`;
+      throw e;
+    }
+
     let ms = 0;
     for (let i = 0; i < result.length; i++) {
       const startTime = result[i].ref;
@@ -107,7 +114,9 @@ intentRunner.registerIntent({
     }
 
     if (ms === 0) {
-      throw new Error("Cannot set timer for 0 seconds");
+      const e = new Error("Failed to set timer");
+      e.displayMessage = "Cannot set timer for 0 seconds";
+      throw e;
     }
     timerController.setActiveTimer(ms);
 
