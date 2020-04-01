@@ -110,8 +110,11 @@ this.contentScript = (function() {
     const img = document.querySelectorAll("img");
     let maxHeightIndex = 0;
     img.forEach((element, index) => {
-      if (isInViewport(element) && element.clientHeight > img[maxHeightIndex].clientHeight) {
-          maxHeightIndex = index;
+      if (
+        isInViewport(element) &&
+        element.clientHeight > img[maxHeightIndex].clientHeight
+      ) {
+        maxHeightIndex = index;
       }
     });
     const url = img[maxHeightIndex].src;

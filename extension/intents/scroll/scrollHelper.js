@@ -8,6 +8,9 @@ function getScrollParent(node) {
   }
 
   if (node.scrollHeight > node.clientHeight) {
+    if (node.scrollHeight === node.parentNode.scrollHeight) {
+      return node.parentNode;
+    }
     return node;
   }
   return getScrollParent(node.parentNode);
