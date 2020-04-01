@@ -44,7 +44,6 @@ export class IntentContext {
   constructor(desc) {
     this.closePopupOnFinish = true;
     this.timestamp = Date.now();
-    this.followupPhraseSet;
     this.expectsFollowup = false;
     this.isFollowup = false;
     this.isFollowupIntent = false;
