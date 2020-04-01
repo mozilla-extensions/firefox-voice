@@ -171,7 +171,7 @@ export class IntentContext {
         ) {
           return;
         }
-        const isGoogle = /^https:\/\/www.google.com\//.test(url);
+        const isGoogle = /\/search/.test(url);
         const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
         if (!isGoogle || isRedirect) {
           if (isRedirect) {
@@ -186,10 +186,6 @@ export class IntentContext {
             browser.tabs.update(tab.id, { url: newUrl });
             return;
           }
-          // We no longer need to listen for updates:
-          browserUtil.onUpdatedRemove(onUpdated, tab.id);
-          resolve(tab);
-        } else {
           // We no longer need to listen for updates:
           browserUtil.onUpdatedRemove(onUpdated, tab.id);
           resolve(tab);
