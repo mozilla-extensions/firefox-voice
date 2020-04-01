@@ -6,6 +6,7 @@ match = """
   go (to | to the |) [query] tab
   go to my [query]
   focus [query] (tab |)
+  find [query] in tabs
 """
 
 [[find.find.example]]
