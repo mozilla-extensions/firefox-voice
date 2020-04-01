@@ -189,6 +189,10 @@ export class IntentContext {
           // We no longer need to listen for updates:
           browserUtil.onUpdatedRemove(onUpdated, tab.id);
           resolve(tab);
+        } else {
+          // We no longer need to listen for updates:
+          browserUtil.onUpdatedRemove(onUpdated, tab.id);
+          resolve(tab);
         }
       }
       try {
