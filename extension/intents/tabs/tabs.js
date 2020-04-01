@@ -587,7 +587,9 @@ intentRunner.registerIntent({
   name: "tabs.findOnPage",
   async run(context) {
     context.keepPopup();
-    const results = await browser.find.find(context.slots.query, {includeRangeData: true});
+    const results = await browser.find.find(context.slots.query, {
+      includeRangeData: true,
+    });
     lastIndex = 0;
     rangeData = results.rangeData;
 
@@ -595,12 +597,17 @@ intentRunner.registerIntent({
       await browser.find.highlightResults({
         noScroll: false,
         rangeIndex: 0,
-       });
+      });
     }
 
     const result = getMessage(results.count, context.slots.query);
 
-    await callResult(result.largeText, result.text, result.eduText, result.image);
+    await callResult(
+      result.largeText,
+      result.text,
+      result.eduText,
+      result.image
+    );
   },
 });
 
@@ -611,17 +618,17 @@ function getMessage(numberOfResults, query) {
       text: `Matches for '${query}'`,
       eduText: `Say 'next' or 'previous'`,
     };
- } else if (numberOfResults === 1) {
-   return {
-     largeText: `1`,
-     text: `Match for '${query}'`,
-   };
- }
-   return {
-   text: `'${query}' not found`,
-   eduText: `Try looking for another phrase`,
-   image: "./images/icon-no-result.svg",
-   };
+  } else if (numberOfResults === 1) {
+    return {
+      largeText: `1`,
+      text: `Match for '${query}'`,
+    };
+  }
+  return {
+    text: `'${query}' not found`,
+    eduText: `Try looking for another phrase`,
+    image: "./images/icon-no-result.svg",
+  };
 }
 
 intentRunner.registerIntent({
@@ -630,60 +637,74 @@ intentRunner.registerIntent({
     context.keepPopup();
 
     const result = await createFindNextAnswer();
-    await callResult(result.largeText, result.text, result.eduText, result.image);
+    await callResult(
+      result.largeText,
+      result.text,
+      result.eduText,
+      result.image
+    );
   },
 });
 
 async function createFindNextAnswer() {
-  if (lastIndex + 1 < rangeData.length ) {
+  if (lastIndex + 1 < rangeData.length) {
     await moveResults(lastIndex + 1);
     const hasMore = lastIndex + 1 === rangeData.length;
 
     return {
       largeText: `${lastIndex + 1} of ${rangeData.length}`,
       text: `Matches for '${rangeData[lastIndex].text}'`,
-      eduText: hasMore ? `Say 'previous' or try looking for another phrase ` : `Say 'next' or 'previous'`,
-      };
-    }
-      return {
-        text: `No more next matches for '${rangeData[lastIndex].text}'`,
-        eduText: `Say 'previous' or try looking for another phrase `,
-        image: "./images/icon-no-result.svg",
-      };
+      eduText: hasMore
+        ? `Say 'previous' or try looking for another phrase `
+        : `Say 'next' or 'previous'`,
+    };
+  }
+  return {
+    text: `No more next matches for '${rangeData[lastIndex].text}'`,
+    eduText: `Say 'previous' or try looking for another phrase `,
+    image: "./images/icon-no-result.svg",
+  };
 }
 
 intentRunner.registerIntent({
   name: "tabs.findOnPagePrevious",
   async run(context) {
     const result = await createFindPreviousAnswer();
-    await callResult(result.largeText, result.text, result.eduText, result.image);
+    await callResult(
+      result.largeText,
+      result.text,
+      result.eduText,
+      result.image
+    );
   },
 });
 
 async function createFindPreviousAnswer() {
-  if (lastIndex - 1 >= 0 ) {
+  if (lastIndex - 1 >= 0) {
     await moveResults(lastIndex - 1);
     const isFirstMatch = lastIndex === 0;
 
     return {
       largeText: `${lastIndex + 1} of ${rangeData.length}`,
       text: `Matches for '${rangeData[lastIndex].text}'`,
-      eduText: isFirstMatch ? `Say 'next' or try looking for another phrase ` : `Say 'next' or 'previous'`,
+      eduText: isFirstMatch
+        ? `Say 'next' or try looking for another phrase `
+        : `Say 'next' or 'previous'`,
     };
-    }
-      return {
-        text: `No more previous matches for '${rangeData[lastIndex].text}'`,
-        eduText: `Say 'next' or try looking for another phrase `,
-        image: "./images/icon-no-result.svg",
-      };
+  }
+  return {
+    text: `No more previous matches for '${rangeData[lastIndex].text}'`,
+    eduText: `Say 'next' or try looking for another phrase `,
+    image: "./images/icon-no-result.svg",
+  };
 }
 
 async function moveResults(rangeIndex) {
   await browser.find.highlightResults({
     noScroll: false,
     rangeIndex,
-   });
-return lastIndex = rangeIndex;
+  });
+  return (lastIndex = rangeIndex);
 }
 
 async function callResult(largeText, text, eduText, image) {
