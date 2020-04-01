@@ -109,6 +109,11 @@ intentRunner.registerIntent({
     for (let i = 0; i < result.length; i++) {
       const startTime = result[i].ref;
       const endTime = result[i].start.date();
+      // skip if timer is set for 0 seconds
+      const time = parseInt(result[i].text);
+      if (time === 0) {
+        continue;
+      }
       // round up to actual number of seconds
       ms += Math.ceil((endTime - startTime) / 1000.0) * 1000;
     }
