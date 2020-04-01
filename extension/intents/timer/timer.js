@@ -1,4 +1,4 @@
-/* globals catcher */
+/* globals catcher, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
 
@@ -89,7 +89,6 @@ export const timerController = new TimerController();
 intentRunner.registerIntent({
   name: "timer.set",
   async run(context) {
-    let seconds = 0;
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       const e = new Error("Failed to set timer");
@@ -98,29 +97,32 @@ intentRunner.registerIntent({
     }
 
     context.keepPopup();
+    const result = chrono.parse(context.slots.time);
 
-    if (context.slots.seconds !== undefined) {
-      seconds = parseInt(context.slots.seconds, 10);
-    }
-    if (context.slots.minutes !== undefined) {
-      seconds += parseInt(context.slots.minutes, 10) * 60;
-    }
-    if (context.slots.hours !== undefined) {
-      seconds += parseInt(context.slots.hours, 10) * 60 * 60;
+    if (result === null || result.length === 0) {
+      const e = new Error("Failed to set timer");
+      e.displayMessage = `Cannot set timer for ${context.slots.time}`;
+      throw e;
     }
 
-    if (seconds === 0) {
-      throw new Error("Cannot set timer for 0 seconds");
+    let ms = 0;
+    for (let i = 0; i < result.length; i++) {
+      const startTime = result[i].ref;
+      const endTime = result[i].start.date();
+      // skip if timer is set for 0 seconds
+      const time = parseInt(result[i].text);
+      if (time === 0) {
+        continue;
+      }
+      // round up to actual number of seconds
+      ms += Math.ceil((endTime - startTime) / 1000.0) * 1000;
     }
 
-    if (Number.isNaN(seconds)) {
-      throw new Error(
-        `Cannot understand number: ${context.slots.seconds || ""} ${context
-          .slots.minutes || ""} ${context.slots.hours || ""}`
-      );
+    if (ms === 0) {
+      const e = new Error("Failed to set timer");
+      e.displayMessage = "Cannot set timer for 0 seconds";
+      throw e;
     }
-
-    const ms = seconds * 1000;
     timerController.setActiveTimer(ms);
 
     await browser.runtime.sendMessage({
