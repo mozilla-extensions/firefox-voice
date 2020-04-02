@@ -33,20 +33,20 @@ this.player = (function() {
     }
 
     action_pause() {
-      const button = this.querySelector("button[aria-label='Pause']");
+      const button = this.querySelector(".player-bottom button[aria-label='Pause']");
       button.click();
     }
     action_unpause() {
-      const button = this.querySelector("button[aria-label='Play']");
+      const button = this.querySelector(".player-bottom button[aria-label='Play']");
       button.click();
     }
 
     action_move({ direction }) {
       if (direction === "Next") {
-        const button = this.querySelector("button[aria-label='Next']");
+        const button = this.querySelector(".player-bottom button[aria-label='Next']");
         button.click();
       } else if (direction === "Previous") {
-        const button = this.querySelector("button[aria-label='Previous']");
+        const button = this.querySelector(".player-bottom button[aria-label='Back']");
         button.click();
       }
     }
