@@ -3,10 +3,12 @@
 
 import * as browserUtil from "../browserUtil.js";
 import * as routinesView from "./routinesView.js";
+import * as historyView from "./history/historyView.js";
 
 export const TABS = {
   GENERAL: "GENERAL",
   ROUTINES: "ROUTINES",
+  HISTORY: "HISTORY"
 };
 
 export const Options = ({
@@ -44,6 +46,9 @@ export const Options = ({
           useToggle={useToggle}
           useEditNicknameDraft={useEditNicknameDraft}
         ></routinesView.Routines>
+      ) : null}
+      {tabValue === TABS.HISTORY ? (
+        <historyView.History></historyView.History>
       ) : null}
     </div>
   );
@@ -91,6 +96,21 @@ const LeftSidebar = ({ version, tabValue }) => {
                 className="tab-icon"
               ></img>
               <span> Routines </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.HISTORY ? "selected-tab" : "")
+              }
+              href="#history"
+            >
+              <img
+                alt="History"
+                className="tab-icon"
+              ></img>
+              <span> History </span>
             </a>
           </li>
         </ul>
