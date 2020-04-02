@@ -10,18 +10,16 @@ fs.readdir(DIR, (err, files) => {
         const newCodePath = `${pathtofile}/${path}`;
         const existingCodePath = `./extension/${file}/${path}`;
         if (fs.existsSync(newCodePath) && fs.existsSync(existingCodePath)) {
-          ///testing testing
           const newCode = fs.readFileSync(newCodePath, {
             encoding: "UTF-8",
-          }); //old file
+          });
           const existing = fs.readFileSync(existingCodePath, {
             encoding: "UTF-8",
-          }); //new file
+          });
           if (existing === newCode) {
-            ///means they are the same
-            return;
+              console.log("files not changed");
           } else {
-            console.log("changed");
+            console.log("files changed");
             fs.writeFileSync(existingCodePath, newCode, {
               encoding: "UTF-8",
             });
@@ -29,7 +27,7 @@ fs.readdir(DIR, (err, files) => {
         } else {
           const newCode = fs.readFileSync(newCodePath, {
             encoding: "UTF-8",
-          }); //old file
+          });
 
           fs.writeFile(existingCodePath, newCode, err => {
           });
