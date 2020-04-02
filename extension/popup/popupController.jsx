@@ -152,6 +152,13 @@ export const PopupController = function() {
     audio.play();
   };
 
+  const playTimerAlarm = () => {
+    const audio = new Audio(
+      "https://mozilla.github.io/firefox-voice/Alarm.mp3"
+    );
+    audio.play();
+  };
+
   const onClickLexicon = async event => {
     await browserUtil.openOrActivateTab(
       browser.runtime.getURL(event.target.href)
@@ -230,7 +237,7 @@ export const PopupController = function() {
     timerElapsed = true;
 
     cancelRecoder();
-    playListeningChime();
+    playTimerAlarm();
 
     setTranscript("Time's up");
 
