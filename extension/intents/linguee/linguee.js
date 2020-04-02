@@ -3,6 +3,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
+import * as browserUtil from "../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "linguee.say",
@@ -13,6 +14,9 @@ intentRunner.registerIntent({
     );
 
     const lingueeTab = await context.createTab({ url: myurl });
+    log.info(lingueeTab);
+
+    await browserUtil.loadUrl(lingueeTab.id, myurl);
 
     const search = await content.lazyInject(lingueeTab.id, [
       "/intents/linguee/contentScript.js",
