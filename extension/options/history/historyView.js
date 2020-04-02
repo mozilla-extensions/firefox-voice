@@ -9,10 +9,10 @@ export const History = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [numRows, setNumRows] = useState(0);
-  const DB_NAME = 'voice';
-  const TABLE_NAME = 'utterance';
-  const tableFields = ['Date', 'Utterance'];
-  const objectFields = ['timestamp', 'utterance'];
+  const DB_NAME = "voice";
+  const TABLE_NAME = "utterance";
+  const tableFields = ["Date", "Utterance"];
+  const objectFields = ["timestamp", "utterance"];
   const possibleItemsPerPage = [10, 25, 50, 100];
   const tableColumns = tableFields.map(field => React.createElement("th", null, field));
 
@@ -42,7 +42,7 @@ export const History = () => {
         let element;
 
         switch (key) {
-          case 'timestamp':
+          case "timestamp":
             {
               element = React.createElement("td", null, new Date(parseInt(row[key], 10)).toLocaleString());
               break;

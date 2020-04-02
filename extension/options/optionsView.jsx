@@ -8,7 +8,7 @@ import * as historyView from "./history/historyView.js";
 export const TABS = {
   GENERAL: "GENERAL",
   ROUTINES: "ROUTINES",
-  HISTORY: "HISTORY"
+  HISTORY: "HISTORY",
 };
 
 export const Options = ({
@@ -106,10 +106,7 @@ const LeftSidebar = ({ version, tabValue }) => {
               }
               href="#history"
             >
-              <img
-                alt="History"
-                className="tab-icon"
-              ></img>
+              <img alt="History" className="tab-icon"></img>
               <span> History </span>
             </a>
           </li>
