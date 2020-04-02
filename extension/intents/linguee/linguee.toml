@@ -7,5 +7,3 @@ match = """
 [[linguee.say.example]]
 phrase = "say fox on linguee"
 test = true
-expectParameters = {service = "linguee"}
-expectSlots = {query = "query"}
