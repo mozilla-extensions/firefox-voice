@@ -1,0 +1,9 @@
+[linguee.say]
+description = "Say the word on linguee"
+match = """
+(say | speak | utter | ) [ query ] (on | in | )linguee
+"""
+
+[[linguee.say.example]]
+phrase = "say fox on linguee"
+test = true
