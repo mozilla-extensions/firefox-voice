@@ -154,7 +154,7 @@ export const PopupController = function() {
 
   const playTimerAlarm = () => {
     const audio = new Audio(
-      "https://mozilla.github.io/firefox-voice/Alarm.mp3"
+      "https://mozilla.github.io/firefox-voice/alarm.mp3"
     );
     audio.play();
   };
