@@ -8,8 +8,12 @@ function getScrollParent(node) {
   }
 
   if (node.scrollHeight > node.clientHeight) {
-    if (node.scrollHeight === node.parentNode.scrollHeight) {
-      return node.parentNode;
+    // if on recursion we get to the body element
+    // body element is not scrollable in firefox, return documentElement
+    // https://developer.mozilla.org/en-US/docs/Web/API/document/scrollingElement
+
+    if (node.tagName === "BODY") {
+      return document.documentElement;
     }
     return node;
   }
