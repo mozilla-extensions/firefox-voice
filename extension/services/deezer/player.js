@@ -11,16 +11,14 @@ this.player = (function() {
 
     async action_search({ query, thenPlay }) {
       try {
+        const queryInput = await this.waitForSelector("form .topbar-search-input");
         const querySubmit = this.querySelector("form .topbar-search-submit");
-        const queryInput = this.querySelector("form .topbar-search-input");
         this.setReactInputValue(queryInput, query);
         queryInput.value = query;
         querySubmit.click();
         if (thenPlay) {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-            timeout: 2000,
-            // There seem to be 3 fixed buttons that appear early before the search results
-            minCount: 4,
+            timeout: 2000
           });
           playerButton.click();
         }
