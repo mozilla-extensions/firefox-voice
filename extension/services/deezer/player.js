@@ -1,7 +1,7 @@
 /* globals helpers */
 
 this.player = (function() {
-  const SEARCH_PLAY = ".datagrid-row song a[role='button']";
+  const SEARCH_PLAY = ".datagrid-row a[role='button']";
 
   class Player extends helpers.Runner {
     action_play() {
