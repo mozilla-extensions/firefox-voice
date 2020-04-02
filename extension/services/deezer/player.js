@@ -131,7 +131,7 @@ this.player = (function() {
       }
     }
 
-    async action_playAlbum({ query, thenPlay }) {
+    async playSection({query, thenPlay, section}) {
       try {
         let ALBUM_SECTION;
         await this.search(query);
@@ -139,7 +139,7 @@ this.player = (function() {
             if (thenPlay) {
               const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
               for (const anchorTag of anchorNodes) {
-                if (anchorTag.innerText === "Albums") {
+                if (anchorTag.innerText === section) {
                   ALBUM_SECTION =  anchorTag.parentElement.parentElement;
                 }
               }
@@ -153,28 +153,12 @@ this.player = (function() {
         throw new Error(e.message);
       }
     }
+    async action_playAlbum({ query, thenPlay }) {
+      await this.playSection({query, thenPlay, section: "Albums"});
+    }
 
     async action_playPlaylist({ query, thenPlay }) {
-      try {
-        let PLAYLIST_SECTION;
-        await this.search(query);
-          try {
-            if (thenPlay) {
-              const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
-              for (const anchorTag of anchorNodes) {
-                if (anchorTag.innerText === "Playlists") {
-                  PLAYLIST_SECTION =  anchorTag.parentElement.parentElement;
-                }
-              }
-              PLAYLIST_SECTION.querySelector("ul li button").click();
-              PLAYLIST_SECTION.querySelector("ul li figure .picture").click();
-            }
-          } catch {
-            throw new Error("No Search Results!");
-          }
-      } catch (e) {
-        throw new Error(e.message);
-      }
+      await this.playSection({query, thenPlay, section: "Playlists"});
     }
   }
 
