@@ -9,13 +9,20 @@ this.player = (function() {
       button.click();
     }
 
-    async action_search({ query, thenPlay }) {
+    async search(query) {
       try {
         const queryInput = await this.waitForSelector("form .topbar-search-input");
         const querySubmit = this.querySelector("form .topbar-search-submit");
         this.setReactInputValue(queryInput, query);
-        queryInput.value = query;
         querySubmit.click();
+      } catch {
+        throw new Error("Please log in to use this service.");
+      }
+    }
+
+    async action_search({ query, thenPlay }) {
+      try {
+        await this.search(query);
         if (thenPlay) {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
             timeout: 2000
@@ -40,10 +47,10 @@ this.player = (function() {
     }
 
     action_move({ direction }) {
-      if (direction === "Next") {
+      if (direction === "next") {
         const button = this.querySelector(".player-bottom button[aria-label='Next']");
         button.click();
-      } else if (direction === "Previous") {
+      } else if (direction === "previous") {
         const button = this.querySelector(".player-bottom button[aria-label='Back']");
         button.click();
       }
@@ -120,6 +127,27 @@ this.player = (function() {
         const iconVolumeOff = this.querySelector(".svg-icon-volume-off");
         const iconVolumeParent = iconVolumeOff.closest(".svg-icon-group-btn");
         iconVolumeParent.click();
+      }
+    }
+
+    async action_playAlbum({ query, thenPlay }) {
+      try {
+        let ALBUM_SECTION;
+        await this.search(query);
+        try {
+          const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
+          for (const anchorTag of anchorNodes) {
+            if (anchorTag.innerText === "Albums") {
+              ALBUM_SECTION =  anchorTag.parentElement.parentElement;
+            }
+          }
+          ALBUM_SECTION.querySelector("ul li button").click();
+          ALBUM_SECTION.querySelector("ul li figure .picture").click();
+        } catch {
+          throw new Error("No Search Results!");
+        }
+      } catch (e) {
+        throw new Error(e.message);
       }
     }
   }
