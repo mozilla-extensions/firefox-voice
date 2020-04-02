@@ -153,6 +153,29 @@ this.player = (function() {
         throw new Error(e.message);
       }
     }
+
+    async action_playPlaylist({ query, thenPlay }) {
+      try {
+        let PLAYLIST_SECTION;
+        await this.search(query);
+          try {
+            if (thenPlay) {
+              const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
+              for (const anchorTag of anchorNodes) {
+                if (anchorTag.innerText === "Playlists") {
+                  PLAYLIST_SECTION =  anchorTag.parentElement.parentElement;
+                }
+              }
+              PLAYLIST_SECTION.querySelector("ul li button").click();
+              PLAYLIST_SECTION.querySelector("ul li figure .picture").click();
+            }
+          } catch {
+            throw new Error("No Search Results!");
+          }
+      } catch (e) {
+        throw new Error(e.message);
+      }
+    }
   }
 
   Player.register();
