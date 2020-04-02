@@ -8,14 +8,15 @@ const extension_manifest_path = join(
   "extension",
   "manifest.json"
 );
+const addon = "./addon.xpi"
 const version_name = require(extension_manifest_path).version;
 const extension_name = "firefox_voice_beta-" + version_name + ".zip";
-const addonFileLocation = join(
+let addonFileLocation = join(
   process.cwd(),
   "web-ext-artifacts",
   extension_name
 );
-
+addonFileLocation = join(addon)
 describe("Build/install extension, and check that toolbar button is present", () => {
   it("Toolbar button is present", async () => {
     const options = new Options()
