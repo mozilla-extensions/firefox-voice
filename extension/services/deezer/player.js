@@ -143,7 +143,7 @@ this.player = (function() {
 
     async playSection({ query, thenPlay, section }) {
       try {
-        let ALBUM_SECTION;
+        let SECTION;
         await this.search(query);
         try {
           if (thenPlay) {
@@ -153,11 +153,11 @@ this.player = (function() {
             });
             for (const anchorTag of anchorNodes) {
               if (anchorTag.innerText === section) {
-                ALBUM_SECTION = anchorTag.parentElement.parentElement;
+                SECTION = anchorTag.parentElement.parentElement;
               }
             }
-            ALBUM_SECTION.querySelector("ul li button").click();
-            ALBUM_SECTION.querySelector("ul li figure .picture").click();
+            SECTION.querySelector("ul li button").click();
+            SECTION.querySelector("ul li figure .picture").click();
           }
         } catch {
           throw new Error("No Search Results!");
