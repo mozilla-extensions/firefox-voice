@@ -12,7 +12,7 @@ function getScrollParent(node) {
     // body element is not scrollable in firefox, return documentElement
     // https://developer.mozilla.org/en-US/docs/Web/API/document/scrollingElement
 
-    if (node.tagName === "BODY") {
+    if (node === document.body) {
       return document.documentElement;
     }
     return node;
