@@ -36,6 +36,14 @@
       },
 
       {
+        "name": "clearBrowserHistory",
+        "type": "function",
+        "description": "Clear History",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "quitApplication",
         "type": "function",
         "description": "Close Firefox",
