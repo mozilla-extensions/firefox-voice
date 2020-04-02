@@ -27,9 +27,9 @@ export class Database {
     });
   }
 
-  get(tbName, primaryKey) {
+  static get(dbName, tbName, primaryKey) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName);
+      const request = indexedDB.open(dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const transaction = database.transaction([tbName]);
@@ -59,9 +59,9 @@ export class Database {
    * primaryKey), "next" is most recent last (based on primaryKey)
    * @returns {Promise} The documents
    */
-  getAll(tbName, direction) {
+  static getAll(dbName, tbName, direction) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName);
+      const request = indexedDB.open(dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const objectStore = database.transaction(tbName).objectStore(tbName);
