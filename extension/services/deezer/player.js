@@ -22,18 +22,19 @@ this.player = (function() {
 
     async action_search({ query, thenPlay }) {
       try {
-        await this.search(query);
-        if (thenPlay) {
-          const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-            timeout: 2000
-          });
-          playerButton.click();
+        try {
+          await this.search(query);
+          if (thenPlay) {
+            const playerButton = await this.waitForSelector(SEARCH_PLAY, {
+              timeout: 2000
+            });
+            playerButton.click();
+          }
+        } catch (e) {
+          throw new Error("No Search Results!");
         }
       } catch (e) {
-        const unlogged = this.querySelector("div[class='unlogged-homepage']");
-        if (unlogged) {
-          throw new Error("Please log in to use this service.");
-        }
+        throw new Error(e.message);
       }
     }
 
@@ -134,18 +135,20 @@ this.player = (function() {
       try {
         let ALBUM_SECTION;
         await this.search(query);
-        try {
-          const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
-          for (const anchorTag of anchorNodes) {
-            if (anchorTag.innerText === "Albums") {
-              ALBUM_SECTION =  anchorTag.parentElement.parentElement;
+          try {
+            if (thenPlay) {
+              const anchorNodes = await this.waitForSelector(".container h2 a", {all: true, timeout: 5000});
+              for (const anchorTag of anchorNodes) {
+                if (anchorTag.innerText === "Albums") {
+                  ALBUM_SECTION =  anchorTag.parentElement.parentElement;
+                }
+              }
+              ALBUM_SECTION.querySelector("ul li button").click();
+              ALBUM_SECTION.querySelector("ul li figure .picture").click();
             }
+          } catch {
+            throw new Error("No Search Results!");
           }
-          ALBUM_SECTION.querySelector("ul li button").click();
-          ALBUM_SECTION.querySelector("ul li figure .picture").click();
-        } catch {
-          throw new Error("No Search Results!");
-        }
       } catch (e) {
         throw new Error(e.message);
       }
