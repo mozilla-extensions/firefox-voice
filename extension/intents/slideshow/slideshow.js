@@ -30,7 +30,7 @@ intentRunner.registerIntent({
     const activeTabId = activeTab.id;
 
     // confirm we are on a google slide page
-    if (!(/^https:\/\/docs.google.com\/presentation/.test(activeTab.url))) {
+    if (!/^https:\/\/docs.google.com\/presentation/.test(activeTab.url)) {
       const err = new Error("Not a valid google slide presentation");
       err.displayMessage = "Not a valid google slide presentation";
       throw err;
@@ -47,5 +47,5 @@ intentRunner.registerIntent({
       err.displayMessage = result.message;
       throw err;
     }
-  }
+  },
 });

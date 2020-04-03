@@ -13,21 +13,21 @@ this.presentationScript = (function() {
     if (document.querySelectorAll(SLIDE_THUMBNAILS).length === 0) {
       return {
         success: false,
-        message: "No slides present"
+        message: "No slides present",
       };
     }
     const presentButton = document.querySelector(PRESENT_BUTTON_SELECTOR);
     if (!presentButton) {
       return {
         success: false,
-        message: "Command could not be completed"
+        message: "Command could not be completed",
       };
     }
 
     clickElement(presentButton);
 
     return {
-      success: true
+      success: true,
     };
   }
 
