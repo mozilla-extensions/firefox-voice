@@ -60,7 +60,11 @@ function startWatchword(keywords, sensitivity) {
 }
 
 function stopWatchword() {
-  porcupineManager.stop();
+  try {
+    porcupineManager.stop();
+  } catch (err) {
+    log.error(`Error in porcupine Manager ${err}:`, err);
+  }
   log.info("Stopped listening for watchwords");
   enabled = false;
 }
