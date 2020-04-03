@@ -25,7 +25,48 @@
         "description": "Undo close window",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "openDownloads",
+        "type": "function",
+        "description": "Open downloads",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "quitApplication",
+        "type": "function",
+        "description": "Close Firefox",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "viewPageSource",
+        "type": "function",
+        "description": "View Page Source",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "showAllBookmarks",
+        "type": "function",
+        "description": "Open bookmarks",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "showAllHistory",
+        "type": "function",
+        "description": "Open History",
+        "parameters": [],
+        "async": true
       }
+
     ]
   }
 ]

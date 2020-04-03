@@ -16,3 +16,32 @@ match = """
 
 [[aboutPage.comments.example]]
 phrase = "Comments on this page?"
+
+[aboutPage.viewPageSource]
+description = "Open page source"
+match = """
+  (View | open | show |) (html |) (page |) (source | html|)
+"""
+
+[[aboutPage.viewPageSource.example]]
+phrase = "view page source"
+
+[[aboutPage.bookmark.example]]
+phrase = "open page source"
+test = true
+
+[[aboutPage.bookmark.example]]
+phrase = "show page source"
+test = true
+
+[[aboutPage.bookmark.example]]
+phrase = "view source"
+test = true
+
+[[aboutPage.bookmark.example]]
+phrase = "view html"
+test = true
+
+[[aboutPage.bookmark.example]]
+phrase = "view html source"
+test = true

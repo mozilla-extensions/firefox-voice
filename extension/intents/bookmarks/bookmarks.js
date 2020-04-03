@@ -13,7 +13,7 @@ intentRunner.registerIntent({
       bookmarksById.set(bookmark.id, bookmark.url);
       bookmarkContent.push({
         id: bookmark.id,
-        title: bookmark.title,
+        title: bookmark.title.split(" "),
         url: bookmark.url,
       });
     }
@@ -76,20 +76,38 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "bookmarks.remove",
   async run(context) {
-    const activeTab = await context.activeTab();
-    const metadata = await pageMetadata.getMetadata(activeTab.id);
-    const bookmarks = await browser.bookmarks.search({ url: metadata.url });
+    await context.displayText("Do you wish to remove this bookmark?");
+    await context.startFollowup({
+      heading: 'Say "YES" or "CANCEL"',
+      insistOnFollowup: true,
+    });
+  },
+  async runFollowup(context) {
+    switch (context.parameters.confirmation) {
+      case "false":
+        await context.displayText("Command cancelled");
+        await context.endFollowup();
+        break;
+      default:
+        const activeTab = await context.activeTab();
+        const metadata = await pageMetadata.getMetadata(activeTab.id);
+        const bookmarks = await browser.bookmarks.search({ url: metadata.url });
 
-    const selected = bookmarks.filter(
-      bookmark => activeTab.url === bookmark.url
-    );
+        const selected = bookmarks.filter(
+          bookmark => activeTab.url === bookmark.url
+        );
 
-    if (!selected.length) {
-      const e = new Error("This page wasn't bookmarked");
-      e.displayMessage = "This page wasn't bookmarked";
-      throw e;
+        if (!selected.length) {
+          context.displayText("");
+          context.endFollowup();
+          const e = new Error("This page wasn't bookmarked");
+          e.displayMessage = "This page wasn't bookmarked";
+          throw e;
+        }
+
+        await browser.bookmarks.remove(selected[0].id);
+        await context.displayText("Bookmark has been removed");
+        await context.endFollowup();
     }
-
-    await browser.bookmarks.remove(selected[0].id);
   },
 });

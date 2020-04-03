@@ -2,6 +2,7 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const SERVICES = {};
 
@@ -94,6 +95,12 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "music.unpause",
   async run(context) {
+    for (const ServiceClass of Object.values(SERVICES)) {
+      const service = new ServiceClass(context);
+      await service.pauseAny({
+        exceptTabId: (await browserUtil.activeTab()).id,
+      });
+    }
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.unpause();
   },
@@ -112,6 +119,69 @@ intentRunner.registerIntent({
   async run(context) {
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.move(context.parameters.direction);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.showTitle",
+  async run(context) {
+    const tabs = await browser.tabs.query({ audible: true });
+    if (!tabs.length) {
+      const e = new Error("Nothing is playing");
+      e.displayMessage = "Nothing is playing";
+      throw e;
+    }
+    context.displayText(tabs[0].title);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.volume",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.adjustVolume(context.parameters.volumeLevel);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.mute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.mute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.unmute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.unmute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.playAlbum",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.playAlbum(context.slots.query);
+    if (service.tab) {
+      await pauseAnyButTab(context, service.tab.id);
+    } else {
+      await pauseAnyButService(context, service.id);
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.playPlaylist",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.playPlaylist(context.slots.query);
+    if (service.tab) {
+      await pauseAnyButTab(context, service.tab.id);
+    } else {
+      await pauseAnyButService(context, service.id);
+    }
   },
 });
 

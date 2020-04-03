@@ -12,6 +12,7 @@ extension/popup/popupController.js
 extension/popup/popupView.js
 extension/options/optionsController.js
 extension/options/optionsView.js
+extension/options/routinesView.js
 extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
 extension/wakeword/wakewordController.js
@@ -32,3 +33,4 @@ credentials
 manifest.json
 /addon.xpi
 /gh-pages
+Thumbs.db
