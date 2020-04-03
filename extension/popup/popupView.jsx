@@ -4,7 +4,7 @@
 
 import * as browserUtil from "../browserUtil.js";
 
-const { Component, useState, useEffect, PureComponent } = React;
+const { useState, useEffect, PureComponent } = React;
 
 export const Popup = ({
   currentView,
@@ -29,6 +29,8 @@ export const Popup = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
+  renderFollowup,
+  followupText,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -38,7 +40,10 @@ export const Popup = ({
     onInputStarted();
   }
   return (
-    <div id="popup" className={currentView}>
+    <div
+      id="popup"
+      className={`${currentView} ${renderFollowup ? "followup" : ""}`}
+    >
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -66,9 +71,11 @@ export const Popup = ({
         expandListeningView={expandListeningView}
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
+        renderFollowup={renderFollowup}
       />
       <PopupFooter
         currentView={currentView}
+        renderFollowup={renderFollowup}
         showSettings={showSettings}
         timerInMS={timerInMS}
       />
@@ -78,6 +85,12 @@ export const Popup = ({
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
+      <FollowupContainer
+        lastIntent={lastIntent}
+        followupText={followupText}
+        renderFollowup={renderFollowup}
+        currentView={currentView}
+      />
     </div>
   );
 };
@@ -195,6 +208,7 @@ const PopupContent = ({
   expandListeningView,
   timerInMS,
   timerTotalInMS,
+  renderFollowup,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -221,6 +235,7 @@ const PopupContent = ({
           <ProcessingContent
             transcript={transcript}
             displayText={displayText}
+            renderFollowup={renderFollowup}
           />
         );
       case "success":
@@ -245,6 +260,7 @@ const PopupContent = ({
             onNextSearchResultClick={onNextSearchResultClick}
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
+            renderFollowup={renderFollowup}
           />
         );
       case "startSavingPage":
@@ -276,6 +292,36 @@ const PopupContent = ({
     <div id="popup-content">
       <Zap currentView={currentView} recorderVolume={recorderVolume} />
       {getContent()}
+    </div>
+  );
+};
+
+const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
+  if (
+    currentView === "listening" ||
+    currentView === "waiting" ||
+    currentView === "processing" ||
+    !renderFollowup
+  ) {
+    return null;
+  }
+
+  let heading = "Waiting...";
+  let subheading;
+  if (followupText) {
+    heading = followupText.heading;
+    subheading = followupText.subheading;
+  }
+  return (
+    <div id="followup-container">
+      <IntentFeedback />
+      <div id="followup-wrapper">
+        <div id="followup_mic-container">Mic On</div>
+        <div id="followup_headings-wrapper">
+          <div id="followup_heading">{heading}</div>
+          {subheading && <div id="followup_subheading">{subheading}</div>}
+        </div>
+      </div>
     </div>
   );
 };
@@ -327,12 +373,13 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings, timerInMS }) => {
+const PopupFooter = ({ currentView, showSettings, renderFollowup }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer"
+    currentView === "timer" ||
+    renderFollowup
   )
     return null;
   return (
@@ -627,11 +674,11 @@ class TypingInput extends PureComponent {
   }
 }
 
-const ProcessingContent = ({ transcript, displayText }) => {
+const ProcessingContent = ({ transcript, displayText, renderFollowup }) => {
   return (
     <React.Fragment>
-      <Transcript transcript={transcript} />
-      <TextDisplay displayText={displayText} />
+      <Transcript transcript={renderFollowup ? "" : transcript} />
+      <TextDisplay displayText={renderFollowup ? "" : displayText} />
     </React.Fragment>
   );
 };
@@ -678,6 +725,7 @@ const SearchResultsContent = ({
   onNextSearchResultClick,
   setMinPopupSize,
   onSubmitFeedback,
+  renderFollowup,
 }) => {
   if (!search) return null;
 
@@ -741,29 +789,33 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      <div id="search-results">{renderCard()}</div>
-      <div id="search-footer">
-        <IntentFeedback
-          onSubmitFeedback={onSubmitFeedback}
-          eduText={card && card.answer ? card.answer.eduText : null}
-        />
-        {next ? (
-          <div id="next-result">
-            <p>
-              <strong>
-                Click mic and say <i>'next'</i> to view
-              </strong>
-            </p>
-            <a
-              href={next.url}
-              id="search-show-next"
-              onClick={onNextResultClick}
-            >
-              {new URL(next.url).hostname} | {next.title}
-            </a>
+      {renderFollowup ? null : (
+        <React.Fragment>
+          <div id="search-results">{renderCard()}</div>
+          <div id="search-footer">
+            <IntentFeedback
+              onSubmitFeedback={onSubmitFeedback}
+              eduText={card && card.answer ? card.answer.eduText : null}
+            />
+            {next ? (
+              <div id="next-result">
+                <p>
+                  <strong>
+                    Click mic and say <i>'next'</i> to view
+                  </strong>
+                </p>
+                <a
+                  href={next.url}
+                  id="search-show-next"
+                  onClick={onNextResultClick}
+                >
+                  {new URL(next.url).hostname} | {next.title}
+                </a>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
@@ -776,7 +828,7 @@ const TextDisplay = ({ displayText }) => {
   return displayText ? <div id="text-display">{displayText}</div> : null;
 };
 
-class Zap extends Component {
+class Zap extends PureComponent {
   constructor(props) {
     super(props);
 

@@ -56,6 +56,10 @@ Example markup to use this styled native checkbox
   position: relative;
 }
 
+.checkbox-wrapper + .checkbox-wrapper {
+  padding-top: 12px;
+}
+
 .styled-checkbox label,
 .styled-toggleswitch label {
   padding-left: 40px;
