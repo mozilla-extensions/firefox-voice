@@ -63,7 +63,7 @@ function stopWatchword() {
   try {
     porcupineManager.stop();
   } catch (err) {
-    log.error(`Error in porcupine Manager ${err}:`, err);
+    log.error(err);
   }
   log.info("Stopped listening for watchwords");
   enabled = false;
