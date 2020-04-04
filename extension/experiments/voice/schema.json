@@ -44,9 +44,33 @@
       },
 
       {
-        "name": "openSidebar",
+        "name": "openBookmarksSidebar",
         "type": "function",
-        "description": "Open sidebar",
+        "description": "Open bookmarks sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "openHistorySidebar",
+        "type": "function",
+        "description": "Open history sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "closeSidebar",
+        "type": "function",
+        "description": "Close sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "toggleSidebar",
+        "type": "function",
+        "description": "Toggle sidebar",
         "parameters": [],
         "async": true
       }
