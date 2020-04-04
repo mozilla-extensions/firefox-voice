@@ -1,9 +1,14 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as browserUtil from "../../browserUtil.js";
+import { timerController } from "../timer/timer";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",
   async run(context) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer !== null) {
+      timerController.closeActiveTimer();
+    }
     context.done(0);
   },
 });
