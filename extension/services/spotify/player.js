@@ -42,7 +42,7 @@ this.player = (function() {
         } catch (e) {
           const notFound = document.querySelector("#searchPage h1");
 
-          if (!!notFound) {
+          if (notFound) {
             if (notFound.innerText.includes("No results found")) {
               throw new Error("No search results");
             }
