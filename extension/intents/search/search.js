@@ -223,6 +223,18 @@ async function moveResult(context, step) {
     // reset the index to an initial search result
     searchInfo.index = undefined;
     tabSearchResults.set(tabId, searchInfo);
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: 0,
+    });
+    context.startFollowup({
+      heading: "Say 'next' to view",
+      subheading: searchInfo.searchResults[0].title,
+      acceptFollowupIntent: ["search.next", "search.previous"],
+      skipSuccessView: true,
+    });
     return;
   }
 
@@ -232,12 +244,6 @@ async function moveResult(context, step) {
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
 
   const item = searchInfo.searchResults[searchInfo.index];
-  await browser.runtime.sendMessage({
-    type: "showSearchResults",
-    searchResults: searchInfo.searchResults,
-    searchUrl: searchInfo.searchUrl,
-    index: searchInfo.index,
-  });
   if (!tabId) {
     const tab = await context.createTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
@@ -267,6 +273,21 @@ async function moveResult(context, step) {
       tabSearchResults.delete(tabId);
     }
   }
+  await browserUtil.waitForDocumentComplete(lastTabId);
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    searchResults: searchInfo.searchResults,
+    searchUrl: searchInfo.searchUrl,
+    index: searchInfo.index,
+  });
+  const nextItemIdx = step === 1 ? searchInfo.index + 1 : searchInfo.index - 1;
+  const nextItem = searchInfo.searchResults[nextItemIdx];
+  context.startFollowup({
+    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
+    subheading: nextItemIdx < 0 ? "Search Results" : nextItem.title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+    skipSuccessView: true,
+  });
 }
 
 export async function focusSearchResults(message) {
@@ -393,7 +414,12 @@ intentRunner.registerIntent({
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
-      const tabId = await openSearchTab();
+      const tab = await browser.tabs.create({
+        url: START_URL,
+        active: false,
+      });
+      const tabId = tab.id;
+      _searchTabId = tabId;
 
       await browser.search.search({
         query: context.slots.query,
@@ -401,11 +427,43 @@ intentRunner.registerIntent({
       });
 
       await focusSearchTab();
-
+      await browserUtil.waitForDocumentComplete(tabId);
       await content.lazyInject(tabId, "/intents/search/queryScript.js");
       const searchInfo = await callScript({ type: "searchResultInfo" });
 
+      if (
+        searchInfo.searchResults === undefined ||
+        !searchInfo.searchResults.length > 0
+      ) {
+        const msg =
+          "Could not get list of search results.\n\nPlease click feedback to let us know.";
+        const e = new Error(msg);
+        e.displayMessage = msg;
+        throw e;
+      }
+
       tabSearchResults.set(tabId, searchInfo);
+
+      context.keepPopup();
+      await context.startFollowup({
+        heading: "Say 'next' to view",
+        subheading: searchInfo.searchResults[0].title,
+        acceptFollowupIntent: ["search.next", "search.previous"],
+      });
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "search.searchGoogle",
+  async run(context) {
+    if (buildSettings.android) {
+      await performSearch(context.slots.query);
+    } else {
+      await browser.search.search({
+        query: context.slots.query,
+        engine: "Google",
+      });
     }
   },
 });

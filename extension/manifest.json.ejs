@@ -37,7 +37,8 @@
       "js/vendor/fuse.js",
       "js/vendor/ppnListing.js",
       "background/moduleLoader.js",
-      "background/loadMain.js"
+      "background/loadMain.js",
+      "js/vendor/chrono.min.js"
     ]
   },
   <% if (env.EXECUTE_INTENT_URL) { %>
@@ -87,7 +88,7 @@
     "browser_style": false,
     "default_title": "Firefox Voice",
     "default_icon":
-      <% if (env.DEV_ICON) { %>
+      <% if (env.IN_DEVELOPMENT) { %>
         "popup/images/mic-dev.svg",
       <% } else { %>
         "popup/images/mic.svg",
