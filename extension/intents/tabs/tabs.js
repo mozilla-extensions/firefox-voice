@@ -1,5 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
+import { numbers, ordinals, cardinals, numberedOrdinals } from "./numbers.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -437,21 +438,21 @@ async function getMatchingTabs(options) {
 
   let matchingTabs = await browser.tabs.query(tabQuery);
 
-  if (options.query !== undefined) {
-    matchingTabs = matchingTabs.filter(tab => {
-      const query = options.query.toLowerCase();
-      return (
-        new URL(tab.url).origin.includes(query) ||
-        tab.title.toLowerCase().includes(query)
-      );
-    });
-  }
+    if (options.query !== undefined) {
+      matchingTabs = matchingTabs.filter(tab => {
+        const query = options.query.toLowerCase();
+        return (
+          new URL(tab.url).origin.includes(query) ||
+          tab.title.toLowerCase().includes(query)
+        );
+      });
+    }
 
-  if (options.sort_by_index === true) {
-    matchingTabs.sort((a, b) => {
-      return a.index > b.index;
-    });
-  }
+    if (options.sort_by_index === true) {
+      matchingTabs.sort((a, b) => {
+        return a.index > b.index;
+      });
+    }
 
   return matchingTabs;
 }
@@ -596,3 +597,166 @@ intentRunner.registerIntent({
     context.displayText(message);
   },
 });
+
+intentRunner.registerIntent({
+  name: "tabs.selectAllTabs",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const tabs = await browser.tabs.query({ currentWindow: true});
+    const allWindows = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      tabs,
+      activeTab,
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "false"
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    await selectAllTabs(matchingTabs);
+
+  },
+});
+
+async function selectAllTabs(tabs){
+  if(tabs.length !== 0){
+    browser.tabs.query({
+      currentWindow: true
+    }).then((tabs) => {
+      for (var tab of tabs) {
+        if (!tab.active){
+          await browser.tabs.update(tabId, {
+              highlighted: true,
+              active: false,
+          });
+        }else{
+          await browser.tabs.update(tabId, {
+            highlighted: true,
+        });
+        }
+      }
+    });
+  }
+}
+
+async function highlightSelectedTabs(center, tabs, dir) {
+  if(dir === "left"){
+    const tabsLeft = tabs.filter(tab => {
+      return tab.index < center.index;
+    });
+    for (let i = 0; i < tabsLeft.length; i++) {
+      tabLeft = tabsLeft[tabsLeft.length - i - 1];
+      if(!tabLeft.active){
+        await browser.tabs.update(tabLeft.id, {
+          highlighted: true,
+          active: false
+        });
+      }else{
+        await browser.tabs.update(tabLeft.id, {
+          highlighted: true,
+        });
+      }
+    }
+  }
+  else if(dir === "right"){
+    const tabsRight = tabs.filter(tab => {
+      return tab.index > center.index;
+    });
+    for (let i = 0; i < tabsRight.length; i++) {
+      var tabRight = tabsRight[tabsRight.length - i - 1];
+      if(!tabRight.active){
+        await browser.tabs.update(tabRight.id, {
+          highlighted: true,
+          active: false
+        });
+      }else{
+        await browser.tabs.update(tabRight.id, {
+          highlighted: true
+        });
+      }
+  }
+
+}}
+
+intentRunner.registerIntent({
+  name: "tabs.highlightSelectedTabs",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const tabs = await browser.tabs.query({ currentWindow: true});
+    const allWindows = await browser.windows.getAll({
+      windowTypes: ["normal"],
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      tabs,
+      activeTab,
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "false"
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    await highlightSelectedTabs(activeTab, matchingTabs, context.parameters.dir);
+
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.selectNumbersTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({ currentWindow: true });
+    const numTabs = context.slots.number;
+    await selectNumbersTabs(tabs, numTabs, context.parameters.dir);
+  },
+});
+
+async function selectNumbersTabs(tabs, num, dir) {
+  const numTabs = ordinals.indexOf(num) + 1;
+  if (dir === "first") {
+    const tabsFirst = tabs.filter(tab => {
+      return tab.index <= numTabs;
+    });
+    for (let i = 0; i < numTabs; i++) {
+      tabFirst = tabsFirst[tabsFirst.length - i - 1];
+      if(!tabFirst.active){
+        await browser.tabs.update(tabFirst.id, {
+          highlighted: true,
+          active: false
+        });
+      }else{
+        await browser.tabs.update(tabFirst.id, {
+          highlighted: true,
+        });
+      }
+    }
+  } else {
+    const tabsLast = tabs.filter(tab => {
+      return tab.index >= numTabs;
+    });
+    for (let i = tabs.length - 1; i >=numTabs; i++) {
+      tabLast = tabsLast[tabsLast.length - i - 1];
+      if(!tabLast.active){
+        await browser.tabs.update(tabLast.id, {
+          highlighted: true,
+          active: false
+        });
+      }else{
+        await browser.tabs.update(tabLast.id, {
+          highlighted: true,
+        });
+      }
+    }
+  }
+  
+}

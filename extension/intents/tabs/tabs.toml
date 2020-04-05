@@ -358,4 +358,44 @@ match = """
 
 [[tabs.findOnPage.example]]
 phrase = "Find query on this page"
-test = true
+
+[[tabs.selectAllTabs]]
+description = "Select all tabs"
+match = """
+    (select | highlight) (all |) (the | this ) (tab{s} | taps | page )
+"""
+[[tabs.selectAllTabs.example]]
+phrase = "Select all the tabs"
+
+[[tabs.selectAllTabs.example]]
+phrase = "Select all tabs"
+
+[[tabs.highlightSelectedTabs]]
+description = "Select tabs to the left/right"
+match = """
+    (select | highlight) all (tab{s} | page) (to | in | by |) (the |) right [dir = right] [allWindows = false]
+    (select | highlight) all (tab{s} | page) (to | in | by |) (the |) left  [dir = left] [allWindows = false]
+"""
+
+[[tabs.highlightSelectedTabs.example]]
+phrase = "Select all tabs to the right"
+expectParameters = {dir = "right"}
+
+[[tabs.highlightSelectedTabs.example]]
+phrase = "Select all tabs to the left"
+expectParameters = {dir = "left"}
+
+[[tabs.selectNumbersTabs]]
+description = "Select first/last numbers of tabs"
+match = """
+    (select | highlight) first [number] (tab{s} | taps | page ) [dir=first] [allWindows = false]
+    (select | highlight) last [number] (tab{s} | taps | page ) [dir=last] [allWindows = false]
+"""
+
+[[tabs.selectNumbersTabs.example]]
+phrase = "select first number tab"
+expectParameters = {dir = "first"}
+
+[[tabs.selectNumbersTabs.example]]
+phrase = "select last number tab"
+expectParameters = {dir = "last"}
