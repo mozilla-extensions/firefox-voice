@@ -421,7 +421,5 @@ expectParameters = {dir = "first"}
 [[tabs.selectNumbersTabs.example]]
 phrase = "select last number tab"
 expectParameters = {dir = "last"}
-=======
-test = true
 
 
