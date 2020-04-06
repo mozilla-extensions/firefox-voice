@@ -345,6 +345,40 @@ tbody tr:hover {
   justify-content: flex-end;
 }
 
-#rows-indicator {
+.rows-indicator {
   align-self: center;
+  margin: 0.5rem;
+}
+
+/* Override default select styling */
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 70px;
+}
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.75rem;
+  top: 2px;
+  right: 15px;
+  position: absolute;
+}
+
+#itemsPerPage {
+  background-color: transparent;
+  border: none;
+  font-size: initial;
+}
+
+#itemsPerPage:focus {
+  outline: none;
+}
+
+.previous, .next {
+  background-color: transparent;
+  border: none;
 }
