@@ -1,4 +1,4 @@
-/* globals XPCOMUtils, ExtensionAPI */
+/* globals , XPCOMUtils, ExtensionAPI */
 
 "use strict";
 
@@ -26,16 +26,18 @@ this.voice = class extends ExtensionAPI {
   getAPI(context) {
     const { extension } = context;
 
+    const windowTracker = ChromeUtils.import(
+      "resource://gre/modules/Extension.jsm",
+      {}
+    ).Management.global.windowTracker;
+    const window = windowTracker.topWindow;
+    const SidebarUI = window.SidebarUI;
+
     return {
       experiments: {
         voice: {
           async openPopup() {
             const browserAction = browserActionFor(extension);
-            const windowTracker = ChromeUtils.import(
-              "resource://gre/modules/Extension.jsm",
-              {}
-            ).Management.global.windowTracker;
-            const window = windowTracker.topWindow;
             browserAction.triggerAction(window);
           },
 
@@ -55,6 +57,26 @@ this.voice = class extends ExtensionAPI {
             return runCommand("cmd_quitApplication");
           },
 
+          async openBookmarksSidebar() {
+            await SidebarUI.show("viewBookmarksSidebar");
+          },
+
+          async openHistorySidebar() {
+            await SidebarUI.show("viewHistorySidebar");
+          },
+
+          async closeSidebar() {
+            await SidebarUI.hide();
+          },
+
+          async toggleSidebar() {
+            if (SidebarUI.lastOpenedId === "viewBookmarksSidebar") {
+              await SidebarUI.toggle("viewBookmarksSidebar");
+            } else {
+              await SidebarUI.toggle("viewHistorySidebar");
+            }
+          },
+        
           async viewPageSource() {
             return runCommand("View:PageSource");
           },

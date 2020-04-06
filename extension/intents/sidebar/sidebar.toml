@@ -1,0 +1,28 @@
+[sidebar.openSidebar]
+description = "Open the sidebar with Bookmarks or History"
+match = """
+  (open | show |) (my | the |) [query] sidebar (for me|)
+"""
+
+[[sidebar.openSidebar.example]]
+phrase = "open bookmarks sidebar"
+expectSlots = {query = "query"}
+
+[sidebar.closeSidebar]
+description = "Close the sidebar"
+match = """
+  (close | hide |) (my | the |) sidebar (for me|)
+"""
+
+[[sidebar.closeSidebar.example]]
+phrase = "close sidebar"
+
+[sidebar.toggleSidebar]
+description = "Toggle the sidebar"
+match = """
+  toggle (my | the |) sidebar (for me|)
+"""
+
+[[sidebar.toggleSidebar.example]]
+phrase = "toggle sidebar"
+
