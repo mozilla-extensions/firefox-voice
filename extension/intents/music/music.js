@@ -47,15 +47,7 @@ async function getService(context, options) {
       options
     );
   }
-  const tab = await browserUtil.activeTab();
-  if (!tab.url.startsWith(ServiceClass.baseUrl)) {
-    const title = tab.url.substring(0, tab.url.indexOf(`.com`) + `.com`.length);
-    const e = new Error(`Sorry We Don't Know How to ${context.utterance} on ${title}`);
-    e.displayMessage = `Sorry We Don't Know How to  ${context.utterance} on ${title}`;
-    throw e;
-  } else {
-    return new ServiceClass(context);
-  }
+  return new ServiceClass(context);
 }
 
 async function pauseAnyButService(context, serviceId) {
