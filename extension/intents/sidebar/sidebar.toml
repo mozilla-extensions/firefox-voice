@@ -1,12 +1,13 @@
 [sidebar.openSidebar]
 description = "Open the sidebar with Bookmarks or History"
 match = """
-  (open | show |) (my | the |) [query] sidebar (for me|)
+  (open | show |) (my | the |) bookmark{s} sidebar (for me|) [sidebar=bookmarks]
+  (open | show |) (my | the |) history sidebar (for me|) [sidebar=history]
 """
 
 [[sidebar.openSidebar.example]]
 phrase = "open bookmarks sidebar"
-expectSlots = {query = "query"}
+expectParameters = {sidebar = "bookmarks"}
 
 [sidebar.closeSidebar]
 description = "Close the sidebar"
@@ -25,4 +26,3 @@ match = """
 
 [[sidebar.toggleSidebar.example]]
 phrase = "toggle sidebar"
-

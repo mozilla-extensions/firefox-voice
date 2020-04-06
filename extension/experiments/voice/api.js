@@ -1,4 +1,4 @@
-/* globals , XPCOMUtils, ExtensionAPI */
+/* globals XPCOMUtils, ExtensionAPI */
 
 "use strict";
 
@@ -22,23 +22,25 @@ function runCommand(commandName) {
   return command.click();
 }
 
+function getTopWindow() {
+  const windowTracker = ChromeUtils.import(
+    "resource://gre/modules/Extension.jsm",
+    {}
+  ).Management.global.windowTracker;
+  const window = windowTracker.topWindow;
+  return window;
+}
+
 this.voice = class extends ExtensionAPI {
   getAPI(context) {
     const { extension } = context;
-
-    const windowTracker = ChromeUtils.import(
-      "resource://gre/modules/Extension.jsm",
-      {}
-    ).Management.global.windowTracker;
-    const window = windowTracker.topWindow;
-    const SidebarUI = window.SidebarUI;
 
     return {
       experiments: {
         voice: {
           async openPopup() {
             const browserAction = browserActionFor(extension);
-            browserAction.triggerAction(window);
+            browserAction.triggerAction(getTopWindow());
           },
 
           async undoCloseTab() {
@@ -58,25 +60,21 @@ this.voice = class extends ExtensionAPI {
           },
 
           async openBookmarksSidebar() {
-            await SidebarUI.show("viewBookmarksSidebar");
+            await getTopWindow().SidebarUI.show("viewBookmarksSidebar");
           },
 
           async openHistorySidebar() {
-            await SidebarUI.show("viewHistorySidebar");
+            await getTopWindow().SidebarUI.show("viewHistorySidebar");
           },
 
           async closeSidebar() {
-            await SidebarUI.hide();
+            await getTopWindow().SidebarUI.hide();
           },
 
           async toggleSidebar() {
-            if (SidebarUI.lastOpenedId === "viewBookmarksSidebar") {
-              await SidebarUI.toggle("viewBookmarksSidebar");
-            } else {
-              await SidebarUI.toggle("viewHistorySidebar");
-            }
+            await getTopWindow().SidebarUI.toggle(SidebarUI.lastOpenedId);
           },
-        
+
           async viewPageSource() {
             return runCommand("View:PageSource");
           },
