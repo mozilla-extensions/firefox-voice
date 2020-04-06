@@ -3,13 +3,16 @@ import * as intentRunner from "../../background/intentRunner.js";
 intentRunner.registerIntent({
   name: "sidebar.openSidebar",
   async run(context) {
-    const query = context.slots.query.toLowerCase();
-    if (query === "bookmarks") {
+    const sidebar = context.parameters.sidebar;
+    let name;
+    if (sidebar === "bookmarks") {
+      name = "Bookmark";
       await browser.experiments.voice.openBookmarksSidebar();
     } else {
+      name = "History";
       await browser.experiments.voice.openHistorySidebar();
     }
-    context.displayText(`${query} is opened`);
+    context.displayText(`${name} sidebar is opened`);
   },
 });
 

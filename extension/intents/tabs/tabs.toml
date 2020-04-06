@@ -83,7 +83,7 @@ phrase = "Move tab in a new window"
 description = "Opens a new (blank) tab"
 match = """
   open tab
-  (open | launch) (a | the |) (new | blank |) tab (for me|)
+  (open | launch | create) (a | the |) (new | blank |) tab (for me|)
   new (blank |) tab
 """
 

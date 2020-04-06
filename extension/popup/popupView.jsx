@@ -502,7 +502,11 @@ const ListeningContent = ({
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <div id="extra-content" className={expandListeningView ? "expanded" : ""}>
-        <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} onInputStarted={onInputStarted} />
+        <VoiceInput
+          suggestions={suggestions}
+          onClickLexicon={onClickLexicon}
+          onInputStarted={onInputStarted}
+        />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
     </React.Fragment>
@@ -532,10 +536,7 @@ const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
           {buildSettings.inDevelopment ? (
             <div>
               <p>Developer tip:</p>
-              <button
-                className="type-input-button"
-                onClick={onInputStarted}
-              >
+              <button className="type-input-button" onClick={onInputStarted}>
                 Start typing to make a request using a keyboard
               </button>
             </div>
