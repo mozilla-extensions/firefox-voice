@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* globals helpers */
 
 this.player = (function() {
@@ -143,7 +144,63 @@ this.player = (function() {
         }
       }
     }
+
+    action_adjustVolume({ volumeLevel }) {
+      const maxVolume = 1.0;
+      const minVolume = 0.0;
+      const volumeChange = 0.2;
+      const volumeChangeSteps = volumeChange * 10;
+
+      const volumeBar = this.querySelectorAll(".volume-bar__icon");
+      log.info(volumeBar);
+      log.info(volumeBar[0]);
+
+      const allProgressbars = this.querySelectorAll(".progress-bar");
+      const progressBar = allProgressbars[1];
+
+      const allSliderWrappers = this.querySelectorAll(".progress-bar__fg");
+      const sliderWrapper = allSliderWrappers[1];
+
+      const allSliders = this.querySelectorAll(".progress-bar__slider");
+      const slider = allSliders[1];
+      // log.info("sliderWrapper", sliderWrapper);
+      // log.info("slider", slider);
+
+      const volumeNow = parseFloat(slider.style.left) / 100;
+      log.info(volumeNow);
+      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
+        const volumeup = new KeyboardEvent("keypress", {
+          bubbles: true,
+          key: "ArrowUp",
+          keyCode: 38,
+          altKey: true,
+        });
+        for (let step = 0; step < volumeChangeSteps; step++) {
+          progressBar.dispatchEvent(volumeup);
+        }
+        slider.style.left = `${volumeNow * 100 + 20}%`;
+        sliderWrapper.style.transform = `translateX(-${100 -
+          (volumeNow * 100 + 20)}%)`;
+      } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
+        const volumedown = new KeyboardEvent("keypress", {
+          bubbles: true,
+          key: "ArrowDown",
+          keyCode: 38,
+          altKey: true,
+        });
+        for (let step = 0; step < volumeChangeSteps; step++) {
+          // volumeBar[0].dispatchEvent(volumedown);
+        }
+      }
+    }
   }
 
   Player.register();
 })();
+
+/* log.info("START-VOLUME", volumeNow);
+log.info("START-TRANSLATE", sliderWrapper.style.transform);
+
+log.info("END-VOLUME", slider.style.left);
+log.info("TRANSLATE", sliderWrapper.style.transform);
+ */
