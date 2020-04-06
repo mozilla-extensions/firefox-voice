@@ -106,7 +106,11 @@ const LeftSidebar = ({ version, tabValue }) => {
               }
               href="#history"
             >
-              <img alt="History" className="tab-icon"></img>
+              <img
+                src="./images/history.svg"
+                alt="History"
+                className="tab-icon"
+              ></img>
               <span> History </span>
             </a>
           </li>
