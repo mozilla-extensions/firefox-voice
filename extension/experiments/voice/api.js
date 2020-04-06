@@ -72,7 +72,10 @@ this.voice = class extends ExtensionAPI {
           },
 
           async toggleSidebar() {
-            await getTopWindow().SidebarUI.toggle(SidebarUI.lastOpenedId);
+            const lastOpenId = getTopWindow().SidebarUI.lastOpenedId;
+            await getTopWindow().SidebarUI.toggle(
+              lastOpenId || "viewHistorySidebar"
+            );
           },
 
           async viewPageSource() {
