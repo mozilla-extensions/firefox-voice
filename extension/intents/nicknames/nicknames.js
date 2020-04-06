@@ -140,11 +140,11 @@ intentRunner.registerIntent({
     const getName = async () => {
       const activeTab = await context.activeTab();
       const metadata = await pageMetadata.getMetadata(activeTab.id);
-      return Object
-        .keys(pageNames)
-        .find(key => pageNames[key] === metadata.url);
+      return Object.keys(pageNames).find(
+        key => pageNames[key] === metadata.url
+      );
     };
-    const name = context.slots.name || await getName();
+    const name = context.slots.name || (await getName());
     if (!name) {
       const exc = new Error("No page name to remove");
       exc.displayMessage = `This page does not have a name`;
