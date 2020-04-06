@@ -378,7 +378,8 @@ tbody tr:hover {
   outline: none;
 }
 
-.previous, .next {
+.previous,
+.next {
   background-color: transparent;
   border: none;
 }

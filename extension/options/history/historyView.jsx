@@ -21,7 +21,7 @@ export const History = () => {
   return <HistoryTable rows={tableRows} numRows={numRows}></HistoryTable>;
 };
 
-const HistoryTable = ({rows, numRows}) => {
+const HistoryTable = ({ rows, numRows }) => {
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const tableFields = ["Date", "Utterance"];
@@ -38,9 +38,7 @@ const HistoryTable = ({rows, numRows}) => {
             switch (key) {
               case "timestamp": {
                 element = (
-                  <td>
-                    {new Date(parseInt(row[key], 10)).toLocaleString()}
-                  </td>
+                  <td>{new Date(parseInt(row[key], 10)).toLocaleString()}</td>
                 );
                 break;
               }
@@ -72,10 +70,11 @@ const HistoryTable = ({rows, numRows}) => {
     setItemsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
-  const firstIndex = ((page - 1) * itemsPerPage) + 1;
-  const secondIndex = numRows < (((page - 1) * itemsPerPage) + 1) + itemsPerPage
-    ? numRows
-    : (((page - 1) * itemsPerPage) + 1) + itemsPerPage;
+  const firstIndex = (page - 1) * itemsPerPage + 1;
+  const secondIndex =
+    numRows < (page - 1) * itemsPerPage + 1 + itemsPerPage
+      ? numRows
+      : (page - 1) * itemsPerPage + 1 + itemsPerPage;
 
   return (
     <div className="settings-content">
@@ -102,18 +101,17 @@ const HistoryTable = ({rows, numRows}) => {
               ))}
             </select>
           </div>
-          {numRows !== 0
-            ? <span className="rows-indicator">
+          {numRows !== 0 ? (
+            <span className="rows-indicator">
               <span>
                 {firstIndex}-{secondIndex} of {numRows}
               </span>
             </span>
-            : <span className="rows-indicator">
-              <span>
-                0-0 of {numRows}
-              </span>
+          ) : (
+            <span className="rows-indicator">
+              <span>0-0 of {numRows}</span>
             </span>
-          }
+          )}
           <button className="previous" onClick={onClickPrevious}>
             &lt;
           </button>
@@ -124,4 +122,4 @@ const HistoryTable = ({rows, numRows}) => {
       </fieldset>
     </div>
   );
-}
+};
