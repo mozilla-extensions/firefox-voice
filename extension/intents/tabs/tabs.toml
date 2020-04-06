@@ -95,6 +95,10 @@ phrase = "open top for me"
 test = true
 
 [[tabs.open.example]]
+phrase = "create tab"
+test = true
+
+[[tabs.open.example]]
 phrase = "open the tab"
 test = true
 
@@ -356,6 +360,9 @@ phrase = "Count my open tabs"
 test = true
 
 [[tabs.countTabs.example]]
+phrase = "Count my open tabs"
+
+[[tabs.countTabs.example]]
 phrase = "Count how many tabs I have open"
 
 [[tabs.countTabs.example]]
@@ -375,3 +382,6 @@ match = """
 [[tabs.findOnPage.example]]
 phrase = "Find query on this page"
 test = true
+
+[[tabs.findOnPage.example]]
+phrase = "Find spaghetti on  page"

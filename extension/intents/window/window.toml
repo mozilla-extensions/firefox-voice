@@ -6,10 +6,12 @@ match = """
 """
 
 [window.downloads]
-description = "Open downloads"
+description = "Open the downloads"
 match = """
   (show | open |) downloads (menu |)
 """
+[[window.downloads.example]]
+phrase = "open downloads"
 
 [window.quitApplication]
 description = "Close Firefox"

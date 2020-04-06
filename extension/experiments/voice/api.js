@@ -76,6 +76,18 @@ this.voice = class extends ExtensionAPI {
               await SidebarUI.toggle("viewHistorySidebar");
             }
           },
+        
+          async viewPageSource() {
+            return runCommand("View:PageSource");
+          },
+
+          async showAllBookmarks() {
+            return runCommand("Browser:ShowAllBookmarks");
+          },
+
+          async showAllHistory() {
+            return runCommand("Browser:ShowAllHistory");
+          },
         },
       },
     };

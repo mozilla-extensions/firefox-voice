@@ -52,9 +52,25 @@
       },
 
       {
+        "name": "viewPageSource",
+        "type": "function",
+        "description": "View Page Source",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "openHistorySidebar",
         "type": "function",
         "description": "Open history sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "showAllBookmarks",
+        "type": "function",
+        "description": "Open bookmarks",
         "parameters": [],
         "async": true
       },
@@ -73,7 +89,16 @@
         "description": "Toggle sidebar",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "showAllHistory",
+        "type": "function",
+        "description": "Open History",
+        "parameters": [],
+        "async": true
       }
+
     ]
   }
 ]
