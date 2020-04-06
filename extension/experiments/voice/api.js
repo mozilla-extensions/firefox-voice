@@ -73,7 +73,7 @@ this.voice = class extends ExtensionAPI {
 
           async showAllHistory() {
             return runCommand("Browser:ShowAllHistory");
-          }
+          },
         },
       },
     };
