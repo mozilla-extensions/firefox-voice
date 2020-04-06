@@ -48,16 +48,9 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "window.close",
   async run(context) {
-    // get current activeTab.windowId
-    const activeTab = await context.activeTab();
-    const currentWindowId = activeTab.windowId;
-    // getAll normal window
-    const gettingAll = await browser.windows.getAll({
-      windowTypes: ["normal"],
-    });
-    // find target windowId
-    const targetWindowId = findTargetWindowId(gettingAll, currentWindowId);
-    await browser.windows.remove(targetWindowId);
+    context.keepPopup();
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.remove(currentWindow.id);
     context.displayText("Window closed");
   },
 });
