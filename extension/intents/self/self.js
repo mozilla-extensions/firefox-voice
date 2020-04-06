@@ -1,6 +1,6 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as browserUtil from "../../browserUtil.js";
-import { timerController } from "../timer/timer";
+import { timerController } from "../timer/timer.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",
