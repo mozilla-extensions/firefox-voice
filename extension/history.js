@@ -1,10 +1,11 @@
 /* globals log */
 
 export class Database {
+  static readonly = "readonly";
+  static readwrite = "readwrite";
+
   constructor(dbName) {
     this.dbName = dbName;
-    this.readonly = "readonly";
-    this.readwrite = "readwrite";
   }
 
   createTable(tbName, primaryKey, version) {
@@ -94,12 +95,12 @@ export class Database {
       request.onsuccess = e => {
         const database = e.target.result;
         const add = database
-          .transaction([tbName], this.readwrite)
+          .transaction([tbName], Database.readwrite)
           .objectStore(tbName)
-          .add(obj);
+          .add();
         add.onsuccess = e => {
           log.info("1 record has been added to your database.");
-          resolve();
+          resolve(obj);
         };
         add.onerror = e => {
           const code = e.target.errorCode;
@@ -110,13 +111,13 @@ export class Database {
     });
   }
 
-  delete(tbName, primaryKey) {
+  static delete(dbName, tbName, primaryKey) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName);
+      const request = indexedDB.open(dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const remove = database
-          .transaction([tbName], this.readwrite)
+          .transaction([tbName], Database.readwrite)
           .objectStore(tbName)
           .delete(primaryKey);
         remove.onsuccess = e => {
@@ -132,13 +133,13 @@ export class Database {
     });
   }
 
-  clearAll(tbName) {
+  static clearAll(dbName, tbName) {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName);
+      const request = indexedDB.open(dbName);
       request.onsuccess = e => {
         const database = e.target.result;
         const objectStore = database
-          .transaction(tbName, this.readwrite)
+          .transaction(tbName, Database.readwrite)
           .objectStore(tbName);
         const clear = objectStore.clear();
         clear.onsuccess = e => {

@@ -57,8 +57,8 @@ test("history database API", () => {
     });
 
   // Error should not occur when removing existent or non-existent object
-  expect(() => db.delete(TEST_TABLE, "1234")).not.toThrow();
-  expect(() => db.delete(TEST_TABLE, "1111")).not.toThrow();
+  expect(() => Database.delete(DB_NAME, TEST_TABLE, "1234")).not.toThrow();
+  expect(() => Database.delete(DB_NAME, TEST_TABLE, "1111")).not.toThrow();
 
   Database.getAll(DB_NAME, TEST_TABLE)
     .then(rows => {
@@ -81,7 +81,7 @@ test("history database API", () => {
     });
 
   // Testing if all entries in the table are removed
-  expect(() => db.clearAll(TEST_TABLE)).not.toThrow();
+  expect(() => Database.clearAll(DB_NAME, TEST_TABLE)).not.toThrow();
 
   Database.getAll(DB_NAME, TEST_TABLE)
     .then(rows => {
