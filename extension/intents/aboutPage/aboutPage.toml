@@ -26,22 +26,22 @@ match = """
 [[aboutPage.viewPageSource.example]]
 phrase = "view page source"
 
-[[aboutPage.bookmark.example]]
+[[aboutPage.viewPageSource.example]]
 phrase = "open page source"
 test = true
 
-[[aboutPage.bookmark.example]]
+[[aboutPage.viewPageSource.example]]
 phrase = "show page source"
 test = true
 
-[[aboutPage.bookmark.example]]
+[[aboutPage.viewPageSource.example]]
 phrase = "view source"
 test = true
 
-[[aboutPage.bookmark.example]]
+[[aboutPage.viewPageSource.example]]
 phrase = "view html"
 test = true
 
-[[aboutPage.bookmark.example]]
+[[aboutPage.viewPageSource.example]]
 phrase = "view html source"
 test = true
