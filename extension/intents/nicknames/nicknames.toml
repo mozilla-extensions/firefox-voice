@@ -34,3 +34,30 @@ match = """
 
 [[nicknames.remove.example]]
 phrase = "Remove name calendar"
+
+[nicknames.namePage]
+description = "Name a page"
+match = """
+ name (this |) (this | page | tab) [name]
+ give (the |) name [name] to (this |) (page | tab)
+"""
+
+[[nicknames.namePage.example]]
+phrase = "name this page news"
+
+[[nicknames.namePage.example]]
+phrase = "give the name news to this tab"
+test = true
+
+[nicknames.removePageName]
+description = "Remove a page name"
+match = """
+  (remove | delete) (the |) (page | tab) (name | nickname | shortcut |) (called |) [name] 
+  (remove | delete) (the | this |) (page | tab) name
+"""
+
+[[nicknames.removePageName.example]]
+phrase = "delete the page called news"
+
+[[nicknames.removePageName.example]]
+phrase = "remove this tab name"

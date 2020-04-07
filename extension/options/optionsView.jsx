@@ -108,7 +108,7 @@ const General = ({
 }) => {
   return (
     <div className="settings-content">
-      <ChimeSettings
+      <PreferenceSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
       />
@@ -169,24 +169,39 @@ const MusicServiceSettings = ({
   );
 };
 
-const ChimeSettings = ({ userSettings, updateUserSettings }) => {
-  const onChimeSettingChange = event => {
+const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
+  const onPreferenceChange = setting => event => {
     if (event) {
-      userSettings.chime = event.target.checked;
+      userSettings[setting] = event.target.checked;
       updateUserSettings(userSettings);
     }
   };
   return (
     <fieldset id="preferences">
       <legend>Preferences</legend>
-      <div className="styled-checkbox">
-        <input
-          id="chime"
-          type="checkbox"
-          checked={userSettings.chime}
-          onChange={onChimeSettingChange}
-        />
-        <label htmlFor="chime">Play chime when opening mic</label>
+      <div className="checkbox-wrapper">
+        <div className="styled-checkbox">
+          <input
+            id="chime"
+            type="checkbox"
+            checked={userSettings.chime}
+            onChange={onPreferenceChange("chime")}
+          />
+          <label htmlFor="chime">Play chime when opening mic</label>
+        </div>
+      </div>
+      <div className="checkbox-wrapper">
+        <div className="styled-checkbox">
+          <input
+            id="mic-state"
+            type="checkbox"
+            checked={userSettings.listenForFollowup}
+            onChange={onPreferenceChange("listenForFollowup")}
+          />
+          <label htmlFor="mic-state">
+            Keep the microphone on for follow up responses
+          </label>
+        </div>
       </div>
     </fieldset>
   );

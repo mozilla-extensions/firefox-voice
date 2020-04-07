@@ -48,16 +48,9 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "window.close",
   async run(context) {
-    // get current activeTab.windowId
-    const activeTab = await context.activeTab();
-    const currentWindowId = activeTab.windowId;
-    // getAll normal window
-    const gettingAll = await browser.windows.getAll({
-      windowTypes: ["normal"],
-    });
-    // find target windowId
-    const targetWindowId = findTargetWindowId(gettingAll, currentWindowId);
-    await browser.windows.remove(targetWindowId);
+    context.keepPopup();
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.remove(currentWindow.id);
     context.displayText("Window closed");
   },
 });
@@ -76,5 +69,19 @@ intentRunner.registerIntent({
     const tabs = await browser.tabs.query({ currentWindow: false });
     const tabsIds = tabs.map(tabInfo => tabInfo.id);
     await browser.tabs.move(tabsIds, { windowId: currentWindow.id, index: -1 });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.zoom",
+  async run(context) {
+    await browser.experiments.voice.zoomWindow();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.minimize",
+  async run(context) {
+    await browser.experiments.voice.minimizeWindow();
   },
 });

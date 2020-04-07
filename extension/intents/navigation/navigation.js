@@ -31,24 +31,31 @@ function saveTabQueryToDatabase(query, tab, url) {
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
-    const query = context.slots.query;
-    const where = context.slots.where;
-    const cached = queryDatabase.get(query.toLowerCase());
-    if (where === "window") {
-      if (cached) {
-        await browser.windows.create({ url: cached.url });
+    const query = context.slots.query.toLowerCase();
+    const result = await browser.storage.sync.get("pageNames");
+    const pageNames = result.pageNames;
+    const savedUrl = pageNames[query];
+    if (savedUrl) {
+      await context.openOrFocusTab(savedUrl);
+    } else {
+      const where = context.slots.where;
+      const cached = queryDatabase.get(query.toLowerCase());
+      if (where === "window") {
+        if (cached) {
+          await browser.windows.create({ url: cached.url });
+        } else {
+          await browser.windows.create({});
+          const tab = await context.createTabGoogleLucky(query);
+          const url = tab.url;
+          saveTabQueryToDatabase(query, tab, url);
+        }
+      } else if (cached) {
+        await context.openOrFocusTab(cached.url);
       } else {
-        await browser.windows.create({});
         const tab = await context.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
-    } else if (cached) {
-      await context.openOrFocusTab(cached.url);
-    } else {
-      const tab = await context.createTabGoogleLucky(query);
-      const url = tab.url;
-      saveTabQueryToDatabase(query, tab, url);
     }
     context.done();
   },
