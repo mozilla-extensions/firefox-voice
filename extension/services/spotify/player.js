@@ -70,23 +70,9 @@ this.player = (function() {
         button.click();
       } else if (direction === "previous") {
         const selector = ".control-button[title='Previous']";
-        // Player time
-        const time = this.querySelector(".playback-bar__progress-time")
-          .innerHTML;
-        if (
-          /\b0:00\b/gi.test(time) ||
-          /\b0:01\b/gi.test(time) ||
-          /\b0:02\b/gi.test(time)
-        ) {
-          const firstClickBtn = this.querySelector(selector);
-          firstClickBtn.click();
-          return;
-        }
+
         const firstClickBtn = this.querySelector(selector);
         firstClickBtn.click();
-        // Since after the first click there is a delay in the selector
-        const secondClickBtn = await this.waitForSelector(selector);
-        secondClickBtn.click();
       }
     }
 
