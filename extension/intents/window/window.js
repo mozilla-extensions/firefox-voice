@@ -71,3 +71,17 @@ intentRunner.registerIntent({
     await browser.tabs.move(tabsIds, { windowId: currentWindow.id, index: -1 });
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.zoom",
+  async run(context) {
+    await browser.experiments.voice.zoomWindow();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.minimize",
+  async run(context) {
+    await browser.experiments.voice.minimizeWindow();
+  },
+});

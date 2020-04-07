@@ -56,3 +56,37 @@ test = true
 [[window.close.example]]
 phrase = "Close all windows"
 test = true
+
+[window.zoom]
+description = "Zooms the window"
+match = """
+  zoom (the |) (this |) window (for me |)
+"""
+
+[[window.zoom.example]]
+phrase = "Zoom window"
+
+[[window.zoom.example]]
+phrase = "Zoom this window"
+test = true
+
+[window.minimize]
+description = "Minimizes the window"
+match = """
+  (minimize | hide |) (the |) (this |) (window |) (for me |)
+"""
+
+[[window.minimize.example]]
+phrase = "Minimize window"
+
+[[window.minimize.example]]
+phrase = "Minimize this window"
+test = true
+
+[[window.minimize.example]]
+phrase = "Minimize"
+test = true
+
+[[window.minimize.example]]
+phrase = "hide window"
+test = true

@@ -97,6 +97,22 @@
         "description": "Open History",
         "parameters": [],
         "async": true
+      },
+
+      {
+        "name": "zoomWindow",
+        "type": "function",
+        "description": "Zoom Firefox",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "minimizeWindow",
+        "type": "function",
+        "description": "Minimize Firefox",
+        "parameters": [],
+        "async": true
       }
 
     ]
