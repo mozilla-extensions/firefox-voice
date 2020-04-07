@@ -166,7 +166,7 @@ match = """
   (make it softer | softer) [volumeLevel=levelDown]
 """
 
-[music.volume.example]
+[[music.volume.example]]
 phrase = "increase volume"
 expectParameters = {volumeLevel = "levelUp"}
 
@@ -177,7 +177,7 @@ match = """
   mute (volume | the volume)
 """
 
-[music.mute.example]
+[[music.mute.example]]
 phrase = "mute music"
 
 [music.unmute]
@@ -187,7 +187,7 @@ match = """
   unmute (volume | the volume)
 """
 
-[music.unmute.example]
+[[music.unmute.example]]
 phrase = "unmute video"
 
 [music.playAlbum]

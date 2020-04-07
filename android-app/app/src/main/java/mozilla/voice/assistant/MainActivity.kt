@@ -9,7 +9,6 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -24,10 +23,13 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
-import java.net.URLEncoder
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.IntentRunner
 import mozilla.voice.assistant.intents.Metadata
+import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.intents.launch.Launch
+import mozilla.voice.assistant.intents.maps.Maps
+import mozilla.voice.assistant.intents.music.Music
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
@@ -44,7 +46,10 @@ class MainActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 ActivityManager.TaskDescription(null, R.mipmap.ic_launcher)
             } else {
-                ActivityManager.TaskDescription(null, BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+                ActivityManager.TaskDescription(
+                    null,
+                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+                )
             }
         )
 
@@ -53,7 +58,13 @@ class MainActivity : AppCompatActivity() {
         val language = Language(this)
         val metadata = Metadata(this, language)
         val compiler = Compiler(metadata, language)
-        intentRunner = IntentRunner(compiler)
+        intentRunner = IntentRunner(
+            compiler,
+            Alarm.getIntents() +
+                    Launch.getIntents() +
+                    Maps.getIntents() +
+                    Music.getIntents()
+        )
     }
 
     override fun onStart() {
@@ -259,25 +270,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getIntent(utterance: String): Intent =
-        intentRunner.runUtterance(utterance, this)?.let { intent ->
-            intent.resolveActivityInfo(packageManager, intent.flags)?.let { activityInfo ->
-                if (activityInfo.exported) intent else null
-            }
-        } ?: Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("${BASE_URL}${URLEncoder.encode(utterance, ENCODING)}")
-        )
-
     private fun handleResults(results: List<String>) {
         results.let {
             if (it.isNotEmpty()) {
-                feedbackView.text = it[0]
-                val intent = getIntent(it[0])
-                Handler().postDelayed(
-                    { startActivity(intent) },
-                    TRANSCRIPT_DISPLAY_TIME
-                )
+                intentRunner.determineBestIntent(this, results).let {
+                    feedbackView.text = it.first
+                    Handler().postDelayed(
+                        { startActivity(it.second) },
+                        TRANSCRIPT_DISPLAY_TIME
+                    )
+                }
             } else {
                 feedbackView.text = getString(R.string.no_match)
             }
@@ -298,11 +300,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private var recognizer: SpeechRecognizer? = null
         private const val TAG = "MainActivity"
-        private const val ENCODING = "UTF-8"
         private const val SPEECH_RECOGNITION_REQUEST = 1
         private const val PERMISSIONS_REQUEST_CODE = 1
-        private const val BASE_URL =
-            "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
         private const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
         private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
         private const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time

@@ -44,14 +44,6 @@ this.dictationContentScript = (function() {
     );
   }
 
-  function quoteHtml(text) {
-    text = text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/"/g, "&quot;");
-    return text;
-  }
-
   function highlightElement(el) {
     const oldBackground = el.style.backgroundColor;
     el.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
@@ -88,12 +80,7 @@ this.dictationContentScript = (function() {
     }
     setTimeout(() => {
       if (el.hasAttribute("contenteditable")) {
-        // eslint-disable-next-line no-unsanitized/property
-        el.innerHTML = insertString(
-          el.innerHTML,
-          quoteHtml(text),
-          el.selectionStart
-        );
+        insertStringContentEditable(text, el);
       } else {
         el.value = insertString(el.value, text, el.selectionStart);
       }
@@ -246,6 +233,53 @@ this.dictationContentScript = (function() {
     }
 
     return `${startSlice}${spaceBefore}${snippet}${spaceAfter}${endSlice}`;
+  }
+
+  function insertStringContentEditable(snippet, containerElement) {
+    const sel = window.getSelection();
+
+    // get cursor location
+    let range = sel.getRangeAt(0);
+
+    // overwrite if its a selection
+    range.deleteContents();
+
+    const modSnippet = prependAppendSpace(snippet, containerElement, range);
+
+    // insert text at cursor
+    const snippetNode = document.createTextNode(modSnippet);
+    range.insertNode(snippetNode);
+
+    // place cursor after inserted text
+    range = range.cloneRange();
+    range.setStartAfter(snippetNode);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function prependAppendSpace(snippet, containerElement, range) {
+    let strAfter, strBefore;
+    const preRange = range.cloneRange();
+    const postRange = range.cloneRange();
+    preRange.collapse(true);
+    preRange.setStart(containerElement, 0);
+    if (preRange.toString().endsWith(" ") || preRange.toString() === "") {
+      strBefore = "";
+    } else {
+      strBefore = " ";
+    }
+
+    postRange.collapse(false);
+    postRange.setEndAfter(containerElement);
+
+    if (postRange.toString().startsWith(" ")) {
+      strAfter = "";
+    } else {
+      strAfter = " ";
+    }
+
+    return `${strBefore}${snippet}${strAfter}`;
   }
 
   function focusDirection(dir) {

@@ -81,11 +81,6 @@ class YouTube extends serviceList.Service {
   }
 
   async move(direction) {
-    if (direction === "previous") {
-      const e = new Error("Cannot move to previous YouTube video");
-      e.displayMessage = `YouTube cannot do "${this.context.utterance}"`;
-      throw e;
-    }
     let tabs = await this.getAllTabs({ audible: true });
     if (!tabs.length) {
       const currentTab = await this.context.activeTab();
@@ -99,8 +94,14 @@ class YouTube extends serviceList.Service {
     }
     // FIXME: doing this on all audible tabs is odd, though any situation with multiple tabs here is odd
     for (const tab of tabs) {
-      await content.lazyInject(tab.id, "/services/youtube/player.js");
-      await this.callOneTab(tab.id, "move", { direction });
+      if (direction === "previous") {
+        await browser.tabs.executeScript(tab.id, {
+          code: "window.history.back();",
+        });
+      } else {
+        await content.lazyInject(tab.id, "/services/youtube/player.js");
+        await this.callOneTab(tab.id, "move", { direction });
+      }
     }
   }
 

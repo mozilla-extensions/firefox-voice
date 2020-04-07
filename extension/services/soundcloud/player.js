@@ -36,7 +36,7 @@ this.player = (function() {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
       if (direction === "next") {
         playControlsBtn[2].click();
-      } else if (direction === "back") {
+      } else if (direction === "previous") {
         playControlsBtn[0].click();
         playControlsBtn[0].click();
       }
