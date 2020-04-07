@@ -16,7 +16,7 @@ export const History = () => {
       setNumRows(rows.length);
     };
     getRows();
-  }, []);
+  }, [tableRows]);
 
   return <HistoryTable rows={tableRows} numRows={numRows}></HistoryTable>;
 };
@@ -27,13 +27,13 @@ const HistoryTable = ({ rows, numRows }) => {
   const tableFields = ["Date", "Utterance"];
   const objectFields = ["timestamp", "utterance"];
   const possibleItemsPerPage = [10, 25, 50, 100];
-
   const tableColumns = tableFields.map(field => <th>{field}</th>);
   const tableRows = rows
     .map(row => {
       const tr = (
         <tr>
           {objectFields.map(key => {
+            // format each row of data
             let element;
             switch (key) {
               case "timestamp": {
@@ -57,19 +57,24 @@ const HistoryTable = ({ rows, numRows }) => {
 
   const onClickPrevious = event => {
     if (page > 1) {
+      // start page index at 1
       setPage(page - 1);
     }
   };
   const onClickNext = event => {
     const maxNumPages = Math.ceil(numRows / itemsPerPage);
     if (page < maxNumPages) {
+      // prevent indexing past the last page
       setPage(page + 1);
     }
   };
   const onItemsPerPageChange = event => {
+    // change the number of items displayed per page and switch to the first page
     setItemsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
+
+  // calculate the values used to display: ${indexOfFirstItem}-${indexOfLastItem} of ${totalNumOfItems}
   const firstIndex = (page - 1) * itemsPerPage + 1;
   const secondIndex =
     numRows < (page - 1) * itemsPerPage + 1 + itemsPerPage
@@ -79,7 +84,22 @@ const HistoryTable = ({ rows, numRows }) => {
   return (
     <div className="settings-content">
       <fieldset>
-        <legend>View your Voice History</legend>
+        <legend>
+          View your Voice History
+          <button
+            className="button"
+            role="button"
+            onClick={async () => {
+              await Database.clearAll(DB_NAME, TABLE_NAME);
+            }}
+          >
+            <img
+              src="./images/delete.svg"
+              alt="Clear all"
+              className="clear-all"
+            ></img>
+          </button>
+        </legend>
         <table className="history-table">
           <thead align="left">
             <tr>{tableColumns}</tr>
@@ -112,11 +132,19 @@ const HistoryTable = ({ rows, numRows }) => {
               <span>0-0 of {numRows}</span>
             </span>
           )}
-          <button className="previous" onClick={onClickPrevious}>
-            &lt;
+          <button className="button previous" onClick={onClickPrevious}>
+            <img
+              src="./images/back-12.svg"
+              alt="Previous page"
+              className="previous-page"
+            ></img>
           </button>
-          <button className="next" onClick={onClickNext}>
-            >
+          <button className="button next" onClick={onClickNext}>
+            <img
+              src="./images/back-12.svg"
+              alt="Next page"
+              className="next-page"
+            ></img>
           </button>
         </div>
       </fieldset>

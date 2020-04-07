@@ -378,8 +378,11 @@ tbody tr:hover {
   outline: none;
 }
 
-.previous,
-.next {
+.button {
   background-color: transparent;
   border: none;
+}
+
+.next-page {
+  transform: scale(-1, 1);
 }
