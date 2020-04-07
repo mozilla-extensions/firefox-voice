@@ -426,6 +426,8 @@ export const PopupController = function() {
     if (message.card) {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
+    } else {
+      setCardImage(null);
     }
 
     updateLastIntent();
