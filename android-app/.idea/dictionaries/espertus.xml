@@ -4,6 +4,7 @@
       <w>multiword</w>
       <w>stopword</w>
       <w>stopwords</w>
+      <w>toml</w>
       <w>unnormalized</w>
     </words>
   </dictionary>

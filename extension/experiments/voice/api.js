@@ -22,6 +22,15 @@ function runCommand(commandName) {
   return command.click();
 }
 
+function getTopWindow() {
+  const windowTracker = ChromeUtils.import(
+    "resource://gre/modules/Extension.jsm",
+    {}
+  ).Management.global.windowTracker;
+  const window = windowTracker.topWindow;
+  return window;
+}
+
 this.voice = class extends ExtensionAPI {
   getAPI(context) {
     const { extension } = context;
@@ -31,12 +40,7 @@ this.voice = class extends ExtensionAPI {
         voice: {
           async openPopup() {
             const browserAction = browserActionFor(extension);
-            const windowTracker = ChromeUtils.import(
-              "resource://gre/modules/Extension.jsm",
-              {}
-            ).Management.global.windowTracker;
-            const window = windowTracker.topWindow;
-            browserAction.triggerAction(window);
+            browserAction.triggerAction(getTopWindow());
           },
 
           async undoCloseTab() {
@@ -53,6 +57,45 @@ this.voice = class extends ExtensionAPI {
 
           async quitApplication() {
             return runCommand("cmd_quitApplication");
+          },
+
+          async openBookmarksSidebar() {
+            await getTopWindow().SidebarUI.show("viewBookmarksSidebar");
+          },
+
+          async openHistorySidebar() {
+            await getTopWindow().SidebarUI.show("viewHistorySidebar");
+          },
+
+          async closeSidebar() {
+            await getTopWindow().SidebarUI.hide();
+          },
+
+          async toggleSidebar() {
+            const lastOpenId = getTopWindow().SidebarUI.lastOpenedId;
+            await getTopWindow().SidebarUI.toggle(
+              lastOpenId || "viewHistorySidebar"
+            );
+          },
+
+          async viewPageSource() {
+            return runCommand("View:PageSource");
+          },
+
+          async zoomWindow() {
+            return runCommand("zoomWindow");
+          },
+
+          async minimizeWindow() {
+            return runCommand("minimizeWindow");
+          },
+
+          async showAllBookmarks() {
+            return runCommand("Browser:ShowAllBookmarks");
+          },
+
+          async showAllHistory() {
+            return runCommand("Browser:ShowAllHistory");
           },
         },
       },

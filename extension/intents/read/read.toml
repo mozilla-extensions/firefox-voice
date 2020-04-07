@@ -8,6 +8,10 @@ match = """
 [[read.read.example]]
 phrase = "Read this page"
 
+[[read.read.example]]
+phrase = "Read out content to me"
+test = true
+
 [read.stopRead]
 description = "Stop reading/narrating the current tab"
 match = """

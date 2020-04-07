@@ -5,9 +5,11 @@ import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.content.res.AssetManager
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import java.io.ByteArrayInputStream
 import mozilla.voice.assistant.language.Language
 import mozilla.voice.assistant.language.LanguageTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -51,6 +53,8 @@ class MetadataTest {
 
     companion object {
         private const val STOPWORDS = "be for my please the"
+        private const val TOML_FILE_NAME = "test.toml"
+
         private val apps = listOf(
             Pair("Be My Eyes", "com.bemyeyes"),
             Pair("The Eyes", "org.theeyes"),
@@ -58,13 +62,21 @@ class MetadataTest {
             Pair("Washington Post", "com.wapo"),
             Pair("My My", "com.mymy")
         )
-
-        // TODO: Populate these data structures.
         private val appInfo = mutableMapOf<String, ApplicationInfo>() // for mocking pm.getApplicationInfo()
         private val appLabels = mutableMapOf<ApplicationInfo, String>() // for mocking pm.getApplicationLabel()
 
-        internal fun getMetadata(language: Language = LanguageTest.getLanguage()): Metadata {
+        internal fun getMetadata(language: Language = LanguageTest.getLanguage(), tomlText: String? = null): Metadata {
             val context = mockk<Context>(relaxed = true)
+            val assetManager = mockk<AssetManager>()
+
+            // Mock TOML file.
+            if (tomlText != null) {
+                every { context.assets } returns assetManager
+                every { assetManager.list("") } returns arrayOf(TOML_FILE_NAME)
+                every { assetManager.open(TOML_FILE_NAME) } returns ByteArrayInputStream(tomlText.toByteArray())
+            }
+
+            // Mock PackageManager to give a fake list of installed apps.
             val pm = mockk<PackageManager>(relaxed = true)
             every { context.packageManager } returns pm
             val resolveInfoList = apps.map {

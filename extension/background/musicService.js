@@ -36,6 +36,8 @@ class MusicService extends serviceList.Service {
       } catch (e) {
         if (e.message.includes("No search results")) {
           e.displayMessage = `No results found for ${query}`;
+        } else if (e.message.includes("Timeout during search")) {
+          e.displayMessage = `Encountered slow internet`;
         }
         throw e;
       }

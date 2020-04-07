@@ -3,5 +3,3 @@
 *.min.js
 # These are both imported from other locations:
 # FIXME: maybe we should move them into vendor/?
-/extension/catcherAsyncSetup.js
-/extension/background/voiceSchema.js
