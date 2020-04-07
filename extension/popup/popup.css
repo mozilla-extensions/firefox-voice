@@ -319,6 +319,9 @@ a#lexicon {
   text-align: center;
   font-size: 1em;
   font-weight: 600;
+  margin-right: -8px;
+  margin-bottom: -8px;
+  margin-left: -8px;
 }
 
 .feedback-controls {
@@ -579,13 +582,13 @@ a#lexicon {
   overflow: hidden;
   text-overflow: ellipsis;
   background-color: black;
-  margin-bottom: -8px;
-  margin-left: -8px;
-  margin-right: -8px;
   position: relative;
   z-index: -2;
   padding-top: 12px;
   display: flex;
+  margin-bottom: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
 }
 
 .timer-clock-footer {
