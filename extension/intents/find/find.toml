@@ -5,6 +5,7 @@ match = """
   (find | open | focus | show | switch to) tab [query]
   go (to | to the |) [query] tab
   go to my [query]
+  open my [query]
   focus [query] (tab |)
 """
 
