@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
@@ -78,7 +79,10 @@ intentRunner.registerIntent({
   name: "forms.turnSelectionIntoLink",
   async run(context) {
     const activeTab = await context.activeTab();
-    const selection = await pageMetadata.getSelection(activeTab.id);
+    const selection = await pageMetadata.getSelection(
+      activeTab.id,
+      activeTab.url
+    );
     if (!selection || !selection.text) {
       const e = new Error("No text selected");
       e.displayMessage = "No text selected";
