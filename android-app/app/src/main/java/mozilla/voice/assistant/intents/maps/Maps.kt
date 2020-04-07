@@ -39,7 +39,7 @@ class Maps {
         private fun createNavigateIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             pr.slots[LOCATION_KEY]?.let {
                 Intent(
@@ -51,7 +51,7 @@ class Maps {
         private fun createSearchIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             pr.slots[THING_KEY]?.let { thing ->
                 val suffix = pr.slots[LOCATION_KEY]?.let { " in $it" } ?: ""

@@ -1,0 +1,19 @@
+[sms.start]
+description = "Start sending a text message"
+match = """
+  send text (message | ) to [name]
+  send sms to [name]
+  send sms message to [name]
+  text [name]
+  sms [name]
+  send [name] a text (message|)
+  send [name] a sms
+  send [name] an sms
+  send [name] a text
+"""
+
+[[sms.start.example]]
+phrase = "Send an sms to London Breed"
+
+[[sms.start.example]]
+phrase = "Text Scott Wiener"

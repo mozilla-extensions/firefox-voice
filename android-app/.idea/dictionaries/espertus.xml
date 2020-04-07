@@ -3,6 +3,7 @@
     <words>
       <w>mozilla</w>
       <w>multiword</w>
+      <w>nocase</w>
       <w>stopword</w>
       <w>stopwords</w>
       <w>toml</w>
