@@ -411,6 +411,8 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
+    // An old popup-only search result is no longer valid once a new search is made:
+    popupSearchInfo = null;
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {

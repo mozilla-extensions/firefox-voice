@@ -98,6 +98,21 @@
         "parameters": [],
         "async": true
       },
+      {
+        "name": "openPreferences",
+        "type": "function",
+        "description": "Open Preferences",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "browserOpenAddonsMgr",
+        "type": "function",
+        "description": "Open Addons or Extensions",
+        "parameters": [],
+        "async": true
+      },
 
       {
         "name": "zoomWindow",
