@@ -55,6 +55,10 @@ this.voice = class extends ExtensionAPI {
             return runCommand("Tools:Downloads");
           },
 
+          async clearBrowserHistory() {
+            return runCommand("Tools:Sanitize");
+          },
+
           async quitApplication() {
             return runCommand("cmd_quitApplication");
           },

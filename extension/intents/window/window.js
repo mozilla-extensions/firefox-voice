@@ -85,3 +85,10 @@ intentRunner.registerIntent({
     await browser.experiments.voice.minimizeWindow();
   },
 });
+
+intentRunner.registerIntent({
+  name: "window.clearBrowserHistory",
+  async run(context) {
+    await browser.experiments.voice.clearBrowserHistory();
+  },
+});
