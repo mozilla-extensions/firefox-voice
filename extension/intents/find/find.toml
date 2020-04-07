@@ -7,6 +7,7 @@ match = """
   go to my [query]
   open my [query]
   focus [query] (tab |)
+  find [query] in tabs
 """
 
 [[find.find.example]]
