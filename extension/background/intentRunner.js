@@ -257,7 +257,7 @@ export class IntentContext {
         ) {
           return;
         }
-        const isGoogle = /^https:\/\/www.google.com\//.test(url);
+        const isGoogle = /\/search/.test(url);
         const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
         if (!isGoogle || isRedirect) {
           if (isRedirect) {
