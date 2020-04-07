@@ -1,7 +1,14 @@
 import * as content from "./content.js";
 
-export async function getSelection(tabId) {
+export async function getSelection(tabId, tabUrl) {
   await content.lazyInject(tabId, "/background/pageMetadata-contentScript.js");
+  const googleDocsUrl = new RegExp(/^https:\/\/docs.google.com\/document\/d\//);
+  if (googleDocsUrl.test(tabUrl)) {
+    const resp = await browser.tabs.sendMessage(tabId, {
+      type: "getGoogleDocsSelection",
+    });
+    return resp.selection;
+  }
   const resp = await browser.tabs.sendMessage(tabId, {
     type: "getSelection",
   });
