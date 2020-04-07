@@ -17,6 +17,9 @@ phrase = "open downloads"
 description = "Close Firefox"
 match = """
   (close | quit | exit | shutdown) (firefox | browser | the browser)
+  close all tabs
+  close all tab
+  all tabs close
 """
 
 [[window.quitApplication.example]]
