@@ -13,6 +13,7 @@ extension/popup/popupView.js
 extension/options/optionsController.js
 extension/options/optionsView.js
 extension/options/routinesView.js
+extension/options/history/historyView.js
 extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
 extension/wakeword/wakewordController.js
