@@ -11,11 +11,7 @@ phrase = "Set timer for 2 hours and 5 minutes"
 [timer.close]
 description = "Close timer"
 match = """
-<<<<<<< HEAD
-    (close | exit | stop | cancel | end) (this | the | current |) (timer | countdown)
-=======
-    (close | exit | stop | cancel | end) (this | the | current |) (timer |)
->>>>>>> set timer control for 'cancel', 'pause' or 'reset'
+    (close | exit | stop | cancel | end) (this | the | current |) (timer | countdown |)
 """
 
 [[timer.close.example]]
