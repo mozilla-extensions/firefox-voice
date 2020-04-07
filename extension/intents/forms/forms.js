@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
