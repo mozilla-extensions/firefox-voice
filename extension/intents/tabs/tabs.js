@@ -231,6 +231,19 @@ intentRunner.registerIntent({
   },
 });
 
+intentRunner.registerIntent({
+  name: "tabs.maximize",
+  async run(context) {
+    if (buildSettings.android) {
+      const exc = new Error("Maximize not supported on Android");
+      exc.displayMessage = exc.message;
+      throw exc;
+    }
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "maximized" });
+  },
+});
+
 const tabHistory = [];
 let lastActivate;
 
