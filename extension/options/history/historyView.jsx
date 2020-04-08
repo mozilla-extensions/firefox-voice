@@ -1,4 +1,7 @@
-import { Database } from "./../../history.js";
+/* globals React */
+
+/* eslint-disable no-unused-vars */
+import { Database } from "../../history.js";
 
 const { useState, useEffect } = React;
 
@@ -53,7 +56,7 @@ const HistoryTable = ({ rows, numRows }) => {
       );
       return tr;
     })
-    .slice((page - 1) * itemsPerPage, page * itemsPerPage - 1);
+    .slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   const onClickPrevious = event => {
     if (page > 1) {
@@ -77,18 +80,15 @@ const HistoryTable = ({ rows, numRows }) => {
   // calculate the values used to display: ${indexOfFirstItem}-${indexOfLastItem} of ${totalNumOfItems}
   const firstIndex = (page - 1) * itemsPerPage + 1;
   const secondIndex =
-    numRows < (page - 1) * itemsPerPage + 1 + itemsPerPage
-      ? numRows
-      : (page - 1) * itemsPerPage + 1 + itemsPerPage;
+    numRows < page * itemsPerPage ? numRows : page * itemsPerPage;
 
   return (
     <div className="settings-content">
       <fieldset>
         <legend>
-          View your Voice History
+          View Your Voice History
           <button
             className="button"
-            role="button"
             onClick={async () => {
               await Database.clearAll(DB_NAME, TABLE_NAME);
             }}
@@ -107,12 +107,13 @@ const HistoryTable = ({ rows, numRows }) => {
           <tbody>{tableRows}</tbody>
         </table>
         <div className="history-pagination">
-          <label className="rows-indicator" for="rows">
+          <label className="rows-indicator" htmlFor="rows">
             Rows per page:
           </label>
           <div className="select-wrapper rows-indicator">
             <select
               id="itemsPerPage"
+              name="rows"
               value={itemsPerPage}
               onChange={onItemsPerPageChange}
             >
