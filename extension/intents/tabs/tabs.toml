@@ -1,12 +1,28 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (this |) (current |) (tab | site | page) (for me |)
-  close (this | that)
+  close (the | this |) (active | current |) (tab{s} | site | page) (for me |)
+  close (the | this | that)
 """
 
 [[tabs.close.example]]
 phrase = "close tab"
+
+[[tabs.close.example]]
+phrase = "close tabs"
+test = true
+
+[[tabs.close.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.close.example]]
+phrase = "close active tab"
+test = true
+
+[[tabs.close.example]]
+phrase = "close the active tabs"
+test = true
 
 [[tabs.close.example]]
 phrase = "close the current top"
@@ -340,6 +356,9 @@ phrase = "Count my open tabs"
 test = true
 
 [[tabs.countTabs.example]]
+phrase = "Count my open tabs"
+
+[[tabs.countTabs.example]]
 phrase = "Count how many tabs I have open"
 
 [[tabs.countTabs.example]]
@@ -359,6 +378,9 @@ match = """
 [[tabs.findOnPage.example]]
 phrase = "Find query on this page"
 test = true
+
+[[tabs.findOnPage.example]]
+phrase = "Find spaghetti on  page"
 
 [[tabs.selectAllTabs]]
 description = "Select all tabs"
@@ -400,3 +422,5 @@ expectParameters = {dir = "first"}
 [[tabs.selectNumbersTabs.example]]
 phrase = "select last number tab"
 expectParameters = {dir = "last"}
+
+

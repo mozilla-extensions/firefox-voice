@@ -54,7 +54,7 @@ Then in `extension/intents/someIntent/someIntent.js`:
 ```js
 import * as intentRunner from "../../background/intentRunner.js";
 
-intentRunner.register({
+intentRunner.registerIntent({
   name: "someIntent.command",
   async run(context) {
     // Run the command
