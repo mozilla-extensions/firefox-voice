@@ -67,9 +67,6 @@ match = """
 """
 
 [[browser.preferences.example]]
-phrase = "open settings"
-
-[[browser.preferences.example]]
 phrase = "open firefox settings"
 test = true
 

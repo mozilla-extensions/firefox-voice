@@ -31,7 +31,7 @@ test = true
 [tabs.undoCloseTab]
 description = "Undo close tab"
 match = """
-  (undo | reopen | open | restore | reinstate | bring | recover) (back |) (the | my | that |) (last | recently |) (close | closed |) (tab |)
+  (undo | reopen | restore | reinstate | bring | recover) (back |) (the | my | that |) (last | recently |) (close | closed |) (tab |)
 """
 
 [[tabs.undoCloseTab.example]]
@@ -43,10 +43,6 @@ test = true
 
 [[tabs.undoCloseTab.example]]
 phrase = "Reopen the last closed tab"
-test = true
-
-[[tabs.undoCloseTab.example]]
-phrase = "Open my recently closed tab"
 test = true
 
 [[tabs.undoCloseTab.example]]
