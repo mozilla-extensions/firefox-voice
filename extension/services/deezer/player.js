@@ -17,8 +17,12 @@ this.player = (function() {
         const querySubmit = this.querySelector("form .topbar-search-submit");
         this.setReactInputValue(queryInput, query);
         querySubmit.click();
-      } catch {
-        throw new Error("Please log in to use this service.");
+      } catch (e) {
+        const unlogged = document.querySelector(".unlogged-homepage");
+        if (unlogged) {
+          throw new Error("Please log in to use this service.");
+        }
+        throw e;
       }
     }
 
