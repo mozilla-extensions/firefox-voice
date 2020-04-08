@@ -147,7 +147,7 @@ this.player = (function() {
 
     async playSection({ query, thenPlay, section }) {
       try {
-        let SECTION;
+        let foundSection;
         await this.search(query);
         try {
           if (thenPlay) {
@@ -157,11 +157,16 @@ this.player = (function() {
             });
             for (const anchorTag of anchorNodes) {
               if (anchorTag.innerText === section) {
-                SECTION = anchorTag.parentElement.parentElement;
+                foundSection = anchorTag.parentElement.parentElement;
+                break;
               }
             }
-            SECTION.querySelector("ul li button").click();
-            SECTION.querySelector("ul li figure .picture").click();
+            try {
+              foundSection.querySelector("ul li button").click();
+              foundSection.querySelector("ul li figure .picture").click();
+            } catch {
+              throw new Error("Album not found!");
+            }
           }
         } catch {
           throw new Error("No Search Results!");
