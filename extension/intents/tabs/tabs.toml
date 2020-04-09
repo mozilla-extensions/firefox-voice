@@ -98,6 +98,15 @@ match = """
 [[tabs.fullScreen.example]]
 phrase = "full screen"
 
+[tabs.maximize]
+description = "Maximize window"
+match = """
+  maximize (the | this |) (window |)
+"""
+
+[[tabs.maximize.example]]
+phrase = "maximize"
+
 [tabs.moveToWindow]
 description = "Move tab in a new window"
 match = """

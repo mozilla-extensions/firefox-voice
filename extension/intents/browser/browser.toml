@@ -1,7 +1,7 @@
 [browser.bookmark]
 description = "Open bookmarks"
 match = """
-  (Open | show |) (all |) (bookmarks | bookmark |)
+  (Open | show |) (all |) (bookmarks | bookmark )
 """
 
 [[browser.bookmark.example]]
@@ -58,4 +58,50 @@ test = true
 
 [[browser.history.example]]
 phrase = "Show my history"
+test = true
+
+[browser.preferences]
+description = "open browser settings or preferences"
+match = """
+  (open |) (browser | firefox) (settings | preferences )
+"""
+
+[[browser.preferences.example]]
+phrase = "open settings"
+
+[[browser.preferences.example]]
+phrase = "open firefox settings"
+test = true
+
+[[browser.preferences.example]]
+phrase = "firefox settings"
+test = true
+
+[browser.addons]
+description = "open browser addons or extensions"
+match = """
+  open (addons | addon | add-ons | add-on | extensions| extension |)
+"""
+
+[[browser.addons.example]]
+phrase = "open addons"
+
+[[browser.addons.example]]
+phrase = "open extensions"
+test = true
+
+[[browser.addons.example]]
+phrase = "open addons"
+test = true
+
+[[browser.addons.example]]
+phrase = "open addon"
+test = true
+
+[[browser.addons.example]]
+phrase = "open add-ons"
+test = true
+
+[[browser.addons.example]]
+phrase = "open add-on"
 test = true

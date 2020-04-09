@@ -55,6 +55,10 @@ this.voice = class extends ExtensionAPI {
             return runCommand("Tools:Downloads");
           },
 
+          async clearBrowserHistory() {
+            return runCommand("Tools:Sanitize");
+          },
+
           async quitApplication() {
             return runCommand("cmd_quitApplication");
           },
@@ -96,6 +100,14 @@ this.voice = class extends ExtensionAPI {
 
           async showAllHistory() {
             return runCommand("Browser:ShowAllHistory");
+          },
+
+          async openPreferences() {
+            return runCommand("menu_preferences");
+          },
+
+          async browserOpenAddonsMgr() {
+            return runCommand("Tools:Addons");
           },
         },
       },

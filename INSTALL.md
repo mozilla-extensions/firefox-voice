@@ -69,3 +69,15 @@ If you are using Windows and wish to use [WSL](https://docs.microsoft.com/en-us/
 15. Update the sources using `sudo apt-get update`.
 16. Install PulseAudio for WSL using `sudo apt install pulseaudio`.
 17. In the same folder as `firefox-voices`, run `export PULSE_SERVER=tcp:IP_ADDRESS_OF_NAMESERVER_HERE`. This will allow `firefox-voices` to access the Windows sound system.
+
+
+## macOS Development
+
+To get started with a macOS development environment, you would need to:
+
+1. Make sure you have  the latest LTS version of [NodeJs](https://nodejs.org/) running any of the provided npm commands.
+2. Download and install [Firefox Nightly](https://www.mozilla.org/en-US/firefox/channel/desktop/) which is a pre-release version of Firefox. Firefox Nightly is updated every now and then just so you are developing and testing with the latest features.
+3. Next, you fork the repository from [mozilla firefox](https://github.com/mozilla/firefox-voice.git), and then clone the forked repo to your local system by running `git clone url to forked repo` on your terminal.
+4. Open the repo in any IDE of your choice and run `npm install`, to install the dependencies.
+5. Finally, run `npm start` to launch a new Firefox Nightly browser with the firefox-voice installed.
+
