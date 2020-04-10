@@ -32,8 +32,9 @@ description = "Find a certain type of place"
 match = """
   where (can i|to) (get|find|buy|eat) [thing] (in|near) [location]
   where (can i|to) (get|find|buy|eat) [thing]
-  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing] (in|near) [location]
-  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|cheapest) (place for|place to get|) [thing] (in|near) [location]
+  (where's|where is|what's|what is) (the|a) (place for|place to get) [thing] (in|near) [location]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|cheapest) (place for|place to get|) [thing]
   (search for|look for|find) [thing] (in|near) [location]
   (search for|look for|find) nearby [thing]
 """
