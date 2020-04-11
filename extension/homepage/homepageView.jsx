@@ -68,7 +68,7 @@ const Hero = () => {
     <section class="mzp-c-hero">
       <div class="mzp-l-content">
         <div class="mzp-c-hero-body">
-          <h1 class="mzp-c-hero-title mzp-has-zap-3">Browse the web with <strong>your voice</strong></h1>
+          <h1 class="mzp-c-hero-title mzp-has-zap-17">Browse the web with <strong>your voice</strong></h1>
 
           <div class="mzp-c-hero-desc">
             <p>Firefox Voice lets you browse and get more done&mdash;faster than ever. Simply install the browser add-on, then command the entire internet with just your voice.</p>

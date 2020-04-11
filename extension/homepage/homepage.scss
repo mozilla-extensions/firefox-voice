@@ -1,14 +1,21 @@
+@use '../css/vendor/protocol/protocol';
+@use '../css/vendor/protocol/protocol-extra' with (
+  $image-path: './images'
+);
+
+
+
 .mzp-c-availability {
-  @include text-body-xs;
+  @include protocol.text-body-xs;
   text-align: center;
   font-weight: italic;
 }
 
 .category-label {
-  @include text-display-xs;
+  @include protocol.text-display-xs;
 }
 
 .see-all-actions {
-  @include text-display-xs;
+  @include protocol.text-display-xs;
   font-weight: normal;
 }
