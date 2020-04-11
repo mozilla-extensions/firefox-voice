@@ -1,0 +1,14 @@
+.mzp-c-availability {
+  @include text-body-xs;
+  text-align: center;
+  font-weight: italic;
+}
+
+.category-label {
+  @include text-display-xs;
+}
+
+.see-all-actions {
+  @include text-display-xs;
+  font-weight: normal;
+}
