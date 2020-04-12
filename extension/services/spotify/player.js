@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* globals helpers */
 
 this.player = (function() {
@@ -145,15 +144,35 @@ this.player = (function() {
       }
     }
 
+    isMuted() {
+      const volumeButton = this.querySelectorAll(".volume-bar__icon");
+      const volumeState = volumeButton[0].getAttribute("aria-label");
+      const muted = volumeState === "Mute" ? 0 : 1;
+      return muted;
+    }
+
+    action_mute() {
+      if (!this.isMuted()) {
+        const volumeButton = this.querySelectorAll(".volume-bar__icon");
+        volumeButton[0].click();
+      }
+    }
+
+    action_unmute() {
+      if (this.isMuted()) {
+        const volumeButton = this.querySelector(".spoticon-volume-off-16");
+        volumeButton.click();
+      }
+    }
+
     action_adjustVolume({ volumeLevel }) {
       const maxVolume = 1.0;
       const minVolume = 0.0;
       const volumeChange = 0.2;
-      const volumeChangeSteps = volumeChange * 10;
+      const volumeChangeSteps = 20;
 
-      const volumeBar = this.querySelectorAll(".volume-bar__icon");
-      log.info(volumeBar);
-      log.info(volumeBar[0]);
+      const allVolumebars = this.querySelectorAll(".volume-bar__icon");
+      const volumeBar = allVolumebars[1];
 
       const allProgressbars = this.querySelectorAll(".progress-bar");
       const progressBar = allProgressbars[1];
@@ -163,44 +182,38 @@ this.player = (function() {
 
       const allSliders = this.querySelectorAll(".progress-bar__slider");
       const slider = allSliders[1];
-      // log.info("sliderWrapper", sliderWrapper);
-      // log.info("slider", slider);
 
       const volumeNow = parseFloat(slider.style.left) / 100;
-      log.info(volumeNow);
+
       if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
-        const volumeup = new KeyboardEvent("keypress", {
+        const rect = slider.getBoundingClientRect();
+        const x = rect.x + 20;
+
+        /* using mousevent */
+        const volumeup = new MouseEvent("mousedown", {
+          bubbles: true,
+          clientX: x,
+        });
+        progressBar.dispatchEvent(volumeup);
+
+        /* using keyboard event */
+
+        /*    const volumeup = new KeyboardEvent("keypress", {
           bubbles: true,
           key: "ArrowUp",
           keyCode: 38,
           altKey: true,
         });
+
         for (let step = 0; step < volumeChangeSteps; step++) {
-          progressBar.dispatchEvent(volumeup);
-        }
-        slider.style.left = `${volumeNow * 100 + 20}%`;
+          slider.dispatchEvent(volumeup);
+        } */
+        /* slider.style.left = `${volumeNow * 100 + 20}%`;
         sliderWrapper.style.transform = `translateX(-${100 -
-          (volumeNow * 100 + 20)}%)`;
-      } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
-        const volumedown = new KeyboardEvent("keypress", {
-          bubbles: true,
-          key: "ArrowDown",
-          keyCode: 38,
-          altKey: true,
-        });
-        for (let step = 0; step < volumeChangeSteps; step++) {
-          // volumeBar[0].dispatchEvent(volumedown);
-        }
+          (volumeNow * 100 + 20)}%)`; */
       }
     }
   }
 
   Player.register();
 })();
-
-/* log.info("START-VOLUME", volumeNow);
-log.info("START-TRANSLATE", sliderWrapper.style.transform);
-
-log.info("END-VOLUME", slider.style.left);
-log.info("TRANSLATE", sliderWrapper.style.transform);
- */
