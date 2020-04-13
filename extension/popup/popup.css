@@ -448,6 +448,9 @@ a#lexicon {
 #header-title .utterance {
   font-style: italic;
   white-space: normal;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #feedback-whats-wrong {
