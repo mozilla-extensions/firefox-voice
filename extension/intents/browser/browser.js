@@ -13,3 +13,17 @@ intentRunner.registerIntent({
     await browser.experiments.voice.showAllHistory();
   },
 });
+
+intentRunner.registerIntent({
+  name: "browser.preferences",
+  async run(context) {
+    await browser.experiments.voice.openPreferences();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "browser.addons",
+  async run(context) {
+    await browser.experiments.voice.browserOpenAddonsMgr();
+  },
+});

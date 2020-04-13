@@ -13,6 +13,7 @@ const DEFAULT_SETTINGS = {
   enableWakeword: false,
   wakewords: ["grasshopper"],
   wakewordSensitivity: 0.6,
+  listenForFollowup: false,
 };
 
 export function getSettings() {

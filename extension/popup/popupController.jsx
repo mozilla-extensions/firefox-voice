@@ -16,6 +16,11 @@ let isInitialized = false;
 let forceCancelRecoder = false;
 let timerElapsed = false;
 let recorder;
+// this next 2 vars need to be global to avoid a weird race condition that occurs
+// when setting it as internal state.
+let renderListenComponent = true;
+let listenForFollowup = false;
+let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
 // This is feedback that the user started, but hasn't submitted;
@@ -55,6 +60,8 @@ export const PopupController = function() {
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
+  const [requestFollowup, setRequestFollowup] = useState(false);
+  const [followupText, setFollowupText] = useState(null);
 
   let executedIntent = false;
   let stream = null;
@@ -66,6 +73,7 @@ export const PopupController = function() {
   const DEFAULT_TIMEOUT = 2500;
   // Timeout for the popup when there's text displaying:
   const TEXT_TIMEOUT = 7000;
+  const FOLLOWUP_TIMEOUT = 5000;
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
@@ -86,6 +94,8 @@ export const PopupController = function() {
       window.close();
       return;
     }
+
+    listenForFollowup = userSettings.listenForFollowup;
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -152,6 +162,13 @@ export const PopupController = function() {
     audio.play();
   };
 
+  const playTimerAlarm = () => {
+    const audio = new Audio(
+      "https://mozilla.github.io/firefox-voice/alarm.mp3"
+    );
+    audio.play();
+  };
+
   const onClickLexicon = async event => {
     await browserUtil.openOrActivateTab(
       browser.runtime.getURL(event.target.href)
@@ -162,7 +179,10 @@ export const PopupController = function() {
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
-        closePopup(message.time);
+        // Override closing the popup on follow ups
+        if (!listenForFollowup && !requestFollowup) {
+          closePopup(message.time);
+        }
         break;
       }
       case "displayFailure": {
@@ -183,6 +203,23 @@ export const PopupController = function() {
       case "displayText": {
         setDisplayText(message.message);
         overrideTimeout = TEXT_TIMEOUT;
+        if (lastIntent && lastIntent.closePopupOnFinish) {
+          closePopup();
+        }
+        break;
+      }
+      case "handleFollowup": {
+        if (message.method === "enable") {
+          if (message.message) {
+            setFollowupText(message.message);
+          }
+          setRequestFollowup(true);
+          runFollowup();
+        } else {
+          setRequestFollowup(false);
+          setFollowupText(null);
+          closePopup();
+        }
         break;
       }
       case "displayAutoplayFailure": {
@@ -230,7 +267,7 @@ export const PopupController = function() {
     timerElapsed = true;
 
     cancelRecoder();
-    playListeningChime();
+    playTimerAlarm();
 
     setTranscript("Time's up");
 
@@ -276,7 +313,10 @@ export const PopupController = function() {
     });
     if (lastIntent) {
       setLastIntent(lastIntent);
+      return lastIntent;
     }
+
+    return null;
   };
 
   const onInputStarted = () => {
@@ -386,6 +426,8 @@ export const PopupController = function() {
     if (message.card) {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
+    } else {
+      setCardImage(null);
     }
 
     updateLastIntent();
@@ -421,9 +463,11 @@ export const PopupController = function() {
     if (ms === null || ms === undefined) {
       ms = overrideTimeout ? overrideTimeout : DEFAULT_TIMEOUT;
     }
-
+    if (closePopupId) {
+      clearTimeout(closePopupId);
+    }
     // TODO: offload mic and other resources before closing?
-    setTimeout(() => {
+    closePopupId = setTimeout(() => {
       window.close();
     }, ms);
   };
@@ -449,29 +493,40 @@ export const PopupController = function() {
         });
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
+      browser.runtime.sendMessage({ type: "clearFollowup" });
       if (!executedIntent) {
         browser.runtime.sendMessage({ type: "cancelledIntent" });
       }
+      renderListenComponent = true;
     });
+  };
+
+  const runFollowup = () => {
+    if (renderListenComponent) {
+      renderListenComponent = false;
+    }
+    recorder.startRecording();
+    closePopup(FOLLOWUP_TIMEOUT);
   };
 
   const startRecorder = () => {
     recorder.onBeginRecording = () => {
-      setPopupView("listening");
-      userSettingsPromise.then(userSettings => {
-        if (userSettings.chime) {
-          playListeningChime();
-        }
-      });
+      if (renderListenComponent) {
+        setPopupView("listening");
+        userSettingsPromise.then(userSettings => {
+          if (userSettings.chime) {
+            playListeningChime();
+          }
+        });
+      }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = json => {
+    recorder.onEnd = async json => {
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
         return;
       }
-      setPopupView("success");
       executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
       browser.runtime.sendMessage({ type: "microphoneStopped" });
@@ -483,14 +538,22 @@ export const PopupController = function() {
       const capText =
         json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
       setTranscript(capText);
-      browser.runtime.sendMessage({
+      await browser.runtime.sendMessage({
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
-      browser.runtime.sendMessage({
+      await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
+      const completedIntent = await updateLastIntent();
+      if (completedIntent && !completedIntent.skipSuccessView) {
+        setPopupView("success");
+      }
+      // intent can run a follow up directly
+      if (listenForFollowup && !requestFollowup) {
+        runFollowup();
+      }
     };
     recorder.onError = error => {
       if (String(error) === "Error: Failed response from server: 500") {
@@ -518,6 +581,7 @@ export const PopupController = function() {
     };
     recorder.onStartVoice = () => {
       clearInterval(noVoiceInterval);
+      clearTimeout(closePopupId);
     };
     recorder.startRecording();
   };
@@ -612,6 +676,8 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
+      renderFollowup={listenForFollowup || requestFollowup}
+      followupText={followupText}
     />
   );
 };

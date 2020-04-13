@@ -67,7 +67,8 @@ body,
   padding-bottom: 3rem;
 }
 
-#popup:not(.searchResults) #popup-content {
+#popup:not(.searchResults) #popup-content,
+#popup:not(.followup) #popup-content {
   padding-bottom: 0;
 }
 
@@ -120,12 +121,12 @@ body,
 
 #moz-voice-privacy {
   line-height: 20px;
-  margin-right: 32px;
+  margin-left: -16px;
 }
 
 #moz-voice-privacy > a {
   font-weight: 400;
-  font-size: 0.85em;
+  font-size: 0.95em;
 }
 
 #feedback-prompt {
@@ -318,6 +319,10 @@ a#lexicon {
   text-align: center;
   font-size: 1em;
   font-weight: 600;
+  margin-bottom: -8px;
+  margin-left: -8px;
+  padding-top: 10px;
+  padding-bottom: 5px;
 }
 
 .feedback-controls {
@@ -326,7 +331,7 @@ a#lexicon {
 
 .feedback-controls button {
   border: none;
-  margin: 5px 10px;
+  margin: 3%;
   background-color: white;
   width: 24px;
   height: 24px;
@@ -348,6 +353,77 @@ a#lexicon {
 
 .feedback-controls .sad-icon:hover {
   mask: url("./images/icon-sad-hover.svg");
+}
+
+#followup-container {
+  background-color: black;
+  position: relative;
+  left: -8px;
+  bottom: -8px;
+  width: 100vw;
+  padding: 8px 0;
+}
+
+#followup-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 0 14px;
+  padding: 8px 0 0;
+  border-top: 1px solid #ededf073;
+}
+
+#followup_mic-container {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+  color: #30e60b;
+  height: 24px;
+  font-size: 14px;
+  padding-right: 8px;
+}
+
+#followup_mic-container:before {
+  display: inline-block;
+  align-self: start;
+  position: relative;
+  top: 3px;
+  content: "";
+  background-image: url("./images/mic-small.svg");
+  background-repeat: no-repeat;
+  background-size: 26px auto;
+  height: 26px;
+  width: 14px;
+}
+
+#followup_mic-container:after {
+  display: inline-block;
+  content: "";
+  background-image: url("./images/right-arrow.svg");
+  background-size: 11px auto;
+  background-repeat: no-repeat;
+  height: 12px;
+  width: 12px;
+  position: relative;
+  left: 6px;
+  top: 1px;
+}
+
+#followup_headings-wrapper {
+  /* hack to allow text overflow ellipsis on children */
+  min-width: 1%;
+}
+
+#followup_heading,
+#followup_subheading {
+  color: white;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#followup_subheading {
+  font-size: 12px;
+  padding-top: 8px;
 }
 
 #next-result {
@@ -373,6 +449,9 @@ a#lexicon {
 #header-title .utterance {
   font-style: italic;
   white-space: normal;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #feedback-whats-wrong {
@@ -507,13 +586,13 @@ a#lexicon {
   overflow: hidden;
   text-overflow: ellipsis;
   background-color: black;
-  margin-bottom: -8px;
-  margin-left: -8px;
-  margin-right: -8px;
   position: relative;
   z-index: -2;
   padding-top: 12px;
   display: flex;
+  margin-bottom: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
 }
 
 .timer-clock-footer {
@@ -535,4 +614,15 @@ a#lexicon {
   color: white;
   bottom: 7px;
   flex: 4;
+}
+
+.type-input-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: arial, sans-serif;
+  color: #0060df;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 2em;
 }
