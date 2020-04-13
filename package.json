@@ -108,7 +108,7 @@
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "format": "prettier 'extension/**/*.{js,jsx,css}' --write",
     "lint": "npm-run-all lint:*",
-    "lint:css": "stylelint 'extension/**/*.css'",
+    "lint:css": "stylelint 'extension/**/*.css' '!extension/css/vendor/protocol/' '!extension/homepage/homepage.css'",
     "lint:html": "htmllint extension/**/*.html",
     "lint:extension": "web-ext lint -s extension --self-hosted",
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",

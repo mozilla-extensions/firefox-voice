@@ -2,7 +2,6 @@
 
 // eslint-disable-next-line no-unused-vars
 import * as homepageView from "./homepageView.js";
-import * as settings from "../settings.js";
 
 const { useState, useEffect } = React;
 const homepageContainer = document.getElementById("homepage-container");
@@ -13,7 +12,6 @@ export const HomepageController = function() {
 
   useEffect(() => {
     if (!isInitialized) {
-      console.log("I GOT HERE");
       isInitialized = true;
       init();
     }
@@ -21,17 +19,12 @@ export const HomepageController = function() {
 
   const init = async () => {
     const search = window.location.search;
-    console.log(search);
     const params = new URLSearchParams(search);
-    const source = params.get('source');
+    const source = params.get("source");
     setIsCommonVoice(source === "commonvoice");
   };
 
-  return (
-    <homepageView.Homepage
-      isCommonVoice={isCommonVoice}
-    />
-  );
+  return <homepageView.Homepage isCommonVoice={isCommonVoice} />;
 };
 
 ReactDOM.render(<HomepageController />, homepageContainer);
