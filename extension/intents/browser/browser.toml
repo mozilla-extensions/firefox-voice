@@ -67,9 +67,6 @@ match = """
 """
 
 [[browser.preferences.example]]
-phrase = "open settings"
-
-[[browser.preferences.example]]
 phrase = "open firefox settings"
 test = true
 
@@ -80,11 +77,15 @@ test = true
 [browser.addons]
 description = "open browser addons or extensions"
 match = """
-  open (addons | addon | add-ons | add-on | extensions| extension |)
+  (open | manage |) (addons | addon | add-ons | add-on | extensions| extension ) (manager |)
 """
 
 [[browser.addons.example]]
+phrase = "extensions"
+
+[[browser.addons.example]]
 phrase = "open addons"
+test = true
 
 [[browser.addons.example]]
 phrase = "open extensions"
@@ -104,4 +105,16 @@ test = true
 
 [[browser.addons.example]]
 phrase = "open add-on"
+test = true
+
+[[browser.addons.example]]
+phrase = "open add-on manager"
+test = true
+
+[[browser.addons.example]]
+phrase = "manage add-ons"
+test = true
+
+[[browser.addons.example]]
+phrase = "manage extensions"
 test = true

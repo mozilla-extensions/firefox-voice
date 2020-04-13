@@ -15,7 +15,7 @@ extends:
   - plugin:mozilla/recommended
   - plugin:jsx-a11y/recommended
   - plugin:prettier/recommended
-  
+
 plugins:
   - mozilla
   - react
@@ -40,3 +40,4 @@ rules:
    - {}
    - fileInfoOptions:
       ignorePath: '.gitignore'
+  jsx-a11y/no-onchange: off
