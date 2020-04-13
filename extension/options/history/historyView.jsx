@@ -90,13 +90,16 @@ const HistoryTable = ({ rows, numRows }) => {
           <button
             className="button"
             onClick={async () => {
-              await Database.clearAll(DB_NAME, TABLE_NAME);
+              if (window.confirm("Delete all voice history?")) {
+                await Database.clearAll(DB_NAME, TABLE_NAME);
+              }
             }}
           >
             <img
               src="./images/delete.svg"
               alt="Clear all"
               className="clear-all"
+              title="Delete all Firefox Voice history"
             ></img>
           </button>
         </legend>
