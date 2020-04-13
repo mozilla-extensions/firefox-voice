@@ -29,7 +29,6 @@ const HistoryTable = ({ rows, numRows }) => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const tableFields = ["Date", "You said..."];
   const objectFields = ["timestamp", "utterance"];
-  const possibleItemsPerPage = [10, 25, 50, 100];
   const tableColumns = tableFields.map(field => <th>{field}</th>);
   const tableRows = rows
     .map(row => {
@@ -58,6 +57,57 @@ const HistoryTable = ({ rows, numRows }) => {
     })
     .slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
+  return (
+    <div className="settings-content">
+      <fieldset>
+        <legend>
+          View Your Voice History
+          <button
+            className="button"
+            onClick={async () => {
+              await Database.clearAll(DB_NAME, TABLE_NAME);
+            }}
+          >
+            <img
+              src="./images/delete.svg"
+              alt="Clear all"
+              className="clear-all"
+            ></img>
+          </button>
+        </legend>
+        <HistoryPagination
+          numRows={numRows}
+          page={page}
+          setPage={setPage}
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+        />
+        <table className="history-table">
+          <thead align="left">
+            <tr>{tableColumns}</tr>
+          </thead>
+          <tbody>{tableRows}</tbody>
+        </table>
+        <HistoryPagination
+          numRows={numRows}
+          page={page}
+          setPage={setPage}
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+        />
+      </fieldset>
+    </div>
+  );
+};
+
+const HistoryPagination = ({
+  numRows,
+  page,
+  setPage,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
+  const possibleItemsPerPage = [10, 25, 50, 100];
   const onClickPrevious = event => {
     if (page > 1) {
       // start page index at 1
@@ -83,72 +133,47 @@ const HistoryTable = ({ rows, numRows }) => {
     numRows < page * itemsPerPage ? numRows : page * itemsPerPage;
 
   return (
-    <div className="settings-content">
-      <fieldset>
-        <legend>
-          View Your Voice History
-          <button
-            className="button"
-            onClick={async () => {
-              await Database.clearAll(DB_NAME, TABLE_NAME);
-            }}
-          >
-            <img
-              src="./images/delete.svg"
-              alt="Clear all"
-              className="clear-all"
-            ></img>
-          </button>
-        </legend>
-        <table className="history-table">
-          <thead align="left">
-            <tr>{tableColumns}</tr>
-          </thead>
-          <tbody>{tableRows}</tbody>
-        </table>
-        <div className="history-pagination">
-          <label className="rows-indicator" htmlFor="rows">
-            Rows per page:
-          </label>
-          <div className="select-wrapper rows-indicator">
-            <select
-              id="itemsPerPage"
-              name="rows"
-              value={itemsPerPage}
-              onChange={onItemsPerPageChange}
-            >
-              {possibleItemsPerPage.map(value => (
-                <option value={value}>{value}</option>
-              ))}
-            </select>
-          </div>
-          {numRows !== 0 ? (
-            <span className="rows-indicator">
-              <span>
-                {firstIndex}-{secondIndex} of {numRows}
-              </span>
-            </span>
-          ) : (
-            <span className="rows-indicator">
-              <span>0-0 of {numRows}</span>
-            </span>
-          )}
-          <button className="button previous" onClick={onClickPrevious}>
-            <img
-              src="./images/back-12.svg"
-              alt="Previous page"
-              className="previous-page"
-            ></img>
-          </button>
-          <button className="button next" onClick={onClickNext}>
-            <img
-              src="./images/back-12.svg"
-              alt="Next page"
-              className="next-page"
-            ></img>
-          </button>
-        </div>
-      </fieldset>
+    <div className="history-pagination">
+      <label className="rows-indicator" htmlFor="rows">
+        Rows per page:
+      </label>
+      <div className="select-wrapper rows-indicator">
+        <select
+          id="itemsPerPage"
+          name="rows"
+          value={itemsPerPage}
+          onChange={onItemsPerPageChange}
+        >
+          {possibleItemsPerPage.map(value => (
+            <option value={value}>{value}</option>
+          ))}
+        </select>
+      </div>
+      {numRows !== 0 ? (
+        <span className="rows-indicator">
+          <span>
+            {firstIndex}-{secondIndex} of {numRows}
+          </span>
+        </span>
+      ) : (
+        <span className="rows-indicator">
+          <span>0-0 of {numRows}</span>
+        </span>
+      )}
+      <button className="button previous" onClick={onClickPrevious}>
+        <img
+          src="./images/back-12.svg"
+          alt="Previous page"
+          className="previous-page"
+        ></img>
+      </button>
+      <button className="button next" onClick={onClickNext}>
+        <img
+          src="./images/back-12.svg"
+          alt="Next page"
+          className="next-page"
+        ></img>
+      </button>
     </div>
   );
 };
