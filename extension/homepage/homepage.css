@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import url("../assets/css/inter.css");
 @font-face {
   font-display: swap;
   font-family: Inter;
@@ -4685,24 +4686,77 @@ html.mzp-is-noscroll .mzp-c-modal {
     width: 25%;
   }
 }
+.mzp-c-navigation-items {
+  float: right;
+}
+
+.mzp-c-navigation-logo a {
+  background-image: url("./images/fx-voice-logo.svg");
+  background-size: 254px, 44px;
+  height: 44px;
+  width: 254px;
+}
+
+.common-voice-welcome {
+  display: flex;
+  text-align: left;
+}
+
+.robot-profile {
+  height: 40px;
+  margin-right: 1rem;
+}
+
+.mzp-c-menu-title {
+  font-weight: normal !important;
+}
+
+.mzp-c-hero {
+  padding-bottom: 0px;
+}
+
+.mzp-l-core {
+  max-width: 80%;
+}
+
+.mzp-c-button.mzp-t-product.install-cta {
+  margin-bottom: 1.5rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  font-size: 1.25rem;
+}
+
 .mzp-c-availability {
-  font-size: 12px;
-  font-size: 0.75rem;
+  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
   text-align: center;
-  font-weight: italic;
+  font-style: italic;
+}
+
+.things-you-can-do {
+  margin-bottom: 2rem;
+}
+
+.action-logo {
+  margin-bottom: 1.5rem;
 }
 
 .category-label {
   font-size: 18px;
   font-size: 1.125rem;
   line-height: 1.1;
+  font-weight: bold;
 }
 @media (min-width: 768px) {
   .category-label {
     font-size: 24px;
     font-size: 1.5rem;
   }
+}
+
+.example-utterance-wrapper ul li {
+  margin-top: 1rem;
 }
 
 .see-all-actions {
@@ -4716,6 +4770,131 @@ html.mzp-is-noscroll .mzp-c-modal {
     font-size: 24px;
     font-size: 1.5rem;
   }
+}
+.see-all-actions :visited {
+  color: #fff;
+}
+
+.box-purple {
+  background: linear-gradient(-180deg, #5731ab 0%, #321c64 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.common-voice-robot {
+  width: 100%;
+}
+
+[class*=mzp-has-zap] strong::after {
+  top: calc(100% + 0.15em);
+}
+
+.card-header {
+  margin-bottom: 2.5rem;
+}
+
+.watch-video {
+  font-weight: bold;
+}
+.watch-video a {
+  text-decoration: none;
+}
+
+.video-wrapper {
+  height: 0;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  position: relative;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.faq-section-header {
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 1.1;
+  font-weight: bold;
+}
+@media (min-width: 768px) {
+  .faq-section-header {
+    font-size: 24px;
+    font-size: 1.5rem;
+  }
+}
+
+.faq {
+  margin-bottom: 4rem;
+}
+.faq details summary {
+  height: 70px;
+  border-top: 1px solid #b1b1b3;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+.faq details ol, .faq details ul {
+  list-style-type: revert;
+  padding-left: 2rem;
+}
+.faq details ol li, .faq details ul li {
+  padding-left: 1rem;
+}
+.faq :first-child summary {
+  border: none;
+}
+.faq :last-child summary {
+  border-bottom: 1px solid #b1b1b3;
+}
+.faq details[open] summary {
+  border-bottom: none;
+}
+
+.faq-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.faq-title strong::after {
+  height: 100%;
+  background-size: 100%;
+  top: calc(100% + 0.25em);
+}
+
+.action-categories {
+  display: flex;
+  justify-content: space-around;
+}
+.action-categories .action-category {
+  width: 30%;
+}
+
+.mzp-c-footer-primary-logo a {
+  background: url("./images/mozilla-logo.svg");
+  width: 112px;
+}
+
+.mzp-c-footer-primary {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mzp-c-footer-items {
+  display: flex;
+}
+
+.mzp-c-footer-item {
+  margin-left: 3rem;
+}
+
+.mzp-c-footer-primary::after {
+  content: unset;
+  display: unset;
 }
 
 /*# sourceMappingURL=homepage.css.map */

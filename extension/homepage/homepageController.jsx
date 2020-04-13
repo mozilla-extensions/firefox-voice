@@ -7,20 +7,24 @@ import * as settings from "../settings.js";
 const { useState, useEffect } = React;
 const homepageContainer = document.getElementById("homepage-container");
 let isInitialized = false;
-let userSettings;
 
 export const HomepageController = function() {
   const [isCommonVoice, setIsCommonVoice] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
+      console.log("I GOT HERE");
       isInitialized = true;
       init();
     }
   });
 
   const init = async () => {
-    userSettings = await settings.getSettings();
+    const search = window.location.search;
+    console.log(search);
+    const params = new URLSearchParams(search);
+    const source = params.get('source');
+    setIsCommonVoice(source === "commonvoice");
   };
 
   return (

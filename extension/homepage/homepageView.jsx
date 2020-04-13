@@ -20,26 +20,33 @@ export const Homepage = ({
   );
 };
 
+const CommonVoiceWelcome = () => {
+  return (
+    <aside class="mzp-c-notification-bar common-voice-welcome">
+      {/* <button class="mzp-c-notification-bar-button" type="button"></button> */}
+      <img class="robot-profile" src="./images/robot-profile.svg" />
+      <p>Welcome Common Voice contributor! Help us build an open voice ecosystem. After installing, please allow Firefox Voice to collect voice samples. <a href="#">Learn more</a>.</p>
+    </aside>
+  );
+}
+
 const Header = () => {
   return (
     <div class="mzp-c-navigation">
       <div class="mzp-c-navigation-l-content">
         <div class="mzp-c-navigation-container">
-          <button class="mzp-c-navigation-menu-button" type="button" aria-controls="patterns.organisms.navigation.navigation">Menu</button>
-
-          <div class="mzp-c-navigation-items" id="patterns.organisms.navigation.navigation">
+          <div class="mzp-c-navigation-logo">
+            <a href="#" />
+          </div>
+          <div class="mzp-c-navigation-items">
             <div class="mzp-c-navigation-menu">
-
               <nav class="mzp-c-menu mzp-is-basic">
                 <ul class="mzp-c-menu-category-list">
                   <li class="mzp-c-menu-category">
-                    <a class="mzp-c-menu-title" href="https://www.mozilla.org/">Sample Link</a>
+                    <a class="mzp-c-menu-title" href="#how-it-works">How it works</a>
                   </li>
                   <li class="mzp-c-menu-category">
-                    <a class="mzp-c-menu-title" href="https://www.mozilla.org/">Another</a>
-                  </li>
-                  <li class="mzp-c-menu-category">
-                    <a class="mzp-c-menu-title" href="https://www.mozilla.org/">Another</a>
+                    <a class="mzp-c-menu-title" href="#faq">FAQs</a>
                   </li>
                 </ul>
               </nav>
@@ -75,7 +82,7 @@ const Hero = () => {
           </div>
 
           <p class="mzp-c-hero-cta">
-            <a class="mzp-c-button mzp-t-product" href="#">Install Firefox Voice</a>
+            <a class="mzp-c-button mzp-t-product install-cta" href="#">Install Firefox Voice</a>
             <div class="mzp-c-availability">
               Available as an extension for Firefox on desktop / laptop. Android coming soon.<br/>
               Requires a working microphone.
@@ -89,41 +96,46 @@ const Hero = () => {
 
 const ExampleActions = () => {
   return (
-    <section class="mzp-c-emphasis-box color-violet-80">
-      <h6>Things you can do</h6>
+    <div class="mzp-l-content">
+      <section class="mzp-c-emphasis-box box-purple">
+        <h6 class="things-you-can-do">Things you can do</h6>
 
-      <div class="action-categories">
-        <ActionCategory 
-          icon={"path/to/icon"}
-          categoryLabel={"Search & Navigate"}
-          exampleUtterances={["Go to The New York Times", "Search legos on Amazon", "Show me the Warriors schedule", "Search my Google Docs for team meeting notes"]}
-        />
+        <div class="action-categories">
+          <ActionCategory 
+            icon={"search"}
+            categoryLabel={"Search & Navigate"}
+            exampleUtterances={["Go to The New York Times", "Search legos on Amazon", "Show me the Warriors schedule", "Search my Google Docs for team meeting notes"]}
+          />
 
-        <ActionCategory 
-          icon={"path/to/icon"}
-          categoryLabel={"Play Music"}
-          exampleUtterances={["Play Jazz on Spotify", "Play Green Day on YouTube", "Pause", "Next"]}
-        />
+          <ActionCategory 
+            icon={"music"}
+            categoryLabel={"Play Music"}
+            exampleUtterances={["Play Jazz on Spotify", "Play Green Day on YouTube", "Pause", "Next"]}
+          />
 
-        <ActionCategory 
-          icon={"path/to/icon"}
-          categoryLabel={"Browser Controls"}
-          exampleUtterances={["Find my calendar tab", "Scroll down", "Print", "Reload this page", "Screenshot"]}
-        />
-      </div>
+          <ActionCategory 
+            icon={"browser"}
+            categoryLabel={"Browser Controls"}
+            exampleUtterances={["Find my calendar tab", "Scroll down", "Print", "Reload this page", "Screenshot"]}
+          />
+        </div>
 
-      <div class="see-all-actions">
-        <a href="">Everything you can say</a>
-      </div>
-    </section>
+        <div class="see-all-actions">
+          <a href="">Everything you can say</a>
+        </div>
+      </section>
+    </div>
   );
 };
 
 const ActionCategory = ({icon, categoryLabel, exampleUtterances}) => {
   return (
-    <div class="">
-      <div class="">
-        Icon
+    <div class="action-category">
+      <div class="action-logo">
+        <img
+          src={"./images/" + icon + ".svg"}
+          alt={icon + " icon"}
+        />
       </div>
       <div class="category-label">
         {categoryLabel}
@@ -132,7 +144,7 @@ const ActionCategory = ({icon, categoryLabel, exampleUtterances}) => {
         <ul>
           {
             exampleUtterances.map((example) => 
-              <li>"{example}"</li>
+              <li>&ldquo;{example}&rdquo;</li>
             )
           }
         </ul>
@@ -141,29 +153,11 @@ const ActionCategory = ({icon, categoryLabel, exampleUtterances}) => {
   );
 };
 
-// const SearchAndNavigate = () => {
-//   return (
-
-//   );
-// };
-
-// const Music = () => {
-//   return (
-
-//   );
-// };
-
-// const BrowserControls = () => {
-//   return (
-
-//   );
-// };
-
 const OpenVoiceEcosystem = () => {
   return (
-    <div class="mzp-l-content mzp-l-card-half">
+    <div class="mzp-l-content mzp-l-card-half mzp-l-core">
       <div class="mzp-c-card">
-        <h6>An open voice ecosystem</h6>
+        <h6 class="card-header mzp-has-zap-14">An <strong>open voice</strong> ecosystem</h6>
         <div>
           <p>At Mozilla we’re trying to build an open voice ecosystem that is both private and secure. To do this, we’ve developed tools such as <a href="https://voice.mozilla.org/">Common Voice</a> to collect the necessary data to teach our systems how to recognize a wider variety of diverse voices, in all sorts of environments.</p>
 
@@ -172,7 +166,7 @@ const OpenVoiceEcosystem = () => {
       </div>
 
       <div class="mzp-c-card">
-        Common Voice Guy goes here
+        <img class="common-voice-robot" src="./images/common-voice-robot.png" />
       </div>
     </div>
   );
@@ -180,17 +174,19 @@ const OpenVoiceEcosystem = () => {
 
 const Demo = () => {
   return (
-    <div class="mzp-l-content mzp-l-card-half">
+    <div id="how-it-works" class="mzp-l-content mzp-l-card-half mzp-l-core">
       <div class="mzp-c-card">
-        DEMO VIDEO
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/3sqKsfj8WRE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
       </div>
 
       <div class="mzp-c-card">
-        <h6>See how it works</h6>
+        <h6 class="card-header mzp-has-zap-11">See how it <strong>works</strong></h6>
         <div>
           Whether you need to maintain your focus or just have your hands full, now you can go hands-free to navigate the web and retrieve information instantly.
 
-          <div><a href="">Watch the video</a></div>
+          <div class="watch-video"><a href="">Watch the video</a></div>
         </div>
       </div>
     </div>
@@ -199,9 +195,11 @@ const Demo = () => {
 
 const Faq = () => {
   return (
-    <div class="mzp-l-content">
-      <h5>Frequently asked questions</h5>
-      <section>
+    <div id="faq" class="mzp-l-content mzp-l-core">
+      <h5 class="mzp-has-zap-17 faq-title">
+        <strong>Frequently asked questions</strong>
+      </h5>
+      <section class="faq">
         <details>
           <summary>
             <div class="faq-section-header">What is Firefox Voice?</div>
@@ -320,18 +318,33 @@ const Footer = () => {
   return (
     <footer class="mzp-c-footer">
       <div class="mzp-l-content">
-      <nav class="mzp-c-footer-primary">
-        <div class="mzp-c-footer-primary-logo"><a href="https://www.mozilla.org/">Mozilla</a></div>
+        <nav class="mzp-c-footer-primary">
+          <div class="mzp-c-footer-primary-logo"><a href="https://www.mozilla.org/">Mozilla</a></div>
+
+          <div class="mzp-c-footer-items">
+            <div class="mzp-c-footer-item">
+              Installation Instructions
+            </div>
+            <div class="mzp-c-footer-item">
+              GitHub
+            </div>
+            <div class="mzp-c-footer-item">
+              Feedback
+            </div>
+            <div class="mzp-c-footer-item">
+              Privacy
+            </div>
+          </div>
+        </nav>
+
+        <nav class="mzp-c-footer-secondary">
           <div class="mzp-c-footer-legal">
             <p class="mzp-c-footer-license">
-              Portions of this content are ©1998–2018 by individual mozilla.org
-              contributors. Content available under a <a rel="license" href="https://www.mozilla.org/foundation/licensing/website-content/">Creative Commons license</a>.
+              Visit Mozilla Corporation’s not-for-profit parent, the <a
+              href="https://foundation.mozilla.org/">Mozilla Foundation</a>.
+                <br/> Portions of this content are ©1998–2018 by individual mozilla.org contributors. Content available under
+                a <a rel="license" href="https://www.mozilla.org/foundation/licensing/website-content/">Creative Commons license</a>.
             </p>
-            <ul class="mzp-c-footer-terms">
-              <li><a href="https://www.mozilla.org/privacy/websites/">Website Privacy Notice</a></li>
-              <li><a href="https://www.mozilla.org/privacy/websites/#cookies">Cookies</a></li>
-              <li><a href="https://www.mozilla.org/about/legal/">Legal</a></li>
-            </ul>
           </div>
         </nav>
       </div>
