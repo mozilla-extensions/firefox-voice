@@ -28,19 +28,15 @@ this.player = (function() {
 
     async action_search({ query, thenPlay }) {
       try {
-        try {
-          await this.search(query);
-          if (thenPlay) {
-            const playerButton = await this.waitForSelector(SEARCH_PLAY, {
-              timeout: 2000,
-            });
-            playerButton.click();
-          }
-        } catch (e) {
-          throw new Error("No Search Results!");
+        await this.search(query);
+        if (thenPlay) {
+          const playerButton = await this.waitForSelector(SEARCH_PLAY, {
+            timeout: 2000,
+          });
+          playerButton.click();
         }
       } catch (e) {
-        throw new Error(e.message);
+        throw new Error("No Search Results!");
       }
     }
 
@@ -146,35 +142,32 @@ this.player = (function() {
     }
 
     async playSection({ query, thenPlay, section }) {
+      let foundSection;
+      await this.search(query);
       try {
-        let foundSection;
-        await this.search(query);
-        try {
-          if (thenPlay) {
-            const anchorNodes = await this.waitForSelector(".container h2 a", {
-              all: true,
-              timeout: 5000,
-            });
-            for (const anchorTag of anchorNodes) {
-              if (anchorTag.innerText === section) {
-                foundSection = anchorTag.parentElement.parentElement;
-                break;
-              }
-            }
-            try {
-              foundSection.querySelector("ul li button").click();
-              foundSection.querySelector("ul li figure .picture").click();
-            } catch {
-              throw new Error("Album not found!");
+        if (thenPlay) {
+          const anchorNodes = await this.waitForSelector(".container h2 a", {
+            all: true,
+            timeout: 5000,
+          });
+          for (const anchorTag of anchorNodes) {
+            if (anchorTag.innerText === section) {
+              foundSection = anchorTag.parentElement.parentElement;
+              break;
             }
           }
-        } catch {
-          throw new Error("No Search Results!");
+          try {
+            foundSection.querySelector("ul li button").click();
+            foundSection.querySelector("ul li figure .picture").click();
+          } catch {
+            throw new Error("Album not found!");
+          }
         }
-      } catch (e) {
-        throw new Error(e.message);
+      } catch {
+        throw new Error("No Search Results!");
       }
     }
+
     async action_playAlbum({ query, thenPlay }) {
       await this.playSection({ query, thenPlay, section: "Albums" });
     }
