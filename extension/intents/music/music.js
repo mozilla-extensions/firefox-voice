@@ -139,7 +139,10 @@ intentRunner.registerIntent({
   name: "music.volume",
   async run(context) {
     const service = await getService(context, { lookAtCurrentTab: true });
-    await service.adjustVolume(context.parameters.volumeLevel);
+    await service.adjustVolume(
+      context.slots.inputVolume,
+      context.parameters.volumeLevel
+    );
   },
 });
 
