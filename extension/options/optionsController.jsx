@@ -26,6 +26,8 @@ window.onhashchange = () => {
     tab = optionsView.TABS.ROUTINES;
   } else if (location.hash === "#general") {
     tab = optionsView.TABS.GENERAL;
+  } else if (location.hash === "#history") {
+    tab = optionsView.TABS.HISTORY;
   }
 
   onTabChange(tab);
@@ -34,6 +36,8 @@ window.onhashchange = () => {
 window.onload = () => {
   if (location.hash === "#routines") {
     DEFAULT_TAB = optionsView.TABS.ROUTINES;
+  } else if (location.hash === "#history") {
+    DEFAULT_TAB = optionsView.TABS.HISTORY;
   }
   onTabChange(DEFAULT_TAB);
 };
