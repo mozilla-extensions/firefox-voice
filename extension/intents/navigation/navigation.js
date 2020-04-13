@@ -34,8 +34,8 @@ intentRunner.registerIntent({
     const query = context.slots.query.toLowerCase();
     const result = await browser.storage.sync.get("pageNames");
     const pageNames = result.pageNames;
-    const savedUrl = pageNames[query];
-    if (savedUrl) {
+    if (pageNames && pageNames[query]) {
+      const savedUrl = pageNames[query];
       await context.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
