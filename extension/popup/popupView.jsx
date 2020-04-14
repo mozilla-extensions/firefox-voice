@@ -280,7 +280,6 @@ const PopupContent = ({
           <TimerCard
             timerInMS={timerInMS}
             timerTotalInMS={timerTotalInMS}
-            onSubmitFeedback={onSubmitFeedback}
           ></TimerCard>
         );
       default:
@@ -315,12 +314,21 @@ const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
   return (
     <div id="followup-container">
       <IntentFeedback />
-      <div id="followup-wrapper">
-        <div id="followup_mic-container">Mic On</div>
-        <div id="followup_headings-wrapper">
-          <div id="followup_heading">{heading}</div>
-          {subheading && <div id="followup_subheading">{subheading}</div>}
-        </div>
+      <FollowUpWrapper
+        heading={heading}
+        subheading={subheading}
+      ></FollowUpWrapper>
+    </div>
+  );
+};
+
+const FollowUpWrapper = ({ heading, subheading }) => {
+  return (
+    <div id="followup-wrapper">
+      <div id="followup_mic-container">Mic On</div>
+      <div id="followup_headings-wrapper">
+        <div id="followup_heading">{heading}</div>
+        {subheading && <div id="followup_subheading">{subheading}</div>}
       </div>
     </div>
   );
@@ -430,7 +438,7 @@ const parseTimer = timerInMS => {
   return pad(minutes, 2) + ":" + pad(seconds, 2);
 };
 
-const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
+const TimerCard = ({ timerInMS, timerTotalInMS }) => {
   const getNotificationExpression = timerTotalInMS => {
     const { hours, minutes, seconds } = getHourMinuteSecond(timerTotalInMS);
     let expression = "";
@@ -465,7 +473,6 @@ const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
           {timerInMS <= 0 ? <p>{notificationExpression}</p> : null}
         </div>
       </div>
-      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </React.Fragment>
   );
 };
