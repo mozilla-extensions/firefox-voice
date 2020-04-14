@@ -4686,6 +4686,16 @@ html.mzp-is-noscroll .mzp-c-modal {
     width: 25%;
   }
 }
+.draft-banner {
+  background-color: #c50042;
+  color: #fff;
+  max-width: 100%;
+  border-bottom: 1px solid #cecece;
+}
+.draft-banner .draft-details {
+  margin-left: 1em;
+}
+
 .mzp-c-navigation-items {
   float: right;
 }
@@ -4717,6 +4727,11 @@ html.mzp-is-noscroll .mzp-c-modal {
 
 .mzp-l-core {
   max-width: 80%;
+}
+
+.mzp-l-flexcards {
+  display: flex;
+  justify-content: center;
 }
 
 .mzp-c-button.mzp-t-product.install-cta {
@@ -4773,6 +4788,9 @@ html.mzp-is-noscroll .mzp-c-modal {
 }
 .see-all-actions :visited {
   color: #fff;
+}
+.see-all-actions a {
+  color: #fff !important;
 }
 
 .box-purple {

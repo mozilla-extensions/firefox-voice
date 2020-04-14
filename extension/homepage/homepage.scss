@@ -5,6 +5,16 @@
 
 @import url("../assets/css/inter.css");
 
+.draft-banner {
+  background-color: #c50042;
+  color: #fff;
+  max-width: 100%;
+  border-bottom: 1px solid #cecece;
+  .draft-details {
+    margin-left: 1em;
+  }
+}
+
 .mzp-c-navigation-items {
   float: right;
 }
@@ -40,6 +50,11 @@
 
 .mzp-l-core {
   max-width: 80%;
+}
+
+.mzp-l-flexcards {
+  display: flex;
+  justify-content: center;
 }
 
 .mzp-c-button.mzp-t-product.install-cta {
@@ -82,6 +97,10 @@
   :visited {
     color: #fff;
   }
+  a {
+    color: #fff !important;
+  }
+
 }
 
 .box-purple {

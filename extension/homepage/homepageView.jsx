@@ -1,17 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* globals React */
 
-import * as browserUtil from "../browserUtil.js";
-
 export const Homepage = ({ isCommonVoice }) => {
   return (
     <div id="homepage-wrapper">
       <React.Fragment>
+        <DraftBanner />
         <Header />
         {isCommonVoice && <CommonVoiceWelcome />}
         <HomepagePageContent />
         <Footer />
       </React.Fragment>
+    </div>
+  );
+};
+
+const DraftBanner = () => {
+  return (
+    <div class="draft-banner mzp-l-content">
+      <strong>DRAFT WEBSITE</strong>
+      <span class="draft-details">
+        The content on this website is a work-in-progress, and may include
+        broken links, incomplete styles, and placeholders
+      </span>
     </div>
   );
 };
@@ -98,7 +109,7 @@ const Hero = () => {
           <p class="mzp-c-hero-cta">
             <a
               class="mzp-c-button mzp-t-product install-cta"
-              href="https://voice.mozilla.org/"
+              href="https://va.allizom.org/releases/prod/firefox-voice.xpi"
             >
               Install Firefox Voice
             </a>
@@ -185,35 +196,37 @@ const ActionCategory = ({ icon, categoryLabel, exampleUtterances }) => {
 
 const OpenVoiceEcosystem = () => {
   return (
-    <div class="mzp-l-content mzp-l-card-half mzp-l-core">
-      <div class="mzp-c-card">
-        <h6 class="card-header mzp-has-zap-14">
-          An <strong>open voice</strong> ecosystem
-        </h6>
-        <div>
-          <p>
-            At Mozilla we’re trying to build an open voice ecosystem that is
-            both private and secure. To do this, we’ve developed tools such as{" "}
-            <a href="https://voice.mozilla.org/">Common Voice</a> to collect the
-            necessary data to teach our systems how to recognize a wider variety
-            of diverse voices, in all sorts of environments.
-          </p>
+    <div class="mzp-l-content mzp-l-card-half">
+      <div class="mzp-l-flexcards">
+        <div class="mzp-c-card">
+          <h6 class="card-header mzp-has-zap-14">
+            An <strong>open voice</strong> ecosystem
+          </h6>
+          <div>
+            <p>
+              At Mozilla we’re trying to build an open voice ecosystem that is
+              both private and secure. To do this, we’ve developed tools such as{" "}
+              <a href="https://voice.mozilla.org/">Common Voice</a> to collect
+              the necessary data to teach our systems how to recognize a wider
+              variety of diverse voices, in all sorts of environments.
+            </p>
 
-          <p>
-            Now you can help by choosing to let us store your Firefox Voice
-            requests&mdash;securely, without accompanying personally
-            identifiable information&mdash;and use them to improve our research.
-            We won't share them outside of Mozilla.
-          </p>
+            <p>
+              Now you can help by choosing to let us store your Firefox Voice
+              requests&mdash;securely, without accompanying personally
+              identifiable information&mdash;and use them to improve our
+              research. We won't share them outside of Mozilla.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="mzp-c-card">
-        <img
-          class="common-voice-robot"
-          alt="Illustration of Mars, the Common Voice robot logo"
-          src="./images/common-voice-robot.png"
-        />
+        <div class="mzp-c-card">
+          <img
+            class="common-voice-robot"
+            alt="Illustration of Mars, the Common Voice robot logo"
+            src="./images/common-voice-robot.png"
+          />
+        </div>
       </div>
     </div>
   );
@@ -221,29 +234,31 @@ const OpenVoiceEcosystem = () => {
 
 const Demo = () => {
   return (
-    <div id="how-it-works" class="mzp-l-content mzp-l-card-half mzp-l-core">
-      <div class="mzp-c-card">
-        <div class="video-wrapper">
-          <iframe
-            title="Firefox Voice Demo Video"
-            src="https://www.youtube.com/embed/3sqKsfj8WRE"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+    <div id="how-it-works" class="mzp-l-content mzp-l-card-half">
+      <div class="mzp-l-flexcards">
+        <div class="mzp-c-card">
+          <div class="video-wrapper">
+            <iframe
+              title="Firefox Voice Demo Video"
+              src="https://www.youtube.com/embed/3sqKsfj8WRE"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
-      </div>
 
-      <div class="mzp-c-card">
-        <h6 class="card-header mzp-has-zap-11">
-          See how it <strong>works</strong>
-        </h6>
-        <div>
-          Whether you need to maintain your focus or just have your hands full,
-          now you can go hands-free to navigate the web and retrieve information
-          instantly.
-          <div class="watch-video">
-            <a href="https://voice.mozilla.org/">Watch the video</a>
+        <div class="mzp-c-card">
+          <h6 class="card-header mzp-has-zap-11">
+            See how it <strong>works</strong>
+          </h6>
+          <div>
+            Whether you need to maintain your focus or just have your hands
+            full, now you can go hands-free to navigate the web and retrieve
+            information instantly.
+            <div class="watch-video">
+              <a href="https://voice.mozilla.org/">Watch the video</a>
+            </div>
           </div>
         </div>
       </div>
