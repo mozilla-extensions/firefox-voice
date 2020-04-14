@@ -4,13 +4,10 @@
 
 We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
 
-### Install Firefox and the extension
+### Install Firefox
 
 1. Install [Firefox](https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=en_US), if you haven't already. (Do not install Firefox Nightly or Preview.)
 2. Make Firefox your [default browser](https://support.mozilla.org/en-US/kb/make-firefox-default-browser-android).
-3. Open Firefox and download [the extension](https://va.allizom.org/releases/dev-android/firefox-voice.xpi).
-4. Confirm that you want to install it.
-5. Grant the requested permissions.
 
 ### Enable installation of apps from unknown sources
 
