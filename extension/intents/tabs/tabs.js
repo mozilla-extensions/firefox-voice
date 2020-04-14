@@ -607,7 +607,13 @@ intentRunner.registerIntent({
       result.text,
       result.eduText,
       result.image
-    );
+    ); 
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      skipSuccessView: true,
+    });
   },
 });
 
@@ -616,7 +622,7 @@ function getMessage(numberOfResults, query) {
     return {
       largeText: `1 of ${numberOfResults}`,
       text: `Matches for '${query}'`,
-      eduText: `Say 'next' or 'previous'`,
+      eduText: `Say 'next match' or 'previous match'`,
     };
   } else if (numberOfResults === 1) {
     return {
@@ -643,6 +649,13 @@ intentRunner.registerIntent({
       result.eduText,
       result.image
     );
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      skipSuccessView: true,
+    });
+
   },
 });
 
@@ -655,13 +668,13 @@ async function createFindNextAnswer() {
       largeText: `${lastIndex + 1} of ${rangeData.length}`,
       text: `Matches for '${rangeData[lastIndex].text}'`,
       eduText: hasMore
-        ? `Say 'previous' or try looking for another phrase `
-        : `Say 'next' or 'previous'`,
+        ? `Say 'previous match' or try looking for another phrase `
+        : `Say 'next match' or 'previous match'`,
     };
   }
   return {
     text: `No more next matches for '${rangeData[lastIndex].text}'`,
-    eduText: `Say 'previous' or try looking for another phrase `,
+    eduText: `Say 'previous match' or try looking for another phrase `,
     image: "./images/icon-no-result.svg",
   };
 }
@@ -676,6 +689,13 @@ intentRunner.registerIntent({
       result.eduText,
       result.image
     );
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      skipSuccessView: true,
+    });
+
   },
 });
 
@@ -688,13 +708,13 @@ async function createFindPreviousAnswer() {
       largeText: `${lastIndex + 1} of ${rangeData.length}`,
       text: `Matches for '${rangeData[lastIndex].text}'`,
       eduText: isFirstMatch
-        ? `Say 'next' or try looking for another phrase `
-        : `Say 'next' or 'previous'`,
+        ? `Say 'next match' or try looking for another phrase `
+        : `Say 'next match' or 'previous match'`,
     };
   }
   return {
     text: `No more previous matches for '${rangeData[lastIndex].text}'`,
-    eduText: `Say 'next' or try looking for another phrase `,
+    eduText: `Say 'next match' or try looking for another phrase `,
     image: "./images/icon-no-result.svg",
   };
 }

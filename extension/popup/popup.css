@@ -417,12 +417,13 @@ a#lexicon {
   color: white;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: initial;
 }
 
 #followup_subheading {
   font-size: 12px;
   padding-top: 8px;
+  white-space: nowrap;
 }
 
 #next-result {

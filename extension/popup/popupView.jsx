@@ -749,6 +749,7 @@ const SearchResultsContent = ({
     card && card.alt
       ? `Click to show search results: ${card.alt}`
       : "Show search results";
+  const shouldRenderCard = card ? true : !renderFollowup;
 
   if (card) {
     setMinPopupSize(card.width);
@@ -801,7 +802,7 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
-      {renderFollowup ? null : (
+      {shouldRenderCard ? (
         <React.Fragment>
           <div id="search-results">{renderCard()}</div>
           <div id="search-footer">
@@ -827,7 +828,7 @@ const SearchResultsContent = ({
             ) : null}
           </div>
         </React.Fragment>
-      )}
+      ) : null }
     </React.Fragment>
   );
 };

@@ -413,8 +413,6 @@ test = true
 
 [[tabs.findOnPage.example]]
 phrase = "Find spaghetti on  page"
-<<<<<<< HEAD
-=======
 
 [tabs.findOnPageNext]
 description = "Find next match"
@@ -435,4 +433,3 @@ match = """
 [[tabs.findOnPagePrevious.example]]
 phrase = "previous match"
 test = true
->>>>>>> add Next/Previous Match
