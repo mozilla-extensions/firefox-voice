@@ -26,10 +26,9 @@ export const History = () => {
 
 const HistoryTable = ({ rows, numRows }) => {
   const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPage = 50;
   const tableFields = ["You said...", "Date and time"];
   const objectFields = ["utterance", "timestamp"];
-  const possibleItemsPerPage = [10, 25, 50, 100];
   const tableColumns = tableFields.map(field => <th>{field}</th>);
   const tableRows = rows
     .map(row => {
@@ -71,11 +70,6 @@ const HistoryTable = ({ rows, numRows }) => {
       setPage(page + 1);
     }
   };
-  const onItemsPerPageChange = event => {
-    // change the number of items displayed per page and switch to the first page
-    setItemsPerPage(parseInt(event.target.value, 10));
-    setPage(1);
-  };
 
   // calculate the values used to display: ${indexOfFirstItem}-${indexOfLastItem} of ${totalNumOfItems}
   const firstIndex = (page - 1) * itemsPerPage + 1;
@@ -107,21 +101,6 @@ const HistoryTable = ({ rows, numRows }) => {
           <tbody>{tableRows}</tbody>
         </table>
         <div className="history-pagination">
-          <label className="rows-indicator" htmlFor="rows">
-            Rows per page:
-          </label>
-          <div className="select-wrapper rows-indicator">
-            <select
-              id="itemsPerPage"
-              name="rows"
-              value={itemsPerPage}
-              onChange={onItemsPerPageChange}
-            >
-              {possibleItemsPerPage.map(value => (
-                <option value={value}>{value}</option>
-              ))}
-            </select>
-          </div>
           {numRows !== 0 ? (
             <span className="rows-indicator">
               <span>
