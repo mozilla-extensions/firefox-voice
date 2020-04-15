@@ -27,8 +27,8 @@ export const History = () => {
 const HistoryTable = ({ rows, numRows }) => {
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const tableFields = ["Date", "You said..."];
-  const objectFields = ["timestamp", "utterance"];
+  const tableFields = ["You said...", "Date and time"];
+  const objectFields = ["utterance", "timestamp"];
   const possibleItemsPerPage = [10, 25, 50, 100];
   const tableColumns = tableFields.map(field => <th>{field}</th>);
   const tableRows = rows
