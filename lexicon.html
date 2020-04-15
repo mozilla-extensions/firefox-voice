@@ -68,12 +68,12 @@
             <div class="small">
               <strong>Supported sites:</strong> Gmail, Google Docs, Google
               Calendar, Google Slides, Google Maps, MDN, GoodReads, Spotify,
-              Amazon, Wikipedia, Yelp, Twitter, Reddit, Amazon Music, Google
+              Amazon, Wikipedia, Yelp, Twitter, GitHub, Reddit, Amazon Music, Google
               Play Music, Pandora, SoundCloud, YouTube, Vimeo, Netflix, StubHub,
               TicketMaster, Instagram, LinkedIn, Quora, Pinterest, Facebook,
               Stack Exchange, Dictionary, Thesaurus, DuckDuckGo, Amazon Maps,
               DuckDuckGo Images, Google Drive, Google Images, Google Scholar,
-              Google Sheets, Google Translate, OpenStreetMap, TuneIn.
+              Google Sheets, Google Translate, OpenStreetMap, TuneIn, Linguee.
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@
           </div>
           <div class="utterance">
             Example
-            <p>Who created breaking bad?</p>
+            <p>Who created Breaking Bad?</p>
             <p>Who won the World Series game last night?</p>
             <p>How deep is the Marianas Trench?</p>
           </div>
@@ -118,18 +118,18 @@
           <div class="utterance">
             Example
             <p>Play Green Day on Spotify</p>
-            <p>Play yesterday's Daily Show</p>
+            <p>Play Paul McCartney</p>
             <p>Play Old Town Road</p>
+            <p>Play that cat wearing socks video on YouTube</p>
             <div class="small">
-              <strong>Supported sites:</strong> YouTube, Spotify, more coming
-              soon...
+              <strong>Supported sites:</strong> YouTube, Spotify, Deezer, SoundCloud
             </div>
           </div>
         </div>
 
         <div class="example">
           <div class="intent">
-            Audio / video controls
+            Audio, video and slideshow controls
           </div>
           <div class="description">
             Control playback within the browser.
@@ -140,6 +140,10 @@
             <p>Mute (all tabs)</p>
             <p>Pause</p>
             <p>Next</p>
+            <p>What's playing?</p>
+            <p>Increase volume</p>
+            <p>Start slideshow</p>
+            <p>Present (on Google Slides)</p>
           </div>
         </div>
 
@@ -153,6 +157,21 @@
           <div class="utterance">
             Example
             <p>Read this page</p>
+            <p>Read title</p>
+          </div>
+        </div>
+
+        <div class="example">
+          <div class="intent">
+            Follow link
+          </div>
+          <div class="description">
+            Opens a link in the active page
+          </div>
+          <div class="utterance">
+            Example
+            <p>Click on link for proper way to drink whisky</p>
+            <p>Follow link to most unlikely solar farms</p>
           </div>
         </div>
 
@@ -180,6 +199,9 @@
             Example
             <p>Translate this webpage (to English)</p>
             <p>How do you say 'what time is it' in Spanish?</p>
+            <p>
+              Translate selection to French (will translate highlighted text)
+            </p>
           </div>
         </div>
         <div class="example">
@@ -203,20 +225,25 @@
           </div>
           <div class="utterance">
             Example
-            <p>Set a timer for 5 minutes.</p>
+            <p>Set a timer for 5 minutes</p>
           </div>
         </div>
 
         <div class="example">
           <div class="intent">
-            Find tab
+            Find &amp; switch tabs
           </div>
           <div class="description">
-            Finds one tab among many by making requested tab active.
+            Manage, navigate between and find tabs.
           </div>
           <div class="utterance">
             Example
             <p>Find calendar tab</p>
+            <p>Previous tab</p>
+            <p>Go to first tab</p>
+            <p>Go to right tab</p>
+            <p>Collect all Google Docs tabs</p>
+            <p>Undo last closed tab</p>
           </div>
         </div>
 
@@ -229,16 +256,33 @@
           </div>
           <div class="utterance">
             Example
-            <p>Close tab</p>
+            <p>Go back</p>
+            <p>Scroll down</p>
+            <p>Scroll all the way down</p>
+            <p>Find x on page</p>
+            <p>Close tab (or window)</p>
+            <p>Undo close tab</p>
             <p>Pin tab</p>
             <p>Duplicate tab</p>
             <p>Move tab to a new window</p>
-            <p>Open new tab</p>
-            <p>Open new window</p>
+            <p>Open new tab (or window)</p>
+            <p>Open a new window and go to Wikipedia</p>
+            <p>Open downloads/bookmarks/history/settings/extensions</p>
+            <p>Fulls screen</p>
+            <p>Minimize window</p>
+            <p>Zoom in/out</p>
             <p>Reload this page</p>
+            <p>Bookmark this page</p>
+            <p>Remove bookmark for this page</p>
             <p>Print</p>
             <p>Save as pdf</p>
+            <p>Full screen</p>
             <p>Open my single sign on bookmark</p>
+            <p>Count my open tabs</p>
+            <p>Close Firefox</p>
+            <p>View source</p>
+            <p>Clear history</p>
+            <p>Clear history</p>
           </div>
         </div>
 
@@ -261,6 +305,26 @@
             <p>Copy screenshot</p>
             <p>Copy full page screenshot</p>
             <p>Paste</p>
+          </div>
+        </div>
+
+        <div class="example">
+          <div class="intent">
+            Ask about a webpage
+          </div>
+          <div class="description">
+            Display or open information to the current page or website.
+          </div>
+          <div class="utterance">
+            Example
+            <p>
+              What are people saying about this page? (Opens Reddit comments for
+              a specific webpage or article)
+            </p>
+            <p>
+              What did they page used to look like? (Shows page history in
+              archive.org)
+            </p>
           </div>
         </div>
 
