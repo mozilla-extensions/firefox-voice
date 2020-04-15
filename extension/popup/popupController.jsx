@@ -254,6 +254,13 @@ export const PopupController = function() {
         clearTimer(message.totalInMS);
         return Promise.resolve(true);
       }
+      case "remoteUtterance": {
+        remoteUtterance(message.utterance);
+        return Promise.resolve(true);
+      }
+      case "pingPopup": {
+        return Promise.resolve(true);
+      }
       default:
         break;
     }
@@ -354,6 +361,11 @@ export const PopupController = function() {
         text,
       });
     }
+  };
+
+  const remoteUtterance = async text => {
+    await onExternalInput();
+    return submitTextInput(text);
   };
 
   const setPopupView = async newView => {

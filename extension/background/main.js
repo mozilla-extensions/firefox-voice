@@ -16,6 +16,7 @@ import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
 import { timerController } from "../intents/timer/timer.js";
 import * as intentParser from "./intentParser.js";
+import * as firebaseSetup from "../crossdevice/firebaseSetup.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
@@ -110,6 +111,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     );
   } else if (message.type === "clearFollowup") {
     return intentRunner.clearFollowup();
+  } else if (message.type === "getDeviceUrl") {
+    return Promise.resolve(firebaseSetup.deviceUrl());
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
@@ -356,3 +359,5 @@ function setUninstallURL() {
 
 setTimeout(setUninstallURL, 10000);
 setInterval(setUninstallURL, 1000 * 60 * 60 * 24); // Update the URL once a day
+
+firebaseSetup.init();
