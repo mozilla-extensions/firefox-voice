@@ -602,12 +602,7 @@ intentRunner.registerIntent({
 
     const result = getMessage(results.count, context.slots.query);
 
-    await callResult(
-      result.largeText,
-      result.text,
-      result.eduText,
-      result.image
-    ); 
+    await callResult(result)
 
     await context.startFollowup({
       heading: result.eduText,
@@ -633,7 +628,7 @@ function getMessage(numberOfResults, query) {
   return {
     text: `'${query}' not found`,
     eduText: `Try looking for another phrase`,
-    image: "./images/icon-no-result.svg",
+    imgSrc: "./images/icon-no-result.svg",
   };
 }
 
@@ -643,12 +638,7 @@ intentRunner.registerIntent({
     context.keepPopup();
 
     const result = await createFindNextAnswer();
-    await callResult(
-      result.largeText,
-      result.text,
-      result.eduText,
-      result.image
-    );
+    await callResult(result);
 
     await context.startFollowup({
       heading: result.eduText,
@@ -675,7 +665,7 @@ async function createFindNextAnswer() {
   return {
     text: `No more next matches for '${rangeData[lastIndex].text}'`,
     eduText: `Say 'previous match' or try looking for another phrase `,
-    image: "./images/icon-no-result.svg",
+    imgSrc: "./images/icon-no-result.svg",
   };
 }
 
@@ -683,12 +673,7 @@ intentRunner.registerIntent({
   name: "tabs.findOnPagePrevious",
   async run(context) {
     const result = await createFindPreviousAnswer();
-    await callResult(
-      result.largeText,
-      result.text,
-      result.eduText,
-      result.image
-    );
+    await callResult(result)
 
     await context.startFollowup({
       heading: result.eduText,
@@ -700,7 +685,8 @@ intentRunner.registerIntent({
 });
 
 async function createFindPreviousAnswer() {
-  if (lastIndex - 1 >= 0) {
+
+    if (lastIndex > 0) {
     await moveResults(lastIndex - 1);
     const isFirstMatch = lastIndex === 0;
 
@@ -715,7 +701,7 @@ async function createFindPreviousAnswer() {
   return {
     text: `No more previous matches for '${rangeData[lastIndex].text}'`,
     eduText: `Say 'next match' or try looking for another phrase `,
-    image: "./images/icon-no-result.svg",
+    imgSrc: "./images/icon-no-result.svg",
   };
 }
 
@@ -727,14 +713,9 @@ async function moveResults(rangeIndex) {
   return (lastIndex = rangeIndex);
 }
 
-async function callResult(largeText, text, eduText, image) {
+async function callResult(cardAnswer) {
   const card = {
-    answer: {
-      largeText,
-      text,
-      eduText,
-      imgSrc: image,
-    },
+    answer: cardAnswer
   };
 
   await browser.runtime.sendMessage({
