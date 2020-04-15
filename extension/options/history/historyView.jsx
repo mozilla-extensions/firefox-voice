@@ -80,18 +80,14 @@ const HistoryTable = ({ rows, numRows }) => {
     <div className="settings-content">
       <fieldset>
         <legend>
-          View Your Voice History
+          Voice History
           <button
-            className="button"
+            className="delete-button"
             onClick={async () => {
               await Database.clearAll(DB_NAME, TABLE_NAME);
             }}
           >
-            <img
-              src="./images/delete.svg"
-              alt="Clear all"
-              className="clear-all"
-            ></img>
+            Clear Voice History
           </button>
         </legend>
         <table className="history-table">

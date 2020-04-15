@@ -251,6 +251,7 @@ body {
   font-size: 1.875rem;
   margin-top: 30px;
   font-weight: 100;
+  width: 100%;
 }
 
 .settings-content fieldset ul {
@@ -344,11 +345,21 @@ a:hover {
 .history-pagination {
   display: flex;
   justify-content: flex-end;
+  margin-top: 10px;
 }
 
 .rows-indicator {
   align-self: center;
   margin: 0.5rem;
+}
+
+.delete-button {
+  padding: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: rgb(199, 199, 199);
+  float: right;
 }
 
 /* Override default select styling */
