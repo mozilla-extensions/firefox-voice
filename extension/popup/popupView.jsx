@@ -828,7 +828,7 @@ const SearchResultsContent = ({
             ) : null}
           </div>
         </React.Fragment>
-      ) : null }
+      ) : null}
     </React.Fragment>
   );
 };

@@ -602,11 +602,11 @@ intentRunner.registerIntent({
 
     const result = getMessage(results.count, context.slots.query);
 
-    await callResult(result)
+    await callResult(result);
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
       skipSuccessView: true,
     });
   },
@@ -642,10 +642,9 @@ intentRunner.registerIntent({
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
       skipSuccessView: true,
     });
-
   },
 });
 
@@ -673,20 +672,18 @@ intentRunner.registerIntent({
   name: "tabs.findOnPagePrevious",
   async run(context) {
     const result = await createFindPreviousAnswer();
-    await callResult(result)
+    await callResult(result);
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext","tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
       skipSuccessView: true,
     });
-
   },
 });
 
 async function createFindPreviousAnswer() {
-
-    if (lastIndex > 0) {
+  if (lastIndex > 0) {
     await moveResults(lastIndex - 1);
     const isFirstMatch = lastIndex === 0;
 
@@ -715,7 +712,7 @@ async function moveResults(rangeIndex) {
 
 async function callResult(cardAnswer) {
   const card = {
-    answer: cardAnswer
+    answer: cardAnswer,
   };
 
   await browser.runtime.sendMessage({
