@@ -8,6 +8,20 @@ intentRunner.registerIntent({
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       timerController.closeActiveTimer();
+      const imageCard =
+        "https://www.pngkey.com/png/detail/443-4439318_check-mark-red-and-white-checkmark.png";
+      const card = {
+        answer: {
+          imgSrc: `${imageCard}`,
+          text: "Timer cancelled",
+          eduText: `Click mic and say 'help' for things to say`,
+        },
+      };
+      await browser.runtime.sendMessage({
+        type: "showSearchResults",
+        card,
+        searchResults: card,
+      });
     }
     context.done(0);
   },
