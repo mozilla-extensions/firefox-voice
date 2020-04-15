@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Demo of Firebase integration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <h1>Demo of Firebase</h1>
+    <div>
+      <form id="input-form">
+        <input
+          id="input-text"
+          placeholder="Enter a phrase here"
+          style="width: 100%"
+          x-webkit-speech
+        />
+      </form>
+    </div>
+    <h3>Log</h3>
+    <pre id="log"></pre>
+  </body>
+  <script src="buildSettings.js"></script>
+  <script src="firebase-app.js"></script>
+  <script src="firebase-firestore.js"></script>
+  <script src="demo.js"></script>
+</html>
