@@ -8,8 +8,7 @@ intentRunner.registerIntent({
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       timerController.closeActiveTimer();
-      const imageCard =
-        "https://www.pngkey.com/png/detail/443-4439318_check-mark-red-and-white-checkmark.png";
+      const imageCard = "../../assets/images/check-mark.png";
       const card = {
         answer: {
           imgSrc: `${imageCard}`,
