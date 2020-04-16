@@ -5,6 +5,10 @@
 
 @import url("../assets/css/inter.css");
 
+html {
+  scroll-behavior: smooth;
+}
+
 .draft-banner {
   background-color: #c50042;
   color: #fff;

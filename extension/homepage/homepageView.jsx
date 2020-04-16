@@ -169,7 +169,9 @@ const ExampleActions = () => {
         </div>
 
         <div class="see-all-actions">
-          <a href="https://voice.mozilla.org/">Everything you can say</a>
+          <a href="https://mozilla.github.io/firefox-voice/lexicon.html">
+            Everything you can say
+          </a>
         </div>
       </section>
     </div>
@@ -284,10 +286,10 @@ const Faq = () => {
           </p>
 
           <p>
-            Currently, Firefox Voice is available for the Desktop browsers, only
-            supports English, and requires a user to{" "}
-            <a href="https://events.mozilla.org/firefoxvoicecampaign">
-              manually download and install the Add-on from the campaign page
+            Currently, Firefox Voice is available for the desktop browser, only
+            supports English, and requires a user to manually{" "}
+            <a href="https://va.allizom.org/releases/prod/firefox-voice.xpi">
+              download and install the Add-on
             </a>
             , grant permission for microphone access, and trigger the microphone
             to listen by clicking on an icon in the toolbar or using a keyboard
@@ -464,10 +466,24 @@ const Footer = () => {
           </div>
 
           <div class="mzp-c-footer-items">
-            <div class="mzp-c-footer-item">Installation Instructions</div>
-            <div class="mzp-c-footer-item">GitHub</div>
-            <div class="mzp-c-footer-item">Feedback</div>
-            <div class="mzp-c-footer-item">Privacy</div>
+            <div class="mzp-c-footer-item">
+              <a href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit">
+                Installation Instructions
+              </a>
+            </div>
+            <div class="mzp-c-footer-item">
+              <a href="https://github.com/mozilla/firefox-voice/">GitHub</a>
+            </div>
+            <div class="mzp-c-footer-item">
+              <a href="https://firefox-voice-feedback.herokuapp.com/">
+                Feedback
+              </a>
+            </div>
+            <div class="mzp-c-footer-item">
+              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+                Privacy
+              </a>
+            </div>
           </div>
         </nav>
 

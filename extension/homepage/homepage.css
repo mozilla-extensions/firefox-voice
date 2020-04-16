@@ -4686,6 +4686,10 @@ html.mzp-is-noscroll .mzp-c-modal {
     width: 25%;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+
 .draft-banner {
   background-color: #c50042;
   color: #fff;
