@@ -86,10 +86,6 @@ this.voice = class extends ExtensionAPI {
             return runCommand("View:PageSource");
           },
 
-          async zoomWindow() {
-            return runCommand("zoomWindow");
-          },
-
           async minimizeWindow() {
             return runCommand("minimizeWindow");
           },

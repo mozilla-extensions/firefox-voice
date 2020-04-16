@@ -81,7 +81,7 @@ test = true
 [window.zoom]
 description = "Zooms the window"
 match = """
-  zoom (the |) (this |) window (for me |)
+  (Zoom | Maximize |) (the | this |) (window |) (for me |)
 """
 
 [[window.zoom.example]]
@@ -89,6 +89,14 @@ phrase = "Zoom window"
 
 [[window.zoom.example]]
 phrase = "Zoom this window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize"
 test = true
 
 [window.minimize]
