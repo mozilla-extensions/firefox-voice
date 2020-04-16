@@ -40,7 +40,11 @@ const HistoryTable = ({ rows, numRows }) => {
             switch (key) {
               case "timestamp": {
                 element = (
-                  <td>{new Date(parseInt(row[key], 10)).toLocaleString()}</td>
+                  <td>
+                    {new Date(parseInt(row[key], 10))
+                      .toLocaleString()
+                      .replace(/:\d+ /, " ")}
+                  </td>
                 );
                 break;
               }
@@ -108,14 +112,16 @@ const HistoryTable = ({ rows, numRows }) => {
               <span>0-0 of {numRows}</span>
             </span>
           )}
-          <button className="button previous" onClick={onClickPrevious}>
-            <img
-              src="./images/back-12.svg"
-              alt="Previous page"
-              className="previous-page"
-            ></img>
+          <button
+            className={firstIndex > 50 ? "active" : "inactive"}
+            onClick={onClickPrevious}
+          >
+            <img src="./images/back-12.svg" alt="Previous page"></img>
           </button>
-          <button className="button next" onClick={onClickNext}>
+          <button
+            className={secondIndex < numRows ? "next active" : "next inactive"}
+            onClick={onClickNext}
+          >
             <img
               src="./images/back-12.svg"
               alt="Next page"
