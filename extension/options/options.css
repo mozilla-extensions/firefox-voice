@@ -318,3 +318,71 @@ a:hover {
   color: #d70022;
   margin-bottom: 20px;
 }
+
+/* History Tab */
+.history-table {
+  width: 1000px;
+  border: 1px solid #eee;
+  border-collapse: collapse;
+  border-bottom: 2px solid gray;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.05),
+    0px 20px 20px rgba(0, 0, 0, 0.05), 0px 30px 20px rgba(0, 0, 0, 0.05);
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid #eee;
+  border-collapse: collapse;
+  padding: 12px 35px;
+}
+
+tbody tr:hover {
+  background: #f4f4f4;
+}
+
+.history-pagination {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rows-indicator {
+  align-self: center;
+  margin: 0.5rem;
+}
+
+/* Override default select styling */
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 70px;
+}
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.75rem;
+  top: 2px;
+  right: 15px;
+  position: absolute;
+}
+
+#itemsPerPage {
+  background-color: transparent;
+  border: none;
+  font-size: initial;
+}
+
+#itemsPerPage:focus {
+  outline: none;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+}
+
+.next-page {
+  transform: scale(-1, 1);
+}

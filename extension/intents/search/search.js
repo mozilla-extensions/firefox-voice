@@ -36,8 +36,11 @@ async function openSearchTab() {
   }, CLOSE_TIME);
   if (_searchTabId) {
     try {
-      await browser.tabs.get(_searchTabId);
-      return _searchTabId;
+      const tab = await browser.tabs.get(_searchTabId);
+      // reuse tab only if it's hidden
+      if (tab.hidden === true) {
+        return _searchTabId;
+      }
     } catch (e) {
       // Presumably the tab doesn't exist
       log.info("Error getting tab:", String(e));

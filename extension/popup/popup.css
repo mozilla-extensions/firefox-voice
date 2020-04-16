@@ -319,9 +319,10 @@ a#lexicon {
   text-align: center;
   font-size: 1em;
   font-weight: 600;
-  margin-right: -8px;
   margin-bottom: -8px;
   margin-left: -8px;
+  padding-top: 10px;
+  padding-bottom: 5px;
 }
 
 .feedback-controls {
@@ -330,7 +331,7 @@ a#lexicon {
 
 .feedback-controls button {
   border: none;
-  margin: 5px 10px;
+  margin: 3%;
   background-color: white;
   width: 24px;
   height: 24px;
@@ -448,6 +449,9 @@ a#lexicon {
 #header-title .utterance {
   font-style: italic;
   white-space: normal;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #feedback-whats-wrong {

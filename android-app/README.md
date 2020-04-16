@@ -4,13 +4,10 @@
 
 We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
 
-### Install Firefox and the extension
+### Install Firefox
 
 1. Install [Firefox](https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=en_US), if you haven't already. (Do not install Firefox Nightly or Preview.)
 2. Make Firefox your [default browser](https://support.mozilla.org/en-US/kb/make-firefox-default-browser-android).
-3. Open Firefox and download [the extension](https://va.allizom.org/releases/dev-android/firefox-voice.xpi).
-4. Confirm that you want to install it.
-5. Grant the requested permissions.
 
 ### Enable installation of apps from unknown sources
 
@@ -27,7 +24,7 @@ On recent versions of Android, follow the instructions illustrated below, in the
 
 ### Install the Mozilla Assistant app
 
-In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/release/app-release.apk?raw=true) (by opening the link) on your Android device. Confirm that you wish to open and install it. If Firefox won't let you, use Chrome for this step.
+In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/release/app-release.apk?raw=true) (by opening the link) on your Android device. Confirm that you wish to open and install it. If Firefox won't let you, use Chrome for this step. If asked if you want to enable Play Protect, decline.
    
 ### Specify your assistant
 

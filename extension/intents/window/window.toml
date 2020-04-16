@@ -75,7 +75,7 @@ phrase = "clear firefox data"
 test = true
 
 [[window.clearBrowserHistory.example]]
-phrase = "clear broswer history"
+phrase = "clear browser history"
 test = true
 
 [window.zoom]
