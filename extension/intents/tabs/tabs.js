@@ -151,10 +151,9 @@ intentRunner.registerIntent({
     // "canceled"
     // "not_saved"
     // "not_replaced"
-    try{
+    try {
       await browser.tabs.saveAsPDF({});
-    }
-    catch (e) {
+    } catch (e) {
       if (e.message === "Not supported on Mac OS X") {
         e.displayMessage = "Save as PDF is not supported on Mac OS X";
         throw e;
