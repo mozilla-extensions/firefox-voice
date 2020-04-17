@@ -1,7 +1,7 @@
 [bookmarks.create]
 description = "Creates a bookmark placing it in the default folder (Other Bookmarks)"
 match = """
-  bookmark (this |) (page | site | tab |) (for me |)
+  bookmark (this) (page | site | tab |) (for me |)
   (save | add) (this |) (page | site | tab |) to bookmarks
 """
 

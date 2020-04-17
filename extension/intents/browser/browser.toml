@@ -1,42 +1,30 @@
 [browser.bookmark]
 description = "Open bookmarks"
 match = """
-  (Open | show | View |) (all | my |) (bookmarks | bookmark ) (sidebar |)
+  (Open | show | View |) (all | my |) (bookmark{s} |) (sidebar |)
 """
 
 [[browser.bookmark.example]]
-phrase = "Bookmarks"
+phrase = "Bookmark{s}"
 
 [[browser.bookmark.example]]
-phrase = "Bookmark"
+phrase = "Open bookmark{s}"
 test = true
 
 [[browser.bookmark.example]]
-phrase = "Open bookmarks"
+phrase = "Show bookmark{s}"
 test = true
 
 [[browser.bookmark.example]]
-phrase = "Show bookmarks"
+phrase = "Show all bookmark{s}"
 test = true
 
 [[browser.bookmark.example]]
-phrase = "Show all bookmarks"
+phrase = "Show my bookmark{s}"
 test = true
 
 [[browser.bookmark.example]]
-phrase = "Show my bookmarks"
-test = true
-
-[[browser.bookmark.example]]
-phrase = "Open bookmark"
-test = true
-
-[[browser.bookmark.example]]
-phrase = "Show bookmark"
-test = true
-
-[[browser.bookmark.example]]
-phrase = "View bookmarks sidebar"
+phrase = "View bookmark{s} sidebar"
 test = true
 
 [browser.history]
