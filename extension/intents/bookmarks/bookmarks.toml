@@ -8,6 +8,14 @@ match = """
 [[bookmarks.create.example]]
 phrase = "Bookmark this page"
 
+[[bookmarks.create.example]]
+phrase = "Bookmark this"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark this site"
+test = true
+
 [bookmarks.open]
 description = "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched"
 match = """

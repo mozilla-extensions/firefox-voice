@@ -8,6 +8,10 @@ match = """
 phrase = "Bookmarks"
 
 [[browser.bookmark.example]]
+phrase = "Bookmark"
+test = true
+
+[[browser.bookmark.example]]
 phrase = "Open bookmarks"
 test = true
 
