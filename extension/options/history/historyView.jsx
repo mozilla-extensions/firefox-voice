@@ -61,25 +61,6 @@ const HistoryTable = ({ rows, numRows }) => {
     })
     .slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
-  const onClickPrevious = event => {
-    if (page > 1) {
-      // start page index at 1
-      setPage(page - 1);
-    }
-  };
-  const onClickNext = event => {
-    const maxNumPages = Math.ceil(numRows / itemsPerPage);
-    if (page < maxNumPages) {
-      // prevent indexing past the last page
-      setPage(page + 1);
-    }
-  };
-
-  // calculate the values used to display: ${indexOfFirstItem}-${indexOfLastItem} of ${totalNumOfItems}
-  const firstIndex = (page - 1) * itemsPerPage + 1;
-  const secondIndex =
-    numRows < page * itemsPerPage ? numRows : page * itemsPerPage;
-
   return (
     <div className="settings-content">
       <fieldset>
@@ -94,42 +75,77 @@ const HistoryTable = ({ rows, numRows }) => {
             Clear Voice History
           </button>
         </legend>
+        <HistoryPagination
+          numRows={numRows}
+          page={page}
+          setPage={setPage}
+          itemsPerPage={itemsPerPage}
+        />
         <table className="history-table">
           <thead align="left">
             <tr>{tableColumns}</tr>
           </thead>
           <tbody>{tableRows}</tbody>
         </table>
-        <div className="history-pagination">
-          {numRows !== 0 ? (
-            <span className="rows-indicator">
-              <span>
-                {firstIndex}-{secondIndex} of {numRows}
-              </span>
-            </span>
-          ) : (
-            <span className="rows-indicator">
-              <span>0-0 of {numRows}</span>
-            </span>
-          )}
-          <button
-            className={firstIndex > 50 ? "active" : "inactive"}
-            onClick={onClickPrevious}
-          >
-            <img src="./images/back-12.svg" alt="Previous page"></img>
-          </button>
-          <button
-            className={secondIndex < numRows ? "next active" : "next inactive"}
-            onClick={onClickNext}
-          >
-            <img
-              src="./images/back-12.svg"
-              alt="Next page"
-              className="next-page"
-            ></img>
-          </button>
-        </div>
+        <HistoryPagination
+          numRows={numRows}
+          page={page}
+          setPage={setPage}
+          itemsPerPage={itemsPerPage}
+        />
       </fieldset>
+    </div>
+  );
+};
+const HistoryPagination = ({ numRows, page, setPage, itemsPerPage }) => {
+  const onClickPrevious = () => {
+    if (page > 1) {
+      // start page index at 1
+      setPage(page - 1);
+    }
+  };
+  const onClickNext = () => {
+    const maxNumPages = Math.ceil(numRows / itemsPerPage);
+    if (page < maxNumPages) {
+      // prevent indexing past the last page
+      setPage(page + 1);
+    }
+  };
+
+  // calculate the values used to display: ${indexOfFirstItem}-${indexOfLastItem} of ${totalNumOfItems}
+  const firstIndex = (page - 1) * itemsPerPage + 1;
+  const secondIndex =
+    numRows < page * itemsPerPage ? numRows : page * itemsPerPage;
+
+  return (
+    <div className="history-pagination">
+      {numRows !== 0 ? (
+        <span className="rows-indicator">
+          <span>
+            {firstIndex}-{secondIndex} of {numRows}
+          </span>
+        </span>
+      ) : (
+        <span className="rows-indicator">
+          <span>0-0 of {numRows}</span>
+        </span>
+      )}
+      <button
+        className={firstIndex > 50 ? "active" : "inactive"}
+        onClick={onClickPrevious}
+      >
+        <img src="./images/back-12.svg" alt="Previous page"></img>
+      </button>
+      <button
+        className={secondIndex < numRows ? "next active" : "next inactive"}
+        onClick={onClickNext}
+      >
+        <img
+          src="./images/back-12.svg"
+          alt="Next page"
+          className="next-page"
+        ></img>
+      </button>
     </div>
   );
 };
