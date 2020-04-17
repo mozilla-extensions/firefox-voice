@@ -1,14 +1,14 @@
 [browser.bookmark]
 description = "Open bookmarks"
 match = """
-  (Open | show | View) (all |) (bookmarks | bookmark ) (sidebar |)
+  (Open | show | View |) (all | my |) (bookmarks | bookmark ) (sidebar |)
 """
 
 [[browser.bookmark.example]]
-phrase = "Open bookmarks"
+phrase = "Bookmarks"
 
 [[browser.bookmark.example]]
-phrase = "bookmarks"
+phrase = "Open bookmarks"
 test = true
 
 [[browser.bookmark.example]]
@@ -38,18 +38,18 @@ test = true
 [browser.history]
 description = "Open history"
 match = """
-  (Open | show |) (my browsing |) (all |) history
+  (Open | Show |) (all | my |) (browsing | browser |) history
 """
 
 [[browser.history.example]]
 phrase = "Open history"
 
 [[browser.history.example]]
-phrase = "history"
+phrase = "History"
 test = true
 
 [[browser.history.example]]
-phrase = "my browsing history"
+phrase = "My browsing history"
 test = true
 
 [[browser.history.example]]
