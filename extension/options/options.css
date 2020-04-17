@@ -331,6 +331,7 @@ a:hover {
   background-color: #ededf0;
   color: #4a4a4f;
   font-weight: normal;
+  border-right: 1px solid #c7c7c7;
 }
 
 .history-table th,
@@ -340,25 +341,21 @@ a:hover {
   padding: 12px 35px;
 }
 
-.history-table tr {
-  height: 36px;
-}
-
-.history-table th {
-  border-right: 1px solid #c7c7c7;
-}
-
 .history-table tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.history-table thead tr {
+  height: 30px;
+}
+
+.history-table tbody tr {
+  height: 38px;
 }
 
 .history-table tr td:nth-child(2) {
   width: 190px;
   color: #4a4a4f;
-}
-
-.history-table tr td:nth-child(1) {
-  color: #0a84ff;
 }
 
 .history-pagination {
@@ -378,8 +375,12 @@ a:hover {
   border: none;
   font-size: 15px;
   cursor: pointer;
-  background-color: rgb(199, 199, 199);
+  background-color: #c7c7c7;
   float: right;
+}
+
+.delete-button:hover {
+  background-color: #afafaf;
 }
 
 .active,
