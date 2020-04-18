@@ -22,6 +22,7 @@ export const HomepageController = function() {
     const params = new URLSearchParams(search);
     const source = params.get("source");
     setIsCommonVoice(source === "commonvoice");
+    Mzp.Navigation.init();
   };
 
   return <homepageView.Homepage isCommonVoice={isCommonVoice} />;

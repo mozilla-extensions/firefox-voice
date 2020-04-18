@@ -20,7 +20,8 @@ extension/homepage/homepageController.js
 extension/homepage/homepageView.js
 extension/homepage/homepage.css
 extension/homepage/homepage.css.map
-extension/homepage/images/zaps/
+extension/homepage/images/
+extension/homepage/js/
 extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
 extension/**/*.js.map

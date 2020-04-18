@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <title>Welcome to Firefox Voice</title>
+    <script src="./js/protocol-base.min.js"></script>
+    <script src="./js/protocol-utils.min.js"></script>
+    <script src="./js/protocol-supports.min.js"></script>
+    <script src="./js/protocol-menu.min.js"></script>
+    <script src="./js/protocol-navigation.min.js"></script>
+    
     <link rel="stylesheet" href="homepage.css" />
   </head>
 
@@ -10,10 +16,12 @@
     <div id="homepage-container"></div>
     <script src="../js/vendor/react.production.min.js"></script>
     <script src="../js/vendor/react-dom.production.min.js"></script>
+    
     <!-- <script src="../buildSettings.js"></script>
     <script src="../log.js"></script>
     <script src="../catcherAsyncSetup.js"></script>
     <script src="../catcher.js"></script> -->
-    <script crossorigin src="./homepageController.js" type="module"></script>
+    <script src="./homepageController.js" type="module"></script>
+    <script src="./js/protocol-modal.min.js"></script>    
   </body>
 </html>

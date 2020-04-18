@@ -4704,6 +4704,10 @@ html {
   float: right;
 }
 
+.mzp-c-navigation-menu-button {
+  background-image: url("./images/menu.svg");
+}
+
 .mzp-c-navigation-logo a {
   background-image: url("./images/fx-voice-logo.svg");
   background-size: 254px, 44px;
@@ -4834,6 +4838,25 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.video-modal-button {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #0060df;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.video-modal-button:hover {
+  text-decoration: none;
+}
+
+.mzp-c-modal-button-close {
+  background-image: url("./images/modal-close.svg") !important;
 }
 
 .faq-section-header {

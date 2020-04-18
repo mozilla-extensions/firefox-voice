@@ -50,6 +50,7 @@ const Header = () => {
     <div class="mzp-c-navigation">
       <div class="mzp-c-navigation-l-content">
         <div class="mzp-c-navigation-container">
+          <button class="mzp-c-navigation-menu-button" type="button" aria-controls="navigation-demo">Menu</button>
           <div class="mzp-c-navigation-logo">
             <a href="https://voice.mozilla.org/">Firefox Voice</a>
           </div>
@@ -235,6 +236,15 @@ const OpenVoiceEcosystem = () => {
 };
 
 const Demo = () => {
+  const handleVideoClick = (e) => {
+    e.preventDefault();
+    const content = document.querySelector('.mzp-u-modal-content');
+    Mzp.Modal.createModal(e.target, content, {
+      title: 'Firefox Voice Demo Video',
+      className: 'mzp-has-media',
+      closeText: 'Close modal'
+    });
+  };
   return (
     <div id="how-it-works" class="mzp-l-content mzp-l-card-half">
       <div class="mzp-l-flexcards">
@@ -259,7 +269,18 @@ const Demo = () => {
             full, now you can go hands-free to navigate the web and retrieve
             information instantly.
             <div class="watch-video">
-              <a href="https://voice.mozilla.org/">Watch the video</a>
+              <button onClick={handleVideoClick} class="video-modal-button">Watch the video</button>
+            </div>
+            <div class="mzp-u-modal-content">
+              <div class="video-wrapper">
+                <iframe
+                  title="Firefox Voice Demo Video"
+                  src="https://www.youtube.com/embed/3sqKsfj8WRE"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
