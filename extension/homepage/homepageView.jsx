@@ -52,7 +52,7 @@ const Header = () => {
         <div class="mzp-c-navigation-container">
           <button class="mzp-c-navigation-menu-button" type="button" aria-controls="navigation-demo">Menu</button>
           <div class="mzp-c-navigation-logo">
-            <a href="https://voice.mozilla.org/">Firefox Voice</a>
+            <img src="./images/fx-voice-logo.svg" alt="Firefox Voice"></img>
           </div>
           <div class="mzp-c-navigation-items">
             <div class="mzp-c-navigation-menu">
@@ -96,7 +96,7 @@ const Hero = () => {
       <div class="mzp-l-content">
         <div class="mzp-c-hero-body">
           <h1 class="mzp-c-hero-title mzp-has-zap-17">
-            Browse the web with <strong>your voice</strong>
+            Browse the web with <strong>your&nbsp;voice</strong>
           </h1>
 
           <div class="mzp-c-hero-desc">
@@ -200,10 +200,10 @@ const ActionCategory = ({ icon, categoryLabel, exampleUtterances }) => {
 const OpenVoiceEcosystem = () => {
   return (
     <div class="mzp-l-content mzp-l-card-half">
-      <div class="mzp-l-flexcards">
+      <div class="mzp-l-flexcards wrap-reverse">
         <div class="mzp-c-card">
-          <h6 class="card-header mzp-has-zap-14">
-            An <strong>open voice</strong> ecosystem
+          <h6 class="card-header mzp-has-zap-14 open-voice-ecosystem">
+            An <strong>open&nbsp;voice</strong> ecosystem
           </h6>
           <div>
             <p>
@@ -293,7 +293,7 @@ const Faq = () => {
   return (
     <div id="faq" class="mzp-l-content mzp-l-core">
       <h5 class="mzp-has-zap-17 faq-title">
-        <strong>Frequently asked questions</strong>
+        <strong>Frequently&nbsp;asked&nbsp;questions</strong>
       </h5>
       <section class="faq">
         <details>
@@ -513,7 +513,7 @@ const Footer = () => {
             <p class="mzp-c-footer-license">
               Visit Mozilla Corporation’s not-for-profit parent, the{" "}
               <a href="https://foundation.mozilla.org/">Mozilla Foundation</a>.
-              <br /> Portions of this content are ©1998–2018 by individual
+              <br /> Portions of this content are ©1998–2020 by individual
               mozilla.org contributors. Content available under a{" "}
               <a
                 rel="license"
