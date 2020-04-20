@@ -93,11 +93,7 @@ const HistoryTable = ({ rows, numRows }) => {
               }
             }}
           >
-            <img
-              src="./images/delete.svg"
-              alt=""
-              className="clear-all"
-            ></img>
+            <img src="./images/delete.svg" alt="" className="clear-all" />
             Clear Voice History
           </button>
         </legend>
