@@ -1,7 +1,7 @@
 /* globals helpers */
 
 this.player = (function() {
-  const SEARCH_PLAY = ".datagrid-row song a[role='button']";
+  const SEARCH_PLAY = ".datagrid-row a[role='button']";
 
   class Player extends helpers.Runner {
     action_play() {
@@ -9,44 +9,60 @@ this.player = (function() {
       button.click();
     }
 
+    async search(query) {
+      try {
+        const queryInput = await this.waitForSelector(
+          "form .topbar-search-input"
+        );
+        const querySubmit = this.querySelector("form .topbar-search-submit");
+        this.setReactInputValue(queryInput, query);
+        querySubmit.click();
+      } catch (e) {
+        const unlogged = document.querySelector(".unlogged-homepage");
+        if (unlogged) {
+          throw new Error("Please log in to use this service.");
+        }
+        throw e;
+      }
+    }
+
     async action_search({ query, thenPlay }) {
       try {
-        const querySubmit = this.querySelector("form .topbar-search-submit");
-        const queryInput = this.querySelector("form .topbar-search-input");
-        this.setReactInputValue(queryInput, query);
-        queryInput.value = query;
-        querySubmit.click();
+        await this.search(query);
         if (thenPlay) {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
             timeout: 2000,
-            // There seem to be 3 fixed buttons that appear early before the search results
-            minCount: 4,
           });
           playerButton.click();
         }
       } catch (e) {
-        const unlogged = this.querySelector("div[class='unlogged-homepage']");
-        if (unlogged) {
-          throw new Error("Please log in to use this service.");
-        }
+        throw new Error("No Search Results!");
       }
     }
 
     action_pause() {
-      const button = this.querySelector("button[aria-label='Pause']");
+      const button = this.querySelector(
+        ".player-bottom button[aria-label='Pause']"
+      );
       button.click();
     }
     action_unpause() {
-      const button = this.querySelector("button[aria-label='Play']");
+      const button = this.querySelector(
+        ".player-bottom button[aria-label='Play']"
+      );
       button.click();
     }
 
     action_move({ direction }) {
-      if (direction === "Next") {
-        const button = this.querySelector("button[aria-label='Next']");
+      if (direction === "next") {
+        const button = this.querySelector(
+          ".player-bottom button[aria-label='Next']"
+        );
         button.click();
-      } else if (direction === "Previous") {
-        const button = this.querySelector("button[aria-label='Previous']");
+      } else if (direction === "previous") {
+        const button = this.querySelector(
+          ".player-bottom button[aria-label='Back']"
+        );
         button.click();
       }
     }
@@ -123,6 +139,41 @@ this.player = (function() {
         const iconVolumeParent = iconVolumeOff.closest(".svg-icon-group-btn");
         iconVolumeParent.click();
       }
+    }
+
+    async playSection({ query, thenPlay, section }) {
+      let foundSection;
+      await this.search(query);
+      try {
+        if (thenPlay) {
+          const anchorNodes = await this.waitForSelector(".container h2 a", {
+            all: true,
+            timeout: 5000,
+          });
+          for (const anchorTag of anchorNodes) {
+            if (anchorTag.innerText === section) {
+              foundSection = anchorTag.parentElement.parentElement;
+              break;
+            }
+          }
+          try {
+            foundSection.querySelector("ul li button").click();
+            foundSection.querySelector("ul li figure .picture").click();
+          } catch {
+            throw new Error("Album not found!");
+          }
+        }
+      } catch {
+        throw new Error("No Search Results!");
+      }
+    }
+
+    async action_playAlbum({ query, thenPlay }) {
+      await this.playSection({ query, thenPlay, section: "Albums" });
+    }
+
+    async action_playPlaylist({ query, thenPlay }) {
+      await this.playSection({ query, thenPlay, section: "Playlists" });
     }
   }
 
