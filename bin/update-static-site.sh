@@ -22,6 +22,16 @@ sys.stdout.write(sys.argv[1].replace("../assets/", "assets/").replace("\"/assets
 ' "$content" > $html
 done
 
+(
+  cd homepage
+  npm run maybeinstall
+  npm run build
+)
+
+mkdir -p gh-pages/homepage
+cp -r homepage/build/ gh-pages/homepage/
+
+
 echo "Status of gh-pages/ :"
 cd gh-pages
 git status

@@ -1,9 +1,9 @@
-@use '../css/vendor/protocol/protocol';
-@use '../css/vendor/protocol/protocol-extra' with (
+@use 'css/vendor/protocol/protocol';
+@use 'css/vendor/protocol/protocol-extra' with (
   $image-path: './images'
 );
 
-@import url("../assets/css/inter.css");
+@import url("assets/css/inter.css");
 
 .draft-banner {
   background-color: #c50042;
@@ -100,7 +100,6 @@
   a {
     color: #fff !important;
   }
-
 }
 
 .box-purple {
@@ -134,8 +133,10 @@
   position: relative;
   iframe {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -156,7 +157,8 @@
       flex-direction: column;
       cursor: pointer;
     }
-    ol, ul {
+    ol,
+    ul {
       list-style-type: revert;
       padding-left: 2rem;
       li {
