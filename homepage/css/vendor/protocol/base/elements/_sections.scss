@@ -1,0 +1,34 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import '../../includes/lib';
+
+// This wrapper element sets the content width
+.mzp-l-content {
+    @include border-box;
+    @include clearfix;
+    margin: 0 auto;
+    max-width: $content-max;
+    min-width: $content-xs;
+    padding: $layout-xs;
+    position: relative;
+
+    &.mzp-t-narrow {
+        max-width: $content-md;
+    }
+
+    @media #{$mq-md} {
+        padding: $layout-xs $layout-lg;
+    }
+
+    @media #{$mq-lg} {
+        padding: $layout-xs $layout-xl;
+    }
+}
+
+hr {
+    border: 0 solid $color-marketing-gray-20;
+    border-top-width: 4px;
+    margin: 1.25em 0;
+}

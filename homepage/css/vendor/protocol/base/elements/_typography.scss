@@ -1,0 +1,67 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import '../../includes/lib';
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 0 0 .5em;
+}
+
+// Mozilla theme class for headlines using Zilla.
+.mzp-t-mozilla {
+    h1, h2, h3, h4 {
+        @include font-mozilla;
+    }
+}
+
+.mzp-t-firefox {
+    // Firefox theme class for headlines.
+    h1, h2, h3, h4 {
+        @include font-firefox;
+    }
+
+    // type in Firefox themes is off-black
+    color: $color-ink-80;
+}
+
+// Type scale defined in includes/mixins/_typography.scss
+h1 {
+    @include text-title-xxl;
+    margin-bottom: .25em;
+}
+
+h2 {
+    @include text-title-xl;
+    margin-bottom: .45em;
+}
+
+h3 {
+    @include text-title-lg;
+}
+
+h4 {
+    @include text-title-md;
+}
+
+h5 {
+    @include text-title-sm;
+}
+
+h6 {
+    @include text-title-xs;
+}
+
+p,
+ul,
+ol,
+dl,
+table {
+    margin: 0 0 1.25em;
+}
+
+code {
+    font-size: .875em;
+}

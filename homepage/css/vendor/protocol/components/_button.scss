@@ -1,0 +1,169 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import '../includes/lib';
+
+/* -------------------------------------------------------------------------- */
+// Primary Button
+
+.mzp-c-button,
+a.mzp-c-button {
+    @include border-box;
+    @include text-body-cta;
+    @include transition(background-color 100ms, box-shadow 100ms, color 100ms, transform 100ms);
+    background-color: $color-black;
+    border-radius: $border-radius-xs;
+    border: 2px solid $color-black;
+    color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    padding: ($spacing-md - 2px) ($spacing-xl - 2px); //2px extra padding removed to compensate for 2px border.
+    text-decoration: none !important;  /* stylelint-disable-line declaration-no-important */
+
+    &:focus,
+    &:hover {
+        @include transform(translate(-2px, -2px));
+        background-color: $color-white;
+        box-shadow: 4px 4px 0 0 $color-black;
+        color: $color-black;
+    }
+
+    &:disabled {
+        background-color: $color-marketing-gray-30;
+        border-color: $color-marketing-gray-30;
+        pointer-events: none;
+    }
+
+    .mzp-t-firefox & {
+        @include font-firefox;
+    }
+}
+
+.mzp-c-button.mzp-t-small {
+    padding: ($spacing-sm - 2px) ($spacing-md - 2px);
+}
+
+.mzp-c-button.mzp-t-dark,
+a.mzp-c-button.mzp-t-dark {
+    background-color: $color-white;
+    border-color: $color-white;
+    color: $color-black;
+
+    &:focus,
+    &:hover {
+        background-color: $color-black;
+        box-shadow: 4px 4px 0 0 $color-white;
+        color: $color-white;
+    }
+
+    &:disabled {
+        background-color: $color-light-gray-80;
+        border-color: $color-light-gray-80;
+        color: $color-black;
+        pointer-events: none;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+// Secondary Buttons
+
+.mzp-c-button.mzp-t-secondary {
+    background-color: transparent;
+    color: $color-black;
+
+    &:disabled {
+        background-color: transparent;
+        border-color: $color-light-gray-30;
+        color: $color-light-gray-30;
+    }
+}
+
+.mzp-c-button.mzp-t-secondary.mzp-t-dark {
+    background-color: transparent;
+    color: $color-white;
+
+    &:disabled {
+        background-color: transparent;
+        border-color: $color-light-gray-80;
+        color: $color-light-gray-80;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+// Product Buttons
+
+.mzp-c-button.mzp-t-product,
+a.mzp-c-button.mzp-t-product {
+    background-color: $color-blue-50;
+    border-color: transparent;
+    color: $color-white;
+
+    &:focus,
+    &:hover {
+        @include transform(none);
+        background-color: $color-blue-60;
+        box-shadow: none;
+        color: $color-white;
+    }
+
+    &:disabled {
+        background-color: $color-light-gray-80;
+        border-color: $color-light-gray-80;
+        pointer-events: none;
+    }
+}
+
+.mzp-c-button.mzp-t-product.mzp-t-small {
+    padding: $spacing-sm $spacing-md;
+}
+
+.mzp-c-button.mzp-t-product.mzp-t-secondary,
+a.mzp-c-button.mzp-t-product.mzp-t-secondary {
+    background-color: transparent;
+    border-color: $color-blue-50;
+    color: $color-blue-50;
+
+    &:focus,
+    &:hover {
+        @include transform(none);
+        background-color: $color-blue-60;
+        border-color: transparent;
+        box-shadow: none;
+        color: $color-white;
+    }
+
+    &:disabled {
+        background-color: transparent;
+        border-color: $color-dark-gray-05;
+        color: $color-dark-gray-05;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+// Download Button Molecule
+
+.mzp-c-button-download-container {
+    text-align: center;
+    margin-bottom: 24px;
+    display: inline-block;
+}
+
+.mzp-c-button-download-privacy-link {
+    @include text-body-xs;
+    display: block;
+    margin-top: $spacing-md;
+
+    a:link,
+    a:visited {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    a:hover,
+    a:active,
+    a:focus {
+        text-decoration: underline;
+    }
+}

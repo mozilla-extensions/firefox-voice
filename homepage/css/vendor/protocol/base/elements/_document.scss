@@ -1,0 +1,25 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import '../../includes/lib';
+
+
+html {
+    font-size: 100%;
+    background: #fff;
+}
+
+body {
+    @include text-body-md;
+    background: #fff;
+    color: $color-black;
+    font-family: $font-base-family;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+// A few places use a class to hide elements. We should try to avoid that.
+.hidden {
+    @include hidden;
+}
