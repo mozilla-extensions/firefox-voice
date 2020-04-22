@@ -7,8 +7,6 @@ extension/options/routinesView.js
 extension/options/history/historyView.js
 extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
-extension/homepage/homepageController.js
-extension/homepage/homepageView.js
 extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
 extension/intents/pocket/contentScript.js

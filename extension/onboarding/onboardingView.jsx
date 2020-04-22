@@ -43,7 +43,6 @@ const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
         <div className="modal-header">
           <p>Successfully Installed</p>
           <h1>Allow Firefox Voice to Collect Voice Transcripts</h1>
-          <h2>TEST REMOVE</h2>
         </div>
         <div className="modal-content">
           <p>
