@@ -215,7 +215,7 @@ html {
 }
 
 .mzp-c-modal-button-close {
-  background-image: url("./images/modal-close.svg") !important;
+  background-image: url("./images/close-white.svg") !important;
 }
 
 .faq-section-header {
@@ -284,9 +284,12 @@ html {
   }
 }
 
-.mzp-c-footer-primary-logo a {
-  background: url("./images/mozilla-logo.svg");
-  width: 112px;
+.mzp-c-footer-primary-logo {
+  background: #fff;
+  a {
+    background: url("./images/mozilla-logo.svg");
+    width: 112px;
+  }
 }
 
 .mzp-c-footer-primary {
