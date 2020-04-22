@@ -361,7 +361,7 @@ a:hover {
 .history-pagination {
   display: flex;
   justify-content: flex-end;
-  margin-top: 15px;
+  margin: 15px 0 15px 0;
 }
 
 .rows-indicator {
