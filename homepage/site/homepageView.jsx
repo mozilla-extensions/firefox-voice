@@ -250,13 +250,12 @@ const Demo = () => {
       <div class="mzp-l-flexcards">
         <div class="mzp-c-card">
           <div class="video-wrapper">
-            <iframe
-              title="Firefox Voice Demo Video"
-              src="https://www.youtube.com/embed/3sqKsfj8WRE"
-              frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+            <div class="play-video">
+              <div class="play-btn-wrapper">
+                <button onClick={handleVideoClick} name="play"></button>
+              </div>
+              <img src="./images/demo-still.png"/>
+            </div>
           </div>
         </div>
 
@@ -488,7 +487,7 @@ const Footer = () => {
 
           <div class="mzp-c-footer-items">
             <div class="mzp-c-footer-item">
-              <a href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit">
+              <a href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit" target="_blank">
                 Installation Instructions
               </a>
             </div>
