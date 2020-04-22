@@ -16,12 +16,6 @@ extension/options/routinesView.js
 extension/options/history/historyView.js
 extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
-extension/homepage/homepageController.js
-extension/homepage/homepageView.js
-extension/homepage/homepage.css
-extension/homepage/homepage.css.map
-extension/homepage/images/
-extension/homepage/js/
 extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
 extension/**/*.js.map
