@@ -1,9 +1,14 @@
-@use 'css/vendor/protocol/protocol';
+@use 'css/vendor/protocol/protocol' with (
+  $font-path: './css/font-files'
+);
+
 @use 'css/vendor/protocol/protocol-extra' with (
   $image-path: './images'
 );
 
-@import url("assets/css/inter.css");
+html {
+  scroll-behavior: smooth;
+}
 
 .draft-banner {
   background-color: #c50042;
@@ -19,8 +24,19 @@
   float: right;
 }
 
-.mzp-c-navigation-logo a {
-  background-image: url("./images/fx-voice-logo.svg");
+.mzp-c-navigation-items.mzp-is-open {
+  float: unset;
+}
+
+.mzp-c-menu-title {
+  justify-content: center;
+}
+
+.mzp-c-navigation-menu-button {
+  background-image: url("./images/menu.svg");  
+}
+
+.mzp-c-navigation-logo > img {
   background-size: 254px, 44px;
   height: 44px;
   width: 254px;
@@ -116,6 +132,10 @@
   top: calc(100% + 0.15em);
 }
 
+.open-voice-ecosystem {
+  line-height: 1.5;
+}
+
 .card-header {
   margin-bottom: 2.5rem;
 }
@@ -124,6 +144,45 @@
   font-weight: bold;
   a {
     text-decoration: none;
+  }
+}
+
+.play-video {
+  display: flex;
+}
+
+.play-btn-wrapper {
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    top: calc(50% - 25px);
+    left: calc(50% - 25px);
+  
+  button[name="play"] {
+    width: 100px;
+    height: 70px;
+    background-color: #373737e3;
+    border: none;
+    border-radius: 20px;
+    margin: auto;
+    cursor: pointer;
+  }
+
+  button[name="play"]:hover {
+    background: #c50042;
+    transition: background-color 0.25s ease;
+  }
+  
+  button[name="play"]::after {
+    content: '';
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    left: 3px;
+    border-style: solid;
+    border-width: 20px 0 20px 30px;
+    border-color: transparent transparent transparent white;
   }
 }
 
@@ -138,6 +197,25 @@
     width: 100%;
     height: 100%;
   }
+}
+
+.video-modal-button {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  color: #0060df;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.video-modal-button:hover {
+  text-decoration: none;
+}
+
+.mzp-c-modal-button-close {
+  background-image: url("./images/close-white.svg") !important;
 }
 
 .faq-section-header {
@@ -200,23 +278,30 @@
 .action-categories {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
   .action-category {
     width: 30%;
   }
 }
 
-.mzp-c-footer-primary-logo a {
-  background: url("./images/mozilla-logo.svg");
-  width: 112px;
+.mzp-c-footer-primary-logo {
+  background: #fff;
+  a {
+    background: url("./images/mozilla-logo.svg");
+    width: 112px;
+  }
 }
 
 .mzp-c-footer-primary {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .mzp-c-footer-items {
   display: flex;
+  max-width: 70%;
+  justify-content: space-between;
 }
 .mzp-c-footer-item {
   margin-left: 3rem;
@@ -225,4 +310,42 @@
 .mzp-c-footer-primary::after {
   content: unset;
   display: unset;
+}
+
+@media(max-width: 768px) {
+  .mzp-l-flexcards {
+    flex-wrap: wrap;
+    .mzp-c-card {
+      width: 100%;
+      margin-right: 0px;
+      max-width: unset;
+    }
+  }
+  .wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+  .mzp-l-content.mzp-l-card-half {
+    max-width: 80%;
+  }
+  .mzp-c-footer-item {
+    margin-left: 0rem;
+  }
+  .mzp-c-footer-items {
+    width: 100% !important;
+    max-width: unset;
+  }
+  .action-category {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+}
+
+@media(max-width: 480px) {
+  .mzp-c-footer-items {
+    display: block;
+  }
+
+  .mzp-c-footer-item {
+    margin-bottom: 0.5rem;
+  }
 }

@@ -1,60 +1,59 @@
 @charset "UTF-8";
-@import url("assets/css/inter.css");
 @font-face {
   font-display: swap;
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/Inter-Regular.woff2") format("woff2"), url("../fonts/Inter-Regular.woff") format("woff");
+  src: url("./css/font-files/Inter-Regular.woff2") format("woff2"), url("./css/font-files/Inter-Regular.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
-  src: url("../fonts/Inter-Bold.woff2") format("woff2"), url("../fonts/Inter-Bold.woff") format("woff");
+  src: url("./css/font-files/Inter-Bold.woff2") format("woff2"), url("./css/font-files/Inter-Bold.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: Inter;
   font-style: italic;
   font-weight: normal;
-  src: url("../fonts/Inter-Italic.woff2") format("woff2"), url("../fonts/Inter-Italic.woff") format("woff");
+  src: url("./css/font-files/Inter-Italic.woff2") format("woff2"), url("./css/font-files/Inter-Italic.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: Inter;
   font-style: italic;
   font-weight: bold;
-  src: url("../fonts/Inter-BoldItalic.woff2") format("woff2"), url("../fonts/Inter-BoldItalic.woff") format("woff");
+  src: url("./css/font-files/Inter-BoldItalic.woff2") format("woff2"), url("./css/font-files/Inter-BoldItalic.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: Metropolis;
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/Metropolis-Medium.woff2") format("woff2"), url("../fonts/Metropolis-Medium.woff") format("woff");
+  src: url("./css/font-files/Metropolis-Medium.woff2") format("woff2"), url("./css/font-files/Metropolis-Medium.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: Metropolis;
   font-style: normal;
   font-weight: bold;
-  src: url("../fonts/Metropolis-Bold.woff2") format("woff2"), url("../fonts/Metropolis-Bold.woff") format("woff");
+  src: url("./css/font-files/Metropolis-Bold.woff2") format("woff2"), url("./css/font-files/Metropolis-Bold.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: "Zilla Slab";
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/ZillaSlab-Regular.woff2") format("woff2"), url("../fonts/ZillaSlab-Regular.woff") format("woff");
+  src: url("./css/font-files/ZillaSlab-Regular.woff2") format("woff2"), url("./css/font-files/ZillaSlab-Regular.woff") format("woff");
 }
 @font-face {
   font-display: swap;
   font-family: "Zilla Slab";
   font-style: normal;
   font-weight: bold;
-  src: url("../fonts/ZillaSlab-Bold.woff2") format("woff2"), url("../fonts/ZillaSlab-Bold.woff") format("woff");
+  src: url("./css/font-files/ZillaSlab-Bold.woff2") format("woff2"), url("./css/font-files/ZillaSlab-Bold.woff") format("woff");
 }
 article, aside, details, figcaption, figure, footer, header,
 hgroup, main, nav, section, summary {
@@ -4935,6 +4934,10 @@ html.mzp-is-noscroll .mzp-c-modal {
     width: 25%;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+
 .draft-banner {
   background-color: #c50042;
   color: #fff;
@@ -4949,8 +4952,19 @@ html.mzp-is-noscroll .mzp-c-modal {
   float: right;
 }
 
-.mzp-c-navigation-logo a {
-  background-image: url("./images/fx-voice-logo.svg");
+.mzp-c-navigation-items.mzp-is-open {
+  float: unset;
+}
+
+.mzp-c-menu-title {
+  justify-content: center;
+}
+
+.mzp-c-navigation-menu-button {
+  background-image: url("./images/menu.svg");
+}
+
+.mzp-c-navigation-logo > img {
   background-size: 254px, 44px;
   height: 44px;
   width: 254px;
@@ -5056,6 +5070,10 @@ html.mzp-is-noscroll .mzp-c-modal {
   top: calc(100% + 0.15em);
 }
 
+.open-voice-ecosystem {
+  line-height: 1.5;
+}
+
 .card-header {
   margin-bottom: 2.5rem;
 }
@@ -5065,6 +5083,42 @@ html.mzp-is-noscroll .mzp-c-modal {
 }
 .watch-video a {
   text-decoration: none;
+}
+
+.play-video {
+  display: flex;
+}
+
+.play-btn-wrapper {
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+}
+.play-btn-wrapper button[name=play] {
+  width: 100px;
+  height: 70px;
+  background-color: #373737e3;
+  border: none;
+  border-radius: 20px;
+  margin: auto;
+  cursor: pointer;
+}
+.play-btn-wrapper button[name=play]:hover {
+  background: #c50042;
+  transition: background-color 0.25s ease;
+}
+.play-btn-wrapper button[name=play]::after {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  left: 3px;
+  border-style: solid;
+  border-width: 20px 0 20px 30px;
+  border-color: transparent transparent transparent white;
 }
 
 .video-wrapper {
@@ -5079,6 +5133,25 @@ html.mzp-is-noscroll .mzp-c-modal {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.video-modal-button {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #0060df;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.video-modal-button:hover {
+  text-decoration: none;
+}
+
+.mzp-c-modal-button-close {
+  background-image: url("./images/close-white.svg") !important;
 }
 
 .faq-section-header {
@@ -5138,11 +5211,15 @@ html.mzp-is-noscroll .mzp-c-modal {
 .action-categories {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 .action-categories .action-category {
   width: 30%;
 }
 
+.mzp-c-footer-primary-logo {
+  background: #fff;
+}
 .mzp-c-footer-primary-logo a {
   background: url("./images/mozilla-logo.svg");
   width: 112px;
@@ -5151,10 +5228,13 @@ html.mzp-is-noscroll .mzp-c-modal {
 .mzp-c-footer-primary {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .mzp-c-footer-items {
   display: flex;
+  max-width: 70%;
+  justify-content: space-between;
 }
 
 .mzp-c-footer-item {
@@ -5164,6 +5244,48 @@ html.mzp-is-noscroll .mzp-c-modal {
 .mzp-c-footer-primary::after {
   content: unset;
   display: unset;
+}
+
+@media (max-width: 768px) {
+  .mzp-l-flexcards {
+    flex-wrap: wrap;
+  }
+  .mzp-l-flexcards .mzp-c-card {
+    width: 100%;
+    margin-right: 0px;
+    max-width: unset;
+  }
+
+  .wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+
+  .mzp-l-content.mzp-l-card-half {
+    max-width: 80%;
+  }
+
+  .mzp-c-footer-item {
+    margin-left: 0rem;
+  }
+
+  .mzp-c-footer-items {
+    width: 100% !important;
+    max-width: unset;
+  }
+
+  .action-category {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+}
+@media (max-width: 480px) {
+  .mzp-c-footer-items {
+    display: block;
+  }
+
+  .mzp-c-footer-item {
+    margin-bottom: 0.5rem;
+  }
 }
 
 /*# sourceMappingURL=homepage.css.map */
