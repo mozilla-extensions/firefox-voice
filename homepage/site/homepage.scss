@@ -1,10 +1,10 @@
-@use 'css/vendor/protocol/protocol';
+@use 'css/vendor/protocol/protocol' with (
+  $font-path: './css/font-files'
+);
 
 @use 'css/vendor/protocol/protocol-extra' with (
   $image-path: './images'
 );
-
-@import url("css/inter.css");
 
 html {
   scroll-behavior: smooth;
