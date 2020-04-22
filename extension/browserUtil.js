@@ -29,11 +29,15 @@ export async function loadUrl(tabId, url) {
   // if url is the same just return
   const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
   const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);
+  const tab = await browser.tabs.get(tabId);
+  if (tab.url === url || isRedirect || isGoogle) {
+    return tab;
+  }
 
   await browser.tabs.update(tabId, { url });
   return new Promise((resolve, reject) => {
     function onUpdated(tabId, changeInfo, tab) {
-      if (tab.url === url || isRedirect || isGoogle) {
+      if (tab.url === url) {
         onUpdatedRemove(onUpdated, tabId);
         resolve(tab);
       }
