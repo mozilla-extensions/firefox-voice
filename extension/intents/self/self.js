@@ -18,7 +18,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openOptions",
   async run(context) {
-    await browserUtil.openOrActivateTab("/options/options.html")
+    await browserUtil.openOrActivateTab("/options/options.html");
   },
 });
 
