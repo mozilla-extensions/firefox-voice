@@ -801,9 +801,9 @@ const SearchResultsContent = ({
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
+      <div id="search-results">{renderCard()}</div>
       {renderFollowup ? null : (
         <React.Fragment>
-          <div id="search-results">{renderCard()}</div>
           <div id="search-footer">
             <IntentFeedback
               onSubmitFeedback={onSubmitFeedback}
