@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, log, buildSettings, catcher */
+/* globals React, ReactDOM, log, buildSettings */
 
 import * as util from "../util.js";
 import * as voice from "./voice.js";
@@ -28,22 +28,10 @@ let timerIntervalId;
 let pendingFeedback;
 
 // For tracking if the microphone works at all:
-const ZERO_VOLUME_LIMIT = 5000;
-let hasHadSuccessfulUtterance;
-browser.storage.local
-  .get("hasHadSuccessfulUtterance")
-  .then(results => {
-    hasHadSuccessfulUtterance = results && results.hasHadSuccessfulUtterance;
-  })
-  .catch(e => {
-    catcher.capture(e);
-  });
-async function setHasHadSuccessfulUtterance() {
-  if (!hasHadSuccessfulUtterance) {
-    hasHadSuccessfulUtterance = true;
-    await browser.storage.local.set({ hasHadSuccessfulUtterance });
-  }
-}
+const ZERO_VOLUME_LIMIT = 8000;
+
+// FIXME: this can be removed eventually (after 2020-08-01), we're just clearing an unused storage:
+browser.storage.local.remove("hasHadSuccessfulUtterance");
 
 export const PopupController = function() {
   const [currentView, setCurrentView] = useState("waiting");
@@ -380,12 +368,16 @@ export const PopupController = function() {
       let nonZeroVolume = false;
       recorderIntervalId = setInterval(() => {
         const volume = recorder.getVolumeLevel();
-        if (!hasHadSuccessfulUtterance && !nonZeroVolume) {
+        if (!nonZeroVolume) {
           if (volume > 0.01) {
             nonZeroVolume = true;
           } else if (Date.now() - startTime > ZERO_VOLUME_LIMIT) {
             browser.runtime.sendMessage({ type: "zeroVolumeError" });
-            window.close();
+            setPopupView("error");
+            setErrorMessage(
+              "Microphone is not working. Firefox may need to be restarted."
+            );
+            cancelRecoder();
           }
         }
         setVolumeForAnimation(volume);
@@ -534,7 +526,6 @@ export const PopupController = function() {
         // It was cancelled
         return;
       }
-      setHasHadSuccessfulUtterance();
       const capText =
         json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
       setTranscript(capText);

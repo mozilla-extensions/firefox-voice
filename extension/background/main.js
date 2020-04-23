@@ -217,14 +217,13 @@ function closeTabSoon(tabId, tabUrl) {
 }
 
 async function zeroVolumeError() {
-  if (!recorderTabId) {
-    const exc = new Error("zeroVolumeError with no recorder tab");
-    log.error(exc.message);
-    catcher.capture(exc);
-    throw exc;
+  const exc = new Error("zeroVolumeError");
+  log.error(exc.message);
+  catcher.capture(exc);
+  if (recorderTabId) {
+    await browserUtil.makeTabActive(recorderTabId);
+    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
   }
-  await browserUtil.makeTabActive(recorderTabId);
-  await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
 }
 
 async function launchOnboarding() {
