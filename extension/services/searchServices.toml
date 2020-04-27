@@ -149,3 +149,9 @@ bangSearch = "mozaddon"
 
 [github]
 bangSearch = "github"
+
+[justwatch] 
+bangSearch = "justwatch"
+
+[reelgood]
+bangSearch = "reelgood"
