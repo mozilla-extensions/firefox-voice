@@ -78,7 +78,7 @@ export const PopupController = function() {
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
-      await browserUtil.openOrActivateTab("onboarding/onboard.html");
+      await browser.runtime.sendMessage({ type: "launchOnboarding" });
       window.close();
       return;
     }
@@ -610,9 +610,7 @@ export const PopupController = function() {
   };
 
   const startOnboarding = async () => {
-    await browser.tabs.create({
-      url: browser.extension.getURL("onboarding/onboard.html"),
-    });
+    return browser.runtime.sendMessage({ type: "launchOnboarding" });
   };
 
   const sendFeedback = async feedback => {

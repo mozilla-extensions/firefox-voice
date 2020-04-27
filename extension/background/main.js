@@ -69,6 +69,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "sendFeedback") {
     intentRunner.clearFeedbackIntent();
     return telemetry.sendFeedback(message);
+  } else if (message.type === "launchOnboarding") {
+    return launchOnboarding();
   } else if (message.type === "openRecordingTab") {
     return openRecordingTab();
   } else if (message.type === "zeroVolumeError") {
@@ -227,8 +229,23 @@ async function zeroVolumeError() {
 }
 
 async function launchOnboarding() {
-  const url = browser.runtime.getURL("onboarding/onboard.html");
-  await browser.tabs.create({ url });
+  const tabs = await browser.tabs.query({
+    url: ["*://voice.mozilla.org/firefox-voice/*", "http://localhost/*"],
+  });
+  let hasAudioIntro = false;
+  for (const tab of tabs) {
+    const u = new URL(tab.url);
+    if (
+      u.searchParams.get("source") === "commonvoice" ||
+      u.searchParams.get("ask-audio")
+    ) {
+      hasAudioIntro = true;
+    }
+  }
+  const url = browser.runtime.getURL(
+    "onboarding/onboard.html" + (hasAudioIntro ? "?audio=1" : "")
+  );
+  await browserUtil.openOrActivateTab(url);
 }
 
 if (buildSettings.openPopupOnStart) {
