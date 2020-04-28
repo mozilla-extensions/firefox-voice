@@ -1,12 +1,20 @@
 [bookmarks.create]
 description = "Creates a bookmark placing it in the default folder (Other Bookmarks)"
 match = """
-  bookmark (this |) (page | site | tab |) (for me |)
+  bookmark (this) (page | site | tab |) (for me |)
   (save | add) (this |) (page | site | tab |) to bookmarks
 """
 
 [[bookmarks.create.example]]
 phrase = "Bookmark this page"
+
+[[bookmarks.create.example]]
+phrase = "Bookmark this"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark this site"
+test = true
 
 [bookmarks.open]
 description = "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched"
