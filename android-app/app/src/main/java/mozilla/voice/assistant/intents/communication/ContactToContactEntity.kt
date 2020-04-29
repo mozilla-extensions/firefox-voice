@@ -17,6 +17,7 @@ private val columns = arrayOf(
 
 internal fun contactUriToContactEntity(
     contactActivity: ContactActivity,
+    nickname: String,
     contactUri: Uri
 ): ContactEntity =
     contactActivity.contentResolver?.let { resolver ->
@@ -28,12 +29,13 @@ internal fun contactUriToContactEntity(
                 null,
                 null
             ),
-            contactActivity.viewModel.nickname
+            nickname
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
 internal fun contactIdToContactEntity(
     contactActivity: ContactActivity,
+    nickname: String,
     contactId: Long
 ): ContactEntity =
     // https://learning.oreilly.com/library/view/android-cookbook-2nd/9781449374471/ch10.html
@@ -46,7 +48,7 @@ internal fun contactIdToContactEntity(
                 arrayOf(contactId.toString()),
                 null
             ),
-            contactActivity.viewModel.nickname
+            nickname
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
@@ -64,7 +66,6 @@ private fun cursorToContentEntity(
             cursor.getInt(cursor.getColumnIndex(Phone.IS_PRIMARY)) > 0,
             cursor.getInt(cursor.getColumnIndex(Phone.IS_SUPER_PRIMARY)) > 0
         ).also {
-
             cursor.moveToNext()
         }
     }.let { contactNumbers ->
@@ -72,8 +73,8 @@ private fun cursorToContentEntity(
             nickname,
             name,
             lookupKey,
-            contactNumbers.maxBy { it.getScore(ContactActivity.SMS_MODE) }?.number,
-            contactNumbers.maxBy { it.getScore(ContactActivity.VOICE_MODE) }?.number
+            contactNumbers.maxBy { it.getScore(SMS_MODE) }?.number,
+            contactNumbers.maxBy { it.getScore(VOICE_MODE) }?.number
         )
     }
 }
@@ -89,8 +90,7 @@ private data class ContactNumber(
             Pair(isPrimary, PRIMARY_BONUS),
             Pair(isSuperPrimary, SUPER_PRIMARY_BONUS),
             Pair(
-                mode == ContactActivity.SMS_MODE &&
-                        (type == Phone.TYPE_MOBILE || type == Phone.TYPE_MMS),
+                mode == SMS_MODE && (type == Phone.TYPE_MOBILE || type == Phone.TYPE_MMS),
                 MOBILE_BONUS_FOR_SMS
             )
         ).sumBy {

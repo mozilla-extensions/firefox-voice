@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
         android:layout_marginBottom="64dp"
+        android:visibility="invisible"
         android:checked="true"
         android:text="@string/remember_contact_choice"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,10 +62,12 @@
         app:layout_constraintRight_toRightOf="@id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/contactsCheckBox">
 
-        <ListView
-            android:id="@+id/contactsList"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsRecyclerView"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"/>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contactsButtonLayout"

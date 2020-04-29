@@ -61,6 +61,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation 'io.mockk:mockk:1.9.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // The below are from https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#2
     // and may not all be needed

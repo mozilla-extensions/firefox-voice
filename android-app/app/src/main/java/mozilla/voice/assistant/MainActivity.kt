@@ -6,9 +6,11 @@ package mozilla.voice.assistant
 
 import android.Manifest
 import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -23,6 +25,8 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import androidx.core.text.scale
 import com.airbnb.lottie.LottieDrawable
+import java.util.Timer
+import kotlin.concurrent.schedule
 import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.IntentRunner
 import mozilla.voice.assistant.intents.Metadata
@@ -38,6 +42,7 @@ import mozilla.voice.assistant.language.Language
 @SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
     private var suggestionIndex = 0
+    private var chimeVolume: Int = 0
     private lateinit var suggestions: List<String>
     private lateinit var intentRunner: IntentRunner
 
@@ -84,6 +89,19 @@ class MainActivity : AppCompatActivity() {
                 PERMISSIONS_REQUEST_CODE
             )
         }
+        if (chimeVolume == 0) {
+            chimeVolume = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).run {
+                getStreamVolume(CHIME_STREAM).let { volume ->
+                    if (volume == 0) {
+                        (getSystemService(Context.AUDIO_SERVICE) as AudioManager).getStreamMaxVolume(
+                            CHIME_STREAM
+                        ) / 2
+                    } else {
+                        volume
+                    }
+                }
+            }
+        }
     }
 
     private fun closeRecognizer() {
@@ -114,7 +132,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setChimeStreamVolume(level: Int) {
+        (getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {
+            setStreamVolume(
+                CHIME_STREAM,
+                level,
+                0
+            )
+        }
+    }
+
+    private fun muteChimeStream() {
+        setChimeStreamVolume(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                (getSystemService(Context.AUDIO_SERVICE) as AudioManager).getStreamMinVolume(
+                    CHIME_STREAM
+                )
+            else {
+                0
+            }
+        )
+    }
+
+    private fun unmuteChimeStream() {
+        setChimeStreamVolume(chimeVolume)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unmuteChimeStream()
+    }
+
     private fun startSpeechRecognition() {
+        unmuteChimeStream()
         if (recognizer == null) {
             recognizer = SpeechRecognizer.createSpeechRecognizer(this)
             recognizer?.setRecognitionListener(Listener())
@@ -219,6 +269,9 @@ class MainActivity : AppCompatActivity() {
 
         override fun onResults(results: Bundle?) {
             closeRecognizer()
+            Timer("mute", false).schedule(CHIME_MUTE_DELAY) {
+                muteChimeStream()
+            }
             showSuccess()
             results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let {
                 handleResults(it)
@@ -303,7 +356,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private var recognizer: SpeechRecognizer? = null
         private const val TAG = "MainActivity"
         private const val SPEECH_RECOGNITION_REQUEST = 1
         private const val PERMISSIONS_REQUEST_CODE = 1
@@ -311,6 +363,10 @@ class MainActivity : AppCompatActivity() {
         private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
         private const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
         private const val INSTRUCTIONS_SCALE = .6f
+
+        // Hack to prevent hearing SpeechRecognizer chime after recognizer is closed.
+        private const val CHIME_STREAM = AudioManager.STREAM_MUSIC
+        private const val CHIME_MUTE_DELAY = 1000L
 
         // Animation frames
         private const val SOLICIT_MIN = 0
@@ -323,5 +379,7 @@ class MainActivity : AppCompatActivity() {
         private const val ERROR_MAX = 153
         private const val SUCCESS_MIN = 184
         private const val SUCCESS_MAX = 205
+
+        private var recognizer: SpeechRecognizer? = null
     }
 }

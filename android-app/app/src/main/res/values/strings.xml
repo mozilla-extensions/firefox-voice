@@ -9,6 +9,8 @@
     <string name="no_speech">I didn\'t catch that. Try again.</string>
     <string name="remember_contact_choice">Remember this choice for next time</string>
     <string name="no_contacts_select_contact">select a contact</string>
+    <string name="multiple_contacts">"Multiple matches for %1s"</string>
+    <string name="no_contacts">No matches found for %1s</string>
     <string-array name="sample_phrases">
         <item>Translate \"ich bin ein berliner\" into English</item>
         <item>How is sausage made?</item>
