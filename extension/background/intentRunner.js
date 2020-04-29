@@ -250,11 +250,7 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (
-          url.startsWith("about:blank") ||
-          (buildSettings.executeIntentUrl &&
-            url.startsWith(buildSettings.executeIntentUrl))
-        ) {
+        if (url.startsWith("about:blank")) {
           return;
         }
         const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);
