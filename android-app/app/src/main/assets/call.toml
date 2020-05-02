@@ -1,0 +1,14 @@
+[call.name]
+description = "Initiate a phone call"
+match = """
+  call [name]
+  make a phone call to [name]
+  dial [name]
+  phone [name]
+"""
+
+[[call.name.example]]
+phrase = "Call Mom"
+
+[[call.name.example]]
+phrase = "Phone Susan"
