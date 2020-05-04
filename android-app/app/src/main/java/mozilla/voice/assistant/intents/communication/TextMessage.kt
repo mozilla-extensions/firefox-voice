@@ -1,7 +1,6 @@
 package mozilla.voice.assistant.intents.communication
 
 import android.content.Context
-import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.ParseResult
@@ -10,7 +9,7 @@ import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivity
 class TextMessage {
     companion object {
         @VisibleForTesting
-        internal const val NAME_KEY = "name"
+        private const val NAME_KEY = "name"
 
         internal fun getIntents() = listOf(
             Pair(
@@ -25,11 +24,9 @@ class TextMessage {
             @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             pr.slots[NAME_KEY]?.let { name ->
-                Intent(context, ContactActivity::class.java).apply {
-                    putExtra(UTTERANCE_KEY, pr.utterance)
-                    putExtra(MODE_KEY, SMS_MODE)
-                    putExtra(NICKNAME_KEY, name)
-                }
+                context?.let {
+                    ContactActivity.createIntent(it, pr.utterance, name, SMS_MODE)
+                } ?: throw AssertionError("Context unavailable")
             }
     }
 }

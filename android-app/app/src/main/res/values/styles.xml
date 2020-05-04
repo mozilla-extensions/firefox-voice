@@ -14,7 +14,7 @@
     </style>
 
     <style name="StatusText" parent="VoiceText">
-        <item name="android:textSize">18pt</item>
+        <item name="android:textSize">14pt</item>
     </style>
 
     <style name="FeedbackText" parent="VoiceText">

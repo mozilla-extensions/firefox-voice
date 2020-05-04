@@ -6,13 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".intents.communication.ui.contact.ContactActivity">
 
+    <Button
+        android:id="@+id/contactCloseButton"
+        android:drawableRight="@drawable/ic_close_black_24dp"
+        android:background="@null"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/contactStatusView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/contactStatusView"
         style="@style/StatusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
-        android:text=""
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toTopOf="@id/top_guideline"
         app:layout_constraintLeft_toLeftOf="@id/left_guideline"
         app:layout_constraintRight_toRightOf="@id/right_guideline"

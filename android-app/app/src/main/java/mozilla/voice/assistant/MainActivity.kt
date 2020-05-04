@@ -381,5 +381,8 @@ class MainActivity : AppCompatActivity() {
         private const val SUCCESS_MAX = 205
 
         private var recognizer: SpeechRecognizer? = null
+
+        internal fun createIntent(context: Context) =
+            Intent(context, MainActivity::class.java)
     }
 }
