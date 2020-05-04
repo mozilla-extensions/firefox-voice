@@ -22,6 +22,14 @@ import mozilla.voice.assistant.intents.communication.VOICE_MODE
 import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
 import mozilla.voice.assistant.intents.communication.contactUriToContactEntity
 
+private fun String.toComparisonStrings() =
+    arrayOf(
+        this, // just the nickname
+        "$this %", // first name
+        "% $this", // last name
+        "% $this %" // middle name
+    )
+
 class ContactPresenter(private val contactActivity: ContactActivity) {
     private var contactLoader: ContactLoader? = null
     private val mode = contactActivity.intent.getStringExtra(MODE_KEY)
@@ -104,22 +112,15 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
     }
 
     inner class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
-        override fun onCreateLoader(loaderId: Int, args: Bundle?): Loader<Cursor> {
-            val nickname = viewModel.nickname
-            return CursorLoader(
+        override fun onCreateLoader(loaderId: Int, args: Bundle?) =
+            CursorLoader(
                 contactActivity,
                 ContactsContract.Contacts.CONTENT_URI,
                 PROJECTION,
                 SELECTION,
-                arrayOf(
-                    nickname, // just the nickname
-                    "$nickname %", // first name
-                    "% $nickname", // last name
-                    "% $nickname %" // middle name
-                ),
+                viewModel.nickname.toComparisonStrings(),
                 null
             )
-        }
 
         override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
             when (cursor.count) {
@@ -138,7 +139,7 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
                         initiateRequestedActivity(contactEntity)
                     }
                 }
-                else -> contactActivity.processMultipleContacts(cursor) // cursor closed by callee
+                else -> contactActivity.processMultipleContacts(cursor) // cursor closed by OnClickListener
             }
         }
 
@@ -153,12 +154,17 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
             ContactsContract.Contacts.HAS_PHONE_NUMBER
         )
-        private const val TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
-        private const val NUM_TERMS = 4 // exact match, first name, last name, middle name
+        private const val HAS_PHONE_TERM = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} = 1"
+        private const val LIKE_TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
+        private const val NUM_LIKE_TERMS = 4 // exact match, first name, last name, middle name
         private val SELECTION: String =
-            generateSequence { TERM }
-                .take(NUM_TERMS)
-                .joinToString(separator = " OR ")
+            generateSequence { LIKE_TERM }
+                .take(NUM_LIKE_TERMS)
+                .joinToString(
+                    separator = " OR ",
+                    prefix = "$HAS_PHONE_TERM AND (",
+                    postfix = ")"
+                )
 
         internal const val CONTACT_ID_INDEX = 0
         internal const val CONTACT_LOOKUP_KEY_INDEX = 1
