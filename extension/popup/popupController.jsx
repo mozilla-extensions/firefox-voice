@@ -26,6 +26,9 @@ let timerIntervalId;
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
+// For the user of callbacks, we shadow this useState() variable here.
+// FIXME: this is a terrible pattern, but could probably be fixed with https://github.com/mozilla/firefox-voice/issues/1614
+let _currentView;
 
 // For tracking if the microphone works at all:
 const ZERO_VOLUME_LIMIT = 8000;
@@ -351,6 +354,7 @@ export const PopupController = function() {
     }
 
     setMinPopupSize(350);
+    _currentView = newView;
     setCurrentView(newView);
 
     // clear timer interval when not used
@@ -538,7 +542,11 @@ export const PopupController = function() {
         text: json.data[0].text,
       });
       const completedIntent = await updateLastIntent();
-      if (completedIntent && !completedIntent.skipSuccessView) {
+      if (
+        completedIntent &&
+        !completedIntent.skipSuccessView &&
+        _currentView !== "searchResults"
+      ) {
         setPopupView("success");
       }
       // intent can run a follow up directly
