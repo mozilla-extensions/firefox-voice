@@ -6,15 +6,15 @@ match = """
 """
 
 [[find.find.example]]
-phrase = "Find my calendar tab"
+phrase = "Find calendar tab"
 
 [[find.find.example]]
-phrase = "switch to my calendar "
+phrase = "switch to calendar "
 
 [[find.find.example]]
-phrase = "go to my calendar"
+phrase = "go to calendar"
 test = true
 
 [[find.find.example]]
-phrase = "bring up my calendar"
+phrase = "bring up calendar"
 test = true
