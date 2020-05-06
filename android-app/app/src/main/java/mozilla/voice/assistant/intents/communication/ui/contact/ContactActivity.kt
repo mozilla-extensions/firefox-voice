@@ -1,10 +1,12 @@
 package mozilla.voice.assistant.intents.communication.ui.contact
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.contact_activity.*
 import mozilla.voice.assistant.R
+import mozilla.voice.assistant.intents.communication.MODE_KEY
 import mozilla.voice.assistant.intents.communication.NICKNAME_KEY
+import mozilla.voice.assistant.intents.communication.UTTERANCE_KEY
 
 class ContactActivity : AppCompatActivity() {
     private lateinit var presenter: ContactPresenter
@@ -29,6 +33,9 @@ class ContactActivity : AppCompatActivity() {
         super.onStart()
         nickname = intent.getStringExtra(NICKNAME_KEY)
         presenter = ContactPresenter(this)
+        contactCloseButton.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -86,17 +93,30 @@ class ContactActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_CONTACT_FOR_NICKNAME) {
-            // TODO: Handle other cases
             if (resultCode == Activity.RESULT_OK) {
                 data?.data?.let {
                     presenter.onContactChosen(it)
+                } ?: run {
+                    Log.e(TAG, "Unable to retrieve chosen contact")
+                    finish()
                 }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                finish()
             }
         }
     }
 
     companion object {
+        private const val TAG = "ContactActivity"
         internal const val PERMISSIONS_REQUEST = 100
         private const val SELECT_CONTACT_FOR_NICKNAME = 1
+
+        fun createIntent(context: Context, utterance: String, nickname: String, mode: String) =
+                Intent(context, ContactActivity::class.java).apply {
+                    putExtra(UTTERANCE_KEY, utterance)
+                    putExtra(NICKNAME_KEY, nickname)
+                    putExtra(MODE_KEY, mode)
+                }
     }
 }

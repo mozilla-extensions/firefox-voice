@@ -1,19 +1,27 @@
-[sms.start]
-description = "Start sending a text message"
+[sms.name]
+description = "Initiate a text message using a target name"
 match = """
-  send text (message | ) to [name]
-  send sms to [name]
-  send sms message to [name]
-  text [name]
-  sms [name]
-  send [name] a text (message|)
-  send [name] a sms
-  send [name] an sms
-  send [name] a text
+  send (a|an|) (text|text message|sms|sms message) to [name]
+  (text|sms) [name]
+  send [name] (a|an) (text|text message|sms)
 """
 
-[[sms.start.example]]
+[[sms.name.example]]
 phrase = "Send an sms to London Breed"
 
-[[sms.start.example]]
+[[sms.name.example]]
 phrase = "Text Scott Wiener"
+
+[sms.number]
+description = "Initiate a text message using a target number"
+match = """
+   send (a|an|) (text|text message|sms|sms message) to [number:phoneNumber]
+   (text|sms) [number:phoneNumber]
+   send [number:phoneNumber] (a|an) (text|text message|sms)
+ """
+
+[[sms.number.example]]
+phrase = "Send a text to 415-555-1212"
+
+[[sms.number.example]]
+phrase = "send 555-1234 an sms"
