@@ -151,8 +151,7 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
-            ContactsContract.Contacts.HAS_PHONE_NUMBER
+            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
         )
         private const val HAS_PHONE_TERM = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} = 1"
         private const val LIKE_TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
@@ -170,6 +169,5 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
         internal const val CONTACT_LOOKUP_KEY_INDEX = 1
         internal const val CONTACT_DISPLAY_NAME_INDEX = 2
         internal const val CONTACT_PHOTO_URI_INDEX = 3
-        internal const val CONTACT_HAS_PHONE_NUMBER = 4
     }
 }

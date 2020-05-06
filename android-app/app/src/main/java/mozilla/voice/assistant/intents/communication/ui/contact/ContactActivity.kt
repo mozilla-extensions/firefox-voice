@@ -112,7 +112,7 @@ class ContactActivity : AppCompatActivity() {
         internal const val PERMISSIONS_REQUEST = 100
         private const val SELECT_CONTACT_FOR_NICKNAME = 1
 
-        internal fun createIntent(context: Context, utterance: String, nickname: String, mode: String) =
+        fun createIntent(context: Context, utterance: String, nickname: String, mode: String) =
                 Intent(context, ContactActivity::class.java).apply {
                     putExtra(UTTERANCE_KEY, utterance)
                     putExtra(NICKNAME_KEY, nickname)

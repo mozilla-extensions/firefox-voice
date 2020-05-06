@@ -382,7 +382,7 @@ class MainActivity : AppCompatActivity() {
 
         private var recognizer: SpeechRecognizer? = null
 
-        internal fun createIntent(context: Context) =
+        fun createIntent(context: Context) =
             Intent(context, MainActivity::class.java)
     }
 }
