@@ -218,7 +218,7 @@ const OpenVoiceEcosystem = () => {
               Now you can help by choosing to let us store your Firefox Voice
               requests&mdash;securely, without accompanying personally
               identifiable information&mdash;and use them to improve our
-              research. We won't share them outside of Mozilla.
+              research.
             </p>
           </div>
         </div>
@@ -300,9 +300,7 @@ const Faq = () => {
             <div class="faq-section-header">What is Firefox Voice?</div>
           </summary>
           <p>
-            Firefox Voice is an experimental Add-On for the Firefox Browser that
-            enables voice interactions. You can ask things like “Search for
-            sushi in Auckland”, “Close tab” or “How tall is Mount Everest?”
+            Firefox Voice is an experimental Add-On for the Firefox Browser that enables voice interactions. You can ask things like “Search for sushi in Auckland”, “Close tab” or “How tall is Mount Everest?”
           </p>
 
           <p>
@@ -341,34 +339,19 @@ const Faq = () => {
             </div>
           </summary>
           <p>
-            By default Firefox Voice does <strong>not</strong> store your voice
-            recordings after processing. Users may enable audio recordings to be
-            stored for purposes of improving our speech detection service but it
-            is not required or enabled by default, nor are we promoting this
-            option currently.
-          </p>
-        </details>
-        <details>
-          <summary>
-            <div class="faq-section-header">
-              Are my voice recordings transcribed and stored?
-            </div>
-          </summary>
-          <p>
-            For the initial Beta release we ask participants to allow
-            transcriptions during the installation process. Even if participants
-            opt-out of allowing transcriptions they are able to use Firefox
-            Voice.
+            By default Firefox Voice does not store voice recordings.
           </p>
           <p>
-            When participants opt-in, transcripts are used for research purposes
-            to improve Firefox Voice and related services. Transcriptions and
-            related data are stored securely and without personally identifying
-            information.
+            Users may allow Mozilla to store their voice recordings and computer-generated transcripts of their recordings. Recordings and transcripts are stored securely and without personally identifying information (this means, we don’t know who said them).
           </p>
           <p>
-            In the Preferences you can additionally allow us to keep your audio
-            for speech-to-text training purposes. This is off by default.
+            Even if users do not opt-in to allowing storage, they are able to use Firefox Voice.
+          </p>
+          <p>
+            In your Preferences,you can change your settings at any time.
+          </p>
+          <p>
+            If you allow Mozilla to store your voice recordings, we use your recordings for research purposes and to help improve Firefox Voice. For example, we may use the computer-generated transcripts of your recordings to help identify which commands we should support. We may also manually review your voice recordings to better train our speech service to respond more accurately.
           </p>
         </details>
         <details>
@@ -378,7 +361,7 @@ const Faq = () => {
             </div>
           </summary>
           <p>
-            The current Beta release of Firefox Voice is an experiment to better
+            The current release of Firefox Voice is an experiment to better
             understand the needs and desire for voice interactions within the
             browser. At this time no decision has been made on when or if the
             add-on will come bundled by default with Firefox. Future development
@@ -404,7 +387,7 @@ const Faq = () => {
             </li>
             <li>
               <a href="https://github.com/mozilla/TTS">Mozilla TTS</a>: A deep
-              learning based Text2Speech engine, low in cost and high in
+              learning based text-to-speech engine, low in cost and high in
               quality.
             </li>
             <li>
@@ -468,6 +451,84 @@ const Faq = () => {
               retain any audio unless you’ve actively chosen to allow Mozilla to
               collect audio recordings for the purpose of improving our speech
               recognition service.
+            </li>
+          </ol>
+        </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">When I try to install I see “the add-on could not be downloaded because of a connection failure.”</div>
+          </summary>
+          <p>
+            Antivirus and other security software can sometimes prevent Firefox extensions from being downloaded, installed or updated.
+          </p>
+          <img></img>
+          <p>
+            If you’re having trouble installing Firefox Voice or it doesn’t update automatically, follow these steps to install the extension manually:
+          </p>
+          <ol>
+            <li>
+              Open a different browser, like Safari, Chrome, or Microsoft Edge.
+            </li>
+            <li>
+              Copy and paste the <a href="https://va.allizom.org/releases/prod/firefox-voice.xpi">download</a> link into the different browser. It will be saved as a .xpi file in your Downloads folder.
+            </li>
+            <li>
+              Open Firefox and drag the .xpi file to the Firefox window, then click Add.
+            </li>
+          </ol>
+        </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">After installing Firefox Voice it doesn’t respond to anything I say.</div>
+          </summary>
+          <p>
+            If you’re having trouble getting Firefox Voice to hear what you're saying and take action the microphone may not be picking up audio. Check that your microphone is set up correctly.
+          </p>
+          <ol>
+            <li>
+              Ensure your device has a microphone or your external microphone is plugged in.
+            </li>
+            <li>
+              Check Firefox Voice has permissions to access the mic.
+            </li>
+            <li>
+              Restart Firefox. This can often clear up the issue.
+            </li>
+          </ol>
+        </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">How is my audio processed?</div>
+          </summary>
+          <p>
+            When you make a request using Firefox Voice, the browser captures the audio and uses cloud-based services to transcribe and then process the request. Below are the steps and services utilized.
+          </p>
+          <ol>
+            <li>
+              The microphone must be opened with a button press or keyboard shortcut.
+            </li>
+            <li>
+              After you finish speaking the microphone is turned off.
+            </li>
+            <li>
+              Audio from your voice request is sent to Mozilla’s Voicefill server without any personally identifiable metadata.
+            </li>
+            <li>
+              The Voicefill server sends the audio to Google’s Speech-to-Text engine, which returns transcribed text. We’ve instructed the Google Speech-to-Text engine to NOT save any recordings. Note: In the future, we expect to enable Mozilla’s own technology for Speech-to-Text which will enable us to stop using Google’s Speech-to-Text engine.
+            </li>
+            <li>
+              Based on the transcribed text, Firefox Voice attempts to fulfill your request.
+              <ul>
+                <li>
+                  For example, if you say “Go to…” or “Find…” a Search using your default search engine will be executed. Note: if you’re using Google Search and are logged into your Google account in Firefox, your search will be associated with your Google search history.
+                </li>
+                <li>
+                  Requests such as “Close tab” or “Read this page” are processed directly by the browser.
+                </li>
+              </ul>
+            </li>
+            <li>
+              We’ve instructed Google Speech-to-text not to retain audio once the request has been processed. In addition, Mozilla does not retain any audio unless you’ve actively chosen to allow Mozilla to collect audio recordings for the purpose of improving our speech recognition service.
             </li>
           </ol>
         </details>
