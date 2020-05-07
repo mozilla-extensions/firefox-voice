@@ -9,6 +9,8 @@ const onboardingContainer = document.getElementById("onboarding-container");
 let isInitialized = false;
 let userSettings;
 
+const askForAudio = !!new URLSearchParams(location.search).get("audio");
+
 export const OnboardingController = function() {
   const [optinViewAlreadyShown, setOptinViewShown] = useState(true);
   const [permissionError, setPermissionError] = useState(null);
@@ -32,6 +34,9 @@ export const OnboardingController = function() {
   const setOptinValue = async value => {
     userSettings.collectTranscriptsOptinAnswered = Date.now();
     userSettings.utterancesTelemetry = value;
+    if (askForAudio) {
+      userSettings.collectAudio = value;
+    }
     await settings.saveSettings(userSettings);
   };
 
@@ -56,6 +61,7 @@ export const OnboardingController = function() {
   return (
     <onboardingView.Onboarding
       optinViewAlreadyShown={optinViewAlreadyShown}
+      askForAudio={askForAudio}
       setOptinValue={setOptinValue}
       setOptinViewShown={setOptinViewShown}
       permissionError={permissionError}

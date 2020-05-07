@@ -138,7 +138,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      {inDevelopment ? (
+      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}
@@ -578,7 +578,10 @@ const AboutSection = () => {
           </a>
         </li>
         <li>
-          <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+          <a
+            href="/views/privacy-policy.html"
+            onClick={browserUtil.activateTabClickHandler}
+          >
             How Mozilla Protects Your Voice Privacy
           </a>
         </li>

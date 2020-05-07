@@ -5,6 +5,7 @@ import * as browserUtil from "../browserUtil.js";
 
 export const Onboarding = ({
   optinViewAlreadyShown,
+  askForAudio,
   setOptinValue,
   setOptinViewShown,
   permissionError,
@@ -15,6 +16,7 @@ export const Onboarding = ({
         <OptinVoiceTranscripts
           setOptinValue={setOptinValue}
           setOptinViewShown={setOptinViewShown}
+          askForAudio={askForAudio}
         />
       )}
       {optinViewAlreadyShown && permissionError && (
@@ -30,7 +32,11 @@ export const Onboarding = ({
   );
 };
 
-const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
+const OptinVoiceTranscripts = ({
+  setOptinValue,
+  setOptinViewShown,
+  askForAudio,
+}) => {
   const updateVoiceTranscriptOptin = event => {
     event.preventDefault();
     setOptinValue(!!event.target.value);
@@ -42,31 +48,17 @@ const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
       <div className="modal">
         <div className="modal-header">
           <p>Successfully Installed</p>
-          <h1>Allow Firefox Voice to Collect Voice Transcripts</h1>
+          {askForAudio ? (
+            <h1>Allow Firefox Voice to collect Voice Samples</h1>
+          ) : (
+            <h1>Allow Firefox Voice to Collect Voice Transcripts</h1>
+          )}
         </div>
-        <div className="modal-content">
-          <p>
-            For research purposes and in order to improve Firefox Voice and
-            related services, Mozilla would like to collect and analyze voice
-            transcripts. We store this data securely and without personally
-            identifying information. Can Firefox Voice store transcripts of your
-            voice recordings for research?
-          </p>
-          <p>
-            You’ll always be able to use Firefox Voice, even if you don’t allow
-            collection. The microphone is only active when triggered with a
-            button press or keyboard shortcut.
-          </p>
-          <p>
-            <a
-              href="/views/privacy-policy.html"
-              target="_blank"
-              onClick={browserUtil.activateTabClickHandler}
-            >
-              Learn how Mozilla protects your voice data.
-            </a>
-          </p>
-        </div>
+        {askForAudio ? (
+          <OptinAudioDescription />
+        ) : (
+          <OptinVoiceTranscriptsDescription />
+        )}
         <div className="modal-footer">
           <button
             className="styled-button"
@@ -83,6 +75,61 @@ const OptinVoiceTranscripts = ({ setOptinValue, setOptinViewShown }) => {
           </button>
         </div>
       </div>
+    </div>
+  );
+};
+
+const OptinAudioDescription = () => {
+  return (
+    <div className="modal-content">
+      <p>
+        At Mozilla we’re trying to build an open voice ecosystem that is private
+        and secure. To do this we need to collect the necessary data to teach
+        our systems how to recognize a wider variety of diverse voices, in all
+        sorts of environments.
+      </p>
+      <p>Will you allow Firefox Voice to store your voice recordings?</p>
+      <p>
+        You’ll always be able to use Firefox Voice, even if you don’t allow
+        collection.
+      </p>
+      <p>
+        <a
+          href="/views/privacy-policy.html"
+          target="_blank"
+          onClick={browserUtil.activateTabClickHandler}
+        >
+          Learn how Mozilla protects your voice data.
+        </a>
+      </p>
+    </div>
+  );
+};
+
+const OptinVoiceTranscriptsDescription = () => {
+  return (
+    <div className="modal-content">
+      <p>
+        For research purposes and in order to improve Firefox Voice and related
+        services, Mozilla would like to collect and analyze voice transcripts.
+        We store this data securely and without personally identifying
+        information. Can Firefox Voice store transcripts of your voice
+        recordings for research?
+      </p>
+      <p>
+        You’ll always be able to use Firefox Voice, even if you don’t allow
+        collection. The microphone is only active when triggered with a button
+        press or keyboard shortcut.
+      </p>
+      <p>
+        <a
+          href="/views/privacy-policy.html"
+          target="_blank"
+          onClick={browserUtil.activateTabClickHandler}
+        >
+          Learn how Mozilla protects your voice data.
+        </a>
+      </p>
     </div>
   );
 };

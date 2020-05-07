@@ -1,0 +1,24 @@
+[call.name]
+description = "Initiate a phone call"
+match = """
+  (call|dial|phone) [name]
+  make a phone call to [name]
+"""
+
+[[call.name.example]]
+phrase = "Call Mom"
+
+[[call.name.example]]
+phrase = "Phone Susan"
+
+[call.number]
+description = "Initiate a phone call to a specified number"
+match = """
+   (call|dial|phone) (one|) [number:phoneNumber]
+ """
+
+[[call.number.example]]
+phrase = "Call 415-555-1212"
+
+[[call.number.example]]
+phrase = "Dial 1 650-555-1212"

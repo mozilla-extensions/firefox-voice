@@ -113,7 +113,19 @@ async function performSearch(query) {
   if (buildSettings.android) {
     await browserUtil.makeTabActive(tabId);
   }
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  try {
+    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  } catch (e) {
+    // There's a (fairly) common race condition here
+    if (e.message.includes("communicate is not defined")) {
+      log.info(
+        "Race condition in search page, attempting to load queryScript second time"
+      );
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    } else {
+      throw e;
+    }
+  }
 }
 
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,

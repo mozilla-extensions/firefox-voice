@@ -26,6 +26,7 @@ match = """
   (hello | hi)
   what commands (can | could | will | would |) (I | you |) (say | follow | use | speak |)
   (hello | hi |) how are you (doing |)
+  show options
 """
 
 [[self.openLexicon.example]]
@@ -60,6 +61,10 @@ phrase = "What can I do?"
 [[self.openLexicon.example]]
 phrase = "what should I do"
 test = true
+
+[[self.openLexicon.example]]
+phrase = "Show options"
+
 
 [self.openOptions]
 description = "Opens the options page"

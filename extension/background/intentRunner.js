@@ -241,8 +241,8 @@ export class IntentContext {
     const searchUrl = searching.googleSearchUrl(query, true);
     const tab =
       !!options.openInTabId && options.openInTabId > -1
-        ? await browserUtil.loadUrl(options.openInTabId, searchUrl)
-        : await this.createTab({ url: searchUrl });
+        ? await browser.tabs.update(options.openInTabId, { url: searchUrl })
+        : await browserUtil.createTab({ url: searchUrl });
     if (options.hide && !buildSettings.android) {
       await browser.tabs.hide(tab.id);
     }
@@ -250,11 +250,7 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (
-          url.startsWith("about:blank") ||
-          (buildSettings.executeIntentUrl &&
-            url.startsWith(buildSettings.executeIntentUrl))
-        ) {
+        if (url.startsWith("about:blank")) {
           return;
         }
         const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);

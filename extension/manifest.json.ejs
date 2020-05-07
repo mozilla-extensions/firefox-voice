@@ -1,10 +1,6 @@
 {
   "manifest_version": 2,
-  "name": <% if (env.EXECUTE_INTENT_URL) { %>
-      "Firefox Voice Android DEMO ONLY",
-     <% } else { %>
-      "Firefox Voice Beta",
-    <% } %>
+  "name": "Firefox Voice Beta",
   "version": <%= env.VERSION || version %>,
   "description": "Voice control the web",
   "developer": {
@@ -35,21 +31,11 @@
       <% } %>
       "catcher.js",
       "js/vendor/fuse.js",
-      "js/vendor/ppnListing.js",
       "background/moduleLoader.js",
       "background/loadMain.js",
       "js/vendor/chrono.min.js"
     ]
   },
-  <% if (env.EXECUTE_INTENT_URL) { %>
-  "content_scripts": [
-    {
-      "matches": [<%= env.EXECUTE_INTENT_URL + "*" %>],
-      "js": ["nativeCommunication/executeIntentUrl.js"],
-      "run_at": "document_start"
-    }
-  ],
-  <% } %>
   "experiment_apis": {
     "voice": {
       "schema": "experiments/voice/schema.json",

@@ -151,7 +151,14 @@ intentRunner.registerIntent({
     // "canceled"
     // "not_saved"
     // "not_replaced"
-    await browser.tabs.saveAsPDF({});
+    try {
+      await browser.tabs.saveAsPDF({});
+    } catch (e) {
+      if (e.message === "Not supported on Mac OS X") {
+        e.displayMessage = "Save as PDF is not supported on Mac OS X";
+        throw e;
+      }
+    }
   },
 });
 
@@ -228,19 +235,6 @@ intentRunner.registerIntent({
     }
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.update(currentWindow.id, { state: "fullscreen" });
-  },
-});
-
-intentRunner.registerIntent({
-  name: "tabs.maximize",
-  async run(context) {
-    if (buildSettings.android) {
-      const exc = new Error("Maximize not supported on Android");
-      exc.displayMessage = exc.message;
-      throw exc;
-    }
-    const currentWindow = await browser.windows.getCurrent();
-    await browser.windows.update(currentWindow.id, { state: "maximized" });
   },
 });
 
