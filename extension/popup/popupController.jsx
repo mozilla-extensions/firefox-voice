@@ -53,6 +53,7 @@ export const PopupController = function() {
   const [timerTotalInMS, setTimerTotalInMS] = useState(0);
   const [requestFollowup, setRequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
+  const [showZeroVolumeError, setShowZeroVolumeError] = useState(false);
 
   let executedIntent = false;
   let stream = null;
@@ -370,18 +371,19 @@ export const PopupController = function() {
     ) {
       const startTime = Date.now();
       let nonZeroVolume = false;
+      let hasSentZeroVolumeError = false;
       recorderIntervalId = setInterval(() => {
         const volume = recorder.getVolumeLevel();
         if (!nonZeroVolume) {
           if (volume > 0.01) {
             nonZeroVolume = true;
-          } else if (Date.now() - startTime > ZERO_VOLUME_LIMIT) {
+          } else if (
+            Date.now() - startTime > ZERO_VOLUME_LIMIT &&
+            !hasSentZeroVolumeError
+          ) {
             browser.runtime.sendMessage({ type: "zeroVolumeError" });
-            setPopupView("error");
-            setErrorMessage(
-              "Microphone is not working. Firefox may need to be restarted."
-            );
-            cancelRecoder();
+            setShowZeroVolumeError(true);
+            hasSentZeroVolumeError = true;
           }
         }
         setVolumeForAnimation(volume);
@@ -675,6 +677,7 @@ export const PopupController = function() {
       timerTotalInMS={timerTotalInMS}
       renderFollowup={listenForFollowup || requestFollowup}
       followupText={followupText}
+      showZeroVolumeError={showZeroVolumeError}
     />
   );
 };
