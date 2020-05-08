@@ -71,13 +71,14 @@ class ContactActivity : AppCompatActivity() {
             .show()
     }
 
-    internal fun processZeroContacts() {
+    internal fun processZeroContacts(cursor: Cursor) {
         // contactsViewAnimator.displayedChild = R.id.noContactsButton
         contactsCheckBox.visibility = View.VISIBLE
 
         contactStatusView.text = getString(R.string.no_contacts, nickname)
         contactsViewAnimator.showNext()
         noContactsButton.setOnClickListener {
+            cursor.close()
             startContactPicker()
         }
     }
