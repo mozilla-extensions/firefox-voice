@@ -21,5 +21,5 @@ As described in our privacy policy, Firefox Voice shares data with service provi
 
 Here’s who we use to support Firefox Voice:
 
-- [Google Cloud Speech Service](https://cloud.google.com/terms/data-processing-terms): we share your audio recording with Google Cloud’s speech-to-text service to assist us in processing and carrying out your commands. Audio recordings are shared without personally identifiable metadata, and we've instructed Google's service not to retain the audio or transcript associated with a command after it processes the command
+- [Google Cloud Speech Service](https://cloud.google.com/terms/data-processing-terms): we share your audio recording with Google Cloud’s speech-to-text service to assist us in processing and carrying out your commands. Audio recordings are shared without personally identifiable metadata, and we've instructed Google's service not to retain the audio or transcript associated with a command after it processes the command.
 - [Rev](https://www.rev.com/about/privacy): if you choose to allow Mozilla to store your audio recordings, we may share your recordings with Rev to manually review and transcribe them. Audio recordings are shared without personally identifiable metadata, and we've instructed Rev’s service not to retain the audio or transcript associated with a command after it reviews the command.
