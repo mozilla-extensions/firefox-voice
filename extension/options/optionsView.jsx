@@ -502,6 +502,11 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
   return (
     <fieldset id="data-collection">
       <legend>Firefox Voice Data Collection and Use</legend>
+      <p>
+        We store this data without personally identifiable information, which
+        means we can’t match data, transcripts, or a voice to a particular
+        person.
+      </p>
       <ul>
         <li>
           <div className="styled-toggleswitch">
