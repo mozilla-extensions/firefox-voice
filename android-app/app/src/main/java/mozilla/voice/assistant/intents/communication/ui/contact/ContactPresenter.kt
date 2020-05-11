@@ -125,8 +125,10 @@ class ContactPresenter(private val contactActivity: ContactActivity) {
         override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
             when (cursor.count) {
                 0 -> run {
-                    cursor.close()
-                    contactActivity.processZeroContacts()
+                    // Don't close cursor here, in case a configuration change occurs after
+                    // processZeroContacts() is called but before the contact picker is opened
+                    // (issue 1628). Instead, it will be called just before opening the picker.
+                    contactActivity.processZeroContacts(cursor)
                 }
                 1 -> cursor.use {
                     it.moveToNext()

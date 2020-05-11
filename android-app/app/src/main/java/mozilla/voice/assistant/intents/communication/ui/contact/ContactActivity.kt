@@ -18,6 +18,22 @@ import mozilla.voice.assistant.intents.communication.MODE_KEY
 import mozilla.voice.assistant.intents.communication.NICKNAME_KEY
 import mozilla.voice.assistant.intents.communication.UTTERANCE_KEY
 
+/**
+ * Activity that initiates a text message or phone call to the specified contact.
+ * The mode ([SMS_MODE] or [VOICE_MODE]) is specified through the [MODE_KEY] extra,
+ * and the name is specified through the [NICKNAME_KEY] extra.
+ *
+ * The translation from the name (referred to as a "nickname" to distinguish it from
+ * an Android contact name) to a phone number is done as follows:
+ * 1. If there is an entry corresponding to the nickname in the app's database,
+ *    the corresponding phone number stored in the database is used.
+ * 2. A lookup is performed among the Android contacts.
+ *    - If no matches are found, the user is prompted to select a contact and whether
+ *      to remember the contact.
+ *    - If one match is found, that contact is used, and the database is updated.
+ *    - If multiple contacts are found, the user is asked to choose among them and
+ *      whether to remember the contact.
+ */
 class ContactActivity : AppCompatActivity() {
     private lateinit var presenter: ContactPresenter
     private lateinit var nickname: String
@@ -55,13 +71,14 @@ class ContactActivity : AppCompatActivity() {
             .show()
     }
 
-    internal fun processZeroContacts() {
+    internal fun processZeroContacts(cursor: Cursor) {
         // contactsViewAnimator.displayedChild = R.id.noContactsButton
         contactsCheckBox.visibility = View.VISIBLE
 
         contactStatusView.text = getString(R.string.no_contacts, nickname)
         contactsViewAnimator.showNext()
         noContactsButton.setOnClickListener {
+            cursor.close()
             startContactPicker()
         }
     }
