@@ -15,20 +15,65 @@ export const Homepage = ({ isCommonVoice }) => {
 };
 
 const CommonVoiceWelcome = () => {
+  const handleCommonVoiceClick = e => {
+    e.preventDefault();
+    const content = document.querySelector(".modal-common-voice-content");
+    Mzp.Modal.createModal(e.target, content, {
+      title: "Contribute your voice",
+      className: "cv-modal",
+      closeText: "Close modal",
+    });
+  };
   return (
-    <aside class="mzp-c-notification-bar common-voice-welcome">
-      {/* <button class="mzp-c-notification-bar-button" type="button"></button> */}
-      <img
-        class="robot-profile"
-        alt="Profile of the Common Voice robot illustration"
-        src="./images/robot-profile.svg"
-      />
-      <p>
-        Welcome Common Voice contributor! Help us build an open voice ecosystem.
-        After installing, please allow Firefox Voice to collect voice samples.{" "}
-        <a href="https://voice.mozilla.org/">Learn more</a>.
-      </p>
-    </aside>
+    <React.Fragment>
+      <aside class="mzp-c-notification-bar common-voice-welcome">
+        {/* <button class="mzp-c-notification-bar-button" type="button"></button> */}
+        <img
+          class="robot-profile"
+          alt="Profile of the Common Voice robot illustration"
+          src="./images/robot-profile.svg"
+        />
+        <p>
+          Welcome Common Voice contributor! Help us build an open voice ecosystem.
+          After installing, please allow Firefox Voice to collect voice samples.{" "}
+          <button onClick={handleCommonVoiceClick} class="modal-button common-voice">
+            Learn more
+          </button>.
+        </p>
+      </aside>
+      <div class="mzp-u-modal-content modal-common-voice-content">
+        <div class="common-voice-content-wrapper">
+          <div class="common-voice-content">
+            <img src="./images/common-voice-wave.jpg" alt="Illustration of audio waves"/>
+            <div class="common-voice-copy">
+              <p>
+                At Mozilla we’re working to build an open voice ecosystem that is both private and secure. To do this, we’ve developed tools like <a href="https://voice.mozilla.org/">Common Voice</a> to collect the necessary data needed to teach our systems how to recognize a wider variety of voices, in all sorts of environments.
+              </p>
+
+              <p>
+                Now we’re asking for your help training <a href="https://github.com/mozilla/DeepSpeech">Mozilla’s DeepSpeech</a> system for the words and phrases people say when browsing the internet.
+              </p>
+
+              <p>
+                You can contribute tremendously to the improvement of DeepSpeech just by using Firefox Voice for common tasks — such as search, navigation, playing music and allowing Mozilla to collect and store samples.
+              </p>
+
+              <p>
+                All voice samples are stored securely and without accompanying personally identifiable information.
+              </p>
+            </div>
+            <div class="common-voice-cta">
+              <a
+                class="mzp-c-button mzp-t-product install-cta"
+                href="https://va.allizom.org/releases/prod/firefox-voice.xpi"
+              >
+                  Install Firefox Voice
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 
@@ -234,7 +279,7 @@ const OpenVoiceEcosystem = () => {
 const Demo = () => {
   const handleVideoClick = e => {
     e.preventDefault();
-    const content = document.querySelector(".mzp-u-modal-content");
+    const content = document.querySelector(".modal-video-content");
     Mzp.Modal.createModal(e.target, content, {
       title: "Firefox Voice Demo Video",
       className: "mzp-has-media",
@@ -267,11 +312,11 @@ const Demo = () => {
             full, now you can go hands-free to navigate the web and retrieve
             information instantly.
             <div class="watch-video">
-              <button onClick={handleVideoClick} class="video-modal-button">
+              <button onClick={handleVideoClick} class="video modal-button">
                 Watch the video
               </button>
             </div>
-            <div class="mzp-u-modal-content">
+            <div class="mzp-u-modal-content modal-video-content">
               <div class="video-wrapper">
                 <iframe
                   title="Firefox Voice Demo Video"

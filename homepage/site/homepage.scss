@@ -35,6 +35,29 @@ html {
 .common-voice-welcome {
   display: flex;
   text-align: left;
+  margin: 1rem auto;
+}
+
+.common-voice-content-wrapper {
+  background: #fff;
+
+  .common-voice-content {
+    padding: 6rem;
+
+    .common-voice-copy {
+      font-size: 1rem;
+      color: #000;
+
+      a {
+        color: #0060df !important;
+      }
+    }
+
+    .common-voice-cta {
+      margin-top: 3rem;
+      text-align: center;
+    }
+  }
 }
 
 .robot-profile {
@@ -185,18 +208,25 @@ html {
   }
 }
 
-.video-modal-button {
+.modal-button {
   background: none !important;
   border: none;
   padding: 0 !important;
   color: #0060df;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.modal-button.common-voice {
+  font-size: 0.875rem;
+}
+
+.modal-button.video {
   font-weight: bold;
   margin-top: 0.5rem;
 }
 
-.video-modal-button:hover {
+.modal-button:hover {
   text-decoration: none;
 }
 
