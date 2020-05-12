@@ -31,16 +31,15 @@ class ContactCursorAdapter(
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 cursor.use {
                     it.moveToPosition(adapterPosition)
-                    contactIdToContactEntity(
+                    val contactEntity = contactIdToContactEntity(
                         contactActivity,
                         nickname,
                         it.getLong(ContactPresenter.CONTACT_ID_INDEX)
-                    ).let { contactEntity ->
-                        if (contactActivity.findViewById<CheckBox>(R.id.contactsCheckBox).isChecked) {
-                            presenter.addContact(contactEntity)
-                        }
-                        presenter.initiateRequestedActivity(contactEntity)
+                    )
+                    if (contactActivity.findViewById<CheckBox>(R.id.contactsCheckBox).isChecked) {
+                        presenter.addContact(contactEntity)
                     }
+                    presenter.initiateRequestedActivity(contactEntity)
                 }
             }
         }

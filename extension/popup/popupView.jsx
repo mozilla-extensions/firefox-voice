@@ -31,6 +31,7 @@ export const Popup = ({
   timerTotalInMS,
   renderFollowup,
   followupText,
+  showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -72,6 +73,7 @@ export const Popup = ({
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
         renderFollowup={renderFollowup}
+        showZeroVolumeError={showZeroVolumeError}
       />
       <PopupFooter
         currentView={currentView}
@@ -209,6 +211,7 @@ const PopupContent = ({
   timerInMS,
   timerTotalInMS,
   renderFollowup,
+  showZeroVolumeError,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -220,6 +223,7 @@ const PopupContent = ({
             onClickLexicon={onClickLexicon}
             onInputStarted={onInputStarted}
             expandListeningView={expandListeningView}
+            showZeroVolumeError={showZeroVolumeError}
           />
         );
       case "typing":
@@ -497,6 +501,7 @@ const ListeningContent = ({
   onClickLexicon,
   onInputStarted,
   expandListeningView,
+  showZeroVolumeError,
 }) => {
   return (
     <React.Fragment>
@@ -506,6 +511,7 @@ const ListeningContent = ({
           suggestions={suggestions}
           onClickLexicon={onClickLexicon}
           onInputStarted={onInputStarted}
+          showZeroVolumeError={showZeroVolumeError}
         />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
@@ -522,7 +528,12 @@ const TypingContent = ({ displayText, submitTextInput, inputValue }) => {
   );
 };
 
-const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
+const VoiceInput = ({
+  suggestions,
+  onClickLexicon,
+  onInputStarted,
+  showZeroVolumeError,
+}) => {
   const onMoreSuggestions = event => {
     if (event) {
       event.preventDefault();
@@ -540,6 +551,9 @@ const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
                 Start typing to make a request using a keyboard
               </button>
             </div>
+          ) : null}
+          {showZeroVolumeError ? (
+            <p>Microphone is not working. Firefox may need to be restarted.</p>
           ) : null}
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">

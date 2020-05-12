@@ -5,11 +5,9 @@
 package mozilla.voice.assistant
 
 import android.Manifest
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -45,21 +43,16 @@ class MainActivity : AppCompatActivity() {
     private var chimeVolume: Int = 0
     private lateinit var suggestions: List<String>
     private lateinit var intentRunner: IntentRunner
+    // showReady() uses shownBurst to ensure the initial "burst" animation is shown only once
+    private var shownBurst = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setTaskDescription(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ActivityManager.TaskDescription(null, R.mipmap.ic_launcher)
-            } else {
-                ActivityManager.TaskDescription(
-                    null,
-                    BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-                )
-            }
-        )
+        initializeData()
+    }
 
+    private fun initializeData() {
         suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
 
         val language = Language(this)
@@ -78,8 +71,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        updateViews()
+        initializeChimeVolume()
+        checkPermsBeforeStartingSpeechRecognition()
+    }
+
+    private fun updateViews() {
         feedbackView.text = ""
         statusView.text = getString(R.string.initializing)
+    }
+
+    private fun initializeChimeVolume() {
+        if (chimeVolume == 0) {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val volume = audioManager.getStreamVolume(CHIME_STREAM)
+            chimeVolume = if (volume == 0) {
+                audioManager.getStreamMaxVolume(CHIME_STREAM) / 2
+            } else {
+                volume
+            }
+        }
+    }
+
+    private fun checkPermsBeforeStartingSpeechRecognition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(
@@ -88,29 +102,10 @@ class MainActivity : AppCompatActivity() {
                 ),
                 PERMISSIONS_REQUEST_CODE
             )
-        }
-        if (chimeVolume == 0) {
-            chimeVolume = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).run {
-                getStreamVolume(CHIME_STREAM).let { volume ->
-                    if (volume == 0) {
-                        (getSystemService(Context.AUDIO_SERVICE) as AudioManager).getStreamMaxVolume(
-                            CHIME_STREAM
-                        ) / 2
-                    } else {
-                        volume
-                    }
-                }
-            }
+        } else {
+            startSpeechRecognition()
         }
     }
-
-    private fun closeRecognizer() {
-        recognizer?.stopListening()
-        recognizer?.destroy()
-        recognizer = null
-    }
-
-    private var shownBurst = false
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -239,6 +234,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         suggestionIndex += NUM_SUGGESTIONS
+    }
+
+    private fun closeRecognizer() {
+        recognizer?.stopListening()
+        recognizer?.destroy()
+        recognizer = null
     }
 
     @SuppressWarnings("EmptyFunctionBlock")
