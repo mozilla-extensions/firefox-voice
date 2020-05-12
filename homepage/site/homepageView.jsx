@@ -5,24 +5,11 @@ export const Homepage = ({ isCommonVoice }) => {
   return (
     <div id="homepage-wrapper">
       <React.Fragment>
-        <DraftBanner />
         <Header />
         {isCommonVoice && <CommonVoiceWelcome />}
         <HomepagePageContent />
         <Footer />
       </React.Fragment>
-    </div>
-  );
-};
-
-const DraftBanner = () => {
-  return (
-    <div class="draft-banner mzp-l-content">
-      <strong>DRAFT WEBSITE</strong>
-      <span class="draft-details">
-        The content on this website is a work-in-progress, and may include
-        broken links, incomplete styles, and placeholders
-      </span>
     </div>
   );
 };
