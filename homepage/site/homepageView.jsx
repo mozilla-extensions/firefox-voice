@@ -24,42 +24,74 @@ const CommonVoiceWelcome = () => {
       closeText: "Close modal",
     });
   };
+
+  const handleDismissCommonVoice = e => {
+    e.preventDefault();
+    e.currentTarget.parentNode.remove();
+  };
+
   return (
     <React.Fragment>
       <aside class="mzp-c-notification-bar common-voice-welcome">
-        {/* <button class="mzp-c-notification-bar-button" type="button"></button> */}
+        <button
+          onClick={handleDismissCommonVoice}
+          class="mzp-c-notification-bar-button"
+          type="button"
+        ></button>
         <img
           class="robot-profile"
           alt="Profile of the Common Voice robot illustration"
           src="./images/robot-profile.svg"
         />
         <p>
-          Welcome Common Voice contributor! Help us build an open voice ecosystem.
-          After installing, please allow Firefox Voice to collect voice samples.{" "}
-          <button onClick={handleCommonVoiceClick} class="modal-button common-voice">
+          Welcome Common Voice contributor! Help us build an open voice
+          ecosystem. After installing, please allow Firefox Voice to collect
+          voice samples.{" "}
+          <button
+            onClick={handleCommonVoiceClick}
+            class="modal-button common-voice"
+          >
             Learn more
-          </button>.
+          </button>
+          .
         </p>
       </aside>
       <div class="mzp-u-modal-content modal-common-voice-content">
         <div class="common-voice-content-wrapper">
           <div class="common-voice-content">
-            <img src="./images/common-voice-wave.jpg" alt="Illustration of audio waves"/>
+            <img
+              src="./images/common-voice-wave.jpg"
+              alt="Illustration of audio waves"
+            />
             <div class="common-voice-copy">
               <p>
-                At Mozilla we’re working to build an open voice ecosystem that is both private and secure. To do this, we’ve developed tools like <a href="https://voice.mozilla.org/">Common Voice</a> to collect the necessary data needed to teach our systems how to recognize a wider variety of voices, in all sorts of environments.
+                At Mozilla we’re working to build an open voice ecosystem that
+                is both private and secure. To do this, we’ve developed tools
+                like <a href="https://voice.mozilla.org/">Common Voice</a> to
+                collect the necessary data needed to teach our systems how to
+                recognize a wider variety of voices, in all sorts of
+                environments.
               </p>
 
               <p>
-                Now we’re asking for your help training <a href="https://github.com/mozilla/DeepSpeech">Mozilla’s DeepSpeech</a> system for the words and phrases people say when browsing the internet.
+                Now we’re asking for your help training{" "}
+                <a href="https://github.com/mozilla/DeepSpeech">
+                  Mozilla’s DeepSpeech
+                </a>{" "}
+                system for the words and phrases people say when browsing the
+                internet.
               </p>
 
               <p>
-                You can contribute tremendously to the improvement of DeepSpeech just by using Firefox Voice for common tasks — such as search, navigation, playing music and allowing Mozilla to collect and store samples.
+                You can contribute tremendously to the improvement of DeepSpeech
+                just by using Firefox Voice for common tasks — such as search,
+                navigation, playing music and allowing Mozilla to collect and
+                store samples.
               </p>
 
               <p>
-                All voice samples are stored securely and without accompanying personally identifiable information.
+                All voice samples are stored securely and without accompanying
+                personally identifiable information.
               </p>
             </div>
             <div class="common-voice-cta">
@@ -67,7 +99,7 @@ const CommonVoiceWelcome = () => {
                 class="mzp-c-button mzp-t-product install-cta"
                 href="https://va.allizom.org/releases/prod/firefox-voice.xpi"
               >
-                  Install Firefox Voice
+                Install Firefox Voice
               </a>
             </div>
           </div>
@@ -303,7 +335,7 @@ const Demo = () => {
           </div>
         </div>
 
-        <div class="mzp-c-card">
+        <div class="mzp-c-card how-it-works-card">
           <h6 class="card-header mzp-has-zap-11">
             See how it <strong>works</strong>
           </h6>

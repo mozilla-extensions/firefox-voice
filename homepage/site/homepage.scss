@@ -38,6 +38,9 @@ html {
   margin: 1rem auto;
 }
 
+.mzp-c-notification-bar-button {
+}
+
 .common-voice-content-wrapper {
   background: #fff;
 
@@ -166,7 +169,7 @@ html {
   display: flex;
   position: absolute;
   top: calc(50% - 25px);
-  left: calc(50% - 25px);
+  left: calc(50% - 50px);
 
   button[name="play"] {
     width: 100px;
@@ -232,6 +235,10 @@ html {
 
 .mzp-c-modal-button-close {
   background-image: url("./images/close-white.svg") !important;
+}
+
+.mzp-c-notification-bar-button {
+  background-image: url("./images/close.svg") !important;
 }
 
 .faq-section-header {
@@ -306,9 +313,9 @@ html {
 }
 
 .mzp-c-footer-primary-logo {
-  background: #fff;
   a {
     background: url("./images/mozilla-logo.svg");
+    background-color: #fff;
     width: 112px;
   }
 }
@@ -326,6 +333,10 @@ html {
 }
 .mzp-c-footer-item {
   margin-left: 3rem;
+
+  a:focus {
+    text-decoration: underline !important;
+  }
 }
 
 .mzp-c-footer-primary::after {
@@ -358,6 +369,10 @@ html {
   .action-category {
     width: 100% !important;
     margin-bottom: 2rem;
+  }
+
+  .how-it-works-card {
+    margin-top: 24px;
   }
 }
 

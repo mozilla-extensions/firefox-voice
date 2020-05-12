@@ -65,7 +65,7 @@
     "build:jsx": "babel --ignore '**/*.scss' --no-copy-ignored --copy-files --out-dir build site/",
     "build:fonts": "mkdir -p build/css/font-files ; cp ../extension/assets/css/font-files/* build/css/font-files/",
     "build:protocol-js": "for file in protocol-base.min.js protocol-utils.min.js protocol-supports.min.js protocol-menu.min.js protocol-navigation.min.js protocol-modal.min.js ; do cp node_modules/@mozilla-protocol/core/protocol/js/$file build/js/vendor/ ; done ",
-    "build:protocol-imgs": "cp -r node_modules/@mozilla-protocol/core/protocol/img/zaps build/images ; for file in logos/mozilla/white.svg icons/close-white.svg icons/menu.svg ; do cp node_modules/@mozilla-protocol/core/protocol/img/$file build/images/ ; done ",
+    "build:protocol-imgs": "cp -r node_modules/@mozilla-protocol/core/protocol/img/zaps build/images ; for file in logos/mozilla/white.svg icons/close-white.svg icons/close.svg icons/menu.svg ; do cp node_modules/@mozilla-protocol/core/protocol/img/$file build/images/ ; done ",
     "build:scss": "sass build/homepage.scss build/homepage.css",
     "watch": "nodemon --on-change-only -e toml,jsx,ejs,scss --exec 'npm run watch-rebuild'",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
