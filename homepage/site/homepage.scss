@@ -217,19 +217,20 @@ html {
 .faq-section-header {
   @include protocol.text-display-xs;
   font-weight: bold;
+  margin-right: 3rem;
 }
 
 .faq {
   margin-bottom: 4rem;
   details {
     summary {
-      height: 70px;
       border-top: 1px solid #b1b1b3;
       display: flex;
       justify-content: center;
       align-content: center;
       flex-direction: column;
       cursor: pointer;
+      padding: 1rem 0rem 1rem 0rem;
     }
     ol,
     ul {
