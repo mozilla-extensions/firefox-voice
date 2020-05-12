@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* globals React */
+/* globals React, Mzp */
 
 export const Homepage = ({ isCommonVoice }) => {
   return (
@@ -37,9 +37,18 @@ const Header = () => {
     <div class="mzp-c-navigation">
       <div class="mzp-c-navigation-l-content">
         <div class="mzp-c-navigation-container">
-          <button class="mzp-c-navigation-menu-button" type="button" aria-controls="navigation-demo">Menu</button>
+          <button
+            class="mzp-c-navigation-menu-button"
+            type="button"
+            aria-controls="navigation-demo"
+          >
+            Menu
+          </button>
           <div class="mzp-c-navigation-logo">
-            <img src="./images/fx-voice-logo.svg" alt="Firefox Voice"></img>
+            <img
+              src="./images/fx-voice-logo.svg"
+              alt="Firefox Voice logo"
+            ></img>
           </div>
           <div class="mzp-c-navigation-items">
             <div class="mzp-c-navigation-menu">
@@ -223,13 +232,13 @@ const OpenVoiceEcosystem = () => {
 };
 
 const Demo = () => {
-  const handleVideoClick = (e) => {
+  const handleVideoClick = e => {
     e.preventDefault();
-    const content = document.querySelector('.mzp-u-modal-content');
+    const content = document.querySelector(".mzp-u-modal-content");
     Mzp.Modal.createModal(e.target, content, {
-      title: 'Firefox Voice Demo Video',
-      className: 'mzp-has-media',
-      closeText: 'Close modal'
+      title: "Firefox Voice Demo Video",
+      className: "mzp-has-media",
+      closeText: "Close modal",
     });
   };
   return (
@@ -241,7 +250,10 @@ const Demo = () => {
               <div class="play-btn-wrapper">
                 <button onClick={handleVideoClick} name="play"></button>
               </div>
-              <img src="./images/demo-still.png"/>
+              <img
+                alt="Still frame from the demo video with a play icon overlay. The still shows the outcome of the Firefox Voice command: 'Read this page to me', where a New York Times article is being narrated in the browser's reader view."
+                src="./images/demo-still.png"
+              />
             </div>
           </div>
         </div>
@@ -255,7 +267,9 @@ const Demo = () => {
             full, now you can go hands-free to navigate the web and retrieve
             information instantly.
             <div class="watch-video">
-              <button onClick={handleVideoClick} class="video-modal-button">Watch the video</button>
+              <button onClick={handleVideoClick} class="video-modal-button">
+                Watch the video
+              </button>
             </div>
             <div class="mzp-u-modal-content">
               <div class="video-wrapper">
@@ -287,7 +301,9 @@ const Faq = () => {
             <div class="faq-section-header">What is Firefox Voice?</div>
           </summary>
           <p>
-            Firefox Voice is an experimental Add-On for the Firefox Browser that enables voice interactions. You can ask things like “Search for sushi in Auckland”, “Close tab” or “How tall is Mount Everest?”
+            Firefox Voice is an experimental Add-On for the Firefox Browser that
+            enables voice interactions. You can ask things like “Search for
+            sushi in Auckland”, “Close tab” or “How tall is Mount Everest?”
           </p>
 
           <p>
@@ -325,20 +341,25 @@ const Faq = () => {
               Are my audio recordings stored?
             </div>
           </summary>
+          <p>By default Firefox Voice does not store voice recordings.</p>
           <p>
-            By default Firefox Voice does not store voice recordings.
+            Users may allow Mozilla to store their voice recordings and
+            computer-generated transcripts of their recordings. Recordings and
+            transcripts are stored securely and without personally identifying
+            information (this means, we don’t know who said them).
           </p>
           <p>
-            Users may allow Mozilla to store their voice recordings and computer-generated transcripts of their recordings. Recordings and transcripts are stored securely and without personally identifying information (this means, we don’t know who said them).
+            Even if users do not opt-in to allowing storage, they are able to
+            use Firefox Voice.
           </p>
+          <p>In your Preferences,you can change your settings at any time.</p>
           <p>
-            Even if users do not opt-in to allowing storage, they are able to use Firefox Voice.
-          </p>
-          <p>
-            In your Preferences,you can change your settings at any time.
-          </p>
-          <p>
-            If you allow Mozilla to store your voice recordings, we use your recordings for research purposes and to help improve Firefox Voice. For example, we may use the computer-generated transcripts of your recordings to help identify which commands we should support. We may also manually review your voice recordings to better train our speech service to respond more accurately.
+            If you allow Mozilla to store your voice recordings, we use your
+            recordings for research purposes and to help improve Firefox Voice.
+            For example, we may use the computer-generated transcripts of your
+            recordings to help identify which commands we should support. We may
+            also manually review your voice recordings to better train our
+            speech service to respond more accurately.
           </p>
         </details>
         <details>
@@ -443,44 +464,63 @@ const Faq = () => {
         </details>
         <details>
           <summary>
-            <div class="faq-section-header">When I try to install I see “the add-on could not be downloaded because of a connection failure.”</div>
+            <div class="faq-section-header">
+              When I try to install I see “the add-on could not be downloaded
+              because of a connection failure.”
+            </div>
           </summary>
           <p>
-            Antivirus and other security software can sometimes prevent Firefox extensions from being downloaded, installed or updated.
+            Antivirus and other security software can sometimes prevent Firefox
+            extensions from being downloaded, installed or updated.
           </p>
-          <img></img>
+          <img
+            class="connection-error"
+            src="./images/connection-error.png"
+            alt="Tooltip dialog window showing an error message upon installing the add-on. The message reads: 'The add-on could not be downloaded
+              because of a connection failure.'"
+          />
           <p>
-            If you’re having trouble installing Firefox Voice or it doesn’t update automatically, follow these steps to install the extension manually:
+            If you’re having trouble installing Firefox Voice or it doesn’t
+            update automatically, follow these steps to install the extension
+            manually:
           </p>
           <ol>
             <li>
               Open a different browser, like Safari, Chrome, or Microsoft Edge.
             </li>
             <li>
-              Copy and paste the <a href="https://va.allizom.org/releases/prod/firefox-voice.xpi">download</a> link into the different browser. It will be saved as a .xpi file in your Downloads folder.
+              Copy and paste the{" "}
+              <a href="https://va.allizom.org/releases/prod/firefox-voice.xpi">
+                download
+              </a>{" "}
+              link into the different browser. It will be saved as a .xpi file
+              in your Downloads folder.
             </li>
             <li>
-              Open Firefox and drag the .xpi file to the Firefox window, then click Add.
+              Open Firefox and drag the .xpi file to the Firefox window, then
+              click Add.
             </li>
           </ol>
         </details>
         <details>
           <summary>
-            <div class="faq-section-header">After installing Firefox Voice it doesn’t respond to anything I say.</div>
+            <div class="faq-section-header">
+              After installing Firefox Voice it doesn’t respond to anything I
+              say.
+            </div>
           </summary>
           <p>
-            If you’re having trouble getting Firefox Voice to hear what you're saying and take action the microphone may not be picking up audio. Check that your microphone is set up correctly.
+            If you’re having trouble getting Firefox Voice to hear what you're
+            saying and take action the microphone may not be picking up audio.
+            Check that your microphone is set up correctly.
           </p>
           <ol>
             <li>
-              Ensure your device has a microphone or your external microphone is plugged in.
+              Ensure your device has a microphone or your external microphone is
+              plugged in.
             </li>
-            <li>
-              Check Firefox Voice has permissions to access the mic.
-            </li>
-            <li>
-              Restart Firefox. This can often clear up the issue.
-            </li>
+            <li>Check Firefox Voice has permissions to access the mic.</li>
+            <li>Restart Firefox. This can often clear up the issue.</li>
           </ol>
         </details>
         <details>
@@ -488,34 +528,51 @@ const Faq = () => {
             <div class="faq-section-header">How is my audio processed?</div>
           </summary>
           <p>
-            When you make a request using Firefox Voice, the browser captures the audio and uses cloud-based services to transcribe and then process the request. Below are the steps and services utilized.
+            When you make a request using Firefox Voice, the browser captures
+            the audio and uses cloud-based services to transcribe and then
+            process the request. Below are the steps and services utilized.
           </p>
           <ol>
             <li>
-              The microphone must be opened with a button press or keyboard shortcut.
+              The microphone must be opened with a button press or keyboard
+              shortcut.
+            </li>
+            <li>After you finish speaking the microphone is turned off.</li>
+            <li>
+              Audio from your voice request is sent to Mozilla’s Voicefill
+              server without any personally identifiable metadata.
             </li>
             <li>
-              After you finish speaking the microphone is turned off.
+              The Voicefill server sends the audio to Google’s Speech-to-Text
+              engine, which returns transcribed text. We’ve instructed the
+              Google Speech-to-Text engine to NOT save any recordings. Note: In
+              the future, we expect to enable Mozilla’s own technology for
+              Speech-to-Text which will enable us to stop using Google’s
+              Speech-to-Text engine.
             </li>
             <li>
-              Audio from your voice request is sent to Mozilla’s Voicefill server without any personally identifiable metadata.
-            </li>
-            <li>
-              The Voicefill server sends the audio to Google’s Speech-to-Text engine, which returns transcribed text. We’ve instructed the Google Speech-to-Text engine to NOT save any recordings. Note: In the future, we expect to enable Mozilla’s own technology for Speech-to-Text which will enable us to stop using Google’s Speech-to-Text engine.
-            </li>
-            <li>
-              Based on the transcribed text, Firefox Voice attempts to fulfill your request.
+              Based on the transcribed text, Firefox Voice attempts to fulfill
+              your request.
               <ul>
                 <li>
-                  For example, if you say “Go to…” or “Find…” a Search using your default search engine will be executed. Note: if you’re using Google Search and are logged into your Google account in Firefox, your search will be associated with your Google search history.
+                  For example, if you say “Go to…” or “Find…” a Search using
+                  your default search engine will be executed. Note: if you’re
+                  using Google Search and are logged into your Google account in
+                  Firefox, your search will be associated with your Google
+                  search history.
                 </li>
                 <li>
-                  Requests such as “Close tab” or “Read this page” are processed directly by the browser.
+                  Requests such as “Close tab” or “Read this page” are processed
+                  directly by the browser.
                 </li>
               </ul>
             </li>
             <li>
-              We’ve instructed Google Speech-to-text not to retain audio once the request has been processed. In addition, Mozilla does not retain any audio unless you’ve actively chosen to allow Mozilla to collect audio recordings for the purpose of improving our speech recognition service.
+              We’ve instructed Google Speech-to-text not to retain audio once
+              the request has been processed. In addition, Mozilla does not
+              retain any audio unless you’ve actively chosen to allow Mozilla to
+              collect audio recordings for the purpose of improving our speech
+              recognition service.
             </li>
           </ol>
         </details>
@@ -535,7 +592,10 @@ const Footer = () => {
 
           <div class="mzp-c-footer-items">
             <div class="mzp-c-footer-item">
-              <a href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit" target="_blank">
+              <a
+                href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit"
+                target="_blank"
+              >
                 Installation Instructions
               </a>
             </div>

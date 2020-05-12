@@ -69,7 +69,7 @@
     "build:scss": "sass build/homepage.scss build/homepage.css",
     "watch": "nodemon --on-change-only -e toml,jsx,ejs,scss --exec 'npm run watch-rebuild'",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
-    "format": "prettier 'extension/**/*.{js,jsx,css,scss}' --write",
+    "format": "prettier './**/*.{js,jsx,css,scss}' --write",
     "lint": "npm-run-all lint:*",
     "lint:css": "stylelint 'site/**/*.scss'",
     "lint:html": "htmllint site/**/*.html",
