@@ -56,7 +56,7 @@ export async function turnOnReaderMode(tabId) {
       }
     }
     onUpdatedListen(onUpdated, tabId);
-    browser.tabs.toggleReaderMode(tabId);
+    browser.tabs.toggleReaderMode(tabId).catch(reject);
   });
 }
 
