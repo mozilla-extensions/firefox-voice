@@ -16,28 +16,18 @@ import kotlinx.android.synthetic.main.contact_activity.*
 import mozilla.voice.assistant.R
 import mozilla.voice.assistant.intents.communication.MODE_KEY
 import mozilla.voice.assistant.intents.communication.NICKNAME_KEY
-import mozilla.voice.assistant.intents.communication.UTTERANCE_KEY
+import mozilla.voice.assistant.intents.communication.PAYLOAD_KEY
+import mozilla.voice.assistant.intents.communication.SMS_MODE
+import mozilla.voice.assistant.intents.communication.VOICE_MODE
 
 /**
  * Activity that initiates a text message or phone call to the specified contact.
  * The mode ([SMS_MODE] or [VOICE_MODE]) is specified through the [MODE_KEY] extra,
- * and the name is specified through the [NICKNAME_KEY] extra.
- *
- * The translation from the name (referred to as a "nickname" to distinguish it from
- * an Android contact name) to a phone number is done as follows:
- * 1. If there is an entry corresponding to the nickname in the app's database,
- *    the corresponding phone number stored in the database is used.
- * 2. A lookup is performed among the Android contacts.
- *    - If no matches are found, the user is prompted to select a contact and whether
- *      to remember the contact.
- *    - If one match is found, that contact is used, and the database is updated.
- *    - If multiple contacts are found, the user is asked to choose among them and
- *      whether to remember the contact.
+ * and the name is specified through either the [NICKNAME_KEY] extra or the [PAYLOAD_KEY] extra,
+ * which may also contain a message.
  */
 class ContactActivity : AppCompatActivity() {
-    private lateinit var presenter: ContactPresenter
-    private lateinit var nickname: String
-
+    private lateinit var controller: ContactController
     private var cursorAdapter: RecyclerView.Adapter<ContactCursorAdapter.ContactViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +37,13 @@ class ContactActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        nickname = intent.getStringExtra(NICKNAME_KEY)
-        presenter = ContactPresenter(this)
+
+        controller = ContactController(
+            this,
+            intent.getStringExtra(MODE_KEY),
+            intent.getStringExtra(NICKNAME_KEY),
+            intent.getStringExtra(PAYLOAD_KEY)
+        )
         contactCloseButton.setOnClickListener {
             finish()
         }
@@ -62,7 +57,7 @@ class ContactActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSIONS_REQUEST) {
-            presenter.onRequestPermissionsResult(grantResults)
+            controller.onRequestPermissionsResult(grantResults)
         }
     }
 
@@ -71,7 +66,7 @@ class ContactActivity : AppCompatActivity() {
             .show()
     }
 
-    internal fun processZeroContacts(cursor: Cursor) {
+    internal fun processZeroContacts(cursor: Cursor, nickname: String) {
         // contactsViewAnimator.displayedChild = R.id.noContactsButton
         contactsCheckBox.visibility = View.VISIBLE
 
@@ -92,11 +87,11 @@ class ContactActivity : AppCompatActivity() {
         )
     }
 
-    internal fun processMultipleContacts(cursor: Cursor) {
+    internal fun processMultipleContacts(cursor: Cursor, nickname: String) {
         //   contactsViewAnimator.displayedChild = R.id.contactsList
         contactsCheckBox.visibility = View.VISIBLE
         contactStatusView.text = getString(R.string.multiple_contacts, nickname)
-        ContactCursorAdapter(this, nickname, cursor, presenter).let { contactCursorAdapter ->
+        ContactCursorAdapter(this, nickname, cursor, controller).let { contactCursorAdapter ->
             cursorAdapter = contactCursorAdapter
             findViewById<RecyclerView>(R.id.contactsRecyclerView).apply {
                 setHasFixedSize(true)
@@ -112,7 +107,7 @@ class ContactActivity : AppCompatActivity() {
         if (requestCode == SELECT_CONTACT_FOR_NICKNAME) {
             if (resultCode == Activity.RESULT_OK) {
                 data?.data?.let {
-                    presenter.onContactChosen(it)
+                    controller.onContactChosen(it)
                 } ?: run {
                     Log.e(TAG, "Unable to retrieve chosen contact")
                     finish()
@@ -129,11 +124,26 @@ class ContactActivity : AppCompatActivity() {
         internal const val PERMISSIONS_REQUEST = 100
         private const val SELECT_CONTACT_FOR_NICKNAME = 1
 
-        fun createIntent(context: Context, utterance: String, nickname: String, mode: String) =
-                Intent(context, ContactActivity::class.java).apply {
-                    putExtra(UTTERANCE_KEY, utterance)
-                    putExtra(NICKNAME_KEY, nickname)
-                    putExtra(MODE_KEY, mode)
-                }
+        private fun createIntent(
+            context: Context,
+            mode: String,
+            nickname: String? = null,
+            payload: String? = null
+        ) = Intent(context, ContactActivity::class.java).apply {
+            putExtra(MODE_KEY, mode)
+            nickname?.let { putExtra(NICKNAME_KEY, it) }
+            payload?.let { putExtra(PAYLOAD_KEY, it) }
+        }
+
+        fun createCallIntent(
+            context: Context,
+            nickname: String
+        ) = createIntent(context, VOICE_MODE, nickname, null)
+
+        fun createSmsIntent(
+            context: Context,
+            nickname: String? = null,
+            payload: String? = null
+        ) = createIntent(context, SMS_MODE, nickname, payload)
     }
 }

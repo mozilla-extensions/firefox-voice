@@ -11,6 +11,7 @@ class TextMessage {
     companion object {
         private const val NAME_KEY = "name"
         private const val PHONE_NUMBER_KEY = "number"
+        private const val PAYLOAD_KEY = "payload"
 
         internal fun getIntents() = listOf(
             // sms.number must precede sms.name so numbers aren't misinterpreted
@@ -22,6 +23,10 @@ class TextMessage {
             Pair(
                 "sms.name",
                 ::createTextMessageNameIntent
+            ),
+            Pair(
+                "sms.payload",
+                ::createTextMessagePayloadIntent
             )
         )
 
@@ -29,8 +34,7 @@ class TextMessage {
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
             @Suppress("UNUSED_PARAMETER") metadata: Metadata
-        ): Intent? =
-            pr.slots[PHONE_NUMBER_KEY]?.let { number ->
+        ) = pr.slots[PHONE_NUMBER_KEY]?.let { number ->
                 Intent(
                     Intent.ACTION_VIEW,
                     Uri.fromParts("sms", number, null)
@@ -41,9 +45,21 @@ class TextMessage {
             pr: ParseResult,
             context: Context?,
             @Suppress("UNUSED_PARAMETER") metadata: Metadata
-        ): android.content.Intent? =
-            pr.slots[NAME_KEY]?.let { name ->
-                ContactActivity.createIntent(requireNotNull(context), pr.utterance, name, SMS_MODE)
+        ) = pr.slots[NAME_KEY]?.let { name ->
+                ContactActivity.createSmsIntent(requireNotNull(context), nickname = name)
             }
+
+        private fun createTextMessagePayloadIntent(
+            pr: ParseResult,
+            context: Context?,
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
+        ) = pr.slots[PAYLOAD_KEY]?.let { payload ->
+            val words = payload.split(' ', limit = 2)
+            ContactActivity.createSmsIntent(
+                requireNotNull(context),
+                nickname = null,
+                payload = payload
+            )
+        }
     }
 }
