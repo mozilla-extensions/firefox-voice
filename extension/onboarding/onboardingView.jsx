@@ -4,30 +4,81 @@
 import * as browserUtil from "../browserUtil.js";
 
 export const Onboarding = ({
+  optinTechDataAlreadyShown,
   optinViewAlreadyShown,
   askForAudio,
+  setCollectTechData,
   setOptinValue,
   setOptinViewShown,
   permissionError,
 }) => {
   return (
     <div id="onboarding-wrapper">
-      {!optinViewAlreadyShown && (
+      {!optinViewAlreadyShown && !optinTechDataAlreadyShown ? (
+        <OptinTechData setCollectTechData={setCollectTechData} />
+      ) : null}
+      {!optinViewAlreadyShown && optinTechDataAlreadyShown ? (
         <OptinVoiceTranscripts
           setOptinValue={setOptinValue}
           setOptinViewShown={setOptinViewShown}
           askForAudio={askForAudio}
         />
-      )}
-      {optinViewAlreadyShown && permissionError && (
+      ) : null}
+      {optinViewAlreadyShown && permissionError ? (
         <PermissionError permissionError={permissionError} />
-      )}
-      {optinViewAlreadyShown && !permissionError && (
+      ) : null}
+      {optinViewAlreadyShown && !permissionError ? (
         <React.Fragment>
           <OnboardingPageContent />
           <Footer />
         </React.Fragment>
-      )}
+      ) : null}
+    </div>
+  );
+};
+
+const OptinTechData = ({ setCollectTechData }) => {
+  const updateTechData = event => {
+    event.preventDefault();
+    setCollectTechData(!!event.target.value);
+  };
+  return (
+    <div id="optinTechData" className="modal-wrapper">
+      <div className="modal">
+        <div className="modal-header">
+          <p>Successfully Installed</p>
+          <h1>
+            Allow Firefox Voice to send technical and interaction data to
+            Mozilla?
+          </h1>
+        </div>
+        <div className="modal-content">
+          <p>
+            This includes high-level categorizations of requests (e.g., search,
+            close tab, and play music) and error reports. Changes to this
+            setting can be made any time in preferences.
+          </p>
+          <p>
+            Data is stored securely and without personally identifying
+            information.
+          </p>
+        </div>
+        <div className="modal-footer">
+          <button
+            className="styled-button"
+            onClick={updateTechData}
+            value={true}
+          >
+            Allow
+          </button>
+          <button
+            className="styled-button cancel-button"
+            onClick={updateTechData}
+          >
+            Don't allow
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -47,7 +98,6 @@ const OptinVoiceTranscripts = ({
     <div id="optinVoiceTranscripts" className="modal-wrapper">
       <div className="modal">
         <div className="modal-header">
-          <p>Successfully Installed</p>
           {askForAudio ? (
             <h1>Allow Firefox Voice to collect Voice Samples</h1>
           ) : (
