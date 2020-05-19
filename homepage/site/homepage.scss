@@ -38,14 +38,11 @@ html {
   margin: 1rem auto;
 }
 
-.mzp-c-notification-bar-button {
-}
-
 .common-voice-content-wrapper {
   background: #fff;
 
   .common-voice-content {
-    padding: 6rem;
+    padding: 4rem;
 
     .common-voice-copy {
       font-size: 1rem;
@@ -74,6 +71,10 @@ html {
 
 .mzp-c-hero {
   padding-bottom: 0px;
+}
+
+.mzp-c-hero-desc {
+  padding-top: 1rem;
 }
 
 // .mzp-c-hero-body {
