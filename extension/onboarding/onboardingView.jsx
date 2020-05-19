@@ -46,7 +46,7 @@ const OptinTechData = ({ setCollectTechData }) => {
     <div id="optinTechData" className="modal-wrapper">
       <div className="modal">
         <div className="modal-header">
-          <p>Successfully Installed</p>
+          <p className="success">Successfully Installed</p>
           <h1>
             Allow Firefox Voice to send technical and interaction data to
             Mozilla?
@@ -138,11 +138,13 @@ const OptinAudioDescription = () => {
         recordings. We store this data securely and without personally
         identifying information.
       </p>
-      <p>Can Firefox Voice store transcripts of your voice recordings?</p>
       <p>
-        You’ll always be able to use Firefox Voice, even if you don’t allow
-        collection. The microphone is only active when triggered with a button
-        press or keyboard shortcut.
+        Can Firefox Voice store transcripts of your voice recordings? You’ll
+        always be able to use Firefox Voice, even if you don’t allow collection.
+      </p>
+      <p className="warning">
+        The microphone is only active when triggered with a button press or
+        keyboard shortcut.
       </p>
       <p>
         <a
@@ -166,11 +168,13 @@ const OptinVoiceTranscriptsDescription = () => {
         recordings. We store this data securely and without personally
         identifying information.
       </p>
-      <p>Can Firefox Voice store transcripts of your voice recordings?</p>
       <p>
-        You’ll always be able to use Firefox Voice, even if you don’t allow
-        collection. The microphone is only active when triggered with a button
-        press or keyboard shortcut.
+        Can Firefox Voice store transcripts of your voice recordings? You’ll
+        always be able to use Firefox Voice, even if you don’t allow collection.
+      </p>
+      <p className="warning">
+        The microphone is only active when triggered with a button press or
+        keyboard shortcut.
       </p>
       <p>
         <a

@@ -70,11 +70,18 @@ p {
   margin: 40px 0;
 }
 
-#optinVoiceTranscripts .modal-header p:before {
+.success:before {
   content: "";
   background-image: url("./images/checkmark.svg");
   background-repeat: no-repeat;
   padding-left: 30px;
+}
+
+.warning {
+  background-color: #fcefc3;
+  font-weight: bold;
+  border: 1px solid #f7e4a4;
+  padding: 3px;
 }
 
 #optinVoiceTranscripts h1:before {
