@@ -83,7 +83,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
-    "start-and-build": "NO_SENTRY=1 IN_DEVELOPMENT=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-extension",
+    "start-and-build": "NO_SENTRY=1 IN_DEVELOPMENT=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata build:jsx start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console --pref=extensions.experiments.enabled=true",
     "start-android": "concurrently --kill-others --success first --names watch,android 'npm run watch' 'npm run start-and-build-android'",
     "start-and-build-android": "NO_SENTRY=1 IN_DEVELOPMENT=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-android-extension",
