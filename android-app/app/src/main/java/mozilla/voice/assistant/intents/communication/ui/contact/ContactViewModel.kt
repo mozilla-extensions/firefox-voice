@@ -15,20 +15,23 @@ import mozilla.voice.assistant.intents.communication.ContactRepository
 class ContactViewModelFactory(
     private val application: Application,
     private val mode: String,
-    private val nickname: String
+    private val nickname: String,
+    private val payload: String?
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         modelClass.getConstructor(
             Application::class.java,
             String::class.java,
+            String::class.java,
             String::class.java
-        ).newInstance(application, mode, nickname)
+        ).newInstance(application, mode, nickname, payload)
 }
 
 class ContactViewModel(
     application: Application,
     val mode: String,
-    val nickname: String
+    var nickname: String,
+    val payload: String?
 ) : AndroidViewModel(application) {
     private val repository: ContactRepository
 

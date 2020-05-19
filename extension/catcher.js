@@ -6,7 +6,18 @@ this.catcher = (function() {
 
   // Note Sentry is usually enabled for live builds and disabled for local development
   // to test Sentry locally use FORCE_SENTRY=1 npm start
-  const activated = (exports.sentryActivated = !!buildSettings.sentryDsn);
+  const activated = (exports.sentryActivated = function() {
+    if (!buildSettings.sentryDsn) {
+      return false;
+    }
+    // This duplicates some logic in settings.js but this isn't a module so it's hard to catch
+    let value = localStorage.getItem("settings");
+    if (!value) {
+      return true;
+    }
+    value = JSON.parse(value);
+    return !value.disableTelemetry;
+  });
 
   function fixUrl(u) {
     return u.replace(hostname, "firefox-voice");
@@ -71,7 +82,7 @@ this.catcher = (function() {
   }
 
   exports.capture = function(e) {
-    if (activated) {
+    if (activated()) {
       Sentry.captureException(e);
     }
   };

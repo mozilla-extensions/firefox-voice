@@ -16,7 +16,7 @@ class ContactCursorAdapter(
     private val contactActivity: ContactActivity,
     private val nickname: String,
     private val cursor: Cursor,
-    private val presenter: ContactPresenter
+    private val controller: ContactController
 ) : RecyclerView.Adapter<ContactCursorAdapter.ContactViewHolder>() {
     inner class ContactViewHolder(private val listItemView: View) :
         RecyclerView.ViewHolder(listItemView), View.OnClickListener {
@@ -34,12 +34,12 @@ class ContactCursorAdapter(
                     val contactEntity = contactIdToContactEntity(
                         contactActivity,
                         nickname,
-                        it.getLong(ContactPresenter.CONTACT_ID_INDEX)
+                        it.getLong(ContactController.CONTACT_ID_INDEX)
                     )
                     if (contactActivity.findViewById<CheckBox>(R.id.contactsCheckBox).isChecked) {
-                        presenter.addContact(contactEntity)
+                        controller.addContact(contactEntity)
                     }
-                    presenter.initiateRequestedActivity(contactEntity)
+                    controller.initiateRequestedActivity(contactEntity)
                 }
             }
         }
@@ -52,11 +52,11 @@ class ContactCursorAdapter(
 
     override fun onBindViewHolder(viewHolder: ContactViewHolder, position: Int) {
         cursor.moveToPosition(position)
-        cursor.getString(ContactPresenter.CONTACT_PHOTO_URI_INDEX)?.let { photoString ->
+        cursor.getString(ContactController.CONTACT_PHOTO_URI_INDEX)?.let { photoString ->
             viewHolder.ivContactPhoto.setImageURI(Uri.parse(photoString))
         }
         viewHolder.tvContactDisplayName.text =
-            cursor.getString(ContactPresenter.CONTACT_DISPLAY_NAME_INDEX)
+            cursor.getString(ContactController.CONTACT_DISPLAY_NAME_INDEX)
     }
 
     override fun getItemCount() = cursor.count

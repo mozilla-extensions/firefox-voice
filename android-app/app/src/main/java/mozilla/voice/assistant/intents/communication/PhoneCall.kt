@@ -30,11 +30,9 @@ class PhoneCall {
             @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): Intent? =
             pr.slots[NAME_KEY]?.let { name ->
-                ContactActivity.createIntent(
+                ContactActivity.createCallIntent(
                     requireNotNull(context),
-                    pr.utterance,
-                    name,
-                    VOICE_MODE
+                    name
                 )
             }
 
