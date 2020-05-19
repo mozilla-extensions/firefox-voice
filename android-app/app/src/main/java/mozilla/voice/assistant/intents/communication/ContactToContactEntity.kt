@@ -4,7 +4,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Phone
-import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivity
+import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivityInterface
 
 private val columns = arrayOf(
     Phone.DISPLAY_NAME,
@@ -16,11 +16,11 @@ private val columns = arrayOf(
 )
 
 internal fun contactUriToContactEntity(
-    contactActivity: ContactActivity,
+    contactActivity: ContactActivityInterface,
     nickname: String,
     contactUri: Uri
 ): ContactEntity =
-    contactActivity.contentResolver?.let { resolver ->
+    contactActivity.app.applicationContext.contentResolver.let { resolver ->
         cursorToContentEntity(
             resolver.query(
                 contactUri,
@@ -34,12 +34,12 @@ internal fun contactUriToContactEntity(
     } ?: throw AssertionError("Unable to access contentResolver")
 
 internal fun contactIdToContactEntity(
-    contactActivity: ContactActivity,
+    contactActivity: ContactActivityInterface,
     nickname: String,
     contactId: Long
 ): ContactEntity =
     // https://learning.oreilly.com/library/view/android-cookbook-2nd/9781449374471/ch10.html
-    contactActivity.contentResolver?.let { resolver ->
+    contactActivity.app.applicationContext.contentResolver?.let { resolver ->
         cursorToContentEntity(
             resolver.query(
                 Phone.CONTENT_URI,

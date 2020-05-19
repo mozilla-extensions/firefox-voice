@@ -1,9 +1,13 @@
 package mozilla.voice.assistant.intents.communication.ui.contact
 
+import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
@@ -26,9 +30,11 @@ import mozilla.voice.assistant.intents.communication.VOICE_MODE
  * and the name is specified through either the [NICKNAME_KEY] extra or the [PAYLOAD_KEY] extra,
  * which may also contain a message.
  */
-class ContactActivity : AppCompatActivity() {
+class ContactActivity : AppCompatActivity(), ContactActivityInterface {
     private lateinit var controller: ContactController
     private var cursorAdapter: RecyclerView.Adapter<ContactCursorAdapter.ContactViewHolder>? = null
+    override val app: Application
+        get() = this.application
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +67,27 @@ class ContactActivity : AppCompatActivity() {
         }
     }
 
-    internal fun reportPermissionsDenial() {
+    override fun startIntent(newIntent: Intent) = startActivity(newIntent)
+
+    override fun permissionsNeeded() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                PERMISSIONS_REQUEST
+            )
+            true
+        } else {
+            false
+        }
+
+    override fun reportPermissionsDenial() {
         Toast.makeText(this, "Unable to proceed without permissions", Toast.LENGTH_LONG)
             .show()
     }
 
-    internal fun processZeroContacts(cursor: Cursor, nickname: String) {
+    override fun processZeroContacts(cursor: Cursor, nickname: String) {
         // contactsViewAnimator.displayedChild = R.id.noContactsButton
         contactsCheckBox.visibility = View.VISIBLE
 
@@ -87,7 +108,7 @@ class ContactActivity : AppCompatActivity() {
         )
     }
 
-    internal fun processMultipleContacts(cursor: Cursor, nickname: String) {
+    override fun processMultipleContacts(cursor: Cursor, nickname: String) {
         //   contactsViewAnimator.displayedChild = R.id.contactsList
         contactsCheckBox.visibility = View.VISIBLE
         contactStatusView.text = getString(R.string.multiple_contacts, nickname)

@@ -1,11 +1,9 @@
 package mozilla.voice.assistant.intents.communication.ui.contact
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.lifecycle.ViewModelProvider
@@ -54,7 +52,7 @@ private fun String.numWords() = if (this.isEmpty()) 0 else this.split(" ").size
  *  until there is only a single word remaining in nickname.
  */
 class ContactController(
-    private val contactActivity: ContactActivity,
+    private val contactActivity: ContactActivityInterface,
     mode: String,
     nickname: String?,
     payload: String?
@@ -63,7 +61,7 @@ class ContactController(
     private val viewModel = ViewModelProvider(
         contactActivity,
         ContactViewModelFactory(
-            contactActivity.application,
+            contactActivity.app,
             mode,
             nickname ?: payload ?: throw AssertionError("Both nickname and payload null"),
             payload
@@ -105,25 +103,17 @@ class ContactController(
             }
             else -> throw AssertionError("Illegal mode: ${viewModel.mode}")
         }
-        contactActivity.startActivity(intent)
-        contactActivity.finish()
+        contactActivity.startIntent(intent)
     }
 
     private fun getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            contactActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-        ) {
-            contactActivity.requestPermissions(
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                ContactActivity.PERMISSIONS_REQUEST
-            )
-        } else {
+        if (!contactActivity.permissionsNeeded()) {
             seekContactsWithNickname()
         }
     }
 
     internal fun onRequestPermissionsResult(grantResults: IntArray) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             seekContactsWithNickname()
         } else {
             contactActivity.reportPermissionsDenial()
@@ -190,10 +180,14 @@ class ContactController(
             }
         }
 
+    /**
+     * Loads contacts matching the given nickname (or payload) and dispatches based on
+     * the number of contacts returned.
+     */
     inner class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         override fun onCreateLoader(loaderId: Int, args: Bundle?) =
             CursorLoader(
-                contactActivity,
+                contactActivity.app,
                 ContactsContract.Contacts.CONTENT_URI,
                 PROJECTION,
                 SELECTION,

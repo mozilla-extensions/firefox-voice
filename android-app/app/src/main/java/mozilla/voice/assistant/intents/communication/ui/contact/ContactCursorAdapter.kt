@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import mozilla.voice.assistant.R
 import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
 
+/**
+ * An adapter used when there are multiple matches in the Android contact database
+ * for the requested nickname, enabling the user to specify their choice.
+ */
 class ContactCursorAdapter(
     private val contactActivity: ContactActivity,
     private val nickname: String,
