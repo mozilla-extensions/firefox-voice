@@ -84,6 +84,7 @@ p {
   padding: 3px;
 }
 
+#optinTechData h1:before,
 #optinVoiceTranscripts h1:before {
   content: "";
   background-image: url("./images/icon-optin.svg");
@@ -92,6 +93,7 @@ p {
   padding-left: 60px;
 }
 
+#optinTechData h1:after,
 #optinVoiceTranscripts h1:after {
   display: block;
   content: "";
@@ -99,10 +101,13 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
+#optinTechData .modal a,
 #optinVoiceTranscripts .modal a {
   color: #0060df;
 }
 
+#optinTechData .modal a:hover,
+#optinTechData .modal a:active,
 #optinVoiceTranscripts .modal a:hover,
 #optinVoiceTranscripts .modal a:active {
   color: #003eaa;
