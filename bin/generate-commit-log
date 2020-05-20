@@ -1,42 +1,117 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import subprocess
 import os
 import argparse
-import email.parser
 import re
 import json
 import time
+from urllib import request
+import base64
 
 IGNORE_COMMITS = [
     "^merge",
     "^chore",
 ]
 
-parser = argparse.ArgumentParser(description='Generate a changelog')
-parser.add_argument('range', metavar='RANGE', type=str,
-                    help='Commit range to generate, or use "recent"')
-parser.add_argument('--write', action="store_true",
-                    help='Write to CHANGELOG.md')
+# These are people who work closely with the project and aren't attributed in the changelog:
+IGNORE_USERNAMES = [
+    "ianb",
+    "espertus",
+    "awallin",
+    "jcambre",
+]
+
+USERNAME_CACHE = os.path.abspath(os.path.join(__file__, "../username-cache.json"))
+usernames = {}
+if os.path.exists(USERNAME_CACHE):
+    usernames = json.load(open(USERNAME_CACHE))
+
+AUTH_HEADER = os.path.abspath(os.path.join(__file__, "../github-auth.txt"))
+auth = None
+if os.path.exists(AUTH_HEADER):
+    auth = open(AUTH_HEADER).read().strip()
+
+parser = argparse.ArgumentParser(description="Generate a changelog")
+parser.add_argument(
+    "range", metavar="RANGE", type=str, help='Commit range to generate, or use "recent"'
+)
+parser.add_argument("--write", action="store_true", help="Write to CHANGELOG.md")
 args = parser.parse_args()
 
 base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 if args.range == "recent":
     last_commit_hash = subprocess.check_output(
-        ["git", "log", "-n", "1", "--pretty=format:%H", "--", "CHANGELOG.md"], cwd=base)
-    args.range = last_commit_hash + "..master"
+        ["git", "log", "-n", "1", "--pretty=format:%H", "--", "CHANGELOG.md"], cwd=base
+    )
+    args.range = last_commit_hash.decode("UTF-8") + "..master"
 
-log = subprocess.check_output(
-    ['git', 'log', '--format=email', args.range])
+log = subprocess.check_output(["git", "log", "--format=email", "--numstat", args.range])
+
+
+def get_username(email, commit):
+    match = re.search(r"<\d+\+([a-zA-Z0-9_-]+)@users.noreply.github.com>", email)
+    if match:
+        return match.group(1)
+    if email in usernames:
+        username = usernames[email]
+        if username == "-":
+            return None
+        return username
+    headers = {}
+    if auth:
+        headers["Authorization"] = "Basic %s" % (
+            base64.b64encode(auth.encode("UTF-8")),
+        )
+    username = None
+    try:
+        req = request.Request(
+            "https://api.github.com/repos/mozilla/firefox-voice/commits/%s" % commit,
+            headers=headers,
+        )
+        body = request.urlopen(req).read()
+        data = json.loads(body)
+        if not data:
+            print("Error: no data returned")
+            print(commit, "body:", body)
+            raise Exception("No body")
+        if not data.get("committer", {}):
+            print("Bad committer data:")
+            print("bad data:", data, commit)
+            raise Exception("Bad committer")
+        username = data["committer"]["login"]
+        if username == "web-flow":
+            username = None
+    except Exception as e:
+        print("Exception in request:", e)
+    if not username:
+        print(
+            "Username for %s could not be looked up. Please find and enter username from commit:"
+            % email
+        )
+        print("  Open https://github.com/mozilla/firefox-voice/commit/%s" % commit)
+        username = input("> ").strip()
+    if username:
+        usernames[email] = username
+        save_usernames()
+    if username == "-":
+        return None
+    return username
+
+
+def save_usernames():
+    json.dump(usernames, open(USERNAME_CACHE, "w"))
+
 
 messages = []
 
-header_regex = re.compile(r'^([a-zA-Z\-]+):\s+(.*)')
-fixes_regex = re.compile(r'fix(?:es)?\s+#(\d+)[.,;:]?\s*', re.I)
-issue_regex = re.compile(r'#(\d+)')
+header_regex = re.compile(r"^([a-zA-Z\-]+):\s+(.*)")
+fixes_regex = re.compile(r"fix(?:es)?\s+#(\d+)[.,;:]?\s*", re.I)
+issue_regex = re.compile(r"#(\d+)")
 
 for line in log.splitlines():
+    line = line.decode("UTF-8")
     if line.startswith("From "):
         commit = line.split()[1]
         messages.append(dict(commit=commit, body=[]))
@@ -56,7 +131,7 @@ for message in messages:
         continue
     sub = message.get("subject", "")
     if sub.startswith("[PATCH] "):
-        sub = sub[len("[PATCH] "):]
+        sub = sub[len("[PATCH] ") :]
     should_skip = False
     for pat in IGNORE_COMMITS:
         if re.search(pat, sub, re.I):
@@ -64,25 +139,54 @@ for message in messages:
             break
     if should_skip:
         continue
+    sub = sub.capitalize()
+    username = get_username(message.get("from"), message.get("commit"))
+    if username in IGNORE_USERNAMES:
+        username = None
     short = message["commit"][:7]
     body_lines = []
+    good_files = False
     if "body" in message and message["body"]:
-        sub += message["body"][0]
-        body_lines = message["body"][1:]
-    full = ["* " + sub] + ['  ' + line.strip() for line in body_lines]
+        # sub += message["body"][0]
+        body_lines = []
+        for line in message["body"]:
+            if not line.strip():
+                continue
+            match = re.search(r"^[0-9-]+\t[0-9-]+\t(.*)", line)
+            if match:
+                filename = match.group(1)
+                if filename.startswith("extension/") or filename.startswith("bin/"):
+                    good_files = True
+            else:
+                body_lines.append(line)
+    if not good_files:
+        continue
+    if not sub:
+        sub = body_lines[0]
+        body_lines = body_lines[1:]
+    if username:
+        sub += " (from [%s](https://github.com/%s))" % (username, username)
+    full = ["* " + sub] + ["  " + line.strip() for line in body_lines]
     full = "\n".join(full)
     found = []
+
     def repl(match):
         found.append(" Fixes #%s" % match.group(1))
         return ""
+
     full = fixes_regex.sub(repl, full)
-    full = re.sub(r'[ ,]*$', "", full)
+    full = re.sub(r"[ ,]*$", "", full)
     if found:
         if not full.endswith("."):
             full += "."
         full = full + "".join(found)
-    full = full + " [%s](https://github.com/mozilla/firefox-voice/commit/%s)" % (short, short)
-    full = issue_regex.sub(r'[#\1](https://github.com/mozilla/firefox-voice/issues/\1)', full)
+    full = full + " [%s](https://github.com/mozilla/firefox-voice/commit/%s)" % (
+        short,
+        short,
+    )
+    full = issue_regex.sub(
+        r"[#\1](https://github.com/mozilla/firefox-voice/issues/\1)", full
+    )
     parts.append(full)
 
 parts = "\n".join(parts)
@@ -100,4 +204,4 @@ if args.write:
         fp.write("\n\n")
         fp.write(content)
 else:
-    print parts
+    print(parts)
