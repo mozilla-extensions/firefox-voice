@@ -4938,16 +4938,6 @@ html {
   scroll-behavior: smooth;
 }
 
-.draft-banner {
-  background-color: #c50042;
-  color: #fff;
-  max-width: 100%;
-  border-bottom: 1px solid #cecece;
-}
-.draft-banner .draft-details {
-  margin-left: 1em;
-}
-
 .mzp-c-navigation-items {
   float: right;
 }
@@ -4973,6 +4963,25 @@ html {
 .common-voice-welcome {
   display: flex;
   text-align: left;
+  margin: 1rem auto;
+}
+
+.common-voice-content-wrapper {
+  background: #fff;
+}
+.common-voice-content-wrapper .common-voice-content {
+  padding: 4rem;
+}
+.common-voice-content-wrapper .common-voice-content .common-voice-copy {
+  font-size: 1rem;
+  color: #000;
+}
+.common-voice-content-wrapper .common-voice-content .common-voice-copy a {
+  color: #0060df !important;
+}
+.common-voice-content-wrapper .common-voice-content .common-voice-cta {
+  margin-top: 3rem;
+  text-align: center;
 }
 
 .robot-profile {
@@ -4986,6 +4995,10 @@ html {
 
 .mzp-c-hero {
   padding-bottom: 0px;
+}
+
+.mzp-c-hero-desc {
+  padding-top: 1rem;
 }
 
 .mzp-l-core {
@@ -5085,17 +5098,13 @@ html {
   text-decoration: none;
 }
 
-.play-video {
-  display: flex;
-}
-
 .play-btn-wrapper {
   display: -ms-flex;
   display: -webkit-flex;
   display: flex;
   position: absolute;
   top: calc(50% - 25px);
-  left: calc(50% - 25px);
+  left: calc(50% - 50px);
 }
 .play-btn-wrapper button[name=play] {
   width: 100px;
@@ -5135,18 +5144,25 @@ html {
   height: 100%;
 }
 
-.video-modal-button {
+.modal-button {
   background: none !important;
   border: none;
   padding: 0 !important;
   color: #0060df;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.modal-button.common-voice {
+  font-size: 0.875rem;
+}
+
+.modal-button.video {
   font-weight: bold;
   margin-top: 0.5rem;
 }
 
-.video-modal-button:hover {
+.modal-button:hover {
   text-decoration: none;
 }
 
@@ -5154,11 +5170,16 @@ html {
   background-image: url("./images/close-white.svg") !important;
 }
 
+.mzp-c-notification-bar-button {
+  background-image: url("./images/close.svg") !important;
+}
+
 .faq-section-header {
   font-size: 18px;
   font-size: 1.125rem;
   line-height: 1.1;
   font-weight: bold;
+  margin-right: 3rem;
 }
 @media (min-width: 768px) {
   .faq-section-header {
@@ -5171,13 +5192,13 @@ html {
   margin-bottom: 4rem;
 }
 .faq details summary {
-  height: 70px;
   border-top: 1px solid #b1b1b3;
   display: flex;
   justify-content: center;
   align-content: center;
   flex-direction: column;
   cursor: pointer;
+  padding: 1rem 0rem 1rem 0rem;
 }
 .faq details ol,
 .faq details ul {
@@ -5208,6 +5229,10 @@ html {
   top: calc(100% + 0.25em);
 }
 
+.connection-error {
+  width: 400px;
+}
+
 .action-categories {
   display: flex;
   justify-content: space-around;
@@ -5217,11 +5242,9 @@ html {
   width: 30%;
 }
 
-.mzp-c-footer-primary-logo {
-  background: #fff;
-}
 .mzp-c-footer-primary-logo a {
   background: url("./images/mozilla-logo.svg");
+  background-color: #fff;
   width: 112px;
 }
 
@@ -5239,6 +5262,9 @@ html {
 
 .mzp-c-footer-item {
   margin-left: 3rem;
+}
+.mzp-c-footer-item a:focus {
+  text-decoration: underline !important;
 }
 
 .mzp-c-footer-primary::after {
@@ -5276,6 +5302,10 @@ html {
   .action-category {
     width: 100% !important;
     margin-bottom: 2rem;
+  }
+
+  .how-it-works-card {
+    margin-top: 24px;
   }
 }
 @media (max-width: 480px) {

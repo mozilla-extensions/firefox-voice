@@ -1,32 +1,64 @@
 /* eslint-disable no-unused-vars */
 
-/* globals React */
+/* globals React, Mzp */
 export const Homepage = ({
   isCommonVoice
 }) => {
   return /*#__PURE__*/React.createElement("div", {
     id: "homepage-wrapper"
-  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(DraftBanner, null), /*#__PURE__*/React.createElement(Header, null), isCommonVoice && /*#__PURE__*/React.createElement(CommonVoiceWelcome, null), /*#__PURE__*/React.createElement(HomepagePageContent, null), /*#__PURE__*/React.createElement(Footer, null)));
-};
-
-const DraftBanner = () => {
-  return /*#__PURE__*/React.createElement("div", {
-    class: "draft-banner mzp-l-content"
-  }, /*#__PURE__*/React.createElement("strong", null, "DRAFT WEBSITE"), /*#__PURE__*/React.createElement("span", {
-    class: "draft-details"
-  }, "The content on this website is a work-in-progress, and may include broken links, incomplete styles, and placeholders"));
+  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Header, null), isCommonVoice && /*#__PURE__*/React.createElement(CommonVoiceWelcome, null), /*#__PURE__*/React.createElement(HomepagePageContent, null), /*#__PURE__*/React.createElement(Footer, null)));
 };
 
 const CommonVoiceWelcome = () => {
-  return /*#__PURE__*/React.createElement("aside", {
+  const handleCommonVoiceClick = e => {
+    e.preventDefault();
+    const content = document.querySelector(".modal-common-voice-content");
+    Mzp.Modal.createModal(e.target, content, {
+      title: "Contribute your voice",
+      className: "cv-modal",
+      closeText: "Close modal"
+    });
+  };
+
+  const handleDismissCommonVoice = e => {
+    e.preventDefault();
+    e.currentTarget.parentNode.remove();
+  };
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("aside", {
     class: "mzp-c-notification-bar common-voice-welcome"
-  }, /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: handleDismissCommonVoice,
+    class: "mzp-c-notification-bar-button",
+    type: "button"
+  }), /*#__PURE__*/React.createElement("img", {
     class: "robot-profile",
     alt: "Profile of the Common Voice robot illustration",
     src: "./images/robot-profile.svg"
-  }), /*#__PURE__*/React.createElement("p", null, "Welcome Common Voice contributor! Help us build an open voice ecosystem. After installing, please allow Firefox Voice to collect voice samples.", " ", /*#__PURE__*/React.createElement("a", {
+  }), /*#__PURE__*/React.createElement("p", null, "Welcome Common Voice contributor! Help us build an open voice ecosystem. After installing, please allow Firefox Voice to collect voice samples.", " ", /*#__PURE__*/React.createElement("button", {
+    onClick: handleCommonVoiceClick,
+    class: "modal-button common-voice"
+  }, "Learn more"), ".")), /*#__PURE__*/React.createElement("div", {
+    class: "mzp-u-modal-content modal-common-voice-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "common-voice-content-wrapper"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "common-voice-content"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "./images/common-voice-wave.jpg",
+    alt: "Illustration of audio waves"
+  }), /*#__PURE__*/React.createElement("div", {
+    class: "common-voice-copy"
+  }, /*#__PURE__*/React.createElement("p", null, "At Mozilla we\u2019re working to build an open voice ecosystem that is both private and secure. To do this, we\u2019ve developed tools like ", /*#__PURE__*/React.createElement("a", {
     href: "https://voice.mozilla.org/"
-  }, "Learn more"), "."));
+  }, "Common Voice"), " to collect the necessary data needed to teach our systems how to recognize a wider variety of voices, in all sorts of environments."), /*#__PURE__*/React.createElement("p", null, "Now we\u2019re asking for your help training", " ", /*#__PURE__*/React.createElement("a", {
+    href: "https://github.com/mozilla/DeepSpeech"
+  }, "Mozilla\u2019s DeepSpeech"), " ", "system for the words and phrases people say when browsing the internet."), /*#__PURE__*/React.createElement("p", null, "You can contribute tremendously to the improvement of DeepSpeech just by using Firefox Voice for common tasks \u2014 such as search, navigation, playing music and allowing Mozilla to collect and store samples."), /*#__PURE__*/React.createElement("p", null, "All voice samples are stored securely and without accompanying personally identifiable information.")), /*#__PURE__*/React.createElement("div", {
+    class: "common-voice-cta"
+  }, /*#__PURE__*/React.createElement("a", {
+    class: "mzp-c-button mzp-t-product install-cta",
+    href: "https://va.allizom.org/releases/prod/firefox-voice.xpi"
+  }, "Install Firefox Voice"))))));
 };
 
 const Header = () => {
@@ -44,7 +76,7 @@ const Header = () => {
     class: "mzp-c-navigation-logo"
   }, /*#__PURE__*/React.createElement("img", {
     src: "./images/fx-voice-logo.svg",
-    alt: "Firefox Voice"
+    alt: "Firefox Voice logo"
   })), /*#__PURE__*/React.createElement("div", {
     class: "mzp-c-navigation-items"
   }, /*#__PURE__*/React.createElement("div", {
@@ -151,7 +183,7 @@ const OpenVoiceEcosystem = () => {
     class: "card-header mzp-has-zap-14 open-voice-ecosystem"
   }, "An ", /*#__PURE__*/React.createElement("strong", null, "open\xA0voice"), " ecosystem"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "At Mozilla we\u2019re trying to build an open voice ecosystem that is both private and secure. To do this, we\u2019ve developed tools such as", " ", /*#__PURE__*/React.createElement("a", {
     href: "https://voice.mozilla.org/"
-  }, "Common Voice"), " to collect the necessary data to teach our systems how to recognize a wider variety of diverse voices, in all sorts of environments."), /*#__PURE__*/React.createElement("p", null, "Now you can help by choosing to let us store your Firefox Voice requests\u2014securely, without accompanying personally identifiable information\u2014and use them to improve our research. We won't share them outside of Mozilla."))), /*#__PURE__*/React.createElement("div", {
+  }, "Common Voice"), " to collect the necessary data to teach our systems how to recognize a wider variety of diverse voices, in all sorts of environments."), /*#__PURE__*/React.createElement("p", null, "Now you can help by choosing to let us store your Firefox Voice requests\u2014securely, without accompanying personally identifiable information\u2014and use them to improve our research."))), /*#__PURE__*/React.createElement("div", {
     class: "mzp-c-card"
   }, /*#__PURE__*/React.createElement("img", {
     class: "common-voice-robot",
@@ -163,11 +195,11 @@ const OpenVoiceEcosystem = () => {
 const Demo = () => {
   const handleVideoClick = e => {
     e.preventDefault();
-    const content = document.querySelector('.mzp-u-modal-content');
+    const content = document.querySelector(".modal-video-content");
     Mzp.Modal.createModal(e.target, content, {
-      title: 'Firefox Voice Demo Video',
-      className: 'mzp-has-media',
-      closeText: 'Close modal'
+      title: "Firefox Voice Demo Video",
+      className: "mzp-has-media",
+      closeText: "Close modal"
     });
   };
 
@@ -188,18 +220,19 @@ const Demo = () => {
     onClick: handleVideoClick,
     name: "play"
   })), /*#__PURE__*/React.createElement("img", {
+    alt: "Still frame from the demo video with a play icon overlay. The still shows the outcome of the Firefox Voice command: 'Read this page to me', where a New York Times article is being narrated in the browser's reader view.",
     src: "./images/demo-still.png"
   })))), /*#__PURE__*/React.createElement("div", {
-    class: "mzp-c-card"
+    class: "mzp-c-card how-it-works-card"
   }, /*#__PURE__*/React.createElement("h6", {
     class: "card-header mzp-has-zap-11"
   }, "See how it ", /*#__PURE__*/React.createElement("strong", null, "works")), /*#__PURE__*/React.createElement("div", null, "Whether you need to maintain your focus or just have your hands full, now you can go hands-free to navigate the web and retrieve information instantly.", /*#__PURE__*/React.createElement("div", {
     class: "watch-video"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: handleVideoClick,
-    class: "video-modal-button"
+    class: "video modal-button"
   }, "Watch the video")), /*#__PURE__*/React.createElement("div", {
-    class: "mzp-u-modal-content"
+    class: "mzp-u-modal-content modal-video-content"
   }, /*#__PURE__*/React.createElement("div", {
     class: "video-wrapper"
   }, /*#__PURE__*/React.createElement("iframe", {
@@ -227,21 +260,31 @@ const Faq = () => {
     class: "faq-section-header"
   }, "When is the microphone active and listening?")), /*#__PURE__*/React.createElement("p", null, "The microphone for Firefox Voice is only active when triggered with a button press or keyboard shortcut. We strive to make it clear anytime Firefox Voice is listening as privacy and trust are central to Firefox Voice and Mozilla."), /*#__PURE__*/React.createElement("p", null, "The microphone access is paused between use, so you may notice an operating system indicator that Firefox is retaining the microphone.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
     class: "faq-section-header"
-  }, "Are my audio recordings stored?")), /*#__PURE__*/React.createElement("p", null, "By default Firefox Voice does ", /*#__PURE__*/React.createElement("strong", null, "not"), " store your voice recordings after processing. Users may enable audio recordings to be stored for purposes of improving our speech detection service but it is not required or enabled by default, nor are we promoting this option currently.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
+  }, "Are my audio recordings stored?")), /*#__PURE__*/React.createElement("p", null, "By default Firefox Voice does not store voice recordings."), /*#__PURE__*/React.createElement("p", null, "Users may allow Mozilla to store their voice recordings and computer-generated transcripts of their recordings. Recordings and transcripts are stored securely and without personally identifying information (this means, we don\u2019t know who said them)."), /*#__PURE__*/React.createElement("p", null, "Even if users do not opt-in to allowing storage, they are able to use Firefox Voice."), /*#__PURE__*/React.createElement("p", null, "In your Preferences,you can change your settings at any time."), /*#__PURE__*/React.createElement("p", null, "If you allow Mozilla to store your voice recordings, we use your recordings for research purposes and to help improve Firefox Voice. For example, we may use the computer-generated transcripts of your recordings to help identify which commands we should support. We may also manually review your voice recordings to better train our speech service to respond more accurately.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
     class: "faq-section-header"
-  }, "Are my voice recordings transcribed and stored?")), /*#__PURE__*/React.createElement("p", null, "For the initial Beta release we ask participants to allow transcriptions during the installation process. Even if participants opt-out of allowing transcriptions they are able to use Firefox Voice."), /*#__PURE__*/React.createElement("p", null, "When participants opt-in, transcripts are used for research purposes to improve Firefox Voice and related services. Transcriptions and related data are stored securely and without personally identifying information."), /*#__PURE__*/React.createElement("p", null, "In the Preferences you can additionally allow us to keep your audio for speech-to-text training purposes. This is off by default.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
-    class: "faq-section-header"
-  }, "When will this automatically be included into Firefox?")), /*#__PURE__*/React.createElement("p", null, "The current Beta release of Firefox Voice is an experiment to better understand the needs and desire for voice interactions within the browser. At this time no decision has been made on when or if the add-on will come bundled by default with Firefox. Future development depends on feedback and performance of the Add-On.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
+  }, "When will this automatically be included into Firefox?")), /*#__PURE__*/React.createElement("p", null, "The current release of Firefox Voice is an experiment to better understand the needs and desire for voice interactions within the browser. At this time no decision has been made on when or if the add-on will come bundled by default with Firefox. Future development depends on feedback and performance of the Add-On.")), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
     class: "faq-section-header"
   }, "What other voice experiments is Mozilla working on?")), /*#__PURE__*/React.createElement("p", null, "Mozilla is experimenting with voice in a number projects including:"), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "https://voice.mozilla.org/"
   }, "Common Voice"), ": A crowdsourcing project to create a free database for speech recognition software. The project is supported by volunteers who record sample sentences with a microphone and review recordings of other users."), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "https://github.com/mozilla/TTS"
-  }, "Mozilla TTS"), ": A deep learning based Text2Speech engine, low in cost and high in quality."), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+  }, "Mozilla TTS"), ": A deep learning based text-to-speech engine, low in cost and high in quality."), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "https://github.com/mozilla/DeepSpeech"
   }, "Project DeepSpeech"), ": An open source Speech-To-Text engine, using a model trained by machine learning techniques."))), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
     class: "faq-section-header"
-  }, "How is my audio processed?")), /*#__PURE__*/React.createElement("p", null, "When you make a request using Firefox Voice, the browser captures the audio and uses cloud-based services to transcribe and then process the request. Below are the steps and services utilized."), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, "The microphone must be opened with a button press or keyboard shortcut."), /*#__PURE__*/React.createElement("li", null, "After you finish speaking the microphone is turned off."), /*#__PURE__*/React.createElement("li", null, "Audio from your voice request is sent to Mozilla\u2019s Voicefill server without any personally identifiable metadata."), /*#__PURE__*/React.createElement("li", null, "Voicefill sends the audio to Google\u2019s Speech-to-Text engine, which returns transcribed text. We\u2019ve instructed the Google Speech-to-Text engine to NOT save any recordings. Note: In the future, we expect to enable Mozilla\u2019s own technology for Speech-to-Text which enables us to stop using Google\u2019s Speech-to-Text engine."), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", null, "Based on the transcribed text, Firefox Voice attempts to fulfill your request."), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "For example, if you say \u201CGo to\u2026\u201D or \u201CFind\u2026\u201D a Search using your default search engine will be executed. Note: if you\u2019re using Google Search and are logged into your Google account in Firefox, your search will be associated with your Google search history."), /*#__PURE__*/React.createElement("li", null, "Requests such as \u201CClose tab\u201D or \u201CRead this page\u201D are processed directly by the browser."))), /*#__PURE__*/React.createElement("li", null, "We\u2019ve instructed Google Speech-to-text not to retain audio once the request has been processed. In addition, Mozilla does not retain any audio unless you\u2019ve actively chosen to allow Mozilla to collect audio recordings for the purpose of improving our speech recognition service.")))));
+  }, "How is my audio processed?")), /*#__PURE__*/React.createElement("p", null, "When you make a request using Firefox Voice, the browser captures the audio and uses cloud-based services to transcribe and then process the request. Below are the steps and services utilized."), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, "The microphone must be opened with a button press or keyboard shortcut."), /*#__PURE__*/React.createElement("li", null, "After you finish speaking the microphone is turned off."), /*#__PURE__*/React.createElement("li", null, "Audio from your voice request is sent to Mozilla\u2019s Voicefill server without any personally identifiable metadata."), /*#__PURE__*/React.createElement("li", null, "Voicefill sends the audio to Google\u2019s Speech-to-Text engine, which returns transcribed text. We\u2019ve instructed the Google Speech-to-Text engine to NOT save any recordings. Note: In the future, we expect to enable Mozilla\u2019s own technology for Speech-to-Text which enables us to stop using Google\u2019s Speech-to-Text engine."), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("div", null, "Based on the transcribed text, Firefox Voice attempts to fulfill your request."), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "For example, if you say \u201CGo to\u2026\u201D or \u201CFind\u2026\u201D a Search using your default search engine will be executed. Note: if you\u2019re using Google Search and are logged into your Google account in Firefox, your search will be associated with your Google search history."), /*#__PURE__*/React.createElement("li", null, "Requests such as \u201CClose tab\u201D or \u201CRead this page\u201D are processed directly by the browser."))), /*#__PURE__*/React.createElement("li", null, "We\u2019ve instructed Google Speech-to-text not to retain audio once the request has been processed. In addition, Mozilla does not retain any audio unless you\u2019ve actively chosen to allow Mozilla to collect audio recordings for the purpose of improving our speech recognition service."))), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
+    class: "faq-section-header"
+  }, "When I try to install I see \u201Cthe add-on could not be downloaded because of a connection failure.\u201D")), /*#__PURE__*/React.createElement("p", null, "Antivirus and other security software can sometimes prevent Firefox extensions from being downloaded, installed or updated."), /*#__PURE__*/React.createElement("img", {
+    class: "connection-error",
+    src: "./images/connection-error.png",
+    alt: "Tooltip dialog window showing an error message upon installing the add-on. The message reads: 'The add-on could not be downloaded because of a connection failure.'"
+  }), /*#__PURE__*/React.createElement("p", null, "If you\u2019re having trouble installing Firefox Voice or it doesn\u2019t update automatically, follow these steps to install the extension manually:"), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, "Open a different browser, like Safari, Chrome, or Microsoft Edge."), /*#__PURE__*/React.createElement("li", null, "Copy and paste the", " ", /*#__PURE__*/React.createElement("a", {
+    href: "https://va.allizom.org/releases/prod/firefox-voice.xpi"
+  }, "download"), " ", "link into the different browser. It will be saved as a .xpi file in your Downloads folder."), /*#__PURE__*/React.createElement("li", null, "Open Firefox and drag the .xpi file to the Firefox window, then click Add."))), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
+    class: "faq-section-header"
+  }, "After installing Firefox Voice it doesn\u2019t respond to anything I say.")), /*#__PURE__*/React.createElement("p", null, "If you\u2019re having trouble getting Firefox Voice to hear what you're saying and take action the microphone may not be picking up audio. Check that your microphone is set up correctly."), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, "Ensure your device has a microphone or your external microphone is plugged in."), /*#__PURE__*/React.createElement("li", null, "Check Firefox Voice has permissions to access the mic."), /*#__PURE__*/React.createElement("li", null, "Restart Firefox. This can often clear up the issue."))), /*#__PURE__*/React.createElement("details", null, /*#__PURE__*/React.createElement("summary", null, /*#__PURE__*/React.createElement("div", {
+    class: "faq-section-header"
+  }, "How is my audio processed?")), /*#__PURE__*/React.createElement("p", null, "When you make a request using Firefox Voice, the browser captures the audio and uses cloud-based services to transcribe and then process the request. Below are the steps and services utilized."), /*#__PURE__*/React.createElement("ol", null, /*#__PURE__*/React.createElement("li", null, "The microphone must be opened with a button press or keyboard shortcut."), /*#__PURE__*/React.createElement("li", null, "After you finish speaking the microphone is turned off."), /*#__PURE__*/React.createElement("li", null, "Audio from your voice request is sent to Mozilla\u2019s Voicefill server without any personally identifiable metadata."), /*#__PURE__*/React.createElement("li", null, "The Voicefill server sends the audio to Google\u2019s Speech-to-Text engine, which returns transcribed text. We\u2019ve instructed the Google Speech-to-Text engine to NOT save any recordings. Note: In the future, we expect to enable Mozilla\u2019s own technology for Speech-to-Text which will enable us to stop using Google\u2019s Speech-to-Text engine."), /*#__PURE__*/React.createElement("li", null, "Based on the transcribed text, Firefox Voice attempts to fulfill your request.", /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "For example, if you say \u201CGo to\u2026\u201D or \u201CFind\u2026\u201D a Search using your default search engine will be executed. Note: if you\u2019re using Google Search and are logged into your Google account in Firefox, your search will be associated with your Google search history."), /*#__PURE__*/React.createElement("li", null, "Requests such as \u201CClose tab\u201D or \u201CRead this page\u201D are processed directly by the browser."))), /*#__PURE__*/React.createElement("li", null, "We\u2019ve instructed Google Speech-to-text not to retain audio once the request has been processed. In addition, Mozilla does not retain any audio unless you\u2019ve actively chosen to allow Mozilla to collect audio recordings for the purpose of improving our speech recognition service.")))));
 };
 
 const Footer = () => {

@@ -1,5 +1,8 @@
-/* globals React, ReactDOM */
+/* globals React, ReactDOM, Mzp */
+const PUBLIC_SITE = "https://voice.mozilla.org/firefox-voice/";
+const GHPAGES_SITE = "https://mozilla.github.io"; // Just the prefix
 // eslint-disable-next-line no-unused-vars
+
 import * as homepageView from "./homepageView.js";
 const {
   useState,
@@ -7,6 +10,11 @@ const {
 } = React;
 const homepageContainer = document.getElementById("homepage-container");
 let isInitialized = false;
+
+if (location.href.startsWith(GHPAGES_SITE)) {
+  location.replace(PUBLIC_SITE);
+}
+
 export const HomepageController = function () {
   const [isCommonVoice, setIsCommonVoice] = useState(false);
   useEffect(() => {
