@@ -600,59 +600,6 @@ const Faq = () => {
             <li>Restart Firefox. This can often clear up the issue.</li>
           </ol>
         </details>
-        <details>
-          <summary>
-            <div class="faq-section-header">How is my audio processed?</div>
-          </summary>
-          <p>
-            When you make a request using Firefox Voice, the browser captures
-            the audio and uses cloud-based services to transcribe and then
-            process the request. Below are the steps and services utilized.
-          </p>
-          <ol>
-            <li>
-              The microphone must be opened with a button press or keyboard
-              shortcut.
-            </li>
-            <li>After you finish speaking the microphone is turned off.</li>
-            <li>
-              Audio from your voice request is sent to Mozilla’s Voicefill
-              server without any personally identifiable metadata.
-            </li>
-            <li>
-              The Voicefill server sends the audio to Google’s Speech-to-Text
-              engine, which returns transcribed text. We’ve instructed the
-              Google Speech-to-Text engine to NOT save any recordings. Note: In
-              the future, we expect to enable Mozilla’s own technology for
-              Speech-to-Text which will enable us to stop using Google’s
-              Speech-to-Text engine.
-            </li>
-            <li>
-              Based on the transcribed text, Firefox Voice attempts to fulfill
-              your request.
-              <ul>
-                <li>
-                  For example, if you say “Go to…” or “Find…” a Search using
-                  your default search engine will be executed. Note: if you’re
-                  using Google Search and are logged into your Google account in
-                  Firefox, your search will be associated with your Google
-                  search history.
-                </li>
-                <li>
-                  Requests such as “Close tab” or “Read this page” are processed
-                  directly by the browser.
-                </li>
-              </ul>
-            </li>
-            <li>
-              We’ve instructed Google Speech-to-text not to retain audio once
-              the request has been processed. In addition, Mozilla does not
-              retain any audio unless you’ve actively chosen to allow Mozilla to
-              collect audio recordings for the purpose of improving our speech
-              recognition service.
-            </li>
-          </ol>
-        </details>
       </section>
     </div>
   );
