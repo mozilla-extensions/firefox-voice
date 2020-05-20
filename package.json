@@ -109,6 +109,7 @@
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
     "once": "web-ext run -s extension",
     "package": "npm-run-all build:* && web-ext build -s extension --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' -i '**/*.toml' && mv web-ext-artifacts/*.zip addon.xpi ; echo ./addon.xpi created",
+    "package-prod": "VERSION=\"$(node -e 'process.stdout.write(require(\"./package.json\").version, {encoding: \"UTF-8\"})')\" UPDATE_BASE=https://va.allizom.org/releases/prod INSTALL_CHANNEL=prod LOG_LEVEL=info npm run package",
     "calculate-version": "node bin/calculate-version.js",
     "enumerate-phrases": "babel-node --plugins @babel/plugin-transform-modules-commonjs bin/enumerate-phrases.js",
     "postinstall": "npm-run-all build:*"
