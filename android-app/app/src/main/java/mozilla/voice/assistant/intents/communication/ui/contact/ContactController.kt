@@ -5,11 +5,9 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import kotlinx.coroutines.launch
 import mozilla.voice.assistant.intents.communication.ContactEntity
@@ -17,14 +15,6 @@ import mozilla.voice.assistant.intents.communication.SMS_MODE
 import mozilla.voice.assistant.intents.communication.VOICE_MODE
 import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
 import mozilla.voice.assistant.intents.communication.contactUriToContactEntity
-
-private fun String.toComparisonStrings() =
-    arrayOf(
-        this, // just the nickname
-        "$this %", // first name
-        "% $this", // last name
-        "% $this %" // middle name
-    )
 
 private fun String.numWords() = if (this.isEmpty()) 0 else this.split(" ").size
 
@@ -186,14 +176,7 @@ class ContactController(
      */
     inner class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         override fun onCreateLoader(loaderId: Int, args: Bundle?) =
-            CursorLoader(
-                contactActivity.app,
-                ContactsContract.Contacts.CONTENT_URI,
-                PROJECTION,
-                SELECTION,
-                viewModel.nickname.toComparisonStrings(),
-                null
-            )
+            viewModel.toCursorLoader(contactActivity.app)
 
         override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
             when (cursor.count) {
@@ -207,26 +190,6 @@ class ContactController(
     }
 
     companion object {
-        private val PROJECTION: Array<out String> = arrayOf(
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
-        )
-
-        // The following statements set up constants for a query to find contacts whose display
-        // name either match or contain a nickname provided at run-time.
-        private const val HAS_PHONE_TERM = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} = 1"
-        private const val LIKE_TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
-        private const val NUM_LIKE_TERMS = 4 // exact match, first name, last name, middle name
-        private val SELECTION: String =
-            generateSequence { LIKE_TERM }
-                .take(NUM_LIKE_TERMS)
-                .joinToString(
-                    separator = " OR ",
-                    prefix = "$HAS_PHONE_TERM AND (",
-                    postfix = ")"
-                )
-
         internal const val CONTACT_ID_INDEX = 0
         internal const val CONTACT_DISPLAY_NAME_INDEX = 1
         internal const val CONTACT_PHOTO_URI_INDEX = 2

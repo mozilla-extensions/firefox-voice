@@ -67,7 +67,10 @@ class ContactActivity : AppCompatActivity(), ContactActivityInterface {
         }
     }
 
-    override fun startIntent(newIntent: Intent) = startActivity(newIntent)
+    override fun startIntent(newIntent: Intent) {
+        startActivity(newIntent)
+        finish()
+    }
 
     override fun permissionsNeeded() =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
