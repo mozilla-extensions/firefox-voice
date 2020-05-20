@@ -10,16 +10,6 @@ html {
   scroll-behavior: smooth;
 }
 
-.draft-banner {
-  background-color: #c50042;
-  color: #fff;
-  max-width: 100%;
-  border-bottom: 1px solid #cecece;
-  .draft-details {
-    margin-left: 1em;
-  }
-}
-
 .mzp-c-navigation-items {
   float: right;
 }
@@ -33,7 +23,7 @@ html {
 }
 
 .mzp-c-navigation-menu-button {
-  background-image: url("./images/menu.svg");  
+  background-image: url("./images/menu.svg");
 }
 
 .mzp-c-navigation-logo > img {
@@ -45,6 +35,29 @@ html {
 .common-voice-welcome {
   display: flex;
   text-align: left;
+  margin: 1rem auto;
+}
+
+.common-voice-content-wrapper {
+  background: #fff;
+
+  .common-voice-content {
+    padding: 4rem;
+
+    .common-voice-copy {
+      font-size: 1rem;
+      color: #000;
+
+      a {
+        color: #0060df !important;
+      }
+    }
+
+    .common-voice-cta {
+      margin-top: 3rem;
+      text-align: center;
+    }
+  }
 }
 
 .robot-profile {
@@ -58,6 +71,10 @@ html {
 
 .mzp-c-hero {
   padding-bottom: 0px;
+}
+
+.mzp-c-hero-desc {
+  padding-top: 1rem;
 }
 
 // .mzp-c-hero-body {
@@ -147,18 +164,14 @@ html {
   }
 }
 
-.play-video {
-  display: flex;
-}
-
 .play-btn-wrapper {
-    display: -ms-flex;
-    display: -webkit-flex;
-    display: flex;
-    position: absolute;
-    top: calc(50% - 25px);
-    left: calc(50% - 25px);
-  
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 50px);
+
   button[name="play"] {
     width: 100px;
     height: 70px;
@@ -173,9 +186,9 @@ html {
     background: #c50042;
     transition: background-color 0.25s ease;
   }
-  
+
   button[name="play"]::after {
-    content: '';
+    content: "";
     display: inline-block;
     position: relative;
     top: 1px;
@@ -199,18 +212,25 @@ html {
   }
 }
 
-.video-modal-button {
-  background: none!important;
+.modal-button {
+  background: none !important;
   border: none;
-  padding: 0!important;
+  padding: 0 !important;
   color: #0060df;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.modal-button.common-voice {
+  font-size: 0.875rem;
+}
+
+.modal-button.video {
   font-weight: bold;
   margin-top: 0.5rem;
 }
 
-.video-modal-button:hover {
+.modal-button:hover {
   text-decoration: none;
 }
 
@@ -218,22 +238,27 @@ html {
   background-image: url("./images/close-white.svg") !important;
 }
 
+.mzp-c-notification-bar-button {
+  background-image: url("./images/close.svg") !important;
+}
+
 .faq-section-header {
   @include protocol.text-display-xs;
   font-weight: bold;
+  margin-right: 3rem;
 }
 
 .faq {
   margin-bottom: 4rem;
   details {
     summary {
-      height: 70px;
       border-top: 1px solid #b1b1b3;
       display: flex;
       justify-content: center;
       align-content: center;
       flex-direction: column;
       cursor: pointer;
+      padding: 1rem 0rem 1rem 0rem;
     }
     ol,
     ul {
@@ -275,6 +300,10 @@ html {
   }
 }
 
+.connection-error {
+  width: 400px;
+}
+
 .action-categories {
   display: flex;
   justify-content: space-around;
@@ -285,9 +314,9 @@ html {
 }
 
 .mzp-c-footer-primary-logo {
-  background: #fff;
   a {
     background: url("./images/mozilla-logo.svg");
+    background-color: #fff;
     width: 112px;
   }
 }
@@ -305,6 +334,10 @@ html {
 }
 .mzp-c-footer-item {
   margin-left: 3rem;
+
+  a:focus {
+    text-decoration: underline !important;
+  }
 }
 
 .mzp-c-footer-primary::after {
@@ -312,7 +345,7 @@ html {
   display: unset;
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .mzp-l-flexcards {
     flex-wrap: wrap;
     .mzp-c-card {
@@ -338,9 +371,13 @@ html {
     width: 100% !important;
     margin-bottom: 2rem;
   }
+
+  .how-it-works-card {
+    margin-top: 24px;
+  }
 }
 
-@media(max-width: 480px) {
+@media (max-width: 480px) {
   .mzp-c-footer-items {
     display: block;
   }
