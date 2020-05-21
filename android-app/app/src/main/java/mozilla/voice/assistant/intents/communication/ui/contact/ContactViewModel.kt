@@ -2,7 +2,6 @@ package mozilla.voice.assistant.intents.communication.ui.contact
 
 import android.app.Application
 import android.provider.ContactsContract
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -61,43 +60,48 @@ class ContactViewModel(
     private val possibleNicknames: List<String>
         get() =  payloadWords?.toPossibleNicknames() ?: listOf(nickname ?: throw AssertionError("Both payload and nickname are null"))
 
-    private suspend fun tryContactNicknames(): ContactEntity? {
-        for (name in possibleNicknames) return repository.get(name) ?: continue
-        return null
+    suspend fun getContact() = withContext(Dispatchers.IO) {
+        getContactInternal()
     }
 
-    suspend fun getContact() = withContext(Dispatchers.IO) {
-        tryContactNicknames()
+    // This function is separate from getContact() because you can't have return within withContext().
+    private suspend fun getContactInternal(): ContactEntity? {
+        // Find repository entry corresponding to first possible (longest) nickname.
+        for (name in possibleNicknames) return repository.get(name) ?: continue
+        return null
     }
 
     fun insert(contact: ContactEntity) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(contact)
     }
 
-    @VisibleForTesting
-    internal fun comparisonStringsFor(name: String) =
-        arrayOf(
+    private val selectionArgs =
+        possibleNicknames.flatMap { selectionArgsFor(it) }.toTypedArray()
+
+    private fun selectionArgsFor(name: String) =
+        listOf(
             name, // just the nickname
             "$name %", // first name
             "% $name", // last name
             "% $name %" // middle name
         )
 
-    @VisibleForTesting
-    internal fun computeSelectionStrings() =
-        if (payload == null) {
-            SELECTION
-        } else {
-            SELECTION // TODO: Change
-        }
+    private val selectionStrings =
+        generateSequence { SELECTION_SUBSTRING }
+            .take(possibleNicknames.size)
+            .joinToString(
+                separator = " OR ",
+                prefix = "$HAS_PHONE_TERM AND (",
+                postfix = ")"
+            )
 
     fun toCursorLoader(app: Application) =
         CursorLoader(
             app,
             ContactsContract.Contacts.CONTENT_URI,
             PROJECTION,
-            computeSelectionStrings(),
-            comparisonStringsFor(nickname!!), // TODO: fix
+            selectionStrings,
+            selectionArgs,
             null
         )
 
@@ -117,12 +121,12 @@ class ContactViewModel(
         private const val HAS_PHONE_TERM = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} = 1"
         private const val LIKE_TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
         private const val NUM_LIKE_TERMS = 4 // exact match, first name, last name, middle name
-        internal val SELECTION: String =
+        internal val SELECTION_SUBSTRING =
             generateSequence { LIKE_TERM }
                 .take(NUM_LIKE_TERMS)
                 .joinToString(
                     separator = " OR ",
-                    prefix = "$HAS_PHONE_TERM AND (",
+                    prefix = "(",
                     postfix = ")"
                 )
     }

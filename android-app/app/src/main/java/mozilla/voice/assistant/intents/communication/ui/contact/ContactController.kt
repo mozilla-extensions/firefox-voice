@@ -87,7 +87,7 @@ class ContactController(
                 viewModel.payload?.let {
                     putExtra(
                         "sms_body",
-                        it.substringAfter(viewModel.nickname)
+                        it.substringAfter(contact.nickname)
                     )
                 }
             }
@@ -111,18 +111,11 @@ class ContactController(
     }
 
     private fun seekContactsWithNickname() {
-        // If we've already created a ContactLoader, destroy it.
-        contactLoader?.let {
-            // We use the number of spaces in a nickname as the id of the corresponding loader,
-            // so the previous loader has an id one greater than the one we're about to create.
-            LoaderManager.getInstance(contactActivity)
-                .destroyLoader(viewModel.nickname.numWords() + 1)
-        }
         ContactLoader().let {
             contactLoader = it
             LoaderManager.getInstance(contactActivity)
                 .initLoader(
-                    viewModel.nickname.numWords(), // id of new loader
+                    CONTACT_LOADER_ID,
                     null,
                     it
                 )
@@ -142,19 +135,10 @@ class ContactController(
     }
 
     internal fun handleZeroContacts(cursor: Cursor) {
-        if (viewModel.payload != null && viewModel.nickname.contains(' ')) {
-            // If we get here, we may have copied too much of the payload into
-            // the nickname. For example, if the user said "text mary golden hello",
-            // we would originally set the nickname to the payload value, "mary golden hello".
-            // We should shorten the nickname and try again.
-            viewModel.nickname = viewModel.nickname.substringBeforeLast(' ')
-            startDatabaseSearch()
-        } else {
-            // Don't close cursor here, in case a configuration change occurs after
-            // processZeroContacts() is called but before the contact picker is opened
-            // (issue 1628). Instead, it will be called just before opening the picker.
-            contactActivity.processZeroContacts(cursor, viewModel.nickname)
-        }
+        // Don't close cursor here, in case a configuration change occurs after
+        // processZeroContacts() is called but before the contact picker is opened
+        // (issue 1628). Instead, it will be called just before opening the picker.
+        contactActivity.processZeroContacts(cursor, viewModel.nickname)
     }
 
     internal fun handleSingleContact(cursor: Cursor) =
@@ -193,5 +177,7 @@ class ContactController(
         internal const val CONTACT_ID_INDEX = 0
         internal const val CONTACT_DISPLAY_NAME_INDEX = 1
         internal const val CONTACT_PHOTO_URI_INDEX = 2
+
+        internal const val CONTACT_LOADER_ID = 100
     }
 }
