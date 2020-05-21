@@ -5,7 +5,7 @@ match = """
 """
 
 [[browser.bookmark.example]]
-phrase = "Bookmark{s}"
+phrase = "Bookmarks"
 
 [[browser.bookmark.example]]
 phrase = "Open bookmark{s}"
