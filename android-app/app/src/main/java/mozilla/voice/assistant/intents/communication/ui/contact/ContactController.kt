@@ -53,7 +53,7 @@ class ContactController(
         ContactViewModelFactory(
             contactActivity.app,
             mode,
-            nickname ?: payload ?: throw AssertionError("Both nickname and payload null"),
+            nickname,
             payload
         )
     ).get(ContactViewModel::class.java)
