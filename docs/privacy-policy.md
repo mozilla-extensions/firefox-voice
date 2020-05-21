@@ -1,4 +1,4 @@
-# Firefox Voice Privacy Notice
+# Privacy Policy
 
 May, 2020
 
