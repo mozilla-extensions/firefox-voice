@@ -248,7 +248,7 @@
 - test intent phrases with jest
   This also moves service metadata into .toml files, and entity types into their own module, so that it's easier to use these from tests. Fixes [#1001](https://github.com/mozilla/firefox-voice/issues/1001) [15a748d](https://github.com/mozilla/firefox-voice/commit/15a748d)
 - add 'follow link' intent
-  This will search all the <a> tags in a page, prioritize ones that are on-screen, highlight the link, and then simulate a click. Fixes [#825](https://github.com/mozilla/firefox-voice/issues/825) [bc2b34d](https://github.com/mozilla/firefox-voice/commit/bc2b34d)
+  This will search all the `<a>` tags in a page, prioritize ones that are on-screen, highlight the link, and then simulate a click. Fixes [#825](https://github.com/mozilla/firefox-voice/issues/825) [bc2b34d](https://github.com/mozilla/firefox-voice/commit/bc2b34d)
 - add opt-in acceptance timestamp. Fixes [#587](https://github.com/mozilla/firefox-voice/issues/587) [51619cc](https://github.com/mozilla/firefox-voice/commit/51619cc)
 - keep track of audio collection pref in telemetry. Fixes [#588](https://github.com/mozilla/firefox-voice/issues/588) [d3192cb](https://github.com/mozilla/firefox-voice/commit/d3192cb)
 - Use spacy stopwords (from [maitrella](https://github.com/maitrella)) [b26c080](https://github.com/mozilla/firefox-voice/commit/b26c080)
