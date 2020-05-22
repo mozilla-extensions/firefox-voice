@@ -36,9 +36,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openOptions",
   async run(context) {
-    await browser.tabs.create({
-      url: browser.runtime.getURL("/options/options.html"),
-    });
+    await browserUtil.openOrActivateTab("/options/options.html");
   },
 });
 
