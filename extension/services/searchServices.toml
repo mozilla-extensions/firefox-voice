@@ -86,6 +86,10 @@ names = ["maps"]
 bangSearch = "omap"
 names = ["open maps"]
 
+["openstreetmap"]
+bangSearch = "omap"
+names = ["open maps"]
+
 [stubhub]
 bangSearch = "stubhub"
 names = ["stub hub"]
