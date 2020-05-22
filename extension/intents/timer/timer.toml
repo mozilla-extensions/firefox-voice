@@ -11,40 +11,51 @@ phrase = "Set timer for 2 hours and 5 minutes"
 [timer.close]
 description = "Close timer"
 match = """
-    (close | exit | stop | cancel | end) (this | the | current |) (timer | countdown)
+    (close | exit | stop | cancel | end) (this | the | current |) (timer | countdown |)
 """
 
 [[timer.close.example]]
+phrase = "cancel"
+
+[[timer.close.example]]
 phrase = "close timer"
-
-
+test = true
 
 [timer.reset]
 description = "Reset timer"
 match = """
-    (reset | restart) (this | the | current |) (timer | countdown)
+    (reset | restart) (this | the | current |) (timer | countdown |)
 """
 
 [[timer.reset.example]]
+phrase = "reset"
+
+[[timer.reset.example]]
 phrase = "reset timer"
-
-
+test = true
 
 [timer.pause]
 description = "Pause timer"
 match = """
-    pause (this | the | current |) (timer | countdown)
+    pause (this | the | current |) (timer | countdown |)
 """
 
 [[timer.pause.example]]
+phrase = "pause"
+
+[[timer.pause.example]]
 phrase = "pause timer"
+test = true
 
 [timer.unpause]
 description = "Unpause timer"
 match = """
-    (unpause | resume | start) (this | the | current |) (timer | countdown)
+    (unpause | resume | start) (this | the | current |) (timer | countdown |)
 """
 
 [[timer.unpause.example]]
-phrase = "unpause timer"
+phrase = "unpause"
 
+[[timer.unpause.example]]
+phrase = "unpause timer"
+test = true

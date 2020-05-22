@@ -1,9 +1,27 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as browserUtil from "../../browserUtil.js";
+import { timerController } from "../timer/timer.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",
   async run(context) {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer !== null) {
+      timerController.closeActiveTimer();
+      const imageCard = "../../assets/images/check-mark.png";
+      const card = {
+        answer: {
+          imgSrc: `${imageCard}`,
+          text: "Timer cancelled",
+          eduText: `Click mic and say 'help' for things to say`,
+        },
+      };
+      await browser.runtime.sendMessage({
+        type: "showSearchResults",
+        card,
+        searchResults: card,
+      });
+    }
     context.done(0);
   },
 });
