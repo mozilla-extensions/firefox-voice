@@ -153,3 +153,6 @@ bangSearch = "mozaddon"
 
 [github]
 bangSearch = "github"
+
+[linguee]
+bangSearch = "linguee"
