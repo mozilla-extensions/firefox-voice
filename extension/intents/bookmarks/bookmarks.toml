@@ -1,12 +1,16 @@
 [bookmarks.create]
 description = "Creates a bookmark placing it in the default folder (Other Bookmarks)"
 match = """
-  bookmark (this) (page | site | tab |) (for me |)
+  bookmark (this |) (page | site | tab |) (for me |)
   (save | add) (this |) (page | site | tab |) to bookmarks
 """
 
 [[bookmarks.create.example]]
+phrase = "Bookmark"
+
+[[bookmarks.create.example]]
 phrase = "Bookmark this page"
+test = true
 
 [[bookmarks.create.example]]
 phrase = "Bookmark this"
@@ -14,6 +18,18 @@ test = true
 
 [[bookmarks.create.example]]
 phrase = "Bookmark this site"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark page"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark tab"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark site"
 test = true
 
 [bookmarks.open]
