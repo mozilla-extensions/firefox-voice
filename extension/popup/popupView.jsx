@@ -547,7 +547,10 @@ const VoiceInput = ({
           {buildSettings.inDevelopment ? (
             <div>
               <p>Developer tip:</p>
-              <button className="type-input-button" onClick={onInputStarted}>
+              <button
+                className="type-input-button"
+                onClick={() => onInputStarted("")}
+              >
                 Start typing to make a request using a keyboard
               </button>
             </div>
