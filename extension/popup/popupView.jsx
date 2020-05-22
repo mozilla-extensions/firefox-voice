@@ -547,7 +547,10 @@ const VoiceInput = ({
           {buildSettings.inDevelopment ? (
             <div>
               <p>Developer tip:</p>
-              <button className="type-input-button" onClick={onInputStarted}>
+              <button
+                className="type-input-button"
+                onClick={() => onInputStarted("")}
+              >
                 Start typing to make a request using a keyboard
               </button>
             </div>
@@ -684,6 +687,7 @@ class TypingInput extends PureComponent {
           autofocus="1"
           onKeyPress={this.onInputKeyPress}
           onChange={this.onInputTextChange}
+          defaultValue={this.value}
           ref={this.textInputRef}
         ></textarea>
         <div id="send-btn-wrapper">
