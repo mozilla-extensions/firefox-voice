@@ -578,7 +578,9 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       log.debug("Closing popup because of no voice input");
-      window.close();
+      setPopupView("noAudio");
+      setDisplayText("I did not hear that, please try again");
+      closePopup(3000);
     };
     recorder.onStartVoice = () => {
       clearInterval(noVoiceInterval);
