@@ -127,6 +127,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "One moment...";
       case "timer":
         return transcript;
+      case "noAudio":
+        return "Oops...";
       case "listening":
       default:
         return "Listening";
@@ -254,6 +256,8 @@ const PopupContent = ({
             displayAutoplay={displayAutoplay}
           />
         );
+      case "noAudio":
+        return <NoAudioContent displayText={displayText} />;
       case "searchResults":
         return (
           <SearchResultsContent
@@ -738,6 +742,16 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
   );
 };
 
+const NoAudioContent = ({ displayText }) => {
+  return (
+    <div id="no-audio">
+      <React.Fragment>
+        <TextDisplay displayText={displayText} />
+      </React.Fragment>
+    </div>
+  );
+};
+
 const SavingPageContent = ({ transcript }) => {
   return (
     <React.Fragment>
@@ -911,6 +925,11 @@ class Zap extends PureComponent {
       },
       feedbackThanks: {
         segments: [this.animationSegmentTimes.success],
+        loop: false,
+        interrupt: true,
+      },
+      noAudio: {
+        segments: [this.animationSegmentTimes.error],
         loop: false,
         interrupt: true,
       },

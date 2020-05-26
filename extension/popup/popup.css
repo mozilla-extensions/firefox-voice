@@ -143,6 +143,12 @@ body,
   margin: 40px 0;
 }
 
+#no-audio {
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 0 0 1em 0;
+}
+
 /* This prevents the text input from taking up space when it isn't visible */
 #popup.listening #text-input {
   opacity: 0;
