@@ -10,6 +10,8 @@ import * as browserUtil from "../browserUtil.js";
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
 
+log.startTiming("popup opened");
+
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
@@ -37,6 +39,7 @@ const ZERO_VOLUME_LIMIT = 8000;
 browser.storage.local.remove("hasHadSuccessfulUtterance");
 
 export const PopupController = function() {
+  log.timing("PopupController called");
   const [currentView, setCurrentView] = useState("waiting");
   const [suggestions, setSuggestions] = useState([]);
   const [lastIntent, setLastIntent] = useState(null);
@@ -78,6 +81,7 @@ export const PopupController = function() {
   });
 
   const init = async () => {
+    log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
@@ -122,11 +126,16 @@ export const PopupController = function() {
       ? new voiceShim.Recorder()
       : new voice.Recorder(stream);
 
+    log.timing("PopupController init() started");
+
     addListeners();
     updateExamples();
     updateLastIntent();
 
+    log.timing("PopupController init() listeners added");
+
     startRecorder();
+    log.timing("PopupController init() recorder created added");
   };
 
   const incrementVisits = () => {
@@ -331,6 +340,7 @@ export const PopupController = function() {
   };
 
   const submitTextInput = async text => {
+    log.timing(`submitTextInput(${text}) called`);
     if (text) {
       const capText = text.charAt(0).toUpperCase() + text.slice(1);
       setTranscript(capText);
@@ -345,10 +355,12 @@ export const PopupController = function() {
         type: "runIntent",
         text,
       });
+      log.timing(`submitTextInput(${text}) sent intent`);
     }
   };
 
   const setPopupView = async newView => {
+    log.timing(`setPopupView(${newView})`);
     // do not change view if timer elapsed; timer has highest priority
     if (timerElapsed === true) {
       return;
@@ -508,7 +520,9 @@ export const PopupController = function() {
   };
 
   const startRecorder = () => {
+    log.timing("startRecorder() called");
     recorder.onBeginRecording = () => {
+      log.timing("recorder.onBeginRecording");
       if (renderListenComponent) {
         setPopupView("listening");
         userSettingsPromise.then(userSettings => {
@@ -520,6 +534,7 @@ export const PopupController = function() {
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
     recorder.onEnd = async json => {
+      log.timing("recorder.onEnd() called");
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
@@ -539,10 +554,12 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
+      log.timing(`Sending runIntent(${json.data[0].text})`);
       await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
+      log.timing(`Sending runIntent(${json.data[0].text}) completed`);
       const completedIntent = await updateLastIntent();
       if (
         completedIntent &&
@@ -555,6 +572,7 @@ export const PopupController = function() {
       if (listenForFollowup && !requestFollowup) {
         runFollowup();
       }
+      log.timing("recorder.onEnd() finished");
     };
     recorder.onError = error => {
       if (String(error) === "Error: Failed response from server: 500") {
@@ -568,6 +586,7 @@ export const PopupController = function() {
       log.error("Got recorder error:", String(error), error);
     };
     recorder.onProcessing = () => {
+      log.timing("recorder.onProcessing()");
       setPopupView("processing");
       browser.runtime.sendMessage({ type: "microphoneStopped" });
     };
@@ -583,10 +602,12 @@ export const PopupController = function() {
       closePopup(3000);
     };
     recorder.onStartVoice = () => {
+      log.timing("recorder.onStartVoice()");
       clearInterval(noVoiceInterval);
       clearTimeout(closePopupId);
     };
     recorder.startRecording();
+    log.timing("startRecorder() finished");
   };
 
   const setupStream = async () => {
@@ -653,7 +674,8 @@ export const PopupController = function() {
     }
   };
 
-  return (
+  log.timing("PopupController initialized");
+  const result = (
     <popupView.Popup
       currentView={currentView}
       suggestions={suggestions}
@@ -682,6 +704,10 @@ export const PopupController = function() {
       showZeroVolumeError={showZeroVolumeError}
     />
   );
+  log.timing("PopupController finished");
+  return result;
 };
 
 ReactDOM.render(<PopupController />, popupContainer);
+
+log.timing("ReactDOM.render() completed");
