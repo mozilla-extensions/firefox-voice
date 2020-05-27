@@ -340,6 +340,7 @@ export function registerIntent(intent) {
 }
 
 export async function runUtterance(utterance, noPopup) {
+  log.timing(`intentRunner.runUtterance(${utterance}) called`);
   for (const name in registeredNicknames) {
     const re = new RegExp(`\\b${name}\\b`, "i");
     if (re.test(utterance)) {
@@ -362,7 +363,9 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
+  log.timing("intentRunner finished nickname checking");
   let desc = intentParser.parse(utterance);
+  log.timing("intentParser returned");
   desc.noPopup = !!noPopup;
   desc.followupMatch = intents[desc.name].followupMatch;
   if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
@@ -388,7 +391,10 @@ export async function runUtterance(utterance, noPopup) {
       lastIntentForFollowup.endFollowup();
     }
   }
-  return runIntent(desc);
+  log.timing("Running intent...");
+  const result = await runIntent(desc);
+  log.timing("Finished running intent");
+  return result;
 }
 
 export async function runIntent(desc) {
