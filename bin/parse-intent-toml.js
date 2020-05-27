@@ -75,8 +75,8 @@ for (const filename of glob.sync(SERVICE_DIR + "/*/*.toml")) {
   const name = Object.keys(data)[0];
   const type = data[name].type;
   data[name].names = (data[name].names || []).concat([name]);
-  if (type !== "music") {
-    throw new Error(`Expected type=music in ${filename}`);
+  if (type !== "music" && type !== "email") {
+    throw new Error(`Expected type=music/email in ${filename}`);
   }
   delete data[name].type;
   Object.assign(serviceMetadata.music, data);
