@@ -112,6 +112,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     );
   } else if (message.type === "clearFollowup") {
     return intentRunner.clearFollowup();
+  } else if (message.type === "addTimings") {
+    return Promise.resolve(log.addTimings(message.timings));
+  } else if (message.type === "getTimings") {
+    return Promise.resolve(log.getTimings());
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
