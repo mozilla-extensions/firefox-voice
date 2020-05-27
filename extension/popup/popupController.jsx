@@ -351,6 +351,7 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { inputTyped: true },
       });
+      setDisplayText("");
       browser.runtime.sendMessage({
         type: "runIntent",
         text,
@@ -458,6 +459,7 @@ export const PopupController = function() {
   };
 
   const onNextSearchResultClick = () => {
+    setDisplayText("");
     browser.runtime.sendMessage({
       type: "runIntent",
       text: "next",
@@ -554,6 +556,7 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
+      setDisplayText("");
       log.timing(`Sending runIntent(${json.data[0].text})`);
       await browser.runtime.sendMessage({
         type: "runIntent",
