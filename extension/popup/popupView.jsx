@@ -140,6 +140,7 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
   };
 
   const onClickClose = () => {
+    console.log("close clicked");
     window.close();
   };
 

@@ -68,7 +68,7 @@ export const PopupController = function() {
   const DEFAULT_TIMEOUT = 2500;
   // Timeout for the popup when there's text displaying:
   const TEXT_TIMEOUT = 7000;
-  const FOLLOWUP_TIMEOUT = 5000;
+  const FOLLOWUP_TIMEOUT = 50000;
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
@@ -219,7 +219,9 @@ export const PopupController = function() {
         } else {
           setRequestFollowup(false);
           setFollowupText(null);
-          closePopup();
+          if (!listenForFollowup) {
+            closePopup();
+          }
         }
         break;
       }
@@ -351,6 +353,7 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { inputTyped: true },
       });
+      setDisplayText("");
       browser.runtime.sendMessage({
         type: "runIntent",
         text,
@@ -458,6 +461,7 @@ export const PopupController = function() {
   };
 
   const onNextSearchResultClick = () => {
+    setDisplayText("");
     browser.runtime.sendMessage({
       type: "runIntent",
       text: "next",
@@ -477,6 +481,8 @@ export const PopupController = function() {
       clearTimeout(closePopupId);
     }
     // TODO: offload mic and other resources before closing?
+    console.log("explicit close popup");
+    console.trace();
     closePopupId = setTimeout(() => {
       window.close();
     }, ms);
@@ -554,6 +560,7 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
+      setDisplayText("");
       log.timing(`Sending runIntent(${json.data[0].text})`);
       await browser.runtime.sendMessage({
         type: "runIntent",

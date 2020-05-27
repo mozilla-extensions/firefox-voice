@@ -52,7 +52,7 @@ function parseNumber(n) {
     return numberNames[n];
   }
   const number = parseInt(n, 10);
-  if (Math.isNaN(number)) {
+  if (isNaN(number)) {
     throw new Error(`Cannot understand number: ${n}`);
   }
   return number;
