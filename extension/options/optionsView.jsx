@@ -470,6 +470,9 @@ const DevelopmentSettings = ({ inDevelopment }) => {
           <a href="/tests/intent-viewer.html">Intent Viewer</a>
         </li>
         <li>
+          <a href="/views/timing/timing.html">Timing/performance information</a>
+        </li>
+        <li>
           <a href="/popup/popup.html">View popup in tab</a>
         </li>
       </ul>
