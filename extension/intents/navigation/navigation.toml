@@ -145,6 +145,15 @@ match = """
   (open | go to) link [query]
 """
 
+[navigation.closeDialog]
+description = "Closes a lightbox-style dialog box"
+match = """
+  (close | dismiss | cancel | stop) (dialog | lightbox | question)
+"""
+
+[[navigation.closeDialog.example]]
+phrase = "Close dialog"
+
 [[navigation.followLink.example]]
 phrase = "follow link latest news"
 

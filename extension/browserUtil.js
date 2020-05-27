@@ -149,6 +149,9 @@ export class TabDataMap {
 }
 
 export function waitForDocumentComplete(tabId) {
+  if (!tabId) {
+    throw new Error("Bad waitForDocumentComplete(null)");
+  }
   return browser.tabs.executeScript(tabId, {
     code: "null",
     runAt: "document_idle",

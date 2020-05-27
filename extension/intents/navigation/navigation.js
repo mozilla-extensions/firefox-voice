@@ -171,6 +171,24 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "navigation.closeDialog",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/intents/navigation/closeDialog.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "closeDialog",
+    });
+    if (found === false) {
+      const exc = new Error("Could not close dialog");
+      exc.displayMessage = "I couldn't figure out how to close the dialog";
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
     const activeTab = await context.activeTab();
