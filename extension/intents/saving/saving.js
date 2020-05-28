@@ -89,7 +89,7 @@ async function downloadScreenshot(context, type) {
     filename = filename + ".png";
   }
   const blob = dataPngUrlToBlob(png);
-  await downloadData(blob, filename);
+  await downloadData(context, blob, filename);
   context.displayText("Screenshot saved to downloads folder");
 }
 
