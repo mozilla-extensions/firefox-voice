@@ -156,3 +156,6 @@ bangSearch = "github"
 
 [linguee]
 bangSearch = "linguee"
+
+["khan academy"]
+bangSearch = "khanacademy"
