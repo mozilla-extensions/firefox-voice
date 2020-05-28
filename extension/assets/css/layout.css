@@ -46,14 +46,12 @@ body {
   font-weight: 600;
   font-size: 48px;
   letter-spacing: -2px;
+  width: 85%;
 }
 
 #sidebar {
   width: 33%;
-  font-size: 24px;
   color: #8e31bd;
-  font-weight: 600;
-  letter-spacing: -2px;
   line-height: 52px;
 }
 
