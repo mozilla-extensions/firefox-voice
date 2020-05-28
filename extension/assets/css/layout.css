@@ -57,9 +57,9 @@ body {
   line-height: 52px;
 }
 
-#sidebar .stmt {
-  width: 100%;
-  padding-right: 40px;
+#sidebar .big-list {
+  width: 200%;
+  margin-bottom: 10px;
 }
 
 #list {
