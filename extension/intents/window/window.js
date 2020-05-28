@@ -90,7 +90,8 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "window.minimize",
   async run(context) {
-    await browser.experiments.voice.minimizeWindow();
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "minimized" });
   },
 });
 
