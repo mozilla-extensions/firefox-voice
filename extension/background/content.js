@@ -57,9 +57,13 @@ export async function lazyInject(tabId, scripts) {
     try {
       await browser.tabs.executeScript(tabId, { file: script });
     } catch (error) {
-      const e = new Error("That does not work on this kind of page");
-      e.displayMessage = "That does not work on this kind of page";
-      throw e;
+      if (error.message.includes("Missing host permission for the tab")) {
+        const e = new Error("That does not work on this kind of page");
+        e.displayMessage = "That does not work on this kind of page";
+        throw e;
+      } else {
+        throw error;
+      }
     }
   }
 
