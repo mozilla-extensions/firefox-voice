@@ -52,9 +52,17 @@ export async function lazyInject(tabId, scripts) {
   ]
     .concat(scripts)
     .concat(["/content/responder.js"]);
+
   for (const script of scripts) {
-    await browser.tabs.executeScript(tabId, { file: script });
+    try {
+      await browser.tabs.executeScript(tabId, { file: script });
+    } catch (error) {
+      const e = new Error("That does not work on this kind of page");
+      e.displayMessage = "That does not work on this kind of page";
+      throw e;
+    }
   }
+
   await browser.tabs.sendMessage(tabId, {
     type: "scriptsLoaded",
     scriptKey,
