@@ -135,6 +135,13 @@ this.queryScript = (function() {
     if (!card) {
       throw new Error("No card found for cardImage");
     }
+    // Minimal effort attempt to find a speakable response
+    let speakableData;
+    if (card.querySelector(".Z0LcW")) {
+      speakableData = card.querySelector(".Z0LcW").innerText;
+    } else if (document.querySelector("[data-tts-text]")) {
+      speakableData = document.querySelector("[data-tts-text]").dataset.ttsText; // could be wrong
+    }
     // When it has a canvas it may dynamically update,
     // And timers have this id, otherwise hard to detect:
     const hasWidget = !!(
@@ -157,6 +164,7 @@ this.queryScript = (function() {
       src: canvas.toDataURL(),
       alt: card.innerText,
       hasWidget,
+      speakableData
     };
   });
 })();

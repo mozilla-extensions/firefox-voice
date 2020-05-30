@@ -17,6 +17,7 @@ export const Popup = ({
   displayAutoplay,
   searchResult,
   cardImage,
+  spokenResponse,
   recorderVolume,
   showSettings,
   submitTextInput,
@@ -60,6 +61,7 @@ export const Popup = ({
         displayAutoplay={displayAutoplay}
         searchResult={searchResult}
         cardImage={cardImage}
+        spokenResponse={spokenResponse}
         recorderVolume={recorderVolume}
         submitTextInput={submitTextInput}
         inputValue={inputValue}
@@ -200,6 +202,7 @@ const PopupContent = ({
   displayAutoplay,
   searchResult,
   cardImage,
+  spokenResponse,
   recorderVolume,
   submitTextInput,
   inputValue,
@@ -263,6 +266,7 @@ const PopupContent = ({
           <SearchResultsContent
             search={searchResult}
             cardImage={cardImage}
+            spokenResponse={spokenResponse}
             displayText={displayText}
             onSearchImageClick={onSearchImageClick}
             onNextSearchResultClick={onNextSearchResultClick}
@@ -763,6 +767,7 @@ const SavingPageContent = ({ transcript }) => {
 const SearchResultsContent = ({
   search,
   cardImage,
+  spokenResponse,
   displayText,
   onSearchImageClick,
   onNextSearchResultClick,
@@ -820,6 +825,10 @@ const SearchResultsContent = ({
     </div>
   );
 
+  const AudioResponse = () => {
+    return card.speakableData ? <div>{card.speakableData}</div> : null;
+  }
+
   const renderCard = () => {
     if (card && card.answer) {
       return AnswerCard();
@@ -831,6 +840,7 @@ const SearchResultsContent = ({
 
   return (
     <React.Fragment>
+      <AudioResponse />
       <TextDisplay displayText={displayText} />
       <div id="search-results">{renderCard()}</div>
       {renderFollowup ? null : (
