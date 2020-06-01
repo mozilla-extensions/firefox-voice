@@ -6,6 +6,8 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivityInterface
 
+const val DUMMY_NICKNAME = "!@@!"
+
 private val columns = arrayOf(
     Phone.DISPLAY_NAME,
     ContactsContract.Data.LOOKUP_KEY,
@@ -17,11 +19,11 @@ private val columns = arrayOf(
 
 internal fun contactUriToContactEntity(
     contactActivity: ContactActivityInterface,
-    nickname: String,
+    nickname: String?,
     contactUri: Uri
 ): ContactEntity =
-    contactActivity.app.applicationContext.contentResolver.let { resolver ->
-        cursorToContentEntity(
+    contactActivity.app.applicationContext.contentResolver?.let { resolver ->
+        resolverCursorToContentEntity(
             resolver.query(
                 contactUri,
                 columns,
@@ -29,18 +31,18 @@ internal fun contactUriToContactEntity(
                 null,
                 null
             ),
-            nickname
+            nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
 internal fun contactIdToContactEntity(
     contactActivity: ContactActivityInterface,
-    nickname: String,
+    nickname: String?,
     contactId: Long
 ): ContactEntity =
     // https://learning.oreilly.com/library/view/android-cookbook-2nd/9781449374471/ch10.html
     contactActivity.app.applicationContext.contentResolver?.let { resolver ->
-        cursorToContentEntity(
+        resolverCursorToContentEntity(
             resolver.query(
                 Phone.CONTENT_URI,
                 columns,
@@ -48,11 +50,11 @@ internal fun contactIdToContactEntity(
                 arrayOf(contactId.toString()),
                 null
             ),
-            nickname
+            nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
-private fun cursorToContentEntity(
+private fun resolverCursorToContentEntity(
     cursor: Cursor,
     nickname: String
 ): ContactEntity {

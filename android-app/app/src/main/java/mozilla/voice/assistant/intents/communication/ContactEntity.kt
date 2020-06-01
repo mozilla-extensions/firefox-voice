@@ -76,6 +76,6 @@ class ContactRepository(private val contactDao: ContactDao) {
         contactDao.findByNickname(nickname)
 
     suspend fun insert(contactEntity: ContactEntity) {
-         contactDao.insert(contactEntity)
+        contactDao.insert(contactEntity)
     }
 }

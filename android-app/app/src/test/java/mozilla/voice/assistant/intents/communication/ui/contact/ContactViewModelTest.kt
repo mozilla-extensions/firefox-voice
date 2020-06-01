@@ -14,4 +14,19 @@ class ContactViewModelTest {
         ).forEach {
             assertEquals(it.first, it.second.split(" ").toPossibleNicknames())
         }}
+
+    @Test
+    fun testPayloadToMessage() {
+        listOf(
+            Pair("gate bridge", "Jessica Golden"),
+            Pair("gate bridge", "Jessica Golden, PhD"),
+            Pair("golden gate bridge", "jessica rabbit"),
+            Pair("jessica golden gate bridge", "Aaron")
+        ).forEach {
+            assertEquals(
+                it.first,
+                ContactViewModel.extractMessage("jessica golden gate bridge", it.second)
+            )
+        }
+    }
 }

@@ -36,11 +36,11 @@ interface ContactActivityInterface : LifecycleOwner, ViewModelStoreOwner {
      * contacts database, as indicated by the given cursor, which must be closed
      * when the request is fully satisfied.
      */
-    fun processZeroContacts(cursor: Cursor, nickname: String)
+    fun processZeroContacts(cursor: Cursor, nickname: String?)
 
     /**
      * Have the user choose among multiple contacts that are possible matches
      * for the given nickname. This method must close the given cursor.
      */
-    fun processMultipleContacts(cursor: Cursor, nickname: String)
+    fun processMultipleContacts(cursor: Cursor, nickname: String?)
 }

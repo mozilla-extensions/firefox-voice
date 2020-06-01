@@ -58,7 +58,9 @@ class ContactViewModel(
     }
 
     private val possibleNicknames: List<String>
-        get() =  payloadWords?.toPossibleNicknames() ?: listOf(nickname ?: throw AssertionError("Both payload and nickname are null"))
+        get() = payloadWords?.toPossibleNicknames() ?: listOf(
+            nickname ?: throw AssertionError("Both payload and nickname are null")
+        )
 
     suspend fun getContact() = withContext(Dispatchers.IO) {
         getContactInternal()
@@ -129,5 +131,11 @@ class ContactViewModel(
                     prefix = "(",
                     postfix = ")"
                 )
+
+        @VisibleForTesting
+        internal fun extractMessage(payload: String, name: String) =
+            payload.substring(
+                payload.commonPrefixWith(name, ignoreCase = true).length
+            ).trim()
     }
 }

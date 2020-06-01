@@ -18,7 +18,7 @@ import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
  */
 class ContactCursorAdapter(
     private val contactActivity: ContactActivity,
-    private val nickname: String,
+    private val nickname: String?,
     private val cursor: Cursor,
     private val controller: ContactController
 ) : RecyclerView.Adapter<ContactCursorAdapter.ContactViewHolder>() {

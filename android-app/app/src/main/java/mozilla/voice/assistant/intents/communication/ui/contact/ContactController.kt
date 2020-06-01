@@ -11,6 +11,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import kotlinx.coroutines.launch
 import mozilla.voice.assistant.intents.communication.ContactEntity
+import mozilla.voice.assistant.intents.communication.DUMMY_NICKNAME
 import mozilla.voice.assistant.intents.communication.SMS_MODE
 import mozilla.voice.assistant.intents.communication.VOICE_MODE
 import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
@@ -87,7 +88,7 @@ class ContactController(
                 viewModel.payload?.let {
                     putExtra(
                         "sms_body",
-                        it.substringAfter(contact.nickname)
+                        ContactViewModel.extractMessage(it, contact.name)
                     )
                 }
             }
@@ -123,13 +124,13 @@ class ContactController(
     }
 
     internal fun addContact(contactEntity: ContactEntity) {
-        viewModel.insert(contactEntity)
+        if (contactEntity.nickname != DUMMY_NICKNAME) viewModel.insert(contactEntity)
     }
 
-    internal fun onContactChosen(contactUri: Uri) {
+    internal fun onContactChosen(contactUri: Uri, save: Boolean) {
         contactUriToContactEntity(contactActivity, viewModel.nickname, contactUri)
             .let { contactEntity ->
-                addContact(contactEntity)
+                if (save) addContact(contactEntity)
                 initiateRequestedActivity(contactEntity)
             }
     }
@@ -141,18 +142,18 @@ class ContactController(
         contactActivity.processZeroContacts(cursor, viewModel.nickname)
     }
 
-    internal fun handleSingleContact(cursor: Cursor) =
+    internal fun handleSingleContact(cursor: Cursor) {
         cursor.use {
             it.moveToNext()
-            contactIdToContactEntity(
-                contactActivity,
-                viewModel.nickname,
-                it.getLong(CONTACT_ID_INDEX)
-            ).let { contactEntity ->
-                addContact(contactEntity)
-                initiateRequestedActivity(contactEntity)
-            }
+            initiateRequestedActivity(
+                contactIdToContactEntity(
+                    contactActivity,
+                    viewModel.nickname,
+                    it.getLong(CONTACT_ID_INDEX)
+                )
+            )
         }
+    }
 
     /**
      * Loads contacts matching the given nickname (or payload) and dispatches based on

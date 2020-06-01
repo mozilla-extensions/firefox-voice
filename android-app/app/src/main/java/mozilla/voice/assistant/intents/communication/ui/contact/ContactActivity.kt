@@ -90,11 +90,14 @@ class ContactActivity : AppCompatActivity(), ContactActivityInterface {
             .show()
     }
 
-    override fun processZeroContacts(cursor: Cursor, nickname: String) {
-        // contactsViewAnimator.displayedChild = R.id.noContactsButton
-        contactsCheckBox.visibility = View.VISIBLE
+    override fun processZeroContacts(cursor: Cursor, nickname: String?) {
+        contactsCheckBox.visibility = if (nickname == null) View.INVISIBLE else View.VISIBLE
 
-        contactStatusView.text = getString(R.string.no_contacts, nickname)
+        contactStatusView.text = if (nickname == null) {
+            getString(R.string.no_contacts)
+        } else {
+            getString(R.string.no_contacts_with_nickname, nickname)
+        }
         contactsViewAnimator.showNext()
         noContactsButton.setOnClickListener {
             cursor.close()
@@ -111,10 +114,13 @@ class ContactActivity : AppCompatActivity(), ContactActivityInterface {
         )
     }
 
-    override fun processMultipleContacts(cursor: Cursor, nickname: String) {
-        //   contactsViewAnimator.displayedChild = R.id.contactsList
-        contactsCheckBox.visibility = View.VISIBLE
-        contactStatusView.text = getString(R.string.multiple_contacts, nickname)
+    override fun processMultipleContacts(cursor: Cursor, nickname: String?) {
+        contactsCheckBox.visibility = if (nickname == null) View.INVISIBLE else View.VISIBLE
+        contactStatusView.text = if (nickname == null) {
+            getString(R.string.multiple_contacts)
+        } else {
+            getString(R.string.multiple_contacts_with_nickname, nickname)
+        }
         ContactCursorAdapter(this, nickname, cursor, controller).let { contactCursorAdapter ->
             cursorAdapter = contactCursorAdapter
             findViewById<RecyclerView>(R.id.contactsRecyclerView).apply {
@@ -131,7 +137,10 @@ class ContactActivity : AppCompatActivity(), ContactActivityInterface {
         if (requestCode == SELECT_CONTACT_FOR_NICKNAME) {
             if (resultCode == Activity.RESULT_OK) {
                 data?.data?.let {
-                    controller.onContactChosen(it)
+                    controller.onContactChosen(
+                        it,
+                        contactsCheckBox.visibility == View.VISIBLE && contactsCheckBox.isChecked
+                    )
                 } ?: run {
                     Log.e(TAG, "Unable to retrieve chosen contact")
                     finish()
