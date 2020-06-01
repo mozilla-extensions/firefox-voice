@@ -77,33 +77,24 @@ class ContactViewModel(
         repository.insert(contact)
     }
 
-    private val selectionArgs =
-        possibleNicknames.flatMap { selectionArgsFor(it) }.toTypedArray()
-
-    private fun selectionArgsFor(name: String) =
-        listOf(
+    private fun toComparisonStrings(name: String) =
+        arrayOf(
             name, // just the nickname
             "$name %", // first name
             "% $name", // last name
             "% $name %" // middle name
         )
 
-    private val selectionStrings =
-        generateSequence { SELECTION_SUBSTRING }
-            .take(possibleNicknames.size)
-            .joinToString(
-                separator = " OR ",
-                prefix = "$HAS_PHONE_TERM AND (",
-                postfix = ")"
-            )
-
     fun toCursorLoader(app: Application) =
         CursorLoader(
             app,
             ContactsContract.Contacts.CONTENT_URI,
             PROJECTION,
-            selectionStrings,
-            selectionArgs,
+            SELECTION_SUBSTRING,
+            toComparisonStrings(
+                nickname ?: payloadWords?.getOrNull(0)
+                ?: throw AssertionError("nickname and payload both null")
+            ),
             null
         )
 
@@ -128,7 +119,7 @@ class ContactViewModel(
                 .take(NUM_LIKE_TERMS)
                 .joinToString(
                     separator = " OR ",
-                    prefix = "(",
+                    prefix = "$HAS_PHONE_TERM AND (",
                     postfix = ")"
                 )
 

@@ -13,7 +13,8 @@ class ContactViewModelTest {
             Pair(listOf("a"), "a")
         ).forEach {
             assertEquals(it.first, it.second.split(" ").toPossibleNicknames())
-        }}
+        }
+    }
 
     @Test
     fun testPayloadToMessage() {
