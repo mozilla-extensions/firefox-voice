@@ -21,6 +21,12 @@ buildscript {
 
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.0.1"
+    id "org.jetbrains.dokka" version "0.10.1"
+}
+
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/dokka"
 }
 
 allprojects {

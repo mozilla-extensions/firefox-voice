@@ -78,7 +78,6 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
             })
 
     companion object {
-        private const val ENCODING = "UTF-8"
         @VisibleForTesting
         internal val FALLBACK_ACTION = android.content.Intent.ACTION_WEB_SEARCH
     }
