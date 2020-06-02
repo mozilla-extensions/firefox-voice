@@ -194,7 +194,7 @@ function pollForCard(maxTime) {
     if (!card) {
       catcher.capture(new Error(`callScript cardImage returned ${card}`));
       return;
-    }
+    }    
     if (card.src === lastImage) {
       return;
     }
@@ -349,6 +349,7 @@ intentRunner.registerIntent({
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
+      log.info(card);
       context.keepPopup();
       searchInfo.index = -1;
       await browser.runtime.sendMessage({
@@ -359,11 +360,11 @@ intentRunner.registerIntent({
         index: -1,
       });
       telemetry.add({ hasCard: true });
-      if (card.hasWidget) {
-        pollForCard();
-      } else {
-        pollForCard(CARD_POLL_LIMIT);
-      }
+      // if (card.hasWidget) {
+      //   pollForCard();
+      // } else {
+      //   pollForCard(CARD_POLL_LIMIT);
+      // }
       lastTabId = undefined;
       popupSearchInfo = searchInfo;
     } else {

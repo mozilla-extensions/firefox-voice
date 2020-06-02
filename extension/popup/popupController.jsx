@@ -439,6 +439,7 @@ export const PopupController = function() {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
       if (message.card.speakableData) { // should also check prefs eventually
+        speakResponse(message.card.speakableData);
         setSpokenResponse(message.card.speakableData);
       }
     } else {
@@ -454,6 +455,12 @@ export const PopupController = function() {
       setMinPopupSize(newCard.width);
     }
   };
+
+  const speakResponse = (text) => {
+    let utterance = new SpeechSynthesisUtterance(text);
+    const synth = window.speechSynthesis;
+    synth.speak(utterance);
+  }
 
   const onSearchImageClick = async searchUrl => {
     await browser.runtime.sendMessage({
