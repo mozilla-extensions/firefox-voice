@@ -271,6 +271,11 @@ intentRunner.registerIntent({
       if (tabId === activeTab.id) {
         continue;
       }
+      try {
+        await browser.tabs.get(tabId);
+      } catch (e) {
+        continue;
+      }
       found = tabId;
       break;
     }
