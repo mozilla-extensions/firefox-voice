@@ -438,9 +438,9 @@ export const PopupController = function() {
     if (message.card) {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
-      if (message.card.speakableData) { // should also check prefs eventually
-        speakResponse(message.card.speakableData);
-        setSpokenResponse(message.card.speakableData);
+      if (message.tts) { // should also check prefs eventually
+        speakResponse(message.tts);
+        setSpokenResponse(message.tts); // FIXME: I think this is unnecessary now
       }
     } else {
       setCardImage(null);

@@ -131,29 +131,12 @@ this.queryScript = (function() {
 
   communicate.register("cardImage", message => {
     const cards = findCards();
+    let isSidebar = false;
     const card = cards.card || cards.sidebarCard;
     if (!card) {
       throw new Error("No card found for cardImage");
-    }
-
-    console.log(card.classList);
-    // Minimal effort attempt to find a speakable response
-    let speakableData;
-    if (card.querySelector(".kp-wholepage")) {
-      // This is a sidebar card, and therefore we should read out the Wikipedia summary.
-      speakableData = card.querySelector(".kno-rdesc > div:nth-child(1) > span:nth-child(2)").innerText;
-    } else if (card.querySelector('.c2xzTb')) {
-      if (card.querySelector(".Z0LcW")) {
-        speakableData = card.querySelector(".Z0LcW").innerText;
-      } else {
-        speakableData = card.querySelector(".e24Kjd").innerText;
-      }
     } else {
-      if (card.querySelector(".Z0LcW")) {
-        speakableData = card.querySelector(".Z0LcW").innerText;
-      } else if (card.querySelector("[data-tts-text]")) {
-        speakableData = card.querySelector("[data-tts-text]").dataset.ttsText; // could be wrong
-      }
+      isSidebar = (card === cards.sidebarCard);
     }
 
     // When it has a canvas it may dynamically update,
@@ -178,7 +161,8 @@ this.queryScript = (function() {
       src: canvas.toDataURL(),
       alt: card.innerText,
       hasWidget,
-      speakableData
+      isSidebar,
+      cardSelectors: card.classList.value
     };
   });
 })();

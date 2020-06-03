@@ -114,14 +114,20 @@ async function performSearch(query) {
     await browserUtil.makeTabActive(tabId);
   }
   try {
-    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    await content.lazyInject(tabId, [
+      "/intents/search/queryScript.js",
+      "/intents/search/tts.js"
+    ]);
   } catch (e) {
     // There's a (fairly) common race condition here
     if (e.message.includes("communicate is not defined")) {
       log.info(
-        "Race condition in search page, attempting to load queryScript second time"
+        "Race condition in search page, attempting to load queryScript and tts second time"
       );
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+      await content.lazyInject(tabId, [
+        "/intents/search/queryScript.js",
+        "/intents/search/tts.js"
+      ]);
     } else {
       throw e;
     }
@@ -349,7 +355,9 @@ intentRunner.registerIntent({
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
+      const ttsOutput = await callScript({ type: "cardSpeakableData", cardSelectors: card.cardSelectors });
       log.info(card);
+      log.info(ttsOutput);
       context.keepPopup();
       searchInfo.index = -1;
       await browser.runtime.sendMessage({
@@ -358,6 +366,7 @@ intentRunner.registerIntent({
         searchResults: searchInfo.searchResults,
         searchUrl: searchInfo.searchUrl,
         index: -1,
+        tts: ttsOutput
       });
       telemetry.add({ hasCard: true });
       // if (card.hasWidget) {
