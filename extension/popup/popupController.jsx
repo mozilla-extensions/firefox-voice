@@ -1,14 +1,14 @@
 /* globals React, ReactDOM, log, buildSettings */
 
-import * as util from "../util.js";
-import * as voice from "./voice.js";
-import * as settings from "../settings.js";
-import * as voiceShim from "./voiceShim.js";
-import * as vad from "./vad.js";
 import * as browserUtil from "../browserUtil.js";
+import * as settings from "../settings.js";
+import * as util from "../util.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
+import * as vad from "./vad.js";
+import * as voice from "./voice.js";
+import * as voiceShim from "./voiceShim.js";
 
 log.startTiming("popup opened");
 
@@ -166,8 +166,9 @@ export const PopupController = function() {
   const playTimerAlarm = () => {
     const audio = new Audio(
       "https://mozilla.github.io/firefox-voice/alarm.mp3"
-    );
-    audio.play();
+    ).play();
+    audio;
+    setTimeout(audio, 2000);
   };
 
   const onClickLexicon = async event => {
