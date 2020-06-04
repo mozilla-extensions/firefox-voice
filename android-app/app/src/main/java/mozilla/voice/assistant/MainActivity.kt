@@ -39,9 +39,7 @@ import mozilla.voice.assistant.language.Language
 
 @SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
-    private var suggestionIndex = 0
     private var chimeVolume: Int = 0
-    private lateinit var suggestions: List<String>
     private lateinit var intentRunner: IntentRunner
     // showReady() uses shownBurst to ensure the initial "burst" animation is shown only once
     private var shownBurst = false
@@ -53,8 +51,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeData() {
-        suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
-
         val language = Language(this)
         val metadata = Metadata(this, language)
         val compiler = Compiler(metadata, language)
@@ -219,21 +215,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun giveSuggestions() {
-        if (suggestionIndex + NUM_SUGGESTIONS > suggestions.size) {
-            suggestionIndex = 0
-        }
-
-        val ideas = suggestions.subList(suggestionIndex, suggestionIndex + NUM_SUGGESTIONS)
-            .joinToString("\n\n")
-
         feedbackView.text = SpannableStringBuilder()
             .scale(INSTRUCTIONS_SCALE) {
                 italic { append(getString(R.string.suggestion_prefix)) }
                     .append("\n\n")
-                    .bold { append(ideas) }
+                    .bold {
+                        append(
+                            intentRunner.getExamplePhrases(MAX_SUGGESTIONS).joinToString(
+                                separator = "\n\n"
+                            )
+                        )
+                    }
             }
-
-        suggestionIndex += NUM_SUGGESTIONS
     }
 
     private fun closeRecognizer() {
@@ -362,7 +355,7 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSIONS_REQUEST_CODE = 1
         private const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
         private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
-        private const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
+        private const val MAX_SUGGESTIONS = 3 // max. number of suggestions to show at a time
         private const val INSTRUCTIONS_SCALE = .6f
 
         // Hack to prevent hearing SpeechRecognizer chime after recognizer is closed.
