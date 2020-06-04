@@ -166,9 +166,11 @@ export const PopupController = function() {
   const playTimerAlarm = () => {
     const audio = new Audio(
       "https://mozilla.github.io/firefox-voice/alarm.mp3"
-    ).play();
-    audio;
-    setTimeout(audio, 2000);
+    );
+    audio.play();
+    setTimeout(() => {
+      audio.play();
+    }, 3000);
   };
 
   const onClickLexicon = async event => {
@@ -283,7 +285,7 @@ export const PopupController = function() {
       method: "closeActiveTimer",
     });
 
-    closePopup();
+    closePopup(6000);
   };
 
   const startTimer = async duration => {
