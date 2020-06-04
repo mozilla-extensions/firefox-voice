@@ -560,7 +560,9 @@ const VoiceInput = ({
             </div>
           ) : null}
           {showZeroVolumeError ? (
-            <p>Microphone is not working. Firefox may need to be restarted.</p>
+            <p className="mic-text">
+              Microphone is not working. Firefox may need to be restarted.
+            </p>
           ) : null}
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">

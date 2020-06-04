@@ -108,6 +108,10 @@ body,
   margin-top: 0;
 }
 
+.mic-text {
+  margin-top: -5px;
+}
+
 .suggestion {
   font-weight: 600;
   line-height: 1rem;
@@ -628,5 +632,5 @@ a#lexicon {
   color: #0060df;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
