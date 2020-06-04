@@ -43,7 +43,7 @@ phrase = "Find website work plan on my Google Drive"
 test = true
 
 [[navigation.bangSearch.example]]
-phrase = "Search ScrollAnywhere on addons"
+phrase = "Search ScrollAnywhere on add-ons"
 
 [navigation.clearQueryDatabase]
 description = "Debugging command to clear the cache of 'open' queries"
