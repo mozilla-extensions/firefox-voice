@@ -179,7 +179,7 @@ body,
 
 #search-results {
   align-self: center;
-  padding: 1em 0 6em;
+  padding: 1em 0 0em;
 }
 
 .results-set {
@@ -289,11 +289,10 @@ a#lexicon {
   color: white;
   background-color: black;
   padding: 0.5em;
-  margin: 2rem -1rem -1rem;
+  margin: 2rem -0.5rem -0.5rem;
   text-align: center;
-  position: fixed;
-  bottom: 1em;
-  width: 100%;
+  position: sticky;
+  bottom: 0;
 }
 
 #search-footer p {
@@ -329,7 +328,7 @@ a#lexicon {
   text-align: center;
   font-size: 1em;
   font-weight: 600;
-  margin: 0px -8px -8px;
+  margin: 0px;
   padding: 10px 0px 5px;
 }
 
@@ -365,18 +364,18 @@ a#lexicon {
 
 #followup-container {
   background-color: black;
-  position: relative;
-  left: -8px;
-  bottom: -8px;
+  position: sticky;
+  bottom: 0px;
   width: 100vw;
   padding: 8px 0;
+  margin: -0.5em;
 }
 
 #followup-wrapper {
   display: flex;
   align-items: center;
   margin: 0 14px;
-  padding: 8px 0 0;
+  padding: 0px;
   border-top: 1px solid #ededf073;
 }
 
