@@ -355,7 +355,7 @@ intentRunner.registerIntent({
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
-      const ttsOutput = await callScript({ type: "cardSpeakableData", cardSelectors: card.cardSelectors });
+      const ttsOutput = await callScript({ type: "cardSpeakableData", cardSelectors: card.cardSelectors, isSidebar: card.isSidebar });
       log.info(card);
       log.info(ttsOutput);
       context.keepPopup();
