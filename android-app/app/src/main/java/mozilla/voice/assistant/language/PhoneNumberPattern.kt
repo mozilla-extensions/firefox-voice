@@ -3,7 +3,7 @@ package mozilla.voice.assistant.language
 /**
  * A [Pattern] that matches strings representing phone numbers, as transcribed by
  * [android.speech.SpeechRecognizer]. For now, it recognizes phone numbers for the United States
- * and Canada only, with or without area codes (e.g, "415-555-1212" and "555-2345").
+ * and Canada only, with or without area codes (e.g, "415-555-1212" and "555-1234").
  */
 class PhoneNumberPattern : Pattern {
     override fun matchUtterance(match: MatchResult): List<MatchResult> =

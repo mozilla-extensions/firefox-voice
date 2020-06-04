@@ -76,7 +76,7 @@ class ContactController(
         } ?: getPermissions() // leads to seekContactsWithNickname()
     }
 
-    internal fun initiateRequestedActivity(contact: ContactEntity) {
+    fun initiateRequestedActivity(contact: ContactEntity) {
         val intent = when (viewModel.mode) {
             VOICE_MODE -> Intent(Intent.ACTION_DIAL).apply {
                 data = Uri.parse("tel: ${contact.voiceNumber}")
@@ -103,7 +103,7 @@ class ContactController(
         }
     }
 
-    internal fun onRequestPermissionsResult(grantResults: IntArray) {
+    fun onRequestPermissionsResult(grantResults: IntArray) {
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             seekContactsWithNickname()
         } else {
@@ -123,11 +123,11 @@ class ContactController(
         }
     }
 
-    internal fun addContact(contactEntity: ContactEntity) {
+    fun addContact(contactEntity: ContactEntity) {
         if (contactEntity.nickname != DUMMY_NICKNAME) viewModel.insert(contactEntity)
     }
 
-    internal fun onContactChosen(contactUri: Uri, save: Boolean) {
+    fun onContactChosen(contactUri: Uri, save: Boolean) {
         contactUriToContactEntity(contactActivity, viewModel.nickname, contactUri)
             .let { contactEntity ->
                 if (save) addContact(contactEntity)
@@ -135,14 +135,14 @@ class ContactController(
             }
     }
 
-    internal fun handleZeroContacts(cursor: Cursor) {
+    fun handleZeroContacts(cursor: Cursor) {
         // Don't close cursor here, in case a configuration change occurs after
         // processZeroContacts() is called but before the contact picker is opened
         // (issue 1628). Instead, it will be called just before opening the picker.
         contactActivity.processZeroContacts(cursor, viewModel.nickname)
     }
 
-    internal fun handleSingleContact(cursor: Cursor) {
+    fun handleSingleContact(cursor: Cursor) {
         cursor.use {
             it.moveToNext()
             initiateRequestedActivity(

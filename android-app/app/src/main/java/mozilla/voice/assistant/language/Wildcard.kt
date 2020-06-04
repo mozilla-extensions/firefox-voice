@@ -1,7 +1,7 @@
 package mozilla.voice.assistant.language
 
 /**
- * A representation of a [Pattern] matching one or more [Word]s. If the property [empty] is
+ * A representation of a [Pattern] matching any one or more [Word]s. If the property "empty" is
  * true, this also matches an empty sequence of [Word]s.
  */
 class Wildcard(
