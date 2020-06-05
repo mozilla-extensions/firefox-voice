@@ -446,20 +446,26 @@ const Faq = () => {
             </div>
           </summary>
           <p>
-            Because Firefox Voice implements a wide variety of commands, it
-            needs permissions to do many things on your behalf.
+            Because you can use Firefox Voice to execute a wide variety of
+            commands, it first needs permissions to many of those things on your
+            behalf.
           </p>
           <dl>
             <dt>Access your data for all websites</dt>
             <dd>
-              This permission allows Firefox Voice to inject functionality onto
-              any site. This is needed for scrolling, copying and pasting,
-              finding tabs, and many more features. This permission would make
-              it <em>possible</em> for Firefox Voice to extract information from
-              websites, but it does not do so. The Privacy Policy specifies what
-              information we collect (with your permission at installation time,
-              or as specified in the preferences). It does not include any
-              browsing or site information.
+              This permission allows you to use Firefox Voice to control
+              websites to do things like scroll, copy and paste, find a tab and
+              more.
+              <br />
+              <br />
+              While this permission would make it <em>possible</em> to extract
+              user information from a website, it does not do so. Our{" "}
+              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+                Privacy Policy
+              </a>{" "}
+              specifies what information we collect (set during installation or
+              later in the preferences). It does NOT include any browsing or
+              site information.
             </dd>
             <dt>Read and modify bookmarks</dt>
             <dd>
@@ -467,40 +473,28 @@ const Faq = () => {
             </dd>
             <dt>Read and modify browser settings</dt>
             <dd>
-              This is used to open your preferred homepage; your homepage
-              location is a browser setting.
+              Used to open your preferred homepage set in the browser setting.
             </dd>
             <dt>Get data from the clipboard</dt>
-            <dd>
-              This is used to "paste" a URL into newtab (which actually opens
-              the URL, and requires us to read the URL). Also in some cases we
-              read the clipboard, put new information into the clipboard, paste
-              it, then restore your previous clipboard content.
-            </dd>
+            <dd>Used to enable voice control for "paste".</dd>
             <dt>Input data to the clipboard</dt>
             <dd>
-              This is used for commands like "copy link" that copy data into the
-              clipboard.
+              Used to enable voice commands for “copy” such as "copy link".
             </dd>
             <dt>
               Download files and read and modify the browser’s download history
             </dt>
             <dd>
-              This is used for commands like "save page" and "save screenshot"
-              that download files. The command "show downloads" requires
-              additional permissions that include download history.
+              Used for commands such as "save page" and "save screenshot" that
+              download files.
             </dd>
             <dt>Read the text of all open tabs</dt>
-            <dd>
-              This permission is used for the command "find [query] in page",
-              which is the equivalent of ^F/⌘F.
-            </dd>
+            <dd>Used for the command "find [query] in page".</dd>
             <dt>Access browsing history</dt>
             <dd>
-              This is used to determine your preferred music service, and in the
-              future we plan to use it to detect other preferred services. E.g.,
-              if you visit `spotify.com` often/recently, then we presume that is
-              your preferred service.
+              Used to determine your preferred music service. E.g., if you visit
+              <code>spotify.com</code> often/recently, it is presumed to be your
+              preferred service.
             </dd>
             <dt>Hide and show browser tabs</dt>
             <dd>
@@ -510,7 +504,7 @@ const Faq = () => {
               clutter your normal tab layout.
             </dd>
             <dt>Access browser tabs</dt>
-            <dd>This permission is used for finding and managing your tabs.</dd>
+            <dd>Used for finding and managing your tabs.</dd>
           </dl>
         </details>
         <details>
