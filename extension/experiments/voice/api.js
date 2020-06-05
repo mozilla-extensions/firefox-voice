@@ -86,10 +86,6 @@ this.voice = class extends ExtensionAPI {
             return runCommand("View:PageSource");
           },
 
-          async minimizeWindow() {
-            return runCommand("minimizeWindow");
-          },
-
           async showAllBookmarks() {
             return runCommand("Browser:ShowAllBookmarks");
           },
