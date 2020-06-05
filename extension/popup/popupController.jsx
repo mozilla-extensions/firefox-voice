@@ -439,8 +439,8 @@ export const PopupController = function() {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
       if (message.tts) { // should also check prefs eventually
-        speakResponse(message.tts);
-        setSpokenResponse(message.tts); // FIXME: I think this is unnecessary now
+        speakResponse(message.tts.ttsText, message.tts.ttsLang);
+        setSpokenResponse(message.tts.ttsText); // FIXME: I think this is unnecessary now
       }
     } else {
       setCardImage(null);
@@ -456,8 +456,10 @@ export const PopupController = function() {
     }
   };
 
-  const speakResponse = (text) => {
+  const speakResponse = (text, lang) => {
     let utterance = new SpeechSynthesisUtterance(text);
+    console.log("the language is!!", lang);
+    utterance.lang = lang;
     const synth = window.speechSynthesis;
     synth.speak(utterance);
   }

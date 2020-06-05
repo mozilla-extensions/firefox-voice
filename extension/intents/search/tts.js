@@ -36,9 +36,8 @@ this.tts = (function () {
   const DICTIONARY_FIRST_DEFINITION = ".QIclbb.XpoqFe > [data-dobid] > span";
   const DICTIONARY_TERM = ".DgZBFd.XcVN5d";
 
-  const TRANSLATE_SOURCE_PHRASE = "#tw-source-text-ta"; // text-area
-  const TRANSLATE_TARGET_LANGUAGE = ".target-language"; // span
-  const TRANSLATE_TARGET_AUDIO_BTN = "#tw-spkr-button"; // span button
+  const TRANSLATE_TARGET_PHRASE = "#tw-target-text > span"; // span 
+  const TRANSLATE_TARGET_LANGUAGE_CODE = "#tw-tl";
 
   const CARD_TYPE_SELECTORS = {
     WEATHER: "#wob_wc",
@@ -150,18 +149,13 @@ this.tts = (function () {
     return response;
   }
 
-  function clickElement(element) {
-    element.dispatchEvent(new MouseEvent("mousedown"));
-    element.dispatchEvent(new MouseEvent("mouseup"));
-  }
-
-  // NOT FUNCTIONAL
   function handleTranslateCard(card) {
-    const sourceText = card.querySelector(TRANSLATE_SOURCE_PHRASE).value;
-    const targetLanguage = card.querySelector(TRANSLATE_TARGET_LANGUAGE).innerText;
-    const translatedAudio = document.querySelector(TRANSLATE_TARGET_AUDIO_BTN);
-    clickElement(translatedAudio);
-    return;
+    const targetLanguageCode = card.querySelector(TRANSLATE_TARGET_LANGUAGE_CODE).dataset.lang;
+    const targetText = card.querySelector(TRANSLATE_TARGET_PHRASE).innerText;
+    return {
+      ttsText: targetText,
+      ttsLanguage: targetLanguageCode
+    };
   }
 
   function handleGenericCard(card) {
@@ -178,12 +172,13 @@ this.tts = (function () {
     return `${value} ${adjustedUnit}`
   }
 
-  communicate.register("cardSpeakableData", message => {
+  communicate.register("cardTtsText", message => {
     const card = document.getElementsByClassName(message.cardSelectors)[0]; // TODO FIX? This is a hack to find the card node (identified in cardImage in queryScript) again
     const parentCard = card.parentNode;
     console.log(card.classList);
 
-    let speakableData;
+    let ttsText;
+    let ttsLang = "en";
     let cardType;
     for (const [type, tag] of Object.entries(CARD_TYPE_SELECTORS)) {
       if (parentCard.querySelectorAll(tag).length) {
@@ -198,34 +193,41 @@ this.tts = (function () {
 
     switch(cardType) {
       case "WEATHER":
-        speakableData = handleWeatherCard(card);
+        ttsText = handleWeatherCard(card);
         break;
       case "DIRECTIONS":
-        speakableData = handleDirectionsCard(card);
+        ttsText = handleDirectionsCard(card);
         break;
       case "SIDEBAR":
-        speakableData = handleSidebarCard(card);
+        ttsText = handleSidebarCard(card);
         break;
       case "SNIPPET":
-        speakableData = handleSnippetCard(card);
+        ttsText = handleSnippetCard(card);
         break;
       case "UNIT":
-        speakableData = handleUnitCard(card);
+        ttsText = handleUnitCard(card);
         break;
       case "CALCULATOR":
-        speakableData = handleCalculatorCard(card);
+        ttsText = handleCalculatorCard(card);
         break;
       case "DICTIONARY":
-        speakableData = handleDictionaryCard(card);
+        ttsText = handleDictionaryCard(card);
         break;
       case "TRANSLATE":
-        speakableData = handleTranslateCard(card);
+        const translationData = handleTranslateCard(card);
+        ttsText = translationData.ttsText;
+        ttsLang = translationData.ttsLanguage;
+        console.log("LANGUAGE");
+        console.log(ttsLang);
         break;
       case "SPORTS":
       default:
-        speakableData = handleGenericCard(card); 
+        ttsText = handleGenericCard(card); 
     }
 
-    return speakableData;
+    return {
+      ttsText,
+      ttsLang
+    };
   });
 })();
