@@ -428,3 +428,7 @@ a:hover {
   right: 15px;
   position: absolute;
 }
+
+#mic-selector{
+  margin-top:20px;
+}
