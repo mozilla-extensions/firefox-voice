@@ -442,6 +442,74 @@ const Faq = () => {
         <details>
           <summary>
             <div class="faq-section-header">
+              Why does Firefox Voice ask for all these permissions?
+            </div>
+          </summary>
+          <p>
+            Because you can use Firefox Voice to execute a wide variety of
+            commands, it first needs permissions to many of those things on your
+            behalf.
+          </p>
+          <dl>
+            <dt>Access your data for all websites</dt>
+            <dd>
+              This permission allows you to use Firefox Voice to control
+              websites to do things like scroll, copy and paste, find a tab and
+              more.
+              <br />
+              <br />
+              While this permission would make it <em>possible</em> to extract
+              user information from a website, it does not do so. Our{" "}
+              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+                Privacy Policy
+              </a>{" "}
+              specifies what information we collect (set during installation or
+              later in the preferences). It does NOT include any browsing or
+              site information.
+            </dd>
+            <dt>Read and modify bookmarks</dt>
+            <dd>
+              This is used for commands that open, create, and delete bookmarks.
+            </dd>
+            <dt>Read and modify browser settings</dt>
+            <dd>
+              Used to open your preferred homepage set in the browser setting.
+            </dd>
+            <dt>Get data from the clipboard</dt>
+            <dd>Used to enable voice control for "paste".</dd>
+            <dt>Input data to the clipboard</dt>
+            <dd>
+              Used to enable voice commands for “copy” such as "copy link".
+            </dd>
+            <dt>
+              Download files and read and modify the browser’s download history
+            </dt>
+            <dd>
+              Used for commands such as "save page" and "save screenshot" that
+              download files.
+            </dd>
+            <dt>Read the text of all open tabs</dt>
+            <dd>Used for the command "find [query] in page".</dd>
+            <dt>Access browsing history</dt>
+            <dd>
+              Used to determine your preferred music service. E.g., if you visit
+              <code>spotify.com</code> often/recently, it is presumed to be your
+              preferred service.
+            </dd>
+            <dt>Hide and show browser tabs</dt>
+            <dd>
+              Firefox Voice executes searches in the background, sometimes
+              taking you directly to search results or cards. We use a "hidden"
+              tab to do this, so these automatically-created search tabs do not
+              clutter your normal tab layout.
+            </dd>
+            <dt>Access browser tabs</dt>
+            <dd>Used for finding and managing your tabs.</dd>
+          </dl>
+        </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">
               When will this automatically be included into Firefox?
             </div>
           </summary>
