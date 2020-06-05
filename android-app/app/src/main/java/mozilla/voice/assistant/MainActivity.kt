@@ -29,18 +29,30 @@ import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.IntentRunner
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.intents.apps.Install
+import mozilla.voice.assistant.intents.apps.Launch
 import mozilla.voice.assistant.intents.communication.PhoneCall
 import mozilla.voice.assistant.intents.communication.TextMessage
-import mozilla.voice.assistant.intents.launch.Launch
 import mozilla.voice.assistant.intents.maps.Maps
 import mozilla.voice.assistant.intents.music.Music
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
+/**
+ * Launches a voice search and takes action based on the user's utterance.
+ * The activity can be started in a few ways:
+ * 1. When the program is launched.
+ * 2. Through the back button or task switcher.
+ * 3. When a user utterance could not be handled directly.
+ *
+ * An example of case 3 is when the user utters "Launch Spotify" but
+ *
+ */
 @SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
     private var chimeVolume: Int = 0
     private lateinit var intentRunner: IntentRunner
+
     // showReady() uses shownBurst to ensure the initial "burst" animation is shown only once
     private var shownBurst = false
 
@@ -57,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         intentRunner = IntentRunner(
             compiler,
             Alarm.getIntents() +
+                    Install.getIntents() +
                     Launch.getIntents() +
                     Maps.getIntents() +
                     Music.getIntents() +
@@ -215,6 +228,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun giveSuggestions() {
+        if (intent.hasExtra(SUGGESTION_KEY)) {
+            feedbackView.text = SpannableStringBuilder()
+                .scale(INSTRUCTIONS_SCALE) {
+                    italic { append("Try saying:\n\n") }
+                        .bold { append(intent.getStringExtra(SUGGESTION_KEY)) }
+                }
+            return
+        }
         feedbackView.text = SpannableStringBuilder()
             .scale(INSTRUCTIONS_SCALE) {
                 italic { append(getString(R.string.suggestion_prefix)) }
@@ -357,6 +378,8 @@ class MainActivity : AppCompatActivity() {
         private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
         private const val MAX_SUGGESTIONS = 3 // max. number of suggestions to show at a time
         private const val INSTRUCTIONS_SCALE = .6f
+        private const val FEEDBACK_KEY = "feedback"
+        private const val SUGGESTION_KEY = "message"
 
         // Hack to prevent hearing SpeechRecognizer chime after recognizer is closed.
         private const val CHIME_STREAM = AudioManager.STREAM_MUSIC
@@ -376,7 +399,10 @@ class MainActivity : AppCompatActivity() {
 
         private var recognizer: SpeechRecognizer? = null
 
-        fun createIntent(context: Context) =
-            Intent(context, MainActivity::class.java)
+        fun createIntent(context: Context, feedback: String, suggestion: String) =
+            Intent(context, MainActivity::class.java).run {
+                putExtra(FEEDBACK_KEY, feedback)
+                putExtra(SUGGESTION_KEY, suggestion)
+            }
     }
 }
