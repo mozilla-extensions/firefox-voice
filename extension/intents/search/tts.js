@@ -39,6 +39,15 @@ this.tts = (function () {
   const TRANSLATE_TARGET_PHRASE = "#tw-target-text > span"; // span 
   const TRANSLATE_TARGET_LANGUAGE_CODE = "#tw-tl";
 
+  const SPORTS_LEFTHAND_SCORE = ".imso_mh__l-tm-sc";
+  const SPORTS_LEFTHAND_TEAM = ".imso_mh__first-tn-ed > .imso_mh__tm-nm";
+  const SPORTS_RIGHTHAND_SCORE = ".imso_mh__r-tm-sc";
+  const SPORTS_RIGHTHAND_TEAM = ".imso_mh__second-tn-ed > .imso_mh__tm-nm";
+  const SPORTS_GAME_TIME = ".imso_mh__lr-dt-ds";
+  const SPORTS_TEAM_OF_INTEREST = ".N0LMJe.ellipsisize";
+
+
+
   const CARD_TYPE_SELECTORS = {
     WEATHER: "#wob_wc",
     DIRECTIONS: ".BbbuR",
@@ -47,7 +56,9 @@ this.tts = (function () {
     CALCULATOR: "#cwmcwd", // not entirely sure
     DICTIONARY: ".zbA8Me.gJBeNe.vSuuAd.i8lZMc",
     SPELLING: ".VpH2eb.vmod.XpoqFe", // not sure about this
-    TRANSLATE: "#tw-container"
+    TRANSLATE: "#tw-container",
+    SPORTS_SCORE: ".imso_mh__l-tm-sc", // To get scores specifically, this might work .imso_mh__scr-sep
+    SPORTS_GAME_TIME: "#sports-app" // has to be last because this will also match the score type
   }
 
   const ALIASES = {
@@ -158,6 +169,30 @@ this.tts = (function () {
     };
   }
 
+  function handleSportsScoreCard(card) {
+    const leftTeamName = card.querySelector(SPORTS_LEFTHAND_TEAM).innerText;
+    const leftTeamScore = parseFloat(card.querySelector(SPORTS_LEFTHAND_SCORE).innerText);
+    const rightTeamName = card.querySelector(SPORTS_RIGHTHAND_TEAM).innerText;
+    const rightTeamScore = parseFloat(card.querySelector(SPORTS_RIGHTHAND_SCORE).innerText);
+    const response = leftTeamScore > rightTeamScore ? `${leftTeamName} ${leftTeamScore}, ${rightTeamName} ${rightTeamScore}` : `${rightTeamName} ${rightTeamScore}, ${leftTeamName} ${leftTeamScore}`;
+    return response;
+  }
+
+  function handleSportsGameTimeCard(card) {
+    const rawEventTimeString = card.querySelector(SPORTS_GAME_TIME).innerText;
+    const teamInQuestion = card.querySelector(SPORTS_TEAM_OF_INTEREST).innerText;
+    const leftTeamName = card.querySelector(SPORTS_LEFTHAND_TEAM).innerText;
+    const rightTeamName = card.querySelector(SPORTS_RIGHTHAND_TEAM).innerText;
+
+    const opposingTeam = teamInQuestion === leftTeamName ? rightTeamName : leftTeamName;
+
+    let eventStringParts = rawEventTimeString.split(", ");
+    eventStringParts.splice(-1, 0, "at"); // insert "at" right before the time
+    // TODO FIX ABBREVIATIONS, PAST EVENTS, ETC.
+    const response = `${eventStringParts.join(" ")} versus ${opposingTeam}`;
+    return response;
+  }
+
   function handleGenericCard(card) {
     const response = card.querySelector(`${DIRECT_ANSWER_SELECTOR}, ${DATETIME_SELECTOR}, ${HOURS_SELECTOR}, ${DAY_SELECTOR}, ${INTERACTIVE_GRAPH_SELECTOR}`).innerText;
     return response;
@@ -217,10 +252,13 @@ this.tts = (function () {
         const translationData = handleTranslateCard(card);
         ttsText = translationData.ttsText;
         ttsLang = translationData.ttsLanguage;
-        console.log("LANGUAGE");
-        console.log(ttsLang);
         break;
-      case "SPORTS":
+      case "SPORTS_SCORE":
+        ttsText = handleSportsScoreCard(card);
+        break;
+      case "SPORTS_GAME_TIME":
+        ttsText = handleSportsGameTimeCard(card);
+        break;
       default:
         ttsText = handleGenericCard(card); 
     }

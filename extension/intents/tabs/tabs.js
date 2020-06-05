@@ -588,6 +588,10 @@ intentRunner.registerIntent({
       type: "showSearchResults",
       card,
       searchResults: card,
+      tts: {
+        ttsText: `${numOfOpenTabs}`,
+        ttsLang: 'en'
+      }
     });
   },
 });

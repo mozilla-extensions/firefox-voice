@@ -180,6 +180,10 @@ export class IntentContext {
     return browser.runtime.sendMessage({ type: "displayText", message });
   }
 
+  speakTts(message) {
+    return browser.runtime.sendMessage({ type: "speakTts", message });
+  }
+
   displayInlineMessage({ message, type }) {
     // FIXME: actually inject something and display a message
     window.alert(message);

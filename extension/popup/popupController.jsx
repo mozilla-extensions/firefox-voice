@@ -210,6 +210,10 @@ export const PopupController = function() {
         }
         break;
       }
+      case "speakTts": {
+        setTts(message.message);
+        break;
+      }
       case "handleFollowup": {
         if (message.method === "enable") {
           if (message.message) {
@@ -230,6 +234,9 @@ export const PopupController = function() {
       }
       case "showSearchResults": {
         showSearchResults(message);
+        if (message.tts) {
+          setTts(message.tts);
+        }
         return Promise.resolve(true);
       }
       case "refreshSearchCard": {
@@ -250,6 +257,8 @@ export const PopupController = function() {
       case "setTimer": {
         setPopupView("timer");
         startTimer(message.timerInMS);
+        const timerMessage = getTimerMessage(message.timerInMS);
+        setTts(timerMessage);
         return Promise.resolve(true);
       }
       case "closeTimer": {
@@ -260,6 +269,29 @@ export const PopupController = function() {
         break;
     }
     return undefined;
+  };
+
+  // FIX: Copied from popupView
+  const getTimerMessage = timerInMS => {
+      const time = parseFloat(timerInMS / 1000).toFixed(3);
+      const hours = Math.floor(time / 60 / 60);
+      const minutes = Math.floor(time / 60) % 60;
+      const seconds = Math.floor(time - minutes * 60);
+    
+      let readableDuration = "";
+      if (hours > 0) {
+        readableDuration = `${hours} hour`;
+      }
+      if (minutes > 0) {
+        readableDuration += ` ${minutes} minute`;
+      }
+      if (seconds > 0) {
+        readableDuration += ` ${seconds} second`;
+      }
+      return {
+        ttsText: `${readableDuration} timer starting now`,
+        ttsLang: "en"
+      };
   };
 
   const clearTimer = async totalInMS => {
@@ -438,10 +470,6 @@ export const PopupController = function() {
     if (message.card) {
       setCardImage(message.card);
       setMinPopupSize(message.card.width);
-      if (message.tts) { // should also check prefs eventually
-        speakResponse(message.tts.ttsText, message.tts.ttsLang);
-        setSpokenResponse(message.tts.ttsText); // FIXME: I think this is unnecessary now
-      }
     } else {
       setCardImage(null);
     }
@@ -456,9 +484,13 @@ export const PopupController = function() {
     }
   };
 
+  const setTts = message => {
+    speakResponse(message.ttsText, message.ttsLang);
+    setSpokenResponse(message.ttsText); // FIXME: I think this is unnecessary now
+  };
+
   const speakResponse = (text, lang) => {
     let utterance = new SpeechSynthesisUtterance(text);
-    console.log("the language is!!", lang);
     utterance.lang = lang;
     const synth = window.speechSynthesis;
     synth.speak(utterance);

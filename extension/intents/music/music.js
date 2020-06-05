@@ -133,6 +133,10 @@ intentRunner.registerIntent({
       throw e;
     }
     context.displayText(tabs[0].title);
+    context.speakTts({
+      ttsText: tabs[0].title,
+      ttsLang: 'en'
+    });
   },
 });
 
