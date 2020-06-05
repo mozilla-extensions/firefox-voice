@@ -444,20 +444,23 @@ const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
     let expression = "";
 
     if (hours !== 0) {
-      expression += `${hours} hours`;
+      const timeUnit = hours === 1 ? "hour" : "hours";
+      expression += `${hours} ${timeUnit}`;
     }
     if (minutes !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${minutes} minutes`;
+      const timeUnit = minutes === 1 ? "minute" : "minutes";
+      expression += `${minutes} ${timeUnit}`;
     }
 
     if (seconds !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${seconds} seconds`;
+      const timeUnit = seconds === 1 ? "second" : "seconds";
+      expression += `${seconds} ${timeUnit}`;
     }
     return `It's been ${expression}`;
   };
@@ -797,9 +800,15 @@ const SearchResultsContent = ({
   };
 
   const SearchCard = () => (
-    <button class="invisible-button" onClick={onSearchCardClick}>
-      <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
-    </button>
+    <div>
+      <a href="#bottomSection" className="scroll-button">
+        <img src="images/arrow_down.svg" alt="scroll to bottom" />
+      </a>
+      <button class="invisible-button" onClick={onSearchCardClick}>
+        <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
+      </button>
+      <div id="bottomSection"></div>
+    </div>
   );
 
   const AnswerCard = () => (

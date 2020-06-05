@@ -3,6 +3,7 @@
 
 html {
   font-family: "Inter", sans-serif;
+  scroll-behavior: smooth;
 }
 
 @supports (font-variation-settings: normal) {
@@ -632,4 +633,11 @@ a#lexicon {
   cursor: pointer;
   font-size: 16px;
   margin-bottom: 1em;
+}
+
+.scroll-button {
+  float: right;
+  top: 100%;
+  transform: translateY(-100%);
+  margin-left: -40px;
 }
