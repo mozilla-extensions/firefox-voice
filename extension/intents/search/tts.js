@@ -55,7 +55,7 @@ this.tts = (function () {
     UNIT: "select.rYVYn",
     CALCULATOR: "#cwmcwd", // not entirely sure
     DICTIONARY: ".zbA8Me.gJBeNe.vSuuAd.i8lZMc",
-    SPELLING: ".VpH2eb.vmod.XpoqFe", // not sure about this
+    SPELLING: ".DgZBFd.XcVN5d", // will also match the dictionary, so ordering matters
     TRANSLATE: "#tw-container",
     SPORTS_SCORE: ".imso_mh__l-tm-sc", // To get scores specifically, this might work .imso_mh__scr-sep
     SPORTS_GAME_TIME: "#sports-app" // has to be last because this will also match the score type
@@ -160,6 +160,13 @@ this.tts = (function () {
     return response;
   }
 
+  function handleSpellingCard(card) {
+    let term = card.querySelector(DICTIONARY_TERM).innerText;
+    term = term.replaceAll("·", "");
+    const spelledOut = term.split("").join("..........."); // the "join" here is used to artificially add gaps between each letter to slow down TTS
+    return spelledOut;
+  }
+
   function handleTranslateCard(card) {
     const targetLanguageCode = card.querySelector(TRANSLATE_TARGET_LANGUAGE_CODE).dataset.lang;
     const targetText = card.querySelector(TRANSLATE_TARGET_PHRASE).innerText;
@@ -247,6 +254,9 @@ this.tts = (function () {
         break;
       case "DICTIONARY":
         ttsText = handleDictionaryCard(card);
+        break;
+      case "SPELLING":
+        ttsText = handleSpellingCard(card);
         break;
       case "TRANSLATE":
         const translationData = handleTranslateCard(card);
