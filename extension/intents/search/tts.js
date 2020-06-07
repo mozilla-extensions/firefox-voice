@@ -50,7 +50,7 @@ this.tts = (function () {
     "July", "August", "September", "October", "November", "December"
   ];
 
-  const BANNER_CARD_SELECTOR = "#extabar";
+  const BANNER_CARD_SELECTOR = "#botabar";
   const BANNER_CARD_ITEM_WIDE = ".rl_item"; // may be possible just to get innerText
   const BANNER_CARD_ITEM_TALL = ".klitem-tr"; // title found in aria-label of this item
 
