@@ -50,6 +50,10 @@ this.tts = (function () {
     "July", "August", "September", "October", "November", "December"
   ];
 
+  const BANNER_CARD_SELECTOR = "#extabar";
+  const BANNER_CARD_ITEM_WIDE = ".rl_item"; // may be possible just to get innerText
+  const BANNER_CARD_ITEM_TALL = ".klitem-tr"; // title found in aria-label of this item
+
   const CARD_TYPE_SELECTORS = {
     WEATHER: "#wob_wc",
     DIRECTIONS: ".BbbuR",
@@ -80,14 +84,18 @@ this.tts = (function () {
     }
   }
 
-  function getSpeakableSubsetOfList(card, maxItems = 3) {
-    const listItems = card.querySelectorAll(SNIPPET_LIST_ITEM_SELECTOR);
+  function getSpeakableSubsetOfList(card, itemSelector, maxItems = 3, sayExactRemainder = false) {
+    const listItems = card.querySelectorAll(itemSelector);
+    console.log("here are the items");
+    console.log(listItems);
     let listItemsAsText = Array.from(listItems).map(el => el.innerText).filter(el => el !== ""); // get all non-empty list items as an array of their inner text
-    const initialLength = listItemsAsText.length;
-    if (initialLength > maxItems) {
-      return `${listItemsAsText.slice(0, maxItems).join(", ")} and more`;
+    const totalNumItems = listItemsAsText.length;
+    if (totalNumItems > maxItems) {
+      const numRemaining = totalNumItems - maxItems;
+      return `${listItemsAsText.slice(0, maxItems).join(", ")} and ${sayExactRemainder ? `${numRemaining} ` : ``}more`;
     } else {
-      return `${listItemsAsText.splice(-2, 0, "and").join(", ")}`;
+      listItemsAsText.splice(-1, 0, "and");
+      return `${listItemsAsText.join(", ")}`;
     }
   }
 
@@ -95,6 +103,19 @@ this.tts = (function () {
     const trimmedText = removeParentheticals ? text.replaceAll(/\([^\)]*\)/g, "") : text;
     const sentences = trimmedText.match( /[^\.!\?]+[\.!\?]+/g );
     return sentences.slice(0, maxSentences).join(" ");
+  }
+
+  function handleBannerCards(bannerCardContainer) {
+    let ttsText;
+    if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_WIDE)) {
+      ttsText = getSpeakableSubsetOfList(bannerCardContainer, BANNER_CARD_ITEM_WIDE, 5, true);
+    } else if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_TALL)) {
+      ttsText = getSpeakableSubsetOfList(bannerCardContainer, BANNER_CARD_ITEM_TALL, 3, true);
+    }
+    return {
+      ttsText,
+      ttsLang: 'en'
+    };
   }
 
   function handleSnippetCard(card) {
@@ -108,7 +129,7 @@ this.tts = (function () {
     }
     const hasList = card.querySelector(`${SNIPPET_ORDERED_LIST_SELECTOR}, ${SNIPPET_UNORDERED_LIST_SELECTOR}`);
     if (hasList) {
-      return `According to ${source}, the top results are ${getSpeakableSubsetOfList(card)}`;
+      return `According to ${source}, the top results are ${getSpeakableSubsetOfList(card, SNIPPET_LIST_ITEM_SELECTOR)}`;
     }
     const snippetBodyText = card.querySelector(SNIPPET_BODY_SELECTOR).innerText;
     return `According to ${source}, ${abbreviateTextResponse(snippetBodyText)}`;
@@ -235,6 +256,11 @@ this.tts = (function () {
   }
 
   communicate.register("cardTtsText", message => {
+    const bannerCardContainer = document.querySelector(BANNER_CARD_SELECTOR);
+    if (bannerCardContainer) {
+      console.log("IN HERE");
+      return handleBannerCards(bannerCardContainer);
+    }
     const card = document.getElementsByClassName(message.cardSelectors)[0]; // TODO FIX? This is a hack to find the card node (identified in cardImage in queryScript) again
     const parentCard = card.parentNode;
     console.log(card.classList);
