@@ -88,7 +88,13 @@ this.tts = (function () {
     const listItems = card.querySelectorAll(itemSelector);
     console.log("here are the items");
     console.log(listItems);
-    let listItemsAsText = Array.from(listItems).map(el => {useAttribute === "" ? el.innerText : el.getAttribute(useAttribute)}).filter(el => el !== ""); // get all non-empty list items as an array of their innerText or attribute containing the relevant text
+    let listItemsAsText = Array.from(listItems).map(el => {
+      if (useAttribute === "") {
+        return el.innerText;
+      }
+      return el.getAttribute(useAttribute);
+    })
+    listItemsAsText = listItemsAsText.filter(el => el !== ""); // get all non-empty list items as an array of their innerText or attribute containing the relevant text
     const totalNumItems = listItemsAsText.length;
     if (totalNumItems > maxItems) {
       const numRemaining = totalNumItems - maxItems;
@@ -110,7 +116,7 @@ this.tts = (function () {
     if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_WIDE)) {
       ttsText = getSpeakableSubsetOfList(bannerCardContainer, BANNER_CARD_ITEM_WIDE, 5, true);
     } else if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_TALL)) {
-      ttsText = getSpeakableSubsetOfList(bannerCardContainer, BANNER_CARD_ITEM_TALL, 3, true);
+      ttsText = getSpeakableSubsetOfList(bannerCardContainer, BANNER_CARD_ITEM_TALL, 3, true, "aria-label");
     }
     return {
       ttsText,
