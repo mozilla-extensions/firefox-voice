@@ -84,11 +84,11 @@ this.tts = (function () {
     }
   }
 
-  function getSpeakableSubsetOfList(card, itemSelector, maxItems = 3, sayExactRemainder = false) {
+  function getSpeakableSubsetOfList(card, itemSelector, maxItems = 3, sayExactRemainder = false, useAttribute = "") {
     const listItems = card.querySelectorAll(itemSelector);
     console.log("here are the items");
     console.log(listItems);
-    let listItemsAsText = Array.from(listItems).map(el => el.innerText).filter(el => el !== ""); // get all non-empty list items as an array of their inner text
+    let listItemsAsText = Array.from(listItems).map(el => {useAttribute === "" ? el.innerText : el.getAttribute(useAttribute)}).filter(el => el !== ""); // get all non-empty list items as an array of their innerText or attribute containing the relevant text
     const totalNumItems = listItemsAsText.length;
     if (totalNumItems > maxItems) {
       const numRemaining = totalNumItems - maxItems;
