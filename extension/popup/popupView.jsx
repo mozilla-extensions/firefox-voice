@@ -800,15 +800,10 @@ const SearchResultsContent = ({
   };
 
   const SearchCard = () => (
-    <div>
-      <a href="#bottomSection" className="scroll-button">
-        <img src="images/arrow_down.svg" alt="scroll to bottom" />
-      </a>
-      <button class="invisible-button" onClick={onSearchCardClick}>
-        <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
-      </button>
+    <button class="invisible-button" onClick={onSearchCardClick}>
+      <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
       <div id="bottomSection"></div>
-    </div>
+    </button>
   );
 
   const AnswerCard = () => (
@@ -839,7 +834,6 @@ const SearchResultsContent = ({
     }
     return null;
   };
-
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
@@ -847,26 +841,35 @@ const SearchResultsContent = ({
       {renderFollowup ? null : (
         <React.Fragment>
           <div id="search-footer">
-            <IntentFeedback
-              onSubmitFeedback={onSubmitFeedback}
-              eduText={card && card.answer ? card.answer.eduText : null}
-            />
-            {next ? (
-              <div id="next-result">
-                <p>
-                  <strong>
-                    Click mic and say <i>'next'</i> to view
-                  </strong>
-                </p>
-                <a
-                  href={next.url}
-                  id="search-show-next"
-                  onClick={onNextResultClick}
-                >
-                  {new URL(next.url).hostname} | {next.title}
+            {card && card.answer ? null : (
+              <div className="scroll-button">
+                <a href="#bottomSection">
+                  <img src="images/arrow_down.svg" alt="scroll to bottom" />
                 </a>
               </div>
-            ) : null}
+            )}
+            <div>
+              <IntentFeedback
+                onSubmitFeedback={onSubmitFeedback}
+                eduText={card && card.answer ? card.answer.eduText : null}
+              />
+              {next ? (
+                <div id="next-result">
+                  <p>
+                    <strong>
+                      Click mic and say <i>'next'</i> to view
+                    </strong>
+                  </p>
+                  <a
+                    href={next.url}
+                    id="search-show-next"
+                    onClick={onNextResultClick}
+                  >
+                    {new URL(next.url).hostname} | {next.title}
+                  </a>
+                </div>
+              ) : null}
+            </div>
           </div>
         </React.Fragment>
       )}
