@@ -46,7 +46,9 @@ this.tts = (function () {
   const SPORTS_GAME_TIME = ".imso_mh__lr-dt-ds";
   const SPORTS_TEAM_OF_INTEREST = ".N0LMJe.ellipsisize";
 
-
+  const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   const CARD_TYPE_SELECTORS = {
     WEATHER: "#wob_wc",
@@ -57,7 +59,7 @@ this.tts = (function () {
     DICTIONARY: ".zbA8Me.gJBeNe.vSuuAd.i8lZMc",
     SPELLING: ".DgZBFd.XcVN5d", // will also match the dictionary, so ordering matters
     TRANSLATE: "#tw-container",
-    SPORTS_SCORE: ".imso_mh__l-tm-sc", // To get scores specifically, this might work .imso_mh__scr-sep
+    SPORTS_SCORE: ".imso_mh__l-tm-sc", 
     SPORTS_GAME_TIME: "#sports-app" // has to be last because this will also match the score type
   }
 
@@ -186,18 +188,21 @@ this.tts = (function () {
   }
 
   function handleSportsGameTimeCard(card) {
-    const rawEventTimeString = card.querySelector(SPORTS_GAME_TIME).innerText;
-    const teamInQuestion = card.querySelector(SPORTS_TEAM_OF_INTEREST).innerText;
+    if (card.querySelector('.liveresults-sports-immersive__game-minute')) {
+      return `They are currently playing. The score is ${handleSportsScoreCard(card)}`
+    }
     const leftTeamName = card.querySelector(SPORTS_LEFTHAND_TEAM).innerText;
     const rightTeamName = card.querySelector(SPORTS_RIGHTHAND_TEAM).innerText;
+    const rawEventTimeString = card.querySelector(SPORTS_GAME_TIME).innerText;    
+    const parsedEventTime = humanReadableDate(rawEventTimeString);
 
-    const opposingTeam = teamInQuestion === leftTeamName ? rightTeamName : leftTeamName;
-
-    let eventStringParts = rawEventTimeString.split(", ");
-    eventStringParts.splice(-1, 0, "at"); // insert "at" right before the time
-    // TODO FIX ABBREVIATIONS, PAST EVENTS, ETC.
-    const response = `${eventStringParts.join(" ")} versus ${opposingTeam}`;
-    return response;
+    if (card.querySelector(SPORTS_TEAM_OF_INTEREST)) {
+      const teamInQuestion = card.querySelector(SPORTS_TEAM_OF_INTEREST).innerText;
+      const opposingTeam = teamInQuestion === leftTeamName ? rightTeamName : leftTeamName;
+      return `${parsedEventTime} versus ${opposingTeam}`;
+    }
+    
+    return `${leftTeamName} and ${rightTeamName} play ${parsedEventTime}`;
   }
 
   function handleGenericCard(card) {
@@ -212,6 +217,21 @@ this.tts = (function () {
       adjustedUnit = irregularPluralForm ? irregularPluralForm : `${unit}s`;
     }
     return `${value} ${adjustedUnit}`
+  }
+
+  function humanReadableDate(rawDate) {
+    let eventStringParts = rawDate.split(", ");
+    if (eventStringParts.length === 3) {
+      // Specifies a day of the week and date (e.g. Tue, 6/16)
+      let [dayOfWeek, monthAndDay, timeOfEvent] = eventStringParts;
+      dayOfWeek = dayOfWeek + "day";
+      let [month, day] = monthAndDay.split("/");
+      month = MONTH_NAMES[parseInt(month) - 1];
+      eventStringParts = [dayOfWeek, month, day, timeOfEvent];
+    }
+    eventStringParts.splice(-1, 0, "at"); // insert "at" right before the time
+    eventStringParts = eventStringParts.join(" ");
+    return eventStringParts;
   }
 
   communicate.register("cardTtsText", message => {
