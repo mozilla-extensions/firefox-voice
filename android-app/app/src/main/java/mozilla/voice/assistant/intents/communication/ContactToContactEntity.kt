@@ -21,16 +21,15 @@ internal fun contactUriToContactEntity(
     contactActivity: ContactActivityInterface,
     nickname: String?,
     contactUri: Uri
-): ContactEntity =
-    contactActivity.app.applicationContext.contentResolver?.let { resolver ->
+): ContactEntity = contactActivity.app.applicationContext.contentResolver?.query(
+        contactUri,
+        columns,
+        null,
+        null,
+        null
+    )?.let { cursor ->
         resolverCursorToContentEntity(
-            resolver.query(
-                contactUri,
-                columns,
-                null,
-                null,
-                null
-            ),
+            cursor,
             nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
@@ -41,15 +40,15 @@ internal fun contactIdToContactEntity(
     contactId: Long
 ): ContactEntity =
     // https://learning.oreilly.com/library/view/android-cookbook-2nd/9781449374471/ch10.html
-    contactActivity.app.applicationContext.contentResolver?.let { resolver ->
+    contactActivity.app.applicationContext.contentResolver?.query(
+        Phone.CONTENT_URI,
+        columns,
+        "${Phone.CONTACT_ID}=?",
+        arrayOf(contactId.toString()),
+        null
+    )?.let { cursor ->
         resolverCursorToContentEntity(
-            resolver.query(
-                Phone.CONTENT_URI,
-                columns,
-                "${Phone.CONTACT_ID}=?",
-                arrayOf(contactId.toString()),
-                null
-            ),
+            cursor,
             nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
