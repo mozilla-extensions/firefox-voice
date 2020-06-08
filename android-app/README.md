@@ -1,4 +1,4 @@
-# Mozilla Assistant
+# Firefox Assistant
 
 ## Installation
 
