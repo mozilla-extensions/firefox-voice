@@ -23,3 +23,9 @@ phrase = "Start presentation"
 [[slideshow.startPresentation.example]]
 phrase = "Present"
 test = true
+
+[slideshow.nextSlide]
+description = "Clicks on the next thumbnail (does not work in presenter mode)"
+match = '''
+  (asdfasdf)
+'''

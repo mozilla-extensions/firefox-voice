@@ -11,7 +11,7 @@ const DEFAULT_SETTINGS = {
   collectTranscriptsOptinAnswered: false,
   keyboardShortcut: null,
   enableWakeword: false,
-  wakewords: ["grasshopper"],
+  wakewords: ["Hey Firefox", "Next slide please"],
   wakewordSensitivity: 0.6,
   listenForFollowup: false,
 };
@@ -44,7 +44,7 @@ export async function getSettingsAndOptions() {
     musicServices: music_getServiceNamesAndTitles(),
     // FIXME: this used to contain the available wakewords, but is empty until we
     // restore wakeword detection:
-    wakewords: [],
+    wakewords: ["Hey Firefox", "Next slide please"],
   };
   return { settings, options };
 }

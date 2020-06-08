@@ -49,3 +49,30 @@ intentRunner.registerIntent({
     }
   },
 });
+
+intentRunner.registerIntent({
+  name: "slideshow.nextSlide",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const activeTabId = activeTab.id;
+
+    // confirm we are on a google slide page
+    if (!/^https:\/\/docs.google.com\/presentation/.test(activeTab.url)) {
+      const err = new Error("Not a valid google slide presentation");
+      err.displayMessage = "Not a valid google slide presentation";
+      throw err;
+    }
+
+    await content.lazyInject(activeTabId, PRESENTATION_SCRIPT);
+
+    const result = await browser.tabs.sendMessage(activeTabId, {
+      type: "nextSlide",
+    });
+
+    if (!result.success) {
+      const err = new Error(result.message);
+      err.displayMessage = result.message;
+      throw err;
+    }
+  },
+});

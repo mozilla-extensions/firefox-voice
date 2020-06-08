@@ -83,6 +83,9 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "copyImage") {
     return copyImage(message.url);
   } else if (message.type === "wakeword") {
+    if (message.wakeword == "Next slide please") {
+      return intentRunner.runUtterance("asdfasdf", true); // TODO: FIX HACK
+    }
     return wakewordPopup(message.wakeword);
   } else if (message.type === "createSurveyUrl") {
     return telemetry.createSurveyUrl(message.url);
