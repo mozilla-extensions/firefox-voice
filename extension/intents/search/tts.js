@@ -253,7 +253,7 @@ this.tts = (function () {
     if (eventStringParts.length === 3) {
       // Specifies a day of the week and date (e.g. Tue, 6/16)
       let [dayOfWeek, monthAndDay, timeOfEvent] = eventStringParts;
-      dayOfWeek = dayOfWeek + "day";
+      dayofWeek = `${dayOfWeek}${ dayOfWeek === "Sat" ? `urday` : `day` }`;
       let [month, day] = monthAndDay.split("/");
       month = MONTH_NAMES[parseInt(month) - 1];
       eventStringParts = [dayOfWeek, month, day, timeOfEvent];
