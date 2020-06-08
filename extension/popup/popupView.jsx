@@ -77,7 +77,6 @@ export const Popup = ({
       />
       <PopupFooter
         currentView={currentView}
-        renderFollowup={renderFollowup}
         showSettings={showSettings}
         timerInMS={timerInMS}
       />
@@ -381,13 +380,12 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings, renderFollowup }) => {
+const PopupFooter = ({ currentView, showSettings }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer" ||
-    renderFollowup
+    currentView === "timer"
   )
     return null;
   return (
