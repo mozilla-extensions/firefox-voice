@@ -5,7 +5,7 @@ this.tts = (function () {
 
   const DIRECTIONS_SELECTOR = ".BbbuR" // directly selects the first line of the directions, which is readable in full
 
-  const DIRECT_ANSWER_SELECTOR = ".Z0LcW";
+  const DIRECT_ANSWER_SELECTOR = ".Z0LcW, .NqXXPb";
 
   const WIKI_SIDEBAR_SELECTOR = ".kno-rdesc > div:nth-child(1) > span:nth-child(2)";
 
@@ -192,7 +192,9 @@ this.tts = (function () {
   function handleSpellingCard(card) {
     let term = card.querySelector(DICTIONARY_TERM).innerText;
     term = term.replaceAll("·", "");
-    const spelledOut = term.split("").join("..........."); // the "join" here is used to artificially add gaps between each letter to slow down TTS
+    let spelledOut = term.split("")
+    spelledOut.push(" "); // Add an additional blank space such that there are trailing periods after the last letter
+    spelledOut = spelledOut.join(".............."); // the "join" here is used to artificially add gaps between each letter to slow down TTS
     return spelledOut;
   }
 
