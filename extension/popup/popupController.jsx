@@ -25,6 +25,9 @@ let listenForFollowup = false;
 let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
+
+let audioInputId = null;
+
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -92,6 +95,9 @@ export const PopupController = function() {
     }
 
     listenForFollowup = userSettings.listenForFollowup;
+    if (userSettings.audioInputId !== undefined) {
+      audioInputId = userSettings.audioInputId;
+    }
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -635,7 +641,17 @@ export const PopupController = function() {
   };
 
   const requestMicrophone = async () => {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    let constraint = null;
+    if (audioInputId !== null) {
+      constraint = {
+        audio: { deviceId: audioInputId },
+      };
+    } else {
+      constraint = {
+        audio: true,
+      };
+    }
+    stream = await navigator.mediaDevices.getUserMedia(constraint);
     return stream;
   };
 
