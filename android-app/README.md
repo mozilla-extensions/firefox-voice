@@ -1,13 +1,8 @@
 # Mozilla Assistant
 
-## Installation
+## User guide
 
 We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
-
-### Install Firefox
-
-1. Install [Firefox](https://play.google.com/store/apps/details?id=org.mozilla.firefox&hl=en_US), if you haven't already. (Do not install Firefox Nightly or Preview.)
-2. Make Firefox your [default browser](https://support.mozilla.org/en-US/kb/make-firefox-default-browser-android).
 
 ### Enable installation of apps from unknown sources
 
@@ -18,8 +13,8 @@ On recent versions of Android, follow the instructions illustrated below, in the
    1. Open Settings and enter "unknown" in the Settings search bar ([image 1](
    https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources1.png)).
    2. Click on "Install unknown apps" ([image 2](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources2.png)).
-   3. Click on "Firefox" ([image 3](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources3.png)).
-   4. Enable installation of apps from unknown sources on Firefox by dragging the slider right ([image 4](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources4.png)).
+   3. Click on your browser (e.g., Firefox) ([image 3](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources3.png)).
+   4. Enable installation of apps from unknown sources by dragging the slider right ([image 4](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources4.png)).
 ![screenshot of process of enabling installation of apps from Firefox](https://github.com/mozilla/firefox-voice/raw/master/android-app/doc/unknown-sources-recent.png)
 
 ### Install the Mozilla Assistant app
@@ -33,10 +28,46 @@ In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/bl
 3. Click on `Assist app`.
 4. Select `Mozilla Assistant`.
 
-## Using Mozilla Assistant
+### Using Mozilla Assistant
 
 After installation, hold down the Home button to open the app, then state your request/question, such as:
 
  * "Open the Washington Post."
- * "What is the weather outside?"
- * "How many feet are in a mile?"
+ * "Set an alarm for 5:30."
+ * "Call Julia."
+
+## Developer guide
+
+### Build instructions
+
+```
+git clone https://github.com/mozilla/firefox-voice.git
+cd firefox-voice
+./gradlew test
+./gradlew assemble
+```
+
+### Android Studio
+
+After cloning the project:
+
+1. Open Android Studio.
+2. Select "Import project (Gradle, Eclipse ADT, etc.)"./
+3. Open "firefox-voice/android-app".
+
+### Style ###
+We follow the style enforced by [ktlint](https://ktlint.github.io/) and [detekt](https://arturbosch.github.io/detekt/). See [how to configure Android Studio appropriately](https://github.com/pinterest/ktlint#option-1-recommended).
+
+To check your style, run:
+
+```
+./gradlew ktlintCheck
+./gradlew detekt
+```
+### Testing ###
+You are expected to both add tests for code that you write and make sure that your changes do not
+cause existing tests to fail:
+
+```
+./gradlew test                            # Run all tests
+```
