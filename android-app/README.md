@@ -64,6 +64,7 @@ To check your style, run:
 ./gradlew ktlintCheck
 ./gradlew detekt
 ```
+
 ### Testing ###
 You are expected to both add tests for code that you write and make sure that your changes do not
 cause existing tests to fail:
@@ -71,3 +72,13 @@ cause existing tests to fail:
 ```
 ./gradlew test                            # Run all tests
 ```
+
+### Generating a signed build ###
+When you change the code, you should also [build a signed APK](https://developer.android.com/studio/publish/app-signing#sign-apk). Here is a summary of the steps:
+
+1. In Android Studio, select `Build > Generate Signed Bundle/APK...`.
+2. In the wizard, select `APK`.
+3. Choose an existing key store or create a new one. When specifying the key store path, if you are on a Mac, you may find it helpful to press Command+Shift+. to show hidden directories. If you create a new key store and key, don't worry too much about what you enter into the `New Key Store` wizard. You can always create a new key if you need to. Android Studio will remember (but not check in) the information about the key store for the next times you build the APK.
+4. Select `release` and `V2 (Full APK Signature)` on the next dialog.
+
+If someone wants to replace an app signed by a different key, they will need to uninstall it before installing the new one.
