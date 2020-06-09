@@ -28,6 +28,10 @@ intentRunner.registerIntent({
     const blob = htmlToBlob(html);
     await downloadData(context, blob, filename);
     context.displayText("Page saved to downloads folder");
+    context.speakTts({
+      ttsText: "Page saved to downloads folder",
+      ttsLang: 'en'
+    });
   },
 });
 
@@ -91,6 +95,10 @@ async function downloadScreenshot(context, type) {
   const blob = dataPngUrlToBlob(png);
   await downloadData(context, blob, filename);
   context.displayText("Screenshot saved to downloads folder");
+  context.speakTts({
+    ttsText: "Screenshot saved to downloads folder",
+    ttsLang: 'en'
+  });
 }
 
 function dataPngUrlToBlob(url) {

@@ -1,24 +1,20 @@
 this.tts = (function () {
-  const WEATHER_SELECTOR = "#wob_wc";
   const WEATHER_TEMPERATURE_SELECTOR = "#wob_tm"; // TODO support degrees Celcius
   const WEATHER_CONDITION_SELECTOR = "#wob_dc";
 
   const DIRECTIONS_SELECTOR = ".BbbuR" // directly selects the first line of the directions, which is readable in full
 
-  const DIRECT_ANSWER_SELECTOR = ".Z0LcW, .NqXXPb";
+  const DIRECT_ANSWER_SELECTOR = ".Z0LcW, .NqXXPb, .XcVN5d";
 
   const WIKI_SIDEBAR_SELECTOR = ".kno-rdesc > div:nth-child(1) > span:nth-child(2)";
 
-  const SNIPPET_SELECTOR = ".c2xzTb"; // selector for the card type
   const SNIPPET_SOURCE_SELECTOR = "cite.iUh30"; // tricky: we would want to remove the child span within this
-  const SNIPPET_SOURCE_BREADCRUMB_SELECTOR = "cite.iUh30 > :nth-child(1)"; // tricky: we would want to remove the child span within this
   const SNIPPET_BODY_SELECTOR = ".e24Kjd, .iKJnec";
   const SNIPPET_HEADER_SELECTOR = ".kno-ecr-pt, .Z0LcW"; // need to validate! this is only one type of header i've seen
   const SNIPPET_ORDERED_LIST_SELECTOR = ".X5LH0c"; // not sure about this one
   const SNIPPET_UNORDERED_LIST_SELECTOR = ".i8Z77e"; // not sure about this one
   const SNIPPET_LIST_ITEM_SELECTOR = ".TrT0Xe"; // seems to be consistent across ordered and unordered
 
-  const UNIT_SELECTOR = "select.rYVYn";
   const UNIT_INPUT_VALUE_SELECTOR = "#HG5Seb > input:nth-child(1)"; // need to get .value
   const UNIT_INPUT_UNITS_SELECTOR = "#ssSucf > [selected]"; // need to find what is selected
   const UNIT_OUTPUT_VALUE_SELECTOR = "#NotFQb > input:nth-child(1)";
@@ -30,7 +26,6 @@ this.tts = (function () {
 
   const INTERACTIVE_GRAPH_SELECTOR = ".ayqGOc.kno-fb-ctx.KBXm4e";
 
-  const CALCULATOR_SELECTOR = ".bNg8Rb";
   const CALCULATOR_RESULT_SELECTOR = "#cwos";
 
   const DICTIONARY_FIRST_DEFINITION = ".QIclbb.XpoqFe > [data-dobid] > span";
@@ -107,7 +102,7 @@ this.tts = (function () {
 
   function abbreviateTextResponse(text, maxSentences = 2, removeParentheticals = true) {
     const trimmedText = removeParentheticals ? text.replaceAll(/\([^\)]*\)/g, "") : text;
-    const sentences = trimmedText.match( /[^\.!\?]+[\.!\?]+/g );
+    const sentences = trimmedText.match( /[^\.!\?]+[\.!\?]+/g ); // TODO fix for abbreviations like U.I.S.T.
     return sentences.slice(0, maxSentences).join(" ");
   }
 
@@ -126,8 +121,9 @@ this.tts = (function () {
 
   function handleSnippetCard(card) {
     let source = card.querySelector(SNIPPET_SOURCE_SELECTOR).innerText;
-    const sourceDetails = card.querySelector(SNIPPET_SOURCE_BREADCRUMB_SELECTOR).innerText;
-    source = source.replace(sourceDetails, "").replace("www.", "");
+    source = source.replace("www.", "").replace(/ › .*/, "");
+
+    // const sourceDetails = card.querySelector(SNIPPET_SOURCE_BREADCRUMB_SELECTOR).innerText;
 
     const header = card.querySelector(SNIPPET_HEADER_SELECTOR);
     if (header) { // A small subset of snippet cards seem to have a direct answer along with a longer text body

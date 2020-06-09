@@ -52,6 +52,10 @@ intentRunner.registerIntent({
   async run(context) {
     await copy(context, "copyScreenshot");
     context.displayText("Screenshot copied to clipboard");
+    context.speakTts({
+      ttsText: "Screenshot copied to clipboard",
+      ttsLang: 'en'
+    });
   },
 });
 
@@ -60,6 +64,10 @@ intentRunner.registerIntent({
   async run(context) {
     await copy(context, "copyFullPageScreenshot");
     context.displayText("Full page screenshot copied to clipboard");
+    context.speakTts({
+      ttsText: "Full page screenshot copied to clipboard",
+      ttsLang: 'en'
+    });
   },
 });
 

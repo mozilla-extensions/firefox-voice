@@ -492,8 +492,17 @@ export const PopupController = function() {
   const speakResponse = (text, lang) => {
     let utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
+    if (lang === "en") {
+      const defaultVoice = window.speechSynthesis.getVoices()[33]; //TODO FIX
+      console.log(defaultVoice);
+      utterance.voice = defaultVoice;
+    }
     const synth = window.speechSynthesis;
     synth.speak(utterance);
+
+    utterance.onend = () => {
+      closePopup(2000);
+    }
   }
 
   const onSearchImageClick = async searchUrl => {
