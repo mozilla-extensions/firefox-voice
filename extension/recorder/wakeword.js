@@ -35,8 +35,8 @@ async function startWatchword(keywords, sensitivity) {
     //   recognizer.wordLabels().
     // - result.spectrogram contains the spectrogram of the recognized word.
     }, {
-    probabilityThreshold: 0.75,
-    overlapFactor: 0.001
+    probabilityThreshold: 0.90,
+    overlapFactor: 0.25
   });
 
   enabled = true;
