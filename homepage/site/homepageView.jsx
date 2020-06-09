@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* globals React, Mzp */
 
-const { useState } = React;
+const { useState, useEffect } = React;
 
 export const Homepage = ({ isCommonVoice }) => {
   const [showScroll, setShowScroll] = useState(false);
 
   const checkScrollTop = () => {
-    if (!showScroll && window.pageYOffset > 400) {
+    if (!showScroll && window.pageYOffset > 300) {
       setShowScroll(true);
-    } else if (showScroll && window.pageYOffset <= 400) {
+    } else if (showScroll && window.pageYOffset <= 300) {
       setShowScroll(false);
     }
   };
@@ -24,11 +24,11 @@ export const Homepage = ({ isCommonVoice }) => {
     <div id="homepage-wrapper">
       <React.Fragment>
         <button
-          className="scrollTop"
+          className="scroll-top"
           onClick={scrollTop}
-          style={{ height: 40, display: showScroll ? "flex" : "none" }}
+          style={{ height: "3rem", display: showScroll ? "flex" : "none" }}
         >
-          Top
+          <img alt="Scroll top" src="./images/arrow-up.png" />
         </button>
         <Header />
         {isCommonVoice && <CommonVoiceWelcome />}
