@@ -116,6 +116,11 @@ const LeftSidebar = ({ version, tabValue }) => {
               <span> History </span>
             </a>
           </li>
+          <li>
+            <a className="tab-button" href="../crossdevice/qrcode.html">
+              Remote
+            </a>
+          </li>
         </ul>
       </div>
     </div>
