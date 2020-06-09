@@ -5325,4 +5325,32 @@ dd {
   margin-left: 1em;
 }
 
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 3rem;
+  border-radius: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s;
+  transition: opacity 0.4s;
+  opacity: 0.5;
+}
+
+.scroll-top:hover {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
 /*# sourceMappingURL=homepage.css.map */

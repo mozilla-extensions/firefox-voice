@@ -1,12 +1,44 @@
 /* eslint-disable no-unused-vars */
 
 /* globals React, Mzp */
+const {
+  useState,
+  useEffect
+} = React;
 export const Homepage = ({
   isCommonVoice
 }) => {
+  const [showScroll, setShowScroll] = useState(false);
+
+  const checkScrollTop = () => {
+    if (!showScroll && window.pageYOffset > 300) {
+      setShowScroll(true);
+    } else if (showScroll && window.pageYOffset <= 300) {
+      setShowScroll(false);
+    }
+  };
+
+  const scrollTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  window.addEventListener("scroll", checkScrollTop);
   return /*#__PURE__*/React.createElement("div", {
     id: "homepage-wrapper"
-  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Header, null), isCommonVoice && /*#__PURE__*/React.createElement(CommonVoiceWelcome, null), /*#__PURE__*/React.createElement(HomepagePageContent, null), /*#__PURE__*/React.createElement(Footer, null)));
+  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    className: "scroll-top",
+    onClick: scrollTop,
+    style: {
+      height: "3rem",
+      display: showScroll ? "flex" : "none"
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    alt: "Scroll top",
+    src: "./images/arrow-up.png"
+  })), /*#__PURE__*/React.createElement(Header, null), isCommonVoice && /*#__PURE__*/React.createElement(CommonVoiceWelcome, null), /*#__PURE__*/React.createElement(HomepagePageContent, null), /*#__PURE__*/React.createElement(Footer, null)));
 };
 
 const CommonVoiceWelcome = () => {
