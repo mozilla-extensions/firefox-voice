@@ -5,7 +5,7 @@ this.buildSettings = {
   deepSpeechServer: "https://dev.speaktome.nonprod.cloudops.mozgcp.net",
   sendToDeepSpeech: true,
   gitCommit: "457c4b4-dirty",
-  buildTime: "2020-06-09T21:13:03.497Z",
+  buildTime: "2020-06-09T21:38:05.972Z",
   backgroundTabRecorder: false,
   channel: "unknown",
   sentryDsn: "https://18143ece2d6042ff91ed7678b287a814@sentry.prod.mozaws.net/458",

@@ -23,11 +23,18 @@ formEl.addEventListener("submit", event => {
 
 const Recog = window.webkitSpeechRecognition || window.SpeechRecognition;
 
+const playListeningChime = () => {
+  const audio = new Audio("https://mozilla.github.io/firefox-voice/chime.ogg");
+  audio.play();
+};
+
 micEl.addEventListener("click", () => {
   if (!key) {
     log("No key loaded");
     return;
   }
+  micEl.style.backgroundColor = "#900";
+  playListeningChime();
   const recognition = new Recog();
   recognition.continuous = false;
   recognition.lang = "en-US";
@@ -35,6 +42,7 @@ micEl.addEventListener("click", () => {
   recognition.maxAlternatives = 1;
   recognition.start();
   recognition.onresult = event => {
+    micEl.style.backgroundColor = null;
     const text = event.results[0][0].transcript;
     sendUtterance(text);
   };
