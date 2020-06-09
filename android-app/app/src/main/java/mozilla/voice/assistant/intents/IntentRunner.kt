@@ -85,7 +85,6 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
      * @return up to [n] example phrases, each for a different intent
      */
     fun getExamplePhrases(n: Int): List<String> =
-        // While this is not the most efficient algorithm, it is good enough.
         intents.values.shuffled().take(n).map { it.examples.random() }
 
     companion object {

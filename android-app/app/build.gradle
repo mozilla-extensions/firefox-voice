@@ -82,5 +82,4 @@ dependencies {
 
     // Material design
     implementation "com.google.android.material:material:$rootProject.materialVersion"
-
 }

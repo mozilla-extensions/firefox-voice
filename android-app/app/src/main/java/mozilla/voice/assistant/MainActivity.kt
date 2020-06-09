@@ -41,10 +41,10 @@ import mozilla.voice.assistant.language.Language
 
 /**
  * Launches a voice search and takes action based on the user's utterance. Specifically,
- * it passes transcriptions of the utterance to [IntentRunner.determineBestIntent]], which
+ * it passes transcriptions of the utterance to [IntentRunner.determineBestIntent], which
  * returns an [Intent] satisfying the user's request, which is launched.
  *
- * The activity can be started in a few ways (from most to least common):
+ * This activity can be started in a few ways (from most to least common):
  * 1. When the program is launched.
  * 2. Through the back button or task switcher.
  * 3. When a user utterance could not be handled directly.
@@ -57,7 +57,6 @@ import mozilla.voice.assistant.language.Language
  * If these extras are set, [MainActivity] displays the status message and makes the suggestion
  * in text and on a button. If the extra are not set (cases 1 and 2), suggestions are taken from
  * [mozilla.voice.assistant.intents.Intent] examples, and the button is not shown.
- *
  */
 @SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
@@ -70,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     private var shownBurst = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initializeData()
@@ -95,7 +93,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        Log.d(TAG, "onStart()")
         super.onStart()
         updateViews()
         initializeChimeVolume()
