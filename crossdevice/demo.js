@@ -34,6 +34,7 @@ micEl.addEventListener("click", () => {
     return;
   }
   micEl.style.backgroundColor = "#900";
+  micEl.textContent = micEl.textContent.replace(/speak/, "listening...");
   playListeningChime();
   const recognition = new Recog();
   recognition.continuous = false;
@@ -43,6 +44,7 @@ micEl.addEventListener("click", () => {
   recognition.start();
   recognition.onresult = event => {
     micEl.style.backgroundColor = null;
+    micEl.textContent = micEl.textContent.replace(/listening\.\.\./, "speak");
     const text = event.results[0][0].transcript;
     sendUtterance(text);
   };
