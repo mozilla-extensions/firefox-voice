@@ -4,7 +4,8 @@
     <string name="listening">Listening</string>
     <string name="processing">Processing</string>
     <string name="got_it">One second...</string>
-    <string name="suggestion_prefix">You can say things like</string>
+    <string name="specific_suggestion_prefix">Try saying</string>
+    <string name="general_suggestion_prefix">You can say things like</string>
     <string name="no_match">I didn\'t understand that. Try again.</string>
     <string name="no_speech">I didn\'t catch that. Try again.</string>
     <string name="remember_contact_choice">Remember this choice for next time</string>
