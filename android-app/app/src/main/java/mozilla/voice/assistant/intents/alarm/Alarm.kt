@@ -67,7 +67,7 @@ class Alarm {
         private fun createAbsoluteAlarmIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             try {
                 makeAlarmIntent(getHoursMins(pr.slots, pr.parameters))
@@ -84,7 +84,7 @@ class Alarm {
         private fun createRelativeAlarmIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             try {
                 calculateWhenRelative(

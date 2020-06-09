@@ -1,12 +1,17 @@
 [sidebar.openSidebar]
 description = "Open the sidebar with Bookmarks or History"
 match = """
-  (open | show |) (my | the |) bookmark{s} sidebar (for me|) [sidebar=bookmarks]
+  (open | show | view |) (my | the |) bookmark{s} sidebar (for me|) [sidebar=bookmarks]
   (open | show |) (my | the |) history sidebar (for me|) [sidebar=history]
 """
 
 [[sidebar.openSidebar.example]]
-phrase = "open bookmarks sidebar"
+phrase = "Open bookmarks sidebar"
+expectParameters = {sidebar = "bookmarks"}
+
+[[sidebar.openSidebar.example]]
+phrase = "view bookmark{s} sidebar"
+test = true
 expectParameters = {sidebar = "bookmarks"}
 
 [sidebar.closeSidebar]

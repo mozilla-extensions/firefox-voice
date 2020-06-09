@@ -44,7 +44,7 @@ class Music {
         private fun createSearchIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent {
             val query = pr.slots[QUERY_KEY]
             val service = pr.slots[SERVICE_KEY]?.firstWord()
@@ -69,7 +69,7 @@ class Music {
         private fun createPlayIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent {
             val intent = pr.slots[SERVICE_KEY]?.let {
                 // Use only the first word of service name ("Google Play" -> "Google")

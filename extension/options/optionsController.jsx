@@ -42,6 +42,21 @@ window.onload = () => {
   onTabChange(DEFAULT_TAB);
 };
 
+async function getAudioInputDevices() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    return null;
+  }
+  const audioInputDevices = [];
+
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  devices.forEach(function(device) {
+    if (device.kind === "audioinput") {
+      audioInputDevices.push(device);
+    }
+  });
+  return audioInputDevices;
+}
+
 export const OptionsController = function() {
   const [inDevelopment, setInDevelopment] = useState(false);
   const [version, setVersion] = useState("");
@@ -52,6 +67,8 @@ export const OptionsController = function() {
   const [userOptions, setUserOptions] = useState({});
   const [tabValue, setTabValue] = useState(DEFAULT_TAB);
   const [registeredNicknames, setRegisteredNicknames] = useState({});
+
+  const [audioInputDevices, setAudioInputDevices] = useState([]);
 
   onKeyboardShortcutError = setKeyboardShortcutError;
   onTabChange = setTabValue;
@@ -67,6 +84,11 @@ export const OptionsController = function() {
     await initVersionInfo();
     await initSettings();
     await initRegisteredNicknames();
+    await initAudioDevices();
+  };
+
+  const initAudioDevices = async () => {
+    setAudioInputDevices(await getAudioInputDevices());
   };
 
   const initVersionInfo = async () => {
@@ -247,6 +269,7 @@ export const OptionsController = function() {
       registeredNicknames={registeredNicknames}
       useToggle={useToggle}
       useEditNicknameDraft={useEditNicknameDraft}
+      audioInputDevices={audioInputDevices}
     />
   );
 };

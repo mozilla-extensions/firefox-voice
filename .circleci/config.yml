@@ -87,7 +87,6 @@ jobs:
             export UPDATE_BASE="https://va.allizom.org/releases/dev-android"
             export INSTALL_CHANNEL=dev-android
             export ANDROID=1
-            export EXECUTE_INTENT_URL=https://mozilla.github.io/firefox-voice/assets/execute.html
             mkdir -p artifacts/dev-android/
             npm run package
             mv addon.xpi artifacts/dev-android/firefox-voice.xpi
@@ -140,8 +139,8 @@ workflows:
     jobs:
       - build:
           filters:
-              branches:
-                ignore: gh-pages
+            branches:
+              ignore: gh-pages
       - test:
           requires:
             - build

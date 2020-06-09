@@ -56,7 +56,7 @@ export async function turnOnReaderMode(tabId) {
       }
     }
     onUpdatedListen(onUpdated, tabId);
-    browser.tabs.toggleReaderMode(tabId);
+    browser.tabs.toggleReaderMode(tabId).catch(reject);
   });
 }
 
@@ -84,11 +84,9 @@ export async function activateTabClickHandler(event) {
 export async function createTab(options = {}) {
   const active = await activeTab();
   if (
-    (["about:blank", "about:home", "about:newtab"].includes(active.url) &&
-      !(active.status === "loading") &&
-      active.title === "") ||
-    (buildSettings.executeIntentUrl &&
-      active.url.startsWith(buildSettings.executeIntentUrl))
+    ["about:blank", "about:home", "about:newtab"].includes(active.url) &&
+    !(active.status === "loading") &&
+    active.title === ""
   ) {
     return browser.tabs.update(options);
   }
@@ -151,6 +149,9 @@ export class TabDataMap {
 }
 
 export function waitForDocumentComplete(tabId) {
+  if (!tabId) {
+    throw new Error("Bad waitForDocumentComplete(null)");
+  }
   return browser.tabs.executeScript(tabId, {
     code: "null",
     runAt: "document_idle",

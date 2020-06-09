@@ -33,6 +33,7 @@ export function getServiceNamesAndTitles() {
 async function getService(context, options) {
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
+  options.defaultService = options.defaultService || "spotify";
   if (explicitService) {
     ServiceClass = SERVICES[serviceList.mapMusicServiceName(explicitService)];
     if (!ServiceClass) {

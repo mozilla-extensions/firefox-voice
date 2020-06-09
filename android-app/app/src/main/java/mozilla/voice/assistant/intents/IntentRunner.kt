@@ -56,7 +56,7 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
     private fun getIntent(context: Context, utterance: String): android.content.Intent? =
         runUtterance(utterance, context)?.let { intent ->
             intent.resolveActivityInfo(context.packageManager, intent.flags)?.let { activityInfo ->
-                if (activityInfo.exported) intent else null
+                if (activityInfo.packageName == "mozilla.voice.assistant" || activityInfo.exported) intent else null
             }
         }
 
