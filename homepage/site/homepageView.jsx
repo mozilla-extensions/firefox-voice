@@ -1,10 +1,35 @@
 /* eslint-disable no-unused-vars */
 /* globals React, Mzp */
 
+const { useState } = React;
+
 export const Homepage = ({ isCommonVoice }) => {
+  const [showScroll, setShowScroll] = useState(false);
+
+  const checkScrollTop = () => {
+    if (!showScroll && window.pageYOffset > 400) {
+      setShowScroll(true);
+    } else if (showScroll && window.pageYOffset <= 400) {
+      setShowScroll(false);
+    }
+  };
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  window.addEventListener("scroll", checkScrollTop);
+
   return (
     <div id="homepage-wrapper">
       <React.Fragment>
+        <button
+          className="scrollTop"
+          onClick={scrollTop}
+          style={{ height: 40, display: showScroll ? "flex" : "none" }}
+        >
+          Top
+        </button>
         <Header />
         {isCommonVoice && <CommonVoiceWelcome />}
         <HomepagePageContent />
