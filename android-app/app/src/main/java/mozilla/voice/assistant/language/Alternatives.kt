@@ -21,6 +21,5 @@ class Alternatives(
             postfix = if (empty) " | )" else ")"
         ) { it.toSource() }
 
-    override fun slotNames() =
-        emptySet<String>().union(alternatives.flatMap { it.slotNames() })
+    override fun slotNames() = alternatives.flatMap { it.slotNames() }.toSet()
 }

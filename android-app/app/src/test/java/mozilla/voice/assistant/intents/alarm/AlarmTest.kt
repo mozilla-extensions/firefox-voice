@@ -1,7 +1,6 @@
-package mozilla.voice.assistant.intents
+package mozilla.voice.assistant.intents.alarm
 
 import java.util.Calendar
-import mozilla.voice.assistant.intents.alarm.Alarm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
