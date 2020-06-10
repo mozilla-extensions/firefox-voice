@@ -106,7 +106,8 @@ class YouTube extends serviceList.Service {
   }
 
   async adjustVolume(volumeLevel) {
-    await this.initTab("/services/youtube/player.js");
+    const findAudibleTab = true;
+    await this.initTab("/services/youtube/player.js", findAudibleTab);
     await this.callTab("adjustVolume", { volumeLevel });
   }
 

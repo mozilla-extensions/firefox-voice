@@ -96,7 +96,8 @@ class MusicService extends serviceList.Service {
   }
 
   async adjustVolume(volumeLevel) {
-    await this.initTab(`/services/${this.id}/player.js`);
+    const findAudibleTab = true;
+    await this.initTab(`/services/${this.id}/player.js`, findAudibleTab);
     await this.callTab("adjustVolume", { volumeLevel });
   }
 
