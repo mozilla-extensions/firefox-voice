@@ -65,10 +65,10 @@ Not all emulator AVDs handle speech recognition correctly. We have tested this c
 4. For system image, select Release Name `R (API Level 30)`.
 5. Give it any name. I used the default "Pixel 2 API 30".
 6. Open the emulator from the command line. On OS X, you can do: `~/Library/Android/sdk/emulator/emulator @Pixel_2_API_30 -dns-server 8.8.8.8 &`
-7. Click on the ellipsis (...) to the right of the emulator to change its settings.
-8. Select `Microphone`, then enable `Virtual microphone uses host audio input`.
+7. Click on the ellipsis (...) to the right of the emulator to change its settings. ![open emulator settings](doc/emulator-options-cropped.png)
+8. Select `Microphone`, then enable `Virtual microphone uses host audio input`. ![microphone settings](doc/enable-microphone.png)
 9. Test that you can do a Google voice search on the emulated device.
-10. In Android Studio, launch the app on the emulator by setting the shown dropdown menus to "app" and "Pixel 2 API 30" and pressing the play button.
+10. In Android Studio, launch the app on the emulator by setting the shown dropdown menus to "app" and "Pixel 2 API 30" and pressing the play button. ![build settings](doc/build-settings.png)
 
 ### Style ###
 We follow the style enforced by [ktlint](https://ktlint.github.io/) and [detekt](https://arturbosch.github.io/detekt/). See [how to configure Android Studio appropriately](https://github.com/pinterest/ktlint#option-1-recommended).
