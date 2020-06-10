@@ -173,8 +173,8 @@ expectParameters = {volumeLevel = "levelUp"}
 [music.mute]
 description = "mute music volume"
 match = """
-  mute (music | audio | video) (volume |)
-  mute (volume | the volume)
+  mute (music | audio | video |) (volume |)
+  mute (volume | the volume |)
 """
 
 [[music.mute.example]]
@@ -183,8 +183,8 @@ phrase = "mute music"
 [music.unmute]
 description = "unmute music volume"
 match = """
-  unmute (music | audio | video) (volume |)
-  unmute (volume | the volume)
+  unmute (music | audio | video |) (volume |)
+  unmute (volume | the volume |)
 """
 
 [[music.unmute.example]]
