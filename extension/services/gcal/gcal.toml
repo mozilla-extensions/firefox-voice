@@ -1,0 +1,4 @@
+[gcal]
+type = "calendar"
+title = "Gcal"
+baseUrl = "https://calendar.google.com"

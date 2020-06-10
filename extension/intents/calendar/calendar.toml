@@ -1,0 +1,13 @@
+[calendar.nextEvent]
+description = "Compose a new email"
+match = """
+  when is my next (event | meeting)
+  next (event | meeting) time
+"""
+
+[[calendar.nextEvent.example]]
+phrase = "When is my next meeting"
+
+[[calendar.nextEvent.example]]
+phrase = "next meeting time"
+test = true

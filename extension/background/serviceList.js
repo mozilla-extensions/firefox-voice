@@ -48,6 +48,15 @@ export function mapEmailServiceName(utterance) {
   return EMAIL_SERVICE_ALIAS[utterance.toLowerCase()];
 }
 
+const CALENDAR_SERVICE_ALIAS = {
+  gcal: "gcal",
+  "google calendar": "gcal",
+};
+
+export function mapCalendarServiceName(utterance) {
+  return CALENDAR_SERVICE_ALIAS[utterance.toLowerCase()];
+}
+
 export class Service {
   constructor(context) {
     this.context = context;
