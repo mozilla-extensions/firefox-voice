@@ -30,7 +30,6 @@ intentRunner.registerIntent({
     context.displayText("Page saved to downloads folder");
     context.speakTts({
       ttsText: "Page saved to downloads folder",
-      ttsLang: 'en'
     });
   },
 });
@@ -97,7 +96,6 @@ async function downloadScreenshot(context, type) {
   context.displayText("Screenshot saved to downloads folder");
   context.speakTts({
     ttsText: "Screenshot saved to downloads folder",
-    ttsLang: 'en'
   });
 }
 

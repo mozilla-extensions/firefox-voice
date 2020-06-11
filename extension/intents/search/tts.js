@@ -1,5 +1,5 @@
 this.tts = (function () {
-  const WEATHER_TEMPERATURE_SELECTOR = "#wob_tm"; // TODO support degrees Celcius
+  const WEATHER_TEMPERATURE_SELECTOR = "#wob_tm";
   const WEATHER_CONDITION_SELECTOR = "#wob_dc";
 
   const DIRECTIONS_SELECTOR = ".BbbuR" // directly selects the first line of the directions, which is readable in full
@@ -54,7 +54,7 @@ this.tts = (function () {
     DIRECTIONS: ".BbbuR",
     SNIPPET: ".c2xzTb",
     UNIT: "select.rYVYn",
-    CALCULATOR: "#cwmcwd", // not entirely sure
+    CALCULATOR: "#cwmcwd",
     DICTIONARY: ".zbA8Me.gJBeNe.vSuuAd.i8lZMc",
     SPELLING: ".DgZBFd.XcVN5d", // will also match the dictionary, so ordering matters
     TRANSLATE: "#tw-container",
@@ -79,10 +79,16 @@ this.tts = (function () {
     }
   }
 
+  function getInnerText(card, selector) {
+    const selectedNode = card.querySelector(selector);
+    if (selectedNode) {
+      return selectedNode.innerText;
+    }
+    return "";
+  }
+
   function getSpeakableSubsetOfList(card, itemSelector, maxItems = 3, sayExactRemainder = false, useAttribute = "") {
     const listItems = card.querySelectorAll(itemSelector);
-    console.log("here are the items");
-    console.log(listItems);
     let listItemsAsText = Array.from(listItems).map(el => {
       if (useAttribute === "") {
         return el.innerText;
@@ -115,30 +121,28 @@ this.tts = (function () {
     }
     return {
       ttsText,
-      ttsLang: 'en'
     };
   }
 
   function handleSnippetCard(card) {
-    let source = card.querySelector(SNIPPET_SOURCE_SELECTOR).innerText;
+    let source = getInnerText(card, SNIPPET_SOURCE_SELECTOR);
     source = source.replace("www.", "").replace(/ › .*/, "");
 
-    // const sourceDetails = card.querySelector(SNIPPET_SOURCE_BREADCRUMB_SELECTOR).innerText;
-
-    const header = card.querySelector(SNIPPET_HEADER_SELECTOR);
+    const header = getInnerText(card, SNIPPET_HEADER_SELECTOR);
     if (header) { // A small subset of snippet cards seem to have a direct answer along with a longer text body
-      return header.innerText;
+      return header;
     }
     const hasList = card.querySelector(`${SNIPPET_ORDERED_LIST_SELECTOR}, ${SNIPPET_UNORDERED_LIST_SELECTOR}`);
     if (hasList) {
       return `According to ${source}, the top results are ${getSpeakableSubsetOfList(card, SNIPPET_LIST_ITEM_SELECTOR)}`;
     }
-    const snippetBodyText = card.querySelector(SNIPPET_BODY_SELECTOR).innerText;
+    const snippetBodyText = getInnerText(card, SNIPPET_BODY_SELECTOR);
     return `According to ${source}, ${abbreviateTextResponse(snippetBodyText)}`;
   }
 
+  // TODO: need to handle abbreviations for hours, avenue, road, N/S/E/W, and so on
   function handleDirectionsCard(card) {
-    let response = card.querySelector(DIRECTIONS_SELECTOR).innerText;
+    let response = getInnerText(card, DIRECTIONS_SELECTOR);
     const abbreviatedUnit = response.match(/\(\d+\.\d.(\w+)/)[1];
     const unit = ALIASES["directions"][abbreviatedUnit]
     let distance = response.match(/\((\d+\.\d)/)[1];
@@ -151,42 +155,40 @@ this.tts = (function () {
   }
 
   function handleWeatherCard(card) {
-    const temp = card.querySelector(WEATHER_TEMPERATURE_SELECTOR).innerText;
-    const conditions = card.querySelector(WEATHER_CONDITION_SELECTOR).innerText;
+    const temp = getInnerText(card, WEATHER_TEMPERATURE_SELECTOR);
+    const conditions = getInnerText(card, WEATHER_CONDITION_SELECTOR);
     const response = `It's ${temp} degrees and ${conditions}`;
     return response;
   }
 
   function handleSidebarCard(card) {
-    const response = card.querySelector(WIKI_SIDEBAR_SELECTOR).innerText;
-    return response;
+    return getInnerText(card, WIKI_SIDEBAR_SELECTOR);
   }
 
   function handleCalculatorCard(card) {
-    const response = card.querySelector(CALCULATOR_RESULT_SELECTOR).innerText;
-    return response;
+    return getInnerText(card, CALCULATOR_RESULT_SELECTOR);
   }
 
   function handleUnitCard(card) {
     const inputValue = card.querySelector(UNIT_INPUT_VALUE_SELECTOR).value;
-    const inputUnits = card.querySelector(UNIT_INPUT_UNITS_SELECTOR).innerText;
+    const inputUnits = getInnerText(card, UNIT_INPUT_UNITS_SELECTOR);
     const outputValue = card.querySelector(UNIT_OUTPUT_VALUE_SELECTOR).value;
-    const outputUnits = card.querySelector(UNIT_OUTPUT_UNITS_SELECTOR).innerText;
+    const outputUnits = getInnerText(card, UNIT_OUTPUT_UNITS_SELECTOR);
 
     const response = `${inflectValueAndUnit(outputValue, outputUnits)} in ${inflectValueAndUnit(inputValue, inputUnits)}`;
     return response;
   }
 
   function handleDictionaryCard(card) {
-    let term = card.querySelector(DICTIONARY_TERM).innerText;
+    let term = getInnerText(card, DICTIONARY_TERM);
     term = term.replaceAll("·", "");
-    const definition = card.querySelector(DICTIONARY_FIRST_DEFINITION).innerText;
+    const definition = getInnerText(card, DICTIONARY_FIRST_DEFINITION);
     const response = `${term} is ${definition}`;
     return response;
   }
 
   function handleSpellingCard(card) {
-    let term = card.querySelector(DICTIONARY_TERM).innerText;
+    let term = getInnerText(card, DICTIONARY_TERM);
     term = term.replaceAll("·", "");
     let spelledOut = term.split("")
     spelledOut.push(" "); // Add an additional blank space such that there are trailing periods after the last letter
@@ -196,7 +198,7 @@ this.tts = (function () {
 
   function handleTranslateCard(card) {
     const targetLanguageCode = card.querySelector(TRANSLATE_TARGET_LANGUAGE_CODE).dataset.lang;
-    const targetText = card.querySelector(TRANSLATE_TARGET_PHRASE).innerText;
+    const targetText = getInnerText(card, TRANSLATE_TARGET_PHRASE);
     return {
       ttsText: targetText,
       ttsLanguage: targetLanguageCode
@@ -204,10 +206,10 @@ this.tts = (function () {
   }
 
   function handleSportsScoreCard(card) {
-    const leftTeamName = card.querySelector(SPORTS_LEFTHAND_TEAM).innerText;
-    const leftTeamScore = parseFloat(card.querySelector(SPORTS_LEFTHAND_SCORE).innerText);
-    const rightTeamName = card.querySelector(SPORTS_RIGHTHAND_TEAM).innerText;
-    const rightTeamScore = parseFloat(card.querySelector(SPORTS_RIGHTHAND_SCORE).innerText);
+    const leftTeamName = getInnerText(card, SPORTS_LEFTHAND_TEAM);
+    const leftTeamScore = parseFloat(getInnerText(card, SPORTS_LEFTHAND_SCORE));
+    const rightTeamName = getInnerText(card, SPORTS_RIGHTHAND_TEAM);
+    const rightTeamScore = parseFloat(getInnerText(card, SPORTS_RIGHTHAND_SCORE));
     const response = leftTeamScore > rightTeamScore ? `${leftTeamName} ${leftTeamScore}, ${rightTeamName} ${rightTeamScore}` : `${rightTeamName} ${rightTeamScore}, ${leftTeamName} ${leftTeamScore}`;
     return response;
   }
@@ -216,13 +218,13 @@ this.tts = (function () {
     if (card.querySelector('.liveresults-sports-immersive__game-minute')) {
       return `They are currently playing. The score is ${handleSportsScoreCard(card)}`
     }
-    const leftTeamName = card.querySelector(SPORTS_LEFTHAND_TEAM).innerText;
-    const rightTeamName = card.querySelector(SPORTS_RIGHTHAND_TEAM).innerText;
-    const rawEventTimeString = card.querySelector(SPORTS_GAME_TIME).innerText;    
+    const leftTeamName = getInnerText(card, SPORTS_LEFTHAND_TEAM);
+    const rightTeamName = getInnerText(card, SPORTS_RIGHTHAND_TEAM);
+    const rawEventTimeString = getInnerText(card, SPORTS_GAME_TIME);    
     const parsedEventTime = humanReadableDate(rawEventTimeString);
 
     if (card.querySelector(SPORTS_TEAM_OF_INTEREST)) {
-      const teamInQuestion = card.querySelector(SPORTS_TEAM_OF_INTEREST).innerText;
+      const teamInQuestion = getInnerText(card, SPORTS_TEAM_OF_INTEREST);
       const opposingTeam = teamInQuestion === leftTeamName ? rightTeamName : leftTeamName;
       return `${parsedEventTime} versus ${opposingTeam}`;
     }
@@ -231,7 +233,7 @@ this.tts = (function () {
   }
 
   function handleGenericCard(card) {
-    const response = card.querySelector(`${DIRECT_ANSWER_SELECTOR}, ${DATETIME_SELECTOR}, ${HOURS_SELECTOR}, ${DAY_SELECTOR}, ${INTERACTIVE_GRAPH_SELECTOR}`).innerText;
+    const response = getInnerText(card, `${DIRECT_ANSWER_SELECTOR}, ${DATETIME_SELECTOR}, ${HOURS_SELECTOR}, ${DAY_SELECTOR}, ${INTERACTIVE_GRAPH_SELECTOR}`);
     return response;
   }
 
@@ -262,12 +264,10 @@ this.tts = (function () {
   communicate.register("cardTtsText", message => {
     const bannerCardContainer = document.querySelector(BANNER_CARD_SELECTOR);
     if (bannerCardContainer) {
-      console.log("IN HERE");
-      return handleBannerCards(bannerCardContainer);
+      return handleBannerCards(bannerCardContainer); // We don't currently show banner-type cards within the popup, and there may be searches that yield both banner cards and sidebar cards.
     }
     const card = document.getElementsByClassName(message.cardSelectors)[0]; // TODO FIX? This is a hack to find the card node (identified in cardImage in queryScript) again
     const parentCard = card.parentNode;
-    console.log(card.classList);
 
     let ttsText;
     let ttsLang = "en";
@@ -281,7 +281,6 @@ this.tts = (function () {
     if (!cardType) {
       cardType = message.isSidebar ? "SIDEBAR" : "UNKNOWN";
     }
-    console.log(cardType);
 
     switch(cardType) {
       case "WEATHER":
@@ -320,7 +319,7 @@ this.tts = (function () {
         ttsText = handleSportsGameTimeCard(card);
         break;
       default:
-        ttsText = handleGenericCard(card); 
+        ttsText = handleGenericCard(card);
     }
 
     return {

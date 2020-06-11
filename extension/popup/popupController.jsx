@@ -290,7 +290,6 @@ export const PopupController = function() {
       }
       return {
         ttsText: `${readableDuration} timer starting now`,
-        ttsLang: "en"
       };
   };
 
@@ -485,7 +484,7 @@ export const PopupController = function() {
   };
 
   const setTts = message => {
-    speakResponse(message.ttsText, message.ttsLang);
+    speakResponse(message.ttsText, message.ttsLang || "en");
     setSpokenResponse(message.ttsText); // FIXME: I think this is unnecessary now
   };
 
@@ -493,8 +492,7 @@ export const PopupController = function() {
     let utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     if (lang === "en") {
-      const defaultVoice = window.speechSynthesis.getVoices()[33]; //TODO FIX
-      console.log(defaultVoice);
+      const defaultVoice = window.speechSynthesis.getVoices()[33]; //TODO FIX: there seems to be a very bizarre bug(?) in which there's sometimes no default US voice
       utterance.voice = defaultVoice;
     }
     const synth = window.speechSynthesis;

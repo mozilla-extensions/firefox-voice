@@ -49,7 +49,6 @@ intentRunner.registerIntent({
     context.displayText(nextEventDetails.toString());
     context.speakTts({
       ttsText: nextEventDetails.length + " items",
-      ttsLang: 'en'
     });
   },
 });

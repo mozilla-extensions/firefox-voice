@@ -54,7 +54,6 @@ intentRunner.registerIntent({
     context.displayText("Screenshot copied to clipboard");
     context.speakTts({
       ttsText: "Screenshot copied to clipboard",
-      ttsLang: 'en'
     });
   },
 });
@@ -66,7 +65,6 @@ intentRunner.registerIntent({
     context.displayText("Full page screenshot copied to clipboard");
     context.speakTts({
       ttsText: "Full page screenshot copied to clipboard",
-      ttsLang: 'en'
     });
   },
 });
