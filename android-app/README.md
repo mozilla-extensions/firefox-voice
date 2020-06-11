@@ -11,6 +11,10 @@
     + [Style](#style)
     + [Testing](#testing)
     + [Generating a signed build](#generating-a-signed-build)
+    + [Adding an intent](#adding-an-intent)
+      - [Create TOML](#create-toml)
+      - [Implement an IntentBuilder](#implement-an-intentbuilder)
+      - [Register the Intent](#register-the-intent)
 
 ## User guide
 
