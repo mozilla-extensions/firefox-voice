@@ -170,6 +170,7 @@ export class IntentContext {
       utterance,
       fallback: false,
       isFollowup: true,
+      followupMatch: lastIntentForFollowup.followupMatch,
     };
   }
 
@@ -223,7 +224,9 @@ export class IntentContext {
   }
 
   async createTab(options) {
-    return browserUtil.createTab(options);
+    const tab = await browserUtil.createTab(options);
+    await browserUtil.loadUrl(tab.id, options.url);
+    return tab;
   }
 
   async openOrFocusTab(url) {
@@ -239,8 +242,8 @@ export class IntentContext {
     const searchUrl = searching.googleSearchUrl(query, true);
     const tab =
       !!options.openInTabId && options.openInTabId > -1
-        ? await browserUtil.loadUrl(options.openInTabId, searchUrl)
-        : await this.createTab({ url: searchUrl });
+        ? await browser.tabs.update(options.openInTabId, { url: searchUrl })
+        : await browserUtil.createTab({ url: searchUrl });
     if (options.hide && !buildSettings.android) {
       await browser.tabs.hide(tab.id);
     }
@@ -248,14 +251,10 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (
-          url.startsWith("about:blank") ||
-          (buildSettings.executeIntentUrl &&
-            url.startsWith(buildSettings.executeIntentUrl))
-        ) {
+        if (url.startsWith("about:blank")) {
           return;
         }
-        const isGoogle = /^https:\/\/www.google.com\//.test(url);
+        const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);
         const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
         if (!isGoogle || isRedirect) {
           if (isRedirect) {
@@ -341,7 +340,13 @@ export function registerIntent(intent) {
   intentParser.registerMatcher(intent.name, intent.match);
 }
 
+export function setLastIntent(intent) {
+  lastIntent = intent;
+  lastIntentForFollowup = intent;
+}
+
 export async function runUtterance(utterance, noPopup) {
+  log.timing(`intentRunner.runUtterance(${utterance}) called`);
   for (const name in registeredNicknames) {
     const re = new RegExp(`\\b${name}\\b`, "i");
     if (re.test(utterance)) {
@@ -364,7 +369,9 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
+  log.timing("intentRunner finished nickname checking");
   let desc = intentParser.parse(utterance);
+  log.timing("intentParser returned");
   desc.noPopup = !!noPopup;
   desc.followupMatch = intents[desc.name].followupMatch;
   if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
@@ -390,7 +397,10 @@ export async function runUtterance(utterance, noPopup) {
       lastIntentForFollowup.endFollowup();
     }
   }
-  return runIntent(desc);
+  log.timing("Running intent...");
+  const result = await runIntent(desc);
+  log.timing("Finished running intent");
+  return result;
 }
 
 export async function runIntent(desc) {

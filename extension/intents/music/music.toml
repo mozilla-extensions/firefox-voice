@@ -58,8 +58,8 @@ description = "Pause all supported services (regardless of tab or window)"
 match = """
   (stop | pause) (play | playing |) video [service=youtube]
   pause [service:musicServiceName]
-  pause (play | playing |) (music |)
-  stop (play | playing |) (music |)
+  pause (play | playing |) (music | audio |)
+  stop (play | playing |) (music | audio |)
 """
 
 [[music.pause.example]]
@@ -128,7 +128,7 @@ description = "Unpause one service, the current tab, or the detected service"
 match = """
   (unpause | continue | play | resume) video [service=youtube]
   (unpause | continue | play | resume) [service:musicServiceName]
-  (unpause | continue | play | resume) (music |)
+  (unpause | continue | play | resume) (music | audio |)
 """
 
 [[music.unpause.example]]

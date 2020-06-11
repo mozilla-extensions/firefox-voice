@@ -152,7 +152,14 @@ intentRunner.registerIntent({
     // "canceled"
     // "not_saved"
     // "not_replaced"
-    await browser.tabs.saveAsPDF({});
+    try {
+      await browser.tabs.saveAsPDF({});
+    } catch (e) {
+      if (e.message === "Not supported on Mac OS X") {
+        e.displayMessage = "Save as PDF is not supported on Mac OS X";
+        throw e;
+      }
+    }
   },
 });
 
@@ -263,6 +270,11 @@ intentRunner.registerIntent({
     let found;
     for (const tabId of tabHistory) {
       if (tabId === activeTab.id) {
+        continue;
+      }
+      try {
+        await browser.tabs.get(tabId);
+      } catch (e) {
         continue;
       }
       found = tabId;

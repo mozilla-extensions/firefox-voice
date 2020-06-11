@@ -36,8 +36,11 @@ async function openSearchTab() {
   }, CLOSE_TIME);
   if (_searchTabId) {
     try {
-      await browser.tabs.get(_searchTabId);
-      return _searchTabId;
+      const tab = await browser.tabs.get(_searchTabId);
+      // reuse tab only if it's hidden
+      if (tab.hidden === true) {
+        return _searchTabId;
+      }
     } catch (e) {
       // Presumably the tab doesn't exist
       log.info("Error getting tab:", String(e));
@@ -110,7 +113,19 @@ async function performSearch(query) {
   if (buildSettings.android) {
     await browserUtil.makeTabActive(tabId);
   }
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  try {
+    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  } catch (e) {
+    // There's a (fairly) common race condition here
+    if (e.message.includes("communicate is not defined")) {
+      log.info(
+        "Race condition in search page, attempting to load queryScript second time"
+      );
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    } else {
+      throw e;
+    }
+  }
 }
 
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,
@@ -402,7 +417,7 @@ intentRunner.registerIntent({
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
-      await browser.tabs.update(searchTabId, { url: searchInfo.url });
+      await browser.tabs.update(searchTabId, { url: searchInfo.searchUrl });
     }
     await focusSearchTab();
   },
@@ -411,6 +426,8 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
+    // An old popup-only search result is no longer valid once a new search is made:
+    popupSearchInfo = null;
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {

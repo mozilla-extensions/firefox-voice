@@ -24,19 +24,25 @@ this.player = (function() {
 
     action_pause() {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
-      playControlsBtn[1].click();
+      const label = playControlsBtn[1].getAttribute("aria-label");
+      if (label === "Pause current") {
+        playControlsBtn[1].click();
+      }
     }
 
     action_unpause() {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
-      playControlsBtn[1].click();
+      const label = playControlsBtn[1].getAttribute("aria-label");
+      if (label === "Play current") {
+        playControlsBtn[1].click();
+      }
     }
 
     action_move({ direction }) {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
       if (direction === "next") {
         playControlsBtn[2].click();
-      } else if (direction === "back") {
+      } else if (direction === "previous") {
         playControlsBtn[0].click();
         playControlsBtn[0].click();
       }

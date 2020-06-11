@@ -36,9 +36,25 @@
       },
 
       {
+        "name": "clearBrowserHistory",
+        "type": "function",
+        "description": "Clear History",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "quitApplication",
         "type": "function",
         "description": "Close Firefox",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "openBookmarksSidebar",
+        "type": "function",
+        "description": "Open bookmarks sidebar",
         "parameters": [],
         "async": true
       },
@@ -52,6 +68,14 @@
       },
 
       {
+        "name": "openHistorySidebar",
+        "type": "function",
+        "description": "Open history sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "showAllBookmarks",
         "type": "function",
         "description": "Open bookmarks",
@@ -60,9 +84,40 @@
       },
 
       {
+        "name": "closeSidebar",
+        "type": "function",
+        "description": "Close sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "toggleSidebar",
+        "type": "function",
+        "description": "Toggle sidebar",
+        "parameters": [],
+        "async": true
+      },
+
+      {
         "name": "showAllHistory",
         "type": "function",
         "description": "Open History",
+        "parameters": [],
+        "async": true
+      },
+      {
+        "name": "openPreferences",
+        "type": "function",
+        "description": "Open Preferences",
+        "parameters": [],
+        "async": true
+      },
+
+      {
+        "name": "browserOpenAddonsMgr",
+        "type": "function",
+        "description": "Open Addons or Extensions",
         "parameters": [],
         "async": true
       }

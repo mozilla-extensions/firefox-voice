@@ -1,7 +1,7 @@
 [slideshow.open]
 description = "Opens the slideshow"
 match = '''
-    (open | display | launch | start|) (the |) slideshow
+  (open | display | launch | start|) (the |) slideshow
 '''
 
 [[slideshow.open.example]]
@@ -9,4 +9,17 @@ phrase = "Open slideshow"
 
 [[slideshow.open.example]]
 phrase = "Launch the slideshow"
+test = true
+
+[slideshow.startPresentation]
+description = "Starts a google slide presentation"
+match = '''
+  (start presentation | present | presenter view)
+'''
+
+[[slideshow.startPresentation.example]]
+phrase = "Start presentation"
+
+[[slideshow.startPresentation.example]]
+phrase = "Present"
 test = true

@@ -1,0 +1,7 @@
+body {
+  font-family: sans-serif;
+}
+
+tr.group td {
+  border-top: 2px solid #000;
+}

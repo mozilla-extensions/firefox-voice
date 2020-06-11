@@ -109,6 +109,7 @@ It's possible to install and use in-development versions of the extension. Every
 We are using these builds for internal testing with more-than-normal data collection. We have not yet implemented data collection controls.
 
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
+  (note: must install via about:debugging)
 - [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi?src=github) (Note: stage isn't always updated!)
 - [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
 - [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
@@ -143,21 +144,6 @@ For some more information:
 - This tutorial on [Developing extensions for Firefox for Android](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)
 - See the [web-ext docs](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext#testing-in-firefox-for-android) and the section "Testing in Firefox for Android"
 - [How to get developer options on Android](https://www.digitaltrends.com/mobile/how-to-get-developer-options-on-android/) (to turn on USB access)
-
-### Demo inter-process communication for Android
-
-On Android we're experimenting with collecting voice outside Firefox and then sending the text of the command into Firefox.
-
-For demonstration purposes only, there is an option to see a URL being opened and use that as the source of an intent. To enable this, set the environmental variable `$EXECUTE_INTENT_URL` to the base URL, and use `?text=...` to pass in the text. For instance:
-
-```sh
-export EXECUTE_INTENT_URL=https://mozilla.github.io/firefox-voice/assets/execute.html
-npm run start-android
-```
-
-Then, open `https://mozilla.github.io/firefox-voice/assets/execute.html?text=open%20tab`
-
-While we may enable something similar on desktop, it will use a [different mechanism](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging).
 
 ## Contributing
 
