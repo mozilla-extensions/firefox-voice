@@ -4,7 +4,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Phone
-import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivity
+import mozilla.voice.assistant.intents.communication.ui.contact.ContactActivityInterface
+
+const val DUMMY_NICKNAME = "!@@!"
 
 private val columns = arrayOf(
     Phone.DISPLAY_NAME,
@@ -16,43 +18,42 @@ private val columns = arrayOf(
 )
 
 internal fun contactUriToContactEntity(
-    contactActivity: ContactActivity,
-    nickname: String,
+    contactActivity: ContactActivityInterface,
+    nickname: String?,
     contactUri: Uri
-): ContactEntity =
-    contactActivity.contentResolver?.let { resolver ->
-        cursorToContentEntity(
-            resolver.query(
-                contactUri,
-                columns,
-                null,
-                null,
-                null
-            ),
-            nickname
+): ContactEntity = contactActivity.app.applicationContext.contentResolver?.query(
+        contactUri,
+        columns,
+        null,
+        null,
+        null
+    )?.let { cursor ->
+        resolverCursorToContentEntity(
+            cursor,
+            nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
 internal fun contactIdToContactEntity(
-    contactActivity: ContactActivity,
-    nickname: String,
+    contactActivity: ContactActivityInterface,
+    nickname: String?,
     contactId: Long
 ): ContactEntity =
     // https://learning.oreilly.com/library/view/android-cookbook-2nd/9781449374471/ch10.html
-    contactActivity.contentResolver?.let { resolver ->
-        cursorToContentEntity(
-            resolver.query(
-                Phone.CONTENT_URI,
-                columns,
-                "${Phone.CONTACT_ID}=?",
-                arrayOf(contactId.toString()),
-                null
-            ),
-            nickname
+    contactActivity.app.applicationContext.contentResolver?.query(
+        Phone.CONTENT_URI,
+        columns,
+        "${Phone.CONTACT_ID}=?",
+        arrayOf(contactId.toString()),
+        null
+    )?.let { cursor ->
+        resolverCursorToContentEntity(
+            cursor,
+            nickname ?: DUMMY_NICKNAME
         )
     } ?: throw AssertionError("Unable to access contentResolver")
 
-private fun cursorToContentEntity(
+private fun resolverCursorToContentEntity(
     cursor: Cursor,
     nickname: String
 ): ContactEntity {

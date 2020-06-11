@@ -23,6 +23,7 @@ export const Options = ({
   registeredNicknames,
   useToggle,
   useEditNicknameDraft,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-page">
@@ -34,6 +35,7 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
+          audioInputDevices={audioInputDevices}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -126,12 +128,14 @@ const General = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-content">
       <PreferenceSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
@@ -190,7 +194,41 @@ const MusicServiceSettings = ({
   );
 };
 
-const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
+const SelectMicPreferences = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
+  const onMicPreferenceChange = event => {
+    if (event) {
+      userSettings.audioInputId = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="mic-selector">
+      <span>Microphone </span>
+      <select
+        value={userSettings.audioInputId}
+        onChange={onMicPreferenceChange}
+        onBlur={onMicPreferenceChange}
+      >
+        {audioInputDevices &&
+          audioInputDevices.map(device => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
+const PreferenceSettings = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
   const onPreferenceChange = setting => event => {
     if (event) {
       userSettings[setting] = event.target.checked;
@@ -224,6 +262,11 @@ const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
           </label>
         </div>
       </div>
+      <SelectMicPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
+      />
     </fieldset>
   );
 };

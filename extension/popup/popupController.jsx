@@ -1,14 +1,14 @@
 /* globals React, ReactDOM, log, buildSettings */
 
-import * as util from "../util.js";
-import * as voice from "./voice.js";
-import * as settings from "../settings.js";
-import * as voiceShim from "./voiceShim.js";
-import * as vad from "./vad.js";
 import * as browserUtil from "../browserUtil.js";
+import * as settings from "../settings.js";
+import * as util from "../util.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
+import * as vad from "./vad.js";
+import * as voice from "./voice.js";
+import * as voiceShim from "./voiceShim.js";
 
 log.startTiming("popup opened");
 
@@ -25,6 +25,9 @@ let listenForFollowup = false;
 let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
+
+let audioInputId = null;
+
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -92,6 +95,9 @@ export const PopupController = function() {
     }
 
     listenForFollowup = userSettings.listenForFollowup;
+    if (userSettings.audioInputId !== undefined) {
+      audioInputId = userSettings.audioInputId;
+    }
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -168,6 +174,9 @@ export const PopupController = function() {
       "https://mozilla.github.io/firefox-voice/alarm.mp3"
     );
     audio.play();
+    setTimeout(() => {
+      audio.play();
+    }, 3000);
   };
 
   const onClickLexicon = async event => {
@@ -282,7 +291,7 @@ export const PopupController = function() {
       method: "closeActiveTimer",
     });
 
-    closePopup();
+    closePopup(6000);
   };
 
   const startTimer = async duration => {
@@ -632,7 +641,17 @@ export const PopupController = function() {
   };
 
   const requestMicrophone = async () => {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    let constraint = null;
+    if (audioInputId !== null) {
+      constraint = {
+        audio: { deviceId: audioInputId },
+      };
+    } else {
+      constraint = {
+        audio: true,
+      };
+    }
+    stream = await navigator.mediaDevices.getUserMedia(constraint);
     return stream;
   };
 

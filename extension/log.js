@@ -47,7 +47,6 @@ this.log = (function() {
   }
 
   exports.addTimings = function(timings) {
-    console.log("adding new timings", timings);
     TIMING_LOGS = TIMING_LOGS.concat(timings);
   };
 
@@ -66,17 +65,14 @@ this.log = (function() {
 
   let _queueId = null;
   function queueTiming() {
-    console.log("queuing...", _queueId);
     if (!_queueId) {
       _queueId = setTimeout(async () => {
-        console.log("sending!");
         await browser.runtime.sendMessage({
           type: "addTimings",
           timings: TIMING_LOGS,
         });
         TIMING_LOGS = [];
         _queueId = null;
-        console.log("success!");
       }, 1000);
     }
   }

@@ -1,8 +1,8 @@
 package mozilla.voice.assistant.language
 
 /**
- * A representation of a pattern matching one or more [Word]s. If the property [empty] is
- * [true], this also matches an empty sequence of [Word]s.
+ * A representation of a [Pattern] matching any one or more [Word]s. If the property "empty" is
+ * true, this also matches an empty sequence of [Word]s.
  */
 class Wildcard(
     private val empty: Boolean = false // whether it matches the empty string
@@ -20,7 +20,7 @@ class Wildcard(
         }
         results.add(match.clone(addIndex = 1))
         while (!results.last().utteranceExhausted()) {
-            // Note wildcards don't act like they captured words
+            // Note wildcards don't count as capturing words.
             results.add(results.last().clone(addIndex = 1))
         }
         return results
