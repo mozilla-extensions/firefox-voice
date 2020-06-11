@@ -17,7 +17,6 @@ export const Popup = ({
   displayAutoplay,
   searchResult,
   cardImage,
-  spokenResponse,
   recorderVolume,
   showSettings,
   submitTextInput,
@@ -61,7 +60,6 @@ export const Popup = ({
         displayAutoplay={displayAutoplay}
         searchResult={searchResult}
         cardImage={cardImage}
-        spokenResponse={spokenResponse}
         recorderVolume={recorderVolume}
         submitTextInput={submitTextInput}
         inputValue={inputValue}
@@ -201,7 +199,6 @@ const PopupContent = ({
   displayAutoplay,
   searchResult,
   cardImage,
-  spokenResponse,
   recorderVolume,
   submitTextInput,
   inputValue,
@@ -265,7 +262,6 @@ const PopupContent = ({
           <SearchResultsContent
             search={searchResult}
             cardImage={cardImage}
-            spokenResponse={spokenResponse}
             displayText={displayText}
             onSearchImageClick={onSearchImageClick}
             onNextSearchResultClick={onNextSearchResultClick}
@@ -591,12 +587,6 @@ const VoiceInput = ({
   );
 };
 
-const ttsResponse = text => {
-  let utterance = new SpeechSynthesisUtterance(text);
-  // Would eventually populate with other prefs like voice, pitch, rate
-  return utterance;
-};
-
 const IntentFeedback = ({ eduText, onSubmitFeedback }) => {
   function onPositive() {
     onSubmitFeedback({ rating: 1, feedback: null });
@@ -773,7 +763,6 @@ const SavingPageContent = ({ transcript }) => {
 const SearchResultsContent = ({
   search,
   cardImage,
-  spokenResponse,
   displayText,
   onSearchImageClick,
   onNextSearchResultClick,
@@ -784,7 +773,6 @@ const SearchResultsContent = ({
   if (!search) return null;
 
   const { searchResults, index, searchUrl } = search;
-  const textToSpeak = spokenResponse;
   const card = cardImage;
   const next = searchResults[index + 1];
   const cardStyles = card ? { height: card.height, width: card.width } : {};
@@ -839,13 +827,6 @@ const SearchResultsContent = ({
       return SearchCard();
     }
     return null;
-  };
-
-  const speakResponse = () => {
-    console.log("I AM NOW HERE", textToSpeak);
-    let utterance = ttsResponse(textToSpeak);
-    const synth = window.speechSynthesis;
-    synth.speak(utterance);
   };
 
   return (

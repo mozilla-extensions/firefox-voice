@@ -53,7 +53,6 @@ export const PopupController = function() {
   const [displayAutoplay, setDisplayAutoplay] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [cardImage, setCardImage] = useState(null);
-  const [spokenResponse, setSpokenResponse] = useState(null);
   const [recorderVolume, setRecorderVolume] = useState(null);
   const [expandListeningView, setExpandedListeningView] = useState(false);
   const [timerInMS, setTimerInMS] = useState(0);
@@ -494,7 +493,6 @@ export const PopupController = function() {
 
   const setTts = message => {
     speakResponse(message.ttsText, message.ttsLang || "en");
-    setSpokenResponse(message.ttsText); // FIXME: I think this is unnecessary now
   };
 
   const speakResponse = (text, lang) => {
@@ -761,7 +759,6 @@ export const PopupController = function() {
       displayAutoplay={displayAutoplay}
       searchResult={searchResult}
       cardImage={cardImage}
-      spokenResponse={spokenResponse}
       recorderVolume={recorderVolume}
       showSettings={showSettings}
       submitTextInput={submitTextInput}
