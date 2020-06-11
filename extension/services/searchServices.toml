@@ -27,6 +27,7 @@ bangSearch = "mdn"
 
 [coursera]
 bangSearch = "coursera"
+baseUrl = "https://www.coursera.org/"
 
 [gmail]
 bangSearch = "gmail"
@@ -34,6 +35,7 @@ names = ["mail", "email", "google mail"]
 
 [amazon]
 bangSearch = "az"
+baseUrl = "https://www.amazon.com/"
 
 [wikipedia]
 bangSearch = "wikipedia"
