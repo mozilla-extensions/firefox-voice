@@ -635,10 +635,30 @@ a#lexicon {
   margin-bottom: 1em;
 }
 
-.scroll-button {
-  background: #fff;
-  float: right;
-  margin-top: -2.5rem;
+.scroll-down {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
   padding: 0.1em;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s;
+  transition: opacity 0.4s;
+  opacity: 0.5;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.scroll-dowwn:hover {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

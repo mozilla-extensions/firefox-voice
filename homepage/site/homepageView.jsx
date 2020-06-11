@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* globals React, Mzp */
 
-const { useState, useEffect } = React;
+const { useState } = React;
 
 export const Homepage = ({ isCommonVoice }) => {
   const [showScroll, setShowScroll] = useState(false);

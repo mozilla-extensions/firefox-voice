@@ -34,6 +34,18 @@ export const Popup = ({
   showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
+  const [showScroll, setShowScroll] = useState(false);
+
+  const checkScrollButton = () => {
+    // still figuring how to render it make it show only if content is greater than view height
+  };
+
+  const scrollDown = () => {
+    window.scrollTo(0, +50);
+  };
+
+  window.addEventListener("scroll", checkScrollButton);
+
   function savingOnInputStarted(value) {
     // When the user types in the hidden field, we need to keep that
     // first input and use it later
@@ -45,6 +57,13 @@ export const Popup = ({
       id="popup"
       className={`${currentView} ${renderFollowup ? "followup" : ""}`}
     >
+      <button
+        className="scroll-down"
+        onClick={scrollDown}
+        style={{ height: "2rem", display: showScroll ? "flex" : "none" }}
+      >
+        <img src="images/arrow_down.svg" alt="scroll to bottom" />
+      </button>
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -839,35 +858,26 @@ const SearchResultsContent = ({
       {renderFollowup ? null : (
         <React.Fragment>
           <div id="search-footer">
-            {card && card.answer ? null : (
-              <div className="scroll-button">
-                <a href="#bottomSection">
-                  <img src="images/arrow_down.svg" alt="scroll to bottom" />
+            <IntentFeedback
+              onSubmitFeedback={onSubmitFeedback}
+              eduText={card && card.answer ? card.answer.eduText : null}
+            />
+            {next ? (
+              <div id="next-result">
+                <p>
+                  <strong>
+                    Click mic and say <i>'next'</i> to view
+                  </strong>
+                </p>
+                <a
+                  href={next.url}
+                  id="search-show-next"
+                  onClick={onNextResultClick}
+                >
+                  {new URL(next.url).hostname} | {next.title}
                 </a>
               </div>
-            )}
-            <div>
-              <IntentFeedback
-                onSubmitFeedback={onSubmitFeedback}
-                eduText={card && card.answer ? card.answer.eduText : null}
-              />
-              {next ? (
-                <div id="next-result">
-                  <p>
-                    <strong>
-                      Click mic and say <i>'next'</i> to view
-                    </strong>
-                  </p>
-                  <a
-                    href={next.url}
-                    id="search-show-next"
-                    onClick={onNextResultClick}
-                  >
-                    {new URL(next.url).hostname} | {next.title}
-                  </a>
-                </div>
-              ) : null}
-            </div>
+            ) : null}
           </div>
         </React.Fragment>
       )}
