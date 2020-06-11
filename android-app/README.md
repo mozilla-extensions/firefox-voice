@@ -58,6 +58,8 @@ After cloning the project:
 2. Select "Import project (Gradle, Eclipse ADT, etc.)"./
 3. Open "firefox-voice/android-app".
 
+This will start building the project and will notify you of anything else you need to download, which you can do through `Tools > SDK Manager`.
+
 ### Using an Emulator
 
 Not all emulator AVDs handle speech recognition correctly. We have tested this configuration:
