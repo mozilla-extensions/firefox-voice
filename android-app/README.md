@@ -1,5 +1,17 @@
 # Firefox Assistant
 
+  * [User guide](#user-guide)
+    + [Enable installation of apps from unknown sources](#enable-installation-of-apps-from-unknown-sources)
+    + [Install the Mozilla Assistant app](#install-the-mozilla-assistant-app)
+    + [Specify your assistant](#specify-your-assistant)
+    + [Using Mozilla Assistant](#using-mozilla-assistant)
+  * [Developer guide](#developer-guide)
+    + [Android Studio](#android-studio)
+    + [Using an Emulator](#using-an-emulator)
+    + [Style](#style)
+    + [Testing](#testing)
+    + [Generating a signed build](#generating-a-signed-build)
+
 ## User guide
 
 We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
@@ -38,22 +50,15 @@ After installation, hold down the Home button to open the app, then state your r
 
 ## Developer guide
 
-### Build instructions
-
-```
-git clone https://github.com/mozilla/firefox-voice.git
-cd firefox-voice/android-app
-./gradlew test
-./gradlew assemble
-```
-
 ### Android Studio
 
 After cloning the project:
 
 1. Open Android Studio.
-2. Select "Import project (Gradle, Eclipse ADT, etc.)"./
-3. Open "firefox-voice/android-app".
+2. Select `Import project (Gradle, Eclipse ADT, etc.)`.
+3. Open `firefox-voice/android-app`.
+
+This will start building the project and will notify you of anything else you need to download, which you can do through `Tools > SDK Manager`.
 
 ### Using an Emulator
 
@@ -82,11 +87,7 @@ To check your style, run:
 
 ### Testing ###
 You are expected to both add tests for code that you write and make sure that your changes do not
-cause existing tests to fail:
-
-```
-./gradlew test           # Run all tests
-```
+cause existing tests to fail. You can run tests in Android Studio by right-clicking on `app` in the Project Pane and selecting `Run 'All Tests'`. ![screenshot](doc/run-all-tests.png)
 
 ### Generating a signed build ###
 When you change the code, you should also [build a signed APK](https://developer.android.com/studio/publish/app-signing#sign-apk). Here is a summary of the steps:
