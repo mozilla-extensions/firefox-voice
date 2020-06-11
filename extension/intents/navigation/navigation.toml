@@ -7,8 +7,6 @@ match = """
   (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
   (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
   (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
-  (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in |) (this site | the site | current site | active site | this tab | the tab | current tab | active tab | here) (for me |)
-  (do a |) (search | query | find | look up | lookup | look on) (on | in |) (this site | the site | current site | active site | this tab | the tab | current tab | active tab | here) (for | for the |) [query] (for me |)
 """
 
 [[navigation.bangSearch.example]]
@@ -46,12 +44,6 @@ test = true
 
 [[navigation.bangSearch.example]]
 phrase = "Search ScrollAnywhere on add-ons"
-
-[[navigation.bangSearch.example]]
-phrase = "search for Electronics in this tab"
-
-[[navigation.bangSearch.example]]
-phrase = "search this site for Smart TV"
 
 [navigation.clearQueryDatabase]
 description = "Debugging command to clear the cache of 'open' queries"
