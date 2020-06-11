@@ -21,7 +21,7 @@ interface Pattern {
     fun toSource(): String
 
     /**
-     * The names of any slots in this pattern, such as "query" in "search for [query]".
+     * The names of any slots in this pattern, such as "query" in "search for \[query\]".
      *
      * @return the names of any slots
      */

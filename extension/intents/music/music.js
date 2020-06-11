@@ -33,6 +33,7 @@ export function getServiceNamesAndTitles() {
 async function getService(context, options) {
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
+  options.defaultService = options.defaultService || "spotify";
   if (explicitService) {
     ServiceClass = SERVICES[serviceList.mapMusicServiceName(explicitService)];
     if (!ServiceClass) {
@@ -132,6 +133,56 @@ intentRunner.registerIntent({
       throw e;
     }
     context.displayText(tabs[0].title);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.volume",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.adjustVolume(context.parameters.volumeLevel);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.mute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.mute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.unmute",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.unmute();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.playAlbum",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.playAlbum(context.slots.query);
+    if (service.tab) {
+      await pauseAnyButTab(context, service.tab.id);
+    } else {
+      await pauseAnyButService(context, service.id);
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.playPlaylist",
+  async run(context) {
+    const service = await getService(context, { lookAtCurrentTab: true });
+    await service.playPlaylist(context.slots.query);
+    if (service.tab) {
+      await pauseAnyButTab(context, service.tab.id);
+    } else {
+      await pauseAnyButService(context, service.id);
+    }
   },
 });
 

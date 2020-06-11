@@ -1,10 +1,10 @@
-/* globals lottie, React */
+/* globals lottie, buildSettings, React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 import * as browserUtil from "../browserUtil.js";
 
-const { Component, useState, useEffect, PureComponent } = React;
+const { useState, useEffect, PureComponent } = React;
 
 export const Popup = ({
   currentView,
@@ -27,6 +27,11 @@ export const Popup = ({
   onSubmitFeedback,
   setMinPopupSize,
   expandListeningView,
+  timerInMS,
+  timerTotalInMS,
+  renderFollowup,
+  followupText,
+  showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -36,7 +41,10 @@ export const Popup = ({
     onInputStarted();
   }
   return (
-    <div id="popup" className={currentView}>
+    <div
+      id="popup"
+      className={`${currentView} ${renderFollowup ? "followup" : ""}`}
+    >
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -62,8 +70,28 @@ export const Popup = ({
         onSubmitFeedback={onSubmitFeedback}
         setMinPopupSize={setMinPopupSize}
         expandListeningView={expandListeningView}
+        timerInMS={timerInMS}
+        timerTotalInMS={timerTotalInMS}
+        renderFollowup={renderFollowup}
+        showZeroVolumeError={showZeroVolumeError}
       />
-      <PopupFooter currentView={currentView} showSettings={showSettings} />
+      <PopupFooter
+        currentView={currentView}
+        showSettings={showSettings}
+        timerInMS={timerInMS}
+      />
+      {timerInMS > 0 ? (
+        <TimerFooter
+          currentView={currentView}
+          timerInMS={timerInMS}
+        ></TimerFooter>
+      ) : null}
+      <FollowupContainer
+        lastIntent={lastIntent}
+        followupText={followupText}
+        renderFollowup={renderFollowup}
+        currentView={currentView}
+      />
     </div>
   );
 };
@@ -96,6 +124,10 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "";
       case "waiting":
         return "One moment...";
+      case "timer":
+        return transcript;
+      case "noAudio":
+        return "Oops...";
       case "listening":
       default:
         return "Listening";
@@ -117,7 +149,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
     currentView === "startSavingPage" ||
     currentView === "endSavingPage" ||
     currentView === "feedback" ||
-    currentView === "feedbackThanks"
+    currentView === "feedbackThanks" ||
+    currentView === "timer"
       ? ""
       : "hidden";
 
@@ -176,6 +209,10 @@ const PopupContent = ({
   onSubmitFeedback,
   setMinPopupSize,
   expandListeningView,
+  timerInMS,
+  timerTotalInMS,
+  renderFollowup,
+  showZeroVolumeError,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -187,6 +224,7 @@ const PopupContent = ({
             onClickLexicon={onClickLexicon}
             onInputStarted={onInputStarted}
             expandListeningView={expandListeningView}
+            showZeroVolumeError={showZeroVolumeError}
           />
         );
       case "typing":
@@ -202,6 +240,7 @@ const PopupContent = ({
           <ProcessingContent
             transcript={transcript}
             displayText={displayText}
+            renderFollowup={renderFollowup}
           />
         );
       case "success":
@@ -216,6 +255,8 @@ const PopupContent = ({
             displayAutoplay={displayAutoplay}
           />
         );
+      case "noAudio":
+        return <NoAudioContent displayText={displayText} />;
       case "searchResults":
         return (
           <SearchResultsContent
@@ -226,6 +267,7 @@ const PopupContent = ({
             onNextSearchResultClick={onNextSearchResultClick}
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
+            renderFollowup={renderFollowup}
           />
         );
       case "startSavingPage":
@@ -240,6 +282,14 @@ const PopupContent = ({
         );
       case "feedbackThanks":
         return <FeedbackThanks />;
+      case "timer":
+        return (
+          <TimerCard
+            timerInMS={timerInMS}
+            timerTotalInMS={timerTotalInMS}
+            onSubmitFeedback={onSubmitFeedback}
+          ></TimerCard>
+        );
       default:
         return null;
     }
@@ -249,6 +299,36 @@ const PopupContent = ({
     <div id="popup-content">
       <Zap currentView={currentView} recorderVolume={recorderVolume} />
       {getContent()}
+    </div>
+  );
+};
+
+const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
+  if (
+    currentView === "listening" ||
+    currentView === "waiting" ||
+    currentView === "processing" ||
+    !renderFollowup
+  ) {
+    return null;
+  }
+
+  let heading = "Waiting...";
+  let subheading;
+  if (followupText) {
+    heading = followupText.heading;
+    subheading = followupText.subheading;
+  }
+  return (
+    <div id="followup-container">
+      <IntentFeedback />
+      <div id="followup-wrapper">
+        <div id="followup_mic-container">Mic On</div>
+        <div id="followup_headings-wrapper">
+          <div id="followup_heading">{heading}</div>
+          {subheading && <div id="followup_subheading">{subheading}</div>}
+        </div>
+      </div>
     </div>
   );
 };
@@ -304,7 +384,8 @@ const PopupFooter = ({ currentView, showSettings }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
-    currentView === "feedbackThanks"
+    currentView === "feedbackThanks" ||
+    currentView === "timer"
   )
     return null;
   return (
@@ -336,18 +417,104 @@ const PopupFooter = ({ currentView, showSettings }) => {
   );
 };
 
+const getHourMinuteSecond = timerInMS => {
+  const time = parseFloat(timerInMS / 1000).toFixed(3);
+  const hours = Math.floor(time / 60 / 60);
+  const minutes = Math.floor(time / 60) % 60;
+  const seconds = Math.floor(time - minutes * 60);
+
+  return { hours, minutes, seconds };
+};
+const parseTimer = timerInMS => {
+  const pad = (num, size) => {
+    return ("000" + num).slice(size * -1);
+  };
+  const { hours, minutes, seconds } = getHourMinuteSecond(timerInMS);
+
+  if (hours > 0)
+    return pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
+  return pad(minutes, 2) + ":" + pad(seconds, 2);
+};
+
+const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
+  const getNotificationExpression = timerTotalInMS => {
+    const { hours, minutes, seconds } = getHourMinuteSecond(timerTotalInMS);
+    let expression = "";
+
+    if (hours !== 0) {
+      expression += `${hours} hours`;
+    }
+    if (minutes !== 0) {
+      if (expression.length > 0) {
+        expression += " and ";
+      }
+      expression += `${minutes} minutes`;
+    }
+
+    if (seconds !== 0) {
+      if (expression.length > 0) {
+        expression += " and ";
+      }
+      expression += `${seconds} seconds`;
+    }
+    return `It's been ${expression}`;
+  };
+
+  const notificationExpression = getNotificationExpression(timerTotalInMS);
+  return (
+    <React.Fragment>
+      <div className="timer-card">
+        <div className="circle-timer">
+          <p className="timer-clock">{parseTimer(timerInMS)}</p>
+        </div>
+        <div className="timer-notification-text">
+          {timerInMS <= 0 ? <p>{notificationExpression}</p> : null}
+        </div>
+      </div>
+      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
+    </React.Fragment>
+  );
+};
+
+const TimerFooter = ({ currentView, timerInMS }) => {
+  if (currentView !== "listening") return null;
+
+  return (
+    <div className="search-footer">
+      <div className="timer-footer">
+        {timerInMS < 3600 * 1000 ? (
+          <div className="circle-timer-footer">
+            <p className="timer-clock">{parseTimer(timerInMS)} </p>
+          </div>
+        ) : (
+          <p className="timer-clock-footer">{parseTimer(timerInMS)}</p>
+        )}
+        <div className="timer-text">
+          <p>Say "cancel", "pause" or "reset" timer.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ListeningContent = ({
   displayText,
   suggestions,
   onClickLexicon,
   onInputStarted,
   expandListeningView,
+  showZeroVolumeError,
 }) => {
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <div id="extra-content" className={expandListeningView ? "expanded" : ""}>
-        <VoiceInput suggestions={suggestions} onClickLexicon={onClickLexicon} />
+        <VoiceInput
+          suggestions={suggestions}
+          onClickLexicon={onClickLexicon}
+          onInputStarted={onInputStarted}
+          showZeroVolumeError={showZeroVolumeError}
+        />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
     </React.Fragment>
@@ -363,7 +530,12 @@ const TypingContent = ({ displayText, submitTextInput, inputValue }) => {
   );
 };
 
-const VoiceInput = ({ suggestions, onClickLexicon }) => {
+const VoiceInput = ({
+  suggestions,
+  onClickLexicon,
+  onInputStarted,
+  showZeroVolumeError,
+}) => {
   const onMoreSuggestions = event => {
     if (event) {
       event.preventDefault();
@@ -374,6 +546,22 @@ const VoiceInput = ({ suggestions, onClickLexicon }) => {
     <div id="voice-input">
       {suggestions ? (
         <div id="suggestions">
+          {buildSettings.inDevelopment ? (
+            <div>
+              <p>Developer tip:</p>
+              <button
+                className="type-input-button"
+                onClick={() => onInputStarted("")}
+              >
+                Start typing to make a request using a keyboard
+              </button>
+            </div>
+          ) : null}
+          {showZeroVolumeError ? (
+            <p className="mic-text">
+              Microphone is not working. Firefox may need to be restarted.
+            </p>
+          ) : null}
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">
             {suggestions.map(suggestion => (
@@ -519,11 +707,11 @@ class TypingInput extends PureComponent {
   }
 }
 
-const ProcessingContent = ({ transcript, displayText }) => {
+const ProcessingContent = ({ transcript, displayText, renderFollowup }) => {
   return (
     <React.Fragment>
-      <Transcript transcript={transcript} />
-      <TextDisplay displayText={displayText} />
+      <Transcript transcript={renderFollowup ? "" : transcript} />
+      <TextDisplay displayText={renderFollowup ? "" : displayText} />
     </React.Fragment>
   );
 };
@@ -554,6 +742,16 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
   );
 };
 
+const NoAudioContent = ({ displayText }) => {
+  return (
+    <div id="no-audio">
+      <React.Fragment>
+        <TextDisplay displayText={displayText} />
+      </React.Fragment>
+    </div>
+  );
+};
+
 const SavingPageContent = ({ transcript }) => {
   return (
     <React.Fragment>
@@ -570,6 +768,7 @@ const SearchResultsContent = ({
   onNextSearchResultClick,
   setMinPopupSize,
   onSubmitFeedback,
+  renderFollowup,
 }) => {
   if (!search) return null;
 
@@ -634,28 +833,32 @@ const SearchResultsContent = ({
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <div id="search-results">{renderCard()}</div>
-      <div id="search-footer">
-        <IntentFeedback
-          onSubmitFeedback={onSubmitFeedback}
-          eduText={card && card.answer ? card.answer.eduText : null}
-        />
-        {next ? (
-          <div id="next-result">
-            <p>
-              <strong>
-                Click mic and say <i>'next'</i> to view
-              </strong>
-            </p>
-            <a
-              href={next.url}
-              id="search-show-next"
-              onClick={onNextResultClick}
-            >
-              {new URL(next.url).hostname} | {next.title}
-            </a>
+      {renderFollowup ? null : (
+        <React.Fragment>
+          <div id="search-footer">
+            <IntentFeedback
+              onSubmitFeedback={onSubmitFeedback}
+              eduText={card && card.answer ? card.answer.eduText : null}
+            />
+            {next ? (
+              <div id="next-result">
+                <p>
+                  <strong>
+                    Click mic and say <i>'next'</i> to view
+                  </strong>
+                </p>
+                <a
+                  href={next.url}
+                  id="search-show-next"
+                  onClick={onNextResultClick}
+                >
+                  {new URL(next.url).hostname} | {next.title}
+                </a>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
@@ -668,7 +871,7 @@ const TextDisplay = ({ displayText }) => {
   return displayText ? <div id="text-display">{displayText}</div> : null;
 };
 
-class Zap extends Component {
+class Zap extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -722,6 +925,11 @@ class Zap extends Component {
       },
       feedbackThanks: {
         segments: [this.animationSegmentTimes.success],
+        loop: false,
+        interrupt: true,
+      },
+      noAudio: {
+        segments: [this.animationSegmentTimes.error],
         loop: false,
         interrupt: true,
       },

@@ -1,0 +1,148 @@
+.fv-lightbox-container {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(37, 17, 17, 0.8);
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.fv-gallery-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: rgb(38, 38, 39);
+  display: none;
+}
+
+.fv-slideshow-container {
+  display: flex;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border: none;
+  background-color: rgb(38, 38, 39);
+  justify-content: center;
+}
+
+.fv-slide-image {
+  width: 100%;
+  height: 100%;
+}
+
+.fv-navbar {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+}
+
+.fv-slide-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fv-slide-image video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fv-slide-image iframe {
+  object-fit: contain;
+}
+
+.fv-prev,
+.fv-next,
+.fv-close {
+  cursor: pointer;
+  width: auto;
+  padding: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  user-select: none;
+  display: table-cell;
+  float: right;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.fv-close {
+  padding: 13px;
+}
+
+.fv-view-gallery,
+.fv-view-slide,
+.fv-update-gallery,
+.fv-reload-gallery {
+  cursor: pointer;
+  width: 20px;
+  padding: 5px 10px;
+  color: white;
+  font-size: 28px;
+  transition: 0.6s ease;
+  user-select: none;
+  display: flex;
+  float: left;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.fv-next:hover,
+.fv-prev:hover,
+.fv-close:hover,
+.fv-view-gallery:hover,
+.fv-view-slide:hover,
+.fv-update-gallery:hover,
+.fv-reload-gallery:hover {
+  background-color: rgb(224, 213, 213);
+  color: black;
+}
+
+.fv-thumbnail-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 0.5fr));
+  grid-auto-rows: minmax(10vw, 15vw);
+  gap: 10px;
+  z-index: 2;
+  margin: 16px;
+  justify-content: center;
+}
+
+.fv-image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.fv-thumbnail {
+  background-color: dimgray;
+  border: 2px solid whitesmoke;
+}
+
+.fv-thumbnail:hover {
+  background-color: rgb(224, 212, 212);
+  border: 10px solid whitesmoke;
+}
+
+.fv-iframe-thumbnail-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 56.25%;
+}
+
+.fv-iframe-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

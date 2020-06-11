@@ -1,11 +1,14 @@
 [find.find]
 description = "Find the open tab that matches the query (searching the title, URL, and page content), and make that tab (and window) active"
 match = """
-  (find | bring me to | bring up | switch to) (my | the |) [query] (tab |)
+  find (my | the |) [query] tab
+  (bring me to | bring up | switch to) (my | the |) [query] (tab |)
   (find | open | focus | show | switch to) tab [query]
   go (to | to the |) [query] tab
   go to my [query]
+  open my [query]
   focus [query] (tab |)
+  find [query] in tabs
 """
 
 [[find.find.example]]

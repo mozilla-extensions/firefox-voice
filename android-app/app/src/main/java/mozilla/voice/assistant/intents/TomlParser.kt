@@ -46,7 +46,7 @@ class TomlParser {
                 val (key, value, rest) = destructured
                 table[key.trim('"')] = value.trim('"')
                 toParse = rest
-            } ?: throw Error("Expected key-value pair: $toParse")
+            } ?: throw TomlException("Expected key-value pair: $toParse")
         }
         return toParse
     }
@@ -54,6 +54,7 @@ class TomlParser {
     internal fun parse(inputStream: InputStream) =
         parse(inputStream.bufferedReader().use(java.io.BufferedReader::readText))
 
+    @SuppressWarnings("ThrowsCount")
     internal fun parse(s: String) {
         var toParse = s.replace(commentRegex, "\n").trim()
         while (toParse.isNotEmpty()) {
@@ -69,16 +70,16 @@ class TomlParser {
             if (toParse.startsWith("[[")) {
                 val table = mutableMapOf<String, String>()
                 val (tableName, rest) = tableListHeaderRegex.matchEntire(toParse)?.destructured
-                    ?: throw Error("Expected table list name")
+                    ?: throw TomlException("Expected table list name")
                 if (tableLists.contains(tableName)) {
-                    tableLists[tableName]?.add(table) ?: throw Error("Invariant violated")
+                    tableLists[tableName]?.add(table) ?: throw AssertionError("Invariant violated")
                 } else {
                     tableLists[tableName] = mutableListOf(table)
                 }
                 toParse = populateTable(table, rest)
                 continue
             }
-            throw Error("Cannot parse: $toParse")
+            throw TomlException("Cannot parse: $toParse")
         }
     }
 
@@ -96,8 +97,12 @@ class TomlParser {
     }
 
     internal fun getString(key: String): String? {
-        val (tableName, fieldName) = splitDottedString(key)
-        return getString(tableName, fieldName)
+        try {
+            val (tableName, fieldName) = splitDottedString(key)
+            return getString(tableName, fieldName)
+        } catch (e: IllegalArgumentException) {
+            throw TomlException("Illegal key: ${e.message}")
+        }
     }
 
     internal fun getString(tableName: String, fieldName: String) = tables[tableName]?.get(fieldName)
@@ -115,3 +120,5 @@ class TomlParser {
 
 typealias TomlTable = MutableMap<String, String>
 typealias TomlTableList = MutableList<TomlTable>
+
+internal class TomlException(msg: String) : Error(msg)

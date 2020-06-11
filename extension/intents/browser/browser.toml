@@ -1,0 +1,100 @@
+[browser.bookmark]
+description = "Open bookmarks"
+match = """
+  (Open | show |) (all | my |) (bookmark{s} |)
+"""
+
+[[browser.bookmark.example]]
+phrase = "Bookmarks"
+
+[[browser.bookmark.example]]
+phrase = "Open bookmark{s}"
+test = true
+
+[[browser.bookmark.example]]
+phrase = "Show bookmark{s}"
+test = true
+
+[[browser.bookmark.example]]
+phrase = "Show all bookmark{s}"
+test = true
+
+[[browser.bookmark.example]]
+phrase = "Show my bookmark{s}"
+test = true
+
+[browser.history]
+description = "Open history"
+match = """
+  (Open | Show |) (all | my |) (browsing | browser |) history
+"""
+
+[[browser.history.example]]
+phrase = "Open history"
+
+[[browser.history.example]]
+phrase = "History"
+test = true
+
+[[browser.history.example]]
+phrase = "My browsing history"
+test = true
+
+[[browser.history.example]]
+phrase = "Show history"
+test = true
+
+[[browser.history.example]]
+phrase = "Show all history"
+test = true
+
+[[browser.history.example]]
+phrase = "Show my history"
+test = true
+
+[browser.preferences]
+description = "open browser settings or preferences"
+match = """
+  (open |) (browser | firefox) (settings | preferences )
+"""
+
+[[browser.preferences.example]]
+phrase = "open firefox settings"
+test = true
+
+[[browser.preferences.example]]
+phrase = "firefox settings"
+test = true
+
+[browser.addons]
+description = "open browser addons or extensions"
+match = """
+  (open | manage |) (addon{s} | add-on{s} | extension{s}) (manager |)
+"""
+
+[[browser.addons.example]]
+phrase = "extensions"
+
+[[browser.addons.example]]
+phrase = "open addon{s}"
+test = true
+
+[[browser.addons.example]]
+phrase = "open extension{s}"
+test = true
+
+[[browser.addons.example]]
+phrase = "open add-on{s}"
+test = true
+
+[[browser.addons.example]]
+phrase = "open add-on{s} manager"
+test = true
+
+[[browser.addons.example]]
+phrase = "manage add-on{s}"
+test = true
+
+[[browser.addons.example]]
+phrase = "manage extension{s}"
+test = true

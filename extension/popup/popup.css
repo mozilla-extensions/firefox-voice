@@ -25,6 +25,7 @@ body,
   width: 350px;
 }
 
+.timer #zap-wrapper,
 .typing #zap-wrapper,
 .feedback #zap-wrapper,
 .searchResults #zap-wrapper {
@@ -66,7 +67,8 @@ body,
   padding-bottom: 3rem;
 }
 
-#popup:not(.searchResults) #popup-content {
+#popup:not(.searchResults) #popup-content,
+#popup:not(.followup) #popup-content {
   padding-bottom: 0;
 }
 
@@ -106,6 +108,10 @@ body,
   margin-top: 0;
 }
 
+.mic-text {
+  margin-top: -5px;
+}
+
 .suggestion {
   font-weight: 600;
   line-height: 1rem;
@@ -119,12 +125,12 @@ body,
 
 #moz-voice-privacy {
   line-height: 20px;
-  margin-right: 32px;
+  margin-left: -16px;
 }
 
 #moz-voice-privacy > a {
   font-weight: 400;
-  font-size: 0.85em;
+  font-size: 0.95em;
 }
 
 #feedback-prompt {
@@ -139,6 +145,12 @@ body,
 #text-input,
 #error-message {
   margin: 40px 0;
+}
+
+#no-audio {
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 0 0 1em 0;
 }
 
 /* This prevents the text input from taking up space when it isn't visible */
@@ -167,7 +179,7 @@ body,
 
 #search-results {
   align-self: center;
-  padding: 1em 0 6em;
+  padding: 1em 0 0em;
 }
 
 .results-set {
@@ -213,6 +225,7 @@ body,
   font-weight: 600;
   padding: 1.5rem 0;
   color: #800;
+  white-space: pre-wrap;
 }
 
 .typing #text-input-field {
@@ -276,11 +289,10 @@ a#lexicon {
   color: white;
   background-color: black;
   padding: 0.5em;
-  margin: 2rem -1rem -1rem;
+  margin: 2rem -0.5rem -0.5rem;
   text-align: center;
-  position: fixed;
-  bottom: 1em;
-  width: 100%;
+  position: sticky;
+  bottom: 0;
 }
 
 #search-footer p {
@@ -316,6 +328,8 @@ a#lexicon {
   text-align: center;
   font-size: 1em;
   font-weight: 600;
+  margin: 0px;
+  padding: 10px 0px 5px;
 }
 
 .feedback-controls {
@@ -324,7 +338,7 @@ a#lexicon {
 
 .feedback-controls button {
   border: none;
-  margin: 5px 10px;
+  margin: 3%;
   background-color: white;
   width: 24px;
   height: 24px;
@@ -346,6 +360,77 @@ a#lexicon {
 
 .feedback-controls .sad-icon:hover {
   mask: url("./images/icon-sad-hover.svg");
+}
+
+#followup-container {
+  background-color: black;
+  position: sticky;
+  bottom: 0px;
+  width: 100vw;
+  padding: 8px 0;
+  margin: -0.5em;
+}
+
+#followup-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 0 14px;
+  padding: 0px;
+  border-top: 1px solid #ededf073;
+}
+
+#followup_mic-container {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+  color: #30e60b;
+  height: 24px;
+  font-size: 14px;
+  padding-right: 8px;
+}
+
+#followup_mic-container:before {
+  display: inline-block;
+  align-self: start;
+  position: relative;
+  top: 3px;
+  content: "";
+  background-image: url("./images/mic-small.svg");
+  background-repeat: no-repeat;
+  background-size: 26px auto;
+  height: 26px;
+  width: 14px;
+}
+
+#followup_mic-container:after {
+  display: inline-block;
+  content: "";
+  background-image: url("./images/right-arrow.svg");
+  background-size: 11px auto;
+  background-repeat: no-repeat;
+  height: 12px;
+  width: 12px;
+  position: relative;
+  left: 6px;
+  top: 1px;
+}
+
+#followup_headings-wrapper {
+  /* hack to allow text overflow ellipsis on children */
+  min-width: 1%;
+}
+
+#followup_heading,
+#followup_subheading {
+  color: white;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#followup_subheading {
+  font-size: 12px;
+  padding-top: 8px;
 }
 
 #next-result {
@@ -370,6 +455,10 @@ a#lexicon {
 
 #header-title .utterance {
   font-style: italic;
+  white-space: normal;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #feedback-whats-wrong {
@@ -422,4 +511,125 @@ a#lexicon {
 
 .feedback-thanks {
   text-align: center;
+}
+
+.circle-timer {
+  width: 185px;
+  height: 180px;
+  background: white;
+  border-radius: 150px;
+  box-sizing: border-box;
+  position: relative;
+  text-align: center;
+  font-size: 40px;
+  display: flex;
+}
+
+.circle-timer:before {
+  border-radius: 100%;
+  content: "";
+  background-image: linear-gradient(#6173ff, #f10366, #ff9100);
+  padding: 7px;
+  width: 185px;
+  height: 180px;
+  top: -7px;
+  left: -7px;
+  position: absolute;
+  z-index: -1;
+}
+
+.timer-card {
+  align-self: center;
+  padding: 1em 0;
+  min-height: 200px;
+  padding-top: 25px;
+  font-weight: bold;
+}
+
+.timer-clock {
+  text-align: center;
+  margin: auto;
+  font-weight: bold;
+}
+
+.timer-notification-text {
+  text-align: center;
+  margin: auto;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.circle-timer-footer {
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  background: rgb(119, 118, 118);
+  border-radius: 150px;
+  box-sizing: border-box;
+  position: relative;
+  text-align: center;
+  font-size: 13px;
+  color: white;
+  display: flex;
+  bottom: 5px;
+}
+
+.circle-timer-footer:before {
+  border-radius: 100%;
+  content: "";
+  background-color: white;
+  padding: 3px;
+  width: 40px;
+  height: 40px;
+  top: -3px;
+  left: -3px;
+  position: absolute;
+  z-index: -1;
+}
+
+.timer-footer {
+  padding: 0.5em 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: black;
+  position: relative;
+  z-index: -2;
+  padding-top: 12px;
+  display: flex;
+  margin-bottom: -8px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.timer-clock-footer {
+  text-align: left;
+  margin: auto;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  bottom: 7px;
+  flex: 1;
+  left: 10px;
+}
+
+.timer-text {
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+  left: 30px;
+  color: white;
+  bottom: 7px;
+  flex: 4;
+}
+
+.type-input-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: arial, sans-serif;
+  color: #0060df;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 1em;
 }

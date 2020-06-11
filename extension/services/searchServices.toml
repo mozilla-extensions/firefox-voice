@@ -86,7 +86,7 @@ names = ["maps"]
 
 ["open street maps"]
 bangSearch = "omap"
-names = ["open maps"]
+names = ["open maps", "openstreetmap"]
 
 [stubhub]
 bangSearch = "stubhub"
@@ -148,6 +148,13 @@ bangSearch = "imdb"
 
 [add-ons]
 bangSearch = "mozaddon"
+names = ["firefox add-ons", "mozilla add-ons"]
 
 [github]
 bangSearch = "github"
+
+[linguee]
+bangSearch = "linguee"
+
+["khan academy"]
+bangSearch = "khanacademy"

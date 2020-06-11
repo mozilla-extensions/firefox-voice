@@ -31,7 +31,7 @@ test = true
 [tabs.undoCloseTab]
 description = "Undo close tab"
 match = """
-  undo (tab |) close (tab |)
+  (undo | reopen | restore | reinstate | bring | recover) (back |) (the | my | that |) (last | recently |) (close | closed |) (tab |)
 """
 
 [[tabs.undoCloseTab.example]]
@@ -39,6 +39,30 @@ phrase = "Undo close tab"
 
 [[tabs.undoCloseTab.example]]
 phrase = "Undo last closed tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Reopen the last closed tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Reopen that tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Reopen closed tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Restore last tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Reinstate last tab"
+test = true
+
+[[tabs.undoCloseTab.example]]
+phrase = "Bring back last tab"
 test = true
 
 [tabs.undoCloseWindow]
@@ -83,7 +107,7 @@ phrase = "Move tab in a new window"
 description = "Opens a new (blank) tab"
 match = """
   open tab
-  (open | launch) (a | the |) (new | blank |) tab (for me|)
+  (open | launch | create) (a | the |) (new | blank |) tab (for me|)
   new (blank |) tab
 """
 
@@ -92,6 +116,10 @@ phrase = "open tab"
 
 [[tabs.open.example]]
 phrase = "open top for me"
+test = true
+
+[[tabs.open.example]]
+phrase = "create tab"
 test = true
 
 [[tabs.open.example]]
@@ -356,6 +384,9 @@ phrase = "Count my open tabs"
 test = true
 
 [[tabs.countTabs.example]]
+phrase = "Count my open tabs"
+
+[[tabs.countTabs.example]]
 phrase = "Count how many tabs I have open"
 
 [[tabs.countTabs.example]]
@@ -375,3 +406,6 @@ match = """
 [[tabs.findOnPage.example]]
 phrase = "Find query on this page"
 test = true
+
+[[tabs.findOnPage.example]]
+phrase = "Find spaghetti on  page"

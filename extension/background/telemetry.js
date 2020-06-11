@@ -117,6 +117,7 @@ export function send() {
   }
   ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
   const s = settings.getSettings();
+  // Note the disabledTelemetry logic is duplicated in catcher.js (to avoid importing settings.js):
   if (!s.disableTelemetry) {
     if (!s.utterancesTelemetry) {
       for (const field of UTTERANCE_FIELDS) {

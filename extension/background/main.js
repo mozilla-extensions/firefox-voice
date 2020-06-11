@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* globals log, buildSettings, catcher */
 
 import * as intentRunner from "./intentRunner.js";
@@ -13,6 +14,7 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
+import { timerController } from "../intents/timer/timer.js";
 import * as intentParser from "./intentParser.js";
 
 const UNINSTALL_SURVEY =
@@ -67,6 +69,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "sendFeedback") {
     intentRunner.clearFeedbackIntent();
     return telemetry.sendFeedback(message);
+  } else if (message.type === "launchOnboarding") {
+    return launchOnboarding();
   } else if (message.type === "openRecordingTab") {
     return openRecordingTab();
   } else if (message.type === "zeroVolumeError") {
@@ -92,6 +96,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     // FIXME: consider focusing the window too
     browserUtil.makeTabActive(recorderTabId || sender.tab.id);
     return null;
+  } else if (message.type === "timerAction") {
+    return timerController[message.method](...(message.args || []));
   } else if (message.type === "getRegisteredNicknames") {
     return intentRunner.getRegisteredNicknames();
   } else if (message.type === "registerNickname") {
@@ -104,6 +110,12 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     return new intentRunner.IntentContext(
       intentParser.parse(message.utterance, message.disableFallback)
     );
+  } else if (message.type === "clearFollowup") {
+    return intentRunner.clearFollowup();
+  } else if (message.type === "addTimings") {
+    return Promise.resolve(log.addTimings(message.timings));
+  } else if (message.type === "getTimings") {
+    return Promise.resolve(log.getTimings());
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
@@ -128,6 +140,8 @@ const temporaryInstallId = setTimeout(() => {
   if (_extensionTemporaryInstall === undefined) {
     _extensionTemporaryInstall = false;
   }
+
+  _inDevelopment = buildSettings.inDevelopment;
 }, 5000);
 
 browser.runtime.onInstalled.addListener(details => {
@@ -209,19 +223,33 @@ function closeTabSoon(tabId, tabUrl) {
 }
 
 async function zeroVolumeError() {
-  if (!recorderTabId) {
-    const exc = new Error("zeroVolumeError with no recorder tab");
-    log.error(exc.message);
-    catcher.capture(exc);
-    throw exc;
+  const exc = new Error("zeroVolumeError");
+  log.error(exc.message);
+  catcher.capture(exc);
+  if (recorderTabId) {
+    await browserUtil.makeTabActive(recorderTabId);
+    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
   }
-  await browserUtil.makeTabActive(recorderTabId);
-  await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
 }
 
 async function launchOnboarding() {
-  const url = browser.runtime.getURL("onboarding/onboard.html");
-  await browser.tabs.create({ url });
+  const tabs = await browser.tabs.query({
+    url: ["*://voice.mozilla.org/firefox-voice/*", "http://localhost/*"],
+  });
+  let hasAudioIntro = false;
+  for (const tab of tabs) {
+    const u = new URL(tab.url);
+    if (
+      u.searchParams.get("source") === "commonvoice" ||
+      u.searchParams.get("ask-audio")
+    ) {
+      hasAudioIntro = true;
+    }
+  }
+  const url = browser.runtime.getURL(
+    "onboarding/onboard.html" + (hasAudioIntro ? "?audio=1" : "")
+  );
+  await browserUtil.openOrActivateTab(url);
 }
 
 if (buildSettings.openPopupOnStart) {

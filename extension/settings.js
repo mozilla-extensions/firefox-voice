@@ -1,4 +1,4 @@
-/* globals log, ppnListing, music_getServiceNamesAndTitles, isBackgroundPage */
+/* globals log, music_getServiceNamesAndTitles, isBackgroundPage */
 
 const watchers = {};
 
@@ -13,6 +13,7 @@ const DEFAULT_SETTINGS = {
   enableWakeword: false,
   wakewords: ["grasshopper"],
   wakewordSensitivity: 0.6,
+  listenForFollowup: false,
 };
 
 export function getSettings() {
@@ -41,7 +42,9 @@ export async function getSettingsAndOptions() {
   const settings = getSettings();
   const options = {
     musicServices: music_getServiceNamesAndTitles(),
-    wakewords: Object.keys(ppnListing),
+    // FIXME: this used to contain the available wakewords, but is empty until we
+    // restore wakeword detection:
+    wakewords: [],
   };
   return { settings, options };
 }

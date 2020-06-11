@@ -74,22 +74,95 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "bookmarks.remove",
+  name: "bookmarks.createInFolder",
   async run(context) {
     const activeTab = await context.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const bookmarks = await browser.bookmarks.search({ url: metadata.url });
-
-    const selected = bookmarks.filter(
-      bookmark => activeTab.url === bookmark.url
-    );
-
-    if (!selected.length) {
-      const e = new Error("This page wasn't bookmarked");
-      e.displayMessage = "This page wasn't bookmarked";
+    if (bookmarks.length) {
+      const exc = new Error("Bookmark already exists");
+      exc.displayMessage = "Bookmark already exists";
+      throw exc;
+    }
+    let folders = await browser.bookmarks.search({});
+    folders = folders.filter(b => b.type === "folder");
+    log.debug("Folder names:", folders.map(f => f.title));
+    const folderContent = [];
+    for (const folder of folders) {
+      folderContent.push({
+        id: folder.id,
+        title: folder.title.split(" "),
+      });
+    }
+    const fuseOptions = {
+      id: "id",
+      shouldSort: true,
+      tokenize: true,
+      findAllMatches: true,
+      includeScore: true,
+      threshold: 0.3,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 3,
+      keys: [
+        {
+          name: "title",
+          weight: 0.8,
+        },
+      ],
+    };
+    const fuse = new Fuse(folderContent, fuseOptions);
+    const matches = fuse.search(context.slots.folder);
+    if (!matches.length) {
+      const e = new Error("No matching folder found");
+      e.displayMessage = `No folder named "${context.slots.folder}" found`;
       throw e;
     }
+    const parentId = matches[0].item;
+    await browser.bookmarks.create({
+      title: metadata.title,
+      url: metadata.url,
+      parentId,
+    });
+  },
+});
 
-    await browser.bookmarks.remove(selected[0].id);
+intentRunner.registerIntent({
+  name: "bookmarks.remove",
+  async run(context) {
+    await context.displayText("Do you wish to remove this bookmark?");
+    await context.startFollowup({
+      heading: 'Say "YES" or "CANCEL"',
+      insistOnFollowup: true,
+    });
+  },
+  async runFollowup(context) {
+    switch (context.parameters.confirmation) {
+      case "false":
+        await context.displayText("Command cancelled");
+        await context.endFollowup();
+        break;
+      default:
+        const activeTab = await context.activeTab();
+        const metadata = await pageMetadata.getMetadata(activeTab.id);
+        const bookmarks = await browser.bookmarks.search({ url: metadata.url });
+
+        const selected = bookmarks.filter(
+          bookmark => activeTab.url === bookmark.url
+        );
+
+        if (!selected.length) {
+          context.displayText("");
+          context.endFollowup();
+          const e = new Error("This page wasn't bookmarked");
+          e.displayMessage = "This page wasn't bookmarked";
+          throw e;
+        }
+
+        await browser.bookmarks.remove(selected[0].id);
+        await context.displayText("Bookmark has been removed");
+        await context.endFollowup();
+    }
   },
 });

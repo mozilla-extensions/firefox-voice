@@ -3,6 +3,7 @@ package mozilla.voice.assistant.intents.music
 import android.app.SearchManager
 import android.content.Context
 import android.provider.MediaStore
+import java.lang.AssertionError
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.ParseResult
 
@@ -43,13 +44,13 @@ class Music {
         private fun createSearchIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent {
             val query = pr.slots[QUERY_KEY]
             val service = pr.slots[SERVICE_KEY]?.firstWord()
             if (query == null || service == null) {
                 // This should never happen.
-                throw Exception("Slot values were not present")
+                throw AssertionError("Slot values were not present")
             }
             return android.content.Intent(
                 when (service) {
@@ -68,7 +69,7 @@ class Music {
         private fun createPlayIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent {
             val intent = pr.slots[SERVICE_KEY]?.let {
                 // Use only the first word of service name ("Google Play" -> "Google")

@@ -1,22 +1,19 @@
 package mozilla.voice.assistant.language
 
-import java.lang.IllegalArgumentException
+import mozilla.voice.assistant.intents.TomlException
 import mozilla.voice.assistant.intents.TomlParser
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@RunWith(JUnit4::class)
 class TomlParserTest {
     lateinit var parser: TomlParser
 
-    @Before
+    @BeforeEach
     fun setup() {
         parser = TomlParser()
     }
@@ -67,8 +64,8 @@ class TomlParserTest {
     fun testUnquotedSingleLineStringRegex() {
         simpleKeys.forEach {
             assertNotNull(
-                "Problem matching /$it/",
-                TomlParser.unquotedSingleLineStringRegex.matchEntire(it)
+                TomlParser.unquotedSingleLineStringRegex.matchEntire(it),
+                "Problem matching /$it/"
             )
         }
     }
@@ -143,11 +140,8 @@ class TomlParserTest {
             "onefield",
             "no dots"
         ).forEach {
-            try {
+            assertThrows(TomlException::class.java) {
                 parser.getString(it)
-                fail("parser.getString('$it') should have thrown an error")
-            } catch (e: IllegalArgumentException) {
-                // expected
             }
         }
         assertNull(parser.getString("foo.bar")) // legal string, not in table
@@ -161,8 +155,8 @@ class TomlParserTest {
             assertEquals("Set an alarm for the specified time", it["description"])
             it["match"]?.trim()?.let {
                 assertTrue(
-                    "Unexpected value for it['match']: /$it/",
-                    it.startsWith("set alarm") && it.endsWith("[period=pm]")
+                    it.startsWith("set alarm") && it.endsWith("[period=pm]"),
+                        "Unexpected value for it['match']: /$it/"
                 )
             } ?: throw Error("Unable to find alarm.setAbsolute.match")
         } ?: throw Error("Unable to find table 'alarm.setAbsolute'")
@@ -180,8 +174,8 @@ class TomlParserTest {
             )
             it["match"]?.trim()?.let {
                 assertTrue(
-                    "Unexpected value for it['match']: /$it/",
-                    it.startsWith("set alarm") && it.endsWith("from now")
+                    it.startsWith("set alarm") && it.endsWith("from now"),
+                    "Unexpected value for it['match']: /$it/"
                 )
             } ?: throw Error("Unable to find alarm.setRelative.match")
         }

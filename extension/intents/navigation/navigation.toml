@@ -3,6 +3,7 @@ description = "Search a specific service, using their site-specific search page"
 match = """
   google images (of | for |) [query] [service=images]
   images (of | for) [query] [service=images]
+  open [service:serviceName] and search [query]
   (do a |) (search | search on | query on | lookup on | look up on | look on | look in | look up in | lookup in) (my |) [service:serviceName] (for | for the |) [query] (for me |)
   (do a |) (search | query ) my [service:serviceName] (for | for the |) [query] (for me|)
   (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
@@ -44,7 +45,7 @@ phrase = "Find website work plan on my Google Drive"
 test = true
 
 [[navigation.bangSearch.example]]
-phrase = "Search ScrollAnywhere on addons"
+phrase = "Search ScrollAnywhere on add-ons"
 
 [[navigation.bangSearch.example]]
 phrase = "search for Electronics in this tab"
@@ -71,7 +72,7 @@ match = """
 """
 
 [navigation.navigate]
-description = "Navigate directly to a site, using Google's I'm Feeling Luck and the query"
+description = "Navigate to the named page or if does not exist, directly to a site, using Google's I'm Feeling Luck and the query"
 match = """
   (bring me | take me | go | navigate | show me | open) (to | find |) (page |) [query]
   (bring me | take me | go | navigate | show me | open) (to | find |) (page |) (in |) (a |) (new |) [where] (and go | and |) (to | find | open) [query]
@@ -148,9 +149,18 @@ expectSlots = {language = "French"}
 [navigation.followLink]
 description = "Follow the named link"
 match = """
-  (follow | click | click on | openlink) (link |) [query]
+  (follow | click | click on | openlink | clicklink) (link |) [query]
   (open | go to) link [query]
 """
+
+[navigation.closeDialog]
+description = "Closes a lightbox-style dialog box"
+match = """
+  (close | dismiss | cancel | stop) (dialog | lightbox | question)
+"""
+
+[[navigation.closeDialog.example]]
+phrase = "Close dialog"
 
 [[navigation.followLink.example]]
 phrase = "follow link latest news"

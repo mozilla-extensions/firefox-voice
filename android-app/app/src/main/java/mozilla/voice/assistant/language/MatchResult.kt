@@ -11,7 +11,8 @@ private fun Map<String, List<Word>>.merge(map: Map<String, List<Word>>?): Map<St
     } ?: this
 
 /**
- * A representation of the state of a match between a [Pattern] and an utterance.
+ * A representation of the state of a match between a [Pattern] and an utterance. Its printable
+ * representation is useful for debugging pattern matching.
  */
 class MatchResult(
     internal val utterance: List<Word>,
@@ -23,24 +24,41 @@ class MatchResult(
     internal val aliasedWords: Int = 0,
     internal val intentName: String? = null
 ) {
-    internal constructor(string: String, language: Language) : this(utterance = string.toWordList(language))
+    internal constructor(string: String, language: Language) : this(
+        utterance = string.toWordList(
+            language
+        )
+    )
 
-    override fun toString(): String {
-        val s = buildString {
-            for (i in utterance.indices) {
-                if (i == index) {
-                    append("^^")
-                } else if (isNotEmpty()) {
-                    append(' ')
-                }
-                append(utterance[i].toSource())
-            }
+    override fun toString() =
+        StringBuilder("MatchResult(\"").apply {
+            append(baseString())
+            append("\"")
+            append(slotString())
+            if (parameters.isNotEmpty()) append(", parameters: $parameters")
+            if (skippedWords != 0) append(", skippedWords: $skippedWords")
+            if (aliasedWords != 0) append(", aliasedWords: $aliasedWords")
+            append(intentName?.let { ", intentName: $it" } ?: "")
+            append(", capturedWords: $capturedWords)")
+        }.toString()
 
-            if (index >= utterance.size) {
+    private fun baseString() = buildString {
+        for (i in utterance.indices) {
+            if (i == index) {
                 append("^^")
+            } else if (isNotEmpty()) {
+                append(' ')
             }
+            append(utterance[i].toSource())
         }
-        val slotString = if (slots.isEmpty()) {
+
+        if (index >= utterance.size) {
+            append("^^")
+        }
+    }
+
+    private fun slotString() =
+        if (slots.isEmpty()) {
             ""
         } else {
             slots.keys.joinToString(
@@ -54,32 +72,17 @@ class MatchResult(
                         postfix = "\"",
                         separator = " "
                     ) { word -> word.toSource() }
-                } ?: throw Error("Slot name $name not associated with any values")
+                } ?: throw AssertionError("Slot name $name not associated with any values")
             }
         }
-
-        val paramString = if (parameters.isEmpty()) "" else ", parameters: $parameters"
-        val skipString = if (skippedWords == 0) "" else ", skippedWords: $skippedWords"
-        val aliasString = if (aliasedWords == 0) "" else ", aliasedWords: $aliasedWords"
-        val intentString = intentName?.let { ", intentName: $it" } ?: ""
-
-        return "MatchResult(\"$s\"$slotString$paramString$skipString$aliasString$intentString, capturedWords: $capturedWords)"
-    }
 
     internal fun utteranceExhausted() = index >= utterance.size
 
     internal fun utteranceWord(): Word =
         if (utteranceExhausted()) {
-            throw Error("Attempted to get utterance word past end: $this")
+            throw AssertionError("Attempted to get utterance word past end: $this")
         } else {
             utterance[index]
-        }
-
-    internal fun slotString(slotName: String) =
-        slots[slotName] ?.let {
-            it.joinToString(separator = " ") { word ->
-                word.toSource()
-            }
         }
 
     internal fun stringSlots(): Map<String, String> = slots.mapValues {
@@ -89,6 +92,7 @@ class MatchResult(
     }
 
     // This method should not be confused with Object.clone().
+    @SuppressWarnings("LongParameterList", "ThrowsCount")
     internal fun clone(
         addIndex: Int = 0,
         slots: Map<String, List<Word>>? = null,
@@ -103,7 +107,7 @@ class MatchResult(
 
             index =
             if (this.index + addIndex > this.utterance.size) {
-                throw Error("Attempted to move past the end of the end")
+                throw AssertionError("Attempted to move past the end of the end")
             } else {
                 this.index + addIndex
             },
@@ -113,7 +117,7 @@ class MatchResult(
             parameters = parameters?.let {
                 it.keys.forEach { key ->
                     if (this.parameters.containsKey(key)) {
-                        throw Error("Attempted to override parameter $key (${parameters[key]}")
+                        throw AssertionError("Attempted to override parameter $key (${parameters[key]}")
                     }
                 }
                 it + this.parameters
@@ -121,7 +125,7 @@ class MatchResult(
 
             intentName = intentName?.let { newIntent ->
                 this.intentName?.let { oldIntent ->
-                    throw Error("Attempted to override intentName ($oldIntent) with $newIntent")
+                    throw AssertionError("Attempted to override intentName ($oldIntent) with $newIntent")
                 } ?: newIntent
             } ?: this.intentName,
 

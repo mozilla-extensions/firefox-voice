@@ -41,11 +41,11 @@ test = true
 [search.search]
 description = "Experimental search interface; this does all searches in a special pinned tab, and if the search results in a card then a screenshot of the card is displayed in the popup. If there's no card, then the first search result is opened in a new tab."
 match = """
-  (do a |) (query | find | find me | look up | lookup | look on | look for) (google | the web | the internet |) (for |) [query] (on the web |) (for me |)
+  (do a |) (query | find | find me | look up | lookup | look on | look for) (the web | the internet |) (for |) [query] (on | in ) (on the web |) (for me |)
 """
 
 [[search.search.example]]
-phrase = "Look up recipes for fish tacos"
+phrase = "Look up recipes for fish tacos on food network"
 
 [[search.search.example]]
 phrase = "Who created breaking bad?"
@@ -77,7 +77,7 @@ phrase = "How do I get to the hardware store?"
 [search.searchPage]
 description = "Opens a search page"
 match = """
-  (do a |) (search | google | look on) (google | the web | the internet |) (for |) [query] (on the web |) (for me|)
+  (do a |) (search | look on| look up | lookup | look for) (the web | the internet |) (for |) [query] (on the web |) (for me|)
 """
 
 [[search.searchPage.example]]
@@ -87,12 +87,10 @@ phrase = "Search for hiking in Denver"
 phrase = "search for tops"
 
 [[search.searchPage.example]]
-phrase = "do a search for query on the web for me"
-test = true
-expectSlots = {query = "query"}
+phrase = "Look up recipes for fish tacos"
 
 [[search.searchPage.example]]
-phrase = "google query"
+phrase = "do a search for query on the web for me"
 test = true
 expectSlots = {query = "query"}
 
@@ -131,3 +129,18 @@ match = """
 [[search.defaultSearchEngine.example]]
 phrase = "search"
 test = true
+
+[search.searchGoogle]
+description = "Give search results from google"
+match = """
+  (do a |) (search | search on | query | find | look up | lookup | look on |) (google) (for | for the |) [query] (for me |)
+  (do a |) (search | query | find | look up | lookup | look on | look for |) (for | for the |) [query] (on google) (for me |)
+"""
+
+[[search.searchGoogle.example]]
+phrase = "google waterfall"
+expectSlots = { query = "waterfall" }
+
+[[search.searchGoogle.example]]
+phrase = "search for fox news on google"
+expectSlots = { query = "fox news" }
