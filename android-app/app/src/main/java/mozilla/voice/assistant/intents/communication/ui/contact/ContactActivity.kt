@@ -1,9 +1,13 @@
 package mozilla.voice.assistant.intents.communication.ui.contact
 
+import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
@@ -26,9 +30,11 @@ import mozilla.voice.assistant.intents.communication.VOICE_MODE
  * and the name is specified through either the [NICKNAME_KEY] extra or the [PAYLOAD_KEY] extra,
  * which may also contain a message.
  */
-class ContactActivity : AppCompatActivity() {
+class ContactActivity : AppCompatActivity(), ContactActivityInterface {
     private lateinit var controller: ContactController
     private var cursorAdapter: RecyclerView.Adapter<ContactCursorAdapter.ContactViewHolder>? = null
+    override val app: Application
+        get() = this.application
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,16 +67,37 @@ class ContactActivity : AppCompatActivity() {
         }
     }
 
-    internal fun reportPermissionsDenial() {
+    override fun startIntent(newIntent: Intent) {
+        startActivity(newIntent)
+        finish()
+    }
+
+    override fun permissionsNeeded() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                PERMISSIONS_REQUEST
+            )
+            true
+        } else {
+            false
+        }
+
+    override fun reportPermissionsDenial() {
         Toast.makeText(this, "Unable to proceed without permissions", Toast.LENGTH_LONG)
             .show()
     }
 
-    internal fun processZeroContacts(cursor: Cursor, nickname: String) {
-        // contactsViewAnimator.displayedChild = R.id.noContactsButton
-        contactsCheckBox.visibility = View.VISIBLE
+    override fun processZeroContacts(cursor: Cursor, nickname: String?) {
+        contactsCheckBox.visibility = if (nickname == null) View.INVISIBLE else View.VISIBLE
 
-        contactStatusView.text = getString(R.string.no_contacts, nickname)
+        contactStatusView.text = if (nickname == null) {
+            getString(R.string.no_contacts)
+        } else {
+            getString(R.string.no_contacts_with_nickname, nickname)
+        }
         contactsViewAnimator.showNext()
         noContactsButton.setOnClickListener {
             cursor.close()
@@ -87,10 +114,13 @@ class ContactActivity : AppCompatActivity() {
         )
     }
 
-    internal fun processMultipleContacts(cursor: Cursor, nickname: String) {
-        //   contactsViewAnimator.displayedChild = R.id.contactsList
-        contactsCheckBox.visibility = View.VISIBLE
-        contactStatusView.text = getString(R.string.multiple_contacts, nickname)
+    override fun processMultipleContacts(cursor: Cursor, nickname: String?) {
+        contactsCheckBox.visibility = if (nickname == null) View.INVISIBLE else View.VISIBLE
+        contactStatusView.text = if (nickname == null) {
+            getString(R.string.multiple_contacts)
+        } else {
+            getString(R.string.multiple_contacts_with_nickname, nickname)
+        }
         ContactCursorAdapter(this, nickname, cursor, controller).let { contactCursorAdapter ->
             cursorAdapter = contactCursorAdapter
             findViewById<RecyclerView>(R.id.contactsRecyclerView).apply {
@@ -107,7 +137,10 @@ class ContactActivity : AppCompatActivity() {
         if (requestCode == SELECT_CONTACT_FOR_NICKNAME) {
             if (resultCode == Activity.RESULT_OK) {
                 data?.data?.let {
-                    controller.onContactChosen(it)
+                    controller.onContactChosen(
+                        it,
+                        contactsCheckBox.visibility == View.VISIBLE && contactsCheckBox.isChecked
+                    )
                 } ?: run {
                     Log.e(TAG, "Unable to retrieve chosen contact")
                     finish()

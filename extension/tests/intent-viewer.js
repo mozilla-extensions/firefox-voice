@@ -49,7 +49,7 @@ async function init() {
       examples = intent.examples.map(e => {
         return `
         <section>
-          Example: <code>${quote(e.text)}</code><br>
+          Example: <code>${quote(e.text.phrase)}</code><br>
           ${
             e.parsedIntent === intent.name
               ? ""
