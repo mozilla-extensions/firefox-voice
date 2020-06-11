@@ -2,7 +2,8 @@
 /* globals React */
 
 export const WakewordTraining = ({
-    savedModels
+    savedModels,
+    onTrainExample
 }) => {
     return (
       <div id="wakeword-training-wrapper">
@@ -11,6 +12,10 @@ export const WakewordTraining = ({
             <SelectModel
                 savedModels={savedModels}
             />
+            <Trainer
+                onTrainExample={onTrainExample}
+            />
+            <Tester />
         </React.Fragment>
       </div>
     );
@@ -41,3 +46,46 @@ const SelectModel = ({savedModels}) => {
         </div>
     );
 };
+
+const Trainer = ({onTrainExample}) => {
+    return (
+        <div class="settings-content">
+            <fieldset id="trainer">
+                <legend>Record training examples for each wakeword</legend>
+                <div>
+                    <p>You should aim to record at least 40 examples per wakeword.</p>
+                    <p>
+                        <b>Settings (hard-coded): </b>
+                        Duration = 2x, including audio waveform, and mixing in noise for training.
+                    </p>
+                </div>
+                <ExampleRecorder word="Background noise" onTrainExample={onTrainExample} />
+                <ExampleRecorder word="Hey Firefox" onTrainExample={onTrainExample} />
+                <ExampleRecorder word="Next slide please" onTrainExample={onTrainExample} />
+            </fieldset>
+        </div>
+    );
+}
+
+const ExampleRecorder = ({
+    word,
+    onTrainExample
+}) => {
+
+    const recordExample = e => {
+        console.log("got here");
+        onTrainExample(word);
+    }
+
+    return (
+        <div>
+            <button class="collect-example-button" onClick={recordExample}>
+                {word}
+            </button>
+        </div>
+    );
+}
+
+const Tester = () => {
+    return (null);
+}
