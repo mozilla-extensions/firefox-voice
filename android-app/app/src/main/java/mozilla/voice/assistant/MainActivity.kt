@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermsBeforeStartingSpeechRecognition() {
         if (!SpeechRecognizer.isRecognitionAvailable(this)) {
-            statusView.text = "Voice input not available on this device."
+            statusView.text = getString(R.string.no_voice_input)
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
