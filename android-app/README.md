@@ -55,8 +55,8 @@ After installation, hold down the Home button to open the app, then state your r
 After cloning the project:
 
 1. Open Android Studio.
-2. Select "Import project (Gradle, Eclipse ADT, etc.)"./
-3. Open "firefox-voice/android-app".
+2. Select `Import project (Gradle, Eclipse ADT, etc.)`.
+3. Open `firefox-voice/android-app`.
 
 This will start building the project and will notify you of anything else you need to download, which you can do through `Tools > SDK Manager`.
 
