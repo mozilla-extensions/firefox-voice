@@ -1,5 +1,18 @@
 # Firefox Assistant
 
+- [Firefox Assistant](#firefox-assistant)
+  * [User guide](#user-guide)
+    + [Enable installation of apps from unknown sources](#enable-installation-of-apps-from-unknown-sources)
+    + [Install the Mozilla Assistant app](#install-the-mozilla-assistant-app)
+    + [Specify your assistant](#specify-your-assistant)
+    + [Using Mozilla Assistant](#using-mozilla-assistant)
+  * [Developer guide](#developer-guide)
+    + [Android Studio](#android-studio)
+    + [Using an Emulator](#using-an-emulator)
+    + [Style](#style)
+    + [Testing](#testing)
+    + [Generating a signed build](#generating-a-signed-build)
+
 ## User guide
 
 We recommend opening this page (https://bit.ly/3dekxLZ) in Firefox on Android.
