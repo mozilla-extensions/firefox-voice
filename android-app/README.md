@@ -1,6 +1,5 @@
 # Firefox Assistant
 
-- [Firefox Assistant](#firefox-assistant)
   * [User guide](#user-guide)
     + [Enable installation of apps from unknown sources](#enable-installation-of-apps-from-unknown-sources)
     + [Install the Mozilla Assistant app](#install-the-mozilla-assistant-app)
