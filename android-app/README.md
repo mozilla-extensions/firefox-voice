@@ -101,28 +101,26 @@ If someone wants to replace an app signed by a different key, they will need to 
 
 ### Adding an intent ###
 
-Adding a voice intent (not to be confused with an Android [Intent](https://developer.android.com/reference/android/content/Intent) requires these steps:
+Adding a voice intent (not to be confused with an Android [`Intent`](https://developer.android.com/reference/android/content/Intent) requires these steps:
 
 #### Create TOML ####
 
 Create or add a description of the intent to either an existing TOML file or a new TOML file in the [assets directory](https://github.com/mozilla/firefox-voice/tree/master/android-app/app/src/main/assets). See [Writing an Intent](https://github.com/mozilla/firefox-voice/blob/master/docs/writing-an-intent.md) for the TOML format.
 
 #### Implement an IntentBuilder ####
-In an existing or new class in a [mozilla.voice.assistant.intents](https://github.com/mozilla/firefox-voice/tree/master/android-app/app/src/main/java/mozilla/voice/assistant/intents) subpackage, write an [IntentBuilder](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentRunner.kt#L104).
-
-[ParseResult](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentParser.kt#L33)
+In an existing or new class in a [mozilla.voice.assistant.intents](https://github.com/mozilla/firefox-voice/tree/master/android-app/app/src/main/java/mozilla/voice/assistant/intents) subpackage, write an [`IntentBuilder`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentRunner.kt#L104).
 
 An `IntentBuilder` takes arguments of the following types:
 
-    - [ParseResult](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentParser.kt#L33), from which it can retrieve slot and parameter values.
-    - `Context?`, in case it needs one to generate the output `Intent`. The only time the value may be null is during tests.
-    - [`Metadata`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/Metadata.kt), in case any of its information is needed (which is currently only the case for the [launch.install intent](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt).
+* [`ParseResult`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentParser.kt#L33), from which it can retrieve slot and parameter values.
+* `Context?`, in case it needs one to generate the output `Intent`. The only time the value may be null is during tests.
+* [`Metadata`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/Metadata.kt), in case any of its information is needed (which is currently only the case for the [launch.install intent](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt).
 
 It returns an `Intent` satisfying the request, or `null` if it is unable to. Look at existing files for examples, such as [Alarm.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/alarm/Alarm.kt).
 
-Usually, the produced `Intent` is handled by a separate app. For example, requests to set an alarm generate an `Intent` whose `action` is [ACTION_SET_ALARM](https://developer.android.com/reference/android/provider/AlarmClock#ACTION_SET_ALARM); however, this is not always the case.
+Usually, the produced `Intent` is handled by a separate app. For example, requests to set an alarm generate an `Intent` whose `action` is [`ACTION_SET_ALARM`](https://developer.android.com/reference/android/provider/AlarmClock#ACTION_SET_ALARM); however, this is not always the case.
 
-In the user makes a nontrivial communication request (e.g., "call Mom" or "text Keith hello"), [PhoneCall.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/PhoneCall.kt) or [TextMessage.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/TextMessage.kt) generates an intent to launch [ContactActivity](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/ui/contact/ContactActivity.kt), which is within the app.
+In the user makes a nontrivial communication request (e.g., "call Mom" or "text Keith hello"), [PhoneCall.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/PhoneCall.kt) or [TextMessage.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/TextMessage.kt) generates an intent to launch [`ContactActivity`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/communication/ui/contact/ContactActivity.kt), which is within the app.
 
 If the user makes a request to launch an app (e.g., "launch Facebook"), there are two types of `Intent`s that could be generated by [Launch.kt](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt):
 
