@@ -85,7 +85,7 @@ To check your style, run:
 
 ### Testing ###
 You are expected to both add tests for code that you write and make sure that your changes do not
-cause existing tests to fail. You can run tests in Android Studio by right-clicking on `app` in the Project Pane and selecting `Run 'All Tests'`.
+cause existing tests to fail. You can run tests in Android Studio by right-clicking on `app` in the Project Pane and selecting `Run 'All Tests'`. ![screenshot](doc/run-all-tests.png)
 
 ### Generating a signed build ###
 When you change the code, you should also [build a signed APK](https://developer.android.com/studio/publish/app-signing#sign-apk). Here is a summary of the steps:
