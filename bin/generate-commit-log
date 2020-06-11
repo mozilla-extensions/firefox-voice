@@ -20,6 +20,9 @@ IGNORE_USERNAMES = [
     "espertus",
     "awallin",
     "jcambre",
+    "Simpcyclassy",
+    "danielamormocea",
+    "jofish",
 ]
 
 USERNAME_CACHE = os.path.abspath(os.path.join(__file__, "../username-cache.json"))
