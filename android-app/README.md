@@ -38,15 +38,6 @@ After installation, hold down the Home button to open the app, then state your r
 
 ## Developer guide
 
-### Build instructions
-
-```
-git clone https://github.com/mozilla/firefox-voice.git
-cd firefox-voice/android-app
-./gradlew test
-./gradlew assemble
-```
-
 ### Android Studio
 
 After cloning the project:
