@@ -30,6 +30,24 @@ for (const filename of glob.sync(INTENT_DIR + "/**/*.toml")) {
     );
     process.exit(1);
   }
+  for (const subcommand in data[intentName]) {
+    const command = data[intentName][subcommand];
+    if (command.example && command.examples) {
+      console.error(
+        `File ${filename} has [[${intentName}.${subcommand}.example]] and [[...examples]]`
+      );
+      process.exit(2);
+    }
+    if (
+      (command.example && !Array.isArray(command.example)) ||
+      (command.examples && !Array.isArray(command.examples))
+    ) {
+      console.error(
+        `File ${filename} does not use [[]] around ${intentName}.${subcommand}.example`
+      );
+      process.exit(3);
+    }
+  }
   if (metadata[intentName]) {
     throw new Error(`Unexpected existing key for ${intentName}`);
   }
@@ -57,8 +75,8 @@ for (const filename of glob.sync(SERVICE_DIR + "/*/*.toml")) {
   const name = Object.keys(data)[0];
   const type = data[name].type;
   data[name].names = (data[name].names || []).concat([name]);
-  if (type !== "music") {
-    throw new Error(`Expected type=music in ${filename}`);
+  if (type !== "music" && type !== "email") {
+    throw new Error(`Expected type=music/email in ${filename}`);
   }
   delete data[name].type;
   Object.assign(serviceMetadata.music, data);

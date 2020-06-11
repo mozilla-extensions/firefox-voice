@@ -2,6 +2,7 @@
 // This is a copy of:
 // https://github.com/mozilla-services/mozilla-pipeline-schemas/blob/master/schemas/telemetry/voice/voice.4.schema.json
 // When this is updated also please update metrics.md
+// prettier-ignore
 
 export const schema = {
   "$schema": "http://json-schema.org/draft-04/schema#",
@@ -1193,7 +1194,7 @@ export const schema = {
           "type": "boolean"
         },
         "inputLength": {
-          "minumum": 0,
+          "minimum": 0,
           "title": "Number of characters in text/voice input",
           "type": "integer"
         },

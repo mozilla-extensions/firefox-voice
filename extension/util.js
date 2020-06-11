@@ -4,6 +4,18 @@ export function sleep(ms) {
   });
 }
 
+export function getSleeperWithClear(ms) {
+  let timeout = null;
+  const sleeper = new Promise(resolve => {
+    timeout = setTimeout(resolve, ms);
+  });
+  const clear = () => {
+    clearTimeout(timeout);
+  };
+
+  return { sleeper, clear };
+}
+
 /** If the promise takes longer than the given number of milliseconds, throw a promise error
  * (error.name === "TimeoutError") */
 export function promiseTimeout(promise, time) {

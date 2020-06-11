@@ -110,7 +110,7 @@ names = ["maps"]
 ["open street maps"]
 bangSearch = "omap"
 baseUrl = "https://www.openstreetmap.org/"
-names = ["open maps"]
+names = ["open maps", "openstreetmap"]
 
 [stubhub]
 bangSearch = "stubhub"
@@ -198,3 +198,16 @@ baseUrl = "https://www.imdb.com/"
 [add-ons]
 bangSearch = "mozaddon"
 baseUrl = "https://addons.mozilla.org/"
+names = ["firefox add-ons", "mozilla add-ons"]
+
+[github]
+bangSearch = "github"
+baseUrl = "https://github.com"
+
+[linguee]
+bangSearch = "linguee"
+baseUrl = "https://www.linguee.com/"
+
+["khan academy"]
+bangSearch = "khanacademy"
+baseUrl = "https://www.khanacademy.org/"

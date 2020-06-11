@@ -93,3 +93,10 @@ intentRunner.registerIntent({
     await browser.tabs.update(activeTab.id, { url: results[index].url });
   },
 });
+
+intentRunner.registerIntent({
+  name: "aboutPage.viewPageSource",
+  async run(context) {
+    await browser.experiments.voice.viewPageSource();
+  },
+});

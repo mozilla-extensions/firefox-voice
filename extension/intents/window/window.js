@@ -1,8 +1,10 @@
+/* globals buildSettings */
+
 import * as intentRunner from "../../background/intentRunner.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
   const len = windowArray.length;
-  // find currentWindowId postion in array
+  // find currentWindowId position in array
   const currentWindowIndex = windowArray.findIndex(
     window => window.id === currentWindowId
   );
@@ -42,5 +44,60 @@ intentRunner.registerIntent({
   name: "window.downloads",
   async run(context) {
     await browser.experiments.voice.openDownloads();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.close",
+  async run(context) {
+    context.keepPopup();
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.remove(currentWindow.id);
+    context.displayText("Window closed");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.quitApplication",
+  async run(context) {
+    await browser.experiments.voice.quitApplication();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.combine",
+  async run(context) {
+    const currentWindow = await browser.windows.getCurrent();
+    const tabs = await browser.tabs.query({ currentWindow: false });
+    const tabsIds = tabs.map(tabInfo => tabInfo.id);
+    await browser.tabs.move(tabsIds, { windowId: currentWindow.id, index: -1 });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.zoom",
+  async run(context) {
+    if (buildSettings.android) {
+      const exc = new Error("Maximize not supported on Android");
+      exc.displayMessage = exc.message;
+      throw exc;
+    }
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "maximized" });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.minimize",
+  async run(context) {
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "minimized" });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.clearBrowserHistory",
+  async run(context) {
+    await browser.experiments.voice.clearBrowserHistory();
   },
 });

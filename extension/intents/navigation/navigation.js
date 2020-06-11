@@ -32,24 +32,31 @@ function saveTabQueryToDatabase(query, tab, url) {
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
-    const query = context.slots.query;
-    const where = context.slots.where;
-    const cached = queryDatabase.get(query.toLowerCase());
-    if (where === "window") {
-      if (cached) {
-        await browser.windows.create({ url: cached.url });
+    const query = context.slots.query.toLowerCase();
+    const result = await browser.storage.sync.get("pageNames");
+    const pageNames = result.pageNames;
+    if (pageNames && pageNames[query]) {
+      const savedUrl = pageNames[query];
+      await context.openOrFocusTab(savedUrl);
+    } else {
+      const where = context.slots.where;
+      const cached = queryDatabase.get(query.toLowerCase());
+      if (where === "window") {
+        if (cached) {
+          await browser.windows.create({ url: cached.url });
+        } else {
+          await browser.windows.create({});
+          const tab = await context.createTabGoogleLucky(query);
+          const url = tab.url;
+          saveTabQueryToDatabase(query, tab, url);
+        }
+      } else if (cached) {
+        await context.openOrFocusTab(cached.url);
       } else {
-        await browser.windows.create({});
         const tab = await context.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
-    } else if (cached) {
-      await context.openOrFocusTab(cached.url);
-    } else {
-      const tab = await context.createTabGoogleLucky(query);
-      const url = tab.url;
-      saveTabQueryToDatabase(query, tab, url);
     }
     context.done();
   },
@@ -177,6 +184,24 @@ intentRunner.registerIntent({
     if (found === false) {
       const exc = new Error("No link found matching query");
       exc.displayMessage = `No link "${context.slots.query}" found`;
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "navigation.closeDialog",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/intents/navigation/closeDialog.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "closeDialog",
+    });
+    if (found === false) {
+      const exc = new Error("Could not close dialog");
+      exc.displayMessage = "I couldn't figure out how to close the dialog";
       throw exc;
     }
   },

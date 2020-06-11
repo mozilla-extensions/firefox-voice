@@ -6,7 +6,117 @@ match = """
 """
 
 [window.downloads]
-description = "Open downloads"
+description = "Open the downloads"
 match = """
   (show | open |) downloads (menu |)
 """
+[[window.downloads.example]]
+phrase = "open downloads"
+
+[window.quitApplication]
+description = "Close Firefox"
+match = """
+  (close | quit | exit | shutdown) (firefox | browser | the browser)
+"""
+
+[[window.quitApplication.example]]
+phrase = "Close Firefox"
+
+[window.combine]
+description = "Combine all windows"
+match = """
+  combine all windows (into |) (one |) (window |)
+  combine tabs (into |) (one |) window
+"""
+
+[[window.combine.example]]
+phrase = "combine all windows"
+
+[[window.combine.example]]
+phrase = "combine all windows into one"
+test = true
+
+[[window.combine.example]]
+phrase = "combine tabs into one window"
+test = true
+
+[window.close]
+description = "Closes the window"
+match = """
+  close (the |) (this |) (all |) (window{s}) (for me |)
+"""
+
+[[window.close.example]]
+phrase = "Close window"
+
+[[window.close.example]]
+phrase = "Close this window"
+test = true
+
+[[window.close.example]]
+phrase = "Close all windows"
+test = true
+
+[window.clearBrowserHistory]
+description = "Brings up dialogue box to clear browser history"
+match = """
+  (clear | erase) (firefox | browser |) (history | data)
+"""
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear history"
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox history"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox data"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear browser history"
+test = true
+
+[window.zoom]
+description = "Zooms the window"
+match = """
+  (Zoom | Maximize |) (the | this |) (window |) (for me |)
+"""
+
+[[window.zoom.example]]
+phrase = "Zoom window"
+
+[[window.zoom.example]]
+phrase = "Zoom this window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize"
+test = true
+
+[window.minimize]
+description = "Minimizes the window"
+match = """
+  (minimize | hide |) (the |) (this |) (window |) (for me |)
+"""
+
+[[window.minimize.example]]
+phrase = "Minimize window"
+
+[[window.minimize.example]]
+phrase = "Minimize this window"
+test = true
+
+[[window.minimize.example]]
+phrase = "Minimize"
+test = true
+
+[[window.minimize.example]]
+phrase = "hide window"
+test = true
+

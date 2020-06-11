@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Mozilla Assistant</string>
+    <string name="initializing">One moment...</string>
+    <string name="listening">Listening</string>
+    <string name="processing">Processing</string>
+    <string name="got_it">One second...</string>
+    <string name="specific_suggestion_prefix">Try saying</string>
+    <string name="general_suggestion_prefix">You can say things like</string>
+    <string name="no_match">I didn\'t understand that. Try again.</string>
+    <string name="no_speech">I didn\'t catch that. Try again.</string>
+    <string name="remember_contact_choice">Remember this choice for next time</string>
+    <string name="no_contacts_select_contact">select a contact</string>
+    <string name="multiple_contacts_with_nickname">"Multiple matches for %1s. Who did you mean?"</string>
+    <string name="multiple_contacts">Multiple matches found. Who did you mean?</string>
+    <string name="no_contacts_with_nickname">No matches found for %1s</string>
+    <string name="no_contacts">No matches found in your contacts.</string>
+    <string name="no_voice_input">Voice input not available on this device.</string>
+</resources>

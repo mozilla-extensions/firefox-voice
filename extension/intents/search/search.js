@@ -36,8 +36,11 @@ async function openSearchTab() {
   }, CLOSE_TIME);
   if (_searchTabId) {
     try {
-      await browser.tabs.get(_searchTabId);
-      return _searchTabId;
+      const tab = await browser.tabs.get(_searchTabId);
+      // reuse tab only if it's hidden
+      if (tab.hidden === true) {
+        return _searchTabId;
+      }
     } catch (e) {
       // Presumably the tab doesn't exist
       log.info("Error getting tab:", String(e));
@@ -102,12 +105,27 @@ function trackTabHide() {
 
 async function performSearch(query) {
   const tabId = await openSearchTab();
+  // Slicing query string to follow google query standard
+  // For more information, https://support.google.com/gsa/answer/4411411#requests
+  query = query.slice(0, 128);
   const url = searching.googleSearchUrl(query) + "&voice";
   await browserUtil.loadUrl(tabId, url);
   if (buildSettings.android) {
     await browserUtil.makeTabActive(tabId);
   }
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  try {
+    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  } catch (e) {
+    // There's a (fairly) common race condition here
+    if (e.message.includes("communicate is not defined")) {
+      log.info(
+        "Race condition in search page, attempting to load queryScript second time"
+      );
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    } else {
+      throw e;
+    }
+  }
 }
 
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,
@@ -195,32 +213,52 @@ function pollForCard(maxTime) {
 async function moveResult(context, step) {
   stopCardPoll();
   const { tabId, searchInfo } = await getSearchInfo();
+
   if (!searchInfo) {
     const e = new Error("No search made");
     e.displayMessage = "You haven't made a search";
     throw e;
   }
+
+  // We are on an initial search results page and trying to navigate to a
+  // non-existent previous result
+  if (searchInfo.index === undefined && step < 0) {
+    const e = new Error("No previous search result");
+    e.displayMessage = "No previous search result";
+    throw e;
+  }
+
   if (
     (searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
     (searchInfo.index <= 0 && step < 0)
   ) {
     const tabId = await openSearchTab();
-    await context.makeTabActive(tabId);
+    await browserUtil.loadUrl(tabId, searchInfo.searchUrl);
+
+    // reset the index to an initial search result
+    searchInfo.index = undefined;
+    tabSearchResults.set(tabId, searchInfo);
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: 0,
+    });
+    context.startFollowup({
+      heading: "Say 'next' to view",
+      subheading: searchInfo.searchResults[0].title,
+      acceptFollowupIntent: ["search.next", "search.previous"],
+      skipSuccessView: true,
+    });
     return;
   }
-  if (!(searchInfo.index + step >= 0)) {
-    const e = new Error("No previous search result");
-    e.displayMessage = "No previous search result";
-    throw e;
-  }
-  searchInfo.index += step;
+
+  // Initial search results do not have an index property and at this point
+  // we wish to start navigating
+  searchInfo.index =
+    searchInfo.index === undefined ? 0 : searchInfo.index + step;
+
   const item = searchInfo.searchResults[searchInfo.index];
-  await browser.runtime.sendMessage({
-    type: "showSearchResults",
-    searchResults: searchInfo.searchResults,
-    searchUrl: searchInfo.searchUrl,
-    index: searchInfo.index,
-  });
   if (!tabId) {
     const tab = await context.createTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
@@ -250,6 +288,21 @@ async function moveResult(context, step) {
       tabSearchResults.delete(tabId);
     }
   }
+  await browserUtil.waitForDocumentComplete(lastTabId);
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    searchResults: searchInfo.searchResults,
+    searchUrl: searchInfo.searchUrl,
+    index: searchInfo.index,
+  });
+  const nextItemIdx = step === 1 ? searchInfo.index + 1 : searchInfo.index - 1;
+  const nextItem = searchInfo.searchResults[nextItemIdx];
+  context.startFollowup({
+    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
+    subheading: nextItemIdx < 0 ? "Search Results" : nextItem.title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+    skipSuccessView: true,
+  });
 }
 
 export async function focusSearchResults(message) {
@@ -272,6 +325,13 @@ export function isSearchTab(tab) {
 }
 
 intentRunner.registerIntent({
+  name: "search.defaultSearchEngine",
+  async run(context) {
+    await browser.search.search({ query: "" });
+  },
+});
+
+intentRunner.registerIntent({
   name: "search.search",
   async run(context) {
     stopCardPoll();
@@ -280,6 +340,13 @@ intentRunner.registerIntent({
     await performSearch(context.slots.query);
     const searchInfo = await callScript({ type: "searchResultInfo" });
     searchInfo.query = context.slots.query;
+
+    if (!searchInfo.searchResults) {
+      const e = new Error("No result found for " + searchInfo.query);
+      e.displayMessage = "No result found for " + searchInfo.query;
+      throw e;
+    }
+
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
       context.keepPopup();
@@ -346,11 +413,11 @@ intentRunner.registerIntent({
     if (!googleIsDefaultProvider) {
       await browser.tabs.update(searchTabId, { url: "about:blank" });
       await browser.search.search({
-        query: searchInfo.query || "unkonwn",
+        query: searchInfo.query || "unknown",
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
-      await browser.tabs.update(searchTabId, { url: searchInfo.url });
+      await browser.tabs.update(searchTabId, { url: searchInfo.searchUrl });
     }
     await focusSearchTab();
   },
@@ -359,11 +426,60 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
+    // An old popup-only search result is no longer valid once a new search is made:
+    popupSearchInfo = null;
+    if (buildSettings.android) {
+      await performSearch(context.slots.query);
+    } else {
+      const tab = await browser.tabs.create({
+        url: START_URL,
+        active: false,
+      });
+      const tabId = tab.id;
+      _searchTabId = tabId;
+
+      await browser.search.search({
+        query: context.slots.query,
+        tabId,
+      });
+
+      await focusSearchTab();
+      await browserUtil.waitForDocumentComplete(tabId);
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+      const searchInfo = await callScript({ type: "searchResultInfo" });
+
+      if (
+        searchInfo.searchResults === undefined ||
+        !searchInfo.searchResults.length > 0
+      ) {
+        const msg =
+          "Could not get list of search results.\n\nPlease click feedback to let us know.";
+        const e = new Error(msg);
+        e.displayMessage = msg;
+        throw e;
+      }
+
+      tabSearchResults.set(tabId, searchInfo);
+
+      context.keepPopup();
+      await context.startFollowup({
+        heading: "Say 'next' to view",
+        subheading: searchInfo.searchResults[0].title,
+        acceptFollowupIntent: ["search.next", "search.previous"],
+      });
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "search.searchGoogle",
+  async run(context) {
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
       await browser.search.search({
         query: context.slots.query,
+        engine: "Google",
       });
     }
   },

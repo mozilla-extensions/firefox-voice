@@ -9,8 +9,48 @@ export async function getSelection(tabId) {
 }
 
 export async function getMetadata(tabId) {
-  await content.lazyInject(tabId, "/background/pageMetadata-contentScript.js");
-  return browser.tabs.sendMessage(tabId, {
+  try {
+    await content.lazyInject(
+      tabId,
+      "/background/pageMetadata-contentScript.js"
+    );
+  } catch (e) {
+    // if lazyInject does not work, try to get the metadata from the tab;
+    const tab = await browser.tabs.get(tabId);
+    const title = tab.title;
+    const canonical = tab.url;
+    const url = tab.url;
+    const docTitle = tab.title;
+    return {
+      title,
+      canonical,
+      url,
+      docTitle,
+    };
+  }
+  const metadata = await browser.tabs.sendMessage(tabId, {
     type: "getMetadata",
   });
+  metadata.canonical = cleanURL(metadata.canonical);
+  return metadata;
+}
+
+function cleanURL(string) {
+  const globalBlockedParams = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+  ];
+  const url = new URL(string);
+  const params = url.searchParams;
+
+  globalBlockedParams.map(blockedParam => {
+    if (params.get(blockedParam)) {
+      params.delete(blockedParam);
+    }
+  });
+
+  return url.toString();
 }

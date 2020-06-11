@@ -1,0 +1,23 @@
+[launch.installed]
+description = "Launch an installed app"
+match = """
+  (open|launch|start|run) [app:appName]
+"""
+
+[[launch.installed.example]]
+phrase = "Open Google Maps"
+
+[[launch.installed.example]]
+phrase = "Launch Spotify"
+
+[launch.uninstalled]
+description = "Launch an app that is not installed"
+match = """
+  (open|launch|start|run) [app]
+"""
+
+[[launch.uninstalled.example]]
+phrase = "Open Libretto"
+
+[[launch.ybinstalled.example]]
+phrase = "Launch Geometry Dash"

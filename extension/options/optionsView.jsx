@@ -2,6 +2,14 @@
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 import * as browserUtil from "../browserUtil.js";
+import * as routinesView from "./routinesView.js";
+import * as historyView from "./history/historyView.js";
+
+export const TABS = {
+  GENERAL: "GENERAL",
+  ROUTINES: "ROUTINES",
+  HISTORY: "HISTORY",
+};
 
 export const Options = ({
   inDevelopment,
@@ -10,22 +18,45 @@ export const Options = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  tabValue,
+  updateNickname,
+  registeredNicknames,
+  useToggle,
+  useEditNicknameDraft,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-page">
-      <LeftSidebar version={version} />
-      <RightContent
-        inDevelopment={inDevelopment}
-        keyboardShortcutError={keyboardShortcutError}
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
+      <LeftSidebar version={version} tabValue={tabValue} />
+      {tabValue === TABS.GENERAL ? (
+        <General
+          inDevelopment={inDevelopment}
+          keyboardShortcutError={keyboardShortcutError}
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          audioInputDevices={audioInputDevices}
+        ></General>
+      ) : null}
+      {tabValue === TABS.ROUTINES ? (
+        <routinesView.Routines
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+          updateNickname={updateNickname}
+          registeredNicknames={registeredNicknames}
+          useToggle={useToggle}
+          useEditNicknameDraft={useEditNicknameDraft}
+        ></routinesView.Routines>
+      ) : null}
+      {tabValue === TABS.HISTORY ? (
+        <historyView.History></historyView.History>
+      ) : null}
     </div>
   );
 };
 
-const LeftSidebar = ({ version }) => {
+const LeftSidebar = ({ version, tabValue }) => {
   return (
     <div className="settings-sidebar">
       <img src="./images/firefox-voice-stacked.svg" alt="Firefox Voice Logo" />
@@ -35,33 +66,89 @@ const LeftSidebar = ({ version }) => {
           <a href="/views/CHANGELOG.html">What's New</a>
         </p>
       </div>
+      <div>
+        <ul className="tab-list">
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.GENERAL ? "selected-tab" : "")
+              }
+              href="#general"
+            >
+              <img
+                src="./images/general.svg"
+                alt="General"
+                className="tab-icon"
+              ></img>
+              <span> General </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.ROUTINES ? "selected-tab" : "")
+              }
+              href="#routines"
+            >
+              <img
+                src="./images/routines.svg"
+                alt="Routines"
+                className="tab-icon"
+              ></img>
+              <span> Routines </span>
+            </a>
+          </li>
+          <li>
+            <a
+              className={
+                "tab-button " +
+                (tabValue === TABS.HISTORY ? "selected-tab" : "")
+              }
+              href="#history"
+            >
+              <img
+                src="./images/history.svg"
+                alt="History"
+                className="tab-icon"
+              ></img>
+              <span> History </span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-const RightContent = ({
+const General = ({
   inDevelopment,
   keyboardShortcutError,
   userOptions,
   userSettings,
   updateUserSettings,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-content">
-      <ChimeSettings
+      <PreferenceSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      <WakewordSettings
-        userOptions={userOptions}
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-      />
+      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
+        <WakewordSettings
+          userOptions={userOptions}
+          userSettings={userSettings}
+          updateUserSettings={updateUserSettings}
+        />
+      ) : null}
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
@@ -107,25 +194,79 @@ const MusicServiceSettings = ({
   );
 };
 
-const ChimeSettings = ({ userSettings, updateUserSettings }) => {
-  const onChimeSettingChange = event => {
+const SelectMicPreferences = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
+  const onMicPreferenceChange = event => {
     if (event) {
-      userSettings.chime = event.target.checked;
+      userSettings.audioInputId = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="mic-selector">
+      <span>Microphone </span>
+      <select
+        value={userSettings.audioInputId}
+        onChange={onMicPreferenceChange}
+        onBlur={onMicPreferenceChange}
+      >
+        {audioInputDevices &&
+          audioInputDevices.map(device => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
+const PreferenceSettings = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
+  const onPreferenceChange = setting => event => {
+    if (event) {
+      userSettings[setting] = event.target.checked;
       updateUserSettings(userSettings);
     }
   };
   return (
     <fieldset id="preferences">
       <legend>Preferences</legend>
-      <div className="styled-checkbox">
-        <input
-          id="chime"
-          type="checkbox"
-          checked={userSettings.chime}
-          onChange={onChimeSettingChange}
-        />
-        <label htmlFor="chime">Play chime when opening mic</label>
+      <div className="checkbox-wrapper">
+        <div className="styled-checkbox">
+          <input
+            id="chime"
+            type="checkbox"
+            checked={userSettings.chime}
+            onChange={onPreferenceChange("chime")}
+          />
+          <label htmlFor="chime">Play chime when opening mic</label>
+        </div>
       </div>
+      <div className="checkbox-wrapper">
+        <div className="styled-checkbox">
+          <input
+            id="mic-state"
+            type="checkbox"
+            checked={userSettings.listenForFollowup}
+            onChange={onPreferenceChange("listenForFollowup")}
+          />
+          <label htmlFor="mic-state">
+            Keep the microphone on for follow up responses
+          </label>
+        </div>
+      </div>
+      <SelectMicPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
+      />
     </fieldset>
   );
 };
@@ -372,6 +513,9 @@ const DevelopmentSettings = ({ inDevelopment }) => {
           <a href="/tests/intent-viewer.html">Intent Viewer</a>
         </li>
         <li>
+          <a href="/views/timing/timing.html">Timing/performance information</a>
+        </li>
+        <li>
           <a href="/popup/popup.html">View popup in tab</a>
         </li>
       </ul>
@@ -404,10 +548,16 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
   return (
     <fieldset id="data-collection">
       <legend>Firefox Voice Data Collection and Use</legend>
+      <p>
+        We store this data without personally identifiable information, which
+        means we can’t match data, transcripts, or a voice to a particular
+        person.
+      </p>
       <ul>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="technical-data"
               type="checkbox"
               checked={!userSettings.disableTelemetry}
@@ -421,13 +571,14 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
             </label>
           </div>
           <p>
-            Includes anonymized high level categorization of requests (e.g.
-            search, close tab, play music, etc) and error reports.
+            This includes high-level categorizations of requests (e.g., search,
+            close tab, and play music) and error reports.
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="transcripts-data"
               type="checkbox"
               checked={userSettings.utterancesTelemetry}
@@ -435,31 +586,34 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
             />
             <label htmlFor="transcripts-data">
               <strong>
-                Allow Firefox Voice to send anonymized transcripts of your audio
-                request.
+                Allow Firefox Voice to store transcripts of your commands.
               </strong>
             </label>
           </div>
           <p>
             Audio transcripts help Mozilla improve product accuracy and develop
-            new features. Data is stored on Mozilla servers, never shared with
-            other organizations and deleted after x months.
+            new features.
           </p>
         </li>
         <li>
-          <div className="styled-checkbox">
+          <div className="styled-toggleswitch">
             <input
+              className="toggle-button"
               id="collect-audio"
               type="checkbox"
               checked={userSettings.collectAudio}
               onChange={onCollectAudioChange}
             />
             <label htmlFor="collect-audio">
-              Allow Firefox Voice to collect your{" "}
-              <strong>audio recordings</strong> for the purpose of improving our
-              speech detection service.
+              <strong>
+                Allow Firefox Voice to store your voice recordings.
+              </strong>
             </label>
           </div>
+          <p>
+            Voice recordings help Mozilla teach our systems how to recognize a
+            wider variety of diverse voices, in all sorts of environments.
+          </p>
         </li>
       </ul>
     </fieldset>
@@ -477,7 +631,10 @@ const AboutSection = () => {
           </a>
         </li>
         <li>
-          <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+          <a
+            href="/views/privacy-policy.html"
+            onClick={browserUtil.activateTabClickHandler}
+          >
             How Mozilla Protects Your Voice Privacy
           </a>
         </li>

@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="buttonStyle">@style/MyButton</item>
+    </style>
+
+    <style name="MyButton" parent="Widget.AppCompat.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">10pt</item>
+        <item name="android:backgroundTint">#322A65</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="VoiceText" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">italic</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="StatusText" parent="VoiceText">
+        <item name="android:textSize">14pt</item>
+    </style>
+
+    <style name="FeedbackText" parent="VoiceText">
+        <item name="android:textSize">14pt</item>
+    </style>
+
+    <style name="contact_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:background">@android:color/holo_orange_light</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    </style>
+</resources>

@@ -24,10 +24,10 @@ export function ddgBangServiceName(name) {
 const MUSIC_SERVICE_ALIASES = {
   youtube: "youtube",
   spotify: "spotify",
+  soundcloud: "soundcloud",
+  deezer: "deezer",
   video: "youtube",
 };
-
-const DEFAULT_MUSIC_SERVICE = "spotify";
 
 // Note these are maintained separately from the services in extension/services/*, because
 // those are all loaded too late to be used here
@@ -37,6 +37,15 @@ export function musicServiceNames() {
 
 export function mapMusicServiceName(utterance) {
   return MUSIC_SERVICE_ALIASES[utterance.toLowerCase()];
+}
+
+const EMAIL_SERVICE_ALIAS = {
+  gmail: "gmail",
+  "google mail": "gmail",
+};
+
+export function mapEmailServiceName(utterance) {
+  return EMAIL_SERVICE_ALIAS[utterance.toLowerCase()];
 }
 
 export class Service {
@@ -192,10 +201,10 @@ export async function detectServiceFromActiveTab(services) {
   return serviceName;
 }
 
-export async function detectServiceFromHistory(services) {
+export async function detectServiceFromHistory(services, defaultService) {
   const now = Date.now();
   const oneMonth = now - 1000 * 60 * 60 * 24 * 30; // last 30 days
-  let best = DEFAULT_MUSIC_SERVICE;
+  let best = defaultService;
   let bestScore = 0;
   for (const name in services) {
     const service = services[name];
@@ -240,7 +249,10 @@ export async function getService(serviceType, serviceMap, options) {
   if (serviceSetting && serviceSetting !== "auto") {
     return serviceMap[serviceSetting];
   }
-  const serviceName = await detectServiceFromHistory(serviceMap);
+  const serviceName = await detectServiceFromHistory(
+    serviceMap,
+    options.defaultService
+  );
   const ServiceClass = serviceMap[serviceName];
   if (!ServiceClass) {
     throw new Error(

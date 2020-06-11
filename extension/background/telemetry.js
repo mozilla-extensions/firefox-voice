@@ -52,7 +52,7 @@ function resetPing() {
   ping.localHour = new Date().getHours();
 }
 
-export function add(properties) {
+export async function add(properties) {
   if (!ping) {
     if (properties.doNotInit) {
       const exc = new Error(
@@ -89,9 +89,10 @@ export function add(properties) {
     ping.timestamp = Date.now();
   }
   if (!ping.numberOfTabs) {
-    browser.tabs.query({ currentWindow: true }).then(tabs => {
+    const hiddenTabs = await browser.tabs.query({ hidden: true });
+    await browser.tabs.query({ currentWindow: true }).then(tabs => {
       if (ping) {
-        ping.numberOfTabs = tabs.length;
+        ping.numberOfTabs = tabs.length - hiddenTabs.length;
       }
     });
   }
@@ -116,6 +117,7 @@ export function send() {
   }
   ping.extensionTemporaryInstall = ping.extensionTemporaryInstall || false;
   const s = settings.getSettings();
+  // Note the disabledTelemetry logic is duplicated in catcher.js (to avoid importing settings.js):
   if (!s.disableTelemetry) {
     if (!s.utterancesTelemetry) {
       for (const field of UTTERANCE_FIELDS) {
