@@ -15,13 +15,13 @@ this.presentationScript = (function() {
       bubbles: true,
       view: window,
       clientX: x,
-      clientY: y
+      clientY: y,
     });
     const mouseupEvent = new MouseEvent("mouseup", {
       bubbles: true,
       view: window,
       clientX: x,
-      clientY: y
+      clientY: y,
     });
     element.dispatchEvent(mousedownEvent);
     element.dispatchEvent(mouseupEvent);
@@ -81,7 +81,9 @@ this.presentationScript = (function() {
     const x = rect.left + 5;
     const y = rect.top + 5;
 
-    const thumbnailListener = document.querySelector('.punch-filmstrip-thumbnails');
+    const thumbnailListener = document.querySelector(
+      ".punch-filmstrip-thumbnails"
+    );
 
     clickAtCoord(thumbnailListener, x, y);
 

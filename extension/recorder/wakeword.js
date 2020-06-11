@@ -13,26 +13,30 @@ async function startWatchword(keywords, sensitivity) {
     sensitivity
   );
 
-  const recognizer = speechCommands.create('BROWSER_FFT');
+  const recognizer = speechCommands.create("BROWSER_FFT");
   await recognizer.ensureModelLoaded();
   transferRecognizer = recognizer.createTransfer("todays-quicker-model"); // TODO: this is hard-coded with the first test model that I trained within the extension.
   await transferRecognizer.load();
 
-  transferRecognizer.listen(async (result) => {
-    const words = transferRecognizer.wordLabels();
+  transferRecognizer.listen(
+    async result => {
+      const words = transferRecognizer.wordLabels();
 
-    const maxConfidence = Math.max(...result.scores);
-    const topWord = words[result.scores.indexOf(maxConfidence)];
-    log.info(`Predicted word ${topWord} with confidence ${maxConfidence}`);
-    const wakeword = topWord === "heyff" ? "Hey Firefox" : "Next slide please";
-    await browser.runtime.sendMessage({
-      type: "wakeword",
-      wakeword
-    });
-    }, {
-    probabilityThreshold: 0.90,
-    overlapFactor: 0.25
-  });
+      const maxConfidence = Math.max(...result.scores);
+      const topWord = words[result.scores.indexOf(maxConfidence)];
+      log.info(`Predicted word ${topWord} with confidence ${maxConfidence}`);
+      const wakeword =
+        topWord === "heyff" ? "Hey Firefox" : "Next slide please";
+      await browser.runtime.sendMessage({
+        type: "wakeword",
+        wakeword,
+      });
+    },
+    {
+      probabilityThreshold: 0.9,
+      overlapFactor: 0.25,
+    }
+  );
 
   enabled = true;
 }

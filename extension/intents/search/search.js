@@ -116,7 +116,7 @@ async function performSearch(query) {
   try {
     await content.lazyInject(tabId, [
       "/intents/search/queryScript.js",
-      "/intents/search/tts.js"
+      "/intents/search/tts.js",
     ]);
   } catch (e) {
     // There's a (fairly) common race condition here
@@ -126,7 +126,7 @@ async function performSearch(query) {
       );
       await content.lazyInject(tabId, [
         "/intents/search/queryScript.js",
-        "/intents/search/tts.js"
+        "/intents/search/tts.js",
       ]);
     } else {
       throw e;
@@ -200,7 +200,7 @@ function pollForCard(maxTime) {
     if (!card) {
       catcher.capture(new Error(`callScript cardImage returned ${card}`));
       return;
-    }    
+    }
     if (card.src === lastImage) {
       return;
     }
@@ -355,7 +355,11 @@ intentRunner.registerIntent({
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
       const card = await callScript({ type: "cardImage" });
-      const ttsOutput = await callScript({ type: "cardTtsText", cardSelectors: card.cardSelectors, isSidebar: card.isSidebar });
+      const ttsOutput = await callScript({
+        type: "cardTtsText",
+        cardSelectors: card.cardSelectors,
+        isSidebar: card.isSidebar,
+      });
       log.info(card);
       log.info(ttsOutput);
       context.keepPopup();
@@ -366,7 +370,7 @@ intentRunner.registerIntent({
         searchResults: searchInfo.searchResults,
         searchUrl: searchInfo.searchUrl,
         index: -1,
-        tts: ttsOutput
+        tts: ttsOutput,
       });
       telemetry.add({ hasCard: true });
       // if (card.hasWidget) {

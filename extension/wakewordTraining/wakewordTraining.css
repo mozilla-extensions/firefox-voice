@@ -1,11 +1,11 @@
 @import url("../options/options.css"); /* temp hack to get some of the options page styling in */
 
 .collect-example-button {
-    background: none;
-    border: 2px solid #0a84ff;
-    border-radius: 0.25em;
-    padding: 0.5em;
-    font-size: 1em;
-    color: #0a84ff;
-    margin-bottom: 1em;
+  background: none;
+  border: 2px solid #0a84ff;
+  border-radius: 0.25em;
+  padding: 0.5em;
+  font-size: 1em;
+  color: #0a84ff;
+  margin-bottom: 1em;
 }

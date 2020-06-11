@@ -1,7 +1,6 @@
 /* globals helpers */
 
-this.calendar = (function () {
-
+this.calendar = (function() {
   class Calendar extends helpers.Runner {
     action_getNextEventDetails() {
       const CURRENT_DAY = ".YvjgZe.F262Ye";
@@ -11,12 +10,16 @@ this.calendar = (function () {
       const EVENT_TIME = ".A6wOnd, .gVNoLb";
 
       const todayColumn = document.querySelector(CURRENT_DAY);
-      const eventsToday = todayColumn ? todayColumn.querySelectorAll(EVENT) : document.querySelectorAll(EVENT);
+      const eventsToday = todayColumn
+        ? todayColumn.querySelectorAll(EVENT)
+        : document.querySelectorAll(EVENT);
       const timeBar = document.querySelector(TIME_BAR);
 
       const verticalOffsetOfTimeBar = parseInt(timeBar.style.top, 10);
-      const verticalOffsetsOfEvents = Array.from(eventsToday).map(ev => parseInt(ev.style.top, 10));
-      
+      const verticalOffsetsOfEvents = Array.from(eventsToday).map(ev =>
+        parseInt(ev.style.top, 10)
+      );
+
       let relevantEvents = [];
       let timeOfUpcomingEvent;
 
@@ -34,8 +37,8 @@ this.calendar = (function () {
         return {
           eventName: eventNode.querySelector(EVENT_NAME).innerText,
           startTime,
-          endTime
-        }
+          endTime,
+        };
       });
 
       return relevantEvents;

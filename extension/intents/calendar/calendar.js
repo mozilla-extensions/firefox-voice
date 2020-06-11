@@ -23,7 +23,8 @@ async function getService(context, options) {
   const explicitService = context.slots.service || context.parameters.service;
   options.defaultService = options.defaultService || "gcal";
   if (explicitService) {
-    ServiceClass = SERVICES[serviceList.mapCalendarServiceName(explicitService)];
+    ServiceClass =
+      SERVICES[serviceList.mapCalendarServiceName(explicitService)];
     if (!ServiceClass) {
       throw new Error(
         `[service] slot refers to unknown service: ${explicitService}`

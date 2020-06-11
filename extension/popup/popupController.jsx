@@ -273,24 +273,24 @@ export const PopupController = function() {
 
   // FIX: Copied from popupView
   const getTimerMessage = timerInMS => {
-      const time = parseFloat(timerInMS / 1000).toFixed(3);
-      const hours = Math.floor(time / 60 / 60);
-      const minutes = Math.floor(time / 60) % 60;
-      const seconds = Math.floor(time - minutes * 60);
-    
-      let readableDuration = "";
-      if (hours > 0) {
-        readableDuration = `${hours} hour`;
-      }
-      if (minutes > 0) {
-        readableDuration += ` ${minutes} minute`;
-      }
-      if (seconds > 0) {
-        readableDuration += ` ${seconds} second`;
-      }
-      return {
-        ttsText: `${readableDuration} timer starting now`,
-      };
+    const time = parseFloat(timerInMS / 1000).toFixed(3);
+    const hours = Math.floor(time / 60 / 60);
+    const minutes = Math.floor(time / 60) % 60;
+    const seconds = Math.floor(time - minutes * 60);
+
+    let readableDuration = "";
+    if (hours > 0) {
+      readableDuration = `${hours} hour`;
+    }
+    if (minutes > 0) {
+      readableDuration += ` ${minutes} minute`;
+    }
+    if (seconds > 0) {
+      readableDuration += ` ${seconds} second`;
+    }
+    return {
+      ttsText: `${readableDuration} timer starting now`,
+    };
   };
 
   const clearTimer = async totalInMS => {
@@ -500,8 +500,8 @@ export const PopupController = function() {
 
     utterance.onend = () => {
       closePopup(2000);
-    }
-  }
+    };
+  };
 
   const onSearchImageClick = async searchUrl => {
     await browser.runtime.sendMessage({

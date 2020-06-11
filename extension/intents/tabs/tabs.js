@@ -590,7 +590,7 @@ intentRunner.registerIntent({
       searchResults: card,
       tts: {
         ttsText: `${numOfOpenTabs}`,
-      }
+      },
     });
   },
 });

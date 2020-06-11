@@ -136,7 +136,7 @@ this.queryScript = (function() {
     if (!card) {
       throw new Error("No card found for cardImage");
     } else {
-      isSidebar = (card === cards.sidebarCard);
+      isSidebar = card === cards.sidebarCard;
     }
 
     // When it has a canvas it may dynamically update,
@@ -162,7 +162,7 @@ this.queryScript = (function() {
       alt: card.innerText,
       hasWidget,
       isSidebar,
-      cardSelectors: card.classList.value
+      cardSelectors: card.classList.value,
     };
   });
 })();

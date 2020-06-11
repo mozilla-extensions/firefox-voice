@@ -593,11 +593,11 @@ const VoiceInput = ({
   );
 };
 
-const ttsResponse = (text) => {
+const ttsResponse = text => {
   let utterance = new SpeechSynthesisUtterance(text);
   // Would eventually populate with other prefs like voice, pitch, rate
   return utterance;
-}
+};
 
 const IntentFeedback = ({ eduText, onSubmitFeedback }) => {
   function onPositive() {
@@ -848,7 +848,7 @@ const SearchResultsContent = ({
     let utterance = ttsResponse(textToSpeak);
     const synth = window.speechSynthesis;
     synth.speak(utterance);
-  }
+  };
 
   return (
     <React.Fragment>
