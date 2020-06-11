@@ -27,7 +27,6 @@ export const WakewordTrainingController = function() {
   });
 
   const init = async () => {
-    console.log("I am here");
     await loadBaseRecognizer();
     await loadSavedModels();
     await loadTransferRecognizer(); // for now, assume there's only one transfer model allowed

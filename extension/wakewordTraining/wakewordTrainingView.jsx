@@ -73,7 +73,6 @@ const ExampleRecorder = ({
 }) => {
 
     const recordExample = e => {
-        console.log("got here");
         onTrainExample(word);
     }
 
