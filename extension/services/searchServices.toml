@@ -1,158 +1,213 @@
 ["google slides"]
 bangSearch = "gslides"
+baseUrl = "https://docs.google.com/presentation/"
 names = ["slides"]
 
 ["google docs"]
 bangSearch = "gd"
+baseUrl = "https://docs.google.com/document/"
 
 ["google scholar"]
 bangSearch = "googlescholar"
+baseUrl = "https://scholar.google.com/"
 
 ["google calendar"]
 bangSearch = "gcal"
+baseUrl = "https://calendar.google.com/"
 names = ["calendar"]
 
 ["google drive"]
 bangSearch = "drive"
+baseUrl = "https://drive.google.com/"
 
 ["google sheets"]
 bangSearch = "gsheets"
+baseUrl = "https://docs.google.com/spreadsheets/"
 names = ["sheets", "spreadsheets"]
 
 [goodreads]
 bangSearch = "goodreads"
+baseUrl = "https://www.goodreads.com/"
 
 [mdn]
 bangSearch = "mdn"
+baseUrl = "https://developer.mozilla.org/en-US/"
 
 [coursera]
 bangSearch = "coursera"
+baseUrl = "https://www.coursera.org/"
 
 [gmail]
 bangSearch = "gmail"
+baseUrl = "https://mail.google.com/"
 names = ["mail", "email", "google mail"]
 
 [amazon]
 bangSearch = "az"
+baseUrl = "https://www.amazon.com/"
 
 [wikipedia]
 bangSearch = "wikipedia"
+baseUrl = "https://en.wikipedia.org/"
 names = ["wiki"]
 
 [yelp]
 bangSearch = "yelp"
+baseUrl = "https://www.yelp.com/"
 
 [twitter]
 bangSearch = "twitter"
+baseUrl = "https://wwww.twitter.com/"
 
 [reddit]
 bangSearch = "reddit"
+baseUrl = "https://www.reddit.com/"
 
 ["amazon music"]
 bangSearch = "amusic"
+baseUrl = "https://music.amazon.com"
 
 ["google music"]
 bangSearch = "gmusic"
+baseUrl = "https://play.google.com/music/"
 
 ["google play music"]
 bangSearch = "gmusic"
+baseUrl = "https://play.google.com/music/"
 names = ["google music"]
 
 [pandora]
 bangSearch = "pandora"
+baseUrl = "https://www.pandora.com/"
 
 [soundcloud]
 bangSearch = "soundcloud"
+baseUrl = "https://soundcloud.com/"
 names = ["sound cloud"]
 
 [tunein]
 bangSearch = "tunein"
+baseUrl = "https://tunein.com/"
 names = ["tune in", "tunein radio", "tune in radio"]
 
 [vimeo]
 bangSearch = "vimeo"
+baseUrl = "https://vimeo.com/"
 
 [netflix]
 bangSearch = "netflix"
+baseUrl = "https://www.netflix.com/"
 
 ["apple maps"]
 bangSearch = "amaps"
+baseUrl = "https://maps.apple.com/"
 
 ["google maps"]
 bangSearch = "gmap"
+baseUrl = "https://maps.google.com/"
 names = ["maps"]
 
 ["open street maps"]
 bangSearch = "omap"
+baseUrl = "https://www.openstreetmap.org/"
 names = ["open maps", "openstreetmap"]
 
 [stubhub]
 bangSearch = "stubhub"
+baseUrl = "https://www.stubhub.com/"
 names = ["stub hub"]
 
 [ticketmaster]
 bangSearch = "ticketmaster"
+baseUrl = "https://wwww.ticketmaster.com/"
 names = ["ticket master"]
 
 ["google translate"]
 bangSearch = "translate"
+baseUrl = "https://translate.google.com/"
 names = ["translate"]
 
 [instagram]
 bangSearch = "instagram"
+baseUrl = "https://www.instagram.com/"
 names = ["insta"]
 
 [linkedin]
 bangSearch = "linkedin"
+baseUrl = "https://www.linkedin.com/"
 
 [quora]
 bangSearch = "quora"
+baseurl = "https://www.quora.com/"
 
 [pinterest]
 bangSearch = "pin"
+baseUrl = "https://www.pinterest.com/"
 names = ["pin"]
 
 [facebook]
 bangSearch = "facebook"
+baseUrl = "https://www.facebook.com/"
 
 [stackexchange]
 bangSearch = "stackexchange"
+baseUrl = "https://stackexchange.com/"
 names = ["stack exchange"]
 
 [dropbox]
 bangSearch = "dropbox"
+baseUrl = "https://www.dropbox.com/"
 
 [dictionary]
 bangSearch = "dcom"
+baseUrl = "https://www.dictionary.com/"
 names = ["dictionary.com"]
 
 [thesaurus]
 bangSearch = "thesaurus"
+baseUrl = "https://www.thesaurus.com/"
 
 [duckduckgo]
 bangSearch = "duckduckgo"
+baseUrl = "https://duckduckgo.com/"
 names = ["duck duck go"]
 
 ["duckduckgo images"]
 bangSearch = "ddgi"
+baseUrl = "https://duckduckgo.com/"
 names = ["duck duck go images"]
+["duckduckgo images".baseUrlQueryParameters]
+iax = "images"
+ia = "images"
+
+["google"]
+bangSearch = "google"
+baseUrl = "https://www.google.com"
 
 ["google images"]
 bangSearch = "gi"
+baseUrl = "https://www.google.com/"
 names = ["images"]
+["google images".baseUrlQueryParameters]
+tbm = "isch"
 
 [imdb]
 bangSearch = "imdb"
+baseUrl = "https://www.imdb.com/"
 
 [add-ons]
 bangSearch = "mozaddon"
+baseUrl = "https://addons.mozilla.org/"
 names = ["firefox add-ons", "mozilla add-ons"]
 
 [github]
 bangSearch = "github"
+baseUrl = "https://github.com"
 
 [linguee]
 bangSearch = "linguee"
+baseUrl = "https://www.linguee.com/"
 
 ["khan academy"]
 bangSearch = "khanacademy"
+baseUrl = "https://www.khanacademy.org/"

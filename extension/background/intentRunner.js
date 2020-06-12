@@ -170,6 +170,7 @@ export class IntentContext {
       utterance,
       fallback: false,
       isFollowup: true,
+      followupMatch: lastIntentForFollowup.followupMatch,
     };
   }
 
@@ -341,6 +342,11 @@ export function registerIntent(intent) {
     throw new Error(`Intent missing .match: ${intent.name}`);
   }
   intentParser.registerMatcher(intent.name, intent.match);
+}
+
+export function setLastIntent(intent) {
+  lastIntent = intent;
+  lastIntentForFollowup = intent;
 }
 
 export async function runUtterance(utterance, noPopup) {
