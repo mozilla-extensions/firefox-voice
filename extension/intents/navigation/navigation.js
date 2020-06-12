@@ -6,7 +6,7 @@ import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { metadata } from "../../services/metadata.js";
-import {performSearchPage} from "../search/search.js";
+import { performSearchPage } from "../search/search.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
