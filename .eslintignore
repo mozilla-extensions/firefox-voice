@@ -9,4 +9,6 @@ extension/onboarding/onboardingController.js
 extension/onboarding/onboardingView.js
 extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
+extension/wakewordTraining/wakewordTrainingController.js
+extension/wakewordTraining/wakewordTrainingView.js
 extension/intents/pocket/contentScript.js

@@ -1,4 +1,4 @@
-/* globals log, tf, speechCommands */
+/* globals log, speechCommands */
 
 import * as settings from "../settings.js";
 

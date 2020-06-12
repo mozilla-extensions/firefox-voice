@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars, speechCommands */
-/* globals React */
+/* eslint-disable no-unused-vars */
+/* globals React, speechCommands, log */
 
 const { useState } = React;
 
@@ -220,7 +220,7 @@ const TrainingExamples = ({
             </button>
             <button
               onClick={handleExampleForward}
-              disabled={currentExampleIndex + 1 == examples.length}
+              disabled={currentExampleIndex + 1 === examples.length}
             >
               →
             </button>
@@ -245,7 +245,10 @@ const ExampleView = ({ example }) => {
 
   return (
     <button class="play-example" onClick={handleExamplePlay}>
-      ▶️ Play
+      <span role="img" aria-label="play button">
+        ▶️
+      </span>{" "}
+      Play
     </button>
   );
 };

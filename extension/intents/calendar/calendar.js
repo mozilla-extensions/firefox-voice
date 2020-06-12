@@ -45,8 +45,6 @@ intentRunner.registerIntent({
   async run(context) {
     const service = await getService(context, { lookAtCurrentTab: true });
     const nextEventDetails = await service.getNextEventDetails();
-    console.log("i got to here");
-    console.log(nextEventDetails);
     context.displayText(nextEventDetails.toString());
     context.speakTts({
       ttsText: nextEventDetails.length + " items",

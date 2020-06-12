@@ -72,11 +72,7 @@ this.presentationScript = (function() {
       };
     }
 
-    console.log("here I am");
-    console.log(nextThumbnail);
-
     const rect = nextThumbnail.getBoundingClientRect();
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     const x = rect.left + 5;
     const y = rect.top + 5;

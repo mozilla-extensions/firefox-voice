@@ -496,10 +496,10 @@ export const PopupController = function() {
   };
 
   const speakResponse = (text, lang) => {
-    let utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     if (lang === "en") {
-      const defaultVoice = window.speechSynthesis.getVoices()[33]; //TODO FIX: there seems to be a very bizarre bug(?) in which there's sometimes no default US voice
+      const defaultVoice = window.speechSynthesis.getVoices()[33]; // TODO FIX: there seems to be a very bizarre bug(?) in which there's sometimes no default US voice
       utterance.voice = defaultVoice;
     }
     const synth = window.speechSynthesis;

@@ -1,4 +1,4 @@
-/* globals React, ReactDOM, tf, speechCommands */
+/* globals React, ReactDOM, speechCommands, log */
 
 // eslint-disable-next-line no-unused-vars
 import * as wakewordTrainingView from "./wakewordTrainingView.js";
@@ -28,13 +28,13 @@ export const WakewordTrainingController = function() {
     augmentByMixingNoiseRatio: 0.5,
     callback: {
       onEpochEnd: async (epoch, logs) => {
-        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
+        log.info(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
       },
     },
     fineTuningEpochs: 5,
     fineTuningCallback: {
       onEpochEnd: async (epoch, logs) => {
-        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
+        log.info(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
       },
     },
   };
@@ -53,13 +53,12 @@ export const WakewordTrainingController = function() {
     await loadBaseRecognizer();
     await loadSavedModels();
     await loadTransferRecognizer(); // for now, assume there's only one transfer model allowed
-    // await showExamples();
   };
 
   const loadBaseRecognizer = async () => {
     recognizer = speechCommands.create("BROWSER_FFT");
     await recognizer.ensureModelLoaded();
-    console.log(recognizer.wordLabels());
+    log.info(recognizer.wordLabels());
   };
 
   const loadSavedModels = async () => {
@@ -69,12 +68,6 @@ export const WakewordTrainingController = function() {
 
   const loadTransferRecognizer = async () => {
     transferRecognizer = recognizer.createTransfer("temp-default"); // TODO: CONVERT TO DEFAULT AFTER TESTING
-    console.log(transferRecognizer);
-    // await transferRecognizer.load();
-  };
-
-  const showExamples = async () => {
-    console.log(transferRecognizer.countExamples());
   };
 
   const onDeleteExample = example => {
@@ -115,16 +108,13 @@ export const WakewordTrainingController = function() {
   };
 
   const onTrainExample = async wakeword => {
-    let collectExampleOptions = COLLECT_EXAMPLE_OPTIONS;
+    const collectExampleOptions = COLLECT_EXAMPLE_OPTIONS;
     if (wakeword === "_background_noise_") {
       collectExampleOptions.durationSec = BACKGROUND_DURATION;
     } else {
       collectExampleOptions.durationMultiplier = WAKEWORD_DURATION;
     }
-    const spectogram = await transferRecognizer.collectExample(
-      wakeword,
-      collectExampleOptions
-    );
+    await transferRecognizer.collectExample(wakeword, collectExampleOptions);
     refreshExamples(wakeword);
   };
 

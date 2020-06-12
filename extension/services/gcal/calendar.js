@@ -23,7 +23,7 @@ this.calendar = (function() {
       let relevantEvents = [];
       let timeOfUpcomingEvent;
 
-      for (let [index, eventTime] of verticalOffsetsOfEvents.entries()) {
+      for (const [index, eventTime] of verticalOffsetsOfEvents.entries()) {
         if (eventTime < verticalOffsetOfTimeBar) continue;
         if (timeOfUpcomingEvent && eventTime > timeOfUpcomingEvent) break;
         timeOfUpcomingEvent = eventTime;

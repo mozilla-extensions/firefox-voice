@@ -1,3 +1,4 @@
+/* globals communicate */
 this.tts = (function() {
   const WEATHER_TEMPERATURE_SELECTOR = "#wob_tm";
   const WEATHER_CONDITION_SELECTOR = "#wob_dc";
@@ -120,10 +121,9 @@ this.tts = (function() {
       return `${listItemsAsText.slice(0, maxItems).join(", ")} and ${
         sayExactRemainder ? `${numRemaining} ` : ``
       }more`;
-    } else {
-      listItemsAsText.splice(-1, 0, "and");
-      return `${listItemsAsText.join(", ")}`;
     }
+    listItemsAsText.splice(-1, 0, "and");
+    return `${listItemsAsText.join(", ")}`;
   }
 
   function abbreviateTextResponse(
@@ -187,7 +187,7 @@ this.tts = (function() {
   function handleDirectionsCard(card) {
     let response = getInnerText(card, DIRECTIONS_SELECTOR);
     const abbreviatedUnit = response.match(/\(\d+\.\d.(\w+)/)[1];
-    const unit = ALIASES["directions"][abbreviatedUnit];
+    const unit = ALIASES.directions[abbreviatedUnit];
     let distance = response.match(/\((\d+\.\d)/)[1];
     distance = parseFloat(distance);
 
@@ -306,7 +306,7 @@ this.tts = (function() {
     let adjustedUnit = unit;
     if (parseFloat(value) !== 1) {
       const irregularPluralForm =
-        ALIASES["irregular_pluralizations"][unit.toLowerCase()];
+        ALIASES.irregular_pluralizations[unit.toLowerCase()];
       adjustedUnit = irregularPluralForm ? irregularPluralForm : `${unit}s`;
     }
     return `${value} ${adjustedUnit}`;
@@ -316,9 +316,13 @@ this.tts = (function() {
     let eventStringParts = rawDate.split(", ");
     if (eventStringParts.length === 3) {
       // Specifies a day of the week and date (e.g. Tue, 6/16)
-      let [dayOfWeek, monthAndDay, timeOfEvent] = eventStringParts;
-      dayofWeek = `${dayOfWeek}${dayOfWeek === "Sat" ? `urday` : `day`}`;
-      let [month, day] = monthAndDay.split("/");
+      let dayOfWeek = eventStringParts[0];
+      let monthAndDay = eventStringParts[1];
+      const timeOfEvent = eventStringParts[3];
+      dayOfWeek = `${dayOfWeek}${dayOfWeek === "Sat" ? `urday` : `day`}`;
+      monthAndDay = monthAndDay.split("/");
+      let month = monthAndDay[0];
+      const day = monthAndDay[1];
       month = MONTH_NAMES[parseInt(month) - 1];
       eventStringParts = [dayOfWeek, month, day, timeOfEvent];
     }

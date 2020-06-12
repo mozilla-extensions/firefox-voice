@@ -13,6 +13,7 @@ const HIDE_TIME = 1000 * 60; // 1 minute
 // Check this often for a new image in a search tab:
 const CARD_POLL_INTERVAL = 200; // milliseconds
 // If we don't believe the card is animated, still get new images for this amount of time:
+// eslint-disable-next-line no-unused-vars
 const CARD_POLL_LIMIT = 1000; // milliseconds
 let closeTabTimeout = null;
 let lastImage = null;
@@ -178,6 +179,7 @@ function stopCardPoll() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function pollForCard(maxTime) {
   stopCardPoll();
   const startTime = Date.now();
