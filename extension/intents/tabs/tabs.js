@@ -1,6 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
-import { numbers, ordinals, cardinals, numberedOrdinals } from "./numbers.js";
+import English from "../../background/language/langs/english.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -614,29 +614,12 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.selectAllTabs",
   async run(context) {
-    const activeTab = await context.activeTab();
     const tabs = await browser.tabs.query({
       currentWindow: true,
       pinned: false,
     });
-    const allWindows = await browser.windows.getAll({
-      windowTypes: ["normal"],
-    });
 
-    const matchingTabs = await getMatchingTabs({
-      tabs,
-      activeTab,
-      sort_by_index: true,
-      allWindows: context.parameters.allWindows === "false",
-    });
-
-    if (matchingTabs.length === 0) {
-      const exc = new Error("No tab that matches the query");
-      exc.displayMessage = "There is no tab that matches the query";
-      throw exc;
-    }
-
-    await selectAllTabs(matchingTabs);
+    await selectAllTabs(tabs);
   },
 });
 
@@ -644,12 +627,12 @@ async function selectAllTabs(tabs) {
   if (tabs.length !== 0) {
     for (const tab of tabs) {
       if (!tab.active) {
-        await browser.tabs.update(tabId, {
+        await browser.tabs.update(tab.id, {
           highlighted: true,
           active: false,
         });
       } else {
-        await browser.tabs.update(tabId, {
+        await browser.tabs.update(tab.id, {
           highlighted: true,
         });
       }
@@ -658,7 +641,6 @@ async function selectAllTabs(tabs) {
 }
 
 async function highlightTabsInDirection(center, tabs, dir) {
-  var tabs;
   if (dir === "left") {
     tabs = tabs.filter(tab => {
       return tab.index < center.index;
@@ -683,7 +665,7 @@ async function highlightTabsInDirection(center, tabs, dir) {
 }
 
 intentRunner.registerIntent({
-  name: "tabs.highlightTabsInDirection",
+  name: "tabs.selectTabsInDirection",
   async run(context) {
     const activeTab = await context.activeTab();
     const tabs = await browser.tabs.query({
@@ -719,21 +701,21 @@ intentRunner.registerIntent({
       currentWindow: true,
       pinned: false,
     });
-    const numTabs = context.slots.number;
+    const numTabs = English.nameToNumber(
+      context.slots.number || context.parameters.number
+    );
     await selectNumbersTabs(tabs, numTabs, context.parameters.dir);
   },
 });
 
-async function selectNumbersTabs(tabs, num, dir) {
-  const numTabs = ordinals.indexOf(num) + 1;
-  var tabs;
+async function selectNumbersTabs(tabs, numTabs, dir) {
   if (dir === "first") {
     tabs = tabs.filter(tab => {
-      return tab.index <= numTabs;
+      return tab.index < numTabs;
     });
   } else {
     tabs = tabs.filter(tab => {
-      return tab.index >= numTabs;
+      return tab.index >= tabs.length - numTabs - 1;
     });
   }
   for (const tab of tabs) {
