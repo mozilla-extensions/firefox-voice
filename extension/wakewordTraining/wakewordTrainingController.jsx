@@ -60,6 +60,43 @@ export const WakewordTrainingController = function() {
     console.log(transferRecognizer.countExamples());
   };
 
+  const onDeleteExample = (example) => {
+    transferRecognizer.removeExample(example.uid);
+    refreshExamples(example.example.label);
+  }
+
+  const refreshExamples = (wakeword) => {
+    switch (wakeword) {
+      case "_background_noise_":
+        setBackgroundNoiseExamples(() => {
+          try {
+            return transferRecognizer.getExamples(wakeword);
+          } catch (error) {
+            return [];
+          }
+        });
+        break;
+      case "heyFirefox":
+        setHeyFirefoxExamples(() => {
+          try {
+            return transferRecognizer.getExamples(wakeword);
+          } catch (error) {
+            return [];
+          }
+        });
+        break;
+      case "nextSlidePlease":
+        setNextSlidePleaseExamples(() => {
+          try {
+            return transferRecognizer.getExamples(wakeword);
+          } catch (error) {
+            return [];
+          }
+        });
+        break;
+    }
+  }
+
   const onTrainExample = async wakeword => {
     let collectExampleOptions = COLLECT_EXAMPLE_OPTIONS;
     if (wakeword === "_background_noise_") {
@@ -71,23 +108,14 @@ export const WakewordTrainingController = function() {
       wakeword,
       collectExampleOptions
     );
-    switch (wakeword) {
-      case "_background_noise_":
-        setBackgroundNoiseExamples(examples => examples.concat(spectogram));
-        break;
-      case "heyFirefox":
-        setHeyFirefoxExamples(examples => examples.concat(spectogram));
-        break;
-      case "nextSlidePlease":
-        setNextSlidePleaseExamples(examples => examples.concat(spectogram));
-        break;
-    }
+    refreshExamples(wakeword);
   };
 
   return (
     <wakewordTrainingView.WakewordTraining
       savedModels={savedModels}
       onTrainExample={onTrainExample}
+      onDeleteExample={onDeleteExample}
       heyFirefoxExamples={heyFirefoxExamples}
       nextSlidePleaseExamples={nextSlidePleaseExamples}
       backgroundNoiseExamples={backgroundNoiseExamples}

@@ -1,10 +1,10 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, speechCommands */
 /* globals React */
 
 const { useState } = React;
 
 
-export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, backgroundNoiseExamples }) => {
+export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, backgroundNoiseExamples, onDeleteExample }) => {
   const CLASSES_TO_TRAIN = [
     {
       name: "heyFirefox",
@@ -27,7 +27,7 @@ export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExampl
       <React.Fragment>
         <Header />
         <SelectModel savedModels={savedModels} />
-        <Trainer classesToTrain={CLASSES_TO_TRAIN} onTrainExample={onTrainExample} />
+        <Trainer classesToTrain={CLASSES_TO_TRAIN} onTrainExample={onTrainExample} onDeleteExample={onDeleteExample} />
         <Tester />
       </React.Fragment>
     </div>
@@ -66,7 +66,7 @@ const SelectModel = ({ savedModels }) => {
   );
 };
 
-const Trainer = ({ onTrainExample, classesToTrain }) => {
+const Trainer = ({ onTrainExample, classesToTrain, onDeleteExample }) => {
   return (
     <div class="settings-content">
       <fieldset id="trainer">
@@ -87,7 +87,7 @@ const Trainer = ({ onTrainExample, classesToTrain }) => {
             </tr>
             {
               classesToTrain.map(function (cls) { 
-                return <TrainingClass classItem={cls} key={cls.name} onTrainExample={onTrainExample} />
+                return <TrainingClass classItem={cls} key={cls.name} onTrainExample={onTrainExample} onDeleteExample={onDeleteExample} />
               })
             }
         </table>
@@ -96,7 +96,13 @@ const Trainer = ({ onTrainExample, classesToTrain }) => {
   );
 };
 
-const TrainingClass = ({classItem, onTrainExample }) => {
+const TrainingClass = ({classItem, onTrainExample, onDeleteExample }) => {
+  const [currentExampleIndex, setCurrentExampleIndex] = useState(-1);
+
+  const setIndex = (index) => {
+    setCurrentExampleIndex(index);
+  }
+
   return (
     <tr>
       <td>
@@ -106,21 +112,24 @@ const TrainingClass = ({classItem, onTrainExample }) => {
         <ExampleRecorder
           word={classItem.name}
           onTrainExample={onTrainExample}
+          numExamples={classItem.examples.length}
+          setIndex={setIndex}
         />
       </td>
       <td>
-        <TrainingExamples examples={classItem.examples} />
+        <TrainingExamples examples={classItem.examples} currentExampleIndex={currentExampleIndex} setIndex={setIndex} onDeleteExample={onDeleteExample} />
       </td>
     </tr>
   );
 }
 
-const ExampleRecorder = ({ word, onTrainExample }) => {
+const ExampleRecorder = ({ word, onTrainExample, numExamples, setIndex }) => {
   const recordExample = async (e) => {
     const eventTarget = e.target;
     eventTarget.classList.add("active");
     await onTrainExample(word);
     eventTarget.classList.remove("active");
+    setIndex(numExamples);
   };
 
   return (
@@ -132,13 +141,58 @@ const ExampleRecorder = ({ word, onTrainExample }) => {
   );
 };
 
-const TrainingExamples = ({examples}) => {
-    return (
+const TrainingExamples = ({examples, currentExampleIndex, setIndex, onDeleteExample}) => {
+  const handleExampleBack = () => {
+    setIndex(currentExampleIndex - 1);
+  }
+
+  const handleExampleForward = () => {
+    setIndex(currentExampleIndex + 1);
+  }
+
+  const handleDelete = () => {
+    const example = examples[currentExampleIndex];
+    handleExampleBack();
+    onDeleteExample(example);
+  }
+
+  return (
+    <div class="loaded-examples">
+      <div class="example-tally">
+          {currentExampleIndex >= 0 ? `${currentExampleIndex + 1} of ${examples.length}` : "No recordings"}
+      </div>
+      {
+        currentExampleIndex >= 0 ?
         <div>
-            {examples.length}
-        </div>
-    )
-}
+          <ExampleView example={examples[currentExampleIndex]} />
+          <div class="example-navigation">
+            <button onClick={handleExampleBack} disabled={currentExampleIndex - 1 < 0}>←</button>
+            <button onClick={handleExampleForward} disabled={currentExampleIndex + 1 == examples.length}>→</button>
+            <button onClick={handleDelete}>x</button>
+          </div>
+        </div> :
+        null
+      }
+    </div>
+  );
+};
+
+const ExampleView = ({example}) => {
+  log.info(example);
+  const handleExamplePlay = (e) => {
+    const eventTarget = e.target;
+    eventTarget.disabled = true;
+    speechCommands.utils.playRawAudio(
+      example.example.rawAudio, () => eventTarget.disabled = false
+    );
+  }
+
+  return (
+    <button class="play-example" onClick={handleExamplePlay}>
+      ▶️ Play
+    </button>
+  );
+};
 
 const Tester = () => {
   return null;
