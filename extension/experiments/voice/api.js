@@ -1,4 +1,4 @@
-/* globals XPCOMUtils, ExtensionAPI, content */
+/* globals XPCOMUtils, ExtensionAPI, ExtensionUtils, content */
 
 "use strict";
 
@@ -9,6 +9,7 @@ ChromeUtils.defineModuleGetter(
 );
 
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+const { ExtensionError } = ExtensionUtils;
 
 XPCOMUtils.defineLazyGetter(this, "browserActionFor", () => {
   return ExtensionParent.apiManager.global.browserActionFor;
@@ -727,6 +728,27 @@ this.voice = class extends ExtensionAPI {
 
           async browserOpenAddonsMgr() {
             return runCommand("Tools:Addons");
+          },
+
+          async sendKeyboardEvent(tabId, eventProperties) {
+            function getTabOrActive(tabId) {
+              const tab =
+                tabId !== null
+                  ? tabTracker.getTab(tabId)
+                  : tabTracker.activeTab;
+              if (!context.canAccessWindow(tab.ownerGlobal)) {
+                throw new ExtensionError(
+                  tabId === null
+                    ? "Cannot access activeTab"
+                    : `Invalid tab ID: ${tabId}`
+                );
+              }
+              return tab;
+            }
+
+            const tab = getTabOrActive(tabId);
+            const KeyboardEvent = new KeyboardEvent(eventProperties);
+            tab.sendEvent(KeyboardEvent);
           },
         },
       },
