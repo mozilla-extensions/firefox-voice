@@ -36,15 +36,21 @@ export const Popup = ({
   const [inputValue, setInputValue] = useState(null);
   const [showScroll, setShowScroll] = useState(false);
 
-  const checkScrollButton = () => {
-    // still figuring how to render it make it show only if content is greater than view height
-  };
+  useEffect(() => {
+    const doc = document.body;
+    if (doc.offsetHeight > window.innerHeight) {
+      setShowScroll(true);
+    } else if (
+      window.innerHeight > doc.offsetHeight ||
+      window.innerHeight === doc.offsetHeight
+    ) {
+      setShowScroll(false);
+    }
+  }, []);
 
   const scrollDown = () => {
-    window.scrollTo(0, +50);
+    window.scrollBy(0, 50);
   };
-
-  window.addEventListener("scroll", checkScrollButton);
 
   function savingOnInputStarted(value) {
     // When the user types in the hidden field, we need to keep that
