@@ -130,6 +130,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermsBeforeStartingSpeechRecognition() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            statusView.text = getString(R.string.no_voice_input)
+            return
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(

@@ -15,6 +15,11 @@ phrase = "Set alarm 2 minutes from now"
 phrase = "Set alarm for 1 hour from now"
 test = true
 
+[timer.set.followup]
+match = """
+    reset (timer |)
+"""
+
 [timer.close]
 description = "Close timer"
 match = """
