@@ -36,6 +36,8 @@ class MusicService extends serviceList.Service {
       } catch (e) {
         if (e.message.includes("No search results")) {
           e.displayMessage = `No results found for ${query}`;
+        } else if (e.message.includes("Timeout during search")) {
+          e.displayMessage = `Encountered slow internet`;
         }
         throw e;
       }
@@ -93,9 +95,9 @@ class MusicService extends serviceList.Service {
     }
   }
 
-  async adjustVolume(volumeLevel) {
+  async adjustVolume(inputVolume, volumeLevel) {
     await this.initTab(`/services/${this.id}/player.js`);
-    await this.callTab("adjustVolume", { volumeLevel });
+    await this.callTab("adjustVolume", { inputVolume, volumeLevel });
   }
 
   async mute() {

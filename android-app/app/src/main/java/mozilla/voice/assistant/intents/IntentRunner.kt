@@ -1,9 +1,7 @@
 package mozilla.voice.assistant.intents
 
 import android.content.Context
-import android.net.Uri
 import androidx.annotation.VisibleForTesting
-import java.net.URLEncoder
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Pattern
 import mozilla.voice.assistant.language.PhraseSet
@@ -58,12 +56,15 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
     private fun getIntent(context: Context, utterance: String): android.content.Intent? =
         runUtterance(utterance, context)?.let { intent ->
             intent.resolveActivityInfo(context.packageManager, intent.flags)?.let { activityInfo ->
-                if (activityInfo.exported) intent else null
+                if (activityInfo.packageName == "mozilla.voice.assistant" || activityInfo.exported) intent else null
             }
         }
 
     // returns a pair consisting of the first utterance to yield an Intent and the intent
-    internal fun determineBestIntent(context: Context, utterances: List<String>): Pair<String, android.content.Intent> =
+    internal fun determineBestIntent(
+        context: Context,
+        utterances: List<String>
+    ): Pair<String, android.content.Intent> =
         utterances.mapNotNull { utterance ->
             getIntent(context, utterance)?.let { intent ->
                 Pair(utterance, intent)
@@ -71,21 +72,24 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
         }.firstOrNull() ?: Pair(
             utterances[0],
             android.content.Intent(
-                FALLBACK_ACTION,
-                Uri.parse(
-                    "${BASE_URL}${URLEncoder.encode(
-                        utterances[0],
-                        ENCODING
-                    )}"
-                )
-            )
-        )
+                FALLBACK_ACTION
+            ).apply {
+                putExtra("query", utterances[0])
+            })
+
+    /**
+     * Gets a list of up to [n] example phrases from registered intents.
+     * This will choose no more than one phrase for each intent.
+     *
+     * @param n the maximum number of phrases to return
+     * @return up to [n] example phrases, each for a different intent
+     */
+    fun getExamplePhrases(n: Int): List<String> =
+        intents.values.shuffled().take(n).map { it.examples.random() }
 
     companion object {
-        private const val BASE_URL = "https://mozilla.github.io/firefox-voice/assets/execute.html?text="
-        private const val ENCODING = "UTF-8"
         @VisibleForTesting
-        internal val FALLBACK_ACTION = android.content.Intent.ACTION_VIEW
+        internal val FALLBACK_ACTION = android.content.Intent.ACTION_WEB_SEARCH
     }
 }
 

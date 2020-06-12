@@ -11,7 +11,8 @@ private fun Map<String, List<Word>>.merge(map: Map<String, List<Word>>?): Map<St
     } ?: this
 
 /**
- * A representation of the state of a match between a [Pattern] and an utterance.
+ * A representation of the state of a match between a [Pattern] and an utterance. Its printable
+ * representation is useful for debugging pattern matching.
  */
 class MatchResult(
     internal val utterance: List<Word>,

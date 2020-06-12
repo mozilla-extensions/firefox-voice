@@ -9,6 +9,7 @@ import { compile, splitPhraseLines } from "./language/compiler.js";
 import { metadata } from "../intents/metadata.js";
 import { entityTypes } from "./entityTypes.js";
 import { Database } from "../history.js";
+import * as settings from "../settings.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -17,10 +18,15 @@ const METADATA_ATTRIBUTES = new Set([
   "example",
   "examples",
   "match",
+  "followup",
 ]);
 
 export const intents = {};
 let lastIntent;
+// This is a copy of lastIntent that gets nullified when the pop up
+// window closes.
+let lastIntentForFollowup;
+let globalListenForFollowup = settings.getSettings().listenForFollowup;
 const intentHistory = [];
 const db = new Database("voice");
 const utteranceTable = "utterance";
@@ -30,10 +36,25 @@ db.createTable(utteranceTable, primaryKey, voiceVersion)
   .then(result => log.info("CREATE TABLE:", result))
   .catch(error => log.error(error));
 
+settings.watch("listenForFollowup", ns => {
+  globalListenForFollowup = ns;
+});
+
 export class IntentContext {
   constructor(desc) {
     this.closePopupOnFinish = true;
     this.timestamp = Date.now();
+    this.expectsFollowup = false;
+    this.isFollowup = false;
+    this.isFollowupIntent = false;
+    this.insistOnFollowup = false;
+    // allows us to reuse an intent's text on retries
+    this.followupHint = {};
+    // When running follow ups, sometimes a success view is not needed,
+    // yet still flashes before the next view. This attribute allows us to
+    // force bypassing the success view.
+    this.skipSuccessView = false;
+    this.acceptFollowupIntent = [];
     Object.assign(this, desc);
   }
 
@@ -50,7 +71,7 @@ export class IntentContext {
 
   done(time = undefined) {
     this.closePopupOnFinish = false;
-    if (!this.noPopup) {
+    if (!this.noPopup && !this.isFollowup && !this.isFollowupIntent) {
       return browser.runtime.sendMessage({
         type: "closePopup",
         time,
@@ -60,6 +81,7 @@ export class IntentContext {
   }
 
   failed(message) {
+    this.skipSuccessView = true;
     telemetry.add({ intentSuccess: false });
     telemetry.sendSoon();
     try {
@@ -87,6 +109,69 @@ export class IntentContext {
       type: "endSavingPage",
       message,
     });
+  }
+
+  async startFollowup(message = undefined) {
+    this.expectsFollowup = true;
+    if (message) {
+      this.acceptFollowupIntent = message.acceptFollowupIntent || [];
+      this.skipSuccessView = message.skipSuccessView || false;
+      this.insistOnFollowup = message.insistOnFollowup || false;
+      this.followupHint = {
+        heading: message.heading,
+        subheading: message.subheading,
+      };
+    }
+    return browser.runtime.sendMessage({
+      type: "handleFollowup",
+      method: "enable",
+      message: {
+        heading: this.followupHint.heading,
+        subheading: this.followupHint.subheading,
+      },
+    });
+  }
+
+  async endFollowup() {
+    this.expectsFollowup = false;
+    browser.runtime.sendMessage({
+      type: "handleFollowup",
+      method: "disable",
+    });
+  }
+
+  parseFollowup(utterance) {
+    if (!lastIntentForFollowup || !lastIntentForFollowup.followupMatch) {
+      return null;
+    }
+    if (!this.followupPhraseSet) {
+      const phrases = [];
+      for (const line of splitPhraseLines(
+        lastIntentForFollowup.followupMatch
+      )) {
+        const compiled = compile(line, {
+          entities: entityTypes,
+          intentName: lastIntentForFollowup.name,
+        });
+        phrases.push(compiled);
+      }
+      this.followupPhraseSet = new PhraseSet(phrases);
+    }
+
+    const result = this.followupPhraseSet.match(utterance);
+    if (!result) {
+      return null;
+    }
+
+    return {
+      name: result.intentName,
+      slots: result.stringSlots(),
+      parameters: result.parameters,
+      utterance,
+      fallback: false,
+      isFollowup: true,
+      followupMatch: lastIntentForFollowup.followupMatch,
+    };
   }
 
   displayText(message) {
@@ -139,7 +224,9 @@ export class IntentContext {
   }
 
   async createTab(options) {
-    return browserUtil.createTab(options);
+    const tab = await browserUtil.createTab(options);
+    await browserUtil.loadUrl(tab.id, options.url);
+    return tab;
   }
 
   async openOrFocusTab(url) {
@@ -155,8 +242,8 @@ export class IntentContext {
     const searchUrl = searching.googleSearchUrl(query, true);
     const tab =
       !!options.openInTabId && options.openInTabId > -1
-        ? await browserUtil.loadUrl(options.openInTabId, searchUrl)
-        : await this.createTab({ url: searchUrl });
+        ? await browser.tabs.update(options.openInTabId, { url: searchUrl })
+        : await browserUtil.createTab({ url: searchUrl });
     if (options.hide && !buildSettings.android) {
       await browser.tabs.hide(tab.id);
     }
@@ -164,14 +251,10 @@ export class IntentContext {
       let forceRedirecting = false;
       function onUpdated(tabId, changeInfo, tab) {
         const url = tab.url;
-        if (
-          url.startsWith("about:blank") ||
-          (buildSettings.executeIntentUrl &&
-            url.startsWith(buildSettings.executeIntentUrl))
-        ) {
+        if (url.startsWith("about:blank")) {
           return;
         }
-        const isGoogle = /^https:\/\/www.google.com\//.test(url);
+        const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);
         const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
         if (!isGoogle || isRedirect) {
           if (isRedirect) {
@@ -245,6 +328,10 @@ export function registerIntent(intent) {
       );
     }
   }
+  if (data.followup) {
+    data.followupMatch = data.followup.match;
+    delete data.followup;
+  }
   Object.assign(intent, data);
   intents[intent.name] = intent;
   if (!intent.match) {
@@ -253,7 +340,13 @@ export function registerIntent(intent) {
   intentParser.registerMatcher(intent.name, intent.match);
 }
 
+export function setLastIntent(intent) {
+  lastIntent = intent;
+  lastIntentForFollowup = intent;
+}
+
 export async function runUtterance(utterance, noPopup) {
+  log.timing(`intentRunner.runUtterance(${utterance}) called`);
   for (const name in registeredNicknames) {
     const re = new RegExp(`\\b${name}\\b`, "i");
     if (re.test(utterance)) {
@@ -276,9 +369,38 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
-  const desc = intentParser.parse(utterance);
+  log.timing("intentRunner finished nickname checking");
+  let desc = intentParser.parse(utterance);
+  log.timing("intentParser returned");
   desc.noPopup = !!noPopup;
-  return runIntent(desc);
+  desc.followupMatch = intents[desc.name].followupMatch;
+  if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
+    const followup = lastIntentForFollowup.parseFollowup(utterance);
+    if (followup) {
+      desc = followup;
+    } else if (
+      lastIntentForFollowup.acceptFollowupIntent &&
+      lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
+    ) {
+      desc.isFollowupIntent = true;
+    } else if (
+      !globalListenForFollowup ||
+      (globalListenForFollowup && lastIntentForFollowup.insistOnFollowup)
+    ) {
+      lastIntentForFollowup.failed(
+        `The phrase\n\n"${desc.utterance}"\n\nis invalid. Please try again`
+      );
+      return lastIntentForFollowup.startFollowup();
+    } else {
+      // This is a new intent when listening for all follow ups, so we
+      // clear previous follow up hints
+      lastIntentForFollowup.endFollowup();
+    }
+  }
+  log.timing("Running intent...");
+  const result = await runIntent(desc);
+  log.timing("Finished running intent");
+  return result;
 }
 
 export async function runIntent(desc) {
@@ -289,6 +411,7 @@ export async function runIntent(desc) {
   const intent = intents[desc.name];
   const context = new IntentContext(desc);
   lastIntent = context;
+  lastIntentForFollowup = lastIntent;
   addIntentHistory(context);
   context.initTelemetry();
   try {
@@ -301,7 +424,11 @@ export async function runIntent(desc) {
         ? `and parameters: ${JSON.stringify(desc.parameters)}`
         : "and no params"
     );
-    await intent.run(context);
+    if (lastIntent.isFollowup) {
+      await intent.runFollowup(context);
+    } else {
+      await intent.run(context);
+    }
     if (context.closePopupOnFinish) {
       context.done();
     }
@@ -417,6 +544,12 @@ export function getLastIntentForFeedback() {
 
 export function clearFeedbackIntent() {
   lastIntent = null;
+}
+
+export function clearFollowup() {
+  if (lastIntentForFollowup) {
+    lastIntentForFollowup = null;
+  }
 }
 
 initRegisteredNicknames();

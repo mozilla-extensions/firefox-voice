@@ -16,7 +16,7 @@ phrase = "open downloads"
 [window.quitApplication]
 description = "Close Firefox"
 match = """
-  (close | quit | exit | shutdown) firefox
+  (close | quit | exit | shutdown) (firefox | browser | the browser)
 """
 
 [[window.quitApplication.example]]
@@ -56,3 +56,67 @@ test = true
 [[window.close.example]]
 phrase = "Close all windows"
 test = true
+
+[window.clearBrowserHistory]
+description = "Brings up dialogue box to clear browser history"
+match = """
+  (clear | erase) (firefox | browser |) (history | data)
+"""
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear history"
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox history"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox data"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear browser history"
+test = true
+
+[window.zoom]
+description = "Zooms the window"
+match = """
+  (Zoom | Maximize |) (the | this |) (window |) (for me |)
+"""
+
+[[window.zoom.example]]
+phrase = "Zoom window"
+
+[[window.zoom.example]]
+phrase = "Zoom this window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize"
+test = true
+
+[window.minimize]
+description = "Minimizes the window"
+match = """
+  (minimize | hide |) (the |) (this |) (window |) (for me |)
+"""
+
+[[window.minimize.example]]
+phrase = "Minimize window"
+
+[[window.minimize.example]]
+phrase = "Minimize this window"
+test = true
+
+[[window.minimize.example]]
+phrase = "Minimize"
+test = true
+
+[[window.minimize.example]]
+phrase = "hide window"
+test = true
+

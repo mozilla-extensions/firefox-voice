@@ -3,7 +3,7 @@ package mozilla.voice.assistant.language
 import androidx.annotation.VisibleForTesting
 
 /**
- * A representation of a sequence of patterns that must be matched in order.
+ * A representation of a sequence of [Pattern]s that must be matched in order.
  */
 class Sequence(@VisibleForTesting val patterns: List<Pattern>) : Pattern {
     init {

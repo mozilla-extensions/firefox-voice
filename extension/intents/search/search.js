@@ -36,8 +36,11 @@ async function openSearchTab() {
   }, CLOSE_TIME);
   if (_searchTabId) {
     try {
-      await browser.tabs.get(_searchTabId);
-      return _searchTabId;
+      const tab = await browser.tabs.get(_searchTabId);
+      // reuse tab only if it's hidden
+      if (tab.hidden === true) {
+        return _searchTabId;
+      }
     } catch (e) {
       // Presumably the tab doesn't exist
       log.info("Error getting tab:", String(e));
@@ -110,7 +113,19 @@ async function performSearch(query) {
   if (buildSettings.android) {
     await browserUtil.makeTabActive(tabId);
   }
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  try {
+    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  } catch (e) {
+    // There's a (fairly) common race condition here
+    if (e.message.includes("communicate is not defined")) {
+      log.info(
+        "Race condition in search page, attempting to load queryScript second time"
+      );
+      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    } else {
+      throw e;
+    }
+  }
 }
 
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,
@@ -223,6 +238,18 @@ async function moveResult(context, step) {
     // reset the index to an initial search result
     searchInfo.index = undefined;
     tabSearchResults.set(tabId, searchInfo);
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      searchResults: searchInfo.searchResults,
+      searchUrl: searchInfo.searchUrl,
+      index: 0,
+    });
+    context.startFollowup({
+      heading: "Say 'next' to view",
+      subheading: searchInfo.searchResults[0].title,
+      acceptFollowupIntent: ["search.next", "search.previous"],
+      skipSuccessView: true,
+    });
     return;
   }
 
@@ -232,12 +259,6 @@ async function moveResult(context, step) {
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
 
   const item = searchInfo.searchResults[searchInfo.index];
-  await browser.runtime.sendMessage({
-    type: "showSearchResults",
-    searchResults: searchInfo.searchResults,
-    searchUrl: searchInfo.searchUrl,
-    index: searchInfo.index,
-  });
   if (!tabId) {
     const tab = await context.createTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
@@ -267,6 +288,21 @@ async function moveResult(context, step) {
       tabSearchResults.delete(tabId);
     }
   }
+  await browserUtil.waitForDocumentComplete(lastTabId);
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    searchResults: searchInfo.searchResults,
+    searchUrl: searchInfo.searchUrl,
+    index: searchInfo.index,
+  });
+  const nextItemIdx = step === 1 ? searchInfo.index + 1 : searchInfo.index - 1;
+  const nextItem = searchInfo.searchResults[nextItemIdx];
+  context.startFollowup({
+    heading: `Say '${step === 1 ? "next" : "previous"}' to view`,
+    subheading: nextItemIdx < 0 ? "Search Results" : nextItem.title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+    skipSuccessView: true,
+  });
 }
 
 export async function focusSearchResults(message) {
@@ -381,7 +417,7 @@ intentRunner.registerIntent({
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
-      await browser.tabs.update(searchTabId, { url: searchInfo.url });
+      await browser.tabs.update(searchTabId, { url: searchInfo.searchUrl });
     }
     await focusSearchTab();
   },
@@ -390,6 +426,8 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "search.searchPage",
   async run(context) {
+    // An old popup-only search result is no longer valid once a new search is made:
+    popupSearchInfo = null;
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
@@ -406,6 +444,7 @@ intentRunner.registerIntent({
       });
 
       await focusSearchTab();
+      await browserUtil.waitForDocumentComplete(tabId);
       await content.lazyInject(tabId, "/intents/search/queryScript.js");
       const searchInfo = await callScript({ type: "searchResultInfo" });
 
@@ -421,6 +460,13 @@ intentRunner.registerIntent({
       }
 
       tabSearchResults.set(tabId, searchInfo);
+
+      context.keepPopup();
+      await context.startFollowup({
+        heading: "Say 'next' to view",
+        subheading: searchInfo.searchResults[0].title,
+        acceptFollowupIntent: ["search.next", "search.previous"],
+      });
     }
   },
 });

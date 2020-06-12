@@ -1,0 +1,17 @@
+[install.install]
+description = "Install an app"
+match = """
+  install [app]
+"""
+
+[[install.install.example]]
+phrase = "Install Paper Football"
+
+[install.search]
+description = "Search for an app in the Google Play store"
+match = """
+  (search for|look for|look up|find) [app] (in|on) (Google|) (Play|App|) store
+"""
+
+[[install.search.example]]
+phrase = "Search for Libretto in Google Play Store"

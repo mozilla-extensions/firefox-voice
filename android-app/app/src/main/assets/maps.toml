@@ -10,12 +10,12 @@ match = """
   (show|tell) (me|) how to walk to [location] [mode=walk]
   (show|tell) (me|) how to get to [location] (on foot|by foot|by walking) [mode=walk]
   (show|tell) me (how to get|how to drive|directions|the way) to [location]
-  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (by car|)
-  (what's|show me|tell me) the (best|fastest|quickest) way to drive to [location] (by car|)
-  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (on foot|by foot|by walking) [mode=walk]
-  (what's|show me|tell me) the (best|fastest|quickest) way to walk to [location] [mode=walk]
-  (what's|show me|tell me) the (best|fastest|quickest) way to get to [location] (by|on) (bike|biking|bicycle|bicycling|cycling) [mode=bike]
-  (what's|show me|tell me) the (best|fastest|quickest) way to (bike|bicycle|cycle) to [location] [mode=bike]
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to get to [location] (by car|)
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to drive to [location] (by car|)
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to get to [location] (on foot|by foot|by walking) [mode=walk]
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to walk to [location] [mode=walk]
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to get to [location] (by|on) (bike|biking|bicycle|bicycling|cycling) [mode=bike]
+  (what's|what is|show me|tell me) the (best|fastest|quickest) way to (bike|bicycle|cycle) to [location] [mode=bike]
 """
 
 [[maps.navigate.example]]
@@ -32,8 +32,10 @@ description = "Find a certain type of place"
 match = """
   where (can i|to) (get|find|buy|eat) [thing] (in|near) [location]
   where (can i|to) (get|find|buy|eat) [thing]
-  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing] (in|near) [location]
-  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|) (place for|place to get|) [thing]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|cheapest) (place for|place to get|) [thing] (in|near) [location]
+  (where's|where is|what's|what is) (the|a) (place for|place to get) [thing] (in|near) [location]
+  (where's|where is|what's|what is) (the|a) (near|nearest|close|closest|good|best|cheapest) (place for|place to get|) [thing]
+  (where's|where is|what's|what is) [thing] in [location]
   (search for|look for|find) [thing] (in|near) [location]
   (search for|look for|find) nearby [thing]
 """

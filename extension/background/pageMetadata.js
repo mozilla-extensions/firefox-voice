@@ -9,7 +9,25 @@ export async function getSelection(tabId) {
 }
 
 export async function getMetadata(tabId) {
-  await content.lazyInject(tabId, "/background/pageMetadata-contentScript.js");
+  try {
+    await content.lazyInject(
+      tabId,
+      "/background/pageMetadata-contentScript.js"
+    );
+  } catch (e) {
+    // if lazyInject does not work, try to get the metadata from the tab;
+    const tab = await browser.tabs.get(tabId);
+    const title = tab.title;
+    const canonical = tab.url;
+    const url = tab.url;
+    const docTitle = tab.title;
+    return {
+      title,
+      canonical,
+      url,
+      docTitle,
+    };
+  }
   const metadata = await browser.tabs.sendMessage(tabId, {
     type: "getMetadata",
   });

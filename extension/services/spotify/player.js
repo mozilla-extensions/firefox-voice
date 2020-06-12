@@ -15,7 +15,13 @@ this.player = (function() {
       if (errorDiv) {
         throw new Error("You must enable DRM.");
       }
-      const searchButton = this.querySelector("a[aria-label='Search']");
+
+      const searchButton = await this.waitForSelector(
+        "a[aria-label='Search']",
+        {
+          timeout: 5000,
+        }
+      );
       searchButton.click();
 
       const input = await this.waitForSelector(
@@ -31,10 +37,17 @@ this.player = (function() {
           const playerButton = await this.waitForSelector(SEARCH_PLAY, {
             timeout: 10000,
           });
+
           playerButton.click();
         } catch (e) {
-          if (e.name === "TimeoutError") {
-            throw new Error("No search results");
+          const notFound = document.querySelector("#searchPage h1");
+
+          if (notFound) {
+            if (notFound.innerText.includes("No results found")) {
+              throw new Error("No search results");
+            }
+          } else if (e.name === "TimeoutError") {
+            throw new Error("Timeout during search");
           }
         }
       }
@@ -47,6 +60,16 @@ this.player = (function() {
 
     action_unpause() {
       const button = this.querySelector(".control-button[title='Play']");
+      button.click();
+    }
+
+    action_mute() {
+      const button = this.querySelector(".control-button[aria-label='Mute']");
+      button.click();
+    }
+
+    action_unmute() {
+      const button = this.querySelector(".control-button[aria-label='Unmute']");
       button.click();
     }
 

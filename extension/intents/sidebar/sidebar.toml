@@ -1,0 +1,33 @@
+[sidebar.openSidebar]
+description = "Open the sidebar with Bookmarks or History"
+match = """
+  (open | show | view |) (my | the |) bookmark{s} sidebar (for me|) [sidebar=bookmarks]
+  (open | show |) (my | the |) history sidebar (for me|) [sidebar=history]
+"""
+
+[[sidebar.openSidebar.example]]
+phrase = "Open bookmarks sidebar"
+expectParameters = {sidebar = "bookmarks"}
+
+[[sidebar.openSidebar.example]]
+phrase = "view bookmark{s} sidebar"
+test = true
+expectParameters = {sidebar = "bookmarks"}
+
+[sidebar.closeSidebar]
+description = "Close the sidebar"
+match = """
+  (close | hide |) (my | the |) sidebar (for me|)
+"""
+
+[[sidebar.closeSidebar.example]]
+phrase = "close sidebar"
+
+[sidebar.toggleSidebar]
+description = "Toggle the sidebar"
+match = """
+  toggle (my | the |) sidebar (for me|)
+"""
+
+[[sidebar.toggleSidebar.example]]
+phrase = "toggle sidebar"
