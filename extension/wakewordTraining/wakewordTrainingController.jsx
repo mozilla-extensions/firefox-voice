@@ -12,6 +12,11 @@ let transferRecognizer;
 
 export const WakewordTrainingController = function() {
   const [savedModels, setSavedModels] = useState([]);
+  const [heyFirefoxExamples, setHeyFirefoxExamples] = useState([]);
+  const [nextSlidePleaseExamples, setNextSlidePleaseExamples] = useState([]);
+  const [why, setWhy] = useState("the-worst");
+
+
   let recognizer;
 
   const COLLECT_EXAMPLE_OPTIONS = {
@@ -69,13 +74,16 @@ export const WakewordTrainingController = function() {
       wordToTrain,
       collectExampleOptions
     );
-    console.log(spectogram);
+    setHeyFirefoxExamples(examples => examples.concat(spectogram));
   };
 
   return (
     <wakewordTrainingView.WakewordTraining
       savedModels={savedModels}
       onTrainExample={onTrainExample}
+      heyFirefoxExamples={heyFirefoxExamples}
+      nextSlidePleaseExamples={nextSlidePleaseExamples}
+      why={why}
     />
   );
 };

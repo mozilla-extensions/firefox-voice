@@ -9,3 +9,11 @@
   color: #0a84ff;
   margin-bottom: 1em;
 }
+
+.the-worst {
+    background: red;
+}
+
+.the-best {
+    background: #fff;
+}

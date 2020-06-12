@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* globals React */
 
-export const WakewordTraining = ({ savedModels, onTrainExample }) => {
+export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, why }) => {
   return (
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
         <SelectModel savedModels={savedModels} />
-        <Trainer onTrainExample={onTrainExample} />
+        <Trainer onTrainExample={onTrainExample} heyFirefoxExamples={heyFirefoxExamples} nextSlidePleaseExamples={nextSlidePleaseExamples} />
         <Tester />
       </React.Fragment>
     </div>
@@ -46,7 +46,7 @@ const SelectModel = ({ savedModels }) => {
   );
 };
 
-const Trainer = ({ onTrainExample }) => {
+const Trainer = ({ onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples }) => {
   return (
     <div class="settings-content">
       <fieldset id="trainer">
@@ -64,18 +64,21 @@ const Trainer = ({ onTrainExample }) => {
           onTrainExample={onTrainExample}
         />
         <ExampleRecorder word="Hey Firefox" onTrainExample={onTrainExample} />
+        <TrainingExamples word="Hey Firefox" examples={heyFirefoxExamples} />
         <ExampleRecorder
           word="Next slide please"
           onTrainExample={onTrainExample}
         />
+        <TrainingExamples word="Next slide please" examples={nextSlidePleaseExamples} />
+
       </fieldset>
     </div>
   );
 };
 
 const ExampleRecorder = ({ word, onTrainExample }) => {
-  const recordExample = e => {
-    onTrainExample(word);
+  const recordExample = async (e) => {
+    await onTrainExample(word);
   };
 
   return (
@@ -86,6 +89,14 @@ const ExampleRecorder = ({ word, onTrainExample }) => {
     </div>
   );
 };
+
+const TrainingExamples = ({examples}) => {
+    return (
+        <div>
+            {examples.length}
+        </div>
+    )
+}
 
 const Tester = () => {
   return null;
