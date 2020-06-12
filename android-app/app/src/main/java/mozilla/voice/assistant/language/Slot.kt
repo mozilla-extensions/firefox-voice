@@ -1,9 +1,9 @@
 package mozilla.voice.assistant.language
 
 /**
- * A representation of a slot whose value is specified by the associated pattern.
- * For example, the slot in "search for [query]", whose name is "query" and whose
- * pattern is a [Wildcard].
+ * A representation of a slot whose value is specified by the associated [Pattern].
+ * For example, the phrase "search for \[query\]" would include a slot with the name
+ * "query" and the pattern [Wildcard].
  */
 class Slot(private val pattern: Pattern, private val slotName: String) : Pattern {
     override fun matchUtterance(match: MatchResult): List<MatchResult> =

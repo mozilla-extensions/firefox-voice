@@ -36,7 +36,7 @@ interface ContactDao {
     fun insert(contact: ContactEntity)
 }
 
-@Database(entities = arrayOf(ContactEntity::class), version = 1)
+@Database(entities = arrayOf(ContactEntity::class), version = 1, exportSchema = false)
 abstract class ContactDatabase : RoomDatabase() {
     abstract fun contactDao(): ContactDao
 

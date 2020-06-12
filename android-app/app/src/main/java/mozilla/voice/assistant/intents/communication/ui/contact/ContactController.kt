@@ -1,32 +1,21 @@
 package mozilla.voice.assistant.intents.communication.ui.contact
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import kotlinx.coroutines.launch
 import mozilla.voice.assistant.intents.communication.ContactEntity
+import mozilla.voice.assistant.intents.communication.DUMMY_NICKNAME
 import mozilla.voice.assistant.intents.communication.SMS_MODE
 import mozilla.voice.assistant.intents.communication.VOICE_MODE
 import mozilla.voice.assistant.intents.communication.contactIdToContactEntity
 import mozilla.voice.assistant.intents.communication.contactUriToContactEntity
-
-private fun String.toComparisonStrings() =
-    arrayOf(
-        this, // just the nickname
-        "$this %", // first name
-        "% $this", // last name
-        "% $this %" // middle name
-    )
 
 private fun String.numWords() = if (this.isEmpty()) 0 else this.split(" ").size
 
@@ -54,7 +43,7 @@ private fun String.numWords() = if (this.isEmpty()) 0 else this.split(" ").size
  *  until there is only a single word remaining in nickname.
  */
 class ContactController(
-    private val contactActivity: ContactActivity,
+    private val contactActivity: ContactActivityInterface,
     mode: String,
     nickname: String?,
     payload: String?
@@ -63,9 +52,9 @@ class ContactController(
     private val viewModel = ViewModelProvider(
         contactActivity,
         ContactViewModelFactory(
-            contactActivity.application,
+            contactActivity.app,
             mode,
-            nickname ?: payload ?: throw AssertionError("Both nickname and payload null"),
+            nickname,
             payload
         )
     ).get(ContactViewModel::class.java)
@@ -87,7 +76,7 @@ class ContactController(
         } ?: getPermissions() // leads to seekContactsWithNickname()
     }
 
-    internal fun initiateRequestedActivity(contact: ContactEntity) {
+    fun initiateRequestedActivity(contact: ContactEntity) {
         val intent = when (viewModel.mode) {
             VOICE_MODE -> Intent(Intent.ACTION_DIAL).apply {
                 data = Uri.parse("tel: ${contact.voiceNumber}")
@@ -99,31 +88,23 @@ class ContactController(
                 viewModel.payload?.let {
                     putExtra(
                         "sms_body",
-                        it.substringAfter(viewModel.nickname)
+                        ContactViewModel.extractMessage(it, contact.name)
                     )
                 }
             }
             else -> throw AssertionError("Illegal mode: ${viewModel.mode}")
         }
-        contactActivity.startActivity(intent)
-        contactActivity.finish()
+        contactActivity.startIntent(intent)
     }
 
     private fun getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            contactActivity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-        ) {
-            contactActivity.requestPermissions(
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                ContactActivity.PERMISSIONS_REQUEST
-            )
-        } else {
+        if (!contactActivity.permissionsNeeded()) {
             seekContactsWithNickname()
         }
     }
 
-    internal fun onRequestPermissionsResult(grantResults: IntArray) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    fun onRequestPermissionsResult(grantResults: IntArray) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             seekContactsWithNickname()
         } else {
             contactActivity.reportPermissionsDenial()
@@ -131,75 +112,56 @@ class ContactController(
     }
 
     private fun seekContactsWithNickname() {
-        // If we've already created a ContactLoader, destroy it.
-        contactLoader?.let {
-            // We use the number of spaces in a nickname as the id of the corresponding loader,
-            // so the previous loader has an id one greater than the one we're about to create.
-            LoaderManager.getInstance(contactActivity)
-                .destroyLoader(viewModel.nickname.numWords() + 1)
-        }
         ContactLoader().let {
             contactLoader = it
             LoaderManager.getInstance(contactActivity)
                 .initLoader(
-                    viewModel.nickname.numWords(), // id of new loader
+                    CONTACT_LOADER_ID,
                     null,
                     it
                 )
         }
     }
 
-    internal fun addContact(contactEntity: ContactEntity) {
-        viewModel.insert(contactEntity)
+    fun addContact(contactEntity: ContactEntity) {
+        if (contactEntity.nickname != DUMMY_NICKNAME) viewModel.insert(contactEntity)
     }
 
-    internal fun onContactChosen(contactUri: Uri) {
+    fun onContactChosen(contactUri: Uri, save: Boolean) {
         contactUriToContactEntity(contactActivity, viewModel.nickname, contactUri)
             .let { contactEntity ->
-                addContact(contactEntity)
+                if (save) addContact(contactEntity)
                 initiateRequestedActivity(contactEntity)
             }
     }
 
-    internal fun handleZeroContacts(cursor: Cursor) {
-        if (viewModel.payload != null && viewModel.nickname.contains(' ')) {
-            // If we get here, we may have copied too much of the payload into
-            // the nickname. For example, if the user said "text mary golden hello",
-            // we would originally set the nickname to the payload value, "mary golden hello".
-            // We should shorten the nickname and try again.
-            viewModel.nickname = viewModel.nickname.substringBeforeLast(' ')
-            startDatabaseSearch()
-        } else {
-            // Don't close cursor here, in case a configuration change occurs after
-            // processZeroContacts() is called but before the contact picker is opened
-            // (issue 1628). Instead, it will be called just before opening the picker.
-            contactActivity.processZeroContacts(cursor, viewModel.nickname)
-        }
+    fun handleZeroContacts(cursor: Cursor) {
+        // Don't close cursor here, in case a configuration change occurs after
+        // processZeroContacts() is called but before the contact picker is opened
+        // (issue 1628). Instead, it will be called just before opening the picker.
+        contactActivity.processZeroContacts(cursor, viewModel.nickname)
     }
 
-    internal fun handleSingleContact(cursor: Cursor) =
+    fun handleSingleContact(cursor: Cursor) {
         cursor.use {
             it.moveToNext()
-            contactIdToContactEntity(
-                contactActivity,
-                viewModel.nickname,
-                it.getLong(CONTACT_ID_INDEX)
-            ).let { contactEntity ->
-                addContact(contactEntity)
-                initiateRequestedActivity(contactEntity)
-            }
+            initiateRequestedActivity(
+                contactIdToContactEntity(
+                    contactActivity,
+                    viewModel.nickname,
+                    it.getLong(CONTACT_ID_INDEX)
+                )
+            )
         }
+    }
 
+    /**
+     * Loads contacts matching the given nickname (or payload) and dispatches based on
+     * the number of contacts returned.
+     */
     inner class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         override fun onCreateLoader(loaderId: Int, args: Bundle?) =
-            CursorLoader(
-                contactActivity,
-                ContactsContract.Contacts.CONTENT_URI,
-                PROJECTION,
-                SELECTION,
-                viewModel.nickname.toComparisonStrings(),
-                null
-            )
+            viewModel.toCursorLoader(contactActivity.app)
 
         override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
             when (cursor.count) {
@@ -213,28 +175,10 @@ class ContactController(
     }
 
     companion object {
-        private val PROJECTION: Array<out String> = arrayOf(
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
-        )
-
-        // The following statements set up constants for a query to find contacts whose display
-        // name either match or contain a nickname provided at run-time.
-        private const val HAS_PHONE_TERM = "${ContactsContract.Contacts.HAS_PHONE_NUMBER} = 1"
-        private const val LIKE_TERM = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
-        private const val NUM_LIKE_TERMS = 4 // exact match, first name, last name, middle name
-        private val SELECTION: String =
-            generateSequence { LIKE_TERM }
-                .take(NUM_LIKE_TERMS)
-                .joinToString(
-                    separator = " OR ",
-                    prefix = "$HAS_PHONE_TERM AND (",
-                    postfix = ")"
-                )
-
         internal const val CONTACT_ID_INDEX = 0
         internal const val CONTACT_DISPLAY_NAME_INDEX = 1
         internal const val CONTACT_PHOTO_URI_INDEX = 2
+
+        internal const val CONTACT_LOADER_ID = 100
     }
 }

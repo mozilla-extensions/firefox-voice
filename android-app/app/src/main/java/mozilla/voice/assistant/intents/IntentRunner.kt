@@ -77,8 +77,17 @@ class IntentRunner(private val compiler: Compiler, intentBuilders: List<Pair<Str
                 putExtra("query", utterances[0])
             })
 
+    /**
+     * Gets a list of up to [n] example phrases from registered intents.
+     * This will choose no more than one phrase for each intent.
+     *
+     * @param n the maximum number of phrases to return
+     * @return up to [n] example phrases, each for a different intent
+     */
+    fun getExamplePhrases(n: Int): List<String> =
+        intents.values.shuffled().take(n).map { it.examples.random() }
+
     companion object {
-        private const val ENCODING = "UTF-8"
         @VisibleForTesting
         internal val FALLBACK_ACTION = android.content.Intent.ACTION_WEB_SEARCH
     }
