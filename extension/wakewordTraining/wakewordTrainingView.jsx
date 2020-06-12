@@ -152,13 +152,22 @@ const TrainingClass = ({ classItem, onTrainExample, onDeleteExample }) => {
 };
 
 const TrainingInitiator = ({ onStartTraining }) => {
+  const handleStartTraining = async (e) => {
+    let eventTarget = e.target;
+    const originalText = eventTarget.innerText;
+    eventTarget.innerText = "Training...";
+    eventTarget.disabled = true;
+    await onStartTraining();
+    eventTarget.innerText = originalText;
+    eventTarget.disabled = false;
+  }
   return (
     <React.Fragment>
       <p>
         Currently using the default settings of 25 epochs and 5 fine-tuning
         epochs.
       </p>
-      <button onClick={onStartTraining}>Start Training</button>
+      <button onClick={handleStartTraining}>Start Training</button>
     </React.Fragment>
   );
 };
