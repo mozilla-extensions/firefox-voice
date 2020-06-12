@@ -11,4 +11,15 @@ this.buildSettings = {
   sentryDsn: <%= (env.NO_SENTRY && !env.FORCE_SENTRY) ? null : env.SENTRY_DSN || "https://18143ece2d6042ff91ed7678b287a814@sentry.prod.mozaws.net/458" %>,
   openPopupOnStart: <%= !!env.OPEN_POPUP_ON_START %>,
   android: <%= !!env.ANDROID %>,
+  // Note: this should only be enabled in demo situations:
+  executeIntentUrl: <%= env.EXECUTE_INTENT_URL || null %>,
+  firebaseConfig: {
+    apiKey: "AIzaSyDh5CJWiog4lXde47YPwPffSh1XMLF4-KE",
+    authDomain: "firefox-voice.firebaseapp.com",
+    databaseURL: "https://firefox-voice.firebaseio.com",
+    projectId: "firefox-voice",
+    storageBucket: "firefox-voice.appspot.com",
+    messagingSenderId: "366523679149",
+    appId: "1:366523679149:web:63fcb6f3aa624af6c5e124"
+  },
 };

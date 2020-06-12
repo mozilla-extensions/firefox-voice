@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Connect your device
+    </title>
+    <link href="../assets/css/gui.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Connect your device</h1>
+    <p>Open this URL in your device (QR code will also load URL):</p>
+    <p>
+      <code>
+        <a href="" rel="noopener" target="blank" id="url"></a>
+      </code>
+    </p>
+    <p>
+      <code>
+        <a href="" rel="noopener" target="blank" id="url-local"></a>
+      </code>
+    </p>
+    <div id="qrcode"></div>
+    <script src="../js/vendor/qrcode.min.js"></script>
+    <script src="qrcode.js"></script>
+  </body>
+</html>
