@@ -118,7 +118,7 @@ export const PopupController = function() {
       }
 
       if (waitFor < 0) {
-        clearTimer(totalInMS);
+        clearTimer({ totalInMS });
       }
     }
 
@@ -261,7 +261,7 @@ export const PopupController = function() {
         return Promise.resolve(true);
       }
       case "closeTimer": {
-        clearTimer(message.totalInMS);
+        clearTimer(message);
         return Promise.resolve(true);
       }
       case "remoteUtterance": {
@@ -279,14 +279,12 @@ export const PopupController = function() {
     return undefined;
   };
 
-  const clearTimer = async totalInMS => {
+  const clearTimer = async ({ totalInMS, followup }) => {
+    playTimerAlarm();
     setPopupView("timer");
 
     // use this variable to stop any other actions and show notifications
     timerElapsed = true;
-
-    cancelRecoder();
-    playTimerAlarm();
 
     setTranscript("Time's up");
 
@@ -300,7 +298,14 @@ export const PopupController = function() {
       method: "closeActiveTimer",
     });
 
-    closePopup(6000);
+    if (followup) {
+      setFollowupText(followup);
+      setRequestFollowup(true);
+      runFollowup();
+    } else {
+      cancelRecoder();
+      closePopup(6000);
+    }
   };
 
   const startTimer = async duration => {
@@ -540,6 +545,7 @@ export const PopupController = function() {
     if (renderListenComponent) {
       renderListenComponent = false;
     }
+    forceCancelRecoder = false;
     recorder.startRecording();
     closePopup(FOLLOWUP_TIMEOUT);
   };

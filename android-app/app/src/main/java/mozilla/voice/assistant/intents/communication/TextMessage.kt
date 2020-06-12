@@ -54,7 +54,6 @@ class TextMessage {
             context: Context?,
             @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ) = pr.slots[PAYLOAD_KEY]?.let { payload ->
-            val words = payload.split(' ', limit = 2)
             ContactActivity.createSmsIntent(
                 requireNotNull(context),
                 nickname = null,

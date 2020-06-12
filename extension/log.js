@@ -47,7 +47,6 @@ this.log = (function() {
   }
 
   exports.addTimings = function(timings) {
-    console.log("adding new timings", timings);
     TIMING_LOGS = TIMING_LOGS.concat(timings);
   };
 
