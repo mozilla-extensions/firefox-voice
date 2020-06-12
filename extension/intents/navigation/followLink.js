@@ -80,6 +80,6 @@ this.followLink = (function() {
   }
 
   function findLinks() {
-    return document.body.querySelectorAll("a");
+    return document.body.querySelectorAll("button, a, *[role=button]");
   }
 })();

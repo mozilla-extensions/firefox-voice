@@ -1,0 +1,4 @@
+[gmail]
+type = "email"
+title = "Gmail"
+baseUrl = "https://mail.google.com"

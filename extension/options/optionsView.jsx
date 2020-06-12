@@ -23,6 +23,7 @@ export const Options = ({
   registeredNicknames,
   useToggle,
   useEditNicknameDraft,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-page">
@@ -34,6 +35,7 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
+          audioInputDevices={audioInputDevices}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -126,19 +128,21 @@ const General = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  audioInputDevices,
 }) => {
   return (
     <div className="settings-content">
       <PreferenceSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      {inDevelopment ? (
+      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}
@@ -190,7 +194,41 @@ const MusicServiceSettings = ({
   );
 };
 
-const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
+const SelectMicPreferences = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
+  const onMicPreferenceChange = event => {
+    if (event) {
+      userSettings.audioInputId = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="mic-selector">
+      <span>Microphone </span>
+      <select
+        value={userSettings.audioInputId}
+        onChange={onMicPreferenceChange}
+        onBlur={onMicPreferenceChange}
+      >
+        {audioInputDevices &&
+          audioInputDevices.map(device => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
+const PreferenceSettings = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
   const onPreferenceChange = setting => event => {
     if (event) {
       userSettings[setting] = event.target.checked;
@@ -224,6 +262,11 @@ const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
           </label>
         </div>
       </div>
+      <SelectMicPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
+      />
     </fieldset>
   );
 };
@@ -470,6 +513,9 @@ const DevelopmentSettings = ({ inDevelopment }) => {
           <a href="/tests/intent-viewer.html">Intent Viewer</a>
         </li>
         <li>
+          <a href="/views/timing/timing.html">Timing/performance information</a>
+        </li>
+        <li>
           <a href="/popup/popup.html">View popup in tab</a>
         </li>
       </ul>
@@ -502,6 +548,11 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
   return (
     <fieldset id="data-collection">
       <legend>Firefox Voice Data Collection and Use</legend>
+      <p>
+        We store this data without personally identifiable information, which
+        means we can’t match data, transcripts, or a voice to a particular
+        person.
+      </p>
       <ul>
         <li>
           <div className="styled-toggleswitch">
@@ -520,8 +571,8 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
             </label>
           </div>
           <p>
-            Includes anonymized high level categorization of requests (e.g.
-            search, close tab, play music, etc) and error reports.
+            This includes high-level categorizations of requests (e.g., search,
+            close tab, and play music) and error reports.
           </p>
         </li>
         <li>
@@ -535,15 +586,13 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
             />
             <label htmlFor="transcripts-data">
               <strong>
-                Allow Firefox Voice to send anonymized transcripts of your audio
-                request.
+                Allow Firefox Voice to store transcripts of your commands.
               </strong>
             </label>
           </div>
           <p>
             Audio transcripts help Mozilla improve product accuracy and develop
-            new features. Data is stored on Mozilla servers, never shared with
-            other organizations and deleted after x months.
+            new features.
           </p>
         </li>
         <li>
@@ -556,11 +605,15 @@ const DataCollection = ({ userSettings, updateUserSettings }) => {
               onChange={onCollectAudioChange}
             />
             <label htmlFor="collect-audio">
-              Allow Firefox Voice to collect your{" "}
-              <strong>audio recordings</strong> for the purpose of improving our
-              speech detection service.
+              <strong>
+                Allow Firefox Voice to store your voice recordings.
+              </strong>
             </label>
           </div>
+          <p>
+            Voice recordings help Mozilla teach our systems how to recognize a
+            wider variety of diverse voices, in all sorts of environments.
+          </p>
         </li>
       </ul>
     </fieldset>

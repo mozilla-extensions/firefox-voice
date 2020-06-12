@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 
 class MetadataTest {
     private lateinit var metadata: Metadata
-    private val language = LanguageTest.getLanguage()
 
     @BeforeEach
     fun setup() {

@@ -5,6 +5,8 @@ import * as pageMetadata from "../../background/pageMetadata.js";
 import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
+import { metadata } from "../../services/metadata.js";
+import {performSearchPage} from "../search/search.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -73,19 +75,38 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.bangSearch",
   async run(context) {
-    const service = context.slots.service || context.parameters.service;
-    const myurl = await searching.ddgBangSearchUrl(
-      context.slots.query,
-      service
-    );
-    context.addTelemetryServiceName(
-      `ddg:${serviceList.ddgBangServiceName(service)}`
-    );
-    await context.createTab({ url: myurl });
-    browser.runtime.sendMessage({
-      type: "closePopup",
-      sender: "find",
-    });
+    let service = context.slots.service || context.parameters.service;
+    let tab = undefined;
+    let myurl = undefined;
+
+    if (service === undefined) {
+      service = await serviceList.detectServiceFromActiveTab(metadata.search);
+      tab = await context.activeTab();
+    }
+
+    if (service !== null) {
+      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+
+      context.addTelemetryServiceName(
+        `ddg:${serviceList.ddgBangServiceName(service)}`
+      );
+
+      if (tab !== undefined && service !== null) {
+        browser.tabs.update(tab.id, { url: myurl });
+      } else {
+        await context.createTab({ url: myurl });
+      }
+
+      browser.runtime.sendMessage({
+        type: "closePopup",
+        sender: "find",
+      });
+    } else {
+      myurl = await performSearchPage(
+        context,
+        context.slots.query + " site:" + new URL(tab.url).origin
+      );
+    }
   },
 });
 
@@ -165,6 +186,24 @@ intentRunner.registerIntent({
     if (found === false) {
       const exc = new Error("No link found matching query");
       exc.displayMessage = `No link "${context.slots.query}" found`;
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "navigation.closeDialog",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.lazyInject(activeTab.id, [
+      "/intents/navigation/closeDialog.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "closeDialog",
+    });
+    if (found === false) {
+      const exc = new Error("Could not close dialog");
+      exc.displayMessage = "I couldn't figure out how to close the dialog";
       throw exc;
     }
   },

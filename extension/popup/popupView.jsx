@@ -31,6 +31,7 @@ export const Popup = ({
   timerTotalInMS,
   renderFollowup,
   followupText,
+  showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   function savingOnInputStarted(value) {
@@ -72,10 +73,10 @@ export const Popup = ({
         timerInMS={timerInMS}
         timerTotalInMS={timerTotalInMS}
         renderFollowup={renderFollowup}
+        showZeroVolumeError={showZeroVolumeError}
       />
       <PopupFooter
         currentView={currentView}
-        renderFollowup={renderFollowup}
         showSettings={showSettings}
         timerInMS={timerInMS}
       />
@@ -125,6 +126,8 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return "One moment...";
       case "timer":
         return transcript;
+      case "noAudio":
+        return "Oops...";
       case "listening":
       default:
         return "Listening";
@@ -209,6 +212,7 @@ const PopupContent = ({
   timerInMS,
   timerTotalInMS,
   renderFollowup,
+  showZeroVolumeError,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -220,6 +224,7 @@ const PopupContent = ({
             onClickLexicon={onClickLexicon}
             onInputStarted={onInputStarted}
             expandListeningView={expandListeningView}
+            showZeroVolumeError={showZeroVolumeError}
           />
         );
       case "typing":
@@ -250,6 +255,8 @@ const PopupContent = ({
             displayAutoplay={displayAutoplay}
           />
         );
+      case "noAudio":
+        return <NoAudioContent displayText={displayText} />;
       case "searchResults":
         return (
           <SearchResultsContent
@@ -280,7 +287,6 @@ const PopupContent = ({
           <TimerCard
             timerInMS={timerInMS}
             timerTotalInMS={timerTotalInMS}
-            onSubmitFeedback={onSubmitFeedback}
           ></TimerCard>
         );
       default:
@@ -315,12 +321,21 @@ const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
   return (
     <div id="followup-container">
       <IntentFeedback />
-      <div id="followup-wrapper">
-        <div id="followup_mic-container">Mic On</div>
-        <div id="followup_headings-wrapper">
-          <div id="followup_heading">{heading}</div>
-          {subheading && <div id="followup_subheading">{subheading}</div>}
-        </div>
+      <FollowUpWrapper
+        heading={heading}
+        subheading={subheading}
+      ></FollowUpWrapper>
+    </div>
+  );
+};
+
+const FollowUpWrapper = ({ heading, subheading }) => {
+  return (
+    <div id="followup-wrapper">
+      <div id="followup_mic-container">Mic On</div>
+      <div id="followup_headings-wrapper">
+        <div id="followup_heading">{heading}</div>
+        {subheading && <div id="followup_subheading">{subheading}</div>}
       </div>
     </div>
   );
@@ -373,13 +388,12 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings, renderFollowup }) => {
+const PopupFooter = ({ currentView, showSettings }) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer" ||
-    renderFollowup
+    currentView === "timer"
   )
     return null;
   return (
@@ -430,7 +444,7 @@ const parseTimer = timerInMS => {
   return pad(minutes, 2) + ":" + pad(seconds, 2);
 };
 
-const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
+const TimerCard = ({ timerInMS, timerTotalInMS }) => {
   const getNotificationExpression = timerTotalInMS => {
     const { hours, minutes, seconds } = getHourMinuteSecond(timerTotalInMS);
     let expression = "";
@@ -465,7 +479,6 @@ const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
           {timerInMS <= 0 ? <p>{notificationExpression}</p> : null}
         </div>
       </div>
-      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </React.Fragment>
   );
 };
@@ -497,6 +510,7 @@ const ListeningContent = ({
   onClickLexicon,
   onInputStarted,
   expandListeningView,
+  showZeroVolumeError,
 }) => {
   return (
     <React.Fragment>
@@ -506,6 +520,7 @@ const ListeningContent = ({
           suggestions={suggestions}
           onClickLexicon={onClickLexicon}
           onInputStarted={onInputStarted}
+          showZeroVolumeError={showZeroVolumeError}
         />
         <TypingInput onInputStarted={onInputStarted} />
       </div>
@@ -522,7 +537,12 @@ const TypingContent = ({ displayText, submitTextInput, inputValue }) => {
   );
 };
 
-const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
+const VoiceInput = ({
+  suggestions,
+  onClickLexicon,
+  onInputStarted,
+  showZeroVolumeError,
+}) => {
   const onMoreSuggestions = event => {
     if (event) {
       event.preventDefault();
@@ -536,10 +556,18 @@ const VoiceInput = ({ suggestions, onClickLexicon, onInputStarted }) => {
           {buildSettings.inDevelopment ? (
             <div>
               <p>Developer tip:</p>
-              <button className="type-input-button" onClick={onInputStarted}>
+              <button
+                className="type-input-button"
+                onClick={() => onInputStarted("")}
+              >
                 Start typing to make a request using a keyboard
               </button>
             </div>
+          ) : null}
+          {showZeroVolumeError ? (
+            <p className="mic-text">
+              Microphone is not working. Firefox may need to be restarted.
+            </p>
           ) : null}
           <p id="prompt">You can say things like:</p>
           <div id="suggestions-list">
@@ -721,6 +749,16 @@ const ErrorContent = ({ displayText, errorMessage, displayAutoplay }) => {
   );
 };
 
+const NoAudioContent = ({ displayText }) => {
+  return (
+    <div id="no-audio">
+      <React.Fragment>
+        <TextDisplay displayText={displayText} />
+      </React.Fragment>
+    </div>
+  );
+};
+
 const SavingPageContent = ({ transcript }) => {
   return (
     <React.Fragment>
@@ -894,6 +932,11 @@ class Zap extends PureComponent {
       },
       feedbackThanks: {
         segments: [this.animationSegmentTimes.success],
+        loop: false,
+        interrupt: true,
+      },
+      noAudio: {
+        segments: [this.animationSegmentTimes.error],
         loop: false,
         interrupt: true,
       },

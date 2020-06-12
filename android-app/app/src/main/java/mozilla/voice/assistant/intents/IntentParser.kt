@@ -29,11 +29,3 @@ class IntentParser(private val phraseSet: PhraseSet) {
         private const val DEFAULT_SLOT = "query"
     }
 }
-
-class ParseResult(
-    val utterance: String,
-    val name: String,
-    val slots: Map<String, String>,
-    val parameters: Map<String, String> = emptyMap(),
-    val fallback: Boolean
-)

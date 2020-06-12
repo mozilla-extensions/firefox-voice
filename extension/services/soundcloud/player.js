@@ -24,12 +24,18 @@ this.player = (function() {
 
     action_pause() {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
-      playControlsBtn[1].click();
+      const label = playControlsBtn[1].getAttribute("aria-label");
+      if (label === "Pause current") {
+        playControlsBtn[1].click();
+      }
     }
 
     action_unpause() {
       const playControlsBtn = this.querySelectorAll(".playControls__control");
-      playControlsBtn[1].click();
+      const label = playControlsBtn[1].getAttribute("aria-label");
+      if (label === "Play current") {
+        playControlsBtn[1].click();
+      }
     }
 
     action_move({ direction }) {
@@ -42,38 +48,61 @@ this.player = (function() {
       }
     }
 
-    action_adjustVolume({ volumeLevel }) {
+    action_adjustVolume({ inputVolume = null, volumeLevel = "setInput" }) {
       const maxVolume = 1.0;
       const minVolume = 0.0;
       const volumeChangeReceiver = this.querySelector(".volume");
       const sliderWrapper = this.querySelector(".volume__sliderWrapper");
       const volumeNow = parseFloat(sliderWrapper.getAttribute("aria-valuenow"));
-      const volumeChange = 0.2;
-      const volumeChangeSteps = volumeChange * 10;
+      let inputVol = 0.0;
+      let volumeChange = 0.2;
+      let volumeChangeSteps = volumeChange * 10;
+      let volumeChangeEvent = null;
+
+      if (inputVolume !== null) {
+        if (inputVolume > "0") {
+          inputVol = (inputVolume / 100).toPrecision(2);
+        } else if (inputVolume === "0") {
+          this.action_mute();
+          return;
+        }
+        if (volumeLevel === "setInput") {
+          if (volumeNow < inputVol) {
+            volumeLevel = "levelUp";
+          } else if (volumeNow > inputVol) {
+            volumeLevel = "levelDown";
+          }
+        }
+      }
 
       if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
-        if (this.isMuted()) {
-          this.action_unmute();
+        if (inputVol && volumeNow < inputVol) {
+          volumeChange = inputVol - volumeNow;
+          volumeChangeSteps = volumeChange * 10;
         }
-        const volumeup = new KeyboardEvent("keydown", {
+        volumeChangeEvent = new KeyboardEvent("keydown", {
           bubbles: true,
           key: "ArrowUp",
           keyCode: 38,
           shiftKey: true,
         });
-        for (let step = 0; step < volumeChangeSteps; step++) {
-          volumeChangeReceiver.dispatchEvent(volumeup);
-        }
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
-        const volumedown = new KeyboardEvent("keydown", {
+        if (inputVol && volumeNow > inputVol) {
+          volumeChange = volumeNow - inputVol;
+          volumeChangeSteps = volumeChange * 10;
+        }
+        volumeChangeEvent = new KeyboardEvent("keydown", {
           bubbles: true,
           key: "ArrowDown",
           keyCode: 40,
           shiftKey: true,
         });
-        for (let step = 0; step < volumeChangeSteps; step++) {
-          volumeChangeReceiver.dispatchEvent(volumedown);
-        }
+      }
+      if (this.isMuted()) {
+        this.action_unmute();
+      }
+      for (let step = 0; step < volumeChangeSteps; step++) {
+        volumeChangeReceiver.dispatchEvent(volumeChangeEvent);
       }
     }
 

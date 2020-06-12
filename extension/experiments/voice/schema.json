@@ -120,14 +120,6 @@
         "description": "Open Addons or Extensions",
         "parameters": [],
         "async": true
-      },
-
-      {
-        "name": "minimizeWindow",
-        "type": "function",
-        "description": "Minimize Firefox",
-        "parameters": [],
-        "async": true
       }
 
     ]

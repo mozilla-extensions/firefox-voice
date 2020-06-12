@@ -5,6 +5,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 class TimerController {
   constructor() {
     this.activeTimer = null;
+    this.lastActiveTimer = null;
   }
 
   getActiveTimer() {
@@ -16,25 +17,36 @@ class TimerController {
     this.activeTimer = null;
   }
 
-  setActiveTimer(totalInMS) {
-    this.activeTimer = new Timer(totalInMS);
+  setActiveTimer(totalInMS, context) {
+    this.activeTimer = new Timer(totalInMS, context);
+    this.lastActiveTimer = { ...this.activeTimer };
     this.activeTimer.start();
+  }
+
+  restoreTimer(context) {
+    this.setActiveTimer(this.lastActiveTimer.totalInMS, context);
+    return this.activeTimer;
   }
 }
 
 class Timer {
-  constructor(totalInMS) {
+  constructor(totalInMS, context) {
     this.totalInMS = totalInMS;
     this.startTimestamp = undefined;
     this.remainingInMS = undefined;
     this.paused = undefined;
+    this.context = context;
   }
 
   close() {
     this.startTimestamp = undefined;
     this.totalInMS = undefined;
     this.remainingInMS = undefined;
-    if (this.timeoutId !== undefined) clearTimeout(this.timeoutId);
+
+    if (this.timeoutId !== undefined) {
+      this.context.endFollowup();
+      clearTimeout(this.timeoutId);
+    }
   }
 
   pause() {
@@ -66,25 +78,51 @@ class Timer {
   }
 
   async openPopup() {
+    this.timeoutId = undefined;
+    // timer may be triggered after other intents have run;
+    // set last intent in order to allow for timer followup;
+    intentRunner.setLastIntent(this.context);
+    const followup = {
+      heading: "Say 'reset' or 'reset timer'",
+    };
+
     // send message to popup and open it if no response;
     // do not close timeout now; make popup do it
     try {
       const result = await browser.runtime.sendMessage({
         type: "closeTimer",
         totalInMS: this.totalInMS, // piggyback
+        followup: { heading: "Say 'reset' or 'reset timer'" },
       });
       if (result) {
-        return null;
+        return;
       }
     } catch (e) {
       catcher.capture(e);
     }
 
-    return browser.experiments.voice.openPopup();
+    await browser.experiments.voice.openPopup();
+    setTimeout(() => {
+      this.context.startFollowup({
+        ...followup,
+      });
+    }, 1000);
   }
 }
 
 export const timerController = new TimerController();
+
+async function executeAfterTimerIsSet(context) {
+  context.startFollowup({
+    heading: "Say 'close timer' or 'reset'",
+    acceptFollowupIntent: ["timer.close"],
+    skipSuccessView: true,
+  });
+  await browser.runtime.sendMessage({
+    type: "setTimer",
+    timerInMS: timerController.getActiveTimer().totalInMS,
+  });
+}
 
 intentRunner.registerIntent({
   name: "timer.set",
@@ -123,12 +161,18 @@ intentRunner.registerIntent({
       e.displayMessage = "Cannot set timer for 0 seconds";
       throw e;
     }
-    timerController.setActiveTimer(ms);
+    timerController.setActiveTimer(ms, context);
 
-    await browser.runtime.sendMessage({
-      type: "setTimer",
-      timerInMS: ms,
-    });
+    await executeAfterTimerIsSet(context);
+  },
+  async runFollowup(context) {
+    let activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null) {
+      activeTimer = timerController.restoreTimer(context);
+    }
+
+    activeTimer.reset();
+    await executeAfterTimerIsSet(context);
   },
 });
 

@@ -69,6 +69,8 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   } else if (message.type === "sendFeedback") {
     intentRunner.clearFeedbackIntent();
     return telemetry.sendFeedback(message);
+  } else if (message.type === "launchOnboarding") {
+    return launchOnboarding();
   } else if (message.type === "openRecordingTab") {
     return openRecordingTab();
   } else if (message.type === "zeroVolumeError") {
@@ -110,6 +112,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     );
   } else if (message.type === "clearFollowup") {
     return intentRunner.clearFollowup();
+  } else if (message.type === "addTimings") {
+    return Promise.resolve(log.addTimings(message.timings));
+  } else if (message.type === "getTimings") {
+    return Promise.resolve(log.getTimings());
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
@@ -217,19 +223,33 @@ function closeTabSoon(tabId, tabUrl) {
 }
 
 async function zeroVolumeError() {
-  if (!recorderTabId) {
-    const exc = new Error("zeroVolumeError with no recorder tab");
-    log.error(exc.message);
-    catcher.capture(exc);
-    throw exc;
+  const exc = new Error("zeroVolumeError");
+  log.error(exc.message);
+  catcher.capture(exc);
+  if (recorderTabId) {
+    await browserUtil.makeTabActive(recorderTabId);
+    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
   }
-  await browserUtil.makeTabActive(recorderTabId);
-  await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
 }
 
 async function launchOnboarding() {
-  const url = browser.runtime.getURL("onboarding/onboard.html");
-  await browser.tabs.create({ url });
+  const tabs = await browser.tabs.query({
+    url: ["*://voice.mozilla.org/firefox-voice/*", "http://localhost/*"],
+  });
+  let hasAudioIntro = false;
+  for (const tab of tabs) {
+    const u = new URL(tab.url);
+    if (
+      u.searchParams.get("source") === "commonvoice" ||
+      u.searchParams.get("ask-audio")
+    ) {
+      hasAudioIntro = true;
+    }
+  }
+  const url = browser.runtime.getURL(
+    "onboarding/onboard.html" + (hasAudioIntro ? "?audio=1" : "")
+  );
+  await browserUtil.openOrActivateTab(url);
 }
 
 if (buildSettings.openPopupOnStart) {

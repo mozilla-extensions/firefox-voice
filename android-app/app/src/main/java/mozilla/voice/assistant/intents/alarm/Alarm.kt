@@ -39,7 +39,7 @@ class Alarm {
             mins: String?,
             now: Calendar = Calendar.getInstance()
         ) =
-            // For now, copy year, month, day, seconds, and time zone
+            // Clone year, month, day, seconds, and time zone.
             (now.clone() as Calendar).apply {
                 hour?.toInt()?.let { add(Calendar.HOUR, it) }
                 mins?.toInt()?.let { add(Calendar.MINUTE, it) }
@@ -67,7 +67,7 @@ class Alarm {
         private fun createAbsoluteAlarmIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             try {
                 makeAlarmIntent(getHoursMins(pr.slots, pr.parameters))
@@ -84,7 +84,7 @@ class Alarm {
         private fun createRelativeAlarmIntent(
             pr: ParseResult,
             @Suppress("UNUSED_PARAMETER") context: Context?,
-            @Suppress("UNUSED_PARAMETER") metdata: Metadata
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): android.content.Intent? =
             try {
                 calculateWhenRelative(

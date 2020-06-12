@@ -1,11 +1,35 @@
 /* eslint-disable no-unused-vars */
-/* globals React */
+/* globals React, Mzp */
+
+const { useState, useEffect } = React;
 
 export const Homepage = ({ isCommonVoice }) => {
+  const [showScroll, setShowScroll] = useState(false);
+
+  const checkScrollTop = () => {
+    if (!showScroll && window.pageYOffset > 300) {
+      setShowScroll(true);
+    } else if (showScroll && window.pageYOffset <= 300) {
+      setShowScroll(false);
+    }
+  };
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  window.addEventListener("scroll", checkScrollTop);
+
   return (
     <div id="homepage-wrapper">
       <React.Fragment>
-        <DraftBanner />
+        <button
+          className="scroll-top"
+          onClick={scrollTop}
+          style={{ height: "3rem", display: showScroll ? "flex" : "none" }}
+        >
+          <img alt="Scroll top" src="./images/arrow-up.png" />
+        </button>
         <Header />
         {isCommonVoice && <CommonVoiceWelcome />}
         <HomepagePageContent />
@@ -15,33 +39,98 @@ export const Homepage = ({ isCommonVoice }) => {
   );
 };
 
-const DraftBanner = () => {
-  return (
-    <div class="draft-banner mzp-l-content">
-      <strong>DRAFT WEBSITE</strong>
-      <span class="draft-details">
-        The content on this website is a work-in-progress, and may include
-        broken links, incomplete styles, and placeholders
-      </span>
-    </div>
-  );
-};
-
 const CommonVoiceWelcome = () => {
+  const handleCommonVoiceClick = e => {
+    e.preventDefault();
+    const content = document.querySelector(".modal-common-voice-content");
+    Mzp.Modal.createModal(e.target, content, {
+      title: "Contribute your voice",
+      className: "cv-modal",
+      closeText: "Close modal",
+    });
+  };
+
+  const handleDismissCommonVoice = e => {
+    e.preventDefault();
+    e.currentTarget.parentNode.remove();
+  };
+
   return (
-    <aside class="mzp-c-notification-bar common-voice-welcome">
-      {/* <button class="mzp-c-notification-bar-button" type="button"></button> */}
-      <img
-        class="robot-profile"
-        alt="Profile of the Common Voice robot illustration"
-        src="./images/robot-profile.svg"
-      />
-      <p>
-        Welcome Common Voice contributor! Help us build an open voice ecosystem.
-        After installing, please allow Firefox Voice to collect voice samples.{" "}
-        <a href="https://voice.mozilla.org/">Learn more</a>.
-      </p>
-    </aside>
+    <React.Fragment>
+      <aside class="mzp-c-notification-bar common-voice-welcome">
+        <button
+          onClick={handleDismissCommonVoice}
+          class="mzp-c-notification-bar-button"
+          type="button"
+        ></button>
+        <img
+          class="robot-profile"
+          alt="Profile of the Common Voice robot illustration"
+          src="./images/robot-profile.svg"
+        />
+        <p>
+          Welcome Common Voice contributor! Help us build an open voice
+          ecosystem. After installing, please allow Firefox Voice to collect
+          voice samples.{" "}
+          <button
+            onClick={handleCommonVoiceClick}
+            class="modal-button common-voice"
+          >
+            Learn more
+          </button>
+          .
+        </p>
+      </aside>
+      <div class="mzp-u-modal-content modal-common-voice-content">
+        <div class="common-voice-content-wrapper">
+          <div class="common-voice-content">
+            <img
+              src="./images/common-voice-wave.jpg"
+              alt="Illustration of audio waves"
+            />
+            <div class="common-voice-copy">
+              <p>
+                At Mozilla we’re working to build an open voice ecosystem that
+                is both private and secure. To do this, we’ve developed tools
+                like <a href="https://voice.mozilla.org/">Common Voice</a> to
+                collect the necessary data needed to teach our systems how to
+                recognize a wider variety of voices, in all sorts of
+                environments.
+              </p>
+
+              <p>
+                Now we’re asking for your help training{" "}
+                <a href="https://github.com/mozilla/DeepSpeech">
+                  Mozilla’s DeepSpeech
+                </a>{" "}
+                system for the words and phrases people say when browsing the
+                internet.
+              </p>
+
+              <p>
+                You can contribute tremendously to the improvement of DeepSpeech
+                just by using Firefox Voice for common tasks — such as search,
+                navigation, playing music and allowing Mozilla to collect and
+                store samples.
+              </p>
+
+              <p>
+                All voice samples are stored securely and without accompanying
+                personally identifiable information.
+              </p>
+            </div>
+            <div class="common-voice-cta">
+              <a
+                class="mzp-c-button mzp-t-product install-cta"
+                href="https://va.allizom.org/releases/prod/firefox-voice.xpi"
+              >
+                Install Firefox Voice
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 
@@ -50,9 +139,18 @@ const Header = () => {
     <div class="mzp-c-navigation">
       <div class="mzp-c-navigation-l-content">
         <div class="mzp-c-navigation-container">
-          <button class="mzp-c-navigation-menu-button" type="button" aria-controls="navigation-demo">Menu</button>
+          <button
+            class="mzp-c-navigation-menu-button"
+            type="button"
+            aria-controls="navigation-demo"
+          >
+            Menu
+          </button>
           <div class="mzp-c-navigation-logo">
-            <img src="./images/fx-voice-logo.svg" alt="Firefox Voice"></img>
+            <img
+              src="./images/fx-voice-logo.svg"
+              alt="Firefox Voice logo"
+            ></img>
           </div>
           <div class="mzp-c-navigation-items">
             <div class="mzp-c-navigation-menu">
@@ -218,7 +316,7 @@ const OpenVoiceEcosystem = () => {
               Now you can help by choosing to let us store your Firefox Voice
               requests&mdash;securely, without accompanying personally
               identifiable information&mdash;and use them to improve our
-              research. We won't share them outside of Mozilla.
+              research.
             </p>
           </div>
         </div>
@@ -236,13 +334,13 @@ const OpenVoiceEcosystem = () => {
 };
 
 const Demo = () => {
-  const handleVideoClick = (e) => {
+  const handleVideoClick = e => {
     e.preventDefault();
-    const content = document.querySelector('.mzp-u-modal-content');
+    const content = document.querySelector(".modal-video-content");
     Mzp.Modal.createModal(e.target, content, {
-      title: 'Firefox Voice Demo Video',
-      className: 'mzp-has-media',
-      closeText: 'Close modal'
+      title: "Firefox Voice Demo Video",
+      className: "mzp-has-media",
+      closeText: "Close modal",
     });
   };
   return (
@@ -254,12 +352,15 @@ const Demo = () => {
               <div class="play-btn-wrapper">
                 <button onClick={handleVideoClick} name="play"></button>
               </div>
-              <img src="./images/demo-still.png"/>
+              <img
+                alt="Still frame from the demo video with a play icon overlay. The still shows the outcome of the Firefox Voice command: 'Read this page to me', where a New York Times article is being narrated in the browser's reader view."
+                src="./images/demo-still.png"
+              />
             </div>
           </div>
         </div>
 
-        <div class="mzp-c-card">
+        <div class="mzp-c-card how-it-works-card">
           <h6 class="card-header mzp-has-zap-11">
             See how it <strong>works</strong>
           </h6>
@@ -268,9 +369,11 @@ const Demo = () => {
             full, now you can go hands-free to navigate the web and retrieve
             information instantly.
             <div class="watch-video">
-              <button onClick={handleVideoClick} class="video-modal-button">Watch the video</button>
+              <button onClick={handleVideoClick} class="video modal-button">
+                Watch the video
+              </button>
             </div>
-            <div class="mzp-u-modal-content">
+            <div class="mzp-u-modal-content modal-video-content">
               <div class="video-wrapper">
                 <iframe
                   title="Firefox Voice Demo Video"
@@ -340,36 +443,94 @@ const Faq = () => {
               Are my audio recordings stored?
             </div>
           </summary>
+          <p>By default Firefox Voice does not store voice recordings.</p>
           <p>
-            By default Firefox Voice does <strong>not</strong> store your voice
-            recordings after processing. Users may enable audio recordings to be
-            stored for purposes of improving our speech detection service but it
-            is not required or enabled by default, nor are we promoting this
-            option currently.
+            Users may allow Mozilla to store their voice recordings and
+            computer-generated transcripts of their recordings. Recordings and
+            transcripts are stored securely and without personally identifying
+            information (this means, we don’t know who said them).
+          </p>
+          <p>
+            Even if users do not opt-in to allowing storage, they are able to
+            use Firefox Voice.
+          </p>
+          <p>In your Preferences,you can change your settings at any time.</p>
+          <p>
+            If you allow Mozilla to store your voice recordings, we use your
+            recordings for research purposes and to help improve Firefox Voice.
+            For example, we may use the computer-generated transcripts of your
+            recordings to help identify which commands we should support. We may
+            also manually review your voice recordings to better train our
+            speech service to respond more accurately.
           </p>
         </details>
         <details>
           <summary>
             <div class="faq-section-header">
-              Are my voice recordings transcribed and stored?
+              Why does Firefox Voice ask for all these permissions?
             </div>
           </summary>
           <p>
-            For the initial Beta release we ask participants to allow
-            transcriptions during the installation process. Even if participants
-            opt-out of allowing transcriptions they are able to use Firefox
-            Voice.
+            Because you can use Firefox Voice to execute a wide variety of
+            commands, it first needs permissions to many of those things on your
+            behalf.
           </p>
-          <p>
-            When participants opt-in, transcripts are used for research purposes
-            to improve Firefox Voice and related services. Transcriptions and
-            related data are stored securely and without personally identifying
-            information.
-          </p>
-          <p>
-            In the Preferences you can additionally allow us to keep your audio
-            for speech-to-text training purposes. This is off by default.
-          </p>
+          <dl>
+            <dt>Access your data for all websites</dt>
+            <dd>
+              This permission allows you to use Firefox Voice to control
+              websites to do things like scroll, copy and paste, find a tab and
+              more.
+              <br />
+              <br />
+              While this permission would make it <em>possible</em> to extract
+              user information from a website, it does not do so. Our{" "}
+              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+                Privacy Policy
+              </a>{" "}
+              specifies what information we collect (set during installation or
+              later in the preferences). It does NOT include any browsing or
+              site information.
+            </dd>
+            <dt>Read and modify bookmarks</dt>
+            <dd>
+              This is used for commands that open, create, and delete bookmarks.
+            </dd>
+            <dt>Read and modify browser settings</dt>
+            <dd>
+              Used to open your preferred homepage set in the browser setting.
+            </dd>
+            <dt>Get data from the clipboard</dt>
+            <dd>Used to enable voice control for "paste".</dd>
+            <dt>Input data to the clipboard</dt>
+            <dd>
+              Used to enable voice commands for “copy” such as "copy link".
+            </dd>
+            <dt>
+              Download files and read and modify the browser’s download history
+            </dt>
+            <dd>
+              Used for commands such as "save page" and "save screenshot" that
+              download files.
+            </dd>
+            <dt>Read the text of all open tabs</dt>
+            <dd>Used for the command "find [query] in page".</dd>
+            <dt>Access browsing history</dt>
+            <dd>
+              Used to determine your preferred music service. E.g., if you visit
+              <code>spotify.com</code> often/recently, it is presumed to be your
+              preferred service.
+            </dd>
+            <dt>Hide and show browser tabs</dt>
+            <dd>
+              Firefox Voice executes searches in the background, sometimes
+              taking you directly to search results or cards. We use a "hidden"
+              tab to do this, so these automatically-created search tabs do not
+              clutter your normal tab layout.
+            </dd>
+            <dt>Access browser tabs</dt>
+            <dd>Used for finding and managing your tabs.</dd>
+          </dl>
         </details>
         <details>
           <summary>
@@ -378,7 +539,7 @@ const Faq = () => {
             </div>
           </summary>
           <p>
-            The current Beta release of Firefox Voice is an experiment to better
+            The current release of Firefox Voice is an experiment to better
             understand the needs and desire for voice interactions within the
             browser. At this time no decision has been made on when or if the
             add-on will come bundled by default with Firefox. Future development
@@ -404,7 +565,7 @@ const Faq = () => {
             </li>
             <li>
               <a href="https://github.com/mozilla/TTS">Mozilla TTS</a>: A deep
-              learning based Text2Speech engine, low in cost and high in
+              learning based text-to-speech engine, low in cost and high in
               quality.
             </li>
             <li>
@@ -471,6 +632,67 @@ const Faq = () => {
             </li>
           </ol>
         </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">
+              When I try to install I see “the add-on could not be downloaded
+              because of a connection failure.”
+            </div>
+          </summary>
+          <p>
+            Antivirus and other security software can sometimes prevent Firefox
+            extensions from being downloaded, installed or updated.
+          </p>
+          <img
+            class="connection-error"
+            src="./images/connection-error.png"
+            alt="Tooltip dialog window showing an error message upon installing the add-on. The message reads: 'The add-on could not be downloaded
+              because of a connection failure.'"
+          />
+          <p>
+            If you’re having trouble installing Firefox Voice or it doesn’t
+            update automatically, follow these steps to install the extension
+            manually:
+          </p>
+          <ol>
+            <li>
+              Open a different browser, like Safari, Chrome, or Microsoft Edge.
+            </li>
+            <li>
+              Copy and paste the{" "}
+              <a href="https://va.allizom.org/releases/prod/firefox-voice.xpi">
+                download
+              </a>{" "}
+              link into the different browser. It will be saved as a .xpi file
+              in your Downloads folder.
+            </li>
+            <li>
+              Open Firefox and drag the .xpi file to the Firefox window, then
+              click Add.
+            </li>
+          </ol>
+        </details>
+        <details>
+          <summary>
+            <div class="faq-section-header">
+              After installing Firefox Voice it doesn’t respond to anything I
+              say.
+            </div>
+          </summary>
+          <p>
+            If you’re having trouble getting Firefox Voice to hear what you're
+            saying and take action the microphone may not be picking up audio.
+            Check that your microphone is set up correctly.
+          </p>
+          <ol>
+            <li>
+              Ensure your device has a microphone or your external microphone is
+              plugged in.
+            </li>
+            <li>Check Firefox Voice has permissions to access the mic.</li>
+            <li>Restart Firefox. This can often clear up the issue.</li>
+          </ol>
+        </details>
       </section>
     </div>
   );
@@ -487,7 +709,10 @@ const Footer = () => {
 
           <div class="mzp-c-footer-items">
             <div class="mzp-c-footer-item">
-              <a href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit" target="_blank">
+              <a
+                href="https://docs.google.com/document/d/1nTyIw4G1yWnxlTmJ-Nvs9OIDntAIYmRPMLKVJZ9TxkI/edit"
+                target="_blank"
+              >
                 Installation Instructions
               </a>
             </div>
