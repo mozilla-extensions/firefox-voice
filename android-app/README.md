@@ -10,7 +10,7 @@
     + [Using an Emulator](#using-an-emulator)
     + [Style](#style)
     + [Testing](#testing)
-    + [Generating a signed APK](#generating-a-signed-build)
+    + [Generating a signed APK](#generating-a-signed-apk)
     + [Adding an intent](#adding-an-intent)
       - [Create TOML](#create-toml)
       - [Implement an IntentBuilder](#implement-an-intentbuilder)
@@ -116,7 +116,7 @@ In an existing or new class in a [mozilla.voice.assistant.intents](https://githu
 
 An `IntentBuilder` takes arguments of the following types:
 
-* [`ParseResult`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentParser.kt#L33), from which it can retrieve slot and parameter values.
+* [`ParseResult`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/ParseResult.kt), from which it can retrieve slot and parameter values.
 * `Context?`, in case it needs one to generate the output `Intent`. The only time the value may be `null` is during tests.
 * [`Metadata`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/Metadata.kt), in case any of its information is needed (which is currently only the case for the [`launch.install` intent](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt)).
 
