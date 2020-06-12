@@ -2,18 +2,42 @@
 
 .collect-example-button {
   background: none;
-  border: 2px solid #0a84ff;
-  border-radius: 0.25em;
+  border: 2px solid crimson;
+  border-radius: 50%;
   padding: 0.5em;
   font-size: 1em;
-  color: #0a84ff;
   margin-bottom: 1em;
+  margin-top: 1em;
 }
 
-.the-worst {
-    background: red;
+.collect-example-button.active {
+    background: crimson;
 }
 
-.the-best {
+.recording-inner-circle {
+    width: 0.5em;
+    background: crimson;
+    height: 0.5em;
+    border-radius: 50%;
+}
+
+.collect-example-button.active > .recording-inner-circle {
     background: #fff;
+}
+
+.training-class {
+    padding-right: 5em;
+}
+
+.record {
+    padding-right: 3em;
+}
+
+table {
+    border-collapse: collapse;
+    border-style: hidden;
+}
+
+tr {
+    border-bottom: 1px solid #ccc;
 }

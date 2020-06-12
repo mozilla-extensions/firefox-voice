@@ -14,8 +14,7 @@ export const WakewordTrainingController = function() {
   const [savedModels, setSavedModels] = useState([]);
   const [heyFirefoxExamples, setHeyFirefoxExamples] = useState([]);
   const [nextSlidePleaseExamples, setNextSlidePleaseExamples] = useState([]);
-  const [why, setWhy] = useState("the-worst");
-
+  const [backgroundNoiseExamples, setBackgroundNoiseExamples] = useState([]);
 
   let recognizer;
 
@@ -62,19 +61,27 @@ export const WakewordTrainingController = function() {
   };
 
   const onTrainExample = async wakeword => {
-    const wordToTrain =
-      wakeword === "Background noise" ? "_background_noise_" : wakeword;
     let collectExampleOptions = COLLECT_EXAMPLE_OPTIONS;
-    if (wordToTrain === "_background_noise_") {
+    if (wakeword === "_background_noise_") {
       collectExampleOptions.durationSec = BACKGROUND_DURATION;
     } else {
       collectExampleOptions.durationMultiplier = WAKEWORD_DURATION;
     }
     const spectogram = await transferRecognizer.collectExample(
-      wordToTrain,
+      wakeword,
       collectExampleOptions
     );
-    setHeyFirefoxExamples(examples => examples.concat(spectogram));
+    switch (wakeword) {
+      case "_background_noise_":
+        setBackgroundNoiseExamples(examples => examples.concat(spectogram));
+        break;
+      case "heyFirefox":
+        setHeyFirefoxExamples(examples => examples.concat(spectogram));
+        break;
+      case "nextSlidePlease":
+        setNextSlidePleaseExamples(examples => examples.concat(spectogram));
+        break;
+    }
   };
 
   return (
@@ -83,7 +90,7 @@ export const WakewordTrainingController = function() {
       onTrainExample={onTrainExample}
       heyFirefoxExamples={heyFirefoxExamples}
       nextSlidePleaseExamples={nextSlidePleaseExamples}
-      why={why}
+      backgroundNoiseExamples={backgroundNoiseExamples}
     />
   );
 };

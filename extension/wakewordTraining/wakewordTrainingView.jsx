@@ -1,13 +1,33 @@
 /* eslint-disable no-unused-vars */
 /* globals React */
 
-export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, why }) => {
+const { useState } = React;
+
+
+export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, backgroundNoiseExamples }) => {
+  const CLASSES_TO_TRAIN = [
+    {
+      name: "heyFirefox",
+      readableName: "Hey Firefox",
+      examples: heyFirefoxExamples
+    },
+    {
+      name: "nextSlidePlease",
+      readableName: "Next slide please",
+      examples: nextSlidePleaseExamples
+    },
+    {
+      name: "_background_noise_",
+      readableName: "Background noise",
+      examples: backgroundNoiseExamples
+    }
+  ]
   return (
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
         <SelectModel savedModels={savedModels} />
-        <Trainer onTrainExample={onTrainExample} heyFirefoxExamples={heyFirefoxExamples} nextSlidePleaseExamples={nextSlidePleaseExamples} />
+        <Trainer classesToTrain={CLASSES_TO_TRAIN} onTrainExample={onTrainExample} />
         <Tester />
       </React.Fragment>
     </div>
@@ -46,7 +66,7 @@ const SelectModel = ({ savedModels }) => {
   );
 };
 
-const Trainer = ({ onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples }) => {
+const Trainer = ({ onTrainExample, classesToTrain }) => {
   return (
     <div class="settings-content">
       <fieldset id="trainer">
@@ -59,32 +79,54 @@ const Trainer = ({ onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples }
             training.
           </p>
         </div>
-        <ExampleRecorder
-          word="Background noise"
-          onTrainExample={onTrainExample}
-        />
-        <ExampleRecorder word="Hey Firefox" onTrainExample={onTrainExample} />
-        <TrainingExamples word="Hey Firefox" examples={heyFirefoxExamples} />
-        <ExampleRecorder
-          word="Next slide please"
-          onTrainExample={onTrainExample}
-        />
-        <TrainingExamples word="Next slide please" examples={nextSlidePleaseExamples} />
-
+        <table>
+            <tr>
+                <th class="training-class">Class to train</th>
+                <th class="record">Record</th>
+                <th>Existing recordings</th>
+            </tr>
+            {
+              classesToTrain.map(function (cls) { 
+                return <TrainingClass classItem={cls} key={cls.name} onTrainExample={onTrainExample} />
+              })
+            }
+        </table>
       </fieldset>
     </div>
   );
 };
 
+const TrainingClass = ({classItem, onTrainExample }) => {
+  return (
+    <tr>
+      <td>
+        {classItem.readableName}
+      </td>
+      <td>
+        <ExampleRecorder
+          word={classItem.name}
+          onTrainExample={onTrainExample}
+        />
+      </td>
+      <td>
+        <TrainingExamples examples={classItem.examples} />
+      </td>
+    </tr>
+  );
+}
+
 const ExampleRecorder = ({ word, onTrainExample }) => {
   const recordExample = async (e) => {
+    const eventTarget = e.target;
+    eventTarget.classList.add("active");
     await onTrainExample(word);
+    eventTarget.classList.remove("active");
   };
 
   return (
     <div>
       <button class="collect-example-button" onClick={recordExample}>
-        {word}
+        <div class="recording-inner-circle" />
       </button>
     </div>
   );
