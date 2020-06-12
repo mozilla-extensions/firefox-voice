@@ -21,6 +21,17 @@ this.contentScript = (function() {
     }
   }
 
+  function getEditableElement(element) {
+    if (element === null) {
+      return null;
+    }
+    if (element.isContentEditable === true) {
+      console.log(element);
+      return element;
+    }
+    return getEditableElement(element.parentNode);
+  }
+
   communicate.register("setPlace", async message => {
     const el = document.activeElement;
     /*
@@ -28,7 +39,20 @@ this.contentScript = (function() {
       return "Firefox Voice doesn't know how to write to this document";
     }
     */
-    focusElement = el;
+    const nodeName = el.nodeName.toLowerCase();
+    if (
+      el.nodeType === 1 &&
+      (nodeName === "textarea" ||
+        (nodeName === "input" &&
+          /^(?:text|email|number|search|tel|url|password)$/i.test(el.type)))) {
+      focusElement = el;
+      return null;
+    }
+    const editableElement = getEditableElement(el);
+    if (editableElement === null) {
+      return "Firefox Voice doesn't know how to write to this document";
+    }
+    focusElement = editableElement;
     return null;
   });
 
