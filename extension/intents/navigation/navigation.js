@@ -6,6 +6,7 @@ import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { metadata } from "../../services/metadata.js";
+import {performSearchPage} from "../search/search.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -89,22 +90,23 @@ intentRunner.registerIntent({
       context.addTelemetryServiceName(
         `ddg:${serviceList.ddgBangServiceName(service)}`
       );
+
+      if (tab !== undefined && service !== null) {
+        browser.tabs.update(tab.id, { url: myurl });
+      } else {
+        await context.createTab({ url: myurl });
+      }
+
+      browser.runtime.sendMessage({
+        type: "closePopup",
+        sender: "find",
+      });
     } else {
-      myurl = await searching.googleSearchUrl(
+      myurl = await performSearchPage(
+        context,
         context.slots.query + " site:" + new URL(tab.url).origin
       );
     }
-
-    if (tab !== undefined && service !== null) {
-      browser.tabs.update(tab.id, { url: myurl });
-    } else {
-      await context.createTab({ url: myurl });
-    }
-
-    browser.runtime.sendMessage({
-      type: "closePopup",
-      sender: "find",
-    });
   },
 });
 
