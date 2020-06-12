@@ -15,7 +15,7 @@ async function startWatchword(keywords, sensitivity) {
 
   const recognizer = speechCommands.create("BROWSER_FFT");
   await recognizer.ensureModelLoaded();
-  transferRecognizer = recognizer.createTransfer("todays-quicker-model"); // TODO: this is hard-coded with the first test model that I trained within the extension.
+  transferRecognizer = recognizer.createTransfer("temp-default"); // TODO: this is hard-coded with the first test model that I trained within the extension.
   await transferRecognizer.load();
 
   transferRecognizer.listen(
@@ -33,7 +33,7 @@ async function startWatchword(keywords, sensitivity) {
       });
     },
     {
-      probabilityThreshold: 0.9,
+      probabilityThreshold: 0.75,
       overlapFactor: 0.25,
     }
   );

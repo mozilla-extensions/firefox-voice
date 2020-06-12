@@ -22,6 +22,23 @@ export const WakewordTrainingController = function() {
     includeRawAudio: true,
   };
 
+  const TRAINING_OPTIONS = {
+    epochs: 25,
+    validationSplit: 0.25,
+    augmentByMixingNoiseRatio: 0.5,
+    callback: {
+      onEpochEnd: async (epoch, logs) => {
+        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
+      },
+    },
+    fineTuningEpochs: 5,
+    fineTuningCallback: {
+      onEpochEnd: async (epoch, logs) => {
+        console.log(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
+      },
+    },
+  };
+
   const BACKGROUND_DURATION = 10;
   const WAKEWORD_DURATION = 2;
 
@@ -60,12 +77,12 @@ export const WakewordTrainingController = function() {
     console.log(transferRecognizer.countExamples());
   };
 
-  const onDeleteExample = (example) => {
+  const onDeleteExample = example => {
     transferRecognizer.removeExample(example.uid);
     refreshExamples(example.example.label);
-  }
+  };
 
-  const refreshExamples = (wakeword) => {
+  const refreshExamples = wakeword => {
     switch (wakeword) {
       case "_background_noise_":
         setBackgroundNoiseExamples(() => {
@@ -95,7 +112,7 @@ export const WakewordTrainingController = function() {
         });
         break;
     }
-  }
+  };
 
   const onTrainExample = async wakeword => {
     let collectExampleOptions = COLLECT_EXAMPLE_OPTIONS;
@@ -111,11 +128,17 @@ export const WakewordTrainingController = function() {
     refreshExamples(wakeword);
   };
 
+  const onStartTraining = async () => {
+    transferRecognizer.train(TRAINING_OPTIONS);
+    transferRecognizer.save();
+  };
+
   return (
     <wakewordTrainingView.WakewordTraining
       savedModels={savedModels}
       onTrainExample={onTrainExample}
       onDeleteExample={onDeleteExample}
+      onStartTraining={onStartTraining}
       heyFirefoxExamples={heyFirefoxExamples}
       nextSlidePleaseExamples={nextSlidePleaseExamples}
       backgroundNoiseExamples={backgroundNoiseExamples}

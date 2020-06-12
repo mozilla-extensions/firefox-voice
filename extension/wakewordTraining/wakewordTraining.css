@@ -11,33 +11,33 @@
 }
 
 .collect-example-button.active {
-    background: crimson;
+  background: crimson;
 }
 
 .recording-inner-circle {
-    width: 0.5em;
-    background: crimson;
-    height: 0.5em;
-    border-radius: 50%;
+  width: 0.5em;
+  background: crimson;
+  height: 0.5em;
+  border-radius: 50%;
 }
 
 .collect-example-button.active > .recording-inner-circle {
-    background: #fff;
+  background: #fff;
 }
 
 .training-class {
-    padding-right: 5em;
+  padding-right: 5em;
 }
 
 .record {
-    padding-right: 3em;
+  padding-right: 3em;
 }
 
 table {
-    border-collapse: collapse;
-    border-style: hidden;
+  border-collapse: collapse;
+  border-style: hidden;
 }
 
 tr {
-    border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }

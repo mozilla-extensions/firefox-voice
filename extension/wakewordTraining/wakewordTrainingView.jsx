@@ -3,31 +3,43 @@
 
 const { useState } = React;
 
-
-export const WakewordTraining = ({ savedModels, onTrainExample, heyFirefoxExamples, nextSlidePleaseExamples, backgroundNoiseExamples, onDeleteExample }) => {
+export const WakewordTraining = ({
+  savedModels,
+  onTrainExample,
+  heyFirefoxExamples,
+  nextSlidePleaseExamples,
+  backgroundNoiseExamples,
+  onDeleteExample,
+  onStartTraining,
+}) => {
   const CLASSES_TO_TRAIN = [
     {
       name: "heyFirefox",
       readableName: "Hey Firefox",
-      examples: heyFirefoxExamples
+      examples: heyFirefoxExamples,
     },
     {
       name: "nextSlidePlease",
       readableName: "Next slide please",
-      examples: nextSlidePleaseExamples
+      examples: nextSlidePleaseExamples,
     },
     {
       name: "_background_noise_",
       readableName: "Background noise",
-      examples: backgroundNoiseExamples
-    }
-  ]
+      examples: backgroundNoiseExamples,
+    },
+  ];
   return (
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
         <SelectModel savedModels={savedModels} />
-        <Trainer classesToTrain={CLASSES_TO_TRAIN} onTrainExample={onTrainExample} onDeleteExample={onDeleteExample} />
+        <Trainer
+          classesToTrain={CLASSES_TO_TRAIN}
+          onTrainExample={onTrainExample}
+          onDeleteExample={onDeleteExample}
+          onStartTraining={onStartTraining}
+        />
         <Tester />
       </React.Fragment>
     </div>
@@ -66,7 +78,12 @@ const SelectModel = ({ savedModels }) => {
   );
 };
 
-const Trainer = ({ onTrainExample, classesToTrain, onDeleteExample }) => {
+const Trainer = ({
+  onTrainExample,
+  classesToTrain,
+  onDeleteExample,
+  onStartTraining,
+}) => {
   return (
     <div class="settings-content">
       <fieldset id="trainer">
@@ -80,34 +97,40 @@ const Trainer = ({ onTrainExample, classesToTrain, onDeleteExample }) => {
           </p>
         </div>
         <table>
-            <tr>
-                <th class="training-class">Class to train</th>
-                <th class="record">Record</th>
-                <th>Existing recordings</th>
-            </tr>
-            {
-              classesToTrain.map(function (cls) { 
-                return <TrainingClass classItem={cls} key={cls.name} onTrainExample={onTrainExample} onDeleteExample={onDeleteExample} />
-              })
-            }
+          <tr>
+            <th class="training-class">Class to train</th>
+            <th class="record">Record</th>
+            <th>Existing recordings</th>
+          </tr>
+          {classesToTrain.map(function(cls) {
+            return (
+              <TrainingClass
+                classItem={cls}
+                key={cls.name}
+                onTrainExample={onTrainExample}
+                onDeleteExample={onDeleteExample}
+              />
+            );
+          })}
         </table>
+        <div>
+          <TrainingInitiator onStartTraining={onStartTraining} />
+        </div>
       </fieldset>
     </div>
   );
 };
 
-const TrainingClass = ({classItem, onTrainExample, onDeleteExample }) => {
+const TrainingClass = ({ classItem, onTrainExample, onDeleteExample }) => {
   const [currentExampleIndex, setCurrentExampleIndex] = useState(-1);
 
-  const setIndex = (index) => {
+  const setIndex = index => {
     setCurrentExampleIndex(index);
-  }
+  };
 
   return (
     <tr>
-      <td>
-        {classItem.readableName}
-      </td>
+      <td>{classItem.readableName}</td>
       <td>
         <ExampleRecorder
           word={classItem.name}
@@ -117,14 +140,31 @@ const TrainingClass = ({classItem, onTrainExample, onDeleteExample }) => {
         />
       </td>
       <td>
-        <TrainingExamples examples={classItem.examples} currentExampleIndex={currentExampleIndex} setIndex={setIndex} onDeleteExample={onDeleteExample} />
+        <TrainingExamples
+          examples={classItem.examples}
+          currentExampleIndex={currentExampleIndex}
+          setIndex={setIndex}
+          onDeleteExample={onDeleteExample}
+        />
       </td>
     </tr>
   );
-}
+};
+
+const TrainingInitiator = ({ onStartTraining }) => {
+  return (
+    <React.Fragment>
+      <p>
+        Currently using the default settings of 25 epochs and 5 fine-tuning
+        epochs.
+      </p>
+      <button onClick={onStartTraining}>Start Training</button>
+    </React.Fragment>
+  );
+};
 
 const ExampleRecorder = ({ word, onTrainExample, numExamples, setIndex }) => {
-  const recordExample = async (e) => {
+  const recordExample = async e => {
     const eventTarget = e.target;
     eventTarget.classList.add("active");
     await onTrainExample(word);
@@ -141,51 +181,67 @@ const ExampleRecorder = ({ word, onTrainExample, numExamples, setIndex }) => {
   );
 };
 
-const TrainingExamples = ({examples, currentExampleIndex, setIndex, onDeleteExample}) => {
+const TrainingExamples = ({
+  examples,
+  currentExampleIndex,
+  setIndex,
+  onDeleteExample,
+}) => {
   const handleExampleBack = () => {
     setIndex(currentExampleIndex - 1);
-  }
+  };
 
   const handleExampleForward = () => {
     setIndex(currentExampleIndex + 1);
-  }
+  };
 
   const handleDelete = () => {
     const example = examples[currentExampleIndex];
     handleExampleBack();
     onDeleteExample(example);
-  }
+  };
 
   return (
     <div class="loaded-examples">
       <div class="example-tally">
-          {currentExampleIndex >= 0 ? `${currentExampleIndex + 1} of ${examples.length}` : "No recordings"}
+        {currentExampleIndex >= 0
+          ? `${currentExampleIndex + 1} of ${examples.length}`
+          : "No recordings"}
       </div>
-      {
-        currentExampleIndex >= 0 ?
+      {currentExampleIndex >= 0 ? (
         <div>
           <ExampleView example={examples[currentExampleIndex]} />
           <div class="example-navigation">
-            <button onClick={handleExampleBack} disabled={currentExampleIndex - 1 < 0}>←</button>
-            <button onClick={handleExampleForward} disabled={currentExampleIndex + 1 == examples.length}>→</button>
+            <button
+              onClick={handleExampleBack}
+              disabled={currentExampleIndex - 1 < 0}
+            >
+              ←
+            </button>
+            <button
+              onClick={handleExampleForward}
+              disabled={currentExampleIndex + 1 == examples.length}
+            >
+              →
+            </button>
             <button onClick={handleDelete}>x</button>
           </div>
-        </div> :
-        null
-      }
+        </div>
+      ) : null}
     </div>
   );
 };
 
-const ExampleView = ({example}) => {
+const ExampleView = ({ example }) => {
   log.info(example);
-  const handleExamplePlay = (e) => {
+  const handleExamplePlay = e => {
     const eventTarget = e.target;
     eventTarget.disabled = true;
     speechCommands.utils.playRawAudio(
-      example.example.rawAudio, () => eventTarget.disabled = false
+      example.example.rawAudio,
+      () => (eventTarget.disabled = false)
     );
-  }
+  };
 
   return (
     <button class="play-example" onClick={handleExamplePlay}>
