@@ -11,7 +11,8 @@ export const WakewordTraining = ({
   backgroundNoiseExamples,
   onDeleteExample,
   onStartTraining,
-  onSaveTrainingData
+  onSaveTrainingData,
+  onLoadTrainingExamples
 }) => {
   const CLASSES_TO_TRAIN = [
     {
@@ -34,7 +35,7 @@ export const WakewordTraining = ({
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
-        <SelectModel savedModels={savedModels} onSaveTrainingData={onSaveTrainingData} />
+        <SelectModel savedModels={savedModels} onSaveTrainingData={onSaveTrainingData} onLoadTrainingExamples={onLoadTrainingExamples} />
         <Trainer
           classesToTrain={CLASSES_TO_TRAIN}
           onTrainExample={onTrainExample}
@@ -63,7 +64,7 @@ const Header = () => {
   );
 };
 
-const SelectModel = ({ savedModels, onSaveTrainingData }) => {
+const SelectModel = ({ savedModels, onSaveTrainingData, onLoadTrainingExamples }) => {
   return (
     <div className="settings-content">
       <fieldset id="model-name">
@@ -75,7 +76,7 @@ const SelectModel = ({ savedModels, onSaveTrainingData }) => {
         </div>
         <div>
           <SaveTrainingExamples onSaveTrainingData={onSaveTrainingData} />
-          <LoadTrainingExamples />
+          <LoadTrainingExamples onLoadTrainingExamples={onLoadTrainingExamples} />
         </div>
       </fieldset>
     </div>
@@ -102,7 +103,26 @@ const SaveTrainingExamples = ({onSaveTrainingData}) => {
   );
 }
 
-const LoadTrainingExamples = () => {
+const LoadTrainingExamples = ({onLoadTrainingExamples}) => {
+  const loadTrainingExamples = async (e) => {
+    console.log("hello??");
+    const files = document.querySelector("#dataset-file-input").files;
+    if (files == null || files.length !== 1) {
+      throw new Error('Must select exactly one file.');
+    }
+    const datasetFileReader = new FileReader();
+    datasetFileReader.onload = event => {
+      try {
+        console.log("i got here");
+        onLoadTrainingExamples(event.target.result);
+      } catch (err) {
+        log.error(err.message);
+      }
+    }
+    datasetFileReader.onerror = () =>
+      log.error(`Failed to binary data from file '${dataFile.name}'.`);
+    datasetFileReader.readAsArrayBuffer(files[0]);
+  }
   return (
     <div>
       <input type="file" id="dataset-file-input" />

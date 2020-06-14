@@ -128,6 +128,18 @@ export const WakewordTrainingController = function() {
     return serializedExamples;
   }
 
+  const onLoadTrainingExamples = (serializedExamples) => {
+    transferRecognizer.loadExamples(serializedExamples);
+    console.log("i got here!!");
+    console.log(serializedExamples);
+    const examples = transferRecognizer.countExamples();
+    console.log(examples);
+    for (const wakeword in examples) {
+      console.log(wakeword);
+      refreshExamples(wakeword);
+    }
+  }
+
   return (
     <wakewordTrainingView.WakewordTraining
       savedModels={savedModels}
@@ -135,6 +147,7 @@ export const WakewordTrainingController = function() {
       onDeleteExample={onDeleteExample}
       onStartTraining={onStartTraining}
       onSaveTrainingData={onSaveTrainingData}
+      onLoadTrainingExamples={onLoadTrainingExamples}
       heyFirefoxExamples={heyFirefoxExamples}
       nextSlidePleaseExamples={nextSlidePleaseExamples}
       backgroundNoiseExamples={backgroundNoiseExamples}
