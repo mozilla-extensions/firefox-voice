@@ -11,6 +11,7 @@ export const WakewordTraining = ({
   backgroundNoiseExamples,
   onDeleteExample,
   onStartTraining,
+  onSaveTrainingData
 }) => {
   const CLASSES_TO_TRAIN = [
     {
@@ -33,7 +34,7 @@ export const WakewordTraining = ({
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
-        <SelectModel savedModels={savedModels} />
+        <SelectModel savedModels={savedModels} onSaveTrainingData={onSaveTrainingData} />
         <Trainer
           classesToTrain={CLASSES_TO_TRAIN}
           onTrainExample={onTrainExample}
@@ -62,7 +63,7 @@ const Header = () => {
   );
 };
 
-const SelectModel = ({ savedModels }) => {
+const SelectModel = ({ savedModels, onSaveTrainingData }) => {
   return (
     <div className="settings-content">
       <fieldset id="model-name">
@@ -73,7 +74,7 @@ const SelectModel = ({ savedModels }) => {
           <p>{savedModels.toString()}</p>
         </div>
         <div>
-          <SaveTrainingExamples />
+          <SaveTrainingExamples onSaveTrainingData={onSaveTrainingData} />
           <LoadTrainingExamples />
         </div>
       </fieldset>
@@ -81,12 +82,33 @@ const SelectModel = ({ savedModels }) => {
   );
 };
 
-const SaveTrainingExamples = () => {
-  return (null);
+const SaveTrainingExamples = ({onSaveTrainingData}) => {
+  const saveExamples = () => {
+    const data = onSaveTrainingData();
+    console.log(data);
+    // pattern for triggering download from speech-commands/demo/index.js
+    const anchor = document.createElement('a');
+    anchor.download = `training_examples_${Date.now().toString()}.bin`;
+    anchor.href = window.URL.createObjectURL(
+        new Blob([data], {type: 'application/octet-stream'}));
+    anchor.click();
+  }
+  return (
+    <div class="save-examples">
+      <button onClick={saveExamples}>
+        Save training examples to file
+      </button>
+    </div>
+  );
 }
 
 const LoadTrainingExamples = () => {
-  return (null);
+  return (
+    <div>
+      <input type="file" id="dataset-file-input" />
+      <button id="upload-dataset" onClick={loadTrainingExamples}>↑ Upload dataset</button>
+    </div>
+  );
 }
 
 const Trainer = ({

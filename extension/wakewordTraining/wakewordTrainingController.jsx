@@ -123,12 +123,18 @@ export const WakewordTrainingController = function() {
     transferRecognizer.save();
   };
 
+  const onSaveTrainingData = () => {
+    const serializedExamples = transferRecognizer.serializeExamples();
+    return serializedExamples;
+  }
+
   return (
     <wakewordTrainingView.WakewordTraining
       savedModels={savedModels}
       onTrainExample={onTrainExample}
       onDeleteExample={onDeleteExample}
       onStartTraining={onStartTraining}
+      onSaveTrainingData={onSaveTrainingData}
       heyFirefoxExamples={heyFirefoxExamples}
       nextSlidePleaseExamples={nextSlidePleaseExamples}
       backgroundNoiseExamples={backgroundNoiseExamples}
