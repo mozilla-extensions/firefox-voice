@@ -152,25 +152,120 @@ const TrainingClass = ({ classItem, onTrainExample, onDeleteExample }) => {
 };
 
 const TrainingInitiator = ({ onStartTraining }) => {
+  const [trainingEpochs, setTrainingEpochs] = useState(25);
+  const [fineTuningEpochs, setFineTuningEpochs] = useState(5);
+  const [augmentWithNoise, setAugmentWithNoise] = useState(true);
+
+  const changeTrainingEpochs = (num) => {
+    setTrainingEpochs(num);
+  }
+
+  const changeFineTuningEpochs = (num) => {
+    setFineTuningEpochs(num);
+  }
+
+  const changeAugmentWithNoise = (shouldAugment) => {
+    setAugmentWithNoise(shouldAugment);
+  }
+
   const handleStartTraining = async (e) => {
     let eventTarget = e.target;
     const originalText = eventTarget.innerText;
     eventTarget.innerText = "Training...";
     eventTarget.disabled = true;
-    await onStartTraining();
+
+    const trainingOptions = {
+      epochs: trainingEpochs,
+      fineTuningEpochs: fineTuningEpochs,
+      augmentByMixingNoiseRatio: (augmentWithNoise * 0.5)
+    }
+    console.log(trainingOptions);
+
+    await onStartTraining(trainingOptions);
     eventTarget.innerText = originalText;
     eventTarget.disabled = false;
   }
   return (
     <React.Fragment>
+      <h5>Training parameters</h5>
       <p>
-        Currently using the default settings of 25 epochs and 5 fine-tuning
-        epochs.
+        The example model that was demoed the week of June 8 was trained with 50 examples each for "Hey Firefox" and "Next slide please," and 10 examples of background noise.
       </p>
+      <p>
+        The training parameters were set to 25 epochs, with 5 fine-tuning
+        epochs and augmentation with noise enabled.
+      </p>
+      <div class="training-options">
+        <TrainingEpochs trainingEpochs={trainingEpochs} changeTrainingEpochs={changeTrainingEpochs} />
+        <FineTuningEpochs fineTuningEpochs={fineTuningEpochs} changeFineTuningEpochs={changeFineTuningEpochs} />
+        <NoiseAugmentation augmentWithNoise={augmentWithNoise} changeAugmentWithNoise={changeAugmentWithNoise} />
+      </div>
       <button onClick={handleStartTraining}>Start Training</button>
     </React.Fragment>
   );
 };
+
+const TrainingEpochs = ({trainingEpochs, changeTrainingEpochs}) => {
+  const handleChange = (num) => {
+    changeTrainingEpochs(num);
+  }
+  return (
+    <div className="training-container">
+      <label htmlFor="training" className="label-training">
+        Number of training epochs:
+      </label>
+      <input
+        id="training"
+        className="styled-input"
+        type="text"
+        placeholder="25"
+        onChange={event => handleChange(event.target.value)}
+        value={trainingEpochs}
+      />
+    </div>
+  );
+}
+
+const FineTuningEpochs = ({fineTuningEpochs, changeFineTuningEpochs}) => {
+  const handleChange = (num) => {
+    changeFineTuningEpochs(num);
+  }
+  return (
+    <div className="fine-tuning-container">
+      <label htmlFor="fine-tuning" className="label-fine-tuning">
+        Number of fine-tuning epochs:
+      </label>
+      <input
+        id="fine-tuning"
+        className="styled-input"
+        type="text"
+        placeholder="5"
+        onChange={event => handleChange(event.target.value)}
+        value={fineTuningEpochs}
+      />
+    </div>
+  );
+}
+
+const NoiseAugmentation = ({augmentWithNoise, changeAugmentWithNoise}) => {
+  const handleChange = (shouldAugment) => {
+    changeAugmentWithNoise(shouldAugment);
+  }
+  return (
+    <div className="augmentation-container">
+      <label htmlFor="augmentation" className="label-augmentation">
+        Augment with noise:
+      </label>
+      <input
+        id="augmentation"
+        type="checkbox"
+        placeholder="5"
+        onChange={event => handleChange(event.target.value)}
+        checked={augmentWithNoise}
+      />
+    </div>
+  );
+}
 
 const ExampleRecorder = ({ word, onTrainExample, numExamples, setIndex }) => {
   const recordExample = async e => {

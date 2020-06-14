@@ -23,15 +23,12 @@ export const WakewordTrainingController = function() {
   };
 
   const TRAINING_OPTIONS = {
-    epochs: 25,
     validationSplit: 0.25,
-    augmentByMixingNoiseRatio: 0.5,
     callback: {
       onEpochEnd: async (epoch, logs) => {
         log.info(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
       },
     },
-    fineTuningEpochs: 5,
     fineTuningCallback: {
       onEpochEnd: async (epoch, logs) => {
         log.info(`Epoch ${epoch}: loss=${logs.loss}, accuracy=${logs.acc}`);
@@ -118,8 +115,11 @@ export const WakewordTrainingController = function() {
     refreshExamples(wakeword);
   };
 
-  const onStartTraining = async () => {
-    transferRecognizer.train(TRAINING_OPTIONS);
+  const onStartTraining = async (trainingParams) => {
+    const trainingOptions = {...trainingParams, ...TRAINING_OPTIONS};
+    console.log("combined training opts");
+    console.log(trainingOptions);
+    await transferRecognizer.train(trainingOptions);
     transferRecognizer.save();
   };
 
