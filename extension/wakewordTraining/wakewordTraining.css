@@ -41,3 +41,11 @@ table {
 tr {
   border-bottom: 1px solid #ccc;
 }
+
+.styled-input.wakeword {
+  width: 3em !important;
+}
+
+.training-container {
+  margin-bottom: 1em;
+}

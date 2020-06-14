@@ -67,16 +67,27 @@ const SelectModel = ({ savedModels }) => {
     <div className="settings-content">
       <fieldset id="model-name">
         <legend>
-          Would you like to train a new model, or load an existing model for
-          testing or updating?
+          You currently have the following models saved:
         </legend>
         <div>
           <p>{savedModels.toString()}</p>
+        </div>
+        <div>
+          <SaveTrainingExamples />
+          <LoadTrainingExamples />
         </div>
       </fieldset>
     </div>
   );
 };
+
+const SaveTrainingExamples = () => {
+  return (null);
+}
+
+const LoadTrainingExamples = () => {
+  return (null);
+}
 
 const Trainer = ({
   onTrainExample,
@@ -156,59 +167,72 @@ const TrainingInitiator = ({ onStartTraining }) => {
   const [fineTuningEpochs, setFineTuningEpochs] = useState(5);
   const [augmentWithNoise, setAugmentWithNoise] = useState(true);
 
-  const changeTrainingEpochs = (num) => {
+  const changeTrainingEpochs = num => {
     setTrainingEpochs(num);
-  }
+  };
 
-  const changeFineTuningEpochs = (num) => {
+  const changeFineTuningEpochs = num => {
     setFineTuningEpochs(num);
-  }
+  };
 
-  const changeAugmentWithNoise = (shouldAugment) => {
+  const changeAugmentWithNoise = shouldAugment => {
     setAugmentWithNoise(shouldAugment);
-  }
+  };
 
-  const handleStartTraining = async (e) => {
+  const handleStartTraining = async e => {
     let eventTarget = e.target;
     const originalText = eventTarget.innerText;
     eventTarget.innerText = "Training...";
     eventTarget.disabled = true;
 
     const trainingOptions = {
-      epochs: trainingEpochs,
-      fineTuningEpochs: fineTuningEpochs,
-      augmentByMixingNoiseRatio: (augmentWithNoise * 0.5)
-    }
+      epochs: parseInt(trainingEpochs),
+      fineTuningEpochs: parseInt(fineTuningEpochs),
+      augmentByMixingNoiseRatio: augmentWithNoise * 0.5,
+    };
     console.log(trainingOptions);
 
     await onStartTraining(trainingOptions);
     eventTarget.innerText = originalText;
     eventTarget.disabled = false;
-  }
+  };
   return (
     <React.Fragment>
       <h5>Training parameters</h5>
       <p>
-        The example model that was demoed the week of June 8 was trained with 50 examples each for "Hey Firefox" and "Next slide please," and 10 examples of background noise.
+        The example model that was demoed the week of June 8 was trained with 50
+        examples each for "Hey Firefox" and "Next slide please," and 10 examples
+        of background noise.
       </p>
       <p>
-        The training parameters were set to 25 epochs, with 5 fine-tuning
-        epochs and augmentation with noise enabled.
+        The training parameters were set to 25 epochs, with 5 fine-tuning epochs
+        and augmentation with noise enabled.
       </p>
       <div class="training-options">
-        <TrainingEpochs trainingEpochs={trainingEpochs} changeTrainingEpochs={changeTrainingEpochs} />
-        <FineTuningEpochs fineTuningEpochs={fineTuningEpochs} changeFineTuningEpochs={changeFineTuningEpochs} />
-        <NoiseAugmentation augmentWithNoise={augmentWithNoise} changeAugmentWithNoise={changeAugmentWithNoise} />
+        <TrainingEpochs
+          trainingEpochs={trainingEpochs}
+          changeTrainingEpochs={changeTrainingEpochs}
+        />
+        <FineTuningEpochs
+          fineTuningEpochs={fineTuningEpochs}
+          changeFineTuningEpochs={changeFineTuningEpochs}
+        />
+        <NoiseAugmentation
+          augmentWithNoise={augmentWithNoise}
+          changeAugmentWithNoise={changeAugmentWithNoise}
+        />
       </div>
-      <button onClick={handleStartTraining}>Start Training</button>
+      <button onClick={handleStartTraining} className="styled-button wakeword">
+        Start Training
+      </button>
     </React.Fragment>
   );
 };
 
-const TrainingEpochs = ({trainingEpochs, changeTrainingEpochs}) => {
-  const handleChange = (num) => {
+const TrainingEpochs = ({ trainingEpochs, changeTrainingEpochs }) => {
+  const handleChange = num => {
     changeTrainingEpochs(num);
-  }
+  };
   return (
     <div className="training-container">
       <label htmlFor="training" className="label-training">
@@ -216,7 +240,7 @@ const TrainingEpochs = ({trainingEpochs, changeTrainingEpochs}) => {
       </label>
       <input
         id="training"
-        className="styled-input"
+        className="styled-input wakeword"
         type="text"
         placeholder="25"
         onChange={event => handleChange(event.target.value)}
@@ -224,12 +248,12 @@ const TrainingEpochs = ({trainingEpochs, changeTrainingEpochs}) => {
       />
     </div>
   );
-}
+};
 
-const FineTuningEpochs = ({fineTuningEpochs, changeFineTuningEpochs}) => {
-  const handleChange = (num) => {
+const FineTuningEpochs = ({ fineTuningEpochs, changeFineTuningEpochs }) => {
+  const handleChange = num => {
     changeFineTuningEpochs(num);
-  }
+  };
   return (
     <div className="fine-tuning-container">
       <label htmlFor="fine-tuning" className="label-fine-tuning">
@@ -237,7 +261,7 @@ const FineTuningEpochs = ({fineTuningEpochs, changeFineTuningEpochs}) => {
       </label>
       <input
         id="fine-tuning"
-        className="styled-input"
+        className="styled-input wakeword"
         type="text"
         placeholder="5"
         onChange={event => handleChange(event.target.value)}
@@ -245,12 +269,12 @@ const FineTuningEpochs = ({fineTuningEpochs, changeFineTuningEpochs}) => {
       />
     </div>
   );
-}
+};
 
-const NoiseAugmentation = ({augmentWithNoise, changeAugmentWithNoise}) => {
-  const handleChange = (shouldAugment) => {
+const NoiseAugmentation = ({ augmentWithNoise, changeAugmentWithNoise }) => {
+  const handleChange = shouldAugment => {
     changeAugmentWithNoise(shouldAugment);
-  }
+  };
   return (
     <div className="augmentation-container">
       <label htmlFor="augmentation" className="label-augmentation">
@@ -265,7 +289,7 @@ const NoiseAugmentation = ({augmentWithNoise, changeAugmentWithNoise}) => {
       />
     </div>
   );
-}
+};
 
 const ExampleRecorder = ({ word, onTrainExample, numExamples, setIndex }) => {
   const recordExample = async e => {

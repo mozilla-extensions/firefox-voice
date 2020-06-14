@@ -115,8 +115,8 @@ export const WakewordTrainingController = function() {
     refreshExamples(wakeword);
   };
 
-  const onStartTraining = async (trainingParams) => {
-    const trainingOptions = {...trainingParams, ...TRAINING_OPTIONS};
+  const onStartTraining = async trainingParams => {
+    const trainingOptions = { ...trainingParams, ...TRAINING_OPTIONS };
     console.log("combined training opts");
     console.log(trainingOptions);
     await transferRecognizer.train(trainingOptions);
