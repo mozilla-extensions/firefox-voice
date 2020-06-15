@@ -21,14 +21,34 @@ this.contentScript = (function() {
     }
   }
 
+  function getEditableElement(element) {
+    if (element === null) {
+      return null;
+    }
+    if (element.isContentEditable === true) {
+      return element;
+    }
+    return getEditableElement(element.parentNode);
+  }
+
   communicate.register("setPlace", async message => {
     const el = document.activeElement;
-    /*
-    if (el.tagName !== "INPUT" && el.tagName !== "TEXTAREA") {
+    const nodeName = el.nodeName.toLowerCase();
+    // https://stackoverflow.com/questions/26723648/check-whether-an-html-element-is-editable-or-not-using-js?fbclid=IwAR3ifBPUuRlq831rI1mzPE-QTX2602-zCMj6SEQU7EwmoD0bpwOE0052bjU
+    if (
+      el.nodeType === 1 &&
+      (nodeName === "textarea" ||
+        (nodeName === "input" &&
+          /^(?:text|email|number|search|tel|url|password)$/i.test(el.type)))
+    ) {
+      focusElement = el;
+      return null;
+    }
+    const editableElement = getEditableElement(el);
+    if (editableElement === null) {
       return "Firefox Voice doesn't know how to write to this document";
     }
-    */
-    focusElement = el;
+    focusElement = editableElement;
     return null;
   });
 

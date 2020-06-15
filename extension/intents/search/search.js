@@ -135,6 +135,48 @@ async function performSearch(query) {
   }
 }
 
+export async function performSearchPage(context, query) {
+  if (!query) {
+    query = context.slots.query;
+  }
+  const tab = await browser.tabs.create({
+    url: START_URL,
+    active: false,
+  });
+  const tabId = tab.id;
+  _searchTabId = tabId;
+
+  await browser.search.search({
+    query,
+    tabId,
+  });
+
+  await focusSearchTab();
+  await browserUtil.waitForDocumentComplete(tabId);
+  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  const searchInfo = await callScript({ type: "searchResultInfo" });
+
+  if (
+    searchInfo.searchResults === undefined ||
+    !searchInfo.searchResults.length > 0
+  ) {
+    const msg =
+      "Could not get list of search results.\n\nPlease click feedback to let us know.";
+    const e = new Error(msg);
+    e.displayMessage = msg;
+    throw e;
+  }
+
+  tabSearchResults.set(tabId, searchInfo);
+
+  context.keepPopup();
+  await context.startFollowup({
+    heading: "Say 'next' to view",
+    subheading: searchInfo.searchResults[0].title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+  });
+}
+
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,
  * otherwise the results for lastTabId, and otherwise null
  */
@@ -447,42 +489,7 @@ intentRunner.registerIntent({
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
-      const tab = await browser.tabs.create({
-        url: START_URL,
-        active: false,
-      });
-      const tabId = tab.id;
-      _searchTabId = tabId;
-
-      await browser.search.search({
-        query: context.slots.query,
-        tabId,
-      });
-
-      await focusSearchTab();
-      await browserUtil.waitForDocumentComplete(tabId);
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
-      const searchInfo = await callScript({ type: "searchResultInfo" });
-
-      if (
-        searchInfo.searchResults === undefined ||
-        !searchInfo.searchResults.length > 0
-      ) {
-        const msg =
-          "Could not get list of search results.\n\nPlease click feedback to let us know.";
-        const e = new Error(msg);
-        e.displayMessage = msg;
-        throw e;
-      }
-
-      tabSearchResults.set(tabId, searchInfo);
-
-      context.keepPopup();
-      await context.startFollowup({
-        heading: "Say 'next' to view",
-        subheading: searchInfo.searchResults[0].title,
-        acceptFollowupIntent: ["search.next", "search.previous"],
-      });
+      await performSearchPage(context);
     }
   },
 });

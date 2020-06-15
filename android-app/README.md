@@ -10,7 +10,7 @@
     + [Using an Emulator](#using-an-emulator)
     + [Style](#style)
     + [Testing](#testing)
-    + [Generating a signed build](#generating-a-signed-build)
+    + [Generating a signed APK](#generating-a-signed-apk)
     + [Adding an intent](#adding-an-intent)
       - [Create TOML](#create-toml)
       - [Implement an IntentBuilder](#implement-an-intentbuilder)
@@ -46,7 +46,7 @@ In Firefox, download the [APK (app)](https://github.com/mozilla/firefox-voice/bl
 
 ### Using Mozilla Assistant
 
-After installation, hold down the Home button to open the app, then state your request/question, such as:
+After installation, hold down the Home (circle) button/icon to open the app, then state your request/question, such as:
 
  * "Open the Washington Post."
  * "Set an alarm for 5:30."
@@ -66,7 +66,7 @@ This will start building the project and will notify you of anything else you ne
 
 ### Using an Emulator
 
-Not all emulator AVDs handle speech recognition correctly. We have tested this configuration:
+The app does not work reliably on emulators. We recommend you debug and demo on physical devices and that you use [vysor.io](http://vysor.io/) for mirroring the screen. That said, the following emulator configuration sometimes works on a 2017 MacBook Pro:
 
 1. Open `Tools > AVD Manager`.
 2. Click on `Create Virtual Device...`
@@ -93,19 +93,19 @@ To check your style, run:
 You are expected to both add tests for code that you write and make sure that your changes do not
 cause existing tests to fail. You can run tests in Android Studio by right-clicking on `app` in the Project Pane and selecting `Run 'All Tests'`. ![screenshot](doc/run-all-tests.png)
 
-### Generating a signed build ###
+### Generating a signed APK ###
 When you change the code, you should also [build a signed APK](https://developer.android.com/studio/publish/app-signing#sign-apk). Here is a summary of the steps:
 
 1. In Android Studio, select `Build > Generate Signed Bundle/APK...`.
 2. In the wizard, select `APK`. ![image of dialog](doc/generate-signed-bundle.png)
 3. Choose an existing key store or create a new one. When specifying the key store path, if you are on a Mac, you may find it helpful to press Command+Shift+. to show hidden directories. If you create a new key store and key, don't worry too much about what you enter into the `New Key Store` wizard. You can always create a new key if you need to. Android Studio will remember (but not check in) the information about the key store for the next times you build the APK. ![image of dialog](doc/new-key-store.png) ![image of dialog](doc/specify-key.png)
-4. Select `release` and `V2 (Full APK Signature)` on the next dialog. ![image of dialog](doc/generate-signed-bundle.png)
+4. Select `release` and `V2 (Full APK Signature)` on the next dialog. ![image of dialog](doc/release-v2-apk.png)
 
 If someone wants to replace an app signed by a different key, they will need to uninstall it before installing the new one.
 
 ### Adding an intent ###
 
-Adding a voice intent (not to be confused with an Android [`Intent`](https://developer.android.com/reference/android/content/Intent) requires these steps:
+Adding a voice intent (not to be confused with an Android [`Intent`](https://developer.android.com/reference/android/content/Intent)) requires these steps:
 
 #### Create TOML ####
 
@@ -116,9 +116,9 @@ In an existing or new class in a [mozilla.voice.assistant.intents](https://githu
 
 An `IntentBuilder` takes arguments of the following types:
 
-* [`ParseResult`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/IntentParser.kt#L33), from which it can retrieve slot and parameter values.
+* [`ParseResult`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/ParseResult.kt), from which it can retrieve slot and parameter values.
 * `Context?`, in case it needs one to generate the output `Intent`. The only time the value may be `null` is during tests.
-* [`Metadata`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/Metadata.kt), in case any of its information is needed (which is currently only the case for the [launch.install intent](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt)).
+* [`Metadata`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/Metadata.kt), in case any of its information is needed (which is currently only the case for the [`launch.install` intent](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt)).
 
 It returns an `Intent` satisfying the request, or `null` if it is unable to. Look at existing files for examples, such as [`Alarm.kt`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/alarm/Alarm.kt).
 
@@ -128,17 +128,17 @@ In the user makes a nontrivial communication request (e.g., "call Mom" or "text 
 
 If the user makes a request to launch an app (e.g., "launch Facebook"), there are two types of `Intent`s that could be generated by [`Launch.kt`](https://github.com/mozilla/firefox-voice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/intents/apps/Launch.kt):
 
-1. If the app is installed, a launch `Inteng` will be created.
+1. If the app is installed, a launch `Intent` will be created.
 2. If the app is not installed, an `Intent` will be created to open `MainActivity` with:
       * feedback (e.g., "Facebook is not installed")
       * a suggestion (e.g., "search for Facebook in Google Play Store")
 
-The latter will cause the `MainActivity` to start not with the ordinary text but with the suggestion shown and on a button:
+The latter will cause `MainActivity` to start not with the ordinary text but with the suggestion shown as text and on a button:
 
 ![screenshot](doc/install-facebook.png)
 
 #### Register the Intent ####
 
-Write a static function `getIntents()` that returns a `List<Pair<String, IntentBuilder>>` mapping intent names from the TOML file (e.g., "alarm.setAbsolute") to `IntentBuilder` methods. Examples can be found in almost every file one directory below [mozilla.voice.assistant.intents](https://github.com/mozilla/firefox-voice/tree/master/android-app/app/src/main/java/mozilla/voice/assistant/intents).
+Write a static function `getIntents()` that returns a `List<Pair<String, IntentBuilder>>` mapping intent names from the TOML file (e.g., `"alarm.setAbsolute"`) to `IntentBuilder` methods. Examples can be found in almost every file one directory below [`mozilla.voice.assistant.intents`](https://github.com/mozilla/firefox-voice/tree/master/android-app/app/src/main/java/mozilla/voice/assistant/intents).
 
 Modify the `initializeData()` method in [`MainActivity`](https://github.com/mozilla/firefox-aoice/blob/master/android-app/app/src/main/java/mozilla/voice/assistant/MainActivity.kt) to call the new `getIntents()` function.

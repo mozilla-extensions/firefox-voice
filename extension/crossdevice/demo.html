@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Demo of remote commands</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="demo.css" />
+  </head>
+  <body>
+    <h1>Demo remote commands</h1>
+    <div>
+      <form id="input-form">
+        <input
+          id="input-text"
+          placeholder="Enter a phrase here"
+          style="width: 70%; font-size: 110%; margin: 0.4em"
+          autofocus="1"
+        />
+        <div>
+          <button type="button" id="mic">🎤 speak</button>
+        </div>
+      </form>
+    </div>
+    <h3>Log</h3>
+    <pre id="log"></pre>
+  </body>
+  <!-- Note the files are in slightly different locations in the extension and website
+    We (lazily) just import both locations and let some fail depending on the context
+  -->
+  <script src="../buildSettings.js"></script>
+  <script src="/js/vendor/firebase-app.js"></script>
+  <script src="/js/vendor/firebase-firestore.js"></script>
+  <script src="buildSettings.js"></script>
+  <script src="firebase-app.js"></script>
+  <script src="firebase-firestore.js"></script>
+  <script src="demo.js"></script>
+</html>
