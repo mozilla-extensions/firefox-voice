@@ -129,6 +129,7 @@ export const WakewordTrainingController = function() {
   const onLoadTrainingExamples = serializedExamples => {
     transferRecognizer.loadExamples(serializedExamples);
     const examples = transferRecognizer.countExamples();
+    log.info("Loaded examples:", examples);
     for (const wakeword in examples) {
       refreshExamples(wakeword);
     }
