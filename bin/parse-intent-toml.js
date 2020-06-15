@@ -59,7 +59,7 @@ export const metadata = ${JSON.stringify(metadata, null, "  ")};\n`;
 
 writeFile(OUTPUT, fileContent, true);
 
-const serviceMetadata = { search: {}, music: {} };
+const serviceMetadata = { search: {}, music: {}, email: {} };
 
 for (const filename of glob.sync(SERVICE_DIR + "/*/*.toml")) {
   let data;
@@ -79,7 +79,7 @@ for (const filename of glob.sync(SERVICE_DIR + "/*/*.toml")) {
     throw new Error(`Expected type=music/email in ${filename}`);
   }
   delete data[name].type;
-  Object.assign(serviceMetadata.music, data);
+  Object.assign(serviceMetadata[type], data);
 }
 
 let searchData;
