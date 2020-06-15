@@ -117,8 +117,6 @@ export const WakewordTrainingController = function() {
 
   const onStartTraining = async trainingParams => {
     const trainingOptions = { ...trainingParams, ...TRAINING_OPTIONS };
-    console.log("combined training opts");
-    console.log(trainingOptions);
     await transferRecognizer.train(trainingOptions);
     transferRecognizer.save();
   };
@@ -126,19 +124,15 @@ export const WakewordTrainingController = function() {
   const onSaveTrainingData = () => {
     const serializedExamples = transferRecognizer.serializeExamples();
     return serializedExamples;
-  }
+  };
 
-  const onLoadTrainingExamples = (serializedExamples) => {
+  const onLoadTrainingExamples = serializedExamples => {
     transferRecognizer.loadExamples(serializedExamples);
-    console.log("i got here!!");
-    console.log(serializedExamples);
     const examples = transferRecognizer.countExamples();
-    console.log(examples);
     for (const wakeword in examples) {
-      console.log(wakeword);
       refreshExamples(wakeword);
     }
-  }
+  };
 
   return (
     <wakewordTrainingView.WakewordTraining

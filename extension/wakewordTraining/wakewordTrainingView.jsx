@@ -12,7 +12,7 @@ export const WakewordTraining = ({
   onDeleteExample,
   onStartTraining,
   onSaveTrainingData,
-  onLoadTrainingExamples
+  onLoadTrainingExamples,
 }) => {
   const CLASSES_TO_TRAIN = [
     {
@@ -35,7 +35,11 @@ export const WakewordTraining = ({
     <div id="wakeword-training-wrapper">
       <React.Fragment>
         <Header />
-        <SelectModel savedModels={savedModels} onSaveTrainingData={onSaveTrainingData} onLoadTrainingExamples={onLoadTrainingExamples} />
+        <SelectModel
+          savedModels={savedModels}
+          onSaveTrainingData={onSaveTrainingData}
+          onLoadTrainingExamples={onLoadTrainingExamples}
+        />
         <Trainer
           classesToTrain={CLASSES_TO_TRAIN}
           onTrainExample={onTrainExample}
@@ -64,72 +68,74 @@ const Header = () => {
   );
 };
 
-const SelectModel = ({ savedModels, onSaveTrainingData, onLoadTrainingExamples }) => {
+const SelectModel = ({
+  savedModels,
+  onSaveTrainingData,
+  onLoadTrainingExamples,
+}) => {
   return (
     <div className="settings-content">
       <fieldset id="model-name">
-        <legend>
-          You currently have the following models saved:
-        </legend>
+        <legend>You currently have the following models saved:</legend>
         <div>
           <p>{savedModels.toString()}</p>
         </div>
         <div>
           <SaveTrainingExamples onSaveTrainingData={onSaveTrainingData} />
-          <LoadTrainingExamples onLoadTrainingExamples={onLoadTrainingExamples} />
+          <LoadTrainingExamples
+            onLoadTrainingExamples={onLoadTrainingExamples}
+          />
         </div>
       </fieldset>
     </div>
   );
 };
 
-const SaveTrainingExamples = ({onSaveTrainingData}) => {
+const SaveTrainingExamples = ({ onSaveTrainingData }) => {
   const saveExamples = () => {
     const data = onSaveTrainingData();
-    console.log(data);
     // pattern for triggering download from speech-commands/demo/index.js
-    const anchor = document.createElement('a');
+    const anchor = document.createElement("a");
     anchor.download = `training_examples_${Date.now().toString()}.bin`;
     anchor.href = window.URL.createObjectURL(
-        new Blob([data], {type: 'application/octet-stream'}));
+      new Blob([data], { type: "application/octet-stream" })
+    );
     anchor.click();
-  }
+  };
   return (
     <div class="save-examples">
-      <button onClick={saveExamples}>
-        Save training examples to file
-      </button>
+      <button onClick={saveExamples}>Save training examples to file</button>
     </div>
   );
-}
+};
 
-const LoadTrainingExamples = ({onLoadTrainingExamples}) => {
-  const loadTrainingExamples = async (e) => {
-    console.log("hello??");
+const LoadTrainingExamples = ({ onLoadTrainingExamples }) => {
+  const loadTrainingExamples = async e => {
     const files = document.querySelector("#dataset-file-input").files;
-    if (files == null || files.length !== 1) {
-      throw new Error('Must select exactly one file.');
+    if (files === null || files.length !== 1) {
+      throw new Error("Must select exactly one file.");
     }
     const datasetFileReader = new FileReader();
     datasetFileReader.onload = event => {
       try {
-        console.log("i got here");
         onLoadTrainingExamples(event.target.result);
       } catch (err) {
         log.error(err.message);
       }
-    }
+    };
     datasetFileReader.onerror = () =>
-      log.error(`Failed to binary data from file '${dataFile.name}'.`);
+      log.error(`Failed to binary data from file '${files[0].name}'.`);
     datasetFileReader.readAsArrayBuffer(files[0]);
-  }
+  };
   return (
     <div>
       <input type="file" id="dataset-file-input" />
-      <button id="upload-dataset" onClick={loadTrainingExamples}>↑ Upload dataset</button>
+      <button id="upload-dataset" onClick={loadTrainingExamples}>
+        ↑ Upload dataset
+      </button>
     </div>
   );
-}
+};
 
 const Trainer = ({
   onTrainExample,
@@ -222,7 +228,7 @@ const TrainingInitiator = ({ onStartTraining }) => {
   };
 
   const handleStartTraining = async e => {
-    let eventTarget = e.target;
+    const eventTarget = e.target;
     const originalText = eventTarget.innerText;
     eventTarget.innerText = "Training...";
     eventTarget.disabled = true;
@@ -232,7 +238,6 @@ const TrainingInitiator = ({ onStartTraining }) => {
       fineTuningEpochs: parseInt(fineTuningEpochs),
       augmentByMixingNoiseRatio: augmentWithNoise * 0.5,
     };
-    console.log(trainingOptions);
 
     await onStartTraining(trainingOptions);
     eventTarget.innerText = originalText;
