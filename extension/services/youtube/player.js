@@ -77,7 +77,7 @@ this.player = (function() {
       button.click();
     }
 
-    action_adjustVolume({ volumeLevel }) {
+    action_adjustVolume({ inputVolume = null, volumeLevel = "setInput" }) {
       const maxVolume = 1.0;
       const minVolume = 0.0;
       const ariaValueFactor = 0.01;
@@ -89,49 +89,61 @@ this.player = (function() {
       const volumeSliderHandle = this.querySelector(
         `${this.selector} .ytp-volume-slider-handle`
       );
-      let volumeNow = ytVideo.volume;
       let ariaValueNow = parseInt(volumePanel.getAttribute("aria-valuenow"));
+      let ariaValueText = volumePanel.getAttribute("aria-valuetext");
       let volumeSliderValue = ariaValueNow / heightFactor;
-      const volumeChange = 0.2;
+      let volumeNow = ariaValueNow / 100;
+      let inputVol = 0;
+      let volumeChange = 0.2;
 
+      if (inputVolume !== null) {
+        if (inputVolume > 0) {
+          inputVol = (inputVolume / 100).toPrecision(2);
+        } else if (inputVolume === "0") {
+          this.action_mute();
+          return;
+        }
+      }
       if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
-        if (this.isMuted()) {
-          this.action_unmute();
+        if (inputVol && volumeNow < inputVol) {
+          volumeChange = inputVol - volumeNow;
         }
         volumeNow =
           volumeNow <= maxVolume - volumeChange
             ? volumeNow + volumeChange
             : maxVolume;
-        ytVideo.volume = volumeNow;
-        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
-        volumeSliderValue = ariaValueNow / heightFactor;
-
-        ytVideo.onvolumechange = () => {
-          volumePanel.setAttribute("aria-valuenow", ariaValueNow);
-          volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
-          volumeSliderHandle.style.left = `${volumeSliderValue}px`;
-        };
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
+        if (inputVol && volumeNow > inputVol) {
+          volumeChange = volumeNow - inputVol;
+        }
         volumeNow =
           volumeNow >= minVolume + volumeChange
             ? volumeNow - volumeChange
             : minVolume;
-        ytVideo.volume = volumeNow;
-        ariaValueNow = Math.round(volumeNow / ariaValueFactor);
-        volumeSliderValue = ariaValueNow / heightFactor;
-
-        ytVideo.onvolumechange = () => {
-          volumePanel.setAttribute("aria-valuenow", ariaValueNow);
-          volumePanel.setAttribute("aria-valuetext", `${ariaValueNow}% volume`);
-          volumeSliderHandle.style.left = `${volumeSliderValue}px`;
-        };
+      } else if (volumeLevel === "setInput") {
+        volumeNow = inputVol ? inputVol : volumeChange;
       }
+      if (this.isMuted()) {
+        this.action_unmute();
+      }
+      ytVideo.volume = volumeNow;
+      ariaValueNow = Math.round(volumeNow / ariaValueFactor);
+      ariaValueText =
+        ariaValueNow === 0
+          ? `${ariaValueNow}% volume muted`
+          : `${ariaValueNow}% volume`;
+      volumeSliderValue = ariaValueNow / heightFactor;
+      ytVideo.onvolumechange = () => {
+        volumePanel.setAttribute("aria-valuenow", ariaValueNow);
+        volumePanel.setAttribute("aria-valuetext", ariaValueText);
+        volumeSliderHandle.style.left = `${volumeSliderValue}px`;
+      };
     }
 
     isMuted() {
-      const volumePanel = document.querySelector(".ytp-volume-panel");
+      const volumeButton = document.querySelector(".ytp-mute-button");
       const muted =
-        volumePanel.getAttribute("aria-valuetext").match(/muted/) !== null;
+        volumeButton.getAttribute("aria-label").match(/Unmute/) !== null;
       return muted ? 1 : 0;
     }
 
