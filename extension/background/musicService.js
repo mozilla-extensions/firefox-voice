@@ -95,9 +95,9 @@ class MusicService extends serviceList.Service {
     }
   }
 
-  async adjustVolume(volumeLevel) {
+  async adjustVolume(inputVolume, volumeLevel) {
     await this.initTab(`/services/${this.id}/player.js`);
-    await this.callTab("adjustVolume", { volumeLevel });
+    await this.callTab("adjustVolume", { inputVolume, volumeLevel });
   }
 
   async mute() {

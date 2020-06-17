@@ -204,6 +204,14 @@ names = ["firefox add-ons", "mozilla add-ons"]
 bangSearch = "github"
 baseUrl = "https://github.com"
 
+[justwatch] 
+bangSearch = "justwatch"
+baseUrl = "https://www.justwatch.com/"
+
+[reelgood]
+bangSearch = "reelgood"
+baseUrl = "https://reelgood.com/"
+
 [linguee]
 bangSearch = "linguee"
 baseUrl = "https://www.linguee.com/"
