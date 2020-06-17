@@ -478,6 +478,9 @@ const WakewordSettings = ({
               <strong>Enable wakeword detection</strong>
             </label>
           </div>
+          <div>
+            <a href="/wakewordTraining/wakewordTraining.html">Train wakeword</a>
+          </div>
           <p>
             If you turn this option on you will be able to enable Firefox Voice
             by saying any one of the (checked) words below.
