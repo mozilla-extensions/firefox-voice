@@ -3,6 +3,8 @@
 import * as settings from "../settings.js";
 
 let enabled = false;
+let enabledWakewords = null;
+let enabledSensitivity = 0;
 let transferRecognizer;
 
 async function startWatchword(keywords, sensitivity) {
@@ -26,7 +28,9 @@ async function startWatchword(keywords, sensitivity) {
       const topWord = words[result.scores.indexOf(maxConfidence)];
       log.info(`Predicted word ${topWord} with confidence ${maxConfidence}`);
       const wakeword =
-        topWord === "heyff" ? "Hey Firefox" : "Next slide please";
+        topWord === "heyff" || topWord === "heyFirefox"
+          ? "Hey Firefox"
+          : "Next slide please";
       await browser.runtime.sendMessage({
         type: "wakeword",
         wakeword,
@@ -39,6 +43,8 @@ async function startWatchword(keywords, sensitivity) {
   );
 
   enabled = true;
+  enabledWakewords = keywords;
+  enabledSensitivity = sensitivity;
 }
 
 function stopWatchword() {
@@ -50,6 +56,15 @@ function stopWatchword() {
 export async function updateWakeword() {
   const userSettings = await settings.getSettings();
   if (userSettings.enableWakeword) {
+    if (
+      enabled &&
+      enabledSensitivity === userSettings.wakewordSensitivity &&
+      enabledWakewords.sort().join(",") ===
+        userSettings.wakewords.sort().join(",")
+    ) {
+      // It's already enabled with the same settings as currently
+      return;
+    }
     if (enabled) {
       stopWatchword();
     }
