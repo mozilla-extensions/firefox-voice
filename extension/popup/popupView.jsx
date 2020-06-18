@@ -894,7 +894,7 @@ const SearchResultsContent = ({
             ) : null}
           </div>
         </React.Fragment>
-      ) : null}
+      )}
     </React.Fragment>
   );
 };
