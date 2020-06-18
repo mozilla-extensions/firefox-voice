@@ -621,7 +621,7 @@ intentRunner.registerIntent({
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
       skipSuccessView: true,
     });
   },
@@ -657,7 +657,7 @@ intentRunner.registerIntent({
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
       skipSuccessView: true,
     });
   },
@@ -691,7 +691,7 @@ intentRunner.registerIntent({
 
     await context.startFollowup({
       heading: result.eduText,
-      acceptFollowupIntent: ["tabs.FindOnPageNext", "tabs.FindOnPagePrevious"],
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
       skipSuccessView: true,
     });
   },
