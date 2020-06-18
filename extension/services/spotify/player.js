@@ -63,6 +63,16 @@ this.player = (function() {
       button.click();
     }
 
+    action_mute() {
+      const button = this.querySelector(".control-button[aria-label='Mute']");
+      button.click();
+    }
+
+    action_unmute() {
+      const button = this.querySelector(".control-button[aria-label='Unmute']");
+      button.click();
+    }
+
     async action_move({ direction }) {
       if (direction === "next") {
         const selector = ".control-button[title='Next']";

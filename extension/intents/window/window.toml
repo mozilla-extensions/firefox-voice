@@ -57,10 +57,31 @@ test = true
 phrase = "Close all windows"
 test = true
 
+[window.clearBrowserHistory]
+description = "Brings up dialogue box to clear browser history"
+match = """
+  (clear | erase) (firefox | browser |) (history | data)
+"""
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear history"
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox history"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear firefox data"
+test = true
+
+[[window.clearBrowserHistory.example]]
+phrase = "clear browser history"
+test = true
+
 [window.zoom]
 description = "Zooms the window"
 match = """
-  zoom (the |) (this |) window (for me |)
+  (Zoom | Maximize |) (the | this |) (window |) (for me |)
 """
 
 [[window.zoom.example]]
@@ -68,6 +89,14 @@ phrase = "Zoom window"
 
 [[window.zoom.example]]
 phrase = "Zoom this window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize window"
+test = true
+
+[[window.zoom.example]]
+phrase = "Maximize"
 test = true
 
 [window.minimize]
@@ -90,3 +119,4 @@ test = true
 [[window.minimize.example]]
 phrase = "hide window"
 test = true
+

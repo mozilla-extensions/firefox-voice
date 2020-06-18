@@ -3,7 +3,8 @@ package mozilla.voice.assistant.language
 import androidx.annotation.VisibleForTesting
 
 /**
- * A representation of a sequence of [Word]s.
+ * A representation of a sequence of [Word]s. This differs from a [Sequence], whose
+ * constituent parts may be of any [Pattern] type.
  */
 class FullPhrase(
     @VisibleForTesting val words: Sequence,

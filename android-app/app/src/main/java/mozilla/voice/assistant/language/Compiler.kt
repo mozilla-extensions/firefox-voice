@@ -22,6 +22,7 @@ class Compiler(internal val metadata: Metadata, internal val language: Language)
 
     private fun makeStandardEntities(): Map<String, Pattern> = mapOf(
         "number" to NumberPattern(),
+        "phoneNumber" to PhoneNumberPattern(),
         "time" to TimePattern(),
         "appName" to Alternatives(metadata.getAppNames().map { makeWordMatcher(it) }),
         "musicServiceName" to Alternatives(listOf(

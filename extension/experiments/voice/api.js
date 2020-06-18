@@ -55,6 +55,10 @@ this.voice = class extends ExtensionAPI {
             return runCommand("Tools:Downloads");
           },
 
+          async clearBrowserHistory() {
+            return runCommand("Tools:Sanitize");
+          },
+
           async quitApplication() {
             return runCommand("cmd_quitApplication");
           },
@@ -80,14 +84,6 @@ this.voice = class extends ExtensionAPI {
 
           async viewPageSource() {
             return runCommand("View:PageSource");
-          },
-
-          async zoomWindow() {
-            return runCommand("zoomWindow");
-          },
-
-          async minimizeWindow() {
-            return runCommand("minimizeWindow");
           },
 
           async showAllBookmarks() {

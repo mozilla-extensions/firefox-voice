@@ -1,3 +1,5 @@
+/* globals buildSettings */
+
 import * as intentRunner from "../../background/intentRunner.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
@@ -75,13 +77,27 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "window.zoom",
   async run(context) {
-    await browser.experiments.voice.zoomWindow();
+    if (buildSettings.android) {
+      const exc = new Error("Maximize not supported on Android");
+      exc.displayMessage = exc.message;
+      throw exc;
+    }
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "maximized" });
   },
 });
 
 intentRunner.registerIntent({
   name: "window.minimize",
   async run(context) {
-    await browser.experiments.voice.minimizeWindow();
+    const currentWindow = await browser.windows.getCurrent();
+    await browser.windows.update(currentWindow.id, { state: "minimized" });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "window.clearBrowserHistory",
+  async run(context) {
+    await browser.experiments.voice.clearBrowserHistory();
   },
 });

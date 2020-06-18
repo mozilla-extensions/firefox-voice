@@ -251,6 +251,7 @@ body {
   font-size: 1.875rem;
   margin-top: 30px;
   font-weight: 100;
+  width: 100%;
 }
 
 .settings-content fieldset ul {
@@ -317,4 +318,117 @@ a:hover {
 .settings-content #keyboard-shortcut .error {
   color: #d70022;
   margin-bottom: 20px;
+}
+
+/* History Tab */
+.history-table {
+  width: 700px;
+  border: 2px solid #c7c7c7;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  background-color: #ededf0;
+  color: #4a4a4f;
+  font-weight: normal;
+  border-right: 1px solid #c7c7c7;
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid #eee;
+  border-collapse: collapse;
+  padding: 12px 35px;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.history-table thead tr {
+  height: 30px;
+}
+
+.history-table tbody tr {
+  height: 38px;
+}
+
+.history-table tr td:nth-child(2) {
+  width: 190px;
+  color: #4a4a4f;
+}
+
+.history-pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0 15px 0;
+}
+
+.rows-indicator {
+  align-self: center;
+  margin-right: 25px;
+  color: #4a4a4f;
+}
+
+.delete-button {
+  padding: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: #c7c7c7;
+  float: right;
+}
+
+.delete-button:hover {
+  background-color: #afafaf;
+}
+
+.active,
+.inactive {
+  cursor: pointer;
+  border: none;
+  margin: none;
+  padding: 10px 20px;
+  background-color: transparent;
+}
+
+.active {
+  background-color: #c7c7c7;
+}
+
+.inactive {
+  background-color: #f2f2f2;
+}
+
+.active:hover {
+  background-color: #afafaf;
+}
+.next {
+  margin-left: 15px;
+}
+
+.next-page {
+  transform: scale(-1, 1);
+}
+
+/* Override default select styling */
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 70px;
+}
+.select-wrapper::after {
+  content: "▼";
+  font-size: 0.75rem;
+  top: 2px;
+  right: 15px;
+  position: absolute;
+}
+
+#mic-selector {
+  margin-top: 20px;
 }

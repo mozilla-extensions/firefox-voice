@@ -1,5 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
+import English from "../../background/language/langs/english.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -154,7 +155,14 @@ intentRunner.registerIntent({
     // "canceled"
     // "not_saved"
     // "not_replaced"
-    await browser.tabs.saveAsPDF({});
+    try {
+      await browser.tabs.saveAsPDF({});
+    } catch (e) {
+      if (e.message === "Not supported on Mac OS X") {
+        e.displayMessage = "Save as PDF is not supported on Mac OS X";
+        throw e;
+      }
+    }
   },
 });
 
@@ -265,6 +273,11 @@ intentRunner.registerIntent({
     let found;
     for (const tabId of tabHistory) {
       if (tabId === activeTab.id) {
+        continue;
+      }
+      try {
+        await browser.tabs.get(tabId);
+      } catch (e) {
         continue;
       }
       found = tabId;
@@ -568,10 +581,12 @@ intentRunner.registerIntent({
     const tabs = await browser.tabs.query({ currentWindow: true });
     const hiddenTabs = await browser.tabs.query({ hidden: true });
     const numOfOpenTabs = tabs.length - hiddenTabs.length;
+    const tabsOpen = numOfOpenTabs <= 1 ? "Open tab" : "Open tabs";
+
     const card = {
       answer: {
         largeText: `${numOfOpenTabs}`,
-        text: "Open tabs",
+        text: tabsOpen,
         eduText: `Click mic and say "gather all Google tabs"`,
       },
     };
@@ -720,4 +735,125 @@ async function callResult(cardAnswer) {
     card,
     searchResults: card,
   });
+}
+
+intentRunner.registerIntent({
+  name: "tabs.selectAllTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+
+    await selectAllTabs(tabs);
+  },
+});
+
+async function selectAllTabs(tabs) {
+  if (tabs.length !== 0) {
+    for (const tab of tabs) {
+      if (!tab.active) {
+        await browser.tabs.update(tab.id, {
+          highlighted: true,
+          active: false,
+        });
+      } else {
+        await browser.tabs.update(tab.id, {
+          highlighted: true,
+        });
+      }
+    }
+  }
+}
+
+async function highlightTabsInDirection(center, tabs, dir) {
+  if (dir === "left") {
+    tabs = tabs.filter(tab => {
+      return tab.index < center.index;
+    });
+  } else {
+    tabs = tabs.filter(tab => {
+      return tab.index > center.index;
+    });
+  }
+  for (const tab of tabs) {
+    if (!tab.active) {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+        active: false,
+      });
+    } else {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+      });
+    }
+  }
+}
+
+intentRunner.registerIntent({
+  name: "tabs.selectTabsInDirection",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      tabs,
+      activeTab,
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "false",
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    await highlightTabsInDirection(
+      activeTab,
+      matchingTabs,
+      context.parameters.dir
+    );
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.selectNumbersTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+    const numTabs = English.nameToNumber(
+      context.slots.number || context.parameters.number
+    );
+    await selectNumbersTabs(tabs, numTabs, context.parameters.dir);
+  },
+});
+
+async function selectNumbersTabs(tabs, numTabs, dir) {
+  if (dir === "first") {
+    tabs = tabs.filter(tab => {
+      return tab.index < numTabs;
+    });
+  } else {
+    tabs = tabs.filter(tab => {
+      return tab.index >= tabs.length - numTabs - 1;
+    });
+  }
+  for (const tab of tabs) {
+    if (!tab.active) {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+        active: false,
+      });
+    } else {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+      });
+    }
+  }
 }
