@@ -290,6 +290,10 @@ export class IntentContext {
     return browserUtil.activeTab();
   }
 
+  activeTabs() {
+    return browserUtil.activeTabs();
+  }
+
   makeTabActive(tab) {
     return browserUtil.makeTabActive(tab);
   }

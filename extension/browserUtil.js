@@ -7,6 +7,10 @@ export async function activeTab() {
   }))[0];
 }
 
+export async function activeTabs() {
+  return browser.tabs.query({});
+}
+
 export async function makeTabActive(tab) {
   let tabId;
   if (typeof tab === "string" || typeof tab === "number") {
