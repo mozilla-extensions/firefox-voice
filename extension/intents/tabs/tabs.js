@@ -112,7 +112,7 @@ intentRunner.registerIntent({
       if (activeTab.id === 1) break;
       await browser.tabs.remove(activeTab.id);
     }
-    context.displayText("Tab closed");
+    context.displayText("Closed all tabs");
   },
 });
 
