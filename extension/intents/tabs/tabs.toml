@@ -1,19 +1,15 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (the | this |) (active | current |) (tab{s} | site | page) (for me |)
+  close (the | this |) (active | current |) (tab | site | page) (for me |)
   close (the | this | that)
 """
 
 [[tabs.close.example]]
+phrase = "close current tab"
+
+[[tabs.close.example]]
 phrase = "close tab"
-
-[[tabs.close.example]]
-phrase = "close tabs"
-test = true
-
-[[tabs.close.example]]
-phrase = "close all tabs"
 test = true
 
 [[tabs.close.example]]
@@ -21,7 +17,7 @@ phrase = "close active tab"
 test = true
 
 [[tabs.close.example]]
-phrase = "close the active tabs"
+phrase = "close the active tab"
 test = true
 
 [[tabs.close.example]]
@@ -456,8 +452,34 @@ phrase = "select last two tabs"
 expectParameters = { dir = "last" }
 
 [tabs.closeAll]
-description = "Closes the current tab"
+description = "Closes all active or open tabs"
 match = """
-  close (all | every | each |) (active | current |) (tab{s} | site | page) (for me |)
-  close (all | every | each)
+  close (all | every | each | the |) (active | open |) (tab{s} | site{s} | page{s}) (for me |)
 """
+
+[[tabs.closeAll.example]]
+phrase = "close tabs"
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all active tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close each active page"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close the active tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close every open site"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all open tabs for me"
+test = true
