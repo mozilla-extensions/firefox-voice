@@ -16,7 +16,6 @@ import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
 import { timerController } from "../intents/timer/timer.js";
 import * as intentParser from "./intentParser.js";
-import * as firebaseSetup from "../crossdevice/firebaseSetup.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
@@ -382,5 +381,3 @@ function setUninstallURL() {
 
 setTimeout(setUninstallURL, 10000);
 setInterval(setUninstallURL, 1000 * 60 * 60 * 24); // Update the URL once a day
-
-firebaseSetup.init();
