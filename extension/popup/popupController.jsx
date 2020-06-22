@@ -274,9 +274,7 @@ export const PopupController = function() {
         return Promise.resolve(true);
       }
       case "remoteUtterance": {
-        setTimeout(() => {
-          remoteUtterance(message.utterance);
-        });
+        remoteUtterance(message.utterance);
         return Promise.resolve(true);
       }
       case "pingPopup": {

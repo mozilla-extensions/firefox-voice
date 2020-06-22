@@ -1,5 +1,7 @@
 /* globals firebase, buildSettings, log */
 
+import * as intentRunner from "../background/intentRunner.js";
+
 // See https://github.com/diafygi/webcrypto-examples
 const KEY_ALGO = {
   name: "AES-GCM",
@@ -14,12 +16,18 @@ let keyExport;
 let userId;
 
 function generateUserId() {
-  const random = crypto.getRandomValues(new Uint8Array(10));
-  const name = arrayBufferToBase64(random)
-    .replace("+", "-")
-    .replace("/", "_")
-    .replace("=", "");
-  return `u-${name.replace("=", "")}`;
+  const random = crypto.getRandomValues(new Uint8Array(24));
+  const name = arrayBufferToBase64(random);
+  return `user-${name.replace("=", "")}`;
+}
+
+function strToArrayBuffer(str) {
+  const buf = new ArrayBuffer(str.length * 2);
+  const bufView = new Uint16Array(buf);
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
 }
 
 function arrayBufferToString(buf) {
@@ -46,6 +54,24 @@ function base64ToArrayBuffer(base64) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes.buffer;
+}
+
+async function encrypt(data) {
+  const text = JSON.stringify(data);
+  const buffer = strToArrayBuffer(text);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    {
+      name: "AES-GCM",
+      iv,
+    },
+    key,
+    buffer
+  );
+  return {
+    iv: arrayBufferToBase64(iv),
+    encrypted: arrayBufferToBase64(encrypted),
+  };
 }
 
 async function decrypt(data) {
@@ -82,46 +108,20 @@ async function initKey() {
     await browser.storage.local.set({ firestoreKey: keyExport });
   } else {
     keyExport = result.firestoreKey;
-    key = await crypto.subtle.importKey("jwk", keyExport, KEY_ALGO, true, [
-      "encrypt",
-      "decrypt",
-    ]);
+    key = await await crypto.subtle.importKey(
+      "jwk",
+      keyExport,
+      KEY_ALGO,
+      true,
+      ["encrypt", "decrypt"]
+    );
   }
 }
-
-export function safeBtoa(obj) {
-  if (typeof obj === "string") {
-    return "." + obj;
-  }
-  const text = JSON.stringify(obj);
-  const encoded = btoa(text)
-    .replace("+", "-")
-    .replace("/", "_")
-    .replace("=", "");
-  return encoded;
-}
-
-const DEFAULT_PROPS = {
-  alg: "A256GCM",
-  ext: true,
-  kty: "oct",
-};
 
 export function deviceUrl() {
-  let newKey = Object.assign({}, keyExport);
-  delete newKey.key_ops;
-  for (const name in DEFAULT_PROPS) {
-    if (newKey[name] === DEFAULT_PROPS[name]) {
-      delete newKey[name];
-    }
-  }
-  if (Object.keys(newKey).length === 1) {
-    newKey = newKey.k;
-  }
-  return `${BASE_SHARE}?${Math.floor(Date.now() / 60000) -
-    26520000}#k=${encodeURIComponent(safeBtoa(newKey))}&u=${encodeURIComponent(
-    userId
-  )}`;
+  return `${BASE_SHARE}?${Date.now()}#key=${encodeURIComponent(
+    JSON.stringify(keyExport)
+  )}&userId=${encodeURIComponent(userId)}`;
 }
 
 export async function init() {
@@ -130,6 +130,8 @@ export async function init() {
   firebase.initializeApp(buildSettings.firebaseConfig);
   db = firebase.firestore();
   listen();
+  console.log("Open file:", deviceUrl());
+  console.log("Or:", browser.runtime.getURL("/crossdevice/qrcode.html"));
 }
 
 function listen() {
@@ -199,5 +201,5 @@ async function executeCommand(data) {
     if (result) {
       clearTimeout(intervalId);
     }
-  }, 150);
+  }, 50);
 }

@@ -4,7 +4,6 @@
 const logEl = document.querySelector("#log");
 const formEl = document.querySelector("#input-form");
 const textEl = document.querySelector("#input-text");
-const micEl = document.querySelector("#mic");
 
 let key;
 let userId;
@@ -18,43 +17,6 @@ formEl.addEventListener("submit", event => {
   }
   const text = textEl.value;
   textEl.value = "";
-  sendUtterance(text);
-});
-
-const Recog = window.webkitSpeechRecognition || window.SpeechRecognition;
-
-const playListeningChime = () => {
-  const audio = new Audio("https://mozilla.github.io/firefox-voice/chime.ogg");
-  audio.play();
-};
-
-micEl.addEventListener("click", () => {
-  if (!key) {
-    log("No key loaded");
-    return;
-  }
-  micEl.style.backgroundColor = "#900";
-  micEl.textContent = micEl.textContent.replace(/speak/, "listening...");
-  playListeningChime();
-  const recognition = new Recog();
-  recognition.continuous = false;
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-  recognition.start();
-  recognition.onresult = event => {
-    micEl.style.backgroundColor = null;
-    micEl.textContent = micEl.textContent.replace(/listening\.\.\./, "speak");
-    const text = event.results[0][0].transcript;
-    sendUtterance(text);
-  };
-});
-
-if (!Recog) {
-  micEl.style.display = "none";
-}
-
-function sendUtterance(text) {
   log(`Sending text: ${text}`);
   sendCommand({ utterance: text }).then(
     () => {
@@ -65,7 +27,7 @@ function sendUtterance(text) {
       log(`Error sending: ${e}`);
     }
   );
-}
+});
 
 function log(text) {
   logEl.textContent = text + "\n" + logEl.textContent;
@@ -118,35 +80,9 @@ async function sendCommand(command) {
     .set({ payload });
 }
 
-function safeAtob(text) {
-  if (text.startsWith(".")) {
-    return text.substr(1);
-  }
-  let encoded = text.replace("-", "+").replace("_", "/");
-  while (encoded.length % 4) {
-    encoded += "=";
-  }
-  return atob(encoded);
-}
-
-const DEFAULT_PROPS = {
-  alg: "A256GCM",
-  ext: true,
-  kty: "oct",
-};
-
-function fillKey(key) {
-  if (typeof key === "string") {
-    key = { k: key };
-  }
-  key = Object.assign({}, DEFAULT_PROPS, key);
-  return key;
-}
-
 async function init() {
   const params = new URLSearchParams(location.hash.substr(1));
-  let keyExport = safeAtob(params.get("k"));
-  keyExport = fillKey(keyExport);
+  const keyExport = JSON.parse(params.get("key"));
   log(`Loaded key: ${JSON.stringify(keyExport)}`);
   key = await crypto.subtle.importKey(
     "jwk",
@@ -158,7 +94,7 @@ async function init() {
     true,
     ["encrypt", "decrypt"]
   );
-  userId = params.get("u");
+  userId = params.get("userId");
   console.log("key imported:", key);
   firebase.initializeApp(buildSettings.firebaseConfig);
   db = firebase.firestore();
