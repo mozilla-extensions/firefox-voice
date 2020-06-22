@@ -2,6 +2,10 @@
 
 "use strict";
 
+XPCOMUtils.defineLazyGetter(this, "tabTracker", () => {
+  return ExtensionParent.apiManager.global.tabTracker;
+});
+
 ChromeUtils.defineModuleGetter(
   this,
   "ExtensionParent",
@@ -730,7 +734,7 @@ this.voice = class extends ExtensionAPI {
             return runCommand("Tools:Addons");
           },
 
-          async sendKeyboardEvent(tabId, eventProperties) {
+          async sendKeyboardEvent(tabId, eventName, eventProperties) {
             function getTabOrActive(tabId) {
               const tab =
                 tabId !== null
@@ -747,7 +751,8 @@ this.voice = class extends ExtensionAPI {
             }
 
             const tab = getTabOrActive(tabId);
-            const KeyboardEvent = new KeyboardEvent(eventProperties);
+            console.log("tab is", tab, tab.KeyboardEvent);
+            const KeyboardEvent = new KeyboardEvent(eventName, eventProperties);
             tab.sendEvent(KeyboardEvent);
           },
         },
