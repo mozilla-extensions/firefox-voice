@@ -115,15 +115,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     );
   } else if (message.type === "clearFollowup") {
     return intentRunner.clearFollowup();
-<<<<<<< HEAD
-  } else if (message.type === "getDeviceUrl") {
-    return Promise.resolve(firebaseSetup.deviceUrl());
   } else if (message.type === "addTimings") {
     return Promise.resolve(log.addTimings(message.timings));
   } else if (message.type === "getTimings") {
     return Promise.resolve(log.getTimings());
-=======
->>>>>>> parent of 3c791b4... WIP cross-device control
   }
   log.error(
     `Received message with unexpected type (${message.type}): ${message}`
