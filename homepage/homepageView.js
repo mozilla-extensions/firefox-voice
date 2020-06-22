@@ -2,8 +2,7 @@
 
 /* globals React, Mzp */
 const {
-  useState,
-  useEffect
+  useState
 } = React;
 export const Homepage = ({
   isCommonVoice
