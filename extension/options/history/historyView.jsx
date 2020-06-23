@@ -2,6 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 import { Database } from "../../history.js";
+import { getSettings, saveSettings } from "../../settings.js";
 
 const { useState, useEffect } = React;
 
@@ -11,6 +12,7 @@ const TABLE_NAME = "utterance";
 export const History = () => {
   const [tableRows, setTableRows] = useState([]);
   const [numRows, setNumRows] = useState(0);
+  const [saveAudio, setSaveAudio] = useState(false);
 
   useEffect(() => {
     const getRows = async () => {
@@ -18,17 +20,37 @@ export const History = () => {
       setTableRows(rows);
       setNumRows(rows.length);
     };
+    const userSettings = getSettings();
+    setSaveAudio(userSettings.saveAudioHistory);
     getRows();
-  }, [tableRows]);
+  }, []);
 
-  return <HistoryTable rows={tableRows} numRows={numRows}></HistoryTable>;
+  const onChangeSaveAudio = async value => {
+    const userSettings = await getSettings();
+    userSettings.saveAudioHistory = value;
+    await saveSettings(userSettings);
+    setSaveAudio(value);
+  };
+
+  return (
+    <HistoryTable
+      rows={tableRows}
+      numRows={numRows}
+      saveAudio={saveAudio}
+      onChangeSaveAudio={onChangeSaveAudio}
+    />
+  );
 };
 
-const HistoryTable = ({ rows, numRows }) => {
+const HistoryTable = ({ rows, numRows, saveAudio, onChangeSaveAudio }) => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 50;
   const tableFields = ["You said...", "Date and time"];
   const objectFields = ["utterance", "timestamp"];
+  if (rows.some(h => h.audio)) {
+    tableFields.push("Audio");
+    objectFields.push("audio");
+  }
   const tableColumns = tableFields.map(field => <th>{field}</th>);
   const tableRows = rows
     .map(row => {
@@ -46,6 +68,25 @@ const HistoryTable = ({ rows, numRows }) => {
                       .replace(/:\d+ /, " ")}
                   </td>
                 );
+                break;
+              }
+              case "audio": {
+                if (row[key]) {
+                  const url = URL.createObjectURL(row[key]);
+                  // eslint-disable-next-line jsx-a11y/media-has-caption
+                  const audio = <audio controls src={url} />;
+                  const filename = `fxvoice-audio-${row.timestamp}`;
+                  element = (
+                    <td>
+                      {audio}{" "}
+                      <a href={url} title="download audio" download={filename}>
+                        save
+                      </a>
+                    </td>
+                  );
+                } else {
+                  element = <td></td>;
+                }
                 break;
               }
               default: {
@@ -78,6 +119,19 @@ const HistoryTable = ({ rows, numRows }) => {
             Clear Voice History
           </button>
         </legend>
+        <div>
+          <label htmlFor="saveAudio">
+            <input
+              type="checkbox"
+              id="saveAudio"
+              checked={saveAudio}
+              onChange={event => {
+                onChangeSaveAudio(event.target.checked);
+              }}
+            />
+            Keep audio locally in history
+          </label>
+        </div>
         <HistoryPagination
           numRows={numRows}
           page={page}
