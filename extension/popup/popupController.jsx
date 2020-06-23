@@ -25,6 +25,8 @@ let listenForFollowup = false;
 let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
+let lastAudio = null;
+let lastAudioUtterance = null;
 
 let audioInputId = null;
 
@@ -263,6 +265,12 @@ export const PopupController = function() {
       case "closeTimer": {
         clearTimer(message);
         return Promise.resolve(true);
+      }
+      case "getLastAudio": {
+        if (message.utterance !== lastAudioUtterance) {
+          return Promise.resolve(null);
+        }
+        return Promise.resolve(lastAudio);
       }
       default:
         break;
@@ -550,7 +558,7 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = async json => {
+    recorder.onEnd = async (json, audioBlob) => {
       log.timing("recorder.onEnd() called");
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
@@ -573,6 +581,8 @@ export const PopupController = function() {
       });
       setDisplayText("");
       log.timing(`Sending runIntent(${json.data[0].text})`);
+      lastAudio = audioBlob;
+      lastAudioUtterance = json.data[0].text;
       await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
