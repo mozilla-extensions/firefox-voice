@@ -12,6 +12,7 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -99,9 +100,13 @@ class MainActivity : AppCompatActivity() {
         checkPermsBeforeStartingSpeechRecognition()
     }
 
+    private fun setStatusText(s: String) {
+        statusView.text = s
+    }
+
     private fun updateViews() {
         feedbackView.text = ""
-        statusView.text = intentStatus ?: getString(R.string.initializing)
+        setStatusText(intentStatus ?: getString(R.string.initializing))
         intentSuggestion?.let { suggestion ->
             suggestionButton.text = suggestion
             suggestionButton.visibility = View.VISIBLE
@@ -130,6 +135,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermsBeforeStartingSpeechRecognition() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            setStatusText(getString(R.string.no_voice_input))
+            return
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(
@@ -225,7 +234,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         animationView.playAnimation()
-        statusView.text = intentStatus ?: getString(R.string.listening)
+        setStatusText(intentStatus ?: getString(R.string.listening))
     }
 
     private fun showListening() {
@@ -234,23 +243,23 @@ class MainActivity : AppCompatActivity() {
         animationView.resumeAnimation()
         animationView.removeAllUpdateListeners()
         animationView.repeatCount = LottieDrawable.INFINITE
-        statusView.text = getString(R.string.listening)
+        setStatusText(getString(R.string.listening))
     }
 
     private fun showProcessing() {
         animationView.setMinAndMaxFrame(PROCESSING_MIN, PROCESSING_MAX)
-        statusView.text = getString(R.string.processing)
+        setStatusText(getString(R.string.processing))
     }
 
     private fun showSuccess() {
         animationView.setMinAndMaxFrame(SUCCESS_MIN, SUCCESS_MAX)
         animationView.repeatCount = 0
-        statusView.text = getString(R.string.got_it)
+        setStatusText(getString(R.string.got_it))
     }
 
     private fun displayError(errorText: String) {
         animationView.setMinAndMaxFrame(ERROR_MIN, ERROR_MAX)
-        statusView.text = ""
+        setStatusText(errorText)
         feedbackView.text = errorText
     }
 
@@ -292,7 +301,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReadyForSpeech(params: Bundle?) {
             speechDetected = false
             showReady()
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 if (!speechDetected) {
                     giveSuggestions()
                 }
@@ -360,8 +369,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        statusView.text = ""
         if (requestCode == SPEECH_RECOGNITION_REQUEST) {
+            setStatusText(getString(R.string.processing))
             if (resultCode == RESULT_OK && data is Intent) {
                 data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.let {
                     handleResults(it)
@@ -382,7 +391,7 @@ class MainActivity : AppCompatActivity() {
                     intentSuggestion = null
                     // Pause briefly before launching the intent to show the winning transcription.
                     feedbackView.text = it.first
-                    Handler().postDelayed(
+                    Handler(Looper.getMainLooper()).postDelayed(
                         { startActivity(it.second) },
                         TRANSCRIPT_DISPLAY_TIME
                     )

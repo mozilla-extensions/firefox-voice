@@ -409,3 +409,68 @@ test = true
 
 [[tabs.findOnPage.example]]
 phrase = "Find spaghetti on  page"
+
+[tabs.findOnPageNext]
+description = "Find next match"
+match = """
+(find | search |) (the |) next match
+"""
+
+[[tabs.findOnPageNext.example]]
+phrase = "next match"
+test = true
+
+[tabs.findOnPagePrevious]
+description = "Find previous match"
+match = """
+(find | search |) (the |) previous match
+"""
+
+[[tabs.findOnPagePrevious.example]]
+phrase = "previous match"
+test = true
+
+[tabs.selectAllTabs]
+description = "Select all tabs"
+match = """
+    (select | highlight) (all |) (the | this | ) (tab{s} | taps | page )
+"""
+
+[[tabs.selectAllTabs.example]]
+phrase = "Select all the tabs"
+test = true
+
+[[tabs.selectAllTabs.example]]
+phrase = "Select all tabs"
+
+[tabs.selectTabsInDirection]
+description = "Select tabs to the left/right"
+match = """
+    (select | highlight) (all |) (tab{s} | page{s}) (to | in | by |) (the |) right [dir=right] [allWindows=false]
+    (select | highlight) (all |) (tab{s} | page{s}) (to | in | by |) (the |) left  [dir=left] [allWindows=false]
+"""
+
+[[tabs.selectTabsInDirection.example]]
+phrase = "Select all tabs to the right"
+expectParameters = {dir = "right"}
+
+[[tabs.selectTabsInDirection.example]]
+phrase = "Select all tabs to the left"
+expectParameters = {dir = "left"}
+
+[tabs.selectNumbersTabs]
+description = "Select first/last numbers of tabs"
+match = """
+    (select | highlight) first [number:smallNumber] (tab{s} | page ) [dir=first] [allWindows=false]
+    (select | highlight) first (tab{s} | page) [dir=first] [number=1] [allWindows=false]
+    (select | highlight) last [number:smallNumber] (tab{s} | page ) [dir=last] [allWindows=false]
+    (select | highlight) last (tab{s} | page) [dir=last] [number=1] [allWindows=false]
+"""
+
+[[tabs.selectNumbersTabs.example]]
+phrase = "select first three tabs"
+expectParameters = { dir = "first" }
+
+[[tabs.selectNumbersTabs.example]]
+phrase = "select last two tabs"
+expectParameters = { dir = "last" }

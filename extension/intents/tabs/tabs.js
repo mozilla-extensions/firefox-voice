@@ -1,5 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
+import English from "../../background/language/langs/english.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -23,6 +24,9 @@ const defaultZoomValues = [
 // Milliseconds: if you activate a tab for less time than this, then it doesn't
 // get tracked (we assume you just passed over the tab)
 const TRACK_TAB_ACTIVATE_MINIMUM = 1500;
+
+let lastIndex;
+let rangeData;
 
 function nextLevel(levels, current) {
   for (const level of levels) {
@@ -577,10 +581,12 @@ intentRunner.registerIntent({
     const tabs = await browser.tabs.query({ currentWindow: true });
     const hiddenTabs = await browser.tabs.query({ hidden: true });
     const numOfOpenTabs = tabs.length - hiddenTabs.length;
+    const tabsOpen = numOfOpenTabs <= 1 ? "Open tab" : "Open tabs";
+
     const card = {
       answer: {
         largeText: `${numOfOpenTabs}`,
-        text: "Open tabs",
+        text: tabsOpen,
         eduText: `Click mic and say "gather all Google tabs"`,
       },
     };
@@ -595,17 +601,259 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.findOnPage",
   async run(context) {
-    let message;
-    const results = await browser.find.find(context.slots.query);
-    await browser.find.highlightResults({
-      noScroll: false,
-      rangeIndex: 0,
+    context.keepPopup();
+    const results = await browser.find.find(context.slots.query, {
+      includeRangeData: true,
     });
+    lastIndex = 0;
+    rangeData = results.rangeData;
+
     if (results.count > 0) {
-      message = `"${context.slots.query}" found ${results.count} times`;
-    } else {
-      message = `"${context.slots.query}" not found`;
+      await browser.find.highlightResults({
+        noScroll: false,
+        rangeIndex: 0,
+      });
     }
-    context.displayText(message);
+
+    const result = getMessage(results.count, context.slots.query);
+
+    await callResult(result);
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
+      skipSuccessView: true,
+    });
   },
 });
+
+function getMessage(numberOfResults, query) {
+  if (numberOfResults > 1) {
+    return {
+      largeText: `1 of ${numberOfResults}`,
+      text: `Matches for '${query}'`,
+      eduText: `Say 'next match' or 'previous match'`,
+    };
+  } else if (numberOfResults === 1) {
+    return {
+      largeText: `1`,
+      text: `Match for '${query}'`,
+    };
+  }
+  return {
+    text: `'${query}' not found`,
+    eduText: `Try looking for another phrase`,
+    imgSrc: "./images/icon-no-result.svg",
+  };
+}
+
+intentRunner.registerIntent({
+  name: "tabs.findOnPageNext",
+  async run(context) {
+    context.keepPopup();
+
+    const result = await createFindNextAnswer();
+    await callResult(result);
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
+      skipSuccessView: true,
+    });
+  },
+});
+
+async function createFindNextAnswer() {
+  if (lastIndex + 1 < rangeData.length) {
+    await moveResults(lastIndex + 1);
+    const hasMore = lastIndex + 1 === rangeData.length;
+
+    return {
+      largeText: `${lastIndex + 1} of ${rangeData.length}`,
+      text: `Matches for '${rangeData[lastIndex].text}'`,
+      eduText: hasMore
+        ? `Say 'previous match' or try looking for another phrase `
+        : `Say 'next match' or 'previous match'`,
+    };
+  }
+  return {
+    text: `No more next matches for '${rangeData[lastIndex].text}'`,
+    eduText: `Say 'previous match' or try looking for another phrase `,
+    imgSrc: "./images/icon-no-result.svg",
+  };
+}
+
+intentRunner.registerIntent({
+  name: "tabs.findOnPagePrevious",
+  async run(context) {
+    const result = await createFindPreviousAnswer();
+    await callResult(result);
+
+    await context.startFollowup({
+      heading: result.eduText,
+      acceptFollowupIntent: ["tabs.findOnPageNext", "tabs.findOnPagePrevious"],
+      skipSuccessView: true,
+    });
+  },
+});
+
+async function createFindPreviousAnswer() {
+  if (lastIndex > 0) {
+    await moveResults(lastIndex - 1);
+    const isFirstMatch = lastIndex === 0;
+
+    return {
+      largeText: `${lastIndex + 1} of ${rangeData.length}`,
+      text: `Matches for '${rangeData[lastIndex].text}'`,
+      eduText: isFirstMatch
+        ? `Say 'next match' or try looking for another phrase `
+        : `Say 'next match' or 'previous match'`,
+    };
+  }
+  return {
+    text: `No more previous matches for '${rangeData[lastIndex].text}'`,
+    eduText: `Say 'next match' or try looking for another phrase `,
+    imgSrc: "./images/icon-no-result.svg",
+  };
+}
+
+async function moveResults(rangeIndex) {
+  await browser.find.highlightResults({
+    noScroll: false,
+    rangeIndex,
+  });
+  return (lastIndex = rangeIndex);
+}
+
+async function callResult(cardAnswer) {
+  const card = {
+    answer: cardAnswer,
+  };
+
+  await browser.runtime.sendMessage({
+    type: "showSearchResults",
+    card,
+    searchResults: card,
+  });
+}
+
+intentRunner.registerIntent({
+  name: "tabs.selectAllTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+
+    await selectAllTabs(tabs);
+  },
+});
+
+async function selectAllTabs(tabs) {
+  if (tabs.length !== 0) {
+    for (const tab of tabs) {
+      if (!tab.active) {
+        await browser.tabs.update(tab.id, {
+          highlighted: true,
+          active: false,
+        });
+      } else {
+        await browser.tabs.update(tab.id, {
+          highlighted: true,
+        });
+      }
+    }
+  }
+}
+
+async function highlightTabsInDirection(center, tabs, dir) {
+  if (dir === "left") {
+    tabs = tabs.filter(tab => {
+      return tab.index < center.index;
+    });
+  } else {
+    tabs = tabs.filter(tab => {
+      return tab.index > center.index;
+    });
+  }
+  for (const tab of tabs) {
+    if (!tab.active) {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+        active: false,
+      });
+    } else {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+      });
+    }
+  }
+}
+
+intentRunner.registerIntent({
+  name: "tabs.selectTabsInDirection",
+  async run(context) {
+    const activeTab = await context.activeTab();
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+
+    const matchingTabs = await getMatchingTabs({
+      tabs,
+      activeTab,
+      sort_by_index: true,
+      allWindows: context.parameters.allWindows === "false",
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    await highlightTabsInDirection(
+      activeTab,
+      matchingTabs,
+      context.parameters.dir
+    );
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.selectNumbersTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+    });
+    const numTabs = English.nameToNumber(
+      context.slots.number || context.parameters.number
+    );
+    await selectNumbersTabs(tabs, numTabs, context.parameters.dir);
+  },
+});
+
+async function selectNumbersTabs(tabs, numTabs, dir) {
+  if (dir === "first") {
+    tabs = tabs.filter(tab => {
+      return tab.index < numTabs;
+    });
+  } else {
+    tabs = tabs.filter(tab => {
+      return tab.index >= tabs.length - numTabs - 1;
+    });
+  }
+  for (const tab of tabs) {
+    if (!tab.active) {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+        active: false,
+      });
+    } else {
+      await browser.tabs.update(tab.id, {
+        highlighted: true,
+      });
+    }
+  }
+}

@@ -34,7 +34,8 @@ export class PhraseSet {
       return (
         cmp(a.capturedWords, b.capturedWords) ||
         cmp(-a.skippedWords, -b.skippedWords) ||
-        cmp(-a.aliasedWords, -b.aliasedWords)
+        cmp(-a.aliasedWords, -b.aliasedWords) ||
+        cmp(-Object.keys(a.slots).length, -Object.keys(b.slots).length)
       );
     });
     return allMatches[0];

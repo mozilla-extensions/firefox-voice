@@ -34,6 +34,24 @@ export const Popup = ({
   showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const doc = document.body;
+    if (doc.offsetHeight > window.innerHeight) {
+      setShowScroll(true);
+    } else if (
+      window.innerHeight > doc.offsetHeight ||
+      window.innerHeight === doc.offsetHeight
+    ) {
+      setShowScroll(false);
+    }
+  }, []);
+
+  const scrollDown = () => {
+    window.scrollBy(0, 50);
+  };
+
   function savingOnInputStarted(value) {
     // When the user types in the hidden field, we need to keep that
     // first input and use it later
@@ -45,6 +63,13 @@ export const Popup = ({
       id="popup"
       className={`${currentView} ${renderFollowup ? "followup" : ""}`}
     >
+      <button
+        className="scroll-down"
+        onClick={scrollDown}
+        style={{ height: "2rem", display: showScroll ? "flex" : "none" }}
+      >
+        <img src="images/arrow_down.svg" alt="scroll to bottom" />
+      </button>
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -287,7 +312,6 @@ const PopupContent = ({
           <TimerCard
             timerInMS={timerInMS}
             timerTotalInMS={timerTotalInMS}
-            onSubmitFeedback={onSubmitFeedback}
           ></TimerCard>
         );
       default:
@@ -322,12 +346,21 @@ const FollowupContainer = ({ followupText, renderFollowup, currentView }) => {
   return (
     <div id="followup-container">
       <IntentFeedback />
-      <div id="followup-wrapper">
-        <div id="followup_mic-container">Mic On</div>
-        <div id="followup_headings-wrapper">
-          <div id="followup_heading">{heading}</div>
-          {subheading && <div id="followup_subheading">{subheading}</div>}
-        </div>
+      <FollowUpWrapper
+        heading={heading}
+        subheading={subheading}
+      ></FollowUpWrapper>
+    </div>
+  );
+};
+
+const FollowUpWrapper = ({ heading, subheading }) => {
+  return (
+    <div id="followup-wrapper">
+      <div id="followup_mic-container">Mic On</div>
+      <div id="followup_headings-wrapper">
+        <div id="followup_heading">{heading}</div>
+        {subheading && <div id="followup_subheading">{subheading}</div>}
       </div>
     </div>
   );
@@ -436,26 +469,29 @@ const parseTimer = timerInMS => {
   return pad(minutes, 2) + ":" + pad(seconds, 2);
 };
 
-const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
+const TimerCard = ({ timerInMS, timerTotalInMS }) => {
   const getNotificationExpression = timerTotalInMS => {
     const { hours, minutes, seconds } = getHourMinuteSecond(timerTotalInMS);
     let expression = "";
 
     if (hours !== 0) {
-      expression += `${hours} hours`;
+      const timeUnit = hours === 1 ? "hour" : "hours";
+      expression += `${hours} ${timeUnit}`;
     }
     if (minutes !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${minutes} minutes`;
+      const timeUnit = minutes === 1 ? "minute" : "minutes";
+      expression += `${minutes} ${timeUnit}`;
     }
 
     if (seconds !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${seconds} seconds`;
+      const timeUnit = seconds === 1 ? "second" : "seconds";
+      expression += `${seconds} ${timeUnit}`;
     }
     return `It's been ${expression}`;
   };
@@ -471,7 +507,6 @@ const TimerCard = ({ timerInMS, timerTotalInMS, onSubmitFeedback }) => {
           {timerInMS <= 0 ? <p>{notificationExpression}</p> : null}
         </div>
       </div>
-      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </React.Fragment>
   );
 };
@@ -780,6 +815,7 @@ const SearchResultsContent = ({
     card && card.alt
       ? `Click to show search results: ${card.alt}`
       : "Show search results";
+  const shouldRenderCard = card ? true : !renderFollowup;
 
   if (card) {
     setMinPopupSize(card.width);
@@ -797,6 +833,7 @@ const SearchResultsContent = ({
   const SearchCard = () => (
     <button class="invisible-button" onClick={onSearchCardClick}>
       <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
+      <div id="bottomSection"></div>
     </button>
   );
 
@@ -828,7 +865,6 @@ const SearchResultsContent = ({
     }
     return null;
   };
-
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />

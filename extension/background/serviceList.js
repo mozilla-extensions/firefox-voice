@@ -173,14 +173,32 @@ export class Service {
 }
 
 export async function detectServiceFromActiveTab(services) {
+  let serviceName = null;
   const tab = await browserUtil.activeTab();
   for (const name in services) {
     const service = services[name];
     if (tab.url.startsWith(service.baseUrl)) {
-      return name;
+      // Continue in case there is another more specific
+      // search provider that also matches the query string
+      if (service.baseUrlQueryParameters === undefined) {
+        serviceName = name;
+        continue;
+      }
+
+      const searchParams = new URL(tab.url).searchParams;
+      let allKeysMatching = true;
+      for (const key in service.baseUrlQueryParameters) {
+        if (searchParams.get(key) !== service.baseUrlQueryParameters[key]) {
+          allKeysMatching = false;
+          break;
+        }
+      }
+      if (allKeysMatching === true) {
+        return name;
+      }
     }
   }
-  return null;
+  return serviceName;
 }
 
 export async function detectServiceFromAllTabs(services) {

@@ -143,7 +143,10 @@ intentRunner.registerIntent({
       lookAtCurrentTab: true,
       lookAtAllTabs: true,
     });
-    await service.adjustVolume(context.parameters.volumeLevel);
+    await service.adjustVolume(
+      context.slots.inputVolume,
+      context.parameters.volumeLevel
+    );
   },
 });
 

@@ -161,14 +161,22 @@ test = true
 description = "Adjust music volume"
 match = """
   (increase | turn up) (music | audio | video |) (volume | the volume) [volumeLevel=levelUp]
-  (make it louder | louder) [volumeLevel=levelUp]
+  (make it louder | louder | volume up) [volumeLevel=levelUp]
   (decrease | turn down) (music | audio | video |) (volume | the volume) [volumeLevel=levelDown]
-  (make it softer | softer) [volumeLevel=levelDown]
+  (make it softer | softer | volume down | lower volume | lower the volume) [volumeLevel=levelDown]
+  set volume (to | by |) [inputVolume] (percent | % |)
+  set [inputVolume] (percent | % |) volume
+  increase volume (to | by ) [inputVolume] (percent | % |) [volumeLevel=levelUp]
+  decrease volume (to | by ) [inputVolume] (percent | % |) [volumeLevel=levelDown]
 """
 
 [[music.volume.example]]
 phrase = "increase volume"
 expectParameters = {volumeLevel = "levelUp"}
+
+[[music.volume.example]]
+phrase = "set volume to 75 percent"
+expectSlots = { inputVolume = "75" }
 
 [music.mute]
 description = "mute music volume"
