@@ -1,15 +1,15 @@
 /* globals log, catcher, buildSettings */
 
-import * as intentParser from "./intentParser.js";
-import * as telemetry from "./telemetry.js";
-import * as searching from "../searching.js";
 import * as browserUtil from "../browserUtil.js";
-import { PhraseSet } from "./language/matching.js";
-import { compile, splitPhraseLines } from "./language/compiler.js";
-import { metadata } from "../intents/metadata.js";
-import { entityTypes } from "./entityTypes.js";
 import { Database } from "../history.js";
+import { metadata } from "../intents/metadata.js";
+import * as searching from "../searching.js";
 import * as settings from "../settings.js";
+import { entityTypes } from "./entityTypes.js";
+import * as intentParser from "./intentParser.js";
+import { compile, splitPhraseLines } from "./language/compiler.js";
+import { PhraseSet } from "./language/matching.js";
+import * as telemetry from "./telemetry.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -531,6 +531,42 @@ export function getRegisteredNicknames() {
   return registeredNicknames;
 }
 
+const registeredPageName = {};
+
+export function registerPageName(name, context) {
+  name = name.toLowerCase();
+  if (!context) {
+    delete registeredPageName[name];
+    log.info("Removed nickname for page", name);
+  } else {
+    registeredPageName[name] = context;
+    log.info(
+      "Added nickname for page",
+      name,
+      "->",
+      context.name,
+      context.slots
+    );
+  }
+  browser.storage.sync.set({ registeredPageName });
+}
+
+async function initRegisteredPageName() {
+  const result = await browser.storage.sync.get(["registeredPageName"]);
+  if (result.registeredPageName) {
+    for (const name in result.registeredPageName) {
+      const value = result.registeredPageName[name];
+      const context = new IntentContext(value);
+      registeredPageName[name] = context;
+      log.info("Loaded page name", name, context.name, context.slots);
+    }
+  }
+}
+
+export function getRegisteredPageName() {
+  return registeredNicknames;
+}
+
 export function getLastIntentForFeedback() {
   if (!lastIntent) {
     return null;
@@ -553,3 +589,4 @@ export function clearFollowup() {
 }
 
 initRegisteredNicknames();
+initRegisteredPageName();
