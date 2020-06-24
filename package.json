@@ -74,13 +74,6 @@
     "type": "git",
     "url": "git+https://github.com/mozilla/firefox-voice.git"
   },
-  "jest": {
-    "transform": {
-      "\\.js$": [
-        "babel-jest"
-      ]
-    }
-  },
   "scripts": {
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
     "start-and-build": "env NO_SENTRY=1 IN_DEVELOPMENT=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata build:jsx build:manifest start-extension",
