@@ -3,8 +3,8 @@
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import * as browserUtil from "../browserUtil.js";
-import { PhraseSet } from "./language/matching.js";
-import { compile, splitPhraseLines } from "./language/compiler.js";
+import { PhraseSet } from "../language/matching.js";
+import { compile, splitPhraseLines } from "../language/compiler.js";
 import { metadata } from "../intents/metadata.js";
 import { entityTypes } from "./entityTypes.js";
 import { Database } from "../history.js";

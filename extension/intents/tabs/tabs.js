@@ -1,6 +1,6 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
-import English from "../../background/language/langs/english.js";
+import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
 
 const MAX_ZOOM = 3;

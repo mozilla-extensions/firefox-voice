@@ -81,7 +81,7 @@ Some things to note:
 
 ## Intent matching
 
-When you register an intent you give a number of matches. The matching is implemented in [`compiler.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/background/language/compiler.js).
+When you register an intent you give a number of matches. The matching is implemented in [`compiler.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/language/compiler.js).
 
 Each pattern is a line in the string (we use backquotes for multi-line strings). Empty lines and lines starting with `#` or `//` are ignored.
 

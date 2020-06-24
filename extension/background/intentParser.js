@@ -1,7 +1,7 @@
 /* globals log */
 
-import { PhraseSet } from "./language/matching.js";
-import { compile, splitPhraseLines } from "./language/compiler.js";
+import { PhraseSet } from "../language/matching.js";
+import { compile, splitPhraseLines } from "../language/compiler.js";
 import { entityTypes } from "./entityTypes.js";
 
 const DEFAULT_INTENT = "search.search";
