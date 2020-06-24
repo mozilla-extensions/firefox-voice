@@ -547,20 +547,14 @@ export function getRegisteredNicknames() {
 
 const registeredPageName = {};
 
-export function registerPageName(name, context) {
+export function registerPageName(name, { url, creationDate }) {
   name = name.toLowerCase();
-  if (!context) {
+  if (!url) {
     delete registeredPageName[name];
     log.info("Removed nickname for page", name);
   } else {
-    registeredPageName[name] = context;
-    log.info(
-      "Added nickname for page",
-      name,
-      "->",
-      context.name,
-      context.slots
-    );
+    registeredPageName[name] = url;
+    log.info("Added nickname for page", name, "->", url, creationDate);
   }
   browser.storage.sync.set({ registeredPageName });
 }
@@ -577,7 +571,10 @@ async function initRegisteredPageName() {
   }
 }
 
-export function getRegisteredPageName() {
+export function getRegisteredPageName(name) {
+  if (!name) {
+    return null;
+  }
   return registeredNicknames;
 }
 
