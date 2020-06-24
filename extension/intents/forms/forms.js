@@ -100,7 +100,7 @@ intentRunner.registerIntent({
         e.displayMessage = "No text selected";
         throw e;
       }
-      const newTab = await context.createTabGoogleLucky(selection.text, {
+      const newTab = await browserUtil.createTabGoogleLucky(selection.text, {
         hide: true,
       });
       const url = newTab.url;

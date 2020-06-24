@@ -35,7 +35,7 @@ class YouTube extends serviceList.Service {
   }
   async playQuery(query) {
     const tabId = await this.getYoutubeTabId();
-    this.tab = await this.context.createTabGoogleLucky(`${query} youtube.com`, {
+    this.tab = await browserUtil.createTabGoogleLucky(`${query} youtube.com`, {
       openInTabId: tabId,
     });
     this.tabCreated = true;

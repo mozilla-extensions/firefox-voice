@@ -46,7 +46,7 @@ intentRunner.registerIntent({
     if (!query) {
       activeTab = await browserUtil.activeTab();
     } else {
-      activeTab = await context.createTabGoogleLucky(query);
+      activeTab = await browserUtil.createTabGoogleLucky(query);
       await browserUtil.waitForDocumentComplete(activeTab.id);
     }
     await browserUtil.turnOnReaderMode(activeTab.id);

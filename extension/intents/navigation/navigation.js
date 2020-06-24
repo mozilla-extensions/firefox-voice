@@ -47,14 +47,14 @@ intentRunner.registerIntent({
           await browser.windows.create({ url: cached.url });
         } else {
           await browser.windows.create({});
-          const tab = await context.createTabGoogleLucky(query);
+          const tab = await browserUtil.createTabGoogleLucky(query);
           const url = tab.url;
           saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
         await browserUtil.openOrFocusTab(cached.url);
       } else {
-        const tab = await context.createTabGoogleLucky(query);
+        const tab = await browserUtil.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
@@ -88,7 +88,7 @@ intentRunner.registerIntent({
       myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
 
       context.addTelemetryServiceName(
-        `ddg:${serviceList.ddgBangServiceName(service)}`
+        `ddg:${searching.ddgBangServiceName(service)}`
       );
 
       if (tab !== undefined && service !== null) {

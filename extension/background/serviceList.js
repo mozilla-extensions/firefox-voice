@@ -2,24 +2,6 @@ import * as content from "./content.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
 import * as util from "../util.js";
-import { metadata } from "../services/metadata.js";
-
-// See https://duckduckgo.com/bang for a list of potential services
-// FIXME: this should be removed and serviceMetadata.js preferred.
-const SERVICE_BANG_ALIASES = {};
-for (const id in metadata.search) {
-  for (const name of metadata.search[id].names) {
-    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
-  }
-}
-
-export function ddgBangServiceName(name) {
-  const bang = SERVICE_BANG_ALIASES[name.toLowerCase().trim()];
-  if (!bang) {
-    throw new Error(`Unknown service name: ${JSON.stringify(name)}`);
-  }
-  return bang;
-}
 
 const MUSIC_SERVICE_ALIASES = {
   youtube: "youtube",
