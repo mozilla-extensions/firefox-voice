@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
   wakewords: ["grasshopper"],
   wakewordSensitivity: 0.6,
   listenForFollowup: false,
+  saveAudioHistory: false,
 };
 
 export function getSettings() {

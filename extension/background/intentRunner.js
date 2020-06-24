@@ -494,7 +494,21 @@ export function getIntentSummary() {
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
-  db.add(utteranceTable, context).catch(error => log.error(error));
+  const saveAudio = settings.getSettings().saveAudioHistory;
+  if (saveAudio) {
+    browser.runtime
+      .sendMessage({ type: "getLastAudio", utterance: context.utterance })
+      .then(audio => {
+        const audioContext = Object.assign({}, context, { audio });
+        db.add(utteranceTable, audioContext).catch(error => log.error(error));
+      })
+      .catch(e => {
+        log.error("Error getting audio for last utterance:", e);
+        db.add(utteranceTable, context).catch(error => log.error(error));
+      });
+  } else {
+    db.add(utteranceTable, context).catch(error => log.error(error));
+  }
 }
 
 export function getIntentHistory() {
