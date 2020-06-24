@@ -96,7 +96,7 @@ export class Service {
     return (await this.getTab(true)).tab;
   }
 
-  async getTab(activate = false) {
+  async getTab(activate = false, findAudibleTab = false) {
     const tabs = await this.getAllTabs();
     if (!tabs.length) {
       return {
@@ -109,7 +109,7 @@ export class Service {
     }
     let best = 0;
     for (let i = 0; i < tabs.length; i++) {
-      if (tabs[i].active) {
+      if (tabs[i].active || (findAudibleTab && tabs[i].audible === true)) {
         best = i;
       }
     }
@@ -124,8 +124,8 @@ export class Service {
     return browser.tabs.query(query);
   }
 
-  async initTab(scripts) {
-    const tabInfo = await this.getTab();
+  async initTab(scripts, findAudibleTab) {
+    const tabInfo = await this.getTab(false, findAudibleTab);
     this.tab = tabInfo.tab;
     this.tabCreated = tabInfo.created;
     await content.lazyInject(this.tab.id, scripts);
@@ -201,6 +201,22 @@ export async function detectServiceFromActiveTab(services) {
   return serviceName;
 }
 
+export async function detectServiceFromAllTabs(services) {
+  const tabs = await browser.tabs.query({ audible: true });
+  if (!tabs.length) {
+    const e = new Error("No audio is playing");
+    e.displayMessage = "No audio is playing";
+    throw e;
+  }
+  for (const name in services) {
+    const service = services[name];
+    if (tabs[0].url.startsWith(service.baseUrl)) {
+      return name;
+    }
+  }
+  return null;
+}
+
 export async function detectServiceFromHistory(services, defaultService) {
   const now = Date.now();
   const oneMonth = now - 1000 * 60 * 60 * 24 * 30; // last 30 days
@@ -246,6 +262,14 @@ export async function getService(serviceType, serviceMap, options) {
       return serviceMap[serviceName];
     }
   }
+
+  if (options.lookAtAllTabs) {
+    const serviceName = await detectServiceFromAllTabs(serviceMap);
+    if (serviceName) {
+      return serviceMap[serviceName];
+    }
+  }
+
   if (serviceSetting && serviceSetting !== "auto") {
     return serviceMap[serviceSetting];
   }
