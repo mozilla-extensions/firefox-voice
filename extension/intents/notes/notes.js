@@ -26,7 +26,7 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await context.activeTab();
     const tabId = activeTab.id;
-    await content.lazyInject(tabId, SCRIPT);
+    await content.inject(tabId, SCRIPT);
     const failureMessage = await browser.tabs.sendMessage(tabId, {
       type: "setPlace",
     });

@@ -6,7 +6,7 @@ intentRunner.registerIntent({
   name: "forms.dictate",
   async run(context) {
     const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
@@ -21,7 +21,7 @@ intentRunner.registerIntent({
   name: "forms.focusField",
   async run(context) {
     const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
@@ -42,7 +42,7 @@ intentRunner.registerIntent({
   name: "forms.focusNext",
   async run(context) {
     const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
@@ -54,7 +54,7 @@ intentRunner.registerIntent({
   name: "forms.formSubmit",
   async run(context) {
     const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
@@ -66,7 +66,7 @@ intentRunner.registerIntent({
   name: "forms.focusPrevious",
   async run(context) {
     const activeTab = await context.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
     ]);
@@ -80,10 +80,7 @@ intentRunner.registerIntent({
     const activeTab = await context.activeTab();
     const isGoogleDoc = new RegExp(/^https:\/\/docs.google.com\/document\/d\//);
     if (isGoogleDoc.test(activeTab.url)) {
-      await content.lazyInject(
-        activeTab.id,
-        "/background/googleContentScript.js"
-      );
+      await content.inject(activeTab.id, "/background/googleContentScript.js");
       const selection = await browser.tabs.sendMessage(activeTab.id, {
         type: "getGoogleDocsSelection",
       });
@@ -108,7 +105,7 @@ intentRunner.registerIntent({
       const url = newTab.url;
       const text = selection.text;
       await browser.tabs.remove(newTab.id);
-      await content.lazyInject(activeTab.id, [
+      await content.inject(activeTab.id, [
         "/js/vendor/fuse.js",
         "/intents/forms/formsContentScript.js",
       ]);

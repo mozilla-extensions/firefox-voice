@@ -57,7 +57,7 @@ class MusicService extends serviceList.Service {
       throw e;
     }
     for (const tab of tabs) {
-      await content.lazyInject(tab.id, `/services/${this.id}/player.js`);
+      await content.inject(tab.id, `/services/${this.id}/player.js`);
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
@@ -90,7 +90,7 @@ class MusicService extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.lazyInject(tab.id, `/services/${this.id}/player.js`);
+      await content.inject(tab.id, `/services/${this.id}/player.js`);
       await this.callOneTab(tab.id, "pause");
     }
   }

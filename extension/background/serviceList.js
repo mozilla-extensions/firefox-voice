@@ -128,7 +128,7 @@ export class Service {
     const tabInfo = await this.getTab(false, findAudibleTab);
     this.tab = tabInfo.tab;
     this.tabCreated = tabInfo.created;
-    await content.lazyInject(this.tab.id, scripts);
+    await content.inject(this.tab.id, scripts);
   }
 
   callTab(name, args) {

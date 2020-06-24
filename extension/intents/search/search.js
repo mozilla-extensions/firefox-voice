@@ -114,14 +114,14 @@ async function performSearch(query) {
     await browserUtil.makeTabActive(tabId);
   }
   try {
-    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    await content.inject(tabId, "/intents/search/queryScript.js");
   } catch (e) {
     // There's a (fairly) common race condition here
     if (e.message.includes("communicate is not defined")) {
       log.info(
         "Race condition in search page, attempting to load queryScript second time"
       );
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+      await content.inject(tabId, "/intents/search/queryScript.js");
     } else {
       throw e;
     }
@@ -146,7 +146,7 @@ export async function performSearchPage(context, query) {
 
   await focusSearchTab();
   await browserUtil.waitForDocumentComplete(tabId);
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  await content.inject(tabId, "/intents/search/queryScript.js");
   const searchInfo = await callScript({ type: "searchResultInfo" });
 
   if (

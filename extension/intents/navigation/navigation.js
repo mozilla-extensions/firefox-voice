@@ -175,7 +175,7 @@ intentRunner.registerIntent({
   name: "navigation.followLink",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/navigation/followLink.js",
     ]);
@@ -195,9 +195,7 @@ intentRunner.registerIntent({
   name: "navigation.closeDialog",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
-    await content.lazyInject(activeTab.id, [
-      "/intents/navigation/closeDialog.js",
-    ]);
+    await content.inject(activeTab.id, ["/intents/navigation/closeDialog.js"]);
     const found = await browser.tabs.sendMessage(activeTab.id, {
       type: "closeDialog",
     });

@@ -16,7 +16,7 @@ export async function stopReading() {
 }
 
 async function stopReadingTab(tabId) {
-  await content.lazyInject(tabId, ["/intents/read/startNarration.js"]);
+  await content.inject(tabId, ["/intents/read/startNarration.js"]);
   await browser.tabs.sendMessage(tabId, {
     type: "stopReading",
   });
@@ -50,7 +50,7 @@ intentRunner.registerIntent({
       await browserUtil.waitForDocumentComplete(activeTab.id);
     }
     await browserUtil.turnOnReaderMode(activeTab.id);
-    await content.lazyInject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "narrate",
     });
@@ -71,7 +71,7 @@ intentRunner.registerIntent({
       e.displayMessage = "Page isn't narrating";
       throw e;
     }
-    await content.lazyInject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "stopReading",
     });
