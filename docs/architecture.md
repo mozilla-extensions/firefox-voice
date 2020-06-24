@@ -90,7 +90,7 @@ Most of the background messages are handled in `main.js` (which calls out to any
 │   │   │   ├── english.js      Generated from english.toml (by bin/parse-intent-toml.js)
 │   │   │   ├── english.toml    List of aliases and stopwords in English
 │   │   │   └── lang.js         List of languages and their codes
-│   │   ├── matching.js         Given multiple intents that match an utterance, this prioritizes them to a single match
+│   │   ├── findMatch.js         Given multiple intents that match an utterance, this prioritizes them to a single match
 │   │   └── textMatching.js     All the basic text matching classes
 │   ├── languages.js            Mapping of the English name of a language to its language code (for use in translation intents, "translate to Spanish")
 │   ├── loadMain.js             Very small script to launch the ECMA modules in the background page

@@ -2,7 +2,7 @@
 
 const { metadata } = require("./metadata.js");
 const { entityTypes } = require("../background/entityTypes.js");
-const { PhraseSet } = require("../language/matching.js");
+const { PhraseSet } = require("../language/findMatch.js");
 const { compile, splitPhraseLines } = require("../language/compiler.js");
 
 const intents = {};
