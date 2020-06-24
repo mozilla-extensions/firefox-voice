@@ -223,15 +223,6 @@ export class IntentContext {
     });
   }
 
-  async openOrFocusTab(url) {
-    const tabs = await browser.tabs.query({ url, currentWindow: true });
-    if (tabs.length) {
-      await browserUtil.makeTabActive(tabs[0]);
-    } else {
-      await browserUtil.createAndLoadTab({ url });
-    }
-  }
-
   async createTabGoogleLucky(query, options = {}) {
     const searchUrl = searching.googleSearchUrl(query, true);
     const tab =

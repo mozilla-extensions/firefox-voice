@@ -25,6 +25,15 @@ export async function makeTabActive(tab) {
   }
 }
 
+export async function openOrFocusTab(url) {
+  const tabs = await browser.tabs.query({ url, currentWindow: true });
+  if (tabs.length) {
+    await makeTabActive(tabs[0]);
+  } else {
+    await createAndLoadTab({ url });
+  }
+}
+
 export async function loadUrl(tabId, url) {
   await browser.tabs.update(tabId, { url });
   return new Promise((resolve, reject) => {

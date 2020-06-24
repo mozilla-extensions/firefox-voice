@@ -38,7 +38,7 @@ intentRunner.registerIntent({
     const pageNames = result.pageNames;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
-      await context.openOrFocusTab(savedUrl);
+      await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query.toLowerCase());
@@ -52,7 +52,7 @@ intentRunner.registerIntent({
           saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
-        await context.openOrFocusTab(cached.url);
+        await browserUtil.openOrFocusTab(cached.url);
       } else {
         const tab = await context.createTabGoogleLucky(query);
         const url = tab.url;
