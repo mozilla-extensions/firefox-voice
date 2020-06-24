@@ -9,7 +9,7 @@ const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
 
 intentRunner.registerIntent({
   name: "muting.mute",
-  async run(desc) {
+  async run(context) {
     const stoppedReading = await stopReading();
     if (stoppedReading) {
       // There was an about:reader narration that we stopped
@@ -35,7 +35,7 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "muting.muteTab",
-  async run(desc) {
+  async run(context) {
     const activeTab = await browserUtil.activeTab();
     await browser.tabs.update(activeTab.id, { muted: true });
     // TODO: show confirmation
@@ -44,7 +44,7 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "muting.unmute",
-  async run(desc) {
+  async run(context) {
     const mutedTabs = await browser.tabs.query({ audible: false });
     if (mutedTabs.empty) {
       // pass a message back to the content script to update the UI and indicate that we don't have any muted tabs
