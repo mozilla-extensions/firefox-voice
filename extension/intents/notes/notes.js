@@ -82,7 +82,7 @@ intentRunner.registerIntent({
       e.displayMessage = "You have not set a tab to write";
       throw e;
     }
-    await context.makeTabActive(writingTabId);
+    await browserUtil.makeTabActive(writingTabId);
   },
 });
 

@@ -77,7 +77,7 @@ export class Service {
     if (!this.tab) {
       throw new Error("No tab to activate");
     }
-    this.context.makeTabActive(this.tab.id);
+    browserUtil.makeTabActive(this.tab.id);
   }
 
   get matchPatterns() {
@@ -114,7 +114,7 @@ export class Service {
       }
     }
     if (activate) {
-      await this.context.makeTabActive(tabs[best]);
+      await browserUtil.makeTabActive(tabs[best]);
     }
     return { created: false, tab: tabs[best] };
   }

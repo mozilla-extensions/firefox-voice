@@ -9,7 +9,7 @@ class MusicService extends serviceList.Service {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
         const activeTabId = (await browserUtil.activeTab()).id;
-        this.context.makeTabActive(this.tab);
+        browserUtil.makeTabActive(this.tab);
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (
           nowAudible ||
@@ -19,7 +19,7 @@ class MusicService extends serviceList.Service {
           }))
         ) {
           if (this.tab.id !== activeTabId) {
-            this.context.makeTabActive(activeTabId);
+            browserUtil.makeTabActive(activeTabId);
           }
         } else {
           this.context.failedAutoplay(this.tab);

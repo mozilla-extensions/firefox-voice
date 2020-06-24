@@ -188,7 +188,7 @@ export class IntentContext {
 
   async failedAutoplay(tab) {
     this.keepPopup();
-    this.makeTabActive(tab);
+    browserUtil.makeTabActive(tab);
     if (this.noPopup) {
       // FIXME: improve error message:
       await this.displayInlineMessage({
@@ -226,7 +226,7 @@ export class IntentContext {
   async openOrFocusTab(url) {
     const tabs = await browser.tabs.query({ url, currentWindow: true });
     if (tabs.length) {
-      await this.makeTabActive(tabs[0]);
+      await browserUtil.makeTabActive(tabs[0]);
     } else {
       await browserUtil.createAndLoadTab({ url });
     }
@@ -278,10 +278,6 @@ export class IntentContext {
         );
       }
     });
-  }
-
-  makeTabActive(tab) {
-    return browserUtil.makeTabActive(tab);
   }
 
   onError(message) {

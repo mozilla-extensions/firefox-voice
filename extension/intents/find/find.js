@@ -2,6 +2,7 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import { isSearchTab } from "../search/search.js";
+import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "find.find",
@@ -64,6 +65,6 @@ intentRunner.registerIntent({
       throw e;
     }
     const topMatch = parseInt(matches[0].item);
-    await context.makeTabActive(topMatch);
+    await browserUtil.makeTabActive(topMatch);
   },
 });

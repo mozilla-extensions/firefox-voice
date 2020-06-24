@@ -289,7 +289,7 @@ intentRunner.registerIntent({
       await switchDir(tabs, context.parameters.dir);
       return;
     }
-    context.makeTabActive(found);
+    browserUtil.makeTabActive(found);
   },
 });
 
@@ -519,9 +519,9 @@ intentRunner.registerIntent({
 
       // prefer staying in current window
       if (tabsCurrentWindow !== undefined) {
-        await context.makeTabActive(tabsCurrentWindow[0]);
+        await browserUtil.makeTabActive(tabsCurrentWindow[0]);
       } else {
-        await context.makeTabActive(matchingTabs[0]);
+        await browserUtil.makeTabActive(matchingTabs[0]);
         await browser.windows.update(matchingTabs[0].windowId, {
           focused: true,
         });

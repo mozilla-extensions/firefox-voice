@@ -312,7 +312,7 @@ async function moveResult(context, step) {
     lastTabId = tabId;
     let exists = true;
     try {
-      await context.makeTabActive(tabId);
+      await browserUtil.makeTabActive(tabId);
     } catch (e) {
       if (String(e).includes("Invalid tab ID")) {
         exists = false;
