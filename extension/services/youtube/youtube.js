@@ -75,7 +75,7 @@ class YouTube extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.lazyInject(tab.id, "/services/youtube/player.js");
+      await content.inject(tab.id, "/services/youtube/player.js");
       await this.callOneTab(tab.id, "pause");
     }
   }
@@ -99,7 +99,7 @@ class YouTube extends serviceList.Service {
           code: "window.history.back();",
         });
       } else {
-        await content.lazyInject(tab.id, "/services/youtube/player.js");
+        await content.inject(tab.id, "/services/youtube/player.js");
         await this.callOneTab(tab.id, "move", { direction });
       }
     }

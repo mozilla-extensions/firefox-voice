@@ -16,7 +16,7 @@ class ReaderMode extends serviceList.Service {
       e.displayMessage = "Cannot unpause";
       throw e;
     }
-    await content.lazyInject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
     await this.callOneTab(activeTab.id, "narrate");
   }
 

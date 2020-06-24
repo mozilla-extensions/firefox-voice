@@ -138,13 +138,13 @@ To prepare a tab to do your custom stuff, run:
 ```js
 async run(context) {
   const activeTab = await browserUtil.activeTab();
-  await content.lazyInject(activeTab.id, "intents/someName/contentScript.js");
+  await content.inject(activeTab.id, "intents/someName/contentScript.js");
   // Now the script, and a bunch of helpers are available
   const resp = await browser.tabs.sendMessage(activeTab.id, {type: "doSomething"});
 }
 ```
 
-`content.lazyInject` will make sure the script is available and fully loaded, and will not re-load the script if called multiple times on the same tab. It also loads [`content/communicate.js`](../extension/content/communicate.js) and [`content/helpers.js`](../extension/content/helpers.js).
+`content.inject` will make sure the script is available and fully loaded, and will not re-load the script if called multiple times on the same tab. It also loads [`content/communicate.js`](../extension/content/communicate.js) and [`content/helpers.js`](../extension/content/helpers.js).
 
 You can use this pattern in your script (`contentScript.js` in this example):
 
@@ -183,10 +183,12 @@ If you want to see the inter-process communication, run `LOG_LEVEL=messaging npm
 
 NPM scripts are simply terminal commands. The npm scripts which are available to use are listed in package.json file. `enumerate-phrases` is a project specific/custom npm script.
 
-**enumerate-phrases:** lists all the matched phrases for the specified intent using the auto-generated metadata for finding matches. This metadata is generated from all the .toml files containing intents description. 
+**enumerate-phrases:** lists all the matched phrases for the specified intent using the auto-generated metadata for finding matches. This metadata is generated from all the .toml files containing intents description.
 
 You can execute this script as:
-```js 
+
+```js
 npm run enumerate-phrases -- someIntent.command
 ```
+
 For example, Running the command `npm run enumerate-phrases -- navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.

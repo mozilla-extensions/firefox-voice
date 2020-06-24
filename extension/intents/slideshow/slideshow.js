@@ -9,7 +9,7 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await context.activeTab();
     const activeTabId = activeTab.id;
-    await content.lazyInject(activeTabId, SLIDESHOW_SCRIPT);
+    await content.inject(activeTabId, SLIDESHOW_SCRIPT);
 
     const success = await browser.tabs.sendMessage(activeTabId, {
       type: "openSlide",
@@ -36,7 +36,7 @@ intentRunner.registerIntent({
       throw err;
     }
 
-    await content.lazyInject(activeTabId, PRESENTATION_SCRIPT);
+    await content.inject(activeTabId, PRESENTATION_SCRIPT);
 
     const result = await browser.tabs.sendMessage(activeTabId, {
       type: "startPresentation",
