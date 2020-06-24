@@ -2,7 +2,7 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
-import English from "../../background/language/langs/english.js";
+import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
