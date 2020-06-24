@@ -40,7 +40,7 @@ settings.watch("listenForFollowup", ns => {
 });
 
 export class IntentContext {
-  constructor(desc) {
+  constructor(params) {
     this.closePopupOnFinish = true;
     this.timestamp = Date.now();
     this.expectsFollowup = false;
@@ -54,7 +54,7 @@ export class IntentContext {
     // force bypassing the success view.
     this.skipSuccessView = false;
     this.acceptFollowupIntent = [];
-    Object.assign(this, desc);
+    Object.assign(this, params);
   }
 
   clone() {
@@ -298,25 +298,25 @@ export async function runUtterance(utterance, noPopup) {
     }
   }
   log.timing("intentRunner finished nickname checking");
-  let desc = intentParser.parse(utterance);
+  let contextParams = intentParser.parse(utterance);
   log.timing("intentParser returned");
-  desc.noPopup = !!noPopup;
-  desc.followupMatch = intents[desc.name].followupMatch;
+  contextParams.noPopup = !!noPopup;
+  contextParams.followupMatch = intents[contextParams.name].followupMatch;
   if (lastIntentForFollowup && lastIntentForFollowup.expectsFollowup) {
     const followup = lastIntentForFollowup.parseFollowup(utterance);
     if (followup) {
-      desc = followup;
+      contextParams = followup;
     } else if (
       lastIntentForFollowup.acceptFollowupIntent &&
-      lastIntentForFollowup.acceptFollowupIntent.includes(desc.name)
+      lastIntentForFollowup.acceptFollowupIntent.includes(contextParams.name)
     ) {
-      desc.isFollowupIntent = true;
+      contextParams.isFollowupIntent = true;
     } else if (
       !globalListenForFollowup ||
       (globalListenForFollowup && lastIntentForFollowup.insistOnFollowup)
     ) {
       lastIntentForFollowup.failed(
-        `The phrase\n\n"${desc.utterance}"\n\nis invalid. Please try again`
+        `The phrase\n\n"${contextParams.utterance}"\n\nis invalid. Please try again`
       );
       return lastIntentForFollowup.startFollowup();
     } else {
@@ -326,30 +326,30 @@ export async function runUtterance(utterance, noPopup) {
     }
   }
   log.timing("Running intent...");
-  const result = await runIntent(desc);
+  const result = await runIntent(contextParams);
   log.timing("Finished running intent");
   return result;
 }
 
-export async function runIntent(desc) {
-  catcher.setTag("intent", desc.name);
-  if (!intents[desc.name]) {
-    throw new Error(`No intent found with name ${desc.name}`);
+export async function runIntent(contextParams) {
+  catcher.setTag("intent", contextParams.name);
+  if (!intents[contextParams.name]) {
+    throw new Error(`No intent found with name ${contextParams.name}`);
   }
-  const intent = intents[desc.name];
-  const context = new IntentContext(desc);
+  const intent = intents[contextParams.name];
+  const context = new IntentContext(contextParams);
   lastIntent = context;
   lastIntentForFollowup = lastIntent;
   addIntentHistory(context);
   context.initTelemetry();
   try {
     log.info(
-      `Running intent ${desc.name}`,
-      Object.keys(desc.slots).length
-        ? `with slots: ${JSON.stringify(desc.slots)}`
+      `Running intent ${contextParams.name}`,
+      Object.keys(contextParams.slots).length
+        ? `with slots: ${JSON.stringify(contextParams.slots)}`
         : "with no slots",
-      Object.keys(desc.parameters).length
-        ? `and parameters: ${JSON.stringify(desc.parameters)}`
+      Object.keys(contextParams.parameters).length
+        ? `and parameters: ${JSON.stringify(contextParams.parameters)}`
         : "and no params"
     );
     if (lastIntent.isFollowup) {
@@ -367,9 +367,15 @@ export async function runIntent(desc) {
     const display = e.displayMessage || `Internal error: ${e}`;
     context.failed(display);
     if (e.displayMessage) {
-      log.info("Expected error in intent", desc.name, ":", String(e), e.stack);
+      log.info(
+        "Expected error in intent",
+        contextParams.name,
+        ":",
+        String(e),
+        e.stack
+      );
     } else {
-      log.error("Error in intent", desc.name, ":", String(e), e.stack);
+      log.error("Error in intent", contextParams.name, ":", String(e), e.stack);
       catcher.capture(e);
     }
   }
