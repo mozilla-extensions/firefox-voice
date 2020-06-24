@@ -1,6 +1,6 @@
 /* globals log */
 
-import { PhraseSet } from "../language/matching.js";
+import { PhraseSet } from "../language/findMatch.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { entityTypes } from "./entityTypes.js";
 
