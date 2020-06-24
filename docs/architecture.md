@@ -95,7 +95,6 @@ Most of the background messages are handled in `main.js` (which calls out to any
 │   ├── languages.js            Mapping of the English name of a language to its language code (for use in translation intents, "translate to Spanish")
 │   ├── loadMain.js             Very small script to launch the ECMA modules in the background page
 │   ├── main.js                 Main script for the background page. IMPORTANT
-│   ├── moduleLoader.js         Loads ECMA modules (since, e.g., manifest.json can't)
 │   ├── musicService.js         Abstract base class for music services
 │   ├── pageMetadata-contentScript.js  Content script for getting metadata from a page
 │   ├── pageMetadata.js         Background script that gets metadata (using that content script)
