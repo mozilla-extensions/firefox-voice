@@ -2,24 +2,6 @@ import * as content from "./content.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
 import * as util from "../util.js";
-import { metadata } from "../services/metadata.js";
-
-// See https://duckduckgo.com/bang for a list of potential services
-// FIXME: this should be removed and serviceMetadata.js preferred.
-const SERVICE_BANG_ALIASES = {};
-for (const id in metadata.search) {
-  for (const name of metadata.search[id].names) {
-    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
-  }
-}
-
-export function ddgBangServiceName(name) {
-  const bang = SERVICE_BANG_ALIASES[name.toLowerCase().trim()];
-  if (!bang) {
-    throw new Error(`Unknown service name: ${JSON.stringify(name)}`);
-  }
-  return bang;
-}
 
 const MUSIC_SERVICE_ALIASES = {
   youtube: "youtube",
@@ -77,7 +59,7 @@ export class Service {
     if (!this.tab) {
       throw new Error("No tab to activate");
     }
-    this.context.makeTabActive(this.tab.id);
+    browserUtil.makeTabActive(this.tab.id);
   }
 
   get matchPatterns() {
@@ -101,7 +83,7 @@ export class Service {
     if (!tabs.length) {
       return {
         created: true,
-        tab: await this.context.createTab({
+        tab: await browserUtil.createAndLoadTab({
           url: this.baseUrl,
           active: activate,
         }),
@@ -114,7 +96,7 @@ export class Service {
       }
     }
     if (activate) {
-      await this.context.makeTabActive(tabs[best]);
+      await browserUtil.makeTabActive(tabs[best]);
     }
     return { created: false, tab: tabs[best] };
   }

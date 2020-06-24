@@ -1,8 +1,7 @@
-/* globals log, catcher, buildSettings */
+/* globals log, catcher */
 
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
-import * as searching from "../searching.js";
 import * as browserUtil from "../browserUtil.js";
 import { PhraseSet } from "./language/matching.js";
 import { compile, splitPhraseLines } from "./language/compiler.js";
@@ -188,7 +187,7 @@ export class IntentContext {
 
   async failedAutoplay(tab) {
     this.keepPopup();
-    this.makeTabActive(tab);
+    browserUtil.makeTabActive(tab);
     if (this.noPopup) {
       // FIXME: improve error message:
       await this.displayInlineMessage({
@@ -221,77 +220,6 @@ export class IntentContext {
       utteranceChars: this.utterance.length,
       utteranceParsed: { slots: this.slots },
     });
-  }
-
-  async createTab(options) {
-    const tab = await browserUtil.createTab(options);
-    await browserUtil.loadUrl(tab.id, options.url);
-    return tab;
-  }
-
-  async openOrFocusTab(url) {
-    const tabs = await browser.tabs.query({ url, currentWindow: true });
-    if (tabs.length) {
-      await this.makeTabActive(tabs[0]);
-    } else {
-      await this.createTab({ url });
-    }
-  }
-
-  async createTabGoogleLucky(query, options = {}) {
-    const searchUrl = searching.googleSearchUrl(query, true);
-    const tab =
-      !!options.openInTabId && options.openInTabId > -1
-        ? await browser.tabs.update(options.openInTabId, { url: searchUrl })
-        : await browserUtil.createTab({ url: searchUrl });
-    if (options.hide && !buildSettings.android) {
-      await browser.tabs.hide(tab.id);
-    }
-    return new Promise((resolve, reject) => {
-      let forceRedirecting = false;
-      function onUpdated(tabId, changeInfo, tab) {
-        const url = tab.url;
-        if (url.startsWith("about:blank")) {
-          return;
-        }
-        const isGoogle = /^https:\/\/[^\/]*\.google\.[^\/]+\/search/.test(url);
-        const isRedirect = /^https:\/\/www.google.com\/url\?/.test(url);
-        if (!isGoogle || isRedirect) {
-          if (isRedirect) {
-            if (forceRedirecting) {
-              // We're already sending the user to the new URL
-              return;
-            }
-            // This is a URL redirect:
-            const params = new URL(url).searchParams;
-            const newUrl = params.get("q");
-            forceRedirecting = true;
-            browser.tabs.update(tab.id, { url: newUrl });
-            return;
-          }
-          // We no longer need to listen for updates:
-          browserUtil.onUpdatedRemove(onUpdated, tab.id);
-          resolve(tab);
-        }
-      }
-      try {
-        browserUtil.onUpdatedListen(onUpdated, tab.id);
-      } catch (e) {
-        throw new Error(
-          `Error in tabs.onUpdated: ${e}, onUpdated type: ${typeof onUpdated}, args: tabId: ${
-            tab.id
-          } is ${typeof tab.id}`
-        );
-      }
-    });
-  }
-
-  activeTab() {
-    return browserUtil.activeTab();
-  }
-
-  makeTabActive(tab) {
-    return browserUtil.makeTabActive(tab);
   }
 
   onError(message) {

@@ -38,7 +38,7 @@ intentRunner.registerIntent({
     const pageNames = result.pageNames;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
-      await context.openOrFocusTab(savedUrl);
+      await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query.toLowerCase());
@@ -47,14 +47,14 @@ intentRunner.registerIntent({
           await browser.windows.create({ url: cached.url });
         } else {
           await browser.windows.create({});
-          const tab = await context.createTabGoogleLucky(query);
+          const tab = await browserUtil.createTabGoogleLucky(query);
           const url = tab.url;
           saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
-        await context.openOrFocusTab(cached.url);
+        await browserUtil.openOrFocusTab(cached.url);
       } else {
-        const tab = await context.createTabGoogleLucky(query);
+        const tab = await browserUtil.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
@@ -81,20 +81,20 @@ intentRunner.registerIntent({
 
     if (service === undefined) {
       service = await serviceList.detectServiceFromActiveTab(metadata.search);
-      tab = await context.activeTab();
+      tab = await browserUtil.activeTab();
     }
 
     if (service !== null) {
       myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
 
       context.addTelemetryServiceName(
-        `ddg:${serviceList.ddgBangServiceName(service)}`
+        `ddg:${searching.ddgBangServiceName(service)}`
       );
 
       if (tab !== undefined && service !== null) {
         browser.tabs.update(tab.id, { url: myurl });
       } else {
-        await context.createTab({ url: myurl });
+        await browserUtil.createAndLoadTab({ url: myurl });
       }
 
       browser.runtime.sendMessage({
@@ -114,7 +114,7 @@ intentRunner.registerIntent({
   name: "navigation.translate",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
       languages.languageCodes[language.toLowerCase().trim()]
     }&u=${encodeURIComponent(tab.url)}`;
@@ -126,7 +126,7 @@ intentRunner.registerIntent({
   name: "navigation.translateSelection",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const selection = await pageMetadata.getSelection(tab.id);
     if (!selection || !selection.text) {
       const e = new Error("No text selected");
@@ -154,7 +154,7 @@ async function saveQueryDatabase() {
 intentRunner.registerIntent({
   name: "navigation.goBack",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.back();",
     });
@@ -164,7 +164,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.goForward",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.forward();",
     });
@@ -210,7 +210,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update({
       url: `https://web.archive.org/web/*/${activeTab.url}`,
     });

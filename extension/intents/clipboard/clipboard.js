@@ -82,7 +82,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     if (
       activeTab.url === "about:newtab" ||
       activeTab.url === "about:home" ||

@@ -1,11 +1,12 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
+import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "forms.dictate",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -20,7 +21,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "forms.focusField",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -41,7 +42,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "forms.focusNext",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -53,7 +54,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "forms.formSubmit",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -65,7 +66,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "forms.focusPrevious",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/forms/formsContentScript.js",
@@ -77,7 +78,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "forms.turnSelectionIntoLink",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const isGoogleDoc = new RegExp(/^https:\/\/docs.google.com\/document\/d\//);
     if (isGoogleDoc.test(activeTab.url)) {
       await content.inject(activeTab.id, "/background/googleContentScript.js");
@@ -99,7 +100,7 @@ intentRunner.registerIntent({
         e.displayMessage = "No text selected";
         throw e;
       }
-      const newTab = await context.createTabGoogleLucky(selection.text, {
+      const newTab = await browserUtil.createTabGoogleLucky(selection.text, {
         hide: true,
       });
       const url = newTab.url;

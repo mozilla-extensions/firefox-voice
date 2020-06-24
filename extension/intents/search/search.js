@@ -302,7 +302,7 @@ async function moveResult(context, step) {
 
   const item = searchInfo.searchResults[searchInfo.index];
   if (!tabId) {
-    const tab = await context.createTab({ url: item.url });
+    const tab = await browserUtil.createAndLoadTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
     lastTabId = tab.id;
     popupSearchInfo = null;
@@ -312,7 +312,7 @@ async function moveResult(context, step) {
     lastTabId = tabId;
     let exists = true;
     try {
-      await context.makeTabActive(tabId);
+      await browserUtil.makeTabActive(tabId);
     } catch (e) {
       if (String(e).includes("Invalid tab ID")) {
         exists = false;

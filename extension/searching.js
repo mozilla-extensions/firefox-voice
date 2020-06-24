@@ -1,4 +1,4 @@
-import * as serviceList from "./background/serviceList.js";
+import { metadata } from "../services/metadata.js";
 
 const luckySearchRemovals = /\.(com|net|org)$/i;
 
@@ -52,8 +52,25 @@ export async function ddgEntitySearch(query) {
   return cardData;
 }
 
+// See https://duckduckgo.com/bang for a list of potential services
+// FIXME: this should be removed and serviceMetadata.js preferred.
+const SERVICE_BANG_ALIASES = {};
+for (const id in metadata.search) {
+  for (const name of metadata.search[id].names) {
+    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
+  }
+}
+
+export function ddgBangServiceName(name) {
+  const bang = SERVICE_BANG_ALIASES[name.toLowerCase().trim()];
+  if (!bang) {
+    throw new Error(`Unknown service name: ${JSON.stringify(name)}`);
+  }
+  return bang;
+}
+
 export async function ddgBangSearchUrl(query, service) {
-  const bang = serviceList.ddgBangServiceName(service);
+  const bang = ddgBangServiceName(service);
   const response = await fetch(
     `https://api.duckduckgo.com/?q=!${encodeURIComponent(
       bang
