@@ -108,11 +108,9 @@ It's possible to install and use in-development versions of the extension. Every
 
 We are using these builds for internal testing with more-than-normal data collection. We have not yet implemented data collection controls.
 
-- [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
+- <a href="https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github" download="firefox-voice.xpi">firefox-voice dev</a>
   (note: must install via about:debugging)
-- [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi?src=github) (Note: stage isn't always updated!)
 - [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
-- [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
 
@@ -122,7 +120,7 @@ There is an index of intents (commands) that is viewable if you open the panel, 
 
 ## Developing in Android
 
-This is very experimental, but to develop for Firefox for Android (not Fenix), install Firefox (release) on your Android device.
+This is very experimental, but to develop for Firefox for Android, install Firefox (release) on your Android device.
 
 To try, run:
 
