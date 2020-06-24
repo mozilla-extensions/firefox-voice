@@ -6,6 +6,7 @@ import { entityTypes } from "./entityTypes.js";
 
 const DEFAULT_INTENT = "search.search";
 const DEFAULT_SLOT = "query";
+const FALLBACK_INTENT = "fallbacks.notImplemented";
 
 // Populated by registerMatcher:
 const INTENTS = {};
@@ -61,6 +62,7 @@ export function parse(text, disableFallback = false) {
       fallback: true,
     };
   }
+
   return {
     name: result.intentName,
     slots: result.stringSlots(),

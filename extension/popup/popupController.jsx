@@ -264,6 +264,11 @@ export const PopupController = function() {
         clearTimer(message);
         return Promise.resolve(true);
       }
+      case "displayFallback": {
+        setPopupView("fallback");
+        setErrorMessage(message.message);
+        return Promise.resolve(true);
+      }
       default:
         break;
     }
