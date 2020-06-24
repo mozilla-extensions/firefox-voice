@@ -60,10 +60,15 @@ match = """
   pause [service:musicServiceName]
   pause (play | playing |) (music | audio |)
   stop (play | playing |) (music | audio |)
+  (pause | stop) (the |) (music | audio | video |) (in this page |)
+
 """
 
 [[music.pause.example]]
 phrase = "Pause music"
+
+[[music.pause.example]]
+phrase = "pause the video in this page"
 
 [[music.pause.example]]
 phrase = "pause spotify"
@@ -128,7 +133,7 @@ description = "Unpause one service, the current tab, or the detected service"
 match = """
   (unpause | continue | play | resume) video [service=youtube]
   (unpause | continue | play | resume) [service:musicServiceName]
-  (unpause | continue | play | resume) (music | audio |)
+  (unpause | continue | play | resume) (the |) (music | audio | video |) (in this page |)
 """
 
 [[music.unpause.example]]
@@ -139,6 +144,10 @@ phrase = "continue music"
 
 [[music.unpause.example]]
 phrase = "play music"
+
+[[music.unpause.example]]
+phrase = "play the video in this page"
+test = true
 
 [[music.unpause.example]]
 phrase = "play spotify"
@@ -161,9 +170,9 @@ test = true
 description = "Adjust music volume"
 match = """
   (increase | turn up) (music | audio | video |) (volume | the volume) [volumeLevel=levelUp]
-  (make it louder | louder | volume up) [volumeLevel=levelUp]
+  (make it louder | louder | volume up) (in this page |) [volumeLevel=levelUp]
   (decrease | turn down) (music | audio | video |) (volume | the volume) [volumeLevel=levelDown]
-  (make it softer | softer | volume down | lower volume | lower the volume) [volumeLevel=levelDown]
+  (make it softer | softer | volume down | lower volume | lower the volume) (in this page |) [volumeLevel=levelDown]
   set volume (to | by |) [inputVolume] (percent | % |)
   set [inputVolume] (percent | % |) volume
   increase volume (to | by ) [inputVolume] (percent | % |) [volumeLevel=levelUp]
@@ -175,8 +184,17 @@ phrase = "increase volume"
 expectParameters = {volumeLevel = "levelUp"}
 
 [[music.volume.example]]
+phrase = "volume up in this page"
+expectParameters = {volumeLevel = "levelUp"}
+
+[[music.volume.example]]
 phrase = "set volume to 75 percent"
 expectSlots = { inputVolume = "75" }
+
+[[music.volume.example]]
+phrase = "volume down in this page"
+expectParameters = {volumeLevel = "levelDown"}
+
 
 [music.mute]
 description = "mute music volume"
