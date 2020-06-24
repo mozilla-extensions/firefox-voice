@@ -1,6 +1,7 @@
 /* globals buildSettings */
 import * as intentRunner from "../../background/intentRunner.js";
 import English from "../../background/language/langs/english.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -50,7 +51,7 @@ async function updateZoom(context, operation) {
   // 0 -> Reset
   // 1 -> zoom in
   // -1 -> zoom out
-  const activeTab = await context.activeTab();
+  const activeTab = await browserUtil.activeTab();
   if (operation === 0) {
     await browser.tabs.setZoom(activeTab.id, DEFAULT_ZOOM);
   } else {
@@ -101,7 +102,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.close",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.remove(activeTab.id);
     context.displayText("Tab closed");
   },
@@ -133,7 +134,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.pin",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update(activeTab.id, { pinned: true });
   },
 });
@@ -141,7 +142,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.unpin",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update(activeTab.id, { pinned: false });
   },
 });
@@ -176,7 +177,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.duplicate",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.duplicate(activeTab.id);
   },
 });
@@ -194,7 +195,7 @@ if (!buildSettings.android) {
   intentRunner.registerIntent({
     name: "tabs.moveToWindow",
     async run(context) {
-      const activeTab = await context.activeTab();
+      const activeTab = await browserUtil.activeTab();
       await browser.windows.create({ tabId: activeTab.id });
     },
   });
@@ -269,7 +270,7 @@ intentRunner.registerIntent({
       await switchDir(tabs, context.parameters.dir);
       return;
     }
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     let found;
     for (const tabId of tabHistory) {
       if (tabId === activeTab.id) {
@@ -476,7 +477,7 @@ async function getMatchingTabs(options) {
 intentRunner.registerIntent({
   name: "tabs.collectMentionedTabs",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const currentWindow = await browser.windows.getCurrent();
     const allWindows = await browser.windows.getAll({
       windowTypes: ["normal"],
@@ -793,7 +794,7 @@ async function highlightTabsInDirection(center, tabs, dir) {
 intentRunner.registerIntent({
   name: "tabs.selectTabsInDirection",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const tabs = await browser.tabs.query({
       currentWindow: true,
       pinned: false,

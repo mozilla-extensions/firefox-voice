@@ -2,6 +2,7 @@ import * as music from "../../intents/music/music.js";
 import * as read from "../../intents/read/read.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as content from "../../background/content.js";
+import * as browserUtil from "../../browserUtil.js";
 
 class ReaderMode extends serviceList.Service {
   async pause() {
@@ -10,7 +11,7 @@ class ReaderMode extends serviceList.Service {
   }
 
   async unpause() {
-    const activeTab = await this.context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     if (!activeTab.url.startsWith("about:reader")) {
       const e = new Error("Cannot unpause a non-reader tab");
       e.displayMessage = "Cannot unpause";

@@ -280,10 +280,6 @@ export class IntentContext {
     });
   }
 
-  activeTab() {
-    return browserUtil.activeTab();
-  }
-
   makeTabActive(tab) {
     return browserUtil.makeTabActive(tab);
   }

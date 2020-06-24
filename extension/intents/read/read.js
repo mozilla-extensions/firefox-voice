@@ -44,7 +44,7 @@ intentRunner.registerIntent({
     let activeTab;
     const query = context.slots.query;
     if (!query) {
-      activeTab = await context.activeTab();
+      activeTab = await browserUtil.activeTab();
     } else {
       activeTab = await context.createTabGoogleLucky(query);
       await browserUtil.waitForDocumentComplete(activeTab.id);
@@ -65,7 +65,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "read.stopRead",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     if (!activeTab.url.startsWith("about:reader")) {
       const e = new Error(`Not a Reader Mode page`);
       e.displayMessage = "Page isn't narrating";

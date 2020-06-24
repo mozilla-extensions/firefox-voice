@@ -81,7 +81,7 @@ intentRunner.registerIntent({
 
     if (service === undefined) {
       service = await serviceList.detectServiceFromActiveTab(metadata.search);
-      tab = await context.activeTab();
+      tab = await browserUtil.activeTab();
     }
 
     if (service !== null) {
@@ -114,7 +114,7 @@ intentRunner.registerIntent({
   name: "navigation.translate",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
       languages.languageCodes[language.toLowerCase().trim()]
     }&u=${encodeURIComponent(tab.url)}`;
@@ -126,7 +126,7 @@ intentRunner.registerIntent({
   name: "navigation.translateSelection",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const selection = await pageMetadata.getSelection(tab.id);
     if (!selection || !selection.text) {
       const e = new Error("No text selected");
@@ -154,7 +154,7 @@ async function saveQueryDatabase() {
 intentRunner.registerIntent({
   name: "navigation.goBack",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.back();",
     });
@@ -164,7 +164,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.goForward",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.forward();",
     });
@@ -210,7 +210,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update({
       url: `https://web.archive.org/web/*/${activeTab.url}`,
     });

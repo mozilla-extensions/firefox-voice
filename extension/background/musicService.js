@@ -1,13 +1,14 @@
 import * as serviceList from "./serviceList.js";
 import * as content from "./content.js";
 import { shouldDisplayWarning } from "../limiter.js";
+import * as browserUtil from "../browserUtil.js";
 
 class MusicService extends serviceList.Service {
   async tabActivation() {
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
-        const activeTabId = (await this.context.activeTab()).id;
+        const activeTabId = (await browserUtil.activeTab()).id;
         this.context.makeTabActive(this.tab);
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (

@@ -2,6 +2,7 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import { stopReading } from "../read/read.js";
+import * as browserUtil from "../../browserUtil.js";
 
 // Always undo temporary muting after this amount of time:
 const TEMPORARY_MUTE_TIMEOUT = 10000; // 10 seconds
@@ -35,7 +36,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "muting.muteTab",
   async run(desc) {
-    const activeTab = await desc.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update(activeTab.id, { muted: true });
     // TODO: show confirmation
   },

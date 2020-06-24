@@ -83,7 +83,7 @@ class YouTube extends serviceList.Service {
   async move(direction) {
     let tabs = await this.getAllTabs({ audible: true });
     if (!tabs.length) {
-      const currentTab = await this.context.activeTab();
+      const currentTab = await browserUtil.activeTab();
       if (currentTab.url.startsWith(this.baseUrl)) {
         tabs = [currentTab];
       } else {
@@ -129,7 +129,7 @@ class YouTube extends serviceList.Service {
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
-        const activeTabId = (await this.context.activeTab()).id;
+        const activeTabId = (await browserUtil.activeTab()).id;
         this.context.makeTabActive(this.tab);
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (

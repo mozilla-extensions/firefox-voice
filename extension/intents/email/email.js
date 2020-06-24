@@ -3,6 +3,7 @@
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const SERVICES = {};
 
@@ -59,7 +60,7 @@ intentRunner.registerIntent({
     }
     let body = "";
     if (context.parameters.body === "tab") {
-      const active = await context.activeTab();
+      const active = await browserUtil.activeTab();
       const metadata = await pageMetadata.getMetadata(active.id);
       if (!subject) {
         subject = metadata.title;

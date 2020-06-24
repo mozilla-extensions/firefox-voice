@@ -2,6 +2,7 @@
 
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as intentRunner from "../../background/intentRunner.js";
+import * as browserUtil from "../../browserUtil.js";
 
 intentRunner.registerIntent({
   name: "bookmarks.open",
@@ -50,7 +51,7 @@ intentRunner.registerIntent({
     const id = matches[0].item;
     const url = bookmarksById.get(id);
     if (context.parameters.tab === "this") {
-      const activeTab = await context.activeTab();
+      const activeTab = await browserUtil.activeTab();
       await browser.tabs.update(activeTab.id, { url });
     } else {
       await browser.tabs.create({ url });
@@ -61,7 +62,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "bookmarks.create",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const bookmarks = await browser.bookmarks.search({ url: metadata.url });
     if (!bookmarks.length) {
@@ -76,7 +77,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "bookmarks.createInFolder",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const bookmarks = await browser.bookmarks.search({ url: metadata.url });
     if (bookmarks.length) {
@@ -144,7 +145,7 @@ intentRunner.registerIntent({
         await context.endFollowup();
         break;
       default:
-        const activeTab = await context.activeTab();
+        const activeTab = await browserUtil.activeTab();
         const metadata = await pageMetadata.getMetadata(activeTab.id);
         const bookmarks = await browser.bookmarks.search({ url: metadata.url });
 
