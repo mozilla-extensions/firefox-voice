@@ -148,7 +148,6 @@ Most of the background messages are handled in `main.js` (which calls out to any
 ├── js
 │   ├── languages.json          Language mapping
 │   └── vendor
-│       ├── browser-polyfill.min.js  Polyfill for Chrome (not used)
 │       ├── chrono.min.js       Parser for natural language times
 │       ├── freezeDry.js        Freezes a page into static HTML
 │       ├── fuse.js             Fuzzy full text search
