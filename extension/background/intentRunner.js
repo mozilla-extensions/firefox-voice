@@ -223,18 +223,12 @@ export class IntentContext {
     });
   }
 
-  async createTab(options) {
-    const tab = await browserUtil.createTab(options);
-    await browserUtil.loadUrl(tab.id, options.url);
-    return tab;
-  }
-
   async openOrFocusTab(url) {
     const tabs = await browser.tabs.query({ url, currentWindow: true });
     if (tabs.length) {
       await this.makeTabActive(tabs[0]);
     } else {
-      await this.createTab({ url });
+      await browserUtil.createAndLoadTab({ url });
     }
   }
 

@@ -94,7 +94,7 @@ intentRunner.registerIntent({
       if (tab !== undefined && service !== null) {
         browser.tabs.update(tab.id, { url: myurl });
       } else {
-        await context.createTab({ url: myurl });
+        await browserUtil.createAndLoadTab({ url: myurl });
       }
 
       browser.runtime.sendMessage({

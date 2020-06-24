@@ -122,7 +122,7 @@ class YouTube extends serviceList.Service {
   }
 
   async playAlbum(query) {
-    this.tab = await browserUtil.createTab({
+    this.tab = await browserUtil.createAndLoadTab({
       url: `${this.baseUrl}/search?q=${query} album`,
     });
     this.tabCreated = true;

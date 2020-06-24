@@ -93,6 +93,12 @@ export async function createTab(options = {}) {
   return browser.tabs.create(options);
 }
 
+export async function createAndLoadTab(options = {}) {
+  const tab = await createTab(options);
+  await loadUrl(tab.id, options.url);
+  return tab;
+}
+
 export class TabRemovalWatcher {
   constructor() {
     this.isWatching = false;

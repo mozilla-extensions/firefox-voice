@@ -101,7 +101,7 @@ export class Service {
     if (!tabs.length) {
       return {
         created: true,
-        tab: await this.context.createTab({
+        tab: await browserUtil.createAndLoadTab({
           url: this.baseUrl,
           active: activate,
         }),

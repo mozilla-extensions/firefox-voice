@@ -124,7 +124,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.open",
   async run(context) {
-    // context.createTab is the normal way to do this, but it sometimes doesn't open a new tab
+    // browserUtil.createTab is the normal way to do this, but it sometimes doesn't open a new tab
     // Since the user asked, we definitely want to open a new tab
     await browser.tabs.create({ active: true });
   },
