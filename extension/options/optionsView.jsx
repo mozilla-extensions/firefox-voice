@@ -240,25 +240,33 @@ const VoiceOutputPreferences = ({
   return (
     <div id="voice-output">
       <div id="voice-output-header">Voice responses</div>
-      <div className="styled-toggleswitch">
-        <input
-          className="toggle-button"
-          id="voice-output-pref"
-          type="checkbox"
-          checked={userSettings.speechOutput}
-          onChange={onVoiceOutputPreferenceChange}
-        />
-        <label htmlFor="voice-output-pref">
-          <strong>
-            Firefox Voice will respond to many requests with speech
-          </strong>
-        </label>
-      </div>
-      <SelectVoicePreference
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        synthesizedVoices={synthesizedVoices}
-      />
+      {synthesizedVoices.length ? (
+        <React.Fragment>
+          <div className="styled-toggleswitch">
+            <input
+              className="toggle-button"
+              id="voice-output-pref"
+              type="checkbox"
+              checked={userSettings.speechOutput}
+              onChange={onVoiceOutputPreferenceChange}
+            />
+            <label htmlFor="voice-output-pref">
+              <strong>
+                Firefox Voice will respond to many requests with speech
+              </strong>
+            </label>
+          </div>
+          <SelectVoicePreference
+            userSettings={userSettings}
+            updateUserSettings={updateUserSettings}
+            synthesizedVoices={synthesizedVoices}
+          />
+        </React.Fragment>
+      ) : (
+        <div id="voice-output-unavailable">
+            It seems that your devices does not have any built-in synthesized voices, so voice responses are not available.
+        </div>
+      )}
     </div>
   );
 };

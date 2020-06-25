@@ -452,3 +452,7 @@ audio {
 #voice-selector > span {
   margin-right: 0.75em;
 }
+
+#voice-output-unavailable {
+  font-style: italic;
+}
