@@ -68,7 +68,7 @@ intentRunner.registerIntent({
   async run(context) {
     queryDatabase.clear();
     saveQueryDatabase();
-    context.displayText('"Open" database/cache cleared');
+    context.presentMessage('"Open" database/cache cleared');
   },
 });
 

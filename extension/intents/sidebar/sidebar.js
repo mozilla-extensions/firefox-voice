@@ -12,7 +12,7 @@ intentRunner.registerIntent({
       name = "History";
       await browser.experiments.voice.openHistorySidebar();
     }
-    context.displayText(`${name} sidebar is opened`);
+    context.presentMessage(`${name} sidebar is opened`);
   },
 });
 

@@ -58,12 +58,12 @@ intentRunner.registerIntent({
       throw e;
     }
     if (results.length > 1) {
-      context.displayText(
+      context.presentMessage(
         `${results.length} comment threads found. Use "next comments" to see more`
       );
       tabResults.set(activeTab.id, results);
     } else {
-      context.displayText("Showing the one found comment thread.");
+      context.presentMessage("Showing the one found comment thread.");
     }
     await browser.tabs.update(activeTab.id, { url: results[0].url });
   },

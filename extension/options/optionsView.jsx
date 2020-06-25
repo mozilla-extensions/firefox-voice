@@ -234,7 +234,7 @@ const VoiceOutputPreferences = ({
   synthesizedVoices,
 }) => {
   const onVoiceOutputPreferenceChange = event => {
-    userSettings.collectAudio = !!event.target.checked;
+    userSettings.speechOutput = !!event.target.checked;
     updateUserSettings(userSettings);
   };
   return (
@@ -245,7 +245,7 @@ const VoiceOutputPreferences = ({
           className="toggle-button"
           id="voice-output-pref"
           type="checkbox"
-          checked={userSettings.voiceOutput}
+          checked={userSettings.speechOutput}
           onChange={onVoiceOutputPreferenceChange}
         />
         <label htmlFor="voice-output-pref">
