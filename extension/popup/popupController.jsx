@@ -194,7 +194,7 @@ export const PopupController = function() {
     window.close();
   };
 
-  const setPreferredVoice = (voiceName) => {
+  const setPreferredVoice = voiceName => {
     const voices = synth.getVoices();
     const matchingVoice = voices.filter(voice => voice.name === voiceName);
     if (matchingVoice.length) {
@@ -296,7 +296,7 @@ export const PopupController = function() {
     return undefined;
   };
 
-  const speak = async (message) => {
+  const speak = async message => {
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.lang = "en-US"; // TODO: accomodate overrides for the Translate search card
     utterance.voice = preferredVoice;
@@ -304,8 +304,8 @@ export const PopupController = function() {
     synth.speak(utterance);
     utterance.onend = () => {
       closePopup(2000);
-    }
-  }
+    };
+  };
 
   const clearTimer = async ({ totalInMS, followup }) => {
     playTimerAlarm();

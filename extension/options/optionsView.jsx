@@ -264,7 +264,8 @@ const VoiceOutputPreferences = ({
         </React.Fragment>
       ) : (
         <div id="voice-output-unavailable">
-            It seems that your devices does not have any built-in synthesized voices, so voice responses are not available.
+          It seems that your devices does not have any built-in synthesized
+          voices, so voice responses are not available.
         </div>
       )}
     </div>
@@ -294,7 +295,8 @@ const SelectVoicePreference = ({
         {synthesizedVoices &&
           synthesizedVoices.map(voice => (
             <option key={voice.name} value={voice.name}>
-              {voice.name} ({voice.lang}){voice.default ? " - Default System Voice" : ""}
+              {voice.name} ({voice.lang})
+              {voice.default ? " - Default System Voice" : ""}
             </option>
           ))}
       </select>
