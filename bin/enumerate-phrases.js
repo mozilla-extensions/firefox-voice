@@ -4,7 +4,7 @@ const { entityTypes } = require("../extension/background/entityTypes.js");
 const {
   compile,
   splitPhraseLines,
-} = require("../extension/background/language/compiler.js");
+} = require("../extension/language/compiler.js");
 
 const args = process.argv.slice(2);
 

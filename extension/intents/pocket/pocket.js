@@ -5,7 +5,7 @@ intentRunner.registerIntent({
   name: "pocket.open",
   async run(context) {
     const url = "https://app.getpocket.com/";
-    await context.openOrFocusTab(url);
+    await browserUtil.openOrFocusTab(url);
   },
 });
 

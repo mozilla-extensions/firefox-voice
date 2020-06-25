@@ -4,7 +4,7 @@ import * as browserUtil from "../../browserUtil.js";
 
 async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
-  await content.lazyInject(activeTab.id, [
+  await content.inject(activeTab.id, [
     "/background/pageMetadata-contentScript.js",
     "/intents/saving/screenshotContentScript.js",
     "/intents/clipboard/contentScript.js",
@@ -82,7 +82,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     if (
       activeTab.url === "about:newtab" ||
       activeTab.url === "about:home" ||
