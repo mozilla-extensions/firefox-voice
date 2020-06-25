@@ -239,7 +239,7 @@ const VoiceOutputPreferences = ({
   };
   return (
     <div id="voice-output">
-      <h4>Voice responses</h4>
+      <div id="voice-output-header">Voice responses</div>
       <div className="styled-toggleswitch">
         <input
           className="toggle-button"
