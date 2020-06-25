@@ -9,7 +9,7 @@ const OUTPUT = path.join(extensionDir, "intents/metadata.js");
 const SYNC_OUTPUT = path.join(extensionDir, "/services/metadata.js");
 const INTENT_DIR = path.join(extensionDir, "intents");
 const SERVICE_DIR = path.join(extensionDir, "services");
-const LANG_DIR = path.join(extensionDir, "background/language/langs");
+const LANG_DIR = path.join(extensionDir, "language/langs");
 
 const metadata = {};
 

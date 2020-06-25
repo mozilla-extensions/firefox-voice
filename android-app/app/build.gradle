@@ -48,7 +48,7 @@ android {
 }
 
 task copyFiles(type: Copy) {
-    from '../../extension/background/language/langs'
+    from '../../extension/language/langs'
     into 'src/main/assets/langs'
     include '*.toml'
 }

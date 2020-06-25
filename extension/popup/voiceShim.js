@@ -49,7 +49,7 @@ export class Recorder {
     // override
   }
 
-  onEnd(jsonOrNull) {
+  onEnd(jsonOrNull, audioBlob) {
     // override
   }
 

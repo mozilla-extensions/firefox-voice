@@ -17,7 +17,7 @@ private fun <K, V> MutableMap<K, MutableList<V>>.add(key: K, value: V) =
  * Language-specific information, namely stop words (e.g., "the" and "please") and
  * aliases (e.g., "coffee" for "copy"). When the app starts, the information is
  * read from the TOML file english.toml, which is copied during the build process from
- * extension/background/language/langs/english.toml to an assets subdirectory.
+ * extension/language/langs/english.toml to an assets subdirectory.
  */
 class Language(context: Context) {
     private val aliases: MutableMap<String, MutableList<String>> = mutableMapOf()

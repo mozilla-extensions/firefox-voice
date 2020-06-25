@@ -8,7 +8,7 @@ intentRunner.registerIntent({
     context.savingPage("startSavingPage");
     let filename;
     const activeTab = await browserUtil.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/freezeDry.js",
       "/background/pageMetadata-contentScript.js",
       "/intents/saving/screenshotContentScript.js",
@@ -66,7 +66,7 @@ intentRunner.registerIntent({
 async function downloadScreenshot(context, type) {
   let filename;
   const activeTab = await browserUtil.activeTab();
-  await content.lazyInject(activeTab.id, [
+  await content.inject(activeTab.id, [
     "/js/vendor/freezeDry.js",
     "/background/pageMetadata-contentScript.js",
     "/intents/saving/screenshotContentScript.js",

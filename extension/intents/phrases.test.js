@@ -2,11 +2,8 @@
 
 const { metadata } = require("./metadata.js");
 const { entityTypes } = require("../background/entityTypes.js");
-const { PhraseSet } = require("../background/language/matching.js");
-const {
-  compile,
-  splitPhraseLines,
-} = require("../background/language/compiler.js");
+const { PhraseSet } = require("../language/findMatch.js");
+const { compile, splitPhraseLines } = require("../language/compiler.js");
 
 const intents = {};
 const phrases = [];

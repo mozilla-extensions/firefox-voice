@@ -1,6 +1,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
+import * as browserUtil from "../../browserUtil.js";
 
 let writingTabId;
 
@@ -24,9 +25,9 @@ async function checkHasTab() {
 intentRunner.registerIntent({
   name: "notes.setPlace",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const tabId = activeTab.id;
-    await content.lazyInject(tabId, SCRIPT);
+    await content.inject(tabId, SCRIPT);
     const failureMessage = await browser.tabs.sendMessage(tabId, {
       type: "setPlace",
     });
@@ -43,7 +44,7 @@ intentRunner.registerIntent({
   name: "notes.addLink",
   async run(context) {
     await checkHasTab();
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const success = await browser.tabs.sendMessage(writingTabId, {
       type: "addLink",
@@ -81,7 +82,7 @@ intentRunner.registerIntent({
       e.displayMessage = "You have not set a tab to write";
       throw e;
     }
-    await context.makeTabActive(writingTabId);
+    await browserUtil.makeTabActive(writingTabId);
   },
 });
 
