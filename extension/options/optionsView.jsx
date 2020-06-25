@@ -284,7 +284,6 @@ const SelectVoicePreference = ({
     }
   };
   return (
-    // TODO account for the fact that some systems (e.g. Ubuntu) don't have preloaded voices
     <div id="voice-selector">
       <span>Voice </span>
       <select

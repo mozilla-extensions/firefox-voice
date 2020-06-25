@@ -231,7 +231,6 @@ export const PopupController = function() {
         if (speechOutput) {
           speak(message.message);
         }
-        // TODO: Add speech output here
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
           closePopup();
