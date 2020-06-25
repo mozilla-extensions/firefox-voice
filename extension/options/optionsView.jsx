@@ -24,6 +24,7 @@ export const Options = ({
   useToggle,
   useEditNicknameDraft,
   audioInputDevices,
+  synthesizedVoices,
 }) => {
   return (
     <div className="settings-page">
@@ -36,6 +37,7 @@ export const Options = ({
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
           audioInputDevices={audioInputDevices}
+          synthesizedVoices={synthesizedVoices}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -129,6 +131,7 @@ const General = ({
   userSettings,
   updateUserSettings,
   audioInputDevices,
+  synthesizedVoices,
 }) => {
   return (
     <div className="settings-content">
@@ -136,6 +139,7 @@ const General = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         audioInputDevices={audioInputDevices}
+        synthesizedVoices={synthesizedVoices}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
@@ -224,10 +228,86 @@ const SelectMicPreferences = ({
   );
 };
 
+const VoiceOutputPreferences = ({
+  userSettings,
+  updateUserSettings,
+  synthesizedVoices,
+}) => {
+  const onVoiceOutputPreferenceChange = event => {
+    userSettings.speechOutput = !!event.target.checked;
+    updateUserSettings(userSettings);
+  };
+  return (
+    <div id="voice-output">
+      <div id="voice-output-header">Voice responses</div>
+      {synthesizedVoices.length ? (
+        <React.Fragment>
+          <div className="styled-toggleswitch">
+            <input
+              className="toggle-button"
+              id="voice-output-pref"
+              type="checkbox"
+              checked={userSettings.speechOutput}
+              onChange={onVoiceOutputPreferenceChange}
+            />
+            <label htmlFor="voice-output-pref">
+              <strong>
+                Firefox Voice will respond to many requests with speech
+              </strong>
+            </label>
+          </div>
+          <SelectVoicePreference
+            userSettings={userSettings}
+            updateUserSettings={updateUserSettings}
+            synthesizedVoices={synthesizedVoices}
+          />
+        </React.Fragment>
+      ) : (
+        <div id="voice-output-unavailable">
+          It seems that your devices does not have any built-in synthesized
+          voices, so voice responses are not available.
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SelectVoicePreference = ({
+  userSettings,
+  updateUserSettings,
+  synthesizedVoices,
+}) => {
+  const onVoicePreferenceChange = event => {
+    if (event) {
+      userSettings.preferredVoice = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="voice-selector">
+      <span>Voice </span>
+      <select
+        value={userSettings.preferredVoice}
+        onChange={onVoicePreferenceChange}
+        onBlur={onVoicePreferenceChange}
+      >
+        {synthesizedVoices &&
+          synthesizedVoices.map(voice => (
+            <option key={voice.name} value={voice.name}>
+              {voice.name} ({voice.lang})
+              {voice.default ? " - Default System Voice" : ""}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
 const PreferenceSettings = ({
   userSettings,
   updateUserSettings,
   audioInputDevices,
+  synthesizedVoices,
 }) => {
   const onPreferenceChange = setting => event => {
     if (event) {
@@ -266,6 +346,11 @@ const PreferenceSettings = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         audioInputDevices={audioInputDevices}
+      />
+      <VoiceOutputPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        synthesizedVoices={synthesizedVoices}
       />
     </fieldset>
   );

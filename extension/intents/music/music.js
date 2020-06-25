@@ -132,7 +132,7 @@ intentRunner.registerIntent({
       e.displayMessage = "Nothing is playing";
       throw e;
     }
-    context.displayText(tabs[0].title);
+    context.presentMessage(tabs[0].title);
   },
 });
 

@@ -173,11 +173,11 @@ export class IntentContext {
     };
   }
 
-  displayText(message) {
+  presentMessage(message) {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
     }
-    return browser.runtime.sendMessage({ type: "displayText", message });
+    return browser.runtime.sendMessage({ type: "presentMessage", message });
   }
 
   displayInlineMessage({ message, type }) {

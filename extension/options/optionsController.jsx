@@ -57,6 +57,14 @@ async function getAudioInputDevices() {
   return audioInputDevices;
 }
 
+function getSynthesizedVoices() {
+  if (!window.speechSynthesis || !window.speechSynthesis.getVoices) {
+    return null;
+  }
+  const voices = window.speechSynthesis.getVoices();
+  return voices;
+}
+
 export const OptionsController = function() {
   const [inDevelopment, setInDevelopment] = useState(false);
   const [version, setVersion] = useState("");
@@ -69,6 +77,7 @@ export const OptionsController = function() {
   const [registeredNicknames, setRegisteredNicknames] = useState({});
 
   const [audioInputDevices, setAudioInputDevices] = useState([]);
+  const [synthesizedVoices, setSynthesizedVoices] = useState([]);
 
   onKeyboardShortcutError = setKeyboardShortcutError;
   onTabChange = setTabValue;
@@ -85,10 +94,15 @@ export const OptionsController = function() {
     await initSettings();
     await initRegisteredNicknames();
     await initAudioDevices();
+    initSynthesizedVoices();
   };
 
   const initAudioDevices = async () => {
     setAudioInputDevices(await getAudioInputDevices());
+  };
+
+  const initSynthesizedVoices = () => {
+    setSynthesizedVoices(getSynthesizedVoices());
   };
 
   const initVersionInfo = async () => {
@@ -270,6 +284,7 @@ export const OptionsController = function() {
       useToggle={useToggle}
       useEditNicknameDraft={useEditNicknameDraft}
       audioInputDevices={audioInputDevices}
+      synthesizedVoices={synthesizedVoices}
     />
   );
 };

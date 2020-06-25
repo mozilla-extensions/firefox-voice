@@ -22,6 +22,7 @@ let recorder;
 // when setting it as internal state.
 let renderListenComponent = true;
 let listenForFollowup = false;
+let speechOutput = false;
 let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
@@ -77,6 +78,8 @@ export const PopupController = function() {
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
+  const synth = window.speechSynthesis;
+  let preferredVoice;
 
   useEffect(() => {
     if (!isInitialized) {
@@ -100,6 +103,9 @@ export const PopupController = function() {
     if (userSettings.audioInputId !== undefined) {
       audioInputId = userSettings.audioInputId;
     }
+
+    speechOutput = userSettings.speechOutput;
+    setPreferredVoice(userSettings.preferredVoice);
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -188,6 +194,14 @@ export const PopupController = function() {
     window.close();
   };
 
+  const setPreferredVoice = voiceName => {
+    const voices = synth.getVoices();
+    const matchingVoice = voices.filter(voice => voice.name === voiceName);
+    if (matchingVoice.length) {
+      preferredVoice = matchingVoice[0];
+    }
+  };
+
   const handleMessage = message => {
     switch (message.type) {
       case "closePopup": {
@@ -212,8 +226,11 @@ export const PopupController = function() {
         setDisplayText(message.message);
         break;
       }
-      case "displayText": {
+      case "presentMessage": {
         setDisplayText(message.message);
+        if (speechOutput) {
+          speak(message.message);
+        }
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
           closePopup();
@@ -276,6 +293,17 @@ export const PopupController = function() {
         break;
     }
     return undefined;
+  };
+
+  const speak = async message => {
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = "en-US"; // TODO: accomodate overrides for the Translate search card
+    utterance.voice = preferredVoice;
+
+    synth.speak(utterance);
+    utterance.onend = () => {
+      closePopup(2000);
+    };
   };
 
   const clearTimer = async ({ totalInMS, followup }) => {

@@ -54,7 +54,7 @@ intentRunner.registerIntent({
     context.keepPopup();
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.remove(currentWindow.id);
-    context.displayText("Window closed");
+    context.presentMessage("Window closed");
   },
 });
 
