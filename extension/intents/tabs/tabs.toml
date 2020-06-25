@@ -23,12 +23,8 @@ test = true
 [tabs.closeAll]
 description = "Closes all open tabs"
 match = """
-  close (all |) (active | open |) (tab{s} | site{s} | page{s}) (for me |)
+  close all (active | open |) (tab{s} | site{s} | page{s}) (for me |)
 """
-
-[[tabs.closeAll.example]]
-phrase = "close tabs"
-test = true
 
 [[tabs.closeAll.example]]
 phrase = "close all tabs"
