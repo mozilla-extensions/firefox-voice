@@ -1,8 +1,9 @@
 /* globals log */
 
 import * as intentRunner from "../../background/intentRunner.js";
-import English from "../../background/language/langs/english.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
+import * as browserUtil from "../../browserUtil.js";
+import English from "../../language/langs/english.js";
 
 intentRunner.registerIntent({
   name: "nicknames.name",
@@ -99,7 +100,7 @@ intentRunner.registerIntent({
   name: "nicknames.namePage",
   async run(context) {
     const name = context.slots.name.toLowerCase();
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
     const result = await browser.storage.sync.get("pageNames");
     const pageNames = result.pageNames || {};
