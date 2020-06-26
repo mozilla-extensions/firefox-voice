@@ -253,7 +253,9 @@ async function launchOnboarding() {
 }
 
 if (buildSettings.openPopupOnStart) {
-  browser.tabs.create({ url: browser.runtime.getURL("/popup/popup.html") });
+  setTimeout(() => {
+    browser.tabs.create({ url: browser.runtime.getURL("/popup/popup.html") });
+  }, 2000);
 }
 
 async function wakewordPopup(wakeword) {
