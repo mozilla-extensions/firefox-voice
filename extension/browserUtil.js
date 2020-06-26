@@ -8,7 +8,11 @@ export async function activeTab() {
 }
 
 export async function activeTabs() {
-  return browser.tabs.query({});
+  return browser.tabs.query({
+    active: false,
+    currentWindow: true,
+    pinned: false,
+  });
 }
 
 export async function makeTabActive(tab) {
