@@ -474,3 +474,21 @@ expectParameters = { dir = "first" }
 [[tabs.selectNumbersTabs.example]]
 phrase = "select last two tabs"
 expectParameters = { dir = "last" }
+
+[tabs.closeAll]
+description = "Closes all active or open tabs"
+match = """
+  close (all | every) tab{s} (for me|)
+"""
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close every tab"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs for me"
+test = true
