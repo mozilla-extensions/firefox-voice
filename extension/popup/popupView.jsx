@@ -36,20 +36,34 @@ export const Popup = ({
   const [inputValue, setInputValue] = useState(null);
   const [showScroll, setShowScroll] = useState(false);
 
+  // This would lead to an infinite loop if showing the scroll effected the height, which
+  // caused this to toggle showScroll back and forth infinitely. But it won't change the
+  // height so it's okay.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const doc = document.body;
     if (doc.offsetHeight > window.innerHeight) {
-      setShowScroll(true);
+      if (!showScroll) {
+        setShowScroll(true);
+      }
     } else if (
       window.innerHeight > doc.offsetHeight ||
       window.innerHeight === doc.offsetHeight
     ) {
-      setShowScroll(false);
+      if (showScroll) {
+        setShowScroll(false);
+      }
     }
-  }, []);
+  });
 
   const scrollDown = () => {
-    window.scrollBy(0, 50);
+    let footerHeight = 0;
+    const footer = document.querySelector("#search-footer");
+    if (footer) {
+      footerHeight = footer.clientHeight;
+    }
+    const scrollAmount = window.innerHeight - footerHeight - 15;
+    window.scrollBy(0, scrollAmount);
   };
 
   function savingOnInputStarted(value) {
