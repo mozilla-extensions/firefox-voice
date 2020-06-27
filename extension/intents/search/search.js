@@ -5,7 +5,7 @@ import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
-import * as settings from "../settings.js";
+import * as settings from "../../settings.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour

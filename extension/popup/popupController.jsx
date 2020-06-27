@@ -486,6 +486,10 @@ export const PopupController = function() {
 
     if (message.card) {
       setCardImage(message.card);
+      if (message.card.speech) {
+        speak(message.card.speech);
+      }
+      log.info(message.card);
       setMinPopupSize(message.card.width);
     } else {
       setCardImage(null);
