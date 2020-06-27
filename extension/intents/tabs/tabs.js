@@ -107,11 +107,12 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "tabs.closeAll",
   async run(context) {
-    while (1) {
-      const activeTab = await context.activeTab();
-      if (activeTab.id === 1) break;
-      await browser.tabs.remove(activeTab.id);
-    }
+    const openTabs = await browser.tabs.query({
+      active: false,
+      lastFocusedWindow: true,
+      pinned: false,
+    });
+    await browser.tabs.remove(openTabs.map(tab => tab.id));
     context.displayText("Closed all tabs");
   },
 });
