@@ -437,3 +437,22 @@ audio {
   /* This should display the play, mute, and time, but not the volume or time slider */
   width: 9em;
 }
+
+#voice-output-header {
+  font-size: 1.25em;
+  font-weight: 300;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+#voice-selector {
+  margin-top: 1em;
+}
+
+#voice-selector > span {
+  margin-right: 0.75em;
+}
+
+#voice-output-unavailable {
+  font-style: italic;
+}

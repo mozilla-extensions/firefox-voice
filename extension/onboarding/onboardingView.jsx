@@ -139,8 +139,9 @@ const OptinAudioDescription = () => {
         identifying information.
       </p>
       <p>
-        Can Firefox Voice store transcripts of your voice recordings? You’ll
-        always be able to use Firefox Voice, even if you don’t allow collection.
+        Can Firefox Voice store your voice recordings and associated transcript?
+        You’ll always be able to use Firefox Voice, even if you don’t allow
+        collection.
       </p>
       <p className="warning">
         The microphone is only active when triggered with a button press or

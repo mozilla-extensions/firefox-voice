@@ -132,7 +132,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "bookmarks.remove",
   async run(context) {
-    await context.displayText("Do you wish to remove this bookmark?");
+    await context.presentMessage("Do you wish to remove this bookmark?");
     await context.startFollowup({
       heading: 'Say "YES" or "CANCEL"',
       insistOnFollowup: true,
@@ -141,7 +141,7 @@ intentRunner.registerIntent({
   async runFollowup(context) {
     switch (context.parameters.confirmation) {
       case "false":
-        await context.displayText("Command cancelled");
+        await context.presentMessage("Command cancelled");
         await context.endFollowup();
         break;
       default:
@@ -154,7 +154,7 @@ intentRunner.registerIntent({
         );
 
         if (!selected.length) {
-          context.displayText("");
+          context.presentMessage("");
           context.endFollowup();
           const e = new Error("This page wasn't bookmarked");
           e.displayMessage = "This page wasn't bookmarked";
@@ -162,7 +162,7 @@ intentRunner.registerIntent({
         }
 
         await browser.bookmarks.remove(selected[0].id);
-        await context.displayText("Bookmark has been removed");
+        await context.presentMessage("Bookmark has been removed");
         await context.endFollowup();
     }
   },
