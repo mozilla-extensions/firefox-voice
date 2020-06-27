@@ -5,9 +5,6 @@ match = """
     restart Firefox [subtype=restart] [message=Sorry, Firefox Voice can't be restarted.]
     generate random password [subtype=password] [message=Sorry, Firefox Voice doesn't generate passwords yet.]
     screen lock [subtype=lock] [message=Sorry, Firefox Voice can't lock your screen yet.]
-    close (this page | all tabs |) (to the left | to the right |) [subtype=page] [message=Sorry, Firefox Voice can't close pages yet.]
-    close (this |) [page] [subtype=page] [message=Sorry, Firefox Voice can't close pages yet.]
-    refresh (all | these |) tabs (to the left | to the right |) [subtype=refresh] [message=Sorry, Firefox Voice can't refesh tabs yet.]
     good (night | morning) [subtype=greetings] [message=Sorry, Firefox Voice doesn't have a routine for this. You can make one yourself in Preferences->Routines]
 """
 
