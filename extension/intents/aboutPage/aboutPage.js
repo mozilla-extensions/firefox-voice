@@ -1,6 +1,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as util from "../../util.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const HN_SEARCH = "https://hn.algolia.com/api/v1/search?query=__URL__";
 const REDDIT_SEARCH =
@@ -43,7 +44,7 @@ async function redditSearchResults(url) {
 intentRunner.registerIntent({
   name: "aboutPage.comments",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const url = (await pageMetadata.getMetadata(activeTab.id)).canonical;
     let results = (await hnSearchResults(url)).concat(
       await redditSearchResults(url)
@@ -72,7 +73,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "aboutPage.changeComments",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const results = tabResults.get(activeTab.id);
     if (!results) {
       const e = new Error("No comment results for this tab");

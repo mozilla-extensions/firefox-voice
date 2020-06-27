@@ -62,8 +62,8 @@ By default this will use Firefox Nightly, but you can override this with the env
    This command does the following:
    - Compiles JavaScript
    - Runs all tests
-   - Checks the code formatting using `prettier`[https://prettier.io/]
-   - Lints the code using `eslint` [https://github.com/eslint/eslint]
+   - Checks the code formatting using [`prettier`](https://prettier.io/)
+   - Lints the code using [`eslint`](https://github.com/eslint/eslint)
 2. While `firefox-voice` makes use of `jest`, it has been excluded from continuous integration (CI) because CI couldn't handle the module rewrites.
 3. `npm test` runs `npm run jest` locally on `node v13.8.0` in the development process.
 4. New `jest` unit tests can be added because `npm test` still runs `jest` locally. For examples to guide you, refer to files with the `.test.js` extension.
@@ -109,10 +109,8 @@ It's possible to install and use in-development versions of the extension. Every
 We are using these builds for internal testing with more-than-normal data collection. We have not yet implemented data collection controls.
 
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
-  (note: must install via about:debugging)
-- [Install stage version](https://va.allizom.org/releases/stage/firefox-voice.xpi?src=github) (Note: stage isn't always updated!)
-- [Install production version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
-- [Logs of updates](https://va.allizom.org/releases/public-update-log.txt)
+  (note: Use **Save As** and install it via about:debugging **Load Temporary Add-on**)
+- [Install release version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
 
@@ -122,7 +120,7 @@ There is an index of intents (commands) that is viewable if you open the panel, 
 
 ## Developing in Android
 
-This is very experimental, but to develop for Firefox for Android (not Fenix), install Firefox (release) on your Android device.
+This is very experimental, but to develop for Firefox for Android, install Firefox (release) on your Android device.
 
 To try, run:
 

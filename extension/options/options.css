@@ -322,7 +322,7 @@ a:hover {
 
 /* History Tab */
 .history-table {
-  width: 700px;
+  min-width: 700px;
   border: 2px solid #c7c7c7;
   border-collapse: collapse;
 }
@@ -431,4 +431,9 @@ a:hover {
 
 #mic-selector {
   margin-top: 20px;
+}
+
+audio {
+  /* This should display the play, mute, and time, but not the volume or time slider */
+  width: 9em;
 }

@@ -35,7 +35,7 @@ class YouTube extends serviceList.Service {
   }
   async playQuery(query) {
     const tabId = await this.getYoutubeTabId();
-    this.tab = await this.context.createTabGoogleLucky(`${query} youtube.com`, {
+    this.tab = await browserUtil.createTabGoogleLucky(`${query} youtube.com`, {
       openInTabId: tabId,
     });
     this.tabCreated = true;
@@ -75,7 +75,7 @@ class YouTube extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.lazyInject(tab.id, "/services/youtube/player.js");
+      await content.inject(tab.id, "/services/youtube/player.js");
       await this.callOneTab(tab.id, "pause");
     }
   }
@@ -83,7 +83,7 @@ class YouTube extends serviceList.Service {
   async move(direction) {
     let tabs = await this.getAllTabs({ audible: true });
     if (!tabs.length) {
-      const currentTab = await this.context.activeTab();
+      const currentTab = await browserUtil.activeTab();
       if (currentTab.url.startsWith(this.baseUrl)) {
         tabs = [currentTab];
       } else {
@@ -99,14 +99,15 @@ class YouTube extends serviceList.Service {
           code: "window.history.back();",
         });
       } else {
-        await content.lazyInject(tab.id, "/services/youtube/player.js");
+        await content.inject(tab.id, "/services/youtube/player.js");
         await this.callOneTab(tab.id, "move", { direction });
       }
     }
   }
 
   async adjustVolume(inputVolume, volumeLevel) {
-    await this.initTab("/services/youtube/player.js");
+    const findAudibleTab = true;
+    await this.initTab("/services/youtube/player.js", findAudibleTab);
     await this.callTab("adjustVolume", { inputVolume, volumeLevel });
   }
 
@@ -121,15 +122,15 @@ class YouTube extends serviceList.Service {
   }
 
   async playAlbum(query) {
-    this.tab = await browserUtil.createTab({
+    this.tab = await browserUtil.createAndLoadTab({
       url: `${this.baseUrl}/search?q=${query} album`,
     });
     this.tabCreated = true;
     if (this.tabCreated) {
       const isAudible = await this.pollTabAudible(this.tab.id, 3000);
       if (!isAudible) {
-        const activeTabId = (await this.context.activeTab()).id;
-        this.context.makeTabActive(this.tab);
+        const activeTabId = (await browserUtil.activeTab()).id;
+        browserUtil.makeTabActive(this.tab);
         const nowAudible = await this.pollTabAudible(this.tab.id, 1000);
         if (
           nowAudible ||
@@ -139,7 +140,7 @@ class YouTube extends serviceList.Service {
           }))
         ) {
           if (this.tab.id !== activeTabId) {
-            this.context.makeTabActive(activeTabId);
+            browserUtil.makeTabActive(activeTabId);
           }
         } else {
           this.context.failedAutoplay(this.tab);

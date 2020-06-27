@@ -1,5 +1,6 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
+import * as browserUtil from "../../browserUtil.js";
 
 const SLIDESHOW_SCRIPT = "/intents/slideshow/contentScript.js";
 const PRESENTATION_SCRIPT = "/intents/slideshow/presentationScript.js";
@@ -7,9 +8,9 @@ const PRESENTATION_SCRIPT = "/intents/slideshow/presentationScript.js";
 intentRunner.registerIntent({
   name: "slideshow.open",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const activeTabId = activeTab.id;
-    await content.lazyInject(activeTabId, SLIDESHOW_SCRIPT);
+    await content.inject(activeTabId, SLIDESHOW_SCRIPT);
 
     const success = await browser.tabs.sendMessage(activeTabId, {
       type: "openSlide",
@@ -26,7 +27,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "slideshow.startPresentation",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const activeTabId = activeTab.id;
 
     // confirm we are on a google slide page
@@ -36,7 +37,7 @@ intentRunner.registerIntent({
       throw err;
     }
 
-    await content.lazyInject(activeTabId, PRESENTATION_SCRIPT);
+    await content.inject(activeTabId, PRESENTATION_SCRIPT);
 
     const result = await browser.tabs.sendMessage(activeTabId, {
       type: "startPresentation",

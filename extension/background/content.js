@@ -3,7 +3,7 @@
 const NO_RECEIVER_MESSAGE =
   "Could not establish connection. Receiving end does not exist";
 
-export async function lazyInject(tabId, scripts) {
+export async function inject(tabId, scripts) {
   if (!tabId) {
     throw new Error(`Invalid tabId: ${tabId}`);
   }
