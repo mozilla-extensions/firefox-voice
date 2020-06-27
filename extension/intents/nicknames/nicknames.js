@@ -99,28 +99,18 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "nicknames.namePage",
   async run(context) {
-    const name = context.slots.name.toLowerCase();
+    const name = context.slots.name;
     const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
-    const result = await browser.storage.sync.get("pageNames");
-    const pageNames = result.pageNames || {};
-    pageNames[name] = metadata.url;
-    log.info("Added page name", name);
-    await browser.storage.sync.set({ pageNames });
+    intentRunner.registerPageName(name, metadata);
   },
 });
 
 intentRunner.registerIntent({
   name: "nicknames.removePageName",
   async run(context) {
-    const name = context.slots.name.toLowerCase();
-    const intents = intentRunner.getRegisteredPageName(name);
-    if (!intents) {
-      const exc = new Error("No named page to remove");
-      exc.displayMessage = `No page name "${name}" found`;
-      throw exc;
-    }
+    const name = context.slots.name;
+    await intentRunner.getRegisteredPageName(name);
     intentRunner.registerPageName(name, null);
-    log.info("Removed page name", name);
   },
 });

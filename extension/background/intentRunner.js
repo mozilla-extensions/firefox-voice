@@ -342,6 +342,7 @@ export async function runIntent(contextParams) {
   lastIntentForFollowup = lastIntent;
   addIntentHistory(context);
   context.initTelemetry();
+
   try {
     log.info(
       `Running intent ${contextParams.name}`,
@@ -479,37 +480,44 @@ export function getRegisteredNicknames() {
   return registeredNicknames;
 }
 
-const registeredPageName = {};
+let pageNames = {};
 
-export function registerPageName(name, { url, creationDate }) {
+export async function registerPageName(name, { url }) {
   name = name.toLowerCase();
+  const creationDate = Date.now();
+  const result = await browser.storage.sync.get("pageNames");
+  pageNames = result.pageNames || {};
+
+  pageNames[name] = url;
+
   if (!url) {
-    delete registeredPageName[name];
+    delete pageNames[name];
     log.info("Removed nickname for page", name);
   } else {
-    registeredPageName[name] = url;
+    pageNames[name] = url;
     log.info("Added nickname for page", name, "->", url, creationDate);
   }
-  browser.storage.sync.set({ registeredPageName });
+  await browser.storage.sync.set({ pageNames });
 }
 
 async function initRegisteredPageName() {
-  const result = await browser.storage.sync.get(["registeredPageName"]);
-  if (result.registeredPageName) {
-    for (const name in result.registeredPageName) {
-      const value = result.registeredPageName[name];
-      const context = new IntentContext(value);
-      registeredPageName[name] = context;
-      log.info("Loaded page name", name, context.name, context.slots);
+  const result = await browser.storage.sync.get(["pageNames"]);
+  if (result.pageNames) {
+    for (const name in result.pageNames) {
+      const value = result.pageNames[name];
+      pageNames[name] = value;
+      log.info("Loaded page name", name, value);
     }
   }
 }
 
 export function getRegisteredPageName(name) {
-  if (!name) {
-    return null;
+  if (!pageNames[name] || !name) {
+    const exc = new Error("No page name to remove");
+    exc.displayMessage = `The page name "${name}" not found`;
+    throw exc;
   }
-  return registeredNicknames;
+  return pageNames;
 }
 
 export function getLastIntentForFeedback() {
