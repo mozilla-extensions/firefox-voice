@@ -5,6 +5,7 @@ import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
+import * as settings from "../settings.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
@@ -225,7 +226,7 @@ function pollForCard(maxTime) {
     }
     let card;
     try {
-      card = await callScript({ type: "cardImage" });
+      card = await callScript({ type: "cardContent" });
     } catch (e) {
       if (e.message && e.message.match(/Invalid Tab ID/i)) {
         stopCardPoll();
@@ -234,7 +235,7 @@ function pollForCard(maxTime) {
       throw e;
     }
     if (!card) {
-      catcher.capture(new Error(`callScript cardImage returned ${card}`));
+      catcher.capture(new Error(`callScript cardContent returned ${card}`));
       return;
     }
     if (card.src === lastImage) {
@@ -390,7 +391,7 @@ intentRunner.registerIntent({
     }
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
-      const card = await callScript({ type: "cardImage" });
+      const card = await callScript({ type: "cardContent", speechOutput: settings.getSettings().speechOutput });
       context.keepPopup();
       searchInfo.index = -1;
       await browser.runtime.sendMessage({

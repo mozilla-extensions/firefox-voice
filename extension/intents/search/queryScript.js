@@ -91,6 +91,10 @@ this.queryScript = (function() {
     return false;
   }
 
+  function getSpeechForCard(card) {
+    return "hooray";
+  }
+
   communicate.register("searchResultInfo", message => {
     const GOOGLE_SELECTOR = "a > h3";
     const DDG_SELECTOR = "#links .results_links_deep .result__a";
@@ -129,11 +133,11 @@ this.queryScript = (function() {
     };
   });
 
-  communicate.register("cardImage", message => {
+  communicate.register("cardContent", message => {
     const cards = findCards();
     const card = cards.sidebarCard || cards.card;
     if (!card) {
-      throw new Error("No card found for cardImage");
+      throw new Error("No card found for cardContent");
     }
     // When it has a canvas it may dynamically update,
     // And timers have this id, otherwise hard to detect:
@@ -151,12 +155,20 @@ this.queryScript = (function() {
     const ctx = canvas.getContext("2d");
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     ctx.drawWindow(window, rect.x, rect.y, rect.width, rect.height, "#fff");
+
+    let speech = "";
+
+    if (message.speechOutput) {
+      speech = getSpeechForCard(card);
+    }
+
     return {
       width: rect.width,
       height: rect.height,
       src: canvas.toDataURL(),
       alt: card.innerText,
       hasWidget,
+      speech
     };
   });
 })();
