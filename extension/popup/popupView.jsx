@@ -740,6 +740,7 @@ class TypingInput extends PureComponent {
           autofocus="1"
           onKeyPress={this.onInputKeyPress}
           onChange={this.onInputTextChange}
+          placeholder="e.g. Translate the selection to French"
           ref={this.textInputRef}
         ></textarea>
         <div id="send-btn-wrapper">
