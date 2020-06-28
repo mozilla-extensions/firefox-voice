@@ -2,36 +2,36 @@
 import { Language } from "./lang.js";
 
 const lang = new Language({
-  aliases: {
-    app: "tab",
-    cat: "tab",
-    tap: "tab",
-    tech: "tab",
-    top: "tab",
-    in: "on",
-    nest: "next",
-    closest: "close",
-    closed: "close",
-    webpage: "page",
-    website: "site",
-    intense: "intents",
-    interns: "intents",
-    haste: "paste",
-    taste: "paste",
-    pace: "paste",
-    best: "paste",
-    coffee: "copy",
+  "aliases": {
+    "app": "tab",
+    "cat": "tab",
+    "tap": "tab",
+    "tech": "tab",
+    "top": "tab",
+    "in": "on",
+    "nest": "next",
+    "closest": "close",
+    "closed": "close",
+    "webpage": "page",
+    "website": "site",
+    "intense": "intents",
+    "interns": "intents",
+    "haste": "paste",
+    "taste": "paste",
+    "pace": "paste",
+    "best": "paste",
+    "coffee": "copy",
     "down ward": "downward",
     "up ward": "upward",
-    like: "link",
-    text: "next",
-    pooping: "open",
-    poop: "open",
-    pint: "pinned",
+    "like": "link",
+    "text": "next",
+    "pooping": "open",
+    "poop": "open",
+    "pint": "pinned",
     "book mark": "bookmark",
-    "slide shoe": "slideshow",
+    "slide shoe": "slideshow"
   },
-  stopwords: [
+  "stopwords": [
     "a",
     "about",
     "above",
@@ -336,8 +336,9 @@ const lang = new Language({
     "your",
     "yours",
     "yourself",
-    "yourselves",
-  ],
-});
+    "yourselves"
+  ]
+}
+);
 
 export default lang;
