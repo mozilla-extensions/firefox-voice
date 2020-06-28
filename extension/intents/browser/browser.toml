@@ -1,11 +1,11 @@
 [browser.bookmark]
 description = "Open bookmarks"
 match = """
-  (Open | show | View |) (all | my |) (bookmark{s} |) (sidebar |)
+  (Open | show |) (all | my |) (bookmark{s} |)
 """
 
 [[browser.bookmark.example]]
-phrase = "Bookmark{s}"
+phrase = "Bookmarks"
 
 [[browser.bookmark.example]]
 phrase = "Open bookmark{s}"
@@ -21,10 +21,6 @@ test = true
 
 [[browser.bookmark.example]]
 phrase = "Show my bookmark{s}"
-test = true
-
-[[browser.bookmark.example]]
-phrase = "View bookmark{s} sidebar"
 test = true
 
 [browser.history]
@@ -73,44 +69,32 @@ test = true
 [browser.addons]
 description = "open browser addons or extensions"
 match = """
-  (open | manage |) (addons | addon | add-ons | add-on | extensions| extension ) (manager |)
+  (open | manage |) (addon{s} | add-on{s} | extension{s}) (manager |)
 """
 
 [[browser.addons.example]]
 phrase = "extensions"
 
 [[browser.addons.example]]
-phrase = "open addons"
+phrase = "open addon{s}"
 test = true
 
 [[browser.addons.example]]
-phrase = "open extensions"
+phrase = "open extension{s}"
 test = true
 
 [[browser.addons.example]]
-phrase = "open addons"
+phrase = "open add-on{s}"
 test = true
 
 [[browser.addons.example]]
-phrase = "open addon"
+phrase = "open add-on{s} manager"
 test = true
 
 [[browser.addons.example]]
-phrase = "open add-ons"
+phrase = "manage add-on{s}"
 test = true
 
 [[browser.addons.example]]
-phrase = "open add-on"
-test = true
-
-[[browser.addons.example]]
-phrase = "open add-on manager"
-test = true
-
-[[browser.addons.example]]
-phrase = "manage add-ons"
-test = true
-
-[[browser.addons.example]]
-phrase = "manage extensions"
+phrase = "manage extension{s}"
 test = true

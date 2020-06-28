@@ -12,11 +12,13 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.text.SpannableStringBuilder
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
@@ -29,20 +31,41 @@ import kotlinx.android.synthetic.main.activity_main.*
 import mozilla.voice.assistant.intents.IntentRunner
 import mozilla.voice.assistant.intents.Metadata
 import mozilla.voice.assistant.intents.alarm.Alarm
+import mozilla.voice.assistant.intents.apps.Install
+import mozilla.voice.assistant.intents.apps.Launch
 import mozilla.voice.assistant.intents.communication.PhoneCall
 import mozilla.voice.assistant.intents.communication.TextMessage
-import mozilla.voice.assistant.intents.launch.Launch
 import mozilla.voice.assistant.intents.maps.Maps
 import mozilla.voice.assistant.intents.music.Music
 import mozilla.voice.assistant.language.Compiler
 import mozilla.voice.assistant.language.Language
 
+/**
+ * Launches a voice search and takes action based on the user's utterance. Specifically,
+ * it passes transcriptions of the utterance to [IntentRunner.determineBestIntent], which
+ * returns an [Intent] satisfying the user's request, which is launched.
+ *
+ * This activity can be started in a few ways (from most to least common):
+ * 1. When the program is launched.
+ * 2. Through the back button or task switcher.
+ * 3. When a user utterance could not be handled directly.
+ *
+ * An example of case 3 is when the user utters "Launch Spotify" but Spotify is not installed.
+ * In this case, [Launch] creates a [MainActivity] intent using [MainActivity.createIntent],
+ * setting the extra [STATUS_KEY] to "Spotify is not installed" and setting the extra
+ * [SUGGESTION_KEY] to "Search for Spotify in the Google Play Store".
+ *
+ * If these extras are set, [MainActivity] displays the status message and makes the suggestion
+ * in text and on a button. If the extra are not set (cases 1 and 2), suggestions are taken from
+ * [mozilla.voice.assistant.intents.Intent] examples, and the button is not shown.
+ */
 @SuppressWarnings("TooManyFunctions")
 class MainActivity : AppCompatActivity() {
-    private var suggestionIndex = 0
     private var chimeVolume: Int = 0
-    private lateinit var suggestions: List<String>
     private lateinit var intentRunner: IntentRunner
+    private var intentStatus: String? = null
+    private var intentSuggestion: String? = null
+
     // showReady() uses shownBurst to ensure the initial "burst" animation is shown only once
     private var shownBurst = false
 
@@ -53,20 +76,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeData() {
-        suggestions = resources.getStringArray(R.array.sample_phrases).toList<String>()
-
         val language = Language(this)
         val metadata = Metadata(this, language)
         val compiler = Compiler(metadata, language)
         intentRunner = IntentRunner(
             compiler,
             Alarm.getIntents() +
+                    Install.getIntents() +
                     Launch.getIntents() +
                     Maps.getIntents() +
                     Music.getIntents() +
                     PhoneCall.getIntents() +
                     TextMessage.getIntents()
         )
+        intentStatus = intent.getStringExtra(STATUS_KEY)
+        intentSuggestion = intent.getStringExtra(SUGGESTION_KEY)
     }
 
     override fun onStart() {
@@ -76,9 +100,26 @@ class MainActivity : AppCompatActivity() {
         checkPermsBeforeStartingSpeechRecognition()
     }
 
+    private fun setStatusText(s: String) {
+        statusView.text = s
+    }
+
     private fun updateViews() {
         feedbackView.text = ""
-        statusView.text = getString(R.string.initializing)
+        setStatusText(intentStatus ?: getString(R.string.initializing))
+        intentSuggestion?.let { suggestion ->
+            suggestionButton.text = suggestion
+            suggestionButton.visibility = View.VISIBLE
+                suggestionButton.setOnClickListener { _ ->
+                    run {
+                        closeRecognizer()
+                        handleResults(listOf(suggestion))
+                    }
+                }
+        } ?: run {
+            suggestionButton.visibility = View.INVISIBLE
+            suggestionButton.setOnClickListener(null)
+        }
     }
 
     private fun initializeChimeVolume() {
@@ -94,6 +135,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermsBeforeStartingSpeechRecognition() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            setStatusText(getString(R.string.no_voice_input))
+            return
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
                 arrayOf(
@@ -189,7 +234,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         animationView.playAnimation()
-        statusView.text = getString(R.string.listening)
+        setStatusText(intentStatus ?: getString(R.string.listening))
     }
 
     private fun showListening() {
@@ -198,42 +243,49 @@ class MainActivity : AppCompatActivity() {
         animationView.resumeAnimation()
         animationView.removeAllUpdateListeners()
         animationView.repeatCount = LottieDrawable.INFINITE
-        statusView.text = getString(R.string.listening)
+        setStatusText(getString(R.string.listening))
     }
 
     private fun showProcessing() {
         animationView.setMinAndMaxFrame(PROCESSING_MIN, PROCESSING_MAX)
-        statusView.text = getString(R.string.processing)
+        setStatusText(getString(R.string.processing))
     }
 
     private fun showSuccess() {
         animationView.setMinAndMaxFrame(SUCCESS_MIN, SUCCESS_MAX)
         animationView.repeatCount = 0
-        statusView.text = getString(R.string.got_it)
+        setStatusText(getString(R.string.got_it))
     }
 
     private fun displayError(errorText: String) {
         animationView.setMinAndMaxFrame(ERROR_MIN, ERROR_MAX)
-        statusView.text = ""
+        setStatusText(errorText)
         feedbackView.text = errorText
     }
 
-    private fun giveSuggestions() {
-        if (suggestionIndex + NUM_SUGGESTIONS > suggestions.size) {
-            suggestionIndex = 0
-        }
-
-        val ideas = suggestions.subList(suggestionIndex, suggestionIndex + NUM_SUGGESTIONS)
-            .joinToString("\n\n")
-
-        feedbackView.text = SpannableStringBuilder()
-            .scale(INSTRUCTIONS_SCALE) {
-                italic { append(getString(R.string.suggestion_prefix)) }
-                    .append("\n\n")
-                    .bold { append(ideas) }
+    private fun getSuggestionPrefix() =
+        getString(
+            if (intentSuggestion != null) {
+                R.string.specific_suggestion_prefix
+            } else {
+                R.string.general_suggestion_prefix
             }
+        )
 
-        suggestionIndex += NUM_SUGGESTIONS
+    private fun getSuggestions() =
+        intentSuggestion ?: intentRunner.getExamplePhrases(MAX_SUGGESTIONS)
+            .joinToString(
+                separator = "\n\n"
+            )
+
+    private fun giveSuggestions() {
+        feedbackView.text =
+            SpannableStringBuilder()
+                .scale(SUGGESTIONS_SCALE) {
+                    italic { append(getSuggestionPrefix()) }
+                        .append("\n\n")
+                        .bold { append(getSuggestions()) }
+                }
     }
 
     private fun closeRecognizer() {
@@ -249,7 +301,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReadyForSpeech(params: Bundle?) {
             speechDetected = false
             showReady()
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 if (!speechDetected) {
                     giveSuggestions()
                 }
@@ -317,8 +369,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        statusView.text = ""
         if (requestCode == SPEECH_RECOGNITION_REQUEST) {
+            setStatusText(getString(R.string.processing))
             if (resultCode == RESULT_OK && data is Intent) {
                 data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.let {
                     handleResults(it)
@@ -333,8 +385,13 @@ class MainActivity : AppCompatActivity() {
         results.let {
             if (it.isNotEmpty()) {
                 intentRunner.determineBestIntent(this, results).let {
+                    // Clear out any suggestions extracted from extras, in case this activity is
+                    // returned to using the back button or recents.
+                    intentStatus = null
+                    intentSuggestion = null
+                    // Pause briefly before launching the intent to show the winning transcription.
                     feedbackView.text = it.first
-                    Handler().postDelayed(
+                    Handler(Looper.getMainLooper()).postDelayed(
                         { startActivity(it.second) },
                         TRANSCRIPT_DISPLAY_TIME
                     )
@@ -362,8 +419,10 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSIONS_REQUEST_CODE = 1
         private const val TRANSCRIPT_DISPLAY_TIME = 1000L // ms before launching browser
         private const val ADVICE_DELAY = 1250L // ms before suggesting utterances
-        private const val NUM_SUGGESTIONS = 3 // number of suggestions to show at a time
-        private const val INSTRUCTIONS_SCALE = .6f
+        private const val MAX_SUGGESTIONS = 3 // max. number of suggestions to show at a time
+        private const val SUGGESTIONS_SCALE = .6f
+        private const val STATUS_KEY = "status"
+        private const val SUGGESTION_KEY = "message"
 
         // Hack to prevent hearing SpeechRecognizer chime after recognizer is closed.
         private const val CHIME_STREAM = AudioManager.STREAM_MUSIC
@@ -383,7 +442,10 @@ class MainActivity : AppCompatActivity() {
 
         private var recognizer: SpeechRecognizer? = null
 
-        fun createIntent(context: Context) =
-            Intent(context, MainActivity::class.java)
+        fun createIntent(context: Context, feedback: String, suggestion: String) =
+            Intent(context, MainActivity::class.java).run {
+                putExtra(STATUS_KEY, feedback)
+                putExtra(SUGGESTION_KEY, suggestion)
+            }
     }
 }

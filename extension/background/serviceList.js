@@ -2,24 +2,6 @@ import * as content from "./content.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
 import * as util from "../util.js";
-import { metadata } from "../services/metadata.js";
-
-// See https://duckduckgo.com/bang for a list of potential services
-// FIXME: this should be removed and serviceMetadata.js preferred.
-const SERVICE_BANG_ALIASES = {};
-for (const id in metadata.search) {
-  for (const name of metadata.search[id].names) {
-    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
-  }
-}
-
-export function ddgBangServiceName(name) {
-  const bang = SERVICE_BANG_ALIASES[name.toLowerCase().trim()];
-  if (!bang) {
-    throw new Error(`Unknown service name: ${JSON.stringify(name)}`);
-  }
-  return bang;
-}
 
 const MUSIC_SERVICE_ALIASES = {
   youtube: "youtube",
@@ -29,8 +11,6 @@ const MUSIC_SERVICE_ALIASES = {
   video: "youtube",
 };
 
-const DEFAULT_MUSIC_SERVICE = "spotify";
-
 // Note these are maintained separately from the services in extension/services/*, because
 // those are all loaded too late to be used here
 export function musicServiceNames() {
@@ -39,6 +19,15 @@ export function musicServiceNames() {
 
 export function mapMusicServiceName(utterance) {
   return MUSIC_SERVICE_ALIASES[utterance.toLowerCase()];
+}
+
+const EMAIL_SERVICE_ALIAS = {
+  gmail: "gmail",
+  "google mail": "gmail",
+};
+
+export function mapEmailServiceName(utterance) {
+  return EMAIL_SERVICE_ALIAS[utterance.toLowerCase()];
 }
 
 export class Service {
@@ -70,7 +59,7 @@ export class Service {
     if (!this.tab) {
       throw new Error("No tab to activate");
     }
-    this.context.makeTabActive(this.tab.id);
+    browserUtil.makeTabActive(this.tab.id);
   }
 
   get matchPatterns() {
@@ -89,12 +78,12 @@ export class Service {
     return (await this.getTab(true)).tab;
   }
 
-  async getTab(activate = false) {
+  async getTab(activate = false, findAudibleTab = false) {
     const tabs = await this.getAllTabs();
     if (!tabs.length) {
       return {
         created: true,
-        tab: await this.context.createTab({
+        tab: await browserUtil.createAndLoadTab({
           url: this.baseUrl,
           active: activate,
         }),
@@ -102,12 +91,12 @@ export class Service {
     }
     let best = 0;
     for (let i = 0; i < tabs.length; i++) {
-      if (tabs[i].active) {
+      if (tabs[i].active || (findAudibleTab && tabs[i].audible === true)) {
         best = i;
       }
     }
     if (activate) {
-      await this.context.makeTabActive(tabs[best]);
+      await browserUtil.makeTabActive(tabs[best]);
     }
     return { created: false, tab: tabs[best] };
   }
@@ -117,11 +106,11 @@ export class Service {
     return browser.tabs.query(query);
   }
 
-  async initTab(scripts) {
-    const tabInfo = await this.getTab();
+  async initTab(scripts, findAudibleTab) {
+    const tabInfo = await this.getTab(false, findAudibleTab);
     this.tab = tabInfo.tab;
     this.tabCreated = tabInfo.created;
-    await content.lazyInject(this.tab.id, scripts);
+    await content.inject(this.tab.id, scripts);
   }
 
   callTab(name, args) {
@@ -166,20 +155,54 @@ export class Service {
 }
 
 export async function detectServiceFromActiveTab(services) {
+  let serviceName = null;
   const tab = await browserUtil.activeTab();
   for (const name in services) {
     const service = services[name];
     if (tab.url.startsWith(service.baseUrl)) {
+      // Continue in case there is another more specific
+      // search provider that also matches the query string
+      if (service.baseUrlQueryParameters === undefined) {
+        serviceName = name;
+        continue;
+      }
+
+      const searchParams = new URL(tab.url).searchParams;
+      let allKeysMatching = true;
+      for (const key in service.baseUrlQueryParameters) {
+        if (searchParams.get(key) !== service.baseUrlQueryParameters[key]) {
+          allKeysMatching = false;
+          break;
+        }
+      }
+      if (allKeysMatching === true) {
+        return name;
+      }
+    }
+  }
+  return serviceName;
+}
+
+export async function detectServiceFromAllTabs(services) {
+  const tabs = await browser.tabs.query({ audible: true });
+  if (!tabs.length) {
+    const e = new Error("No audio is playing");
+    e.displayMessage = "No audio is playing";
+    throw e;
+  }
+  for (const name in services) {
+    const service = services[name];
+    if (tabs[0].url.startsWith(service.baseUrl)) {
       return name;
     }
   }
   return null;
 }
 
-export async function detectServiceFromHistory(services) {
+export async function detectServiceFromHistory(services, defaultService) {
   const now = Date.now();
   const oneMonth = now - 1000 * 60 * 60 * 24 * 30; // last 30 days
-  let best = DEFAULT_MUSIC_SERVICE;
+  let best = defaultService;
   let bestScore = 0;
   for (const name in services) {
     const service = services[name];
@@ -221,10 +244,21 @@ export async function getService(serviceType, serviceMap, options) {
       return serviceMap[serviceName];
     }
   }
+
+  if (options.lookAtAllTabs) {
+    const serviceName = await detectServiceFromAllTabs(serviceMap);
+    if (serviceName) {
+      return serviceMap[serviceName];
+    }
+  }
+
   if (serviceSetting && serviceSetting !== "auto") {
     return serviceMap[serviceSetting];
   }
-  const serviceName = await detectServiceFromHistory(serviceMap);
+  const serviceName = await detectServiceFromHistory(
+    serviceMap,
+    options.defaultService
+  );
   const ServiceClass = serviceMap[serviceName];
   if (!ServiceClass) {
     throw new Error(

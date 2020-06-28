@@ -23,6 +23,6 @@ class NumberPattern : Pattern {
     override fun slotNames(): Set<String> = emptySet()
 
     companion object {
-        private val NATURAL_NUM_REGEX = Regex("\\d+")
+        private val NATURAL_NUM_REGEX = Regex("""\d+""")
     }
 }

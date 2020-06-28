@@ -1,7 +1,7 @@
 import * as content from "./content.js";
 
 export async function getSelection(tabId) {
-  await content.lazyInject(tabId, "/background/pageMetadata-contentScript.js");
+  await content.inject(tabId, "/background/pageMetadata-contentScript.js");
   const resp = await browser.tabs.sendMessage(tabId, {
     type: "getSelection",
   });
@@ -9,7 +9,22 @@ export async function getSelection(tabId) {
 }
 
 export async function getMetadata(tabId) {
-  await content.lazyInject(tabId, "/background/pageMetadata-contentScript.js");
+  try {
+    await content.inject(tabId, "/background/pageMetadata-contentScript.js");
+  } catch (e) {
+    // if inject does not work, try to get the metadata from the tab;
+    const tab = await browser.tabs.get(tabId);
+    const title = tab.title;
+    const canonical = tab.url;
+    const url = tab.url;
+    const docTitle = tab.title;
+    return {
+      title,
+      canonical,
+      url,
+      docTitle,
+    };
+  }
   const metadata = await browser.tabs.sendMessage(tabId, {
     type: "getMetadata",
   });

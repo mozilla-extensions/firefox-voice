@@ -3,7 +3,7 @@
 const NO_RECEIVER_MESSAGE =
   "Could not establish connection. Receiving end does not exist";
 
-export async function lazyInject(tabId, scripts) {
+export async function inject(tabId, scripts) {
   if (!tabId) {
     throw new Error(`Invalid tabId: ${tabId}`);
   }
@@ -52,9 +52,21 @@ export async function lazyInject(tabId, scripts) {
   ]
     .concat(scripts)
     .concat(["/content/responder.js"]);
+
   for (const script of scripts) {
-    await browser.tabs.executeScript(tabId, { file: script });
+    try {
+      await browser.tabs.executeScript(tabId, { file: script });
+    } catch (error) {
+      if (error.message.includes("Missing host permission for the tab")) {
+        const e = new Error("That does not work on this kind of page");
+        e.displayMessage = "That does not work on this kind of page";
+        throw e;
+      } else {
+        throw error;
+      }
+    }
   }
+
   await browser.tabs.sendMessage(tabId, {
     type: "scriptsLoaded",
     scriptKey,

@@ -67,6 +67,14 @@ this.player = (function() {
       }
     }
 
+    getVolumeIcon() {
+      const svgIconGroupBtn = this.querySelectorAll(".svg-icon-group-btn");
+      const volumeBtn = svgIconGroupBtn[svgIconGroupBtn.length - 2];
+      const volumeIcon = volumeBtn.firstElementChild;
+      const volumeIconClass = volumeIcon.getAttribute("class");
+      return volumeIconClass;
+    }
+
     getVolumeSliderTracker() {
       const svgIconGroupBtn = this.querySelectorAll(".svg-icon-group-btn");
       const volumeBtn = svgIconGroupBtn[svgIconGroupBtn.length - 2];
@@ -77,58 +85,86 @@ this.player = (function() {
       });
       volumeBtn.dispatchEvent(mouseover);
       const slidersTrackInput = this.querySelectorAll(".slider-track-input");
-      return slidersTrackInput;
+      return slidersTrackInput[1];
     }
 
-    isMuted() {
-      const slidersTrackInput = this.getVolumeSliderTracker();
+    getVolume() {
+      const sliderTrackInput = this.getVolumeSliderTracker();
       const volumeNow = parseInt(
-        slidersTrackInput[1].getAttribute("aria-valuenow")
+        sliderTrackInput.getAttribute("aria-valuenow")
       );
-      const muted = volumeNow ? 0 : 1;
-      return muted;
+      return volumeNow;
     }
 
-    action_adjustVolume({ volumeLevel }) {
+    action_adjustVolume({ inputVolume = null, volumeLevel = "setInput" }) {
       const maxVolume = 100;
       const minVolume = 0;
-      const volumeChange = 20;
-      const volumeChangeSteps = volumeChange;
-      const slidersTrackInput = this.getVolumeSliderTracker();
-      const volumeNow = parseInt(
-        slidersTrackInput[1].getAttribute("aria-valuenow")
-      );
+      const sliderTrackInput = this.getVolumeSliderTracker();
+      const volumeNow = this.getVolume();
+      let inputVol = 0;
+      let volumeChange = 20;
+      let volumeChangeSteps = volumeChange;
+      let volumeChangeEvent = null;
 
-      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
-        if (this.isMuted()) {
-          this.action_unmute();
+      if (inputVolume !== null) {
+        if (inputVolume > "0") {
+          inputVol = inputVolume;
+        } else if (inputVolume === "0") {
+          this.action_mute();
+          return;
         }
-        const volumeup = new KeyboardEvent("keypress", {
+        if (volumeLevel === "setInput") {
+          if (volumeNow < inputVol) {
+            volumeLevel = "levelUp";
+          } else if (volumeNow > inputVol) {
+            volumeLevel = "levelDown";
+          }
+        }
+      }
+      if (volumeLevel === "levelUp" && volumeNow < maxVolume) {
+        if (inputVol && volumeNow < inputVol) {
+          volumeChange = inputVol - volumeNow;
+          volumeChangeSteps = volumeChange;
+        }
+        volumeChangeEvent = new KeyboardEvent("keypress", {
           bubbles: true,
           key: "ArrowUp",
           keyCode: 38,
           shiftKey: true,
         });
-        for (let step = 0; step < volumeChangeSteps; step++) {
-          slidersTrackInput[1].dispatchEvent(volumeup);
-        }
       } else if (volumeLevel === "levelDown" && volumeNow > minVolume) {
-        const volumedown = new KeyboardEvent("keypress", {
+        if (inputVol && volumeNow > inputVol) {
+          volumeChange = volumeNow - inputVol;
+          volumeChangeSteps = volumeChange;
+        }
+        volumeChangeEvent = new KeyboardEvent("keypress", {
           bubbles: true,
           key: "ArrowDown",
           keyCode: 40,
           shiftKey: true,
         });
-        for (let step = 0; step < volumeChangeSteps; step++) {
-          slidersTrackInput[1].dispatchEvent(volumedown);
-        }
       }
+      if (this.isMuted()) {
+        this.action_unmute();
+      }
+      for (let step = 0; step < volumeChangeSteps; step++) {
+        sliderTrackInput.dispatchEvent(volumeChangeEvent);
+      }
+      if (this.getVolume() === 0) {
+        this.action_mute();
+      }
+    }
+
+    isMuted() {
+      const volumeIcon = this.getVolumeIcon();
+      const muted = volumeIcon === "svg-icon svg-icon-volume-off" ? 1 : 0;
+      return muted;
     }
 
     action_mute() {
       if (!this.isMuted()) {
         const iconVolume = this.querySelector(".svg-icon-volume");
-        const iconVolumeParent = iconVolume.closest(".svg-icon-group-btn");
+        const iconVolumeParent = iconVolume.parentElement;
         iconVolumeParent.click();
       }
     }
@@ -136,7 +172,7 @@ this.player = (function() {
     action_unmute() {
       if (this.isMuted()) {
         const iconVolumeOff = this.querySelector(".svg-icon-volume-off");
-        const iconVolumeParent = iconVolumeOff.closest(".svg-icon-group-btn");
+        const iconVolumeParent = iconVolumeOff.parentElement;
         iconVolumeParent.click();
       }
     }

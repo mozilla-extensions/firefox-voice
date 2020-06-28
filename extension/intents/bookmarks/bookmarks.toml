@@ -1,12 +1,16 @@
 [bookmarks.create]
 description = "Creates a bookmark placing it in the default folder (Other Bookmarks)"
 match = """
-  bookmark (this) (page | site | tab |) (for me |)
-  (save | add) (this |) (page | site | tab |) to bookmarks
+  bookmark (this |) (page | site | tab |) (for me |)
+  (save | add) (this |) (page | site | tab |) (in | to) bookmarks
 """
 
 [[bookmarks.create.example]]
+phrase = "Bookmark"
+
+[[bookmarks.create.example]]
 phrase = "Bookmark this page"
+test = true
 
 [[bookmarks.create.example]]
 phrase = "Bookmark this"
@@ -15,6 +19,29 @@ test = true
 [[bookmarks.create.example]]
 phrase = "Bookmark this site"
 test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark page"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark tab"
+test = true
+
+[[bookmarks.create.example]]
+phrase = "Bookmark site"
+test = true
+
+[bookmarks.createInFolder]
+description = "Creates a bookmark and puts it in a specific folder"
+match = """
+  (save | add | put | create | ) (this |) bookmark (this |) (page | site | tab |) (in | to) (folder |) [folder]
+  (save | add | put) (this |) (page | site | tab |) (in | to) bookmark{s} folder [folder]
+"""
+
+[[bookmarks.createInFolder.example]]
+phrase = "Bookmark this in a folder"
+expectSlots = {folder = "a folder"}
 
 [bookmarks.open]
 description = "This will search all your bookmarks for the given query, and open what appears to be the best match. Only title and URL are searched"

@@ -23,7 +23,7 @@ extension/background/serviceImport.js
 extension/background/intentImport.js
 extension/intents/metadata.js
 extension/services/metadata.js
-extension/background/language/langs/*.js
+extension/language/langs/*.js
 node_modules
 npm-debug.log
 package-lock.json
@@ -36,3 +36,4 @@ manifest.json
 /gh-pages
 Thumbs.db
 /build
+/bin/username-cache.json

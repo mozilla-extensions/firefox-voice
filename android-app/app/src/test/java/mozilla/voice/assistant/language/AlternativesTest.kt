@@ -72,4 +72,17 @@ class AlternativesTest {
             ).toSource()
         )
     }
+
+    @Test
+    fun testSlotValues() {
+        assertEquals(
+            setOf("slot1", "slot2"),
+            Alternatives(
+                listOf(
+                    Slot(Wildcard(empty = false), "slot1"),
+                    Slot(Wildcard(empty = true), "slot2")
+                )
+            ).slotNames()
+        )
+    }
 }

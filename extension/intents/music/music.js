@@ -33,6 +33,7 @@ export function getServiceNamesAndTitles() {
 async function getService(context, options) {
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
+  options.defaultService = options.defaultService || "spotify";
   if (explicitService) {
     ServiceClass = SERVICES[serviceList.mapMusicServiceName(explicitService)];
     if (!ServiceClass) {
@@ -131,15 +132,21 @@ intentRunner.registerIntent({
       e.displayMessage = "Nothing is playing";
       throw e;
     }
-    context.displayText(tabs[0].title);
+    context.presentMessage(tabs[0].title);
   },
 });
 
 intentRunner.registerIntent({
   name: "music.volume",
   async run(context) {
-    const service = await getService(context, { lookAtCurrentTab: true });
-    await service.adjustVolume(context.parameters.volumeLevel);
+    const service = await getService(context, {
+      lookAtCurrentTab: true,
+      lookAtAllTabs: true,
+    });
+    await service.adjustVolume(
+      context.slots.inputVolume,
+      context.parameters.volumeLevel
+    );
   },
 });
 

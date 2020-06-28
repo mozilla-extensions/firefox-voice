@@ -82,8 +82,8 @@ class IntentRunnerTest {
 
         private fun dummyIntentBuilder(
             parseResult: ParseResult,
-            context: Context?,
-            metadata: Metadata
+            @Suppress("UNUSED_PARAMETER") context: Context?,
+            @Suppress("UNUSED_PARAMETER") metadata: Metadata
         ): Intent? {
             val intent = mockk<Intent>(relaxed = true)
             val activityInfo = mockk<ActivityInfo>(relaxed = true)

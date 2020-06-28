@@ -5,6 +5,8 @@ import * as pageMetadata from "../../background/pageMetadata.js";
 import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
+import { metadata } from "../../services/metadata.js";
+import { performSearchPage } from "../search/search.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -36,7 +38,7 @@ intentRunner.registerIntent({
     const pageNames = result.pageNames;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
-      await context.openOrFocusTab(savedUrl);
+      await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query.toLowerCase());
@@ -45,14 +47,14 @@ intentRunner.registerIntent({
           await browser.windows.create({ url: cached.url });
         } else {
           await browser.windows.create({});
-          const tab = await context.createTabGoogleLucky(query);
+          const tab = await browserUtil.createTabGoogleLucky(query);
           const url = tab.url;
           saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
-        await context.openOrFocusTab(cached.url);
+        await browserUtil.openOrFocusTab(cached.url);
       } else {
-        const tab = await context.createTabGoogleLucky(query);
+        const tab = await browserUtil.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
@@ -66,26 +68,45 @@ intentRunner.registerIntent({
   async run(context) {
     queryDatabase.clear();
     saveQueryDatabase();
-    context.displayText('"Open" database/cache cleared');
+    context.presentMessage('"Open" database/cache cleared');
   },
 });
 
 intentRunner.registerIntent({
   name: "navigation.bangSearch",
   async run(context) {
-    const service = context.slots.service || context.parameters.service;
-    const myurl = await searching.ddgBangSearchUrl(
-      context.slots.query,
-      service
-    );
-    context.addTelemetryServiceName(
-      `ddg:${serviceList.ddgBangServiceName(service)}`
-    );
-    await context.createTab({ url: myurl });
-    browser.runtime.sendMessage({
-      type: "closePopup",
-      sender: "find",
-    });
+    let service = context.slots.service || context.parameters.service;
+    let tab = undefined;
+    let myurl = undefined;
+
+    if (service === undefined) {
+      service = await serviceList.detectServiceFromActiveTab(metadata.search);
+      tab = await browserUtil.activeTab();
+    }
+
+    if (service !== null) {
+      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+
+      context.addTelemetryServiceName(
+        `ddg:${searching.ddgBangServiceName(service)}`
+      );
+
+      if (tab !== undefined && service !== null) {
+        browser.tabs.update(tab.id, { url: myurl });
+      } else {
+        await browserUtil.createAndLoadTab({ url: myurl });
+      }
+
+      browser.runtime.sendMessage({
+        type: "closePopup",
+        sender: "find",
+      });
+    } else {
+      myurl = await performSearchPage(
+        context,
+        context.slots.query + " site:" + new URL(tab.url).origin
+      );
+    }
   },
 });
 
@@ -93,7 +114,7 @@ intentRunner.registerIntent({
   name: "navigation.translate",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const translation = `https://translate.google.com/translate?hl=&sl=auto&tl=${
       languages.languageCodes[language.toLowerCase().trim()]
     }&u=${encodeURIComponent(tab.url)}`;
@@ -105,7 +126,7 @@ intentRunner.registerIntent({
   name: "navigation.translateSelection",
   async run(context) {
     const language = context.slots.language || "english";
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     const selection = await pageMetadata.getSelection(tab.id);
     if (!selection || !selection.text) {
       const e = new Error("No text selected");
@@ -133,7 +154,7 @@ async function saveQueryDatabase() {
 intentRunner.registerIntent({
   name: "navigation.goBack",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.back();",
     });
@@ -143,7 +164,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "navigation.goForward",
   async run(context) {
-    const tab = await context.activeTab();
+    const tab = await browserUtil.activeTab();
     await browser.tabs.executeScript(tab.id, {
       code: "window.history.forward();",
     });
@@ -154,7 +175,7 @@ intentRunner.registerIntent({
   name: "navigation.followLink",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
-    await content.lazyInject(activeTab.id, [
+    await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
       "/intents/navigation/followLink.js",
     ]);
@@ -171,9 +192,25 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "navigation.closeDialog",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.inject(activeTab.id, ["/intents/navigation/closeDialog.js"]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "closeDialog",
+    });
+    if (found === false) {
+      const exc = new Error("Could not close dialog");
+      exc.displayMessage = "I couldn't figure out how to close the dialog";
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     await browser.tabs.update({
       url: `https://web.archive.org/web/*/${activeTab.url}`,
     });

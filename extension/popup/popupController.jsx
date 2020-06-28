@@ -1,14 +1,16 @@
 /* globals React, ReactDOM, log, buildSettings */
 
-import * as util from "../util.js";
-import * as voice from "./voice.js";
-import * as settings from "../settings.js";
-import * as voiceShim from "./voiceShim.js";
-import * as vad from "./vad.js";
 import * as browserUtil from "../browserUtil.js";
+import * as settings from "../settings.js";
+import * as util from "../util.js";
 // eslint isn't catching the JSX that uses popupView:
 // eslint-disable-next-line no-unused-vars
 import * as popupView from "./popupView.js";
+import * as vad from "./vad.js";
+import * as voice from "./voice.js";
+import * as voiceShim from "./voiceShim.js";
+
+log.startTiming("popup opened");
 
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
@@ -20,9 +22,15 @@ let recorder;
 // when setting it as internal state.
 let renderListenComponent = true;
 let listenForFollowup = false;
+let speechOutput = false;
 let closePopupId;
 let recorderIntervalId;
 let timerIntervalId;
+let lastAudio = null;
+let lastAudioUtterance = null;
+
+let audioInputId = null;
+
 // This is feedback that the user started, but hasn't submitted;
 // if the window closes then we'll send it:
 let pendingFeedback;
@@ -37,6 +45,7 @@ const ZERO_VOLUME_LIMIT = 8000;
 browser.storage.local.remove("hasHadSuccessfulUtterance");
 
 export const PopupController = function() {
+  log.timing("PopupController called");
   const [currentView, setCurrentView] = useState("waiting");
   const [suggestions, setSuggestions] = useState([]);
   const [lastIntent, setLastIntent] = useState(null);
@@ -69,6 +78,8 @@ export const PopupController = function() {
   let overrideTimeout;
   let noVoiceInterval;
   const userSettingsPromise = util.makeNakedPromise();
+  const synth = window.speechSynthesis;
+  let preferredVoice;
 
   useEffect(() => {
     if (!isInitialized) {
@@ -78,6 +89,7 @@ export const PopupController = function() {
   });
 
   const init = async () => {
+    log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
@@ -88,6 +100,12 @@ export const PopupController = function() {
     }
 
     listenForFollowup = userSettings.listenForFollowup;
+    if (userSettings.audioInputId !== undefined) {
+      audioInputId = userSettings.audioInputId;
+    }
+
+    speechOutput = userSettings.speechOutput;
+    setPreferredVoice(userSettings.preferredVoice);
 
     const activeTimer = await browser.runtime.sendMessage({
       type: "timerAction",
@@ -108,7 +126,7 @@ export const PopupController = function() {
       }
 
       if (waitFor < 0) {
-        clearTimer(totalInMS);
+        clearTimer({ totalInMS });
       }
     }
 
@@ -122,11 +140,16 @@ export const PopupController = function() {
       ? new voiceShim.Recorder()
       : new voice.Recorder(stream);
 
+    log.timing("PopupController init() started");
+
     addListeners();
     updateExamples();
     updateLastIntent();
 
+    log.timing("PopupController init() listeners added");
+
     startRecorder();
+    log.timing("PopupController init() recorder created added");
   };
 
   const incrementVisits = () => {
@@ -159,6 +182,9 @@ export const PopupController = function() {
       "https://mozilla.github.io/firefox-voice/alarm.mp3"
     );
     audio.play();
+    setTimeout(() => {
+      audio.play();
+    }, 3000);
   };
 
   const onClickLexicon = async event => {
@@ -166,6 +192,14 @@ export const PopupController = function() {
       browser.runtime.getURL(event.target.href)
     );
     window.close();
+  };
+
+  const setPreferredVoice = voiceName => {
+    const voices = synth.getVoices();
+    const matchingVoice = voices.filter(voice => voice.name === voiceName);
+    if (matchingVoice.length) {
+      preferredVoice = matchingVoice[0];
+    }
   };
 
   const handleMessage = message => {
@@ -192,8 +226,11 @@ export const PopupController = function() {
         setDisplayText(message.message);
         break;
       }
-      case "displayText": {
+      case "presentMessage": {
         setDisplayText(message.message);
+        if (speechOutput) {
+          speak(message.message);
+        }
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
           closePopup();
@@ -243,8 +280,14 @@ export const PopupController = function() {
         return Promise.resolve(true);
       }
       case "closeTimer": {
-        clearTimer(message.totalInMS);
+        clearTimer(message);
         return Promise.resolve(true);
+      }
+      case "getLastAudio": {
+        if (message.utterance !== lastAudioUtterance) {
+          return Promise.resolve(null);
+        }
+        return Promise.resolve(lastAudio);
       }
       default:
         break;
@@ -252,14 +295,23 @@ export const PopupController = function() {
     return undefined;
   };
 
-  const clearTimer = async totalInMS => {
+  const speak = async message => {
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = "en-US"; // TODO: accomodate overrides for the Translate search card
+    utterance.voice = preferredVoice;
+
+    synth.speak(utterance);
+    utterance.onend = () => {
+      closePopup(2000);
+    };
+  };
+
+  const clearTimer = async ({ totalInMS, followup }) => {
+    playTimerAlarm();
     setPopupView("timer");
 
     // use this variable to stop any other actions and show notifications
     timerElapsed = true;
-
-    cancelRecoder();
-    playTimerAlarm();
 
     setTranscript("Time's up");
 
@@ -273,7 +325,14 @@ export const PopupController = function() {
       method: "closeActiveTimer",
     });
 
-    closePopup();
+    if (followup) {
+      setFollowupText(followup);
+      setRequestFollowup(true);
+      runFollowup();
+    } else {
+      cancelRecoder();
+      closePopup(6000);
+    }
   };
 
   const startTimer = async duration => {
@@ -331,6 +390,7 @@ export const PopupController = function() {
   };
 
   const submitTextInput = async text => {
+    log.timing(`submitTextInput(${text}) called`);
     if (text) {
       const capText = text.charAt(0).toUpperCase() + text.slice(1);
       setTranscript(capText);
@@ -341,14 +401,17 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { inputTyped: true },
       });
+      setDisplayText("");
       browser.runtime.sendMessage({
         type: "runIntent",
         text,
       });
+      log.timing(`submitTextInput(${text}) sent intent`);
     }
   };
 
   const setPopupView = async newView => {
+    log.timing(`setPopupView(${newView})`);
     // do not change view if timer elapsed; timer has highest priority
     if (timerElapsed === true) {
       return;
@@ -446,6 +509,7 @@ export const PopupController = function() {
   };
 
   const onNextSearchResultClick = () => {
+    setDisplayText("");
     browser.runtime.sendMessage({
       type: "runIntent",
       text: "next",
@@ -503,12 +567,15 @@ export const PopupController = function() {
     if (renderListenComponent) {
       renderListenComponent = false;
     }
+    forceCancelRecoder = false;
     recorder.startRecording();
     closePopup(FOLLOWUP_TIMEOUT);
   };
 
   const startRecorder = () => {
+    log.timing("startRecorder() called");
     recorder.onBeginRecording = () => {
+      log.timing("recorder.onBeginRecording");
       if (renderListenComponent) {
         setPopupView("listening");
         userSettingsPromise.then(userSettings => {
@@ -519,7 +586,8 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStarted" });
     };
-    recorder.onEnd = async json => {
+    recorder.onEnd = async (json, audioBlob) => {
+      log.timing("recorder.onEnd() called");
       clearInterval(recorderIntervalId);
       if (forceCancelRecoder) {
         // The recorder ended because it was cancelled when typing began or timer has ended
@@ -539,10 +607,15 @@ export const PopupController = function() {
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
+      setDisplayText("");
+      log.timing(`Sending runIntent(${json.data[0].text})`);
+      lastAudio = audioBlob;
+      lastAudioUtterance = json.data[0].text;
       await browser.runtime.sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
+      log.timing(`Sending runIntent(${json.data[0].text}) completed`);
       const completedIntent = await updateLastIntent();
       if (
         completedIntent &&
@@ -555,6 +628,7 @@ export const PopupController = function() {
       if (listenForFollowup && !requestFollowup) {
         runFollowup();
       }
+      log.timing("recorder.onEnd() finished");
     };
     recorder.onError = error => {
       if (String(error) === "Error: Failed response from server: 500") {
@@ -568,6 +642,7 @@ export const PopupController = function() {
       log.error("Got recorder error:", String(error), error);
     };
     recorder.onProcessing = () => {
+      log.timing("recorder.onProcessing()");
       setPopupView("processing");
       browser.runtime.sendMessage({ type: "microphoneStopped" });
     };
@@ -578,13 +653,17 @@ export const PopupController = function() {
       }
       browser.runtime.sendMessage({ type: "microphoneStopped" });
       log.debug("Closing popup because of no voice input");
-      window.close();
+      setPopupView("noAudio");
+      setDisplayText("I did not hear that, please try again");
+      closePopup(3000);
     };
     recorder.onStartVoice = () => {
+      log.timing("recorder.onStartVoice()");
       clearInterval(noVoiceInterval);
       clearTimeout(closePopupId);
     };
     recorder.startRecording();
+    log.timing("startRecorder() finished");
   };
 
   const setupStream = async () => {
@@ -606,7 +685,17 @@ export const PopupController = function() {
   };
 
   const requestMicrophone = async () => {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    let constraint = null;
+    if (audioInputId !== null) {
+      constraint = {
+        audio: { deviceId: audioInputId },
+      };
+    } else {
+      constraint = {
+        audio: true,
+      };
+    }
+    stream = await navigator.mediaDevices.getUserMedia(constraint);
     return stream;
   };
 
@@ -651,7 +740,8 @@ export const PopupController = function() {
     }
   };
 
-  return (
+  log.timing("PopupController initialized");
+  const result = (
     <popupView.Popup
       currentView={currentView}
       suggestions={suggestions}
@@ -680,6 +770,10 @@ export const PopupController = function() {
       showZeroVolumeError={showZeroVolumeError}
     />
   );
+  log.timing("PopupController finished");
+  return result;
 };
 
 ReactDOM.render(<PopupController />, popupContainer);
+
+log.timing("ReactDOM.render() completed");

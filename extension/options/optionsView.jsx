@@ -23,6 +23,8 @@ export const Options = ({
   registeredNicknames,
   useToggle,
   useEditNicknameDraft,
+  audioInputDevices,
+  synthesizedVoices,
 }) => {
   return (
     <div className="settings-page">
@@ -34,6 +36,8 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
+          audioInputDevices={audioInputDevices}
+          synthesizedVoices={synthesizedVoices}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -126,12 +130,16 @@ const General = ({
   userOptions,
   userSettings,
   updateUserSettings,
+  audioInputDevices,
+  synthesizedVoices,
 }) => {
   return (
     <div className="settings-content">
       <PreferenceSettings
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
+        synthesizedVoices={synthesizedVoices}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
@@ -190,7 +198,117 @@ const MusicServiceSettings = ({
   );
 };
 
-const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
+const SelectMicPreferences = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+}) => {
+  const onMicPreferenceChange = event => {
+    if (event) {
+      userSettings.audioInputId = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="mic-selector">
+      <span>Microphone </span>
+      <select
+        value={userSettings.audioInputId}
+        onChange={onMicPreferenceChange}
+        onBlur={onMicPreferenceChange}
+      >
+        {audioInputDevices &&
+          audioInputDevices.map(device => (
+            <option key={device.deviceId} value={device.deviceId}>
+              {device.label}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
+const VoiceOutputPreferences = ({
+  userSettings,
+  updateUserSettings,
+  synthesizedVoices,
+}) => {
+  const onVoiceOutputPreferenceChange = event => {
+    userSettings.speechOutput = !!event.target.checked;
+    updateUserSettings(userSettings);
+  };
+  return (
+    <div id="voice-output">
+      <div id="voice-output-header">Voice responses</div>
+      {synthesizedVoices.length ? (
+        <React.Fragment>
+          <div className="styled-toggleswitch">
+            <input
+              className="toggle-button"
+              id="voice-output-pref"
+              type="checkbox"
+              checked={userSettings.speechOutput}
+              onChange={onVoiceOutputPreferenceChange}
+            />
+            <label htmlFor="voice-output-pref">
+              <strong>
+                Firefox Voice will respond to many requests with speech
+              </strong>
+            </label>
+          </div>
+          <SelectVoicePreference
+            userSettings={userSettings}
+            updateUserSettings={updateUserSettings}
+            synthesizedVoices={synthesizedVoices}
+          />
+        </React.Fragment>
+      ) : (
+        <div id="voice-output-unavailable">
+          It seems that your devices does not have any built-in synthesized
+          voices, so voice responses are not available.
+        </div>
+      )}
+    </div>
+  );
+};
+
+const SelectVoicePreference = ({
+  userSettings,
+  updateUserSettings,
+  synthesizedVoices,
+}) => {
+  const onVoicePreferenceChange = event => {
+    if (event) {
+      userSettings.preferredVoice = event.target.value;
+      updateUserSettings(userSettings);
+    }
+  };
+  return (
+    <div id="voice-selector">
+      <span>Voice </span>
+      <select
+        value={userSettings.preferredVoice}
+        onChange={onVoicePreferenceChange}
+        onBlur={onVoicePreferenceChange}
+      >
+        {synthesizedVoices &&
+          synthesizedVoices.map(voice => (
+            <option key={voice.name} value={voice.name}>
+              {voice.name} ({voice.lang})
+              {voice.default ? " - Default System Voice" : ""}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
+
+const PreferenceSettings = ({
+  userSettings,
+  updateUserSettings,
+  audioInputDevices,
+  synthesizedVoices,
+}) => {
   const onPreferenceChange = setting => event => {
     if (event) {
       userSettings[setting] = event.target.checked;
@@ -224,6 +342,16 @@ const PreferenceSettings = ({ userSettings, updateUserSettings }) => {
           </label>
         </div>
       </div>
+      <SelectMicPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        audioInputDevices={audioInputDevices}
+      />
+      <VoiceOutputPreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        synthesizedVoices={synthesizedVoices}
+      />
     </fieldset>
   );
 };
@@ -468,6 +596,9 @@ const DevelopmentSettings = ({ inDevelopment }) => {
       <ul>
         <li>
           <a href="/tests/intent-viewer.html">Intent Viewer</a>
+        </li>
+        <li>
+          <a href="/views/timing/timing.html">Timing/performance information</a>
         </li>
         <li>
           <a href="/popup/popup.html">View popup in tab</a>

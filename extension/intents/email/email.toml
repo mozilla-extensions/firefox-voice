@@ -1,0 +1,26 @@
+[email.compose]
+description = "Compose a new email"
+match = """
+  (write | send | compose | start | launch |) (new |) (email | mail | send)
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) [body=tab]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) (to | for) [to]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) (to | for) [to] [body=tab]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) (to | for) [to] (about | subject) [subject]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) (to | for) [to] (about | subject) [subject] [body=tab]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) (to | for) [to] (about | subject) [subject]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) (to | for) [to] (about | subject) [subject] [body=tab]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) (about | subject) [subject]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) (about | subject) [subject] [body=tab]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) (about | subject) [subject] (to | for) [to]
+  (write | send | compose | start | launch |) (new |) (email | mail | send) this (tab | site | page | article |) (about | subject) [subject] (to | for) [to] [body=tab]
+  (email | mail) [to]
+"""
+
+[[email.compose.example]]
+phrase = "Send email"
+
+[[email.compose.example]]
+# This is a typical transcription, but it gets normalized in the intent:
+phrase = "Email Bob At Example. Com"
+expectSlots = { to = "Bob At Example. Com" }
+test = true

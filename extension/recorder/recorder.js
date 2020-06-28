@@ -99,14 +99,14 @@ class ShimRecorder extends voice.Recorder {
     }
   }
 
-  onEnd(json) {
+  onEnd(json, audioBlob) {
     if (this._destroyed) {
       log.error("onEnd called after ShimRecorder destroyed");
     } else {
       browser.runtime.sendMessage({
         type: "onVoiceShimForward",
         method: "onEnd",
-        args: [json],
+        args: [json, audioBlob],
       });
       pause();
     }

@@ -114,18 +114,60 @@ async function performSearch(query) {
     await browserUtil.makeTabActive(tabId);
   }
   try {
-    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    await content.inject(tabId, "/intents/search/queryScript.js");
   } catch (e) {
     // There's a (fairly) common race condition here
     if (e.message.includes("communicate is not defined")) {
       log.info(
         "Race condition in search page, attempting to load queryScript second time"
       );
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+      await content.inject(tabId, "/intents/search/queryScript.js");
     } else {
       throw e;
     }
   }
+}
+
+export async function performSearchPage(context, query) {
+  if (!query) {
+    query = context.slots.query;
+  }
+  const tab = await browser.tabs.create({
+    url: START_URL,
+    active: false,
+  });
+  const tabId = tab.id;
+  _searchTabId = tabId;
+
+  await browser.search.search({
+    query,
+    tabId,
+  });
+
+  await focusSearchTab();
+  await browserUtil.waitForDocumentComplete(tabId);
+  await content.inject(tabId, "/intents/search/queryScript.js");
+  const searchInfo = await callScript({ type: "searchResultInfo" });
+
+  if (
+    searchInfo.searchResults === undefined ||
+    !searchInfo.searchResults.length > 0
+  ) {
+    const msg =
+      "Could not get list of search results.\n\nPlease click feedback to let us know.";
+    const e = new Error(msg);
+    e.displayMessage = msg;
+    throw e;
+  }
+
+  tabSearchResults.set(tabId, searchInfo);
+
+  context.keepPopup();
+  await context.startFollowup({
+    heading: "Say 'next' to view",
+    subheading: searchInfo.searchResults[0].title,
+    acceptFollowupIntent: ["search.next", "search.previous"],
+  });
 }
 
 /** Returns the popupSearchInfo if it's available, otherwise the active tab's searchInfo,
@@ -260,7 +302,7 @@ async function moveResult(context, step) {
 
   const item = searchInfo.searchResults[searchInfo.index];
   if (!tabId) {
-    const tab = await context.createTab({ url: item.url });
+    const tab = await browserUtil.createAndLoadTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
     lastTabId = tab.id;
     popupSearchInfo = null;
@@ -270,7 +312,7 @@ async function moveResult(context, step) {
     lastTabId = tabId;
     let exists = true;
     try {
-      await context.makeTabActive(tabId);
+      await browserUtil.makeTabActive(tabId);
     } catch (e) {
       if (String(e).includes("Invalid tab ID")) {
         exists = false;
@@ -417,7 +459,7 @@ intentRunner.registerIntent({
         tabId: searchTabId,
       });
     } else if (searchTab.url !== searchInfo.searchUrl) {
-      await browser.tabs.update(searchTabId, { url: searchInfo.url });
+      await browser.tabs.update(searchTabId, { url: searchInfo.searchUrl });
     }
     await focusSearchTab();
   },
@@ -431,42 +473,7 @@ intentRunner.registerIntent({
     if (buildSettings.android) {
       await performSearch(context.slots.query);
     } else {
-      const tab = await browser.tabs.create({
-        url: START_URL,
-        active: false,
-      });
-      const tabId = tab.id;
-      _searchTabId = tabId;
-
-      await browser.search.search({
-        query: context.slots.query,
-        tabId,
-      });
-
-      await focusSearchTab();
-      await browserUtil.waitForDocumentComplete(tabId);
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
-      const searchInfo = await callScript({ type: "searchResultInfo" });
-
-      if (
-        searchInfo.searchResults === undefined ||
-        !searchInfo.searchResults.length > 0
-      ) {
-        const msg =
-          "Could not get list of search results.\n\nPlease click feedback to let us know.";
-        const e = new Error(msg);
-        e.displayMessage = msg;
-        throw e;
-      }
-
-      tabSearchResults.set(tabId, searchInfo);
-
-      context.keepPopup();
-      await context.startFollowup({
-        heading: "Say 'next' to view",
-        subheading: searchInfo.searchResults[0].title,
-        acceptFollowupIntent: ["search.next", "search.previous"],
-      });
+      await performSearchPage(context);
     }
   },
 });

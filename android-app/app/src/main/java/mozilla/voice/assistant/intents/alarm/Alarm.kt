@@ -39,7 +39,7 @@ class Alarm {
             mins: String?,
             now: Calendar = Calendar.getInstance()
         ) =
-            // For now, copy year, month, day, seconds, and time zone
+            // Clone year, month, day, seconds, and time zone.
             (now.clone() as Calendar).apply {
                 hour?.toInt()?.let { add(Calendar.HOUR, it) }
                 mins?.toInt()?.let { add(Calendar.MINUTE, it) }

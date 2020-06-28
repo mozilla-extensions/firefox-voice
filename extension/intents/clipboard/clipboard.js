@@ -4,7 +4,7 @@ import * as browserUtil from "../../browserUtil.js";
 
 async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
-  await content.lazyInject(activeTab.id, [
+  await content.inject(activeTab.id, [
     "/background/pageMetadata-contentScript.js",
     "/intents/saving/screenshotContentScript.js",
     "/intents/clipboard/contentScript.js",
@@ -19,7 +19,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyLink",
   async run(context) {
     await copy(context, "copyLink");
-    context.displayText("Link copied to clipboard");
+    context.presentMessage("Link copied to clipboard");
   },
 });
 
@@ -27,7 +27,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyTitle",
   async run(context) {
     await copy(context, "copyTitle");
-    context.displayText("Title copied to clipboard");
+    context.presentMessage("Title copied to clipboard");
   },
 });
 
@@ -35,7 +35,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyRichLink",
   async run(context) {
     await copy(context, "copyRichLink");
-    context.displayText("Title and link copied to clipboard");
+    context.presentMessage("Title and link copied to clipboard");
   },
 });
 
@@ -43,7 +43,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyMarkdownLink",
   async run(context) {
     await copy(context, "copyMarkdownLink");
-    context.displayText("Markdown title and link copied to clipboard");
+    context.presentMessage("Markdown title and link copied to clipboard");
   },
 });
 
@@ -51,7 +51,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyScreenshot",
   async run(context) {
     await copy(context, "copyScreenshot");
-    context.displayText("Screenshot copied to clipboard");
+    context.presentMessage("Screenshot copied to clipboard");
   },
 });
 
@@ -59,7 +59,7 @@ intentRunner.registerIntent({
   name: "clipboard.copyFullPageScreenshot",
   async run(context) {
     await copy(context, "copyFullPageScreenshot");
-    context.displayText("Full page screenshot copied to clipboard");
+    context.presentMessage("Full page screenshot copied to clipboard");
   },
 });
 
@@ -67,7 +67,7 @@ intentRunner.registerIntent({
   name: "clipboard.copySelection",
   async run(context) {
     await copy(context, "copySelection");
-    context.displayText("Selected text copied to clipboard");
+    context.presentMessage("Selected text copied to clipboard");
   },
 });
 
@@ -75,14 +75,14 @@ intentRunner.registerIntent({
   name: "clipboard.copyImage",
   async run(context) {
     await copy(context, "copyImage");
-    context.displayText("Image copied to clipboard");
+    context.presentMessage("Image copied to clipboard");
   },
 });
 
 intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     if (
       activeTab.url === "about:newtab" ||
       activeTab.url === "about:home" ||

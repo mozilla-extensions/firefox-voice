@@ -20,7 +20,7 @@ phrase = "Comments on this page?"
 [aboutPage.viewPageSource]
 description = "Open page source"
 match = """
-  (View | open | show |) (html |) (page |) (source | html|)
+  (View | open | show |) (html |) (page |) (source | html)
 """
 
 [[aboutPage.viewPageSource.example]]
