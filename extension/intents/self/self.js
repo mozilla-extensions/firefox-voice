@@ -29,7 +29,20 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    await browserUtil.openOrActivateTab("/views/lexicon.html");
+    const imageCard = "../../assets/images/lionel-richie.jpg";
+    const card = {
+      answer: {
+        imgSrc: `${imageCard}`,
+        alt: "Lionel Richie",
+        text: "Is it me you're looking for?",
+        eduText: `Click mic and say 'help' for things to say`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
   },
 });
 
