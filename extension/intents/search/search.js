@@ -226,7 +226,7 @@ function pollForCard(maxTime) {
     }
     let card;
     try {
-      card = await callScript({ type: "cardContent" });
+      card = await callScript({ type: "cardContent", polling: true });
     } catch (e) {
       if (e.message && e.message.match(/Invalid Tab ID/i)) {
         stopCardPoll();
@@ -391,7 +391,10 @@ intentRunner.registerIntent({
     }
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
-      const card = await callScript({ type: "cardContent", speechOutput: settings.getSettings().speechOutput });
+      const card = await callScript({
+        type: "cardContent",
+        speechOutput: settings.getSettings().speechOutput,
+      });
       context.keepPopup();
       searchInfo.index = -1;
       await browser.runtime.sendMessage({
@@ -402,11 +405,11 @@ intentRunner.registerIntent({
         index: -1,
       });
       telemetry.add({ hasCard: true });
-      // if (card.hasWidget) {
-      //   pollForCard();
-      // } else {
-      //   pollForCard(CARD_POLL_LIMIT);
-      // }
+      if (card.hasWidget) {
+        pollForCard();
+      } else {
+        pollForCard(CARD_POLL_LIMIT);
+      }
       lastTabId = undefined;
       popupSearchInfo = searchInfo;
     } else {

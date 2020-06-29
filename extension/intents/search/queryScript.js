@@ -138,6 +138,9 @@ this.queryScript = (function() {
   }
 
   function handleBannerCards(bannerCardContainer) {
+    const BANNER_CARD_ITEM_WIDE = ".rl_item"; // may be possible just to get innerText
+    const BANNER_CARD_ITEM_TALL = ".klitem-tr"; // title found in aria-label of this item
+
     let text;
     if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_WIDE)) {
       text = getSpeakableSubsetOfList(
@@ -226,7 +229,8 @@ this.queryScript = (function() {
   }
 
   function handleSidebarCard(card) {
-    const WIKI_SIDEBAR_SELECTOR = ".kno-rdesc > div:nth-child(1) > span:nth-child(2)";
+    const WIKI_SIDEBAR_SELECTOR =
+      ".kno-rdesc > div:nth-child(1) > span:nth-child(2)";
     const wikiResponse = getInnerText(card, WIKI_SIDEBAR_SELECTOR);
 
     return abbreviateTextResponse(wikiResponse);
@@ -361,12 +365,11 @@ this.queryScript = (function() {
       fahrenheit: "fahrenheit",
       kelvin: "kelvin",
       century: "centuries",
-    }
+    };
 
     let adjustedUnit = unit;
     if (parseFloat(value) !== 1) {
-      const irregularPluralForm =
-        IRREGULAR_PLURALIZATIONS[unit.toLowerCase()];
+      const irregularPluralForm = IRREGULAR_PLURALIZATIONS[unit.toLowerCase()];
       adjustedUnit = irregularPluralForm ? irregularPluralForm : `${unit}s`;
     }
     return `${value} ${adjustedUnit}`;
@@ -387,7 +390,7 @@ this.queryScript = (function() {
       "November",
       "December",
     ];
-    
+
     let eventStringParts = rawDate.split(", ");
     if (eventStringParts.length === 3) {
       // Specifies a day of the week and date (e.g. Tue, 6/16)
@@ -425,6 +428,12 @@ this.queryScript = (function() {
     let text;
     let language;
     let cardType;
+
+    const BANNER_CARD_SELECTOR = "#botabar";
+    const bannerCardContainer = document.querySelector(BANNER_CARD_SELECTOR);
+    if (bannerCardContainer) {
+      return handleBannerCards(bannerCardContainer); // We don't currently show banner-type cards within the popup, and there may be searches that yield both banner cards and sidebar cards.
+    }
 
     for (const [type, tag] of Object.entries(CARD_TYPE_SELECTORS)) {
       if (parentCard.querySelectorAll(tag).length) {
@@ -473,7 +482,7 @@ this.queryScript = (function() {
         text = handleGenericCard(card);
     }
 
-    return {text, language};
+    return { text, language };
   }
 
   communicate.register("searchResultInfo", message => {
@@ -539,7 +548,7 @@ this.queryScript = (function() {
 
     let speech;
 
-    if (message.speechOutput) {
+    if (message.speechOutput && !message.polling) {
       speech = getSpeechForCard(card);
     }
 
@@ -549,7 +558,7 @@ this.queryScript = (function() {
       src: canvas.toDataURL(),
       alt: card.innerText,
       hasWidget,
-      speech
+      speech,
     };
   });
 })();

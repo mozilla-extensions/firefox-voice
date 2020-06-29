@@ -229,7 +229,7 @@ export const PopupController = function() {
       case "presentMessage": {
         setDisplayText(message.message);
         if (speechOutput) {
-          speak({text: message.message});
+          speak({ text: message.message });
         }
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
@@ -296,7 +296,7 @@ export const PopupController = function() {
   };
 
   const speak = async message => {
-    const {text, language} = message;
+    const { text, language } = message;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = language || "en-US";
     if (!language) {
