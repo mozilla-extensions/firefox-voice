@@ -138,16 +138,16 @@ this.queryScript = (function() {
   }
 
   function handleBannerCards(bannerCardContainer) {
-    let ttsText;
+    let text;
     if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_WIDE)) {
-      ttsText = getSpeakableSubsetOfList(
+      text = getSpeakableSubsetOfList(
         bannerCardContainer,
         BANNER_CARD_ITEM_WIDE,
         5,
         true
       );
     } else if (bannerCardContainer.querySelector(BANNER_CARD_ITEM_TALL)) {
-      ttsText = getSpeakableSubsetOfList(
+      text = getSpeakableSubsetOfList(
         bannerCardContainer,
         BANNER_CARD_ITEM_TALL,
         3,
@@ -156,7 +156,7 @@ this.queryScript = (function() {
       );
     }
     return {
-      ttsText,
+      text,
     };
   }
 
@@ -227,8 +227,9 @@ this.queryScript = (function() {
 
   function handleSidebarCard(card) {
     const WIKI_SIDEBAR_SELECTOR = ".kno-rdesc > div:nth-child(1) > span:nth-child(2)";
-    
-    return getInnerText(card, WIKI_SIDEBAR_SELECTOR);
+    const wikiResponse = getInnerText(card, WIKI_SIDEBAR_SELECTOR);
+
+    return abbreviateTextResponse(wikiResponse);
   }
 
   function handleCalculatorCard(card) {
@@ -286,8 +287,8 @@ this.queryScript = (function() {
     ).dataset.lang;
     const targetText = getInnerText(card, TRANSLATE_TARGET_PHRASE);
     return {
-      ttsText: targetText,
-      ttsLanguage: targetLanguageCode,
+      text: targetText,
+      language: targetLanguageCode,
     };
   }
 
@@ -415,13 +416,14 @@ this.queryScript = (function() {
       DICTIONARY: ".zbA8Me.gJBeNe.vSuuAd.i8lZMc",
       SPELLING: ".DgZBFd.XcVN5d", // will also match the dictionary, so ordering matters
       TRANSLATE: "#tw-container",
+      SIDEBAR: ".kno-rdesc > div:nth-child(1) > span:nth-child(2)",
       SPORTS_SCORE: ".imso_mh__l-tm-sc",
       SPORTS_GAME_TIME: "#sports-app", // has to be last because this will also match the score type
     };
 
     const parentCard = card.parentNode;
-    let ttsText;
-    let ttsLang = "en";
+    let text;
+    let language;
     let cardType;
 
     for (const [type, tag] of Object.entries(CARD_TYPE_SELECTORS)) {
@@ -430,51 +432,48 @@ this.queryScript = (function() {
         break;
       }
     }
-    if (!cardType) {
-      cardType = message.isSidebar ? "SIDEBAR" : "UNKNOWN";
-    }
 
     switch (cardType) {
       case "WEATHER":
-        ttsText = handleWeatherCard(card);
+        text = handleWeatherCard(card);
         break;
       case "DIRECTIONS":
-        ttsText = handleDirectionsCard(card);
+        text = handleDirectionsCard(card);
         break;
       case "SIDEBAR":
-        ttsText = handleSidebarCard(card);
+        text = handleSidebarCard(card);
         break;
       case "SNIPPET":
-        ttsText = handleSnippetCard(card);
+        text = handleSnippetCard(card);
         break;
       case "UNIT":
-        ttsText = handleUnitCard(card);
+        text = handleUnitCard(card);
         break;
       case "CALCULATOR":
-        ttsText = handleCalculatorCard(card);
+        text = handleCalculatorCard(card);
         break;
       case "DICTIONARY":
-        ttsText = handleDictionaryCard(card);
+        text = handleDictionaryCard(card);
         break;
       case "SPELLING":
-        ttsText = handleSpellingCard(card);
+        text = handleSpellingCard(card);
         break;
       case "TRANSLATE":
         const translationData = handleTranslateCard(card);
-        ttsText = translationData.ttsText;
-        ttsLang = translationData.ttsLanguage;
+        text = translationData.text;
+        language = translationData.language;
         break;
       case "SPORTS_SCORE":
-        ttsText = handleSportsScoreCard(card);
+        text = handleSportsScoreCard(card);
         break;
       case "SPORTS_GAME_TIME":
-        ttsText = handleSportsGameTimeCard(card);
+        text = handleSportsGameTimeCard(card);
         break;
       default:
-        ttsText = handleGenericCard(card);
+        text = handleGenericCard(card);
     }
 
-    return ttsText; // TODO: accommodate different languages
+    return {text, language};
   }
 
   communicate.register("searchResultInfo", message => {

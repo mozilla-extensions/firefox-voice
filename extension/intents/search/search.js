@@ -402,11 +402,11 @@ intentRunner.registerIntent({
         index: -1,
       });
       telemetry.add({ hasCard: true });
-      if (card.hasWidget) {
-        pollForCard();
-      } else {
-        pollForCard(CARD_POLL_LIMIT);
-      }
+      // if (card.hasWidget) {
+      //   pollForCard();
+      // } else {
+      //   pollForCard(CARD_POLL_LIMIT);
+      // }
       lastTabId = undefined;
       popupSearchInfo = searchInfo;
     } else {
