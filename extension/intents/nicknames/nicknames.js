@@ -111,6 +111,6 @@ intentRunner.registerIntent({
   async run(context) {
     const name = context.slots.name;
     await intentRunner.getRegisteredPageName(name);
-    intentRunner.registerPageName(name, null);
+    intentRunner.registerPageName(name, { url: null });
   },
 });
