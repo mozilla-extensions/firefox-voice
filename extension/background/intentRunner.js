@@ -199,10 +199,6 @@ export class IntentContext {
     await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
   }
 
-  activeTabs() {
-    return browserUtil.activeTabs();
-  }
-
   /** This is some ad hoc information this specific intent wants to add */
   addExtraTelemetryData(intentExtraData) {
     telemetry.add({ intentExtraData });
