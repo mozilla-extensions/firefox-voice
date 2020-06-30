@@ -72,3 +72,22 @@ intentRunner.registerIntent({
     });
   },
 });
+
+intentRunner.registerIntent({
+  name: "self.simpleTest",
+  async run(context) {
+    const imageCard = "../../assets/images/check-mark.png";
+    const card = {
+      answer: {
+        imgSrc: `${imageCard}`,
+        text: "Everything checks out",
+        eduText: `Click mic and say 'help' for things to say`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
+  },
+});
