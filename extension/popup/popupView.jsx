@@ -125,12 +125,14 @@ export const Popup = ({
           timerInMS={timerInMS}
         ></TimerFooter>
       ) : null}
-      <FollowupContainer
-        lastIntent={lastIntent}
-        followupText={followupText}
-        renderFollowup={renderFollowup}
-        currentView={currentView}
-      />
+      {searchResult ? null : (
+        <FollowupContainer
+          lastIntent={lastIntent}
+          followupText={followupText}
+          renderFollowup={renderFollowup}
+          currentView={currentView}
+        />
+      )}
     </div>
   );
 };
@@ -883,7 +885,32 @@ const SearchResultsContent = ({
     <React.Fragment>
       <TextDisplay displayText={displayText} />
       <div id="search-results">{renderCard()}</div>
-      {renderFollowup ? null : (
+      {renderFollowup ? (
+        <React.Fragment>
+          <div id="search-footer">
+            <IntentFeedback />
+            <FollowUpWrapper
+              heading={card && card.answer ? card.answer.eduMicOn : null}
+            />
+            {next ? (
+              <div id="next-result">
+                <p>
+                  <strong>
+                    Say <i>'next'</i> to view
+                  </strong>
+                </p>
+                <a
+                  href={next.url}
+                  id="search-show-next"
+                  onClick={onNextResultClick}
+                >
+                  {new URL(next.url).hostname} | {next.title}
+                </a>
+              </div>
+            ) : null}
+          </div>
+        </React.Fragment>
+      ) : (
         <React.Fragment>
           <div id="search-footer">
             <IntentFeedback
