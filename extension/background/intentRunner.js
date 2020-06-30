@@ -490,13 +490,25 @@ export async function registerPageName(name, { url }) {
 
   pageNames[name] = url;
 
-  if (!url) {
-    delete pageNames[name];
-    log.info("Removed nickname for page", name);
-  } else {
-    pageNames[name] = url;
-    log.info("Added nickname for page", name, "->", url, creationDate);
+  log.info("Added nickname for page", name, "->", url, creationDate);
+  await browser.storage.sync.set({ pageNames });
+}
+
+export async function getRegisteredPageName(name) {
+  const result = await browser.storage.sync.get("pageNames");
+  pageNames = result.pageNames;
+
+  if (!pageNames[name] || !name) {
+    const exc = new Error("No page name to remove");
+    exc.displayMessage = `The page name "${name}" not found`;
+    throw exc;
   }
+  return pageNames;
+}
+
+export async function unregisterPageName(name) {
+  delete pageNames[name];
+  log.info("Removed nickname for page", name);
   await browser.storage.sync.set({ pageNames });
 }
 
@@ -505,19 +517,9 @@ async function initRegisteredPageName() {
   if (result.pageNames) {
     for (const name in result.pageNames) {
       const value = result.pageNames[name];
-      pageNames[name] = value;
       log.info("Loaded page name", name, value);
     }
   }
-}
-
-export function getRegisteredPageName(name) {
-  if (!pageNames[name] || !name) {
-    const exc = new Error("No page name to remove");
-    exc.displayMessage = `The page name "${name}" not found`;
-    throw exc;
-  }
-  return pageNames;
 }
 
 export function getLastIntentForFeedback() {
