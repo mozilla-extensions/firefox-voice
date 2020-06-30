@@ -585,6 +585,16 @@ if (!buildSettings.android) {
 }
 
 intentRunner.registerIntent({
+  name: "tabs.refreshSelectedTabs",
+  async run(context) {
+    const tabs = await browser.tabs.query({ highlighted: true });
+    for (const tab of tabs) {
+      await browser.tabs.reload(tab.id);
+    }
+  },
+});
+
+intentRunner.registerIntent({
   name: "tabs.countTabs",
   async run(context) {
     context.keepPopup();
@@ -841,6 +851,25 @@ intentRunner.registerIntent({
       context.slots.number || context.parameters.number
     );
     await selectNumbersTabs(tabs, numTabs, context.parameters.dir);
+  },
+});
+
+intentRunner.registerIntent({
+  name: "tabs.selectSpecificTabs",
+  async run(context) {
+    const matchingTabs = await getMatchingTabs({
+      query: context.slots.query,
+      sort_by_index: false,
+      allWindows: context.parameters.allWindows === "true",
+    });
+
+    if (matchingTabs.length === 0) {
+      const exc = new Error("No tab that matches the query");
+      exc.displayMessage = "There is no tab that matches the query";
+      throw exc;
+    }
+
+    await selectAllTabs(matchingTabs);
   },
 });
 
