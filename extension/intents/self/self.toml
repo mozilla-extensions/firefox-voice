@@ -103,3 +103,13 @@ phrase = "Say something funny"
 
 [[self.tellJoke.example]]
 phrase = "Make me laugh"
+
+
+[self.simpleTest]
+description = "People often say 'test' to Firefox Voice. We should do a simple test to provide feedback"
+match = """
+  (this is | ) (test | testing) (test | testing |) (test | testing |)
+"""
+
+[[self.simpleTest.example]]
+phrase = "test"
