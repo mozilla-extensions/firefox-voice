@@ -209,9 +209,13 @@ export class IntentContext {
   }
 
   initTelemetry() {
+    let name = this.name;
+    if (this.parameters.subtype !== undefined) {
+      name += "." + this.parameters.subtype;
+    }
     telemetry.add({
       inputLength: this.utterance.length,
-      intent: this.name,
+      intent: name,
       intentCategory: this.name.split(".")[0],
       intentFallback: this.fallback,
       intentParseSuccess: !this.fallback,

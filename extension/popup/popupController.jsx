@@ -283,6 +283,11 @@ export const PopupController = function() {
         clearTimer(message);
         return Promise.resolve(true);
       }
+      case "displayFallback": {
+        setPopupView("fallback");
+        setErrorMessage(message.message);
+        return Promise.resolve(true);
+      }
       case "getLastAudio": {
         if (message.utterance !== lastAudioUtterance) {
           return Promise.resolve(null);
