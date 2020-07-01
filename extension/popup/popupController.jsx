@@ -229,7 +229,7 @@ export const PopupController = function() {
       case "presentMessage": {
         setDisplayText(message.message);
         if (speechOutput) {
-          speak(message.message);
+          speak({ text: message.message });
         }
         overrideTimeout = TEXT_TIMEOUT;
         if (lastIntent && lastIntent.closePopupOnFinish) {
@@ -301,9 +301,12 @@ export const PopupController = function() {
   };
 
   const speak = async message => {
-    const utterance = new SpeechSynthesisUtterance(message);
-    utterance.lang = "en-US"; // TODO: accomodate overrides for the Translate search card
-    utterance.voice = preferredVoice;
+    const { text, language } = message;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language || "en-US";
+    if (!language) {
+      utterance.voice = preferredVoice;
+    }
 
     synth.speak(utterance);
     utterance.onend = () => {
@@ -491,6 +494,10 @@ export const PopupController = function() {
 
     if (message.card) {
       setCardImage(message.card);
+      if (message.card.speech) {
+        speak(message.card.speech);
+      }
+      log.info(message.card);
       setMinPopupSize(message.card.width);
     } else {
       setCardImage(null);
