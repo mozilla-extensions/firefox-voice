@@ -1,7 +1,7 @@
 [tabs.close]
 description = "Closes the current tab"
 match = """
-  close (the | this |) (active | current |) (tab{s} | site | page) (for me |)
+  close (the | this |) (active | current |) (tab | site | page) (for me |)
   close (the | this | that)
 """
 
@@ -9,23 +9,33 @@ match = """
 phrase = "close tab"
 
 [[tabs.close.example]]
-phrase = "close tabs"
-test = true
-
-[[tabs.close.example]]
-phrase = "close all tabs"
-test = true
-
-[[tabs.close.example]]
 phrase = "close active tab"
 test = true
 
 [[tabs.close.example]]
-phrase = "close the active tabs"
+phrase = "close the active tab"
 test = true
 
 [[tabs.close.example]]
 phrase = "close the current top"
+test = true
+
+[tabs.closeAll]
+description = "Closes all open tabs"
+match = """
+  close all (active | open |) (tab{s} | site{s} | page{s}) (for me |)
+"""
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all active tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all open tabs"
 test = true
 
 [tabs.undoCloseTab]
