@@ -122,19 +122,6 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "tabs.closeAll",
-  async run(context) {
-    const openTabs = await browser.tabs.query({
-      active: false,
-      lastFocusedWindow: true,
-      pinned: false,
-    });
-    await browser.tabs.remove(openTabs.map(tab => tab.id));
-    context.displayText("Closed all tabs");
-  },
-});
-
-intentRunner.registerIntent({
   name: "tabs.undoCloseTab",
   async run(context) {
     await browser.experiments.voice.undoCloseTab();
