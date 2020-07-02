@@ -330,6 +330,14 @@ const PopupContent = ({
             timerTotalInMS={timerTotalInMS}
           ></TimerCard>
         );
+      case "fallback":
+        return (
+          <FallbackContent
+            displayText={displayText}
+            errorMessage={errorMessage}
+            onSubmitFeedback={onSubmitFeedback}
+          />
+        );
       default:
         return null;
     }
@@ -339,6 +347,16 @@ const PopupContent = ({
     <div id="popup-content">
       <Zap currentView={currentView} recorderVolume={recorderVolume} />
       {getContent()}
+    </div>
+  );
+};
+
+const FallbackContent = ({ displayText, errorMessage, onSubmitFeedback }) => {
+  return (
+    <div>
+      <TextDisplay displayText={displayText} />
+      {errorMessage ? <div id="error-message">{errorMessage}</div> : null}
+      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </div>
   );
 };
@@ -434,7 +452,8 @@ const PopupFooter = ({ currentView, showSettings }) => {
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer"
+    currentView === "timer" ||
+    currentView === "fallback"
   )
     return null;
   return (
@@ -1006,6 +1025,11 @@ class Zap extends PureComponent {
         interrupt: true,
       },
       noAudio: {
+        segments: [this.animationSegmentTimes.error],
+        loop: false,
+        interrupt: true,
+      },
+      fallback: {
         segments: [this.animationSegmentTimes.error],
         loop: false,
         interrupt: true,

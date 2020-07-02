@@ -497,6 +497,24 @@ expectParameters = { dir = "first" }
 phrase = "select last two tabs"
 expectParameters = { dir = "last" }
 
+[tabs.closeAll]
+description = "Closes all active or open tabs"
+match = """
+  close (all | every) tab{s} (for me|)
+"""
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close every tab"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs for me"
+test = true
+
 [tabs.selectSpecificTabs]
 description = "Select specific tabs after query"
 match = """

@@ -1,0 +1,12 @@
+[fallbacks.notImplemented]
+description = "Catch all unimplemented fallbacks"
+match = """
+    set alarm for [time] [subtype=alarm] [message=Sorry, Firefox Voice doesn't include alarms yet]
+    restart Firefox [subtype=restart] [message=Sorry, Firefox Voice can't be restarted.]
+    generate random password [subtype=password] [message=Sorry, Firefox Voice doesn't generate passwords yet.]
+    screen lock [subtype=lock] [message=Sorry, Firefox Voice can't lock your screen yet.]
+    good (night | morning) [subtype=greetings] [message=Sorry, Firefox Voice doesn't have a routine for this. You can make one yourself in Preferences->Routines]
+"""
+
+[[fallbacks.notImplemented.example]]
+phrase = "Set alarm for 5am"

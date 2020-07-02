@@ -132,7 +132,23 @@ intentRunner.registerIntent({
       e.displayMessage = "Nothing is playing";
       throw e;
     }
-    context.presentMessage(tabs[0].title);
+    const activeTab = await browserUtil.activeTab();
+    log.info(activeTab);
+    const musicServiceFav = activeTab.favIconUrl;
+    const musicTitle = tabs[0].title;
+
+    const card = {
+      answer: {
+        imgSrc: musicServiceFav,
+        text: musicTitle,
+        eduText: `Click mic and say ‘pause’, ‘next’ or ‘stop’`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
   },
 });
 

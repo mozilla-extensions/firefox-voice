@@ -1,14 +1,14 @@
 /* globals log, catcher */
 
+import * as browserUtil from "../browserUtil.js";
+import { Database } from "../history.js";
+import { metadata } from "../intents/metadata.js";
+import { compile, splitPhraseLines } from "../language/compiler.js";
+import { PhraseSet } from "../language/findMatch.js";
+import * as settings from "../settings.js";
+import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
-import * as browserUtil from "../browserUtil.js";
-import { PhraseSet } from "../language/findMatch.js";
-import { compile, splitPhraseLines } from "../language/compiler.js";
-import { metadata } from "../intents/metadata.js";
-import { entityTypes } from "./entityTypes.js";
-import { Database } from "../history.js";
-import * as settings from "../settings.js";
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -209,9 +209,13 @@ export class IntentContext {
   }
 
   initTelemetry() {
+    let name = this.name;
+    if (this.parameters.subtype !== undefined) {
+      name += "." + this.parameters.subtype;
+    }
     telemetry.add({
       inputLength: this.utterance.length,
-      intent: this.name,
+      intent: name,
       intentCategory: this.name.split(".")[0],
       intentFallback: this.fallback,
       intentParseSuccess: !this.fallback,
@@ -342,6 +346,7 @@ export async function runIntent(contextParams) {
   lastIntentForFollowup = lastIntent;
   addIntentHistory(context);
   context.initTelemetry();
+
   try {
     log.info(
       `Running intent ${contextParams.name}`,
@@ -479,6 +484,48 @@ export function getRegisteredNicknames() {
   return registeredNicknames;
 }
 
+let pageNames = {};
+
+export async function registerPageName(name, { url }) {
+  name = name.toLowerCase();
+  const creationDate = Date.now();
+  const result = await browser.storage.sync.get("pageNames");
+  pageNames = result.pageNames || {};
+
+  pageNames[name] = url;
+
+  log.info("Added nickname for page", name, "->", url, creationDate);
+  await browser.storage.sync.set({ pageNames });
+}
+
+export async function getRegisteredPageName(name) {
+  const result = await browser.storage.sync.get("pageNames");
+  pageNames = result.pageNames;
+
+  if (!pageNames[name] || !name) {
+    const exc = new Error("No page name to remove");
+    exc.displayMessage = `The page name "${name}" not found`;
+    throw exc;
+  }
+  return pageNames;
+}
+
+export async function unregisterPageName(name) {
+  delete pageNames[name];
+  log.info("Removed nickname for page", name);
+  await browser.storage.sync.set({ pageNames });
+}
+
+async function initRegisteredPageName() {
+  const result = await browser.storage.sync.get(["pageNames"]);
+  if (result.pageNames) {
+    for (const name in result.pageNames) {
+      const value = result.pageNames[name];
+      log.info("Loaded page name", name, value);
+    }
+  }
+}
+
 export function getLastIntentForFeedback() {
   if (!lastIntent) {
     return null;
@@ -501,3 +548,4 @@ export function clearFollowup() {
 }
 
 initRegisteredNicknames();
+initRegisteredPageName();
