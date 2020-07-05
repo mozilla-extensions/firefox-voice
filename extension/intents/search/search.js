@@ -422,6 +422,8 @@ intentRunner.registerIntent({
       });
       lastTabId = tab.id;
       tabSearchResults.set(tab.id, searchInfo);
+
+      await browserUtil.waitForPageToLoadUsingSelector(tab.id);
     }
   },
 });

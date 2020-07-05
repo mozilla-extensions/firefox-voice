@@ -233,7 +233,7 @@ export const OptionsController = function() {
     return browser.runtime.sendMessage({
       type: "parseUtterance",
       utterance,
-      disableFallback: true,
+      disableFallback: false,
     });
   };
 

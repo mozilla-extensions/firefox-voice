@@ -87,8 +87,6 @@ intentRunner.registerIntent({
       subcontext.onError = () => {
         hadError = true;
       };
-      const activeTab = await browserUtil.activeTab();
-      await browserUtil.waitForDocumentComplete(activeTab.id);
       await intentRunner.runIntent(subcontext);
       if (hadError) {
         log.info("  Last intent failed, stopping");
