@@ -1,3 +1,65 @@
+## Version 0.22.0 (2020-07-07)
+
+- Enable speech output for search card results
+  ([#1786](https://github.com/mozilla/firefox-voice/issues/1786))
+  - Add speech output pref to options
+  - Add speech output (behind a pref) for messages that previously only displayed in-card text
+  - Only display voice output preferences if the device has built-in speech synthesis voices
+  - Reimplement text-to-speech card parsing, with query selectors embedded within their corresponding methods
+  - Support other languages for translate cards, and fix sidebar cards
+  - Enable speech for banner cards
+  - Move card speech parsing into its own file. Fixes [#582](https://github.com/mozilla/firefox-voice/issues/582) [cdca380](https://github.com/mozilla/firefox-voice/commit/cdca380)
+- [intent] hello ([#1783](https://github.com/mozilla/firefox-voice/issues/1783)). Fixes [#1269](https://github.com/mozilla/firefox-voice/issues/1269) [bccd01e](https://github.com/mozilla/firefox-voice/commit/bccd01e)
+- Added intents for missing features ([#1762](https://github.com/mozilla/firefox-voice/issues/1762)). Fixes [#963](https://github.com/mozilla/firefox-voice/issues/963) Fixes [#963](https://github.com/mozilla/firefox-voice/issues/963) [2de786d](https://github.com/mozilla/firefox-voice/commit/2de786d)
+- Create registerPageName function in intentrunner
+  ([#1756](https://github.com/mozilla/firefox-voice/issues/1756))
+  - Create registerPageName function in intentRunner. Fixes [#1483](https://github.com/mozilla/firefox-voice/issues/1483) Fixes [#1483](https://github.com/mozilla/firefox-voice/issues/1483) [51ec95a](https://github.com/mozilla/firefox-voice/commit/51ec95a)
+- Intent for close all tabs ([#1754](https://github.com/mozilla/firefox-voice/issues/1754)) (from [Ishakikani9117](https://github.com/Ishakikani9117)) [056ff1f](https://github.com/mozilla/firefox-voice/commit/056ff1f)
+  - Close all tabs intent ([#1772](https://github.com/mozilla/firefox-voice/issues/1772)) (from [veecee424](https://github.com/veecee424)). Fixes [#1751](https://github.com/mozilla/firefox-voice/issues/1751) Fixes [#1751](https://github.com/mozilla/firefox-voice/issues/1751) [acf5900](https://github.com/mozilla/firefox-voice/commit/acf5900)
+- Various styling issues in routines. Fixes [#1329](https://github.com/mozilla/firefox-voice/issues/1329) [9aee421](https://github.com/mozilla/firefox-voice/commit/9aee421)
+- What's playing cleanup & improvments. Fixes [#1266](https://github.com/mozilla/firefox-voice/issues/1266) [41e076a](https://github.com/mozilla/firefox-voice/commit/41e076a)
+- [intent] "test" Fixes [#1270](https://github.com/mozilla/firefox-voice/issues/1270) [9631961](https://github.com/mozilla/firefox-voice/commit/9631961)
+- Selecting specified tabs. Fixes [#1778](https://github.com/mozilla/firefox-voice/issues/1778) [4cef231](https://github.com/mozilla/firefox-voice/commit/4cef231)
+- Implement voice output preference, and support
+  - voice output for results that previously only displayed in-card text ([#1770](https://github.com/mozilla/firefox-voice/issues/1770))
+  - This adds a new preference for voice output, and attempts to handle cases where the user's device has no built-in voices.
+  - To reflect the fact that both speech and text output are now supported, this PR also renames displayText to presentMessage.
+  - Note that this is likely not yet compatible with follow-ups.
+    - Add speech output (behind a pref) for messages that previously only displayed in-card text
+    - Only display voice output preferences if the device has built-in speech synthesis voices. Fixes [#1722](https://github.com/mozilla/firefox-voice/issues/1722) [39b9b82](https://github.com/mozilla/firefox-voice/commit/39b9b82)
+- Lots of code refactoring.
+  - Rename language/matching.js to language/findmatch.js. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [887bbc5](https://github.com/mozilla/firefox-voice/commit/887bbc5)
+  - Remove module loader ([#1768](https://github.com/mozilla/firefox-voice/issues/1768))
+    - Remove moduleLoader.js and simplify how main.js is first loaded. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [a676475](https://github.com/mozilla/firefox-voice/commit/a676475)
+  - Rename old occurances of 'desc' to something context-related.
+    See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [8edf680](https://github.com/mozilla/firefox-voice/commit/8edf680)
+  - Remove now-unused commits [522d953](https://github.com/mozilla/firefox-voice/commit/522d953)
+  - Move createtabgooglelucky from context to browserutil. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [c590a63](https://github.com/mozilla/firefox-voice/commit/c590a63)
+  - Remove context.openorfocustab and move it to browserutil. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [e4919e9](https://github.com/mozilla/firefox-voice/commit/e4919e9)
+  - Remove context.maketabactive and use
+    browserUtil.makeTabActive. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [4e80df3](https://github.com/mozilla/firefox-voice/commit/4e80df3)
+  - Remove context.activetab and use browserutil.activetab. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [07e9a42](https://github.com/mozilla/firefox-voice/commit/07e9a42)
+  - Use browserutil.createandloadtab instead of
+    context.createTab. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [5ca014d](https://github.com/mozilla/firefox-voice/commit/5ca014d)
+  - Rename conntent.lazyinject to content.inject (since it's not
+    lazily done at all) [b6413da](https://github.com/mozilla/firefox-voice/commit/b6413da)
+- Adjust volume for audible tabs ([#1731](https://github.com/mozilla/firefox-voice/issues/1731))
+  When a volume command adjustment is made, it will look through all the "might be audible" tabs and adjusts the volume to the latest audible tab. If no tab is audible, the error "No audio is playing" appears. Fixes [#1718](https://github.com/mozilla/firefox-voice/issues/1718) [9380cc5](https://github.com/mozilla/firefox-voice/commit/9380cc5)
+- Enable intent "turn selection into link" in google docs (from [noi5e](https://github.com/noi5e))
+  ([#1565](https://github.com/mozilla/firefox-voice/issues/1565))
+  Partial fix for issue [#1363](https://github.com/mozilla/firefox-voice/issues/1363) (solves in Google Docs, not in Google Slides)
+  I made an earlier draft PR here: [#1493](https://github.com/mozilla/firefox-voice/issues/1493)
+  - extension/intents/forms/forms.js detects if the URL is in Google Docs and lazyloads the script file, googleContentScript.js.
+  - if no text is selected, display "No text selected" error as usual
+  - if text is selected, but isn't obviously a link (like "ABC"), the link button is clicked and open for user to input their own link.
+  - if the link is obviously a link (http://www.google.com), the text is automatically transformed into a link.
+  - note how this behavior is different from the default turnSelectionIntoLink on other webpages: in those cases, Voice opens up a new browser tab to the link. [ee6446b](https://github.com/mozilla/firefox-voice/commit/ee6446b)
+- Add optional audio saving to history. Fixes [#1760](https://github.com/mozilla/firefox-voice/issues/1760) [c7c19c3](https://github.com/mozilla/firefox-voice/commit/c7c19c3)
+
 ## Version 0.21.0 (2020-06-22)
 
 - Music service volume_followup, also ([#1536](https://github.com/mozilla/firefox-voice/issues/1536)) (from [farhatcode](https://github.com/farhatcode))
