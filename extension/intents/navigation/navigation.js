@@ -39,7 +39,7 @@ intentRunner.registerIntent({
     let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
-      await browserUtil.openOrFocusTab(savedUrl);
+      tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query.toLowerCase());
