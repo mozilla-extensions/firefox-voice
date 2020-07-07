@@ -61,3 +61,21 @@ phrase = "delete the page called news"
 
 [[nicknames.removePageName.example]]
 phrase = "remove this tab name"
+
+[nicknames.pause]
+description = "Pauses a routine"
+match = """
+  pause routine
+"""
+
+[[nicknames.pause.example]]
+phrase = "pause routine"
+
+[nicknames.continue]
+description = "Continues a routine"
+match = """
+  continue routine
+"""
+
+[[nicknames.continue.example]]
+phrase = "Continue routine"

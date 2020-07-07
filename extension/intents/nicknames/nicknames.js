@@ -4,6 +4,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
+import { RoutineExecutor } from "./routineExecutor.js";
 
 intentRunner.registerIntent({
   name: "nicknames.name",
@@ -75,24 +76,11 @@ intentRunner.registerIntent({
   name: "nicknames.combined",
   async run(context) {
     log.info(`Running a named series (${context.contexts.length}) of intents`);
-    for (let subcontext of context.contexts) {
-      subcontext = new intentRunner.IntentContext(subcontext);
-      log.info(
-        "  Running subintent",
-        subcontext,
-        subcontext.name,
-        subcontext.slots
-      );
-      let hadError = false;
-      subcontext.onError = () => {
-        hadError = true;
-      };
-      await intentRunner.runIntent(subcontext);
-      if (hadError) {
-        log.info("  Last intent failed, stopping");
-        break;
-      }
-    }
+    const routineExecutor = new RoutineExecutor(
+      context.nickname,
+      context.contexts
+    );
+    await routineExecutor.run();
   },
 });
 
@@ -136,5 +124,45 @@ intentRunner.registerIntent({
     delete pageNames[name];
     log.info("Removed page name", name);
     await browser.storage.sync.set({ pageNames });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "nicknames.pause",
+  async run(context) {
+    if (context.parentRoutine === undefined) {
+      const exc = new Error("Command not available");
+      exc.displayMessage = "Command not available";
+      throw exc;
+    }
+    context.parentRoutine.stop = true;
+    browser.storage.sync.set({
+      pausedRoutine: {
+        name: context.parentRoutine.name,
+        nextIndex: context.parentRoutine.nextIndex,
+      },
+    });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "nicknames.continue",
+  async run(context) {
+    const { pausedRoutine } = await browser.storage.sync.get("pausedRoutine");
+    if (pausedRoutine === undefined) {
+      const exc = new Error("Command not available");
+      exc.displayMessage = "Command not available";
+      throw exc;
+    }
+
+    const { name, nextIndex } = pausedRoutine;
+    const registeredNicknames = await intentRunner.getRegisteredNicknames();
+    const routineExecutor = new RoutineExecutor(
+      registeredNicknames[name].nickname,
+      registeredNicknames[name].contexts,
+      nextIndex
+    );
+    await browser.storage.sync.remove("pausedRoutine");
+    await routineExecutor.run();
   },
 });
