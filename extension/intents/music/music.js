@@ -153,6 +153,42 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "music.support",
+  async run(context) {
+    const card = {
+      answer: {
+        eduMic: `Say a music to set to default`,
+        eduText: `Click a music to set to default`,
+      },
+
+      music: [
+        {
+          imgSrc: "",
+          text: "Spotify",
+          alt: "spotify icon",
+        },
+        {
+          imgSrc: "",
+          text: "SoundCloud",
+          alt: "soundCloud icon",
+        },
+        {
+          imgSrc: "",
+          text: "Deezer",
+          alt: "deezer icon",
+        },
+      ],
+    };
+
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
+  },
+});
+
+intentRunner.registerIntent({
   name: "music.volume",
   async run(context) {
     const service = await getService(context, {
