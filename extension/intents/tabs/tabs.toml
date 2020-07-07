@@ -414,16 +414,7 @@ description = "Find on page content"
 match = """
   find [query] on (this |) (page | tab)
   search (this |) (page | tab) for [query]
-  [query]
 """
-
-[[tabs.findOnPage.example]]
-phrase = "sign in"
-expectSlots = { query = "sign in" }
-
-[[tabs.findOnPage.example]]
-phrase = "sign out"
-expectSlots = { query = "sign out" }
 
 [[tabs.findOnPage.example]]
 phrase = "Find query on this page"

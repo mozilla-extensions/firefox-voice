@@ -192,6 +192,27 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "navigation.signInAndOut",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.inject(activeTab.id, [
+      "/js/vendor/fuse.js",
+      "/intents/navigation/clickLink.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "signInAndOut",
+      query: context.slots.query,
+    });
+
+    if (found === false) {
+      const exc = new Error("No link found matching query");
+      exc.displayMessage = `Sorry can't "${context.slots.query}" on this page`;
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
   name: "navigation.closeDialog",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
