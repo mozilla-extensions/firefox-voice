@@ -61,6 +61,7 @@ export function parse(text, disableFallback = false) {
       fallback: true,
     };
   }
+
   return {
     name: result.intentName,
     slots: result.stringSlots(),

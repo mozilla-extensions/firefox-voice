@@ -29,7 +29,20 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    await browserUtil.openOrActivateTab("/views/lexicon.html");
+    const imageCard = "../../assets/images/lionel-richie.jpg";
+    const card = {
+      answer: {
+        imgSrc: `${imageCard}`,
+        alt: "Lionel Richie",
+        text: "Is it me you're looking for?",
+        eduText: `Click mic and say 'help' for things to say`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
   },
 });
 
@@ -56,6 +69,25 @@ intentRunner.registerIntent({
       url: browser.runtime.getURL(
         "https://www.youtube.com/watch?v=N3jx4WIUYy4"
       ),
+    });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "self.simpleTest",
+  async run(context) {
+    const imageCard = "../../assets/images/check-mark.png";
+    const card = {
+      answer: {
+        imgSrc: `${imageCard}`,
+        text: "Everything checks out",
+        eduText: `Click mic and say 'help' for things to say`,
+      },
+    };
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
     });
   },
 });
