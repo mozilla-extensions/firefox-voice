@@ -882,7 +882,7 @@ const SearchResultsContent = ({
       <div className="results-text">
         <em>
           {card.answer.largeText ? (
-            <div className="results-largeText">{card.answer.largeText}</div>
+            <div className="results-text">{card.answer.largeText}</div>
           ) : null}
           <div>{card.answer.text}</div>
         </em>

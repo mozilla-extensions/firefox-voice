@@ -610,7 +610,7 @@ intentRunner.registerIntent({
     let tabsCount = 0;
     let windowsCount = 1;
     sampleTabs.forEach((window, index) => {
-      tabsCount += window.tabs.length ;
+      tabsCount += window.tabs.length;
       windowsCount += index;
     });
 
