@@ -120,8 +120,52 @@
         "description": "Open Addons or Extensions",
         "parameters": [],
         "async": true
+      },
+      {
+        "name": "sendKeyboardEvent",
+        "type": "function",
+        "description": "Send a keyboard event to the tab",
+        "parameters": [
+          {
+            "type": "number",
+            "name": "tabId",
+            "description": "The tab to send the keyboard event to"
+          },
+          {
+            "type": "object",
+            "name": "eventProperties",
+            "description": "Keyboard properties",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "ctrlKey": {
+                "type": "boolean",
+                "defaultValue": false
+              },
+              "shiftKey": {
+                "type": "boolean"
+              },
+              "altKey": {
+                "type": "boolean"
+              },
+              "metaKey": {
+                "type": "boolean"
+              },
+              "repeat": {
+                "type": "boolean"
+              },
+              "isComposing": {
+                "type": "boolean"
+              }
+            }
+          }
+        ],
+        "async": true
       }
-
     ]
   }
 ]
