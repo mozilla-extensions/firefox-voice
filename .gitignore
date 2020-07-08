@@ -19,6 +19,8 @@ extension/onboarding/onboardingView.js
 extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
 extension/**/*.js.map
+extension/background/language/langs/english.js
+extension/background/intentImport.js
 extension/background/serviceImport.js
 extension/background/intentImport.js
 extension/intents/metadata.js
