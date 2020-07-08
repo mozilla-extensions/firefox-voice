@@ -1,7 +1,7 @@
 import { languageNames } from "./languages.js";
 import { metadata } from "../services/metadata.js";
-import { convertEntities } from "./language/compiler.js";
-import English from "./language/langs/english.js";
+import { convertEntities } from "../language/compiler.js";
+import English from "../language/langs/english.js";
 
 export const allServiceNames = [];
 

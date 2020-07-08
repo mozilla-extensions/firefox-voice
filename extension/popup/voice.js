@@ -104,7 +104,7 @@ export class Recorder {
     // Can be overridden!
   }
 
-  onEnd(jsonOrNull) {
+  onEnd(jsonOrNull, audioBlob) {
     // Can be overridden
   }
 
@@ -153,7 +153,7 @@ export class Recorder {
 
   async mediaStopped() {
     if (this.cancelled) {
-      this.onEnd(null);
+      this.onEnd(null, null);
       return;
     }
     const blob = new Blob(this.chunks, {
@@ -213,7 +213,7 @@ export class Recorder {
       },
       doNotInit: true,
     });
-    this.onEnd(json);
+    this.onEnd(json, blob);
   }
 
   async sendForDeepSpeech(audio, otherResponsePromise) {

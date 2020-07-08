@@ -21,9 +21,9 @@ export const Routines = ({
       <fieldset>
         <legend>Manage your Routines</legend>
         <div className="description-container">
-          <h2 className="description">
-            Create a custom phrase to execute one or more actions
-          </h2>
+          <div className="description">
+            Create a custom phrase to execute one or more actions.
+          </div>
           <div>
             <button
               className="styled-button new-routine-button"
@@ -31,7 +31,8 @@ export const Routines = ({
                 createRoutine();
               }}
             >
-              + New routine
+              <span className="plus-sign"> ＋ </span>
+              New Routine
             </button>
           </div>
         </div>
@@ -174,11 +175,20 @@ const RoutineMenu = ({ useToggle, nicknameContext, updateNickname, draft }) => {
 };
 
 const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
+  const allFieldsCompleted = () => {
+    return (
+      draft.tempEditableNickname.nickname !== undefined &&
+      draft.tempEditableNickname.nickname.length > 0 &&
+      draft.tempEditableNickname.intents !== undefined &&
+      draft.tempEditableNickname.intents.length > 0
+    );
+  };
   const save = async () => {
     if (
       draft.tempEditableNickname.nickname === undefined ||
       draft.tempEditableNickname.nickname.length === 0
     ) {
+      draft.setErrorMessage("This Routine should have a name.");
       log.error("This routine should have a name");
       return;
     }
@@ -188,18 +198,19 @@ const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
       oldNickname = oldNicknameContext.nickname;
     }
 
-    const allowed = await updateNickname(
+    const { allowed, error } = await updateNickname(
       draft.tempEditableNickname,
       oldNickname
     );
     if (allowed === true) {
       draft.setVisible(false);
     } else {
-      log.error("The intent was not saved");
+      draft.setErrorMessage(error);
     }
   };
 
   const changeNickname = nickname => {
+    draft.setErrorMessage("");
     const nicknameContext = draft.tempEditableNickname;
     nicknameContext.nickname = nickname;
     draft.setTempEditableNickname(nicknameContext);
@@ -222,6 +233,10 @@ const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
           />
         </div>
         <UtteranceList draft={draft}></UtteranceList>
+        {draft.errorMessage ? (
+          <div className="error-message"> {draft.errorMessage} </div>
+        ) : null}
+
         <button
           className="styled-button cancel-button"
           onClick={() => {
@@ -232,7 +247,9 @@ const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
           Cancel{" "}
         </button>
         <button
-          className="styled-button save-button"
+          className={`styled-button ${
+            allFieldsCompleted() ? "save-button-allowed" : "save-button"
+          }`}
           onClick={() => {
             save();
           }}
@@ -247,6 +264,7 @@ const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
 
 const UtteranceList = ({ draft }) => {
   const updateUtterance = (utterance, utteranceContext) => {
+    draft.setErrorMessage("");
     if (utteranceContext !== undefined) {
       utteranceContext.utterance = utterance;
     } else {
@@ -262,6 +280,7 @@ const UtteranceList = ({ draft }) => {
         id="utterances"
         className="styled-input textarea-container"
         type="text"
+        placeholder="Type your actions here, separated by enter"
         onChange={event => {
           updateUtterance(event.target.value);
         }}

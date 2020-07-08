@@ -1,6 +1,6 @@
 /* globals test, expect */
 
-const { PhraseSet } = require("./matching.js");
+const { PhraseSet } = require("./findMatch.js");
 const { compile, convertEntities } = require("./compiler.js");
 const { MatchResult } = require("./textMatching.js");
 

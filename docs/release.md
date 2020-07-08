@@ -8,14 +8,14 @@ The release process is handled with [CircleCI](../.circleci/config.yml), with ru
 
 - [ ] Update the version in `package.json` (the third numeral should always be `0`)
 - [ ] Update the changelog with: `./bin/generate-commit-log --write recent`
-- [ ] Run `./bin/update-static-site.sh`
 - [ ] Edit `CHANGELOG.md` to enter the version and review the list of changes, removing uninteresting changes
 - [ ] Commit the changes, `git commit -a -m "Update version with changelog"`
 - [ ] Tag the version like `git tag vX.Y.0`
 - [ ] Push the change and tags: `git push && git push --tags`
-- [ ] Then push to prod: `git push origin master:prod`
-- [ ] Review the [CircleCI builds](https://circleci.com/gh/mozilla/firefox-voice)
-- [ ] Review the [log of updates](https://va.allizom.org/releases/public-update-log.txt)
+- [ ] Run `./bin/update-static-site.sh`
+- [ ] Create a prod version of the extension with `npm run package-prod`
+- [ ] Send the extension for review/signing
+- [ ] Move it into place on the server and hand-update the JSON file
 
 To fix issues:
 

@@ -34,6 +34,38 @@ export const Popup = ({
   showZeroVolumeError,
 }) => {
   const [inputValue, setInputValue] = useState(null);
+  const [showScroll, setShowScroll] = useState(false);
+
+  // This would lead to an infinite loop if showing the scroll effected the height, which
+  // caused this to toggle showScroll back and forth infinitely. But it won't change the
+  // height so it's okay.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const doc = document.body;
+    if (doc.offsetHeight > window.innerHeight) {
+      if (!showScroll) {
+        setShowScroll(true);
+      }
+    } else if (
+      window.innerHeight > doc.offsetHeight ||
+      window.innerHeight === doc.offsetHeight
+    ) {
+      if (showScroll) {
+        setShowScroll(false);
+      }
+    }
+  });
+
+  const scrollDown = () => {
+    let footerHeight = 0;
+    const footer = document.querySelector("#search-footer");
+    if (footer) {
+      footerHeight = footer.clientHeight;
+    }
+    const scrollAmount = window.innerHeight - footerHeight - 15;
+    window.scrollBy(0, scrollAmount);
+  };
+
   function savingOnInputStarted(value) {
     // When the user types in the hidden field, we need to keep that
     // first input and use it later
@@ -45,6 +77,13 @@ export const Popup = ({
       id="popup"
       className={`${currentView} ${renderFollowup ? "followup" : ""}`}
     >
+      <button
+        className="scroll-down"
+        onClick={scrollDown}
+        style={{ height: "2rem", display: showScroll ? "flex" : "none" }}
+      >
+        <img src="images/arrow_down.svg" alt="scroll to bottom" />
+      </button>
       <PopupHeader
         currentView={currentView}
         transcript={transcript}
@@ -289,6 +328,14 @@ const PopupContent = ({
             timerTotalInMS={timerTotalInMS}
           ></TimerCard>
         );
+      case "fallback":
+        return (
+          <FallbackContent
+            displayText={displayText}
+            errorMessage={errorMessage}
+            onSubmitFeedback={onSubmitFeedback}
+          />
+        );
       default:
         return null;
     }
@@ -298,6 +345,16 @@ const PopupContent = ({
     <div id="popup-content">
       <Zap currentView={currentView} recorderVolume={recorderVolume} />
       {getContent()}
+    </div>
+  );
+};
+
+const FallbackContent = ({ displayText, errorMessage, onSubmitFeedback }) => {
+  return (
+    <div>
+      <TextDisplay displayText={displayText} />
+      {errorMessage ? <div id="error-message">{errorMessage}</div> : null}
+      <IntentFeedback onSubmitFeedback={onSubmitFeedback} />
     </div>
   );
 };
@@ -393,7 +450,8 @@ const PopupFooter = ({ currentView, showSettings }) => {
     currentView === "searchResults" ||
     currentView === "feedback" ||
     currentView === "feedbackThanks" ||
-    currentView === "timer"
+    currentView === "timer" ||
+    currentView === "fallback"
   )
     return null;
   return (
@@ -450,20 +508,23 @@ const TimerCard = ({ timerInMS, timerTotalInMS }) => {
     let expression = "";
 
     if (hours !== 0) {
-      expression += `${hours} hours`;
+      const timeUnit = hours === 1 ? "hour" : "hours";
+      expression += `${hours} ${timeUnit}`;
     }
     if (minutes !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${minutes} minutes`;
+      const timeUnit = minutes === 1 ? "minute" : "minutes";
+      expression += `${minutes} ${timeUnit}`;
     }
 
     if (seconds !== 0) {
       if (expression.length > 0) {
         expression += " and ";
       }
-      expression += `${seconds} seconds`;
+      const timeUnit = seconds === 1 ? "second" : "seconds";
+      expression += `${seconds} ${timeUnit}`;
     }
     return `It's been ${expression}`;
   };
@@ -787,6 +848,7 @@ const SearchResultsContent = ({
     card && card.alt
       ? `Click to show search results: ${card.alt}`
       : "Show search results";
+  const shouldRenderCard = card ? true : !renderFollowup;
 
   if (card) {
     setMinPopupSize(card.width);
@@ -804,6 +866,7 @@ const SearchResultsContent = ({
   const SearchCard = () => (
     <button class="invisible-button" onClick={onSearchCardClick}>
       <img id="search-image" alt={imgAlt} style={cardStyles} src={card.src} />
+      <div id="bottomSection"></div>
     </button>
   );
 
@@ -835,7 +898,6 @@ const SearchResultsContent = ({
     }
     return null;
   };
-
   return (
     <React.Fragment>
       <TextDisplay displayText={displayText} />
@@ -936,6 +998,11 @@ class Zap extends PureComponent {
         interrupt: true,
       },
       noAudio: {
+        segments: [this.animationSegmentTimes.error],
+        loop: false,
+        interrupt: true,
+      },
+      fallback: {
         segments: [this.animationSegmentTimes.error],
         loop: false,
         interrupt: true,

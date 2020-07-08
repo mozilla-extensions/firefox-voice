@@ -1,6 +1,7 @@
 /* globals buildSettings */
 
 import * as intentRunner from "../../background/intentRunner.js";
+import * as browserUtil from "../../browserUtil.js";
 
 function findTargetWindowId(windowArray, currentWindowId, direction) {
   const len = windowArray.length;
@@ -21,7 +22,7 @@ intentRunner.registerIntent({
   name: "window.switch",
   async run(context) {
     // get current activeTab.windowId
-    const activeTab = await context.activeTab();
+    const activeTab = await browserUtil.activeTab();
     const currentWindowId = activeTab.windowId;
     // get direction parameter
     const direction = context.parameters.direction;
@@ -53,7 +54,7 @@ intentRunner.registerIntent({
     context.keepPopup();
     const currentWindow = await browser.windows.getCurrent();
     await browser.windows.remove(currentWindow.id);
-    context.displayText("Window closed");
+    context.presentMessage("Window closed");
   },
 });
 

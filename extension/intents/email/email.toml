@@ -22,5 +22,5 @@ phrase = "Send email"
 [[email.compose.example]]
 # This is a typical transcription, but it gets normalized in the intent:
 phrase = "Email Bob At Example. Com"
-expectSlots = { to = "Bob" }
+expectSlots = { to = "Bob At Example. Com" }
 test = true

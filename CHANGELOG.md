@@ -1,3 +1,110 @@
+## Version 0.22.0 (2020-07-07)
+
+- Enable speech output for search card results
+  ([#1786](https://github.com/mozilla/firefox-voice/issues/1786))
+  - Add speech output pref to options
+  - Add speech output (behind a pref) for messages that previously only displayed in-card text
+  - Only display voice output preferences if the device has built-in speech synthesis voices
+  - Reimplement text-to-speech card parsing, with query selectors embedded within their corresponding methods
+  - Support other languages for translate cards, and fix sidebar cards
+  - Enable speech for banner cards
+  - Move card speech parsing into its own file. Fixes [#582](https://github.com/mozilla/firefox-voice/issues/582) [cdca380](https://github.com/mozilla/firefox-voice/commit/cdca380)
+- [intent] hello ([#1783](https://github.com/mozilla/firefox-voice/issues/1783)). Fixes [#1269](https://github.com/mozilla/firefox-voice/issues/1269) [bccd01e](https://github.com/mozilla/firefox-voice/commit/bccd01e)
+- Added intents for missing features ([#1762](https://github.com/mozilla/firefox-voice/issues/1762)). Fixes [#963](https://github.com/mozilla/firefox-voice/issues/963) Fixes [#963](https://github.com/mozilla/firefox-voice/issues/963) [2de786d](https://github.com/mozilla/firefox-voice/commit/2de786d)
+- Create registerPageName function in intentrunner
+  ([#1756](https://github.com/mozilla/firefox-voice/issues/1756))
+  - Create registerPageName function in intentRunner. Fixes [#1483](https://github.com/mozilla/firefox-voice/issues/1483) Fixes [#1483](https://github.com/mozilla/firefox-voice/issues/1483) [51ec95a](https://github.com/mozilla/firefox-voice/commit/51ec95a)
+- Intent for close all tabs ([#1754](https://github.com/mozilla/firefox-voice/issues/1754)) (from [Ishakikani9117](https://github.com/Ishakikani9117)) [056ff1f](https://github.com/mozilla/firefox-voice/commit/056ff1f)
+  - Close all tabs intent ([#1772](https://github.com/mozilla/firefox-voice/issues/1772)) (from [veecee424](https://github.com/veecee424)). Fixes [#1751](https://github.com/mozilla/firefox-voice/issues/1751) Fixes [#1751](https://github.com/mozilla/firefox-voice/issues/1751) [acf5900](https://github.com/mozilla/firefox-voice/commit/acf5900)
+- Various styling issues in routines. Fixes [#1329](https://github.com/mozilla/firefox-voice/issues/1329) [9aee421](https://github.com/mozilla/firefox-voice/commit/9aee421)
+- What's playing cleanup & improvments. Fixes [#1266](https://github.com/mozilla/firefox-voice/issues/1266) [41e076a](https://github.com/mozilla/firefox-voice/commit/41e076a)
+- [intent] "test" Fixes [#1270](https://github.com/mozilla/firefox-voice/issues/1270) [9631961](https://github.com/mozilla/firefox-voice/commit/9631961)
+- Selecting specified tabs. Fixes [#1778](https://github.com/mozilla/firefox-voice/issues/1778) [4cef231](https://github.com/mozilla/firefox-voice/commit/4cef231)
+- Implement voice output preference, and support
+  - voice output for results that previously only displayed in-card text ([#1770](https://github.com/mozilla/firefox-voice/issues/1770))
+  - This adds a new preference for voice output, and attempts to handle cases where the user's device has no built-in voices.
+  - To reflect the fact that both speech and text output are now supported, this PR also renames displayText to presentMessage.
+  - Note that this is likely not yet compatible with follow-ups.
+    - Add speech output (behind a pref) for messages that previously only displayed in-card text
+    - Only display voice output preferences if the device has built-in speech synthesis voices. Fixes [#1722](https://github.com/mozilla/firefox-voice/issues/1722) [39b9b82](https://github.com/mozilla/firefox-voice/commit/39b9b82)
+- Lots of code refactoring.
+  - Rename language/matching.js to language/findmatch.js. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [887bbc5](https://github.com/mozilla/firefox-voice/commit/887bbc5)
+  - Remove module loader ([#1768](https://github.com/mozilla/firefox-voice/issues/1768))
+    - Remove moduleLoader.js and simplify how main.js is first loaded. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [a676475](https://github.com/mozilla/firefox-voice/commit/a676475)
+  - Rename old occurances of 'desc' to something context-related.
+    See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [8edf680](https://github.com/mozilla/firefox-voice/commit/8edf680)
+  - Remove now-unused commits [522d953](https://github.com/mozilla/firefox-voice/commit/522d953)
+  - Move createtabgooglelucky from context to browserutil. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [c590a63](https://github.com/mozilla/firefox-voice/commit/c590a63)
+  - Remove context.openorfocustab and move it to browserutil. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [e4919e9](https://github.com/mozilla/firefox-voice/commit/e4919e9)
+  - Remove context.maketabactive and use
+    browserUtil.makeTabActive. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [4e80df3](https://github.com/mozilla/firefox-voice/commit/4e80df3)
+  - Remove context.activetab and use browserutil.activetab. see
+    [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [07e9a42](https://github.com/mozilla/firefox-voice/commit/07e9a42)
+  - Use browserutil.createandloadtab instead of
+    context.createTab. See [#1600](https://github.com/mozilla/firefox-voice/issues/1600) [5ca014d](https://github.com/mozilla/firefox-voice/commit/5ca014d)
+  - Rename conntent.lazyinject to content.inject (since it's not
+    lazily done at all) [b6413da](https://github.com/mozilla/firefox-voice/commit/b6413da)
+- Adjust volume for audible tabs ([#1731](https://github.com/mozilla/firefox-voice/issues/1731))
+  When a volume command adjustment is made, it will look through all the "might be audible" tabs and adjusts the volume to the latest audible tab. If no tab is audible, the error "No audio is playing" appears. Fixes [#1718](https://github.com/mozilla/firefox-voice/issues/1718) [9380cc5](https://github.com/mozilla/firefox-voice/commit/9380cc5)
+- Enable intent "turn selection into link" in google docs (from [noi5e](https://github.com/noi5e))
+  ([#1565](https://github.com/mozilla/firefox-voice/issues/1565))
+  Partial fix for issue [#1363](https://github.com/mozilla/firefox-voice/issues/1363) (solves in Google Docs, not in Google Slides)
+  I made an earlier draft PR here: [#1493](https://github.com/mozilla/firefox-voice/issues/1493)
+  - extension/intents/forms/forms.js detects if the URL is in Google Docs and lazyloads the script file, googleContentScript.js.
+  - if no text is selected, display "No text selected" error as usual
+  - if text is selected, but isn't obviously a link (like "ABC"), the link button is clicked and open for user to input their own link.
+  - if the link is obviously a link (http://www.google.com), the text is automatically transformed into a link.
+  - note how this behavior is different from the default turnSelectionIntoLink on other webpages: in those cases, Voice opens up a new browser tab to the link. [ee6446b](https://github.com/mozilla/firefox-voice/commit/ee6446b)
+- Add optional audio saving to history. Fixes [#1760](https://github.com/mozilla/firefox-voice/issues/1760) [c7c19c3](https://github.com/mozilla/firefox-voice/commit/c7c19c3)
+
+## Version 0.21.0 (2020-06-22)
+
+- Music service volume_followup, also ([#1536](https://github.com/mozilla/firefox-voice/issues/1536)) (from [farhatcode](https://github.com/farhatcode))
+  This PR adds youtube, soundcloud and deezer volume controls to be handled as numbers or percentages (1-100) as suggested. Along with some code improvements to my previous code.
+  I am dealing numbers and percents as alias to keep things simple.
+  Also. Fixes [#1501](https://github.com/mozilla/firefox-voice/issues/1501) Fixes [#1501](https://github.com/mozilla/firefox-voice/issues/1501) [7ac40e9](https://github.com/mozilla/firefox-voice/commit/7ac40e9)
+- Extend 1481 ([#1743](https://github.com/mozilla/firefox-voice/issues/1743))
+  - Added select all the tabs
+  - Added select tabs to the right/left
+  - Added select first/last three tabs (any number of tabs) [4f491dd](https://github.com/mozilla/firefox-voice/commit/4f491dd)
+- Fixes 1644 error when making note when not content editable [d480cde](https://github.com/mozilla/firefox-voice/commit/d480cde)
+- Fixed a display issue with timer when feedback card appeared (after followups were merged, there were 2 feedback cards). Added the follow-up functionality for reset and close; Now, the user can say "close timer" within 5 seconds of the input command (as long as the followup stays awake), or when the timer finished, "reset | reset timer". Fixes [#1392](https://github.com/mozilla/firefox-voice/issues/1392) Fixes [#1392](https://github.com/mozilla/firefox-voice/issues/1392) [ce63f13](https://github.com/mozilla/firefox-voice/commit/ce63f13)
+- Firefox Voice is can use different site-specific searches using the current tab as context. Fixes [#841](https://github.com/mozilla/firefox-voice/issues/841) [c460be3](https://github.com/mozilla/firefox-voice/commit/c460be3)
+- Remember search context ([#1291](https://github.com/mozilla/firefox-voice/issues/1291)) (from [farhatcode](https://github.com/farhatcode))
+  Considers 3 cases for navigation.bangSearch :
+  1. supported service + serviceName mentioned e.g. "search amazon for X"
+  2. supported service + reference of active tab | site used (serviceName not mentioned) e.g. "search here | this tab for Y"
+  3. unsupported service e.g. open bing.com, say "search for news here"
+     Fixes [#841](https://github.com/mozilla/firefox-voice/issues/841) [de99777](https://github.com/mozilla/firefox-voice/commit/de99777)
+- Add simpcyclassy, danielamormocea, and jofish as core contributors (and ignore them in changelog) [c63dfb6](https://github.com/mozilla/firefox-voice/commit/c63dfb6)
+- added mic selector preference ([#1714](https://github.com/mozilla/firefox-voice/issues/1714)). Fixes [#1672](https://github.com/mozilla/firefox-voice/issues/1672) Fixes [#1672](https://github.com/mozilla/firefox-voice/issues/1672) [267fc7f](https://github.com/mozilla/firefox-voice/commit/267fc7f)
+- When alarm finishes play audio twice ([#1713](https://github.com/mozilla/firefox-voice/issues/1713)). Fixes [#1549](https://github.com/mozilla/firefox-voice/issues/1549) [ee1b40e](https://github.com/mozilla/firefox-voice/commit/ee1b40e)
+- Followup feature had disabled settings/feedback. Fixes [#1473](https://github.com/mozilla/firefox-voice/issues/1473) [26bc3a0](https://github.com/mozilla/firefox-voice/commit/26bc3a0)
+- Add down arrow scroll. Fixes [#1706](https://github.com/mozilla/firefox-voice/issues/1706) [f3f0c4f](https://github.com/mozilla/firefox-voice/commit/f3f0c4f)
+- Added mute/unmute music in spotify (from [Ishakikani9117](https://github.com/Ishakikani9117)) [0da15a2](https://github.com/mozilla/firefox-voice/commit/0da15a2)
+- Changed just Missing Host Permission Error for a more user-friendly one. Fixes [#1609](https://github.com/mozilla/firefox-voice/issues/1609) Fixes [#1609](https://github.com/mozilla/firefox-voice/issues/1609) [77f20a7](https://github.com/mozilla/firefox-voice/commit/77f20a7)
+- Fixed scrolling behavior and styling on cards with feedback. Fixes [#1685](https://github.com/mozilla/firefox-voice/issues/1685) [1b1372f](https://github.com/mozilla/firefox-voice/commit/1b1372f)
+- Add 'search name on firefox/mozilla add-ons'. Fixes [#1222](https://github.com/mozilla/firefox-voice/issues/1222) [7b51c7a](https://github.com/mozilla/firefox-voice/commit/7b51c7a)
+- Add 'bookmark this in [folder]' intent. This does a fuzzy search for the folder [a8a6904](https://github.com/mozilla/firefox-voice/commit/a8a6904)
+- Add 'close dialog' intent. This attempts to find a floating dialog (usually an annoying dialog) and click the close button [7eb7b4d](https://github.com/mozilla/firefox-voice/commit/7eb7b4d)
+- Allow 'follow' intent to target a button or button-like element [ea94a4f](https://github.com/mozilla/firefox-voice/commit/ea94a4f)
+- Add email intents and services. This adds an intent to compose an email, with an optional subject and to address, and optionally based on the current page. Also the service framework is extended for email providers, and a gmail provider added. Not much functionality around those providers yet. [aff7660](https://github.com/mozilla/firefox-voice/commit/aff7660)
+- Add performance logging. This commit doesn't add any logging, but it does add the functions used for logging, and a page to display the information. Fixes [#1667](https://github.com/mozilla/firefox-voice/issues/1667) [0c241cb](https://github.com/mozilla/firefox-voice/commit/0c241cb) [f2c4b49](https://github.com/mozilla/firefox-voice/commit/f2c4b49)
+- Reuse settings page ([#1579](https://github.com/mozilla/firefox-voice/issues/1579)) (from [farhatcode](https://github.com/farhatcode)). Fixes [#1576](https://github.com/mozilla/firefox-voice/issues/1576) [0425852](https://github.com/mozilla/firefox-voice/commit/0425852)
+- Fixed white border on the right side of the black feedback background ([#1546](https://github.com/mozilla/firefox-voice/issues/1546)) (from [rohanharikr](https://github.com/rohanharikr))
+- Search openstreetmap for london" command makes a google search ([#1472](https://github.com/mozilla/firefox-voice/issues/1472))
+  - added openstreetmap to searchService
+  - open and search. Fixes [#1421](https://github.com/mozilla/firefox-voice/issues/1421) Fixes [#866](https://github.com/mozilla/firefox-voice/issues/866) [dd41a62](https://github.com/mozilla/firefox-voice/commit/dd41a62)
+- Timer controls 'cancel', 'pause', and 'reset' ([#1464](https://github.com/mozilla/firefox-voice/issues/1464))
+  - set timer control for 'cancel', 'pause' or 'reset'
+  - set cancelIntent to stop timer when timer active
+  - timer control cancel
+  - make timer word optional. Fixes [#1439](https://github.com/mozilla/firefox-voice/issues/1439) [efd0da8](https://github.com/mozilla/firefox-voice/commit/efd0da8)
+- Format fixes[#1322](https://github.com/mozilla/firefox-voice/issues/1322) [574c546](https://github.com/mozilla/firefox-voice/commit/574c546)
+
 ## Version 0.20.0 (2020-05-19)
 
 - Implement new two-step opt-in flow. Fixes [#1656](https://github.com/mozilla/firefox-voice/issues/1656) [5b6b4e0](https://github.com/mozilla/firefox-voice/commit/5b6b4e0)

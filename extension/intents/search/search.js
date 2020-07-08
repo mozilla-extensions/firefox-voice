@@ -5,6 +5,7 @@ import * as searching from "../../searching.js";
 import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
+import * as settings from "../../settings.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
@@ -114,14 +115,20 @@ async function performSearch(query) {
     await browserUtil.makeTabActive(tabId);
   }
   try {
-    await content.lazyInject(tabId, "/intents/search/queryScript.js");
+    await content.inject(tabId, [
+      "/intents/search/queryScript.js",
+      "/intents/search/cardSpeech.js",
+    ]);
   } catch (e) {
     // There's a (fairly) common race condition here
     if (e.message.includes("communicate is not defined")) {
       log.info(
         "Race condition in search page, attempting to load queryScript second time"
       );
-      await content.lazyInject(tabId, "/intents/search/queryScript.js");
+      await content.inject(tabId, [
+        "/intents/search/queryScript.js",
+        "/intents/search/cardSpeech.js",
+      ]);
     } else {
       throw e;
     }
@@ -146,7 +153,7 @@ export async function performSearchPage(context, query) {
 
   await focusSearchTab();
   await browserUtil.waitForDocumentComplete(tabId);
-  await content.lazyInject(tabId, "/intents/search/queryScript.js");
+  await content.inject(tabId, "/intents/search/queryScript.js");
   const searchInfo = await callScript({ type: "searchResultInfo" });
 
   if (
@@ -225,7 +232,7 @@ function pollForCard(maxTime) {
     }
     let card;
     try {
-      card = await callScript({ type: "cardImage" });
+      card = await callScript({ type: "cardContent", polling: true });
     } catch (e) {
       if (e.message && e.message.match(/Invalid Tab ID/i)) {
         stopCardPoll();
@@ -234,7 +241,7 @@ function pollForCard(maxTime) {
       throw e;
     }
     if (!card) {
-      catcher.capture(new Error(`callScript cardImage returned ${card}`));
+      catcher.capture(new Error(`callScript cardContent returned ${card}`));
       return;
     }
     if (card.src === lastImage) {
@@ -302,7 +309,7 @@ async function moveResult(context, step) {
 
   const item = searchInfo.searchResults[searchInfo.index];
   if (!tabId) {
-    const tab = await context.createTab({ url: item.url });
+    const tab = await browserUtil.createAndLoadTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates
     lastTabId = tab.id;
     popupSearchInfo = null;
@@ -312,7 +319,7 @@ async function moveResult(context, step) {
     lastTabId = tabId;
     let exists = true;
     try {
-      await context.makeTabActive(tabId);
+      await browserUtil.makeTabActive(tabId);
     } catch (e) {
       if (String(e).includes("Invalid tab ID")) {
         exists = false;
@@ -390,7 +397,10 @@ intentRunner.registerIntent({
     }
 
     if (searchInfo.hasCard || searchInfo.hasSidebarCard) {
-      const card = await callScript({ type: "cardImage" });
+      const card = await callScript({
+        type: "cardContent",
+        speechOutput: settings.getSettings().speechOutput,
+      });
       context.keepPopup();
       searchInfo.index = -1;
       await browser.runtime.sendMessage({
