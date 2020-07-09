@@ -163,17 +163,17 @@ intentRunner.registerIntent({
 
       music: [
         {
-          imgSrc: "",
+          imgSrc: "../../assets/images/Spotify.svg",
           text: "Spotify",
           alt: "spotify icon",
         },
         {
-          imgSrc: "",
+          imgSrc: "../../assets/images/soundcloud.svg",
           text: "SoundCloud",
           alt: "soundCloud icon",
         },
         {
-          imgSrc: "",
+          imgSrc: "../../assets/images/deezer.svg",
           text: "Deezer",
           alt: "deezer icon",
         },

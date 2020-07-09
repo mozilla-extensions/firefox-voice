@@ -892,25 +892,27 @@ const SearchResultsContent = ({
   const MusicCard = () => (
     <div className="results-set">
       {card.music.map(({ imgSrc, text, alt }) => (
-        <div>
+        <div className="music-list">
           <div>
-            <img className="results-image" src={imgSrc} alt={alt} />
+            <img
+              className="results-image music-service-image"
+              src={imgSrc}
+              alt={alt}
+            />
           </div>
-          <em>
-            <div>{text}</div>
-          </em>
+          <div className="results-medium-text">{text}</div>
         </div>
       ))}
     </div>
   );
 
   const renderCard = () => {
-    if (card && card.answer) {
-      return AnswerCard();
+    if (card && card.music && card.answer) {
+      return <MusicCard />;
+    } else if (card && card.answer) {
+      return <AnswerCard />;
     } else if (card) {
-      return SearchCard();
-    } else if (card && card.music && card.answer) {
-      return MusicCard();
+      return <SearchCard />;
     }
     return null;
   };

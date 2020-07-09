@@ -76,7 +76,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.simpleTest",
   async run(context) {
-    const imageCard = "../../assets/images/check-mark.png";
+    const imageCard = "./images/check-mark.png";
     const card = {
       answer: {
         imgSrc: `${imageCard}`,

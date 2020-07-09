@@ -204,6 +204,24 @@ body,
   font-size: 1.5em;
 }
 
+.results-medium-text {
+  font-size: 2em;
+  float: left;
+  font-weight: 600;
+  margin-left: 20px;
+  margin-top: 8px;
+}
+
+.music-list {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+}
+
+.music-service-image {
+  width: 50px;
+}
+
 #voice-input,
 #text-input,
 #search-results,
