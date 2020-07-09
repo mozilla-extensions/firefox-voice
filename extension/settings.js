@@ -16,6 +16,7 @@ const DEFAULT_SETTINGS = {
   listenForFollowup: false,
   speechOutput: false,
   saveAudioHistory: false,
+  saveHistory: true,
 };
 
 export function getSettings() {

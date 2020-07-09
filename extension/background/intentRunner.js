@@ -433,8 +433,11 @@ export function getIntentSummary() {
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
-  const saveAudio = settings.getSettings().saveAudioHistory;
-  if (saveAudio) {
+  const userSettings = settings.getSettings();
+  if (!userSettings.saveHistory) {
+    return;
+  }
+  if (userSettings.saveAudioHistory) {
     browser.runtime
       .sendMessage({ type: "getLastAudio", utterance: context.utterance })
       .then(audio => {

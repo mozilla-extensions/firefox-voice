@@ -486,3 +486,7 @@ audio {
 #voice-output-unavailable {
   font-style: italic;
 }
+
+label.disabled-field {
+  opacity: 0.5;
+}
