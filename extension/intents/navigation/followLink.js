@@ -18,15 +18,15 @@ this.followLink = (function() {
       keys: [
         {
           name: "title",
-          weight: 0.8,
+          weight: 0.45,
         },
         {
           name: "text",
-          weight: 0.8,
+          weight: 0.45,
         },
         {
           name: "url",
-          weight: 0.2,
+          weight: 0.1,
         },
       ],
     };
