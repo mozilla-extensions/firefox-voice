@@ -71,9 +71,8 @@ async function pauseAnyButTab(context, tabId) {
 intentRunner.registerIntent({
   name: "music.play",
   async run(context) {
-    if(context.parameters.prefixQuery!== undefined)
-    {
-      context.slots.query+=" "+context.parameters.prefixQuery;
+    if (context.parameters.prefixQuery !== undefined) {
+      context.slots.query += " " + context.parameters.prefixQuery;
     }
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.playQuery(context.slots.query);
