@@ -72,7 +72,8 @@ intentRunner.registerIntent({
   name: "music.play",
   async run(context) {
     if (context.parameters.prefixQuery !== undefined) {
-      context.slots.query += " " + context.parameters.prefixQuery;
+      context.slots.query =
+        context.parameters.prefixQuery + " " + context.slots.query;
     }
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.playQuery(context.slots.query);
