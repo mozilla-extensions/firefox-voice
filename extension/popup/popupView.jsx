@@ -32,6 +32,9 @@ export const Popup = ({
   renderFollowup,
   followupText,
   showZeroVolumeError,
+  userOptions,
+  userSettings,
+  updateUserSettings,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   const [showScroll, setShowScroll] = useState(false);
@@ -113,6 +116,9 @@ export const Popup = ({
         timerTotalInMS={timerTotalInMS}
         renderFollowup={renderFollowup}
         showZeroVolumeError={showZeroVolumeError}
+        userOptions={userOptions}
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
       />
       <PopupFooter
         currentView={currentView}
@@ -252,6 +258,9 @@ const PopupContent = ({
   timerTotalInMS,
   renderFollowup,
   showZeroVolumeError,
+  userOptions,
+  userSettings,
+  updateUserSettings,
 }) => {
   const getContent = () => {
     switch (currentView) {
@@ -307,6 +316,9 @@ const PopupContent = ({
             setMinPopupSize={setMinPopupSize}
             onSubmitFeedback={onSubmitFeedback}
             renderFollowup={renderFollowup}
+            userOptions={userOptions}
+            userSettings={userSettings}
+            updateUserSettings={updateUserSettings}
           />
         );
       case "startSavingPage":
@@ -837,6 +849,9 @@ const SearchResultsContent = ({
   setMinPopupSize,
   onSubmitFeedback,
   renderFollowup,
+  userOptions,
+  userSettings,
+  updateUserSettings,
 }) => {
   if (!search) return null;
 
@@ -861,6 +876,13 @@ const SearchResultsContent = ({
   const onNextResultClick = event => {
     event.preventDefault();
     onNextSearchResultClick();
+  };
+
+  const onMusicServiceChange = event => {
+    if (event) {
+      userSettings.musicService = event.target.value;
+      updateUserSettings(userSettings);
+    }
   };
 
   const SearchCard = () => (
@@ -889,19 +911,30 @@ const SearchResultsContent = ({
       </div>
     </div>
   );
+
   const MusicCard = () => (
     <div className="results-set">
       {card.music.map(({ imgSrc, text, alt }) => (
-        <div className="music-list">
-          <div>
-            <img
-              className="results-image music-service-image"
-              src={imgSrc}
-              alt={alt}
-            />
-          </div>
-          <div className="results-medium-text">{text}</div>
-        </div>
+        <select
+          value={userSettings.musicService}
+          onChange={onMusicServiceChange}
+          onBlur={onMusicServiceChange}
+          className="music-list"
+        >
+          {userOptions.musicServices &&
+            userOptions.musicServices.map(musicOption => (
+              <option key={musicOption.name} value={musicOption.name}>
+                <div>
+                  <img
+                    className="results-image music-service-image"
+                    src={imgSrc}
+                    alt={alt}
+                  />
+                </div>
+                <div className="results-medium-text">{text}</div>
+              </option>
+            ))}
+        </select>
       ))}
     </div>
   );
