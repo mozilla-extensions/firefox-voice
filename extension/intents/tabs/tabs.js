@@ -616,7 +616,7 @@ intentRunner.registerIntent({
 
     const card = {
       answer: {
-        largeText: `Open Windows: ${windowsCount} ,
+        tabCountText: `Open Windows: ${windowsCount} ,
                                   Tabs in current window: ${numOfOpenTabs},
                                   Total Tabs Open: ${tabsCount -
                                     hiddenTabs.length}`,
