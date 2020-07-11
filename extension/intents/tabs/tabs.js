@@ -1,4 +1,4 @@
-/* globals buildSettings */
+/* globals buildSettings,Fuse,log */
 import * as intentRunner from "../../background/intentRunner.js";
 import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
@@ -469,13 +469,58 @@ async function getMatchingTabs(options) {
   let matchingTabs = await browser.tabs.query(tabQuery);
 
   if (options.query !== undefined) {
-    matchingTabs = matchingTabs.filter(tab => {
-      const query = options.query.toLowerCase();
-      return (
-        new URL(tab.url).origin.includes(query) ||
-        tab.title.toLowerCase().includes(query)
-      );
-    });
+    const fuseOptions = {
+      id: "tabId",
+      shouldSort: true,
+      tokenize: true,
+      findAllMatches: true,
+      includeScore: true,
+      threshold: 0.3,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 3,
+      keys: [
+        {
+          name: "title",
+          weight: 0.8,
+        },
+        {
+          name: "url",
+          weight: 0.2,
+        },
+      ],
+    };
+
+    let combinedTabContent = [];
+
+    for (const tab of matchingTabs) {
+      const result = {
+        tabId: tab.id,
+        title: tab.title,
+        url: tab.url,
+      };
+
+      combinedTabContent.push(result);
+    }
+
+    combinedTabContent = combinedTabContent.flat();
+
+    // use Fuse.js to parse the most probable response?
+    const fuse = new Fuse(combinedTabContent, fuseOptions);
+    const matches = fuse.search(options.query);
+    log.debug("find matches:", matches);
+    // TODO account for multiple matches
+    if (!matches.length) {
+      const e = new Error("No matching tab found");
+      e.displayMessage = "No matching tab found";
+      throw e;
+    }
+
+    matchingTabs = [];
+    for (const match of matches) {
+      matchingTabs.push(await browser.tabs.get(parseInt(match.item)));
+    }
   }
 
   if (options.sort_by_index === true) {
