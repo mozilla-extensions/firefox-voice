@@ -215,11 +215,14 @@ body,
 .music-list {
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
+  margin-left: 0;
 }
 
 .music-service-image {
   width: 50px;
+  height: auto;
+  padding-bottom: 35px;
+  float: left;
 }
 
 #voice-input,

@@ -1,4 +1,4 @@
-/* globals lottie, buildSettings, React */
+/* globals lottie, buildSettings, React, log */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
@@ -881,6 +881,7 @@ const SearchResultsContent = ({
   const onMusicServiceChange = event => {
     if (event) {
       userSettings.musicService = event.target.value;
+      log.info(event.target.value);
       updateUserSettings(userSettings);
     }
   };
@@ -913,29 +914,21 @@ const SearchResultsContent = ({
   );
 
   const MusicCard = () => (
-    <div className="results-set">
-      {card.music.map(({ imgSrc, text, alt }) => (
-        <select
-          value={userSettings.musicService}
-          onChange={onMusicServiceChange}
-          onBlur={onMusicServiceChange}
-          className="music-list"
-        >
-          {userOptions.musicServices &&
-            userOptions.musicServices.map(musicOption => (
-              <option key={musicOption.name} value={musicOption.name}>
-                <div>
-                  <img
-                    className="results-image music-service-image"
-                    src={imgSrc}
-                    alt={alt}
-                  />
-                </div>
-                <div className="results-medium-text">{text}</div>
-              </option>
-            ))}
-        </select>
-      ))}
+    <div value={userSettings.musicService} className="results-set">
+      {userOptions.musicServices &&
+        card.music.map(({ imgSrc, text, alt }) => (
+          <button
+            key={alt}
+            value={alt}
+            onChange={onMusicServiceChange}
+            className="music-list invisible-button"
+          >
+            <div>
+              <img className="music-service-image" src={imgSrc} alt={alt} />
+            </div>
+            <div className="results-medium-text">{text}</div>
+          </button>
+        ))}
     </div>
   );
 
