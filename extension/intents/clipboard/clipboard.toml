@@ -125,3 +125,9 @@ match = """
 
 [[clipboard.paste.example]]
 phrase = "Paste"
+
+[clipboard.copyValue]
+description = "Copies the value given"
+match = """
+  copy [value]
+"""

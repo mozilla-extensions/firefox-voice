@@ -130,39 +130,85 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "nicknames.pause",
   async run(context) {
-    if (context.parentRoutine === undefined) {
-      const exc = new Error("Command not available");
-      exc.displayMessage = "Command not available";
+    if (context.routineExecutor === undefined) {
+      const exc = new Error("Command not available.");
+      exc.displayMessage = "Command not available.";
       throw exc;
     }
-    context.parentRoutine.stop = true;
-    browser.storage.sync.set({
-      pausedRoutine: {
-        name: context.parentRoutine.name,
-        nextIndex: context.parentRoutine.nextIndex,
-      },
+    browser.runtime.sendMessage({
+      type: "presentMessage",
+      message: context.slots.message,
     });
+    context.routineExecutor.pauseRoutine();
   },
 });
 
 intentRunner.registerIntent({
   name: "nicknames.continue",
-  async run(context) {
-    const { pausedRoutine } = await browser.storage.sync.get("pausedRoutine");
+  async run() {
+    const { pausedRoutine } = await browser.storage.local.get("pausedRoutine");
     if (pausedRoutine === undefined) {
-      const exc = new Error("Command not available");
-      exc.displayMessage = "Command not available";
+      const exc = new Error(
+        "'Continue' can only be used in a routine after 'pause routine'"
+      );
+      exc.displayMessage =
+        "'Continue' can only be used in a routine after 'pause routine'";
       throw exc;
     }
 
-    const { name, nextIndex } = pausedRoutine;
+    const { name, nextIndex, states, forIndex } = pausedRoutine;
     const registeredNicknames = await intentRunner.getRegisteredNicknames();
     const routineExecutor = new RoutineExecutor(
       registeredNicknames[name].nickname,
       registeredNicknames[name].contexts,
-      nextIndex
+      nextIndex,
+      states,
+      forIndex
     );
-    await browser.storage.sync.remove("pausedRoutine");
+    await browser.storage.local.remove("pausedRoutine");
     await routineExecutor.run();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "nicknames.startForLoop",
+  async run(context) {
+    const objectToLoop = [];
+    if (context.parameters.option === "clipboard") {
+      const result = await navigator.clipboard.readText();
+      const splitResult = result.split("\n");
+      for (const key of splitResult) {
+        objectToLoop.push({ value: key });
+      }
+    }
+
+    if (context.parameters.option === "selected") {
+      const selectedTabs = await browser.tabs.query({ highlighted: true });
+      for (const tab of selectedTabs) {
+        objectToLoop.push({ selected: tab.url });
+      }
+    }
+    if (context.parameters.option === "tab") {
+      const tabs = await browser.tabs.query({ currentWindow: true });
+      for (const tab in tabs) {
+        objectToLoop.push({ tab: tab.url });
+      }
+    }
+    if (context.parameters.option === "bookmark") {
+      const bookmarks = await browser.bookmarks.get();
+      for (const bookmark in bookmarks) {
+        objectToLoop.push({ bookmark: bookmark.url });
+      }
+    }
+
+    context.routineExecutor.startLoop(objectToLoop);
+    return true;
+  },
+});
+
+intentRunner.registerIntent({
+  name: "nicknames.endForLoop",
+  async run(context) {
+    context.routineExecutor.endLoop();
   },
 });

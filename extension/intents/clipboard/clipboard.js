@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 
-async function copy(context, copyType, complete = false) {
+async function copy(context, copyType, complete = false, value) {
   const activeTab = await browserUtil.activeTab();
   await content.inject(activeTab.id, [
     "/background/pageMetadata-contentScript.js",
@@ -12,7 +12,7 @@ async function copy(context, copyType, complete = false) {
   if (complete) {
     await browserUtil.waitForDocumentComplete(activeTab.id);
   }
-  browser.tabs.sendMessage(activeTab.id, { type: "copy", copyType });
+  browser.tabs.sendMessage(activeTab.id, { type: "copy", copyType, value });
 }
 
 intentRunner.registerIntent({
@@ -76,6 +76,14 @@ intentRunner.registerIntent({
   async run(context) {
     await copy(context, "copyImage");
     context.presentMessage("Image copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.copyValue",
+  async run(context) {
+    await copy(context, "copyValue", false, context.slots.value);
+    context.presentMessage("Value copied to clipboard");
   },
 });
 

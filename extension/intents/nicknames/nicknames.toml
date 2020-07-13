@@ -65,11 +65,9 @@ phrase = "remove this tab name"
 [nicknames.pause]
 description = "Pauses a routine"
 match = """
+  pause routine (with |) (and |) (show |) (message | status | text | print) [message]
   pause routine
 """
-
-[[nicknames.pause.example]]
-phrase = "pause routine"
 
 [nicknames.continue]
 description = "Continues a routine"
@@ -77,5 +75,18 @@ match = """
   continue routine
 """
 
-[[nicknames.continue.example]]
-phrase = "Continue routine"
+[nicknames.startForLoop]
+description = "Statement to start loop"
+match = """
+  for each value in (clipboard) [option=clipboard]
+  for each tab [option=tab]
+  for each bookmark [option=bookmark]
+  for each selected (tab |) [option=selected]
+"""
+
+[nicknames.endForLoop]
+description = "Statement to end loop"
+match = """
+  endfor
+"""
+
