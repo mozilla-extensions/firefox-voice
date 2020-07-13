@@ -1,6 +1,7 @@
 /* globals catcher, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
+import { registerHandler } from "../../background/communicate.js";
 
 class TimerController {
   constructor() {
@@ -226,4 +227,8 @@ intentRunner.registerIntent({
     }
     activeTimer.unpause();
   },
+});
+
+registerHandler("timerAction", message => {
+  return timerController[message.method](...(message.args || []));
 });

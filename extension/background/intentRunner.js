@@ -9,6 +9,8 @@ import * as settings from "../settings.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
+import { registerHandler } from "./communicate.js";
+
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -335,6 +337,29 @@ export async function runUtterance(utterance, noPopup) {
   return result;
 }
 
+registerHandler("runIntent", (message, sender) => {
+  if (message.closeThisTab) {
+    closeTabSoon(sender.tab.id, sender.tab.url);
+  }
+  return runUtterance(message.text, message.noPopup);
+});
+
+function closeTabSoon(tabId, tabUrl) {
+  setTimeout(async () => {
+    try {
+      const tab = await browser.tabs.get(tabId);
+      if (tab.url !== tabUrl) {
+        // The tab has been updated, and shouldn't be closed
+        return;
+      }
+      await browser.tabs.remove(tabId);
+    } catch (e) {
+      log.error("Error closing temporary execution tab:", e);
+      catcher.capture(e);
+    }
+  }, 250);
+}
+
 export async function runIntent(contextParams) {
   catcher.setTag("intent", contextParams.name);
   if (!intents[contextParams.name]) {
@@ -430,6 +455,8 @@ export function getIntentSummary() {
   });
 }
 
+registerHandler("getIntentSummary", getIntentSummary);
+
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
@@ -471,6 +498,14 @@ export function registerNickname(name, context) {
   browser.storage.sync.set({ registeredNicknames });
 }
 
+registerHandler("registerNickname", message => {
+  let context = message.context;
+  if (context !== null) {
+    context = new IntentContext(context);
+  }
+  return registerNickname(message.name, context);
+});
+
 async function initRegisteredNicknames() {
   const result = await browser.storage.sync.get(["registeredNicknames"]);
   if (result.registeredNicknames) {
@@ -486,6 +521,8 @@ async function initRegisteredNicknames() {
 export function getRegisteredNicknames() {
   return registeredNicknames;
 }
+
+registerHandler("getRegisteredNicknames", getRegisteredNicknames);
 
 let pageNames = {};
 
@@ -540,6 +577,10 @@ export function getLastIntentForFeedback() {
   return lastIntent;
 }
 
+registerHandler("getLastIntentForFeedback", () => {
+  return getLastIntentForFeedback();
+});
+
 export function clearFeedbackIntent() {
   lastIntent = null;
 }
@@ -549,6 +590,14 @@ export function clearFollowup() {
     lastIntentForFollowup = null;
   }
 }
+
+registerHandler("clearFollowup", clearFollowup);
+
+registerHandler("parseUtterance", message => {
+  return new IntentContext(
+    intentParser.parse(message.utterance, message.disableFallback)
+  );
+});
 
 initRegisteredNicknames();
 initRegisteredPageName();
