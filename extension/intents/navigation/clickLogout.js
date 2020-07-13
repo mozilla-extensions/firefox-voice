@@ -2,26 +2,26 @@
 
 this.followLink = (function() {
   communicate.register("signOut", message => {
-    const { query } = message;
-    const regex = /log\s*out|sign\s*out/i;
+    const regex = /log\s*in|sign\s*in/i;
+    let element;
 
     for (const link of findButton()) {
-      const element = link.innerText;
-      return regex.test(element.innerText);
+      if (regex.test(link.innerText)) {
+        element = link;
+        break;
+      }
     }
-    const matches = regex.match(query);
-    const found = matches[0];
 
-    highlightElement(found);
-    found.scrollIntoView();
+    highlightButton(element);
+    element.scrollIntoView();
     setTimeout(() => {
-      log.info("Following link to:", found.href || "?");
-      found.click();
+      log.info("Following link to:", element.href || "?");
+      element.click();
     }, 100);
     return true;
   });
 
-  function highlightElement(el) {
+  function highlightButton(el) {
     el.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
   }
 
