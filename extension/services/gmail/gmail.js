@@ -9,7 +9,10 @@ class Gmail {
     const url = `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&source=mailto&to=${encodeURIComponent(
       to
     )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    await browserUtil.createTab({ url });
+    const tab = await browserUtil.createTab({ url });
+    await browserUtil.waitForPageToLoadUsingSelector(tab.id, {
+      selector: "#\\:mj",
+    });
   }
 }
 
