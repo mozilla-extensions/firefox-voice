@@ -1,5 +1,7 @@
 /* globals log, music_getServiceNamesAndTitles, isBackgroundPage */
 
+import { sendMessage } from "./background/communicate.js";
+
 const watchers = {};
 
 const DEFAULT_SETTINGS = {
@@ -34,7 +36,7 @@ export function getSettings() {
 
 export async function getSettingsAndOptions() {
   if (typeof isBackgroundPage === "undefined" || !isBackgroundPage) {
-    const result = await browser.runtime.sendMessage({
+    const result = await sendMessage({
       type: "getSettingsAndOptions",
     });
     if (!result) {
@@ -58,7 +60,7 @@ export async function saveSettings(settings) {
     // We're not running in the background
     // Remove any inherited/default properties:
     settings = JSON.parse(JSON.stringify(settings));
-    await browser.runtime.sendMessage({ type: "saveSettings", settings });
+    await sendMessage({ type: "saveSettings", settings });
   }
   localStorage.setItem("settings", JSON.stringify(settings));
   if (Object.keys(watchers).length !== 0) {

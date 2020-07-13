@@ -52,37 +52,42 @@ export function registerOnMessage() {
   browser.runtime.onMessage.addListener(handleMessage);
 }
 
-export async function send(message, options) {
+export async function sendMessage(message, options) {
   if (!message.type) {
     throw new Error("message.type is required in send()");
   }
   options = options || {};
-  return Promise.resolve(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let result;
     const timeout = options.timeout || DEFAULT_SEND_TIMEOUT;
     const timeoutId = setTimeout(() => {
       reject(new Error(`Timeout sending ${message.type}`));
     }, timeout);
-    try {
-      if (options.tabId) {
-        result = await browser.tabs.sendMessage(options.tabId, message);
-      } else {
-        result = await browser.runtime.sendMessage(message);
-      }
-      clearTimeout(timeoutId);
-    } catch (e) {
-      clearTimeout(timeoutId);
-      if (e.message.includes("Missing host permission for the tab")) {
-        e.displayMessage = "That does not work on this kind of page";
-      }
-      throw e;
+    if (options.tabId) {
+      result = browser.tabs.sendMessage(options.tabId, message);
+    } else {
+      result = browser.runtime.sendMessage(message);
     }
-    if (result && typeof result === "object" && result.type === "error") {
-      const exc = new Error(result.message);
-      exc.name = result.name;
-      exc.displayMessage = result.displayMessage;
-      reject(exc);
-    }
+    clearTimeout(timeoutId);
+    result.then(
+      value => {
+        if (value && typeof value === "object" && value.type === "error") {
+          const exc = new Error(value.message);
+          exc.name = value.name;
+          exc.displayMessage = value.displayMessage;
+          reject(exc);
+        } else {
+          resolve(value);
+        }
+      },
+      e => {
+        clearTimeout(timeoutId);
+        if (e.message.includes("Missing host permission for the tab")) {
+          e.displayMessage = "That does not work on this kind of page";
+        }
+        throw e;
+      }
+    );
     resolve(result);
   });
 }

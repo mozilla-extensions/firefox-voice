@@ -1,6 +1,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as browserUtil from "../../browserUtil.js";
 import { timerController } from "../timer/timer.js";
+import { sendMessage } from "../../background/communicate.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",
@@ -16,7 +17,7 @@ intentRunner.registerIntent({
           eduText: `Click mic and say 'help' for things to say`,
         },
       };
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "showSearchResults",
         card,
         searchResults: card,
@@ -38,7 +39,7 @@ intentRunner.registerIntent({
         eduText: `Click mic and say 'help' for things to say`,
       },
     };
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "showSearchResults",
       card,
       searchResults: card,
@@ -84,7 +85,7 @@ intentRunner.registerIntent({
         eduText: `Click mic and say 'help' for things to say`,
       },
     };
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "showSearchResults",
       card,
       searchResults: card,

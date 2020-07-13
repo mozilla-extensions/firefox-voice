@@ -13,7 +13,11 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
-import { registerOnMessage, registerHandler } from "./communicate.js";
+import {
+  registerOnMessage,
+  registerHandler,
+  sendMessage,
+} from "./communicate.js";
 
 // These are used for registering message handlers:
 // eslint-disable-next-line no-unused-vars
@@ -65,10 +69,13 @@ const RECORDER_URL = browser.runtime.getURL("/recorder/recorder.html");
 async function openRecordingTab() {
   if (recorderTabId) {
     try {
-      await browser.tabs.sendMessage(recorderTabId, {
-        type: "voiceShim",
-        method: "ping",
-      });
+      await sendMessage(
+        {
+          type: "voiceShim",
+          method: "ping",
+        },
+        { tabId: recorderTabId }
+      );
       return;
     } catch (e) {
       log.info("Error ending message to recorder tab:", String(e));
@@ -98,10 +105,13 @@ async function openRecordingTab() {
   recorderTabId = tab.id;
   for (let i = 0; i < 5; i++) {
     try {
-      await browser.tabs.sendMessage(recorderTabId, {
-        type: "voiceShim",
-        method: "ping",
-      });
+      await sendMessage(
+        {
+          type: "voiceShim",
+          method: "ping",
+        },
+        { tabId: recorderTabId }
+      );
       break;
     } catch (e) {}
     await util.sleep(100);
@@ -115,7 +125,7 @@ async function zeroVolumeError() {
   catcher.capture(exc);
   if (recorderTabId) {
     await browserUtil.makeTabActive(recorderTabId);
-    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
+    await sendMessage({ type: "zeroVolumeError" }, { tabId: recorderTabId });
   }
 }
 
@@ -149,7 +159,7 @@ async function wakewordPopup(wakeword) {
   telemetry.add({ wakewordUsed: wakeword });
   log.info("Received wakeword", wakeword);
   try {
-    const result = await browser.runtime.sendMessage({
+    const result = await sendMessage({
       type: "wakewordReceivedRestartPopup",
     });
     if (result) {
@@ -179,7 +189,7 @@ async function updateKeyboardShortcut(shortcut) {
       let error = String(e);
       error = error.replace(/^.*Error: Value/, "");
       try {
-        await browser.runtime.sendMessage({
+        await sendMessage({
           type: "keyboardShortcutError",
           error,
         });
@@ -199,7 +209,7 @@ async function updateKeyboardShortcut(shortcut) {
     }
     if (success) {
       try {
-        await browser.runtime.sendMessage({
+        await sendMessage({
           type: "keyboardShortcutError",
           error: "",
         });
@@ -244,10 +254,10 @@ const openWakeword = util.serializeCalls(async function() {
       pinned: true,
     });
     await browserUtil.waitForDocumentComplete(tab.id);
-    await browser.tabs.sendMessage(tab.id, { type: "updateWakeword" });
+    await sendMessage({ type: "updateWakeword" }, { tabId: tab.id });
     await browserUtil.makeTabActive(activeTab.id);
   } else {
-    await browser.tabs.sendMessage(tabs[0].id, { type: "updateWakeword" });
+    await sendMessage({ type: "updateWakeword" }, { tabId: tabs[0].id });
   }
   wakewordMaybeOpen = true;
 });
@@ -304,14 +314,14 @@ registerHandler("wakeword", message => {
 // popup; all these methods are forwarded between these two contexts:
 registerHandler("onVoiceShimForward", message => {
   message.type = "onVoiceShim";
-  return browser.runtime.sendMessage(message);
+  return sendMessage(message);
 });
 registerHandler("voiceShimForward", message => {
   message.type = "voiceShim";
   if (!recorderTabId) {
     throw new Error("Recorder tab has not been created");
   }
-  return browser.tabs.sendMessage(recorderTabId, message);
+  return sendMessage(message, { tabId: recorderTabId });
 });
 registerHandler("makeRecorderActive", (message, sender) => {
   // FIXME: consider focusing the window too

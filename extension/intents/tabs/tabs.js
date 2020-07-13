@@ -2,6 +2,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
+import { sendMessage } from "../../background/communicate.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -614,7 +615,7 @@ intentRunner.registerIntent({
         eduText: `Click mic and say "gather all Google tabs"`,
       },
     };
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "showSearchResults",
       card,
       searchResults: card,
@@ -754,7 +755,7 @@ async function callResult(cardAnswer) {
     answer: cardAnswer,
   };
 
-  await browser.runtime.sendMessage({
+  await sendMessage({
     type: "showSearchResults",
     card,
     searchResults: card,
