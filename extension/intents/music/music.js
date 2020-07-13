@@ -3,6 +3,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
+import { sendMessage } from "../../background/communicate.js";
 
 const SERVICES = {};
 
@@ -148,7 +149,7 @@ intentRunner.registerIntent({
         eduText: `Click mic and say ‘pause’, ‘next’ or ‘stop’`,
       },
     };
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "showSearchResults",
       card,
       searchResults: card,

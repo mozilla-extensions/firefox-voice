@@ -9,7 +9,7 @@ import * as settings from "../settings.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
-import { registerHandler } from "./communicate.js";
+import { registerHandler, sendMessage } from "./communicate.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
@@ -73,7 +73,7 @@ export class IntentContext {
   done(time = undefined) {
     this.closePopupOnFinish = false;
     if (!this.noPopup && !this.isFollowup && !this.isFollowupIntent) {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "closePopup",
         time,
       });
@@ -93,7 +93,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "error" });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "displayFailure",
       message,
     });
@@ -101,12 +101,12 @@ export class IntentContext {
 
   savingPage(message) {
     if (message === "startSavingPage") {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "startSavingPage",
         message,
       });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "endSavingPage",
       message,
     });
@@ -123,7 +123,7 @@ export class IntentContext {
         subheading: message.subheading,
       };
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "handleFollowup",
       method: "enable",
       message: {
@@ -135,7 +135,7 @@ export class IntentContext {
 
   async endFollowup() {
     this.expectsFollowup = false;
-    browser.runtime.sendMessage({
+    await sendMessage({
       type: "handleFollowup",
       method: "disable",
     });
@@ -179,7 +179,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
     }
-    return browser.runtime.sendMessage({ type: "presentMessage", message });
+    return sendMessage({ type: "presentMessage", message });
   }
 
   displayInlineMessage({ message, type }) {
@@ -198,7 +198,7 @@ export class IntentContext {
       });
       return;
     }
-    await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
+    await sendMessage({ type: "displayAutoplayFailure" });
   }
 
   /** This is some ad hoc information this specific intent wants to add */
@@ -465,8 +465,7 @@ function addIntentHistory(context) {
     return;
   }
   if (userSettings.saveAudioHistory) {
-    browser.runtime
-      .sendMessage({ type: "getLastAudio", utterance: context.utterance })
+    sendMessage({ type: "getLastAudio", utterance: context.utterance })
       .then(audio => {
         const audioContext = Object.assign({}, context, { audio });
         db.add(utteranceTable, audioContext).catch(error => log.error(error));

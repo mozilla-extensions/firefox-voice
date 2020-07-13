@@ -7,6 +7,7 @@ import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
+import { sendMessage } from "../../background/communicate.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -100,7 +101,7 @@ intentRunner.registerIntent({
         await browserUtil.createAndLoadTab({ url: myurl });
       }
 
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "closePopup",
         sender: "find",
       });
