@@ -144,7 +144,10 @@ export const OptionsController = function() {
         (oldNickname === undefined || oldNickname !== nicknameContext.nickname)
       ) {
         log.error("There already is a routine with this name");
-        return false;
+        return {
+          allowed: false,
+          error: "There already is a routine with this name",
+        };
       }
       const contexts = [];
       const intents = nicknameContext.intents.split("\n");
@@ -157,7 +160,10 @@ export const OptionsController = function() {
         const context = await parseUtterance(intent);
         if (context === undefined || context.utterance === undefined) {
           log.error(`The intent number ${i} is not a valid intent`);
-          return false;
+          return {
+            allowed: false,
+            error: `The intent number ${i + 1} is not a valid intent`,
+          };
         }
 
         contexts.push(context);
@@ -165,7 +171,7 @@ export const OptionsController = function() {
 
       if (contexts.length === 0) {
         log.error("No actions added for this routine");
-        return false;
+        return { allowed: false, error: "No actions added for this routine" };
       }
       delete nicknameContext.intents;
       nicknameContext.contexts = contexts;
@@ -240,6 +246,7 @@ export const OptionsController = function() {
   const useEditNicknameDraft = (initialIsVisible, initialContext) => {
     const { ref, isVisible, setVisible } = useToggle(initialIsVisible);
     const [tempEditableNickname, setTempEditableNickname] = useState({});
+    const [errorMessage, setErrorMessage] = useState("");
     const copyNickname = {
       ...tempEditableNickname,
     };
@@ -267,6 +274,8 @@ export const OptionsController = function() {
       setVisible: setDraftVisibile,
       tempEditableNickname: copyNickname,
       setTempEditableNickname,
+      errorMessage,
+      setErrorMessage,
     };
   };
 

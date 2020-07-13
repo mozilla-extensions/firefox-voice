@@ -2,9 +2,9 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
-import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
 import { RoutineExecutor } from "./routineExecutor.js";
+import English from "../../language/langs/english.js";
 
 intentRunner.registerIntent({
   name: "nicknames.name",
@@ -87,43 +87,19 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "nicknames.namePage",
   async run(context) {
-    const name = context.slots.name.toLowerCase();
+    const name = context.slots.name;
     const activeTab = await browserUtil.activeTab();
     const metadata = await pageMetadata.getMetadata(activeTab.id);
-    const result = await browser.storage.sync.get("pageNames");
-    const pageNames = result.pageNames || {};
-    pageNames[name] = metadata.url;
-    log.info("Added page name", name);
-    await browser.storage.sync.set({ pageNames });
+    intentRunner.registerPageName(name, metadata);
   },
 });
 
 intentRunner.registerIntent({
   name: "nicknames.removePageName",
   async run(context) {
-    const result = await browser.storage.sync.get("pageNames");
-    const pageNames = result.pageNames || {};
-    const getName = async () => {
-      const activeTab = await browserUtil.activeTab();
-      const metadata = await pageMetadata.getMetadata(activeTab.id);
-      return Object.keys(pageNames).find(
-        key => pageNames[key] === metadata.url
-      );
-    };
-    const name = context.slots.name || (await getName());
-    if (!name) {
-      const exc = new Error("No page name to remove");
-      exc.displayMessage = `This page does not have a name`;
-      throw exc;
-    }
-    if (!pageNames[name]) {
-      const exc = new Error("No page name to remove");
-      exc.displayMessage = `No page name "${name}" found`;
-      throw exc;
-    }
-    delete pageNames[name];
-    log.info("Removed page name", name);
-    await browser.storage.sync.set({ pageNames });
+    const name = context.slots.name;
+    await intentRunner.getRegisteredPageName(name);
+    intentRunner.unregisterPageName(name);
   },
 });
 

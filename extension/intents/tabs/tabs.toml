@@ -351,7 +351,7 @@ test = true
 [tabs.closeSelectedTabs]
 description = "Close selected tabs"
 match = """
-  (close | remove) (all |) (the |) selected tabs
+  (close | remove) (all |) (the |) selected (tabs | pages |)
 """
 
 [[tabs.closeSelectedTabs.example]]
@@ -359,6 +359,19 @@ phrase = "Close all selected tabs"
 
 [[tabs.closeSelectedTabs.example]]
 phrase = "Remove the selected tabs"
+test = true
+
+[tabs.refreshSelectedTabs]
+description = "Refresh selected tabs"
+match = """
+  (refresh | reload) (all |) (the |) selected (tabs | pages |)
+"""
+
+[[tabs.refreshSelectedTabs.example]]
+phrase = "Refresh all selected tabs"
+
+[[tabs.refreshSelectedTabs.example]]
+phrase = "Reload the selected tabs"
 test = true
 
 [tabs.countTabs]
@@ -474,3 +487,28 @@ expectParameters = { dir = "first" }
 [[tabs.selectNumbersTabs.example]]
 phrase = "select last two tabs"
 expectParameters = { dir = "last" }
+
+[tabs.closeAll]
+description = "Closes all active or open tabs"
+match = """
+  close (all | every) tab{s} (for me|)
+"""
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close every tab"
+test = true
+
+[[tabs.closeAll.example]]
+phrase = "close all tabs for me"
+test = true
+
+[tabs.selectSpecificTabs]
+description = "Select specific tabs after query"
+match = """
+  (select | highlight) (all |) [query] (tab{s} | page{s}) (in | from) all (the|) window{s} [allWindows=true]
+  (select | highlight) (all |) [query] (tab{s} | page{s}) [allWindows=false]
+"""

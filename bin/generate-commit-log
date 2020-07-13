@@ -104,7 +104,7 @@ def get_username(email, commit):
 
 
 def save_usernames():
-    json.dump(usernames, open(USERNAME_CACHE, "w"))
+    json.dump(usernames, open(USERNAME_CACHE, "w"), indent=2)
 
 
 messages = []
