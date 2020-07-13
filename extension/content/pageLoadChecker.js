@@ -7,7 +7,7 @@ this.contentScript = (function() {
 
   communicate.register("isLoaded", message => {
     const { options } = message;
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       let timeout = null;
       const checkExist = setInterval(function() {
         if (document.querySelector(options.selector || DEFAULT_SELECTOR)) {
@@ -18,8 +18,8 @@ this.contentScript = (function() {
       }, options.checkInterval || DEFAULT_CHECK_INTERVAL);
       // the specified selector has not been found
       timeout = setTimeout(() => {
-        reject(new Error("The page took too much to load."));
         clearInterval(checkExist);
+        resolve(false);
       }, options.timeout || DEFAULT_TIMEOUT);
     });
   });

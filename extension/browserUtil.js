@@ -1,7 +1,6 @@
 /* globals buildSettings */
 import * as searching from "./searching.js";
 import * as content from "./background/content.js";
-const PAGE_LOAD_CHECKER_SCRIPT = "./content/pageLoadChecker.js";
 
 export async function activeTab() {
   return (await browser.tabs.query({
@@ -225,7 +224,7 @@ export function waitForDocumentComplete(tabId) {
 }
 
 export async function waitForPageToLoadUsingSelector(tabId, options = {}) {
-  await content.inject(tabId, PAGE_LOAD_CHECKER_SCRIPT);
+  await content.inject(tabId, "./content/pageLoadChecker.js");
   return browser.tabs.sendMessage(tabId, { type: "isLoaded", options });
 }
 
