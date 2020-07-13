@@ -492,7 +492,7 @@ async function getMatchingTabs(options) {
       ],
     };
 
-    let combinedTabContent = [];
+    const combinedTabContent = [];
 
     for (const tab of matchingTabs) {
       const result = {
@@ -504,18 +504,10 @@ async function getMatchingTabs(options) {
       combinedTabContent.push(result);
     }
 
-    combinedTabContent = combinedTabContent.flat();
-
     // use Fuse.js to parse the most probable response?
     const fuse = new Fuse(combinedTabContent, fuseOptions);
     const matches = fuse.search(options.query);
     log.debug("find matches:", matches);
-    // TODO account for multiple matches
-    if (!matches.length) {
-      const e = new Error("No matching tab found");
-      e.displayMessage = "No matching tab found";
-      throw e;
-    }
 
     matchingTabs = [];
     for (const match of matches) {
