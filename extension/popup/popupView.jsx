@@ -881,7 +881,6 @@ const SearchResultsContent = ({
   const onMusicServiceChange = event => {
     if (event) {
       userSettings.musicService = event.target.value;
-      log.info(event.target.value);
       updateUserSettings(userSettings);
     }
   };
@@ -920,7 +919,9 @@ const SearchResultsContent = ({
           <button
             key={alt}
             value={alt}
-            onChange={onMusicServiceChange}
+            onChange={() => {
+              onMusicServiceChange(alt);
+            }}
             className="music-list invisible-button"
           >
             <div>
