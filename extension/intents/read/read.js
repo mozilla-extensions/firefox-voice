@@ -82,3 +82,45 @@ intentRunner.registerIntent({
     }
   },
 });
+
+intentRunner.registerIntent({
+  name: "read.forwordRead",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    if (!activeTab.url.startsWith("about:reader")) {
+      const e = new Error(`Not a Reader Mode page`);
+      e.displayMessage = "Page isn't narrating";
+      throw e;
+    }
+    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    const success = await browser.tabs.sendMessage(activeTab.id, {
+      type: "forword",
+    });
+    if (!success) {
+      const e = new Error("Not narrating");
+      e.displayMessage = "Page isn't narrating";
+      throw e;
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "read.backwordRead",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    if (!activeTab.url.startsWith("about:reader")) {
+      const e = new Error(`Not a Reader Mode page`);
+      e.displayMessage = "Page isn't narrating";
+      throw e;
+    }
+    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    const success = await browser.tabs.sendMessage(activeTab.id, {
+      type: "backword",
+    });
+    if (!success) {
+      const e = new Error("Not narrating");
+      e.displayMessage = "Page isn't narrating";
+      throw e;
+    }
+  },
+});
