@@ -1,13 +1,13 @@
+import { sendMessage } from "../../background/communicate.js";
+import * as content from "../../background/content.js";
 import * as intentRunner from "../../background/intentRunner.js";
-import * as serviceList from "../../background/serviceList.js";
 import * as languages from "../../background/languages.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
-import * as searching from "../../searching.js";
-import * as content from "../../background/content.js";
+import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
+import * as searching from "../../searching.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
-import { sendMessage } from "../../background/communicate.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -35,8 +35,8 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query.toLowerCase();
-    const result = await browser.storage.sync.get("pageNames");
-    const pageNames = result.pageNames;
+    const name = context.slots.name;
+    const pageNames = intentRunner.getRegisteredPageName(name);
     let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];

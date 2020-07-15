@@ -110,7 +110,7 @@ intentRunner.registerIntent({
   name: "nicknames.removePageName",
   async run(context) {
     const name = context.slots.name;
-    await intentRunner.getRegisteredPageName(name);
     intentRunner.unregisterPageName(name);
+    context.presentMessage(`The page name ${name} has been removed`);
   },
 });

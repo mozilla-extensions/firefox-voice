@@ -6,10 +6,10 @@ import { metadata } from "../intents/metadata.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { PhraseSet } from "../language/findMatch.js";
 import * as settings from "../settings.js";
+import { registerHandler, sendMessage } from "./communicate.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
-import { registerHandler, sendMessage } from "./communicate.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
@@ -541,16 +541,18 @@ export async function getRegisteredPageName(name) {
   const result = await browser.storage.sync.get("pageNames");
   pageNames = result.pageNames;
 
+  return pageNames;
+}
+
+export async function unregisterPageName(name) {
+  pageNames = getRegisteredPageName(name);
   if (!pageNames[name] || !name) {
     const exc = new Error("No page name to remove");
     exc.displayMessage = `The page name "${name}" not found`;
     throw exc;
   }
-  return pageNames;
-}
-
-export async function unregisterPageName(name) {
   delete pageNames[name];
+
   log.info("Removed nickname for page", name);
   await browser.storage.sync.set({ pageNames });
 }
