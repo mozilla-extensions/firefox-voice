@@ -1,6 +1,8 @@
 /* globals catcher, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
+import { registerHandler } from "../../background/communicate.js";
+import { sendMessage } from "../../background/communicate.js";
 
 class TimerController {
   constructor() {
@@ -89,7 +91,7 @@ class Timer {
     // send message to popup and open it if no response;
     // do not close timeout now; make popup do it
     try {
-      const result = await browser.runtime.sendMessage({
+      const result = await sendMessage({
         type: "closeTimer",
         totalInMS: this.totalInMS, // piggyback
         followup: { heading: "Say 'reset' or 'reset timer'" },
@@ -118,7 +120,7 @@ async function executeAfterTimerIsSet(context) {
     acceptFollowupIntent: ["timer.close"],
     skipSuccessView: true,
   });
-  await browser.runtime.sendMessage({
+  await sendMessage({
     type: "setTimer",
     timerInMS: timerController.getActiveTimer().totalInMS,
   });
@@ -226,4 +228,8 @@ intentRunner.registerIntent({
     }
     activeTimer.unpause();
   },
+});
+
+registerHandler("timerAction", message => {
+  return timerController[message.method](...(message.args || []));
 });

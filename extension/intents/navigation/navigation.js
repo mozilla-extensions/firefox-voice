@@ -7,6 +7,7 @@ import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
+import { sendMessage } from "../../background/communicate.js";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -36,29 +37,32 @@ intentRunner.registerIntent({
     const query = context.slots.query.toLowerCase();
     const result = await browser.storage.sync.get("pageNames");
     const pageNames = result.pageNames;
+    let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
-      await browserUtil.openOrFocusTab(savedUrl);
+      tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query.toLowerCase());
       if (where === "window") {
         if (cached) {
-          await browser.windows.create({ url: cached.url });
+          const window = await browser.windows.create({ url: cached.url });
+          tab = window.tabs[0];
         } else {
           await browser.windows.create({});
-          const tab = await browserUtil.createTabGoogleLucky(query);
+          tab = await browserUtil.createTabGoogleLucky(query);
           const url = tab.url;
           saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
-        await browserUtil.openOrFocusTab(cached.url);
+        tab = await browserUtil.openOrFocusTab(cached.url);
       } else {
-        const tab = await browserUtil.createTabGoogleLucky(query);
+        tab = await browserUtil.createTabGoogleLucky(query);
         const url = tab.url;
         saveTabQueryToDatabase(query, tab, url);
       }
     }
+    await browserUtil.waitForPageToLoadUsingSelector(tab.id);
     context.done();
   },
 });
@@ -97,7 +101,7 @@ intentRunner.registerIntent({
         await browserUtil.createAndLoadTab({ url: myurl });
       }
 
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "closePopup",
         sender: "find",
       });

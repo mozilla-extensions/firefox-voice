@@ -58,7 +58,7 @@ Messages that are sent to a content script are send directly to only that tab us
 
 Messages are always JSON objects, and always have a `.type` property, such as `{type: "getExamples"}`.
 
-Most of the background messages are handled in `main.js` (which calls out to any other modules that are needed). The `*Controller.jsx` scripts typically handle their own messages.
+Most of the background messages are handled in `main.js` (which calls out to any other modules that are needed), but look for `registerHandler()` for other message handlers. The `*Controller.jsx` scripts typically handle their own messages.
 
 ## Code layout
 

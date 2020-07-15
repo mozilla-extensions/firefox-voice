@@ -9,6 +9,7 @@ import * as popupView from "./popupView.js";
 import * as vad from "./vad.js";
 import * as voice from "./voice.js";
 import * as voiceShim from "./voiceShim.js";
+import { sendMessage } from "../background/communicate.js";
 
 log.startTiming("popup opened");
 
@@ -94,7 +95,7 @@ export const PopupController = function() {
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
-      await browser.runtime.sendMessage({ type: "launchOnboarding" });
+      await sendMessage({ type: "launchOnboarding" });
       window.close();
       return;
     }
@@ -107,7 +108,7 @@ export const PopupController = function() {
     speechOutput = userSettings.speechOutput;
     setPreferredVoice(userSettings.preferredVoice);
 
-    const activeTimer = await browser.runtime.sendMessage({
+    const activeTimer = await sendMessage({
       type: "timerAction",
       method: "getActiveTimer",
     });
@@ -328,7 +329,7 @@ export const PopupController = function() {
     setTimerTotalInMS(totalInMS);
 
     // send message to timer to ack that it can close
-    browser.runtime.sendMessage({
+    sendMessage({
       type: "timerAction",
       method: "closeActiveTimer",
     });
@@ -358,7 +359,7 @@ export const PopupController = function() {
   };
 
   const updateExamples = async () => {
-    const suggestions = await browser.runtime.sendMessage({
+    const suggestions = await sendMessage({
       type: "getExamples",
       number: 3,
     });
@@ -367,7 +368,7 @@ export const PopupController = function() {
   };
 
   const updateLastIntent = async () => {
-    const lastIntent = await browser.runtime.sendMessage({
+    const lastIntent = await sendMessage({
       type: "getLastIntentForFeedback",
     });
     if (lastIntent) {
@@ -391,7 +392,7 @@ export const PopupController = function() {
   };
 
   const onExternalInput = async () => {
-    await browser.runtime.sendMessage({ type: "microphoneStopped" });
+    await sendMessage({ type: "microphoneStopped" });
     if (recorder !== undefined) {
       recorder.cancel(); // not sure if this is working as expected?
     }
@@ -404,13 +405,13 @@ export const PopupController = function() {
       setTranscript(capText);
       setPopupView("success");
       executedIntent = true;
-      await browser.runtime.sendMessage({ type: "microphoneStopped" });
-      browser.runtime.sendMessage({
+      await sendMessage({ type: "microphoneStopped" });
+      sendMessage({
         type: "addTelemetry",
         properties: { inputTyped: true },
       });
       setDisplayText("");
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "runIntent",
         text,
       });
@@ -452,7 +453,7 @@ export const PopupController = function() {
             Date.now() - startTime > ZERO_VOLUME_LIMIT &&
             !hasSentZeroVolumeError
           ) {
-            browser.runtime.sendMessage({ type: "zeroVolumeError" });
+            sendMessage({ type: "zeroVolumeError" });
             setShowZeroVolumeError(true);
             hasSentZeroVolumeError = true;
           }
@@ -514,7 +515,7 @@ export const PopupController = function() {
   };
 
   const onSearchImageClick = async searchUrl => {
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "focusSearchResults",
       searchUrl,
     });
@@ -522,7 +523,7 @@ export const PopupController = function() {
 
   const onNextSearchResultClick = () => {
     setDisplayText("");
-    browser.runtime.sendMessage({
+    sendMessage({
       type: "runIntent",
       text: "next",
     });
@@ -560,16 +561,16 @@ export const PopupController = function() {
       }
 
       if (pendingFeedback) {
-        browser.runtime.sendMessage({
+        sendMessage({
           type: "sendFeedback",
           rating: pendingFeedback.rating,
           feedback: pendingFeedback.feedback,
         });
       }
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
-      browser.runtime.sendMessage({ type: "clearFollowup" });
+      sendMessage({ type: "microphoneStopped" });
+      sendMessage({ type: "clearFollowup" });
       if (!executedIntent) {
-        browser.runtime.sendMessage({ type: "cancelledIntent" });
+        sendMessage({ type: "cancelledIntent" });
       }
       renderListenComponent = true;
     });
@@ -596,7 +597,7 @@ export const PopupController = function() {
           }
         });
       }
-      browser.runtime.sendMessage({ type: "microphoneStarted" });
+      sendMessage({ type: "microphoneStarted" });
     };
     recorder.onEnd = async (json, audioBlob) => {
       log.timing("recorder.onEnd() called");
@@ -607,7 +608,7 @@ export const PopupController = function() {
       }
       executedIntent = true;
       // Probably superfluous, since this is called in onProcessing:
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
+      sendMessage({ type: "microphoneStopped" });
       if (json === null) {
         // It was cancelled
         return;
@@ -615,7 +616,7 @@ export const PopupController = function() {
       const capText =
         json.data[0].text.charAt(0).toUpperCase() + json.data[0].text.slice(1);
       setTranscript(capText);
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "addTelemetry",
         properties: { transcriptionConfidence: json.data[0].confidence },
       });
@@ -623,7 +624,7 @@ export const PopupController = function() {
       log.timing(`Sending runIntent(${json.data[0].text})`);
       lastAudio = audioBlob;
       lastAudioUtterance = json.data[0].text;
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "runIntent",
         text: json.data[0].text,
       });
@@ -650,20 +651,20 @@ export const PopupController = function() {
       }
       setPopupView("error");
       clearInterval(recorderIntervalId);
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
+      sendMessage({ type: "microphoneStopped" });
       log.error("Got recorder error:", String(error), error);
     };
     recorder.onProcessing = () => {
       log.timing("recorder.onProcessing()");
       setPopupView("processing");
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
+      sendMessage({ type: "microphoneStopped" });
     };
     recorder.onNoVoice = () => {
       // stop closing if recorder was canceled and popup must be open (eg timer notification)
       if (forceCancelRecoder) {
         return;
       }
-      browser.runtime.sendMessage({ type: "microphoneStopped" });
+      sendMessage({ type: "microphoneStopped" });
       log.debug("Closing popup because of no voice input");
       setPopupView("noAudio");
       setDisplayText("I did not hear that, please try again");
@@ -721,11 +722,11 @@ export const PopupController = function() {
   };
 
   const startOnboarding = async () => {
-    return browser.runtime.sendMessage({ type: "launchOnboarding" });
+    return sendMessage({ type: "launchOnboarding" });
   };
 
   const sendFeedback = async feedback => {
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "sendFeedback",
       rating: feedback.rating,
       feedback: feedback.feedback,
