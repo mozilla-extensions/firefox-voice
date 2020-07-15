@@ -1,4 +1,4 @@
-import { registerHandler } from "../background/communicate.js";
+import { registerHandler } from "../communicate.js";
 
 const DEFAULT_SELECTOR = "html";
 const DEFAULT_TIMEOUT = 30000;

@@ -1,5 +1,5 @@
 /* globals Fuse */
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 const PASTE_SELECTORS = [
   "textarea",

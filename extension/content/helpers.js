@@ -1,4 +1,4 @@
-import { registerHandler } from "../background/communicate.js";
+import { registerHandler } from "../communicate.js";
 
 export class Runner {
   constructor() {

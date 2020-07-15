@@ -1,5 +1,5 @@
 /* globals Fuse, log */
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 registerHandler("followLink", message => {
   const { query } = message;

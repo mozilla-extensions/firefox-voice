@@ -1,6 +1,6 @@
 /* globals log */
 
-import { sendMessage } from "../background/communicate.js";
+import { sendMessage } from "../communicate.js";
 
 let activeRecorder;
 let unloadEventAdded = false;

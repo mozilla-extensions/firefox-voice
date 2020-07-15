@@ -1,4 +1,4 @@
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 let slideElements = [];
 let lastElementIndex = -1;

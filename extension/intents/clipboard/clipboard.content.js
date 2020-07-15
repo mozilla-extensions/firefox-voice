@@ -1,5 +1,5 @@
 /* globals log */
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 import { getMetadata } from "../../background/pageMetadata.content.js";
 import {
   visibleScreenshot,

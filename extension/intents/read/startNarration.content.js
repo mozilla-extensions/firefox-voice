@@ -1,4 +1,4 @@
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 function startNarration() {
   const dropdown = document.querySelector(".narrate-dropdown");

@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
-import { canRespondToMessage } from "../../background/communicate.js";
+import { canRespondToMessage } from "../../communicate.js";
 
 let writingTabId;
 

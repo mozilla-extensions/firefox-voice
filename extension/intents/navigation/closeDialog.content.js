@@ -1,5 +1,5 @@
 /* globals log */
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 const SELECTOR = `
     button[class*=close],

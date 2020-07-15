@@ -1,4 +1,4 @@
-import { registerHandler } from "./communicate.js";
+import { registerHandler } from "../communicate.js";
 
 const clickGoogleSelectionToLinkButton = () => {
   // simulates clicking on the "Turn selection into link" button. bubbles must be true so click event will trigger the appropriate event listener.

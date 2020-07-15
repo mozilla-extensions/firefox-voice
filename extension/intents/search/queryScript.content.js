@@ -1,4 +1,4 @@
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 import * as cardSpeech from "./cardSpeech.js";
 
 const CARD_SELECTOR = ".vk_c, .kp-blk, .EyBRub";

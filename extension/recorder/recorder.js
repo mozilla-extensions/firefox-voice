@@ -3,7 +3,7 @@
 import * as util from "../util.js";
 import * as voice from "../popup/voice.js";
 import * as wakeword from "./wakeword.js";
-import { sendMessage } from "../background/communicate.js";
+import { sendMessage } from "../communicate.js";
 
 // If the permission doesn't return in this amount of time, we'll request that this tab
 // come to the foreground:

@@ -2,7 +2,7 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { timerController } from "../timer/timer.js";
-import { sendMessage } from "../../background/communicate.js";
+import { sendMessage } from "../../communicate.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",

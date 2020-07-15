@@ -1,4 +1,4 @@
-import { registerHandler } from "../../background/communicate.js";
+import { registerHandler } from "../../communicate.js";
 
 const PRESENT_BUTTON_SELECTOR = "#punch-start-presentation-left";
 const SLIDE_THUMBNAILS = ".punch-filmstrip-thumbnail";

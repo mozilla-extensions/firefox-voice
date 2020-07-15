@@ -1,4 +1,4 @@
-import { registerHandler } from "./communicate.js";
+import { registerHandler } from "../communicate.js";
 
 registerHandler(
   "getSelection",
