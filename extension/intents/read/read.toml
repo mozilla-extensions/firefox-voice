@@ -21,25 +21,25 @@ match = """
 [[read.stopRead.example]]
 phrase = "Stop reading"
 
-[read.forwordRead]
-description = "Forword reading/narrating"
+[read.forwardRead]
+description = "Forward reading/narrating"
 match = """
-  forword (this |) (tab | page |) (to me | for me |)
+  forward (this |) (tab | page |) (to me | for me |)
 """
 
-[[read.forwordRead.example]]
-phrase = "forword"
+[[read.forwardRead.example]]
+phrase = "forward"
 
-[[read.forwordRead.example]]
-phrase = "forword this"
+[[read.forwardRead.example]]
+phrase = "forward this"
 
-[read.backwordRead]
-description = "Backword reading/narrating"
+[read.backwardRead]
+description = "Backward reading/narrating"
 match = """
-  backword (this |) (tab | page |) (to me | for me |)
+  backward (this |) (tab | page |) (to me | for me |)
 """
-[[read.backwordRead.example]]
-phrase = "backword"
+[[read.backwardRead.example]]
+phrase = "backward"
 
-[[read.backwordRead.example]]
-phrase = "backword this"
+[[read.backwardRead.example]]
+phrase = "backward this"

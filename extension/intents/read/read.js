@@ -84,7 +84,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "read.forwordRead",
+  name: "read.forwardRead",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
     if (!activeTab.url.startsWith("about:reader")) {
@@ -94,7 +94,7 @@ intentRunner.registerIntent({
     }
     await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
     const success = await browser.tabs.sendMessage(activeTab.id, {
-      type: "forword",
+      type: "forward",
     });
     if (!success) {
       const e = new Error("Not narrating");
@@ -105,7 +105,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "read.backwordRead",
+  name: "read.backwardRead",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
     if (!activeTab.url.startsWith("about:reader")) {
@@ -115,7 +115,7 @@ intentRunner.registerIntent({
     }
     await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
     const success = await browser.tabs.sendMessage(activeTab.id, {
-      type: "backword",
+      type: "backward",
     });
     if (!success) {
       const e = new Error("Not narrating");

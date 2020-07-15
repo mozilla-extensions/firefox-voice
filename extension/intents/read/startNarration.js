@@ -39,7 +39,7 @@ communicate.register("stopReading", () => {
   return true;
 });
 
-communicate.register("forword", () => {
+communicate.register("forward", () => {
   if (!isPlaying()) {
     return false;
   }
@@ -51,7 +51,7 @@ communicate.register("forword", () => {
   return true;
 });
 
-communicate.register("backword", () => {
+communicate.register("backward", () => {
   if (!isPlaying()) {
     return false;
   }
