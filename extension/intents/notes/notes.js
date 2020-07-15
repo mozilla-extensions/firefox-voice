@@ -2,10 +2,11 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
+import { canRespondToMessage } from "../../background/communicate.js";
 
 let writingTabId;
 
-const SCRIPT = "/intents/notes/contentScript.js";
+const SCRIPT = "/intents/notes/makeNote.content.js";
 
 async function checkHasTab() {
   if (!writingTabId) {
@@ -13,7 +14,9 @@ async function checkHasTab() {
     e.displayMessage = 'You must use "Write notes here"';
     throw e;
   }
-  const available = await content.hasScript(writingTabId, SCRIPT);
+  const available = await canRespondToMessage("addText", {
+    tabId: writingTabId,
+  });
   if (!available) {
     const e = new Error("Writing tab no longer active");
     e.displayMessage =

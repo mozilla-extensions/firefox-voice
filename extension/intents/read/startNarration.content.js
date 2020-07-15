@@ -1,4 +1,4 @@
-/* globals communicate */
+import { registerHandler } from "../../background/communicate.js";
 
 function startNarration() {
   const dropdown = document.querySelector(".narrate-dropdown");
@@ -26,8 +26,9 @@ function isPlaying() {
   return !element.disabled;
 }
 
-communicate.register("narrate", startNarration);
-communicate.register("stopReading", () => {
+registerHandler("narrate", startNarration);
+
+registerHandler("stopReading", () => {
   if (!isPlaying()) {
     return false;
   }
@@ -39,7 +40,7 @@ communicate.register("stopReading", () => {
   return true;
 });
 
-communicate.register("forward", () => {
+registerHandler("forward", () => {
   if (!isPlaying()) {
     return false;
   }
@@ -51,7 +52,7 @@ communicate.register("forward", () => {
   return true;
 });
 
-communicate.register("backward", () => {
+registerHandler("backward", () => {
   if (!isPlaying()) {
     return false;
   }

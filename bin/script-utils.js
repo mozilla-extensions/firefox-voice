@@ -27,3 +27,8 @@ exports.writeFile = function(path, content, verbose = false) {
     console.log(`Wrote ${displayPath(path)} (${content.length} chars)`);
   }
 };
+
+exports.copyFile = function(source, dest, verbose = false) {
+  const existing = fs.readFileSync(source, { encoding: "UTF-8" });
+  exports.writeFile(dest, existing, verbose);
+};

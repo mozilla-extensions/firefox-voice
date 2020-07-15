@@ -30,7 +30,7 @@ class MusicService extends serviceList.Service {
 
   async playQuery(query) {
     try {
-      await this.initTab(`/services/${this.id}/player.js`);
+      await this.initTab(`/services/${this.id}/player.content.js`);
       try {
         await this.callTab("search", { query, thenPlay: true });
         await this.tabActivation();
@@ -58,29 +58,29 @@ class MusicService extends serviceList.Service {
       throw e;
     }
     for (const tab of tabs) {
-      await content.inject(tab.id, `/services/${this.id}/player.js`);
+      await content.inject(tab.id, `/services/${this.id}/player.content.js`);
       await this.callOneTab(tab.id, "move", { direction });
     }
   }
 
   async pause() {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("pause");
   }
 
   async unpause() {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("unpause");
   }
 
   async playAlbum(query) {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("playAlbum", { query, thenPlay: true });
     await this.tabActivation();
   }
 
   async playPlaylist(query) {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("playPlaylist", { query, thenPlay: true });
     await this.tabActivation();
   }
@@ -91,24 +91,27 @@ class MusicService extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.inject(tab.id, `/services/${this.id}/player.js`);
+      await content.inject(tab.id, `/services/${this.id}/player.content.js`);
       await this.callOneTab(tab.id, "pause");
     }
   }
 
   async adjustVolume(inputVolume, volumeLevel) {
     const findAudibleTab = true;
-    await this.initTab(`/services/${this.id}/player.js`, findAudibleTab);
+    await this.initTab(
+      `/services/${this.id}/player.content.js`,
+      findAudibleTab
+    );
     await this.callTab("adjustVolume", { inputVolume, volumeLevel });
   }
 
   async mute() {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("mute");
   }
 
   async unmute() {
-    await this.initTab(`/services/${this.id}/player.js`);
+    await this.initTab(`/services/${this.id}/player.content.js`);
     await this.callTab("unmute");
   }
 }

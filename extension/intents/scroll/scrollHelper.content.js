@@ -1,4 +1,4 @@
-/* globals communicate */
+import { registerHandler } from "../../background/communicate.js";
 
 const scrollAmount = 0.9;
 
@@ -58,7 +58,7 @@ function scrollUp() {
   );
 }
 
-communicate.register("scrollUp", scrollUp);
+registerHandler("scrollUp", scrollUp);
 
 function scrollDown() {
   const toBeScrolled = getScrollableElement();
@@ -72,7 +72,7 @@ function scrollDown() {
   );
 }
 
-communicate.register("scrollDown", scrollDown);
+registerHandler("scrollDown", scrollDown);
 
 function scrollToTop() {
   const toBeScrolled = getScrollableElement();
@@ -82,7 +82,7 @@ function scrollToTop() {
   return scrollVertically(-toBeScrolled.scrollPos, false, toBeScrolled.element);
 }
 
-communicate.register("scrollToTop", scrollToTop);
+registerHandler("scrollToTop", scrollToTop);
 
 function scrollToBottom() {
   const toBeScrolled = getScrollableElement();
@@ -96,4 +96,4 @@ function scrollToBottom() {
   );
 }
 
-communicate.register("scrollToBottom", scrollToBottom);
+registerHandler("scrollToBottom", scrollToBottom);

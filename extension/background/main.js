@@ -13,11 +13,7 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
-import {
-  registerOnMessage,
-  registerHandler,
-  sendMessage,
-} from "./communicate.js";
+import { registerHandler, sendMessage } from "./communicate.js";
 
 // These are used for registering message handlers:
 // eslint-disable-next-line no-unused-vars
@@ -25,8 +21,6 @@ import * as intentExamples from "./intentExamples.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
-
-registerOnMessage();
 
 let _inDevelopment;
 export function inDevelopment() {
