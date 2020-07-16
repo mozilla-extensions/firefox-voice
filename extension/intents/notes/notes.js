@@ -82,7 +82,12 @@ intentRunner.registerIntent({
       e.displayMessage = "You have not set a tab to write";
       throw e;
     }
-    await browserUtil.makeTabActive(writingTabId);
+    const available = await content.hasScript(writingTabId, SCRIPT);
+    if (!available) {
+      await browser.experiments.voice.undoCloseTab();
+    } else {
+      await browserUtil.makeTabActive(writingTabId);
+    }
   },
 });
 
