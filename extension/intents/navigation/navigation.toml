@@ -153,37 +153,31 @@ phrase = "follow link latest news"
 [navigation.signInAndOut]
 description = "Follow the named sign in or out link and click"
 match = """
-  (sign in | login | log in) [action=login]
-  (sign out | logout | log out) [action=logout]
+  (sign in | login | log in)
+  (sign out | logout | log out)
 """
 
 [[navigation.signInAndOut.example]]
 phrase = "sign in"
-expectParameters = {action = "login"}
 
 [[navigation.signInAndOut.example]]
 phrase = "login"
 test = true
-expectParameters = {action = "login"}
 
 [[navigation.signInAndOut.example]]
 phrase = "log in"
 test = true
-expectParameters = {action = "login"}
 
 [[navigation.signInAndOut.example]]
 phrase = "sign out"
-expectParameters = {action = "logout"}
 
 [[navigation.signInAndOut.example]]
 phrase = "logout"
 test = true
-expectParameters = {action = "logout"}
 
 [[navigation.signInAndOut.example]]
 phrase = "log out"
 test = true
-expectParameters = {action = "logout"}
 
 [navigation.closeDialog]
 description = "Closes a lightbox-style dialog box"

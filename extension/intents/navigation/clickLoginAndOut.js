@@ -1,8 +1,9 @@
 /* globals communicate, log */
 
 this.followLink = (function() {
-  communicate.register("signIn", message => {
-    const regex = /log\s*in|sign\s*in/i;
+  communicate.register("signInAndOut", message => {
+    const regex = /log\s*(out|in)|sign\s*(out|in)/i;
+
     let element;
 
     for (const link of findButton()) {
@@ -10,6 +11,9 @@ this.followLink = (function() {
         element = link;
         break;
       }
+    }
+    if (!element) {
+      return false;
     }
 
     highlightButton(element);

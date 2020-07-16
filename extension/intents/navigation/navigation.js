@@ -196,29 +196,15 @@ intentRunner.registerIntent({
   async run(context) {
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
-      "/intents/navigation/clickLogin.js",
-      "/intents/navigation/clickLogout.js",
+      "/intents/navigation/clickLoginAndOut.js",
     ]);
-    if (context.parameters.action === "login") {
-      const found = await browser.tabs.sendMessage(activeTab.id, {
-        type: "signIn",
-        query: context.slots.query,
-      });
-      if (found === false) {
-        const exc = new Error("No link found matching query");
-        exc.displayMessage = `Sorry can't "${context.slots.query}" on this page`;
-        throw exc;
-      }
-    } else {
-      const found = await browser.tabs.sendMessage(activeTab.id, {
-        type: "signOut",
-        query: context.slots.query,
-      });
-      if (found === false) {
-        const exc = new Error("No link found matching query");
-        exc.displayMessage = `Sorry can't "${context.slots.query}" on this page`;
-        throw exc;
-      }
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "signInAndOut",
+    });
+    if (found === false) {
+      const exc = new Error("No link found matching query");
+      exc.displayMessage = `Sorry can't "${context.utterance}" on this page`;
+      throw exc;
     }
   },
 });
