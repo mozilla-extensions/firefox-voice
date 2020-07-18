@@ -2,19 +2,20 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 
+export let pausedRoutineExecutor = null;
 export class RoutineExecutor {
   constructor(
     routineName,
     subcommands,
-    index = 0,
-    states = [{}],
-    forIndex = 0
+    programCounter = 0,
+    states = null,
+    startLoopProgramCounter = 0
   ) {
     this.routineName = routineName;
     this.subcommands = subcommands;
-    this.index = index;
+    this.programCounter = programCounter;
     this.states = states;
-    this.forIndex = forIndex;
+    this.startLoopProgramCounter = startLoopProgramCounter;
   }
 
   mapState(subcommand, state) {
@@ -30,21 +31,23 @@ export class RoutineExecutor {
   async runSubcommand(subcommand) {
     let hadError = false;
     let errorMessage = null;
+    if (this.states !== null) {
+      subcommand = this.mapState(subcommand, this.states[0]);
+    }
+    subcommand.routineExecutor = this;
+    subcommand.onError = message => {
+      hadError = true;
+      errorMessage = message;
+    };
 
     log.info(
       "  Running subintent",
       subcommand,
       subcommand.name,
       subcommand.slots,
-      this.index
+      this.programCounter
     );
 
-    subcommand = this.mapState(subcommand, this.states[0]);
-    subcommand.routineExecutor = this;
-    subcommand.onError = message => {
-      hadError = true;
-      errorMessage = message;
-    };
     await intentRunner.runIntent(subcommand);
     if (hadError) {
       log.info(
@@ -57,46 +60,59 @@ export class RoutineExecutor {
   }
 
   startLoop(states) {
+    if (this.states !== null) {
+      const exc = new Error("Encountered nested loops. Not yet supported.");
+      exc.displayMessage = "Encountered nested loops. Not yet supported.";
+      throw exc;
+    }
     this.states = states;
-    this.forIndex = this.index;
+    this.startLoopProgramCounter = this.programCounter;
   }
 
   endLoop() {
     this.states.shift();
     if (this.states.length > 0) {
-      this.index = this.forIndex;
+      this.programCounter = this.startLoopProgramCounter;
     } else {
-      this.states = [{}];
+      this.states = null
     }
   }
 
   async run() {
-    const { pausedRoutine } = await browser.storage.local.get("pausedRoutine");
-    if (pausedRoutine !== undefined) {
+    if (pausedRoutineExecutor !== null) {
       const exc = new Error("Another routine is already active.");
       exc.displayMessage = "Another routine is already active.";
       throw exc;
     }
-
-    for (; this.index < this.subcommands.length; this.index++) {
-      const subcommand = this.subcommands[this.index];
+    for (
+      ;
+      this.programCounter < this.subcommands.length;
+      this.programCounter++
+    ) {
+      const subcommand = this.subcommands[this.programCounter];
       const stopRoutine = await this.runSubcommand(subcommand);
       if (stopRoutine === true) {
-        break;
+        return true;
       }
+    }
+
+    if (this.states !== null) {
+      const exc = new Error("'End for' is required at the end of loop.");
+      exc.displayMessage = "'End for' is required at the end of loop.";
+      throw exc;
     }
     return true;
   }
 
+  async continue() {
+    pausedRoutineExecutor = null;
+    this.programCounter++;
+    this._stop = false;
+    return this.run();
+  }
+
   pauseRoutine() {
     this._stop = true;
-    browser.storage.local.set({
-      pausedRoutine: {
-        name: this.routineName,
-        forIndex: this.forIndex,
-        nextIndex: this.index + 1,
-        states: this.states,
-      },
-    });
+    pausedRoutineExecutor = this;
   }
 }

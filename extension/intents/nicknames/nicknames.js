@@ -3,7 +3,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
-import { RoutineExecutor } from "./routineExecutor.js";
+import { RoutineExecutor, pausedRoutineExecutor } from "./routineExecutor.js";
 import English from "../../language/langs/english.js";
 
 intentRunner.registerIntent({
@@ -113,7 +113,9 @@ intentRunner.registerIntent({
     }
     browser.runtime.sendMessage({
       type: "presentMessage",
-      message: context.slots.message,
+      message:
+        context.slots.message ||
+        `Routine "${context.routineExecutor.routineName}" was paused.`,
     });
     context.routineExecutor.pauseRoutine();
   },
@@ -122,8 +124,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "nicknames.continue",
   async run() {
-    const { pausedRoutine } = await browser.storage.local.get("pausedRoutine");
-    if (pausedRoutine === undefined) {
+    if (pausedRoutineExecutor === null) {
       const exc = new Error(
         "'Continue' can only be used in a routine after 'pause routine'"
       );
@@ -131,49 +132,75 @@ intentRunner.registerIntent({
         "'Continue' can only be used in a routine after 'pause routine'";
       throw exc;
     }
-
-    const { name, nextIndex, states, forIndex } = pausedRoutine;
-    const registeredNicknames = await intentRunner.getRegisteredNicknames();
-    const routineExecutor = new RoutineExecutor(
-      registeredNicknames[name].nickname,
-      registeredNicknames[name].contexts,
-      nextIndex,
-      states,
-      forIndex
-    );
-    await browser.storage.local.remove("pausedRoutine");
-    await routineExecutor.run();
+    await pausedRoutineExecutor.continue();
   },
 });
+
+function getAllBookmarksInFolder(bookmarkFolder) {
+  let bookmarksList = [];
+  for (const child of bookmarkFolder.children) {
+    if (child.type === "bookmark") {
+      bookmarksList.push(child);
+    } else {
+      bookmarksList = bookmarksList.concat(getAllBookmarksInFolder(child));
+    }
+  }
+  return bookmarksList;
+}
 
 intentRunner.registerIntent({
   name: "nicknames.startForLoop",
   async run(context) {
     const objectToLoop = [];
-    if (context.parameters.option === "clipboard") {
+    const variable = context.slots.variable;
+    
+    if (context.parameters.dataSource === "clipboard") {
       const result = await navigator.clipboard.readText();
       const splitResult = result.split("\n");
       for (const key of splitResult) {
-        objectToLoop.push({ value: key });
+        objectToLoop.push({ [variable]: key });
       }
     }
 
-    if (context.parameters.option === "selected") {
+    if (context.parameters.dataSource === "selectedTabs") {
       const selectedTabs = await browser.tabs.query({ highlighted: true });
       for (const tab of selectedTabs) {
-        objectToLoop.push({ selected: tab.url });
+        objectToLoop.push({ [variable]: tab.url });
       }
     }
-    if (context.parameters.option === "tab") {
+    if (context.parameters.dataSource === "tab") {
       const tabs = await browser.tabs.query({ currentWindow: true });
-      for (const tab in tabs) {
-        objectToLoop.push({ tab: tab.url });
+      for (const tab of tabs) {
+        objectToLoop.push({ [variable]: tab.url });
       }
     }
-    if (context.parameters.option === "bookmark") {
+    if (context.parameters.dataSource === "bookmark") {
       const bookmarks = await browser.bookmarks.get();
-      for (const bookmark in bookmarks) {
-        objectToLoop.push({ bookmark: bookmark.url });
+      for (const bookmark of bookmarks) {
+        objectToLoop.push({ [variable]: bookmark.url });
+      }
+    }
+
+    if (context.parameters.dataSource === "bookmarkFolder") {
+      const folder = context.slots.folder;
+      const exc = new Error(`${folder} is not a bookmark folder.`);
+      exc.displayMessage = `${folder} is not a bookmark folder.`;
+      
+      let bookmarkFolder = null;
+      try {
+        const [{id}] = await browser.bookmarks.search({title: folder});
+        [bookmarkFolder] = await browser.bookmarks.getSubTree(id);
+      } catch (err) {
+        throw exc;
+      }
+      
+      if (bookmarkFolder.type !== "folder") {
+        throw exc;
+      }
+      
+      const bookmarks = getAllBookmarksInFolder(bookmarkFolder);
+      for (const bookmark of bookmarks) {
+        objectToLoop.push({ [variable]: bookmark.url });
       }
     }
 

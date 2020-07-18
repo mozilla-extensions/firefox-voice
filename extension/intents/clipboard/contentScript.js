@@ -65,7 +65,7 @@ this.contentScript = (function() {
 
   communicate.register("copy", message => {
     const { copyType } = message;
-    const result = types[copyType]() || message.value;
+    const result = types[copyType]();
     if (result) {
       navigator.clipboard.writeText(result);
     }
@@ -119,10 +119,6 @@ this.contentScript = (function() {
     });
     const url = img[maxHeightIndex].src;
     copyImage(url);
-  };
-
-  types.copyValue = function() {
-    return null;
   };
 
   function isPasteable(el) {

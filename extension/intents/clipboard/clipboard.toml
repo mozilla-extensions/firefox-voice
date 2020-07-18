@@ -129,5 +129,5 @@ phrase = "Paste"
 [clipboard.copyValue]
 description = "Copies the value given"
 match = """
-  copy [value]
+  copy text [value]
 """

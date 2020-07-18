@@ -78,15 +78,26 @@ match = """
 [nicknames.startForLoop]
 description = "Statement to start loop"
 match = """
-  for each value in (clipboard) [option=clipboard]
-  for each tab [option=tab]
-  for each bookmark [option=bookmark]
-  for each selected (tab |) [option=selected]
+  for each value in (clipboard) (as | named | as named |) [variable] [dataSource=clipboard]
+  for each value in (clipboard) [dataSource=clipboard]
+
+  for each tab [dataSource=tab]
+  for each tab (as | named | as named |) [variable] [dataSource=tab]
+
+  for each bookmark [dataSource=bookmark]
+  for each bookmark (as | named | as named |) [variable] [dataSource=bookmark]
+
+  for each bookmark in (folder |) [folder] [dataSource=bookmarkFolder]
+  for each bookmark in (folder |) [folder] (as | named | as named |) [variable] [dataSource=bookmarkFolder]
+
+  for each selected tab [dataSource=selectedTabs]
+  for each selected tab (as | named | as named |) [variable] [dataSource=selectedTabs]
 """
 
 [nicknames.endForLoop]
 description = "Statement to end loop"
 match = """
   endfor
+  end for
 """
 
