@@ -92,6 +92,9 @@ match = """
 
   for each selected tab [dataSource=selectedTabs]
   for each selected tab (as | named | as named |) [variable] [dataSource=selectedTabs]
+
+  for each number from 1 to [range] [dataSource=interval]
+  for each number from 1 to [range] (as | named | as named |) [variable] [dataSource=interval]
 """
 
 [nicknames.endForLoop]

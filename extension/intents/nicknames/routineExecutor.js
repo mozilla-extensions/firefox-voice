@@ -33,6 +33,8 @@ export class RoutineExecutor {
     let errorMessage = null;
     if (this.states !== null) {
       subcommand = this.mapState(subcommand, this.states[0]);
+    } else {
+      subcommand = JSON.parse(JSON.stringify(subcommand));
     }
     subcommand.routineExecutor = this;
     subcommand.onError = message => {
@@ -47,7 +49,6 @@ export class RoutineExecutor {
       subcommand.slots,
       this.programCounter
     );
-
     await intentRunner.runIntent(subcommand);
     if (hadError) {
       log.info(
@@ -95,7 +96,6 @@ export class RoutineExecutor {
         return true;
       }
     }
-
     if (this.states !== null) {
       const exc = new Error("'End for' is required at the end of loop.");
       exc.displayMessage = "'End for' is required at the end of loop.";

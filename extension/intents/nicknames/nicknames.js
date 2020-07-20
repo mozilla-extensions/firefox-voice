@@ -204,6 +204,13 @@ intentRunner.registerIntent({
       }
     }
 
+    if (context.parameters.dataSource === "interval") {
+      const range = context.slots.range;
+      for (let i = 0; i < range; i++) {
+        objectToLoop.push({[variable]: i});
+      }
+    }
+
     context.routineExecutor.startLoop(objectToLoop);
     return true;
   },
