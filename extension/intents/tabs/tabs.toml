@@ -13,10 +13,6 @@ phrase = "close tabs"
 test = true
 
 [[tabs.close.example]]
-phrase = "close all tabs"
-test = true
-
-[[tabs.close.example]]
 phrase = "close active tab"
 test = true
 
@@ -421,7 +417,7 @@ phrase = "Find query on this page"
 test = true
 
 [[tabs.findOnPage.example]]
-phrase = "Find spaghetti on  page"
+phrase = "Find spaghetti on page"
 
 [tabs.findOnPageNext]
 description = "Find next match"

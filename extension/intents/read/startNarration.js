@@ -38,3 +38,27 @@ communicate.register("stopReading", () => {
   element.dispatchEvent(new MouseEvent("click"));
   return true;
 });
+
+communicate.register("forward", () => {
+  if (!isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-skip-next");
+  if (!element) {
+    return false;
+  }
+  element.dispatchEvent(new MouseEvent("click"));
+  return true;
+});
+
+communicate.register("backward", () => {
+  if (!isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-skip-previous");
+  if (!element) {
+    return false;
+  }
+  element.dispatchEvent(new MouseEvent("click"));
+  return true;
+});

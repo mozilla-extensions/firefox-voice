@@ -3,6 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as optionsView from "./optionsView.js";
 import * as settings from "../settings.js";
+import { sendMessage } from "../background/communicate.js";
 
 const { useState, useEffect, useRef } = React;
 const optionsContainer = document.getElementById("options-container");
@@ -107,7 +108,7 @@ export const OptionsController = function() {
 
   const initVersionInfo = async () => {
     setInDevelopment(
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "inDevelopment",
       })
     );
@@ -121,7 +122,7 @@ export const OptionsController = function() {
   };
 
   const initRegisteredNicknames = async () => {
-    const registeredNicknames = await browser.runtime.sendMessage({
+    const registeredNicknames = await sendMessage({
       type: "getRegisteredNicknames",
     });
 
@@ -134,7 +135,7 @@ export const OptionsController = function() {
   };
 
   const updateNickname = async (nicknameContext, oldNickname) => {
-    const registeredNicknames = await browser.runtime.sendMessage({
+    const registeredNicknames = await sendMessage({
       type: "getRegisteredNicknames",
     });
 
@@ -175,7 +176,7 @@ export const OptionsController = function() {
       }
       delete nicknameContext.intents;
       nicknameContext.contexts = contexts;
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "registerNickname",
         name: nicknameContext.nickname,
         context: {
@@ -194,7 +195,7 @@ export const OptionsController = function() {
       (nicknameContext === undefined ||
         oldNickname !== nicknameContext.nickname)
     ) {
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "registerNickname",
         name: oldNickname,
         context: null,
@@ -235,10 +236,10 @@ export const OptionsController = function() {
   };
 
   const parseUtterance = async utterance => {
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "parseUtterance",
       utterance,
-      disableFallback: true,
+      disableFallback: false,
     });
   };
 
