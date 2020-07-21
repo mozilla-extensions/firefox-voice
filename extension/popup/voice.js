@@ -3,6 +3,7 @@
 import * as util from "../util.js";
 import * as vad from "./vad.js";
 import * as settings from "../settings.js";
+import { sendMessage } from "../background/communicate.js";
 
 const STT_SERVER_URL =
   buildSettings.sttServer || "https://speaktome-2.services.mozilla.com";
@@ -177,7 +178,7 @@ export class Recorder {
         },
       });
     } catch (e) {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "addTelemetry",
         properties: { serverErrorSpeech: `Connection error: ${e}` },
         doNotInit: true,
@@ -189,7 +190,7 @@ export class Recorder {
       this.sendForDeepSpeech(blob, deferredJson);
     });
     if (!response.ok) {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "addTelemetry",
         properties: {
           serverErrorSpeech: `Response error: ${response.status} ${response.statusText}`,
@@ -206,7 +207,7 @@ export class Recorder {
     }
     const json = await response.json();
     deferredJson.resolve(json);
-    browser.runtime.sendMessage({
+    sendMessage({
       type: "addTelemetry",
       properties: {
         serverTimeSpeech: Date.now() - startTime,
@@ -258,7 +259,7 @@ export class Recorder {
         )}))\n` +
         `  ${utterance} (${formatConfidence(confidence)})`
     );
-    browser.runtime.sendMessage({
+    sendMessage({
       type: "addTelemetry",
       properties: {
         utteranceDeepSpeech: utterance,

@@ -9,6 +9,8 @@ import * as settings from "../settings.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
+import { registerHandler, sendMessage } from "./communicate.js";
+
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -71,7 +73,7 @@ export class IntentContext {
   done(time = undefined) {
     this.closePopupOnFinish = false;
     if (!this.noPopup && !this.isFollowup && !this.isFollowupIntent) {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "closePopup",
         time,
       });
@@ -91,7 +93,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "error" });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "displayFailure",
       message,
     });
@@ -99,12 +101,12 @@ export class IntentContext {
 
   savingPage(message) {
     if (message === "startSavingPage") {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "startSavingPage",
         message,
       });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "endSavingPage",
       message,
     });
@@ -121,7 +123,7 @@ export class IntentContext {
         subheading: message.subheading,
       };
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "handleFollowup",
       method: "enable",
       message: {
@@ -133,7 +135,7 @@ export class IntentContext {
 
   async endFollowup() {
     this.expectsFollowup = false;
-    browser.runtime.sendMessage({
+    await sendMessage({
       type: "handleFollowup",
       method: "disable",
     });
@@ -177,7 +179,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
     }
-    return browser.runtime.sendMessage({ type: "presentMessage", message });
+    return sendMessage({ type: "presentMessage", message });
   }
 
   displayInlineMessage({ message, type }) {
@@ -196,7 +198,7 @@ export class IntentContext {
       });
       return;
     }
-    await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
+    await sendMessage({ type: "displayAutoplayFailure" });
   }
 
   /** This is some ad hoc information this specific intent wants to add */
@@ -335,6 +337,29 @@ export async function runUtterance(utterance, noPopup) {
   return result;
 }
 
+registerHandler("runIntent", (message, sender) => {
+  if (message.closeThisTab) {
+    closeTabSoon(sender.tab.id, sender.tab.url);
+  }
+  return runUtterance(message.text, message.noPopup);
+});
+
+function closeTabSoon(tabId, tabUrl) {
+  setTimeout(async () => {
+    try {
+      const tab = await browser.tabs.get(tabId);
+      if (tab.url !== tabUrl) {
+        // The tab has been updated, and shouldn't be closed
+        return;
+      }
+      await browser.tabs.remove(tabId);
+    } catch (e) {
+      log.error("Error closing temporary execution tab:", e);
+      catcher.capture(e);
+    }
+  }, 250);
+}
+
 export async function runIntent(contextParams) {
   catcher.setTag("intent", contextParams.name);
   if (!intents[contextParams.name]) {
@@ -430,13 +455,17 @@ export function getIntentSummary() {
   });
 }
 
+registerHandler("getIntentSummary", getIntentSummary);
+
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
-  const saveAudio = settings.getSettings().saveAudioHistory;
-  if (saveAudio) {
-    browser.runtime
-      .sendMessage({ type: "getLastAudio", utterance: context.utterance })
+  const userSettings = settings.getSettings();
+  if (!userSettings.saveHistory) {
+    return;
+  }
+  if (userSettings.saveAudioHistory) {
+    sendMessage({ type: "getLastAudio", utterance: context.utterance })
       .then(audio => {
         const audioContext = Object.assign({}, context, { audio });
         db.add(utteranceTable, audioContext).catch(error => log.error(error));
@@ -468,6 +497,14 @@ export function registerNickname(name, context) {
   browser.storage.sync.set({ registeredNicknames });
 }
 
+registerHandler("registerNickname", message => {
+  let context = message.context;
+  if (context !== null) {
+    context = new IntentContext(context);
+  }
+  return registerNickname(message.name, context);
+});
+
 async function initRegisteredNicknames() {
   const result = await browser.storage.sync.get(["registeredNicknames"]);
   if (result.registeredNicknames) {
@@ -483,6 +520,8 @@ async function initRegisteredNicknames() {
 export function getRegisteredNicknames() {
   return registeredNicknames;
 }
+
+registerHandler("getRegisteredNicknames", getRegisteredNicknames);
 
 let pageNames = {};
 
@@ -537,6 +576,10 @@ export function getLastIntentForFeedback() {
   return lastIntent;
 }
 
+registerHandler("getLastIntentForFeedback", () => {
+  return getLastIntentForFeedback();
+});
+
 export function clearFeedbackIntent() {
   lastIntent = null;
 }
@@ -546,6 +589,14 @@ export function clearFollowup() {
     lastIntentForFollowup = null;
   }
 }
+
+registerHandler("clearFollowup", clearFollowup);
+
+registerHandler("parseUtterance", message => {
+  return new IntentContext(
+    intentParser.parse(message.utterance, message.disableFallback)
+  );
+});
 
 initRegisteredNicknames();
 initRegisteredPageName();

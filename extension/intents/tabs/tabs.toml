@@ -13,10 +13,6 @@ phrase = "close tabs"
 test = true
 
 [[tabs.close.example]]
-phrase = "close all tabs"
-test = true
-
-[[tabs.close.example]]
 phrase = "close active tab"
 test = true
 

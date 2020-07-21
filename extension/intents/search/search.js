@@ -6,6 +6,7 @@ import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
 import * as settings from "../../settings.js";
+import { sendMessage } from "../../background/communicate.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
@@ -248,7 +249,7 @@ function pollForCard(maxTime) {
       return;
     }
     lastImage = card.src;
-    const response = await browser.runtime.sendMessage({
+    const response = await sendMessage({
       type: "refreshSearchCard",
       card,
     });
@@ -287,7 +288,7 @@ async function moveResult(context, step) {
     // reset the index to an initial search result
     searchInfo.index = undefined;
     tabSearchResults.set(tabId, searchInfo);
-    await browser.runtime.sendMessage({
+    await sendMessage({
       type: "showSearchResults",
       searchResults: searchInfo.searchResults,
       searchUrl: searchInfo.searchUrl,
@@ -338,7 +339,7 @@ async function moveResult(context, step) {
     }
   }
   await browserUtil.waitForDocumentComplete(lastTabId);
-  await browser.runtime.sendMessage({
+  await sendMessage({
     type: "showSearchResults",
     searchResults: searchInfo.searchResults,
     searchUrl: searchInfo.searchUrl,
@@ -362,7 +363,7 @@ export async function focusSearchResults(message) {
     await browser.tabs.update({ url: searchUrl });
   }
   await focusSearchTab();
-  await browser.runtime.sendMessage({
+  await sendMessage({
     type: "closePopup",
     time: 0,
   });
@@ -403,7 +404,7 @@ intentRunner.registerIntent({
       });
       context.keepPopup();
       searchInfo.index = -1;
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "showSearchResults",
         card,
         searchResults: searchInfo.searchResults,
@@ -421,7 +422,7 @@ intentRunner.registerIntent({
     } else {
       context.keepPopup();
       searchInfo.index = 0;
-      await browser.runtime.sendMessage({
+      await sendMessage({
         type: "showSearchResults",
         searchResults: searchInfo.searchResults,
         searchUrl: searchInfo.searchUrl,
@@ -432,6 +433,8 @@ intentRunner.registerIntent({
       });
       lastTabId = tab.id;
       tabSearchResults.set(tab.id, searchInfo);
+
+      await browserUtil.waitForPageToLoadUsingSelector(tab.id);
     }
   },
 });

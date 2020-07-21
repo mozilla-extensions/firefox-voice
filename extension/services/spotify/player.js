@@ -17,7 +17,7 @@ this.player = (function() {
       }
 
       const searchButton = await this.waitForSelector(
-        "a[aria-label='Search']",
+        "a[aria-label='Search'], a[href$='search']",
         {
           timeout: 5000,
         }
