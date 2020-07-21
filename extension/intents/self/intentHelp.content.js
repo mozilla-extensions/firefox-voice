@@ -1,6 +1,7 @@
-/* globals communicate, Fuse */
+/* globals Fuse */
+import { registerHandler } from "../../communicate.js";
 
-communicate.register("focusField", async message => {
+registerHandler("focusField", async message => {
   const helpElement = message.query;
   const elements = [];
   const searchContent = [];

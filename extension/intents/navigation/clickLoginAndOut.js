@@ -1,35 +1,34 @@
-/* globals communicate, log */
+/* globals log */
+import { registerHandler } from "../../communicate.js";
 
-this.followLink = (function() {
-  communicate.register("signInAndOut", message => {
-    const regex = /log\s*(out|in)|sign\s*(out|in)/i;
+registerHandler("signInAndOut", message => {
+  const regex = /log\s*(out|in)|sign\s*(out|in)/i;
 
-    let element;
+  let element;
 
-    for (const link of findButton()) {
-      if (regex.test(link.innerText)) {
-        element = link;
-        break;
-      }
+  for (const link of findButton()) {
+    if (regex.test(link.innerText)) {
+      element = link;
+      break;
     }
-    if (!element) {
-      return false;
-    }
-
-    highlightButton(element);
-    element.scrollIntoView();
-    setTimeout(() => {
-      log.info("Following link to:", element.href || "?");
-      element.click();
-    }, 100);
-    return true;
-  });
-
-  function highlightButton(el) {
-    el.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+  }
+  if (!element) {
+    return false;
   }
 
-  function findButton() {
-    return document.body.querySelectorAll("button, a, *[role=button]");
-  }
-})();
+  highlightButton(element);
+  element.scrollIntoView();
+  setTimeout(() => {
+    log.info("Following link to:", element.href || "?");
+    element.click();
+  }, 100);
+  return true;
+});
+
+function highlightButton(el) {
+  el.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+}
+
+function findButton() {
+  return document.body.querySelectorAll("button, a, *[role=button]");
+}

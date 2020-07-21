@@ -101,7 +101,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/self/contentScript.js",
+      "/intents/self/intentHelp.content.js",
     ]);
     const query = context.slots.query;
     const result = await browser.tabs.sendMessage(activeTab.id, {
