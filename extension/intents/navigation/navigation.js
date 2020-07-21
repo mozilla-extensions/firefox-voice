@@ -1,10 +1,10 @@
+import * as content from "../../background/content.js";
 import * as intentRunner from "../../background/intentRunner.js";
-import * as serviceList from "../../background/serviceList.js";
 import * as languages from "../../background/languages.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
-import * as searching from "../../searching.js";
-import * as content from "../../background/content.js";
+import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
+import * as searching from "../../searching.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
 import { sendMessage } from "../../background/communicate.js";
@@ -190,6 +190,24 @@ intentRunner.registerIntent({
     if (found === false) {
       const exc = new Error("No link found matching query");
       exc.displayMessage = `No link "${context.slots.query}" found`;
+      throw exc;
+    }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "navigation.signInAndOut",
+  async run(context) {
+    const activeTab = await browserUtil.activeTab();
+    await content.inject(activeTab.id, [
+      "/intents/navigation/clickLoginAndOut.js",
+    ]);
+    const found = await browser.tabs.sendMessage(activeTab.id, {
+      type: "signInAndOut",
+    });
+    if (found === false) {
+      const exc = new Error("No link found matching query");
+      exc.displayMessage = `Sorry can't "${context.utterance}" on this page`;
       throw exc;
     }
   },
