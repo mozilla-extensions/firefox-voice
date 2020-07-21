@@ -153,7 +153,7 @@ intentRunner.registerIntent({
   async run(context) {
     const objectToLoop = [];
     const variable = context.slots.variable;
-    
+
     if (context.parameters.dataSource === "clipboard") {
       const result = await navigator.clipboard.readText();
       const splitResult = result.split("\n");
@@ -185,19 +185,19 @@ intentRunner.registerIntent({
       const folder = context.slots.folder;
       const exc = new Error(`${folder} is not a bookmark folder.`);
       exc.displayMessage = `${folder} is not a bookmark folder.`;
-      
+
       let bookmarkFolder = null;
       try {
-        const [{id}] = await browser.bookmarks.search({title: folder});
+        const [{ id }] = await browser.bookmarks.search({ title: folder });
         [bookmarkFolder] = await browser.bookmarks.getSubTree(id);
       } catch (err) {
         throw exc;
       }
-      
+
       if (bookmarkFolder.type !== "folder") {
         throw exc;
       }
-      
+
       const bookmarks = getAllBookmarksInFolder(bookmarkFolder);
       for (const bookmark of bookmarks) {
         objectToLoop.push({ [variable]: bookmark.url });
@@ -207,7 +207,7 @@ intentRunner.registerIntent({
     if (context.parameters.dataSource === "interval") {
       const range = context.slots.range;
       for (let i = 0; i < range; i++) {
-        objectToLoop.push({[variable]: i});
+        objectToLoop.push({ [variable]: i });
       }
     }
 

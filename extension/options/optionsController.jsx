@@ -205,7 +205,7 @@ export const OptionsController = function() {
     }
 
     setRegisteredNicknames(registeredNicknames);
-    return {allowed: true};
+    return { allowed: true };
   };
 
   const useToggle = initialIsVisible => {

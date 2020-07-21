@@ -75,7 +75,7 @@ export class RoutineExecutor {
     if (this.states.length > 0) {
       this.programCounter = this.startLoopProgramCounter;
     } else {
-      this.states = null
+      this.states = null;
     }
   }
 
