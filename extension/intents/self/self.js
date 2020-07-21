@@ -1,4 +1,5 @@
 import * as intentRunner from "../../background/intentRunner.js";
+import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { timerController } from "../timer/timer.js";
 import { sendMessage } from "../../background/communicate.js";
@@ -90,5 +91,27 @@ intentRunner.registerIntent({
       card,
       searchResults: card,
     });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "self.helpIntent",
+  async run(context) {
+    await browserUtil.openOrActivateTab("/views/lexicon.html");
+    const activeTab = await browserUtil.activeTab();
+    await content.inject(activeTab.id, [
+      "/js/vendor/fuse.js",
+      "/intents/self/contentScript.js",
+    ]);
+    const query = context.slots.query;
+    const result = await browser.tabs.sendMessage(activeTab.id, {
+      type: "focusField",
+      query,
+    });
+    if (!result) {
+      const exc = new Error("No Intent found");
+      exc.displayMessage = `No matching Intent found for "${query}"`;
+      throw exc;
+    }
   },
 });
