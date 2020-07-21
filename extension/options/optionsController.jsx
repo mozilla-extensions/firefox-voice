@@ -176,7 +176,6 @@ export const OptionsController = function() {
       }
       delete nicknameContext.intents;
       nicknameContext.contexts = contexts;
-
       await sendMessage({
         type: "registerNickname",
         name: nicknameContext.nickname,
@@ -206,7 +205,7 @@ export const OptionsController = function() {
     }
 
     setRegisteredNicknames(registeredNicknames);
-    return true;
+    return {allowed: true};
   };
 
   const useToggle = initialIsVisible => {

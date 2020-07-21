@@ -80,6 +80,14 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
+  name: "clipboard.copyValue",
+  async run(context) {
+    navigator.clipboard.writeText(context.slots.value);
+    context.presentMessage("Value copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
   name: "clipboard.paste",
   async run(context) {
     const activeTab = await browserUtil.activeTab();
