@@ -4,11 +4,7 @@ import * as browserUtil from "../../browserUtil.js";
 
 async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
-  await content.inject(activeTab.id, [
-    "/background/pageMetadata-contentScript.js",
-    "/intents/saving/screenshotContentScript.js",
-    "/intents/clipboard/contentScript.js",
-  ]);
+  await content.inject(activeTab.id, "/intents/clipboard/clipboard.content.js");
   if (complete) {
     await browserUtil.waitForDocumentComplete(activeTab.id);
   }

@@ -3,7 +3,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
-import { sendMessage } from "../../background/communicate.js";
+import { sendMessage } from "../../communicate.js";
 
 const SERVICES = {};
 

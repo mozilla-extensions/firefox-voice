@@ -16,7 +16,7 @@ export async function stopReading() {
 }
 
 async function stopReadingTab(tabId) {
-  await content.inject(tabId, ["/intents/read/startNarration.js"]);
+  await content.inject(tabId, "/intents/read/startNarration.content.js");
   await browser.tabs.sendMessage(tabId, {
     type: "stopReading",
   });
@@ -50,7 +50,10 @@ intentRunner.registerIntent({
       await browserUtil.waitForDocumentComplete(activeTab.id);
     }
     await browserUtil.turnOnReaderMode(activeTab.id);
-    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(
+      activeTab.id,
+      "/intents/read/startNarration.content.js"
+    );
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "narrate",
     });
@@ -71,7 +74,10 @@ intentRunner.registerIntent({
       e.displayMessage = "Page isn't narrating";
       throw e;
     }
-    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(
+      activeTab.id,
+      "/intents/read/startNarration.content.js"
+    );
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "stopReading",
     });
@@ -92,7 +98,10 @@ intentRunner.registerIntent({
       e.displayMessage = "Page isn't narrating";
       throw e;
     }
-    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(
+      activeTab.id,
+      "/intents/read/startNarration.content.js"
+    );
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "forward",
     });
@@ -113,7 +122,10 @@ intentRunner.registerIntent({
       e.displayMessage = "Page isn't narrating";
       throw e;
     }
-    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(
+      activeTab.id,
+      "/intents/read/startNarration.content.js"
+    );
     const success = await browser.tabs.sendMessage(activeTab.id, {
       type: "backward",
     });

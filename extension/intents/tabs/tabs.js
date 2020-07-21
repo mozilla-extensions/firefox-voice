@@ -1,5 +1,5 @@
 /* globals buildSettings,Fuse,log */
-import { sendMessage } from "../../background/communicate.js";
+import { sendMessage } from "../../communicate.js";
 import * as intentRunner from "../../background/intentRunner.js";
 import * as browserUtil from "../../browserUtil.js";
 import English from "../../language/langs/english.js";

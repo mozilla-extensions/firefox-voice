@@ -224,7 +224,7 @@ export function waitForDocumentComplete(tabId) {
 }
 
 export async function waitForPageToLoadUsingSelector(tabId, options = {}) {
-  await content.inject(tabId, "./content/pageLoadChecker.js");
+  await content.inject(tabId, "./content/pageLoadChecker.content.js");
   return browser.tabs.sendMessage(tabId, { type: "isLoaded", options });
 }
 

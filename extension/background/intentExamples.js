@@ -1,5 +1,5 @@
 import * as intentRunner from "./intentRunner.js";
-import { registerHandler } from "./communicate.js";
+import { registerHandler } from "../communicate.js";
 
 const INTENT_ROTATION_PERIOD = 1000 * 60 * 5; // 5 minutes
 // This gets filled later:

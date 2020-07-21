@@ -9,7 +9,7 @@ import * as popupView from "./popupView.js";
 import * as vad from "./vad.js";
 import * as voice from "./voice.js";
 import * as voiceShim from "./voiceShim.js";
-import { sendMessage } from "../background/communicate.js";
+import { sendMessage } from "../communicate.js";
 
 log.startTiming("popup opened");
 
