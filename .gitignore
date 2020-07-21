@@ -38,3 +38,5 @@ Thumbs.db
 /build
 /bin/username-cache.json
 *.bundle.js
+# This is where we check out the honkling library:
+/honkling
