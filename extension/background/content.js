@@ -1,8 +1,3 @@
-/* globals log */
-
-const NO_RECEIVER_MESSAGE =
-  "Could not establish connection. Receiving end does not exist";
-
 export async function inject(tabId, scripts) {
   if (!tabId) {
     throw new Error(`Invalid tabId: ${tabId}`);
@@ -10,52 +5,16 @@ export async function inject(tabId, scripts) {
   if (typeof scripts === "string") {
     scripts = [scripts];
   }
-  const scriptKey = scripts.join(",");
-  let available = true;
-  try {
-    available = await browser.tabs.sendMessage(tabId, {
-      type: "ping",
-      scriptKey,
-    });
-    if (!available) {
-      available = "some";
-    }
-  } catch (e) {
-    available = false;
-    if (String(e).includes(NO_RECEIVER_MESSAGE)) {
-      // This is a normal error
-    } else {
-      log.error("Error sending message:", String(e));
-    }
+  if (!scripts.filter(s => s.endsWith(".content.js")).length) {
+    throw new Error(`Not a bundle script: ${scripts}`);
   }
-  if (available === "some") {
-    for (const script of scripts) {
-      await browser.tabs.executeScript(tabId, {
-        file: script,
-        runAt: "document_idle",
-      });
-    }
-    await browser.tabs.sendMessage(tabId, {
-      type: "scriptsLoaded",
-      scriptKey,
-    });
-    return;
-  }
-  if (available) {
-    return;
-  }
-  scripts = [
-    "/buildSettings.js",
-    "/log.js",
-    "/content/helpers.js",
-    "/content/communicate.js",
-  ]
-    .concat(scripts)
-    .concat(["/content/responder.js"]);
-
-  for (const script of scripts) {
+  const bundleScripts = scripts.map(script =>
+    script.replace(/\.content\.js$/, ".bundle.js")
+  );
+  const execScripts = ["/buildSettings.js", "/log.js"].concat(bundleScripts);
+  for (const file of execScripts) {
     try {
-      await browser.tabs.executeScript(tabId, { file: script });
+      await browser.tabs.executeScript(tabId, { file });
     } catch (error) {
       if (error.message.includes("Missing host permission for the tab")) {
         const e = new Error("That does not work on this kind of page");
@@ -66,29 +25,4 @@ export async function inject(tabId, scripts) {
       }
     }
   }
-
-  await browser.tabs.sendMessage(tabId, {
-    type: "scriptsLoaded",
-    scriptKey,
-  });
-}
-
-export async function hasScript(tabId, scripts) {
-  if (!tabId) {
-    throw new Error(`Invalid tabId: ${tabId}`);
-  }
-  if (typeof scripts === "string") {
-    scripts = [scripts];
-  }
-  const scriptKey = scripts.join(",");
-  let available;
-  try {
-    available = await browser.tabs.sendMessage(tabId, {
-      type: "ping",
-      scriptKey,
-    });
-  } catch (e) {
-    available = false;
-  }
-  return available;
 }

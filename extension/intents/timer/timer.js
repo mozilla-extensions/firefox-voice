@@ -1,8 +1,7 @@
 /* globals catcher, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
-import { registerHandler } from "../../background/communicate.js";
-import { sendMessage } from "../../background/communicate.js";
+import { registerHandler, sendMessage } from "../../communicate.js";
 
 class TimerController {
   constructor() {

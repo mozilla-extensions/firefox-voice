@@ -2,8 +2,8 @@ import * as intentRunner from "../../background/intentRunner.js";
 import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 
-const SLIDESHOW_SCRIPT = "/intents/slideshow/contentScript.js";
-const PRESENTATION_SCRIPT = "/intents/slideshow/presentationScript.js";
+const SLIDESHOW_SCRIPT = "/intents/slideshow/contentScript.content.js";
+const PRESENTATION_SCRIPT = "/intents/slideshow/presentationScript.content.js";
 
 intentRunner.registerIntent({
   name: "slideshow.open",

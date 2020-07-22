@@ -61,3 +61,46 @@ phrase = "delete the page called news"
 
 [[nicknames.removePageName.example]]
 phrase = "remove this tab name"
+
+[nicknames.pause]
+description = "Pauses a routine"
+match = """
+  pause routine (with |) (and |) (show |) (message | status | text | print) [message]
+  pause routine
+"""
+
+[nicknames.continue]
+description = "Continues a routine"
+match = """
+  continue routine
+"""
+
+[nicknames.startForLoop]
+description = "Statement to start loop"
+match = """
+  for each value in (clipboard) (as | named | as named |) [variable] [dataSource=clipboard]
+  for each value in (clipboard) [dataSource=clipboard]
+
+  for each tab [dataSource=tab]
+  for each tab (as | named | as named |) [variable] [dataSource=tab]
+
+  for each bookmark [dataSource=bookmark]
+  for each bookmark (as | named | as named |) [variable] [dataSource=bookmark]
+
+  for each bookmark in (folder |) [folder] [dataSource=bookmarkFolder]
+  for each bookmark in (folder |) [folder] (as | named | as named |) [variable] [dataSource=bookmarkFolder]
+
+  for each selected tab [dataSource=selectedTabs]
+  for each selected tab (as | named | as named |) [variable] [dataSource=selectedTabs]
+
+  for each number from 1 to [range] [dataSource=interval]
+  for each number from 1 to [range] (as | named | as named |) [variable] [dataSource=interval]
+"""
+
+[nicknames.endForLoop]
+description = "Statement to end loop"
+match = """
+  endfor
+  end for
+"""
+

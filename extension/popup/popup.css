@@ -370,6 +370,7 @@ a#lexicon {
   width: 100vw;
   padding: 8px 0;
   margin: -0.5em;
+  min-height: 8.5em;
 }
 
 #followup-wrapper {

@@ -9,7 +9,7 @@ import * as settings from "../settings.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
-import { registerHandler, sendMessage } from "./communicate.js";
+import { registerHandler, sendMessage } from "../communicate.js";
 
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:

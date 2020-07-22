@@ -60,12 +60,12 @@ class YouTube extends serviceList.Service {
   }
 
   async pause() {
-    await this.initTab("/services/youtube/player.js");
+    await this.initTab("/services/youtube/player.content.js");
     await this.callTab("pause");
   }
 
   async unpause() {
-    await this.initTab("/services/youtube/player.js");
+    await this.initTab("/services/youtube/player.content.js");
     await this.callTab("unpause");
   }
 
@@ -75,7 +75,7 @@ class YouTube extends serviceList.Service {
       if (exceptTabId && exceptTabId === tab.id) {
         continue;
       }
-      await content.inject(tab.id, "/services/youtube/player.js");
+      await content.inject(tab.id, "/services/youtube/player.content.js");
       await this.callOneTab(tab.id, "pause");
     }
   }
@@ -99,7 +99,7 @@ class YouTube extends serviceList.Service {
           code: "window.history.back();",
         });
       } else {
-        await content.inject(tab.id, "/services/youtube/player.js");
+        await content.inject(tab.id, "/services/youtube/player.content.js");
         await this.callOneTab(tab.id, "move", { direction });
       }
     }
@@ -107,17 +107,17 @@ class YouTube extends serviceList.Service {
 
   async adjustVolume(inputVolume, volumeLevel) {
     const findAudibleTab = true;
-    await this.initTab("/services/youtube/player.js", findAudibleTab);
+    await this.initTab("/services/youtube/player.content.js", findAudibleTab);
     await this.callTab("adjustVolume", { inputVolume, volumeLevel });
   }
 
   async mute() {
-    await this.initTab(`/services/youtube/player.js`);
+    await this.initTab(`/services/youtube/player.content.js`);
     await this.callTab("mute");
   }
 
   async unmute() {
-    await this.initTab(`/services/youtube/player.js`);
+    await this.initTab(`/services/youtube/player.content.js`);
     await this.callTab("unmute");
   }
 
@@ -147,7 +147,7 @@ class YouTube extends serviceList.Service {
         }
       }
     }
-    await this.initTab("/services/youtube/player.js");
+    await this.initTab("/services/youtube/player.content.js");
     await this.callTab("playAlbum");
   }
 }

@@ -6,7 +6,7 @@ import * as content from "../../background/content.js";
 import * as telemetry from "../../background/telemetry.js";
 import * as browserUtil from "../../browserUtil.js";
 import * as settings from "../../settings.js";
-import { sendMessage } from "../../background/communicate.js";
+import { sendMessage } from "../../communicate.js";
 
 // Close the search tab after this amount of time:
 const CLOSE_TIME = 1000 * 60 * 60; // 1 hour
@@ -116,20 +116,14 @@ async function performSearch(query) {
     await browserUtil.makeTabActive(tabId);
   }
   try {
-    await content.inject(tabId, [
-      "/intents/search/queryScript.js",
-      "/intents/search/cardSpeech.js",
-    ]);
+    await content.inject(tabId, "/intents/search/queryScript.content.js");
   } catch (e) {
     // There's a (fairly) common race condition here
     if (e.message.includes("communicate is not defined")) {
       log.info(
         "Race condition in search page, attempting to load queryScript second time"
       );
-      await content.inject(tabId, [
-        "/intents/search/queryScript.js",
-        "/intents/search/cardSpeech.js",
-      ]);
+      await content.inject(tabId, "/intents/search/queryScript.content.js");
     } else {
       throw e;
     }
@@ -154,7 +148,7 @@ export async function performSearchPage(context, query) {
 
   await focusSearchTab();
   await browserUtil.waitForDocumentComplete(tabId);
-  await content.inject(tabId, "/intents/search/queryScript.js");
+  await content.inject(tabId, "/intents/search/queryScript.content.js");
   const searchInfo = await callScript({ type: "searchResultInfo" });
 
   if (

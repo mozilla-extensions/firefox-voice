@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as optionsView from "./optionsView.js";
 import * as settings from "../settings.js";
-import { sendMessage } from "../background/communicate.js";
+import { sendMessage } from "../communicate.js";
 
 const { useState, useEffect, useRef } = React;
 const optionsContainer = document.getElementById("options-container");
@@ -176,7 +176,6 @@ export const OptionsController = function() {
       }
       delete nicknameContext.intents;
       nicknameContext.contexts = contexts;
-
       await sendMessage({
         type: "registerNickname",
         name: nicknameContext.nickname,
@@ -206,7 +205,7 @@ export const OptionsController = function() {
     }
 
     setRegisteredNicknames(registeredNicknames);
-    return true;
+    return { allowed: true };
   };
 
   const useToggle = initialIsVisible => {
