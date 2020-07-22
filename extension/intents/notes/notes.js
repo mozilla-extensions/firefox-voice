@@ -82,13 +82,13 @@ intentRunner.registerIntent({
       e.displayMessage = "You have not set a tab to write";
       throw e;
     }
-    const available = await content.hasScript(writingTabId, SCRIPT);
-    if (!available) {
-      const e = new Error("No Notes Tab found");
-      e.displayMessage = "Notes tab maybe closed or not able to found";
-      throw e;
-    } else {
+    try {
       await browserUtil.makeTabActive(writingTabId);
+    } catch (e) {
+      if (e.message.includes("Invalid tab")) {
+        e.displayMessage = "Notes tab can't be found";
+        throw e;
+      }
     }
   },
 });
