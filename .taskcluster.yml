@@ -11,7 +11,7 @@ tasks:
           #     enable signing on push/PR. Note, this only works for public
           #     repos for now. Release builds off shipit will get signing for
           #     both public and private repos.
-          xpiSigningType: ""
+          xpiSigningType: "privileged"
           # The below doesn't need changing on initial repo setup
           taskgraph:
               branch: taskgraph
