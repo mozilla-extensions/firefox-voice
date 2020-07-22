@@ -84,7 +84,9 @@ intentRunner.registerIntent({
     }
     const available = await content.hasScript(writingTabId, SCRIPT);
     if (!available) {
-      await browser.experiments.voice.undoCloseTab();
+      const e = new Error("No Notes Tab found");
+      e.displayMessage = "Notes tab maybe closed or not able to found";
+      throw e;
     } else {
       await browserUtil.makeTabActive(writingTabId);
     }
