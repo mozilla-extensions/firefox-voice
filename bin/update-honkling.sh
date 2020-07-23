@@ -26,17 +26,13 @@ mkdir -p $dest
 files="
 common/config.js
 common/util.js
-honkling-models/honkling/tfjs_version.js
 honkling-models/honkling/meyda_version.js
 common/precomputed/melBasis.js
 common/precomputed/hanningWindow.js
-common/melSpectrogram.js
 common/inferenceEngine.js
 common/micAudioProcessor.js
 common/offlineAudioProcessor.js
 models/speechResModel.js
-controller/baseController.js
-controller/honklingController.js
 "
 
 for file in $files ; do
