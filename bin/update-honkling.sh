@@ -27,12 +27,14 @@ files="
 common/config.js
 common/util.js
 honkling-models/honkling/meyda_version.js
-common/precomputed/melBasis.js
+common/precomputed/melBasis_40.js
+common/precomputed/melBasis_80.js
 common/precomputed/hanningWindow.js
 common/inferenceEngine.js
 common/micAudioProcessor.js
 common/offlineAudioProcessor.js
 models/speechResModel.js
+lib/meyda.js
 "
 
 for file in $files ; do

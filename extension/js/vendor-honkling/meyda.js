@@ -2618,7 +2618,7 @@ var Meyda = {
   // melBands: 40,
   // ~~~~~~~~~~~~~~~~
   // ~~~ FF ~~~
-  melBands: 80,
+  melBands: 40,
   // ~~~~~~~~~~~~~~~~
 
   /**
@@ -2659,7 +2659,7 @@ var Meyda = {
   // numberOfMFCCCoefficients: 40,
   // // ~~~~~~~~~~~~~~~~
   // ~~~ FF ~~~
-  numberOfMFCCCoefficients: 80,
+  numberOfMFCCCoefficients: 40,
 
   // for the construction of melFilterBank, max(melBands, numberOfMFCCCoefficients) is used
   // ~~~~~~~~~~~~~~~~
@@ -2941,6 +2941,9 @@ function () {
     //   this._m.bufferSize);
     // ~~~~~~~~~~~~~~~~
 
+    if (options.hasOwnProperty('melBands')) {
+      this._m.melBands = options.melBands;
+    }
     this._m.melFilterBank = _utilities__WEBPACK_IMPORTED_MODULE_0__["createMelFilterBank"](this._m.melBands, this._m.sampleRate, this._m.bufferSize);
     this._m.inputData = null;
     this._m.previousInputData = null;
@@ -3220,7 +3223,10 @@ function freqToMel(fV) {
 function createMelFilterBank(numFilters, sampleRate, bufferSize) {
 
   // use precomputed values
-  return mel_basis;
+  return melBasis[numFilters.toString()];
+
+  // Use precomputed values for optimization
+  /*
 
   //the +2 is the upper and lower limits
   var melValues = new Float32Array(numFilters + 2);
@@ -3339,6 +3345,8 @@ function createMelFilterBank(numFilters, sampleRate, bufferSize) {
 
 
   return filterBank;
+
+  */
 } // ~~~ UNNECESSARY CODE ~~~
 // export function hzToOctaves(freq, A440) {
 //   return Math.log2(16 * freq / A440);
