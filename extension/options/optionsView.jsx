@@ -19,10 +19,10 @@ export const Options = ({
   userSettings,
   updateUserSettings,
   tabValue,
-  updateNickname,
-  registeredNicknames,
+  updateRoutine,
+  registeredRoutines,
   useToggle,
-  useEditNicknameDraft,
+  useEditRoutineDraft,
   audioInputDevices,
   synthesizedVoices,
 }) => {
@@ -45,10 +45,10 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
-          updateNickname={updateNickname}
-          registeredNicknames={registeredNicknames}
+          updateRoutine={updateRoutine}
+          registeredRoutines={registeredRoutines}
           useToggle={useToggle}
-          useEditNicknameDraft={useEditNicknameDraft}
+          useEditRoutineDraft={useEditRoutineDraft}
         ></routinesView.Routines>
       ) : null}
       {tabValue === TABS.HISTORY ? (
