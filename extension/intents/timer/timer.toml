@@ -3,6 +3,7 @@ description = "Set timer"
 match = """
     (set | open | show | start | create | make |) (a |) (timer | countdown) (for |) [time]
     (set | start | create | make |) (for |) (alarm ) [time] (from now |)
+    [time] minutes [sufixQuery=minutes]
 """
 
 [[timer.set.example]]
@@ -10,6 +11,9 @@ phrase = "Set timer for 2 hours and 5 minutes"
 
 [[timer.set.example]]
 phrase = "Set alarm 2 minutes from now"
+
+[[timer.set.example]]
+phrase = "5 minutes"
 
 [[timer.set.example]]
 phrase = "Set alarm for 1 hour from now"

@@ -134,7 +134,10 @@ intentRunner.registerIntent({
       e.displayMessage = "Only one timer can be active.";
       throw e;
     }
-
+    if (context.parameters.sufixQuery !== undefined) {
+      context.slots.time =
+        context.slots.time + " " + context.parameters.sufixQuery;
+    }
     context.keepPopup();
     const result = chrono.parse(context.slots.time);
 
