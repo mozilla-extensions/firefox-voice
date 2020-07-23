@@ -8,7 +8,8 @@ class OfflineAudioProcessor {
     this.offlineSampleRate = config.offlineSampleRate;
     this.meydaHopSize = this.offlineSampleRate / 1000 * config.offlineHopSize;
     this.window_size = config.window_size * config.offlineSampleRate; // convert from s to n_samples
-    this.padding_size = config.padding_size
+    this.padding_size = config.padding_size;
+    this.melBands = config.melBands;
     this.audioData = audioData;
 
     this.bufferSize = 512;
@@ -63,6 +64,7 @@ class OfflineAudioProcessor {
       hopSize: this.meydaHopSize,
       callback: postProcessing,
       sampleRate: this.offlineSampleRate,
+      melBands: this.melBands
     });
   }
 
