@@ -173,14 +173,14 @@ export const PopupController = function() {
 
   const playListeningChime = () => {
     const audio = new Audio(
-      "https://mozilla.github.io/firefox-voice/chime.ogg"
+      "https://mozilla-extensions.github.io/firefox-voice/chime.ogg"
     );
     audio.play();
   };
 
   const playTimerAlarm = () => {
     const audio = new Audio(
-      "https://mozilla.github.io/firefox-voice/alarm.mp3"
+      "https://mozilla-extensions.github.io/firefox-voice/alarm.mp3"
     );
     audio.play();
     setTimeout(() => {
