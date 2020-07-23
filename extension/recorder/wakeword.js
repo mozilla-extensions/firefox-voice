@@ -2,23 +2,27 @@
 
 import * as settings from "../settings.js";
 
+const LISTENING_TIMEOUT = 2000;
 let enabled = false;
+let lastInvoked = 0;
+
+let micAudioProcessor = new MicAudioProcessor(audioConfig);
+let model = new SpeechResModel("RES8", commands);
+let inferenceEngine = new InferenceEngine(inferenceEngineConfig, commands);
 
 function startWatchword(keywords, sensitivity) {
-  let micAudioProcessor = new MicAudioProcessor(audioConfig);
-  let model = new SpeechResModel("RES8", commands);
-  let inferenceEngine = new InferenceEngine(inferenceEngineConfig, commands);
-
   micAudioProcessor.getMicPermission().done(function() {
     setInterval(function() {
       let offlineProcessor = new OfflineAudioProcessor(audioConfig, micAudioProcessor.getData());
-      offlineProcessor.getMFCC().done(function(mfccData) {
+      offlineProcessor.getMFCC().done(async function(mfccData) {
 
         let command = inferenceEngine.infer(mfccData, model, commands);
-        // console.log("RECEIVED COMMAND ", command);
 
         if (inferenceEngine.sequencePresent()) {
-          console.log("HEY FIREFOX");
+          console.log("wtf");
+          if ((Date.now() - lastInvoked) > LISTENING_TIMEOUT) {
+            await callWakeword();
+          }
         }
       });
     }, predictionFrequency);
@@ -33,6 +37,15 @@ function startWatchword(keywords, sensitivity) {
     sensitivity
   );
   enabled = true;
+}
+
+async function callWakeword() {
+  lastInvoked = Date.now();
+  console.log("HEY FIREFOX");
+  await browser.runtime.sendMessage({
+    type: "wakeword",
+    wakeword: "Hey Firefox"
+  });
 }
 
 function stopWatchword() {
