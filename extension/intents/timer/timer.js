@@ -23,7 +23,7 @@ class TimerController {
         this.activeTimer.close();
         this.activeTimer = null;
         resolve(true);
-      }
+      };
     });
   }
 
@@ -32,9 +32,9 @@ class TimerController {
     return this.activeTimer;
   }
 
-  wait = async () => {
+  async waitTimer() {
     return this.waitPromise;
-  } 
+  };
 }
 
 class Timer {
@@ -104,7 +104,6 @@ class Timer {
       if (result) {
         return;
       }
-      
     } catch (e) {
       catcher.capture(e);
     }
@@ -240,7 +239,6 @@ registerHandler("timerAction", message => {
   return timerController[message.method](...(message.args || []));
 });
 
-
 intentRunner.registerIntent({
   name: "timer.wait",
   async run() {
@@ -251,6 +249,5 @@ intentRunner.registerIntent({
       throw e;
     }
     await timerController.wait();
-
-  }
+  },
 });
