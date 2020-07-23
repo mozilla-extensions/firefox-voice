@@ -192,8 +192,7 @@ export const OptionsController = function() {
     // delete if necessary
     if (
       oldRoutine !== undefined &&
-      (routineContext === undefined ||
-        oldRoutine !== routineContext.routine)
+      (routineContext === undefined || oldRoutine !== routineContext.routine)
     ) {
       await sendMessage({
         type: "registerRoutine",

@@ -494,7 +494,10 @@ export function registerRoutine(name, context) {
     registeredRoutines[name] = context;
     log.info("Added routine", name, "->", context.name, context.slots);
   }
-  localStorage.setItem( "registeredRoutines", JSON.stringify(registeredRoutines) );
+  localStorage.setItem(
+    "registeredRoutines",
+    JSON.stringify(registeredRoutines)
+  );
   const res = JSON.parse(localStorage.getItem("registeredRoutines"));
 }
 
@@ -515,14 +518,16 @@ async function moveNicknameToRoutine() {
       delete value.nickname;
     }
     const registeredRoutines = result.registeredNicknames;
-    localStorage.setItem( "registeredRoutines", JSON.stringify(registeredRoutines) );
+    localStorage.setItem(
+      "registeredRoutines",
+      JSON.stringify(registeredRoutines)
+    );
     const checkRoutines = localStorage.getItem("registeredRoutines");
     if (JSON.stringify(checkRoutines) === JSON.stringify(registeredRoutines)) {
       await browser.storage.sync.remove("registeredNicknames");
     }
   }
 }
-
 
 // switch to local storage;
 async function initRegisteredRoutines() {
