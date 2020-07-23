@@ -2,6 +2,7 @@
 
 import * as intentRunner from "../../background/intentRunner.js";
 import { registerHandler, sendMessage } from "../../communicate.js";
+import { sleep } from "../../util.js";
 
 class TimerController {
   constructor() {
@@ -13,21 +14,27 @@ class TimerController {
     return this.activeTimer;
   }
 
-  closeActiveTimer() {
-    this.activeTimer.close();
-    this.activeTimer = null;
-  }
-
   setActiveTimer(totalInMS, context) {
     this.activeTimer = new Timer(totalInMS, context);
     this.lastActiveTimer = { ...this.activeTimer };
     this.activeTimer.start();
+    this.waitPromise = new Promise((resolve, reject) => {
+      this.closeActiveTimer = () => {
+        this.activeTimer.close();
+        this.activeTimer = null;
+        resolve(true);
+      }
+    });
   }
 
   restoreTimer(context) {
     this.setActiveTimer(this.lastActiveTimer.totalInMS, context);
     return this.activeTimer;
   }
+
+  wait = async () => {
+    return this.waitPromise;
+  } 
 }
 
 class Timer {
@@ -86,7 +93,6 @@ class Timer {
     const followup = {
       heading: "Say 'reset' or 'reset timer'",
     };
-
     // send message to popup and open it if no response;
     // do not close timeout now; make popup do it
     try {
@@ -98,6 +104,7 @@ class Timer {
       if (result) {
         return;
       }
+      
     } catch (e) {
       catcher.capture(e);
     }
@@ -231,4 +238,19 @@ intentRunner.registerIntent({
 
 registerHandler("timerAction", message => {
   return timerController[message.method](...(message.args || []));
+});
+
+
+intentRunner.registerIntent({
+  name: "timer.wait",
+  async run() {
+    const activeTimer = timerController.getActiveTimer();
+    if (activeTimer === null || activeTimer.paused === false) {
+      const e = new Error("Failed to wait for timer to finish.");
+      e.displayMessage = "No active timer.";
+      throw e;
+    }
+    await timerController.wait();
+
+  }
 });

@@ -62,3 +62,10 @@ match = """
 [[timer.unpause.example]]
 phrase = "unpause timer"
 test = true
+
+
+[timer.wait]
+description = "Wait for timer to finish"
+match = """
+    wait for timer (to |) (finish | end |)
+"""
