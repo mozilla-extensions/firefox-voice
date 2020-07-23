@@ -64,78 +64,10 @@ jobs:
           command: |
             export PATH=~/firefox:$PATH
             FIREFOX_CHANNEL=NIGHTLY MOZ_HEADLESS=1 npm run functional-test
-  deploy_dev:
-    docker:
-      - image: circleci/node:13.8.0-stretch
-    steps:
-      - setup_remote_docker
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build XPI
-          command: |
-            # Build desktop version:
-            export VERSION="$(node bin/calculate-version.js)"
-            export UPDATE_BASE="https://va.allizom.org/releases/dev"
-            export INSTALL_CHANNEL=dev
-            export IN_DEVELOPMENT=1
-            mkdir -p artifacts/dev/
-            npm run package
-            mv addon.xpi artifacts/dev/firefox-voice.xpi
-            node bin/generate-update-json.js > artifacts/dev/updates.json
-            # Build Android version:
-            export UPDATE_BASE="https://va.allizom.org/releases/dev-android"
-            export INSTALL_CHANNEL=dev-android
-            export ANDROID=1
-            mkdir -p artifacts/dev-android/
-            npm run package
-            mv addon.xpi artifacts/dev-android/firefox-voice.xpi
-            node bin/generate-update-json.js > artifacts/dev-android/updates.json
-      - store_artifacts:
-          path: artifacts/
-  deploy_stage:
-    docker:
-      - image: circleci/node:13.8.0-stretch
-    steps:
-      - setup_remote_docker
-      - attach_workspace:
-          at: .
-      - run:
-          name: Deploy to Stage
-          command: |
-            export VERSION="$(node bin/calculate-version.js)"
-            export UPDATE_BASE="https://va.allizom.org/releases/stage"
-            export INSTALL_CHANNEL=stage
-            mkdir -p artifacts/stage/
-            npm run package
-            mv addon.xpi artifacts/stage/firefox-voice.xpi
-            node bin/generate-update-json.js > artifacts/stage/updates.json
-      - store_artifacts:
-          path: artifacts/
-  deploy_prod:
-    docker:
-      - image: circleci/node:13.8.0-stretch
-    steps:
-      - setup_remote_docker
-      - attach_workspace:
-          at: .
-      - run:
-          name: Deploy to Prod
-          command: |
-            export VERSION="$(node -e 'process.stdout.write(require("./package.json").version, {encoding: "UTF8"})')"
-            export UPDATE_BASE="https://va.allizom.org/releases/prod"
-            export INSTALL_CHANNEL=prod
-            export LOG_LEVEL=info
-            mkdir -p artifacts/prod/
-            npm run package
-            mv addon.xpi artifacts/prod/firefox-voice.xpi
-            node bin/generate-update-json.js > artifacts/prod/updates.json
-      - store_artifacts:
-          path: artifacts/
 
 workflows:
   version: 2
-  build_test_deploy:
+  build_test:
     jobs:
       - build:
           filters:
@@ -144,21 +76,3 @@ workflows:
       - test:
           requires:
             - build
-      - deploy_dev:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
-      - deploy_stage:
-          requires:
-            - test
-          filters:
-            branches:
-              only: stage
-      - deploy_prod:
-          requires:
-            - test
-          filters:
-            branches:
-              only: prod
