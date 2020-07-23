@@ -4,7 +4,9 @@ const SEARCH_PLAY = "#searchPage div button[style='--size:48px;']";
 
 class Player extends Runner {
   action_play() {
-    const button = this.querySelector("button[title='Play']");
+    const button = this.querySelector(
+      ".control-button[data-testid='control-button-play']"
+    );
     button.click();
   }
 
@@ -15,12 +17,9 @@ class Player extends Runner {
       throw new Error("You must enable DRM.");
     }
 
-    const searchButton = await this.waitForSelector(
-      "a[aria-label='Search'], a[href$='search']",
-      {
-        timeout: 5000,
-      }
-    );
+    const searchButton = await this.waitForSelector("a[href$='search']", {
+      timeout: 5000,
+    });
     searchButton.click();
 
     const input = await this.waitForSelector(
@@ -53,32 +52,42 @@ class Player extends Runner {
   }
 
   action_pause() {
-    const button = this.querySelector("button[title='Pause']");
+    const button = this.querySelector(
+      ".control-button[data-testid='control-button-pause']"
+    );
     button.click();
   }
 
   action_unpause() {
-    const button = this.querySelector(".control-button[title='Play']");
+    const button = this.querySelector(
+      ".control-button[data-testid='control-button-play']"
+    );
     button.click();
   }
 
   action_mute() {
-    const button = this.querySelector(".control-button[aria-label='Mute']");
+    const button = this.querySelector(
+      ".control-button[class|='spoticon-volume']:not([class*='off'])"
+    );
     button.click();
   }
 
   action_unmute() {
-    const button = this.querySelector(".control-button[aria-label='Unmute']");
+    const button = this.querySelector(
+      ".control-button[class|='spoticon-volume-off']"
+    );
     button.click();
   }
 
   async action_move({ direction }) {
     if (direction === "next") {
-      const selector = ".control-button[title='Next']";
+      const selector =
+        ".control-button[data-testid='control-button-skip-forward']";
       const button = this.querySelector(selector);
       button.click();
     } else if (direction === "previous") {
-      const selector = ".control-button[title='Previous']";
+      const selector =
+        ".control-button[data-testid='control-button-skip-back']";
       // Player time
       const time = this.querySelector(".playback-bar__progress-time").innerHTML;
       if (
