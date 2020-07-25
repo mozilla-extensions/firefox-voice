@@ -11,6 +11,19 @@ async function copy(context, copyType, complete = false) {
   browser.tabs.sendMessage(activeTab.id, { type: "copy", copyType });
 }
 
+async function add(context, copyType, prevousText, complete = false) {
+  const activeTab = await browserUtil.activeTab();
+  await content.inject(activeTab.id, "/intents/clipboard/clipboard.content.js");
+  if (complete) {
+    await browserUtil.waitForDocumentComplete(activeTab.id);
+  }
+  browser.tabs.sendMessage(activeTab.id, {
+    type: "add",
+    copyType,
+    prevousText,
+  });
+}
+
 intentRunner.registerIntent({
   name: "clipboard.copyLink",
   async run(context) {
@@ -80,6 +93,46 @@ intentRunner.registerIntent({
   async run(context) {
     navigator.clipboard.writeText(context.slots.value);
     context.presentMessage("Value copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addLink",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copyLink", text);
+    } else {
+      await copy(context, "copyLink");
+    }
+    context.presentMessage("Link added to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addTitle",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copyTitle", text);
+    } else {
+      await copy(context, "copyTitle");
+    }
+    context.presentMessage("Title added to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addSelection",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copySelection", text);
+    } else {
+      await copy(context, "copySelection");
+    }
+
+    context.presentMessage("Selected text added to clipboard");
   },
 });
 
