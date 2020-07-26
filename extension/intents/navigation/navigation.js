@@ -10,6 +10,7 @@ import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
+
 function saveTabQueryToDatabase(query, tab, url) {
   queryDatabase.set(query.toLowerCase(), {
     url,
@@ -28,6 +29,7 @@ function saveTabQueryToDatabase(query, tab, url) {
   }, 1000);
   saveQueryDatabase();
 }
+
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
@@ -61,6 +63,7 @@ intentRunner.registerIntent({
     context.done();
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.clearQueryDatabase",
   async run(context) {
@@ -69,26 +72,32 @@ intentRunner.registerIntent({
     context.presentMessage('"Open" database/cache cleared');
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.bangSearch",
   async run(context) {
     let service = context.slots.service || context.parameters.service;
     let tab = undefined;
     let myurl = undefined;
+
     if (service === undefined) {
       service = await serviceList.detectServiceFromActiveTab(metadata.search);
       tab = await browserUtil.activeTab();
     }
+
     if (service !== null) {
       myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+
       context.addTelemetryServiceName(
         `ddg:${searching.ddgBangServiceName(service)}`
       );
+
       if (tab !== undefined && service !== null) {
         browser.tabs.update(tab.id, { url: myurl });
       } else {
         await browserUtil.createAndLoadTab({ url: myurl });
       }
+
       sendMessage({
         type: "closePopup",
         sender: "find",
@@ -101,6 +110,7 @@ intentRunner.registerIntent({
     }
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.translate",
   async run(context) {
@@ -112,6 +122,7 @@ intentRunner.registerIntent({
     browser.tabs.update(tab.id, { url: translation });
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.translateSelection",
   async run(context) {
@@ -129,6 +140,7 @@ intentRunner.registerIntent({
     await browser.tabs.create({ url });
   },
 });
+
 async function saveQueryDatabase() {
   const expireTime = Date.now() - QUERY_DATABASE_EXPIRATION;
   const entries = [];
@@ -139,6 +151,7 @@ async function saveQueryDatabase() {
   }
   await browser.storage.local.set({ queryDatabase: entries });
 }
+
 intentRunner.registerIntent({
   name: "navigation.goBack",
   async run(context) {
@@ -148,6 +161,7 @@ intentRunner.registerIntent({
     });
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.goForward",
   async run(context) {
@@ -157,6 +171,7 @@ intentRunner.registerIntent({
     });
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.followLink",
   async run(context) {
@@ -176,6 +191,7 @@ intentRunner.registerIntent({
     }
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.signInAndOut",
   async run(context) {
@@ -193,6 +209,7 @@ intentRunner.registerIntent({
     }
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.closeDialog",
   async run(context) {
@@ -210,6 +227,7 @@ intentRunner.registerIntent({
     }
   },
 });
+
 intentRunner.registerIntent({
   name: "navigation.internetArchive",
   async run(context) {
@@ -219,6 +237,7 @@ intentRunner.registerIntent({
     });
   },
 });
+
 async function loadQueryDatabase() {
   const result = await browser.storage.local.get(["queryDatabase"]);
   if (result && result.queryDatabase) {
@@ -227,4 +246,5 @@ async function loadQueryDatabase() {
     }
   }
 }
+
 loadQueryDatabase();
