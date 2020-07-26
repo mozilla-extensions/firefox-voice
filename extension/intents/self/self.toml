@@ -113,3 +113,12 @@ match = """
 
 [[self.simpleTest.example]]
 phrase = "test"
+
+[self.helpIntent]
+description = "This will try to find help for for the intent on lexicon page"
+match = """
+  (show | open |) (help | command{s}) (for | on | about |) [query] (to | for |) (me |)
+"""
+
+[[self.helpIntent.example]]
+phrase = "help on search"

@@ -1,5 +1,5 @@
 import * as intentRunner from "../../background/intentRunner.js";
-import { sendMessage } from "../../background/communicate.js";
+import { sendMessage } from "../../communicate.js";
 
 intentRunner.registerIntent({
   name: "fallbacks.notImplemented",

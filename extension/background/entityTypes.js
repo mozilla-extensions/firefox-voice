@@ -21,6 +21,15 @@ for (const id in metadata.music) {
   }
 }
 
+export const namedPages = [];
+
+for (const id in metadata.name) {
+  const item = metadata.name[id];
+  for (const name of item.names) {
+    namedPages.push(name);
+  }
+}
+
 export const entityTypes = convertEntities({
   serviceName: allServiceNames,
   musicServiceName: musicServiceNames,

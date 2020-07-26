@@ -51,6 +51,7 @@
     "stylelint-config-prettier": "^5.3.0",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-prettier": "^1.1.2",
+    "tmp": "^0.2.1",
     "toml": "^3.0.0",
     "web-ext": "^4.2.0"
   },
@@ -63,6 +64,7 @@
     "lottie-web": "^5.6.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "rollup": "^2.21.0",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "semver": "^7.3.2",
     "webrtcvad_js": "^1.0.0"
@@ -75,7 +77,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others --success first --names watch,browser 'npm run watch' 'npm run start-and-build'",
-    "start-and-build": "env NO_SENTRY=1 IN_DEVELOPMENT=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata build:jsx build:manifest start-extension",
+    "start-and-build": "env NO_SENTRY=1 IN_DEVELOPMENT=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata build:jsx build:manifest build:rollup start-extension",
     "start-extension": "mkdir -p ${PROFILE:-Profile} && web-ext run --firefox-profile ${PROFILE:-Profile}/ --keep-profile-changes --firefox \"${FIREFOX:-nightly}\" --source-dir extension/ --browser-console --pref=extensions.experiments.enabled=true",
     "start-android": "concurrently --kill-others --success first --names watch,android 'npm run watch' 'npm run start-and-build-android'",
     "start-and-build-android": "env NO_SENTRY=1 IN_DEVELOPMENT=1 ANDROID=1 npm-run-all maybeinstall build:templates build:manifest build:intent-metadata start-android-extension",
@@ -89,9 +91,10 @@
     "build:intent-metadata": "node bin/parse-intent-toml.js",
     "build:jsx": "babel --relative --out-dir ../build --only '**/*.jsx' extension/ && node bin/move-changed-build-files.js",
     "build:browserify": "browserify --require freeze-dry --standalone freezeDry > extension/js/vendor/freezeDry.js",
+    "build:rollup": "./bin/rollup-content-scripts.js",
     "test:selenium": "web-ext build -s extension --overwrite-dest && jest",
-    "watch-rebuild": "npm-run-all build:jsx build:intent-metadata build:manifest",
-    "watch": "nodemon --on-change-only -e toml,jsx,ejs --exec 'npm run watch-rebuild'",
+    "watch-rebuild": "npm-run-all build:jsx build:intent-metadata build:manifest build:rollup",
+    "watch": "nodemon --on-change-only -e toml,jsx,ejs,content.js --exec 'npm run watch-rebuild'",
     "maybeinstall": "if [[ package.json -nt node_modules/last_install.txt ]] ; then npm install && touch node_modules/last_install.txt ; fi",
     "format": "prettier 'extension/**/*.{js,jsx,css}' --write",
     "lint": "npm-run-all lint:*",

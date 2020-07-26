@@ -146,6 +146,39 @@ match = """
   (open | go to) link [query]
 """
 
+[[navigation.followLink.example]]
+phrase = "follow link latest news"
+
+
+[navigation.signInAndOut]
+description = "Follow the named sign in or out link and click"
+match = """
+  (sign in | login | log in)
+  (sign out | logout | log out)
+"""
+
+[[navigation.signInAndOut.example]]
+phrase = "sign in"
+
+[[navigation.signInAndOut.example]]
+phrase = "login"
+test = true
+
+[[navigation.signInAndOut.example]]
+phrase = "log in"
+test = true
+
+[[navigation.signInAndOut.example]]
+phrase = "sign out"
+
+[[navigation.signInAndOut.example]]
+phrase = "logout"
+test = true
+
+[[navigation.signInAndOut.example]]
+phrase = "log out"
+test = true
+
 [navigation.closeDialog]
 description = "Closes a lightbox-style dialog box"
 match = """
@@ -154,9 +187,6 @@ match = """
 
 [[navigation.closeDialog.example]]
 phrase = "Close dialog"
-
-[[navigation.followLink.example]]
-phrase = "follow link latest news"
 
 [navigation.internetArchive]
 description = "Search current url on archive.org"

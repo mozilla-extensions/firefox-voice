@@ -1,4 +1,4 @@
-/* globals communicate */
+import { registerHandler } from "../../communicate.js";
 
 function startNarration() {
   const dropdown = document.querySelector(".narrate-dropdown");
@@ -26,12 +26,37 @@ function isPlaying() {
   return !element.disabled;
 }
 
-communicate.register("narrate", startNarration);
-communicate.register("stopReading", () => {
+registerHandler("narrate", startNarration);
+
+registerHandler("stopReading", () => {
   if (!isPlaying()) {
     return false;
   }
   const element = document.querySelector(".narrate-start-stop");
+  if (!element) {
+    return false;
+  }
+  element.dispatchEvent(new MouseEvent("click"));
+  return true;
+});
+
+registerHandler("forward", () => {
+  if (!isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-skip-next");
+  if (!element) {
+    return false;
+  }
+  element.dispatchEvent(new MouseEvent("click"));
+  return true;
+});
+
+registerHandler("backward", () => {
+  if (!isPlaying()) {
+    return false;
+  }
+  const element = document.querySelector(".narrate-skip-previous");
   if (!element) {
     return false;
   }

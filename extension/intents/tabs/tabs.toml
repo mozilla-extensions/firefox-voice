@@ -417,7 +417,7 @@ phrase = "Find query on this page"
 test = true
 
 [[tabs.findOnPage.example]]
-phrase = "Find spaghetti on  page"
+phrase = "Find spaghetti on page"
 
 [tabs.findOnPageNext]
 description = "Find next match"

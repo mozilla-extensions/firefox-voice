@@ -1,6 +1,6 @@
 /* globals log, music_getServiceNamesAndTitles, isBackgroundPage */
 
-import { sendMessage } from "./background/communicate.js";
+import { sendMessage } from "./communicate.js";
 
 const watchers = {};
 

@@ -1,12 +1,12 @@
 /* globals log, catcher */
 
 import * as browserUtil from "../browserUtil.js";
+import { registerHandler, sendMessage } from "../communicate.js";
 import { Database } from "../history.js";
 import { metadata } from "../intents/metadata.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { PhraseSet } from "../language/findMatch.js";
 import * as settings from "../settings.js";
-import { registerHandler, sendMessage } from "./communicate.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
@@ -525,11 +525,17 @@ registerHandler("getRegisteredNicknames", getRegisteredNicknames);
 
 let pageNames = {};
 
+export async function getRegisteredPageName() {
+  const result = await browser.storage.sync.get("pageNames");
+  pageNames = result.pageNames;
+
+  return pageNames;
+}
+
 export async function registerPageName(name, { url }) {
   name = name.toLowerCase();
   const creationDate = Date.now();
-  const result = await browser.storage.sync.get("pageNames");
-  pageNames = result.pageNames || {};
+  pageNames = getRegisteredPageName() || {};
 
   pageNames[name] = url;
 
@@ -537,20 +543,15 @@ export async function registerPageName(name, { url }) {
   await browser.storage.sync.set({ pageNames });
 }
 
-export async function getRegisteredPageName(name) {
-  const result = await browser.storage.sync.get("pageNames");
-  pageNames = result.pageNames;
-
-  return pageNames;
+export async function openRegisteredPageName(name, tab) {
+  await getRegisteredPageName(name);
+  if (pageNames && pageNames[name]) {
+    const savedUrl = pageNames[name];
+    tab = await browserUtil.openOrFocusTab(savedUrl);
+  }
 }
 
 export async function unregisterPageName(name) {
-  pageNames = getRegisteredPageName(name);
-  if (!pageNames[name] || !name) {
-    const exc = new Error("No page name to remove");
-    exc.displayMessage = `The page name "${name}" not found`;
-    throw exc;
-  }
   delete pageNames[name];
 
   log.info("Removed nickname for page", name);

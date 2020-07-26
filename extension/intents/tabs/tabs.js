@@ -1,8 +1,8 @@
 /* globals buildSettings,Fuse,log */
+import { sendMessage } from "../../communicate.js";
 import * as intentRunner from "../../background/intentRunner.js";
-import English from "../../language/langs/english.js";
 import * as browserUtil from "../../browserUtil.js";
-import { sendMessage } from "../../background/communicate.js";
+import English from "../../language/langs/english.js";
 
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 0.3;
@@ -650,6 +650,7 @@ intentRunner.registerIntent({
         largeText: `${numOfOpenTabs}`,
         text: tabsOpen,
         eduText: `Click mic and say "gather all Google tabs"`,
+        eduMicOn: `Say "gather all Google tabs"`,
       },
     };
     await sendMessage({
@@ -703,7 +704,7 @@ function getMessage(numberOfResults, query) {
     };
   }
   return {
-    text: `'${query}' not found`,
+    text: `Sorry can't find '${query}' on this page`,
     eduText: `Try looking for another phrase`,
     imgSrc: "./images/icon-no-result.svg",
   };

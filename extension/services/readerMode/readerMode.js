@@ -6,7 +6,7 @@ import * as browserUtil from "../../browserUtil.js";
 
 class ReaderMode extends serviceList.Service {
   async pause() {
-    await this.initTab("/services/spotify/player.js");
+    await this.initTab("/services/spotify/player.content.js");
     await this.callTab("pause");
   }
 
@@ -17,7 +17,10 @@ class ReaderMode extends serviceList.Service {
       e.displayMessage = "Cannot unpause";
       throw e;
     }
-    await content.inject(activeTab.id, ["/intents/read/startNarration.js"]);
+    await content.inject(
+      activeTab.id,
+      "/intents/read/startNarration.content.js"
+    );
     await this.callOneTab(activeTab.id, "narrate");
   }
 
