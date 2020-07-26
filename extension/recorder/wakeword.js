@@ -19,7 +19,6 @@ function startWatchword(keywords, sensitivity) {
         let command = inferenceEngine.infer(mfccData, model, commands);
 
         if (inferenceEngine.sequencePresent()) {
-          console.log("wtf");
           if ((Date.now() - lastInvoked) > LISTENING_TIMEOUT) {
             await callWakeword();
           }
