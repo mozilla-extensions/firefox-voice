@@ -1,4 +1,33 @@
+## Version 0.23.0 (2020-07-27)
+
+- Moved repository from https://github.com/mozilla/firefox-voice to https://github.com/mozilla-extensions/firefox-voice
+- Fixed: "show notes" give invalid tab error if notes tab is closed (from [AbhiVaidya95](https://github.com/AbhiVaidya95))
+  [#1643](https://github.com/mozilla/firefox-voice/issues/1643) ([#1816](https://github.com/mozilla/firefox-voice/issues/1816))
+- Help [#1833](https://github.com/mozilla/firefox-voice/issues/1833), fix read test
+  To actually fix the bug this should override the music.move implementation for the service, but this fixes the test at least [d8f5b02](https://github.com/mozilla/firefox-voice/commit/d8f5b02)
+- Make Spotify work when localized with a language besides English (from [breadsanta](https://github.com/breadsanta)). [#1602](https://github.com/mozilla/firefox-voice/issues/1602) [b65c3e3](https://github.com/mozilla/firefox-voice/commit/b65c3e3)
+- Refactor content scripts ([#1815](https://github.com/mozilla/firefox-voice/issues/1815)) Fixes [#1085](https://github.com/mozilla/firefox-voice/issues/1085) [c87b022](https://github.com/mozilla/firefox-voice/commit/c87b022)
+- Partly pause and continue routines ([#1798](https://github.com/mozilla/firefox-voice/issues/1798))
+  - pause and continue routines
+  - added for loops. Fixes [#1757](https://github.com/mozilla/firefox-voice/issues/1757) Fixes [#1757](https://github.com/mozilla/firefox-voice/issues/1757) Fixes [#1757](https://github.com/mozilla/firefox-voice/issues/1757) [7ce4c83](https://github.com/mozilla/firefox-voice/commit/7ce4c83)
+- 'Sign in' and 'sign out' intent. Fixes [#1560](https://github.com/mozilla/firefox-voice/issues/1560) Fixes [#1560](https://github.com/mozilla/firefox-voice/issues/1560) [8bbbe33](https://github.com/mozilla/firefox-voice/commit/8bbbe33)
+- Adding a min-height to remove white line (from [Gwe-n](https://github.com/Gwe-n))
+  Fixes 1607 [42cf930](https://github.com/mozilla/firefox-voice/commit/42cf930)
+- Add "help about X" intent (from [AbhiVaidya95](https://github.com/AbhiVaidya95)). Fixes [#1771](https://github.com/mozilla/firefox-voice/issues/1771) [bf4520d](https://github.com/mozilla/firefox-voice/commit/bf4520d)
+- Support forward and rewind request in reader mode [#1704](https://github.com/mozilla/firefox-voice/issues/1704) (from [AbhiVaidya95](https://github.com/AbhiVaidya95))
+  ([#1812](https://github.com/mozilla/firefox-voice/issues/1812))
+- Use free text search in tabs.js:getmatchingtabs() (from [AbhiVaidya95](https://github.com/AbhiVaidya95))
+  ([#1807](https://github.com/mozilla/firefox-voice/issues/1807))
+- Routine timing improvements ([#1791](https://github.com/mozilla/firefox-voice/issues/1791))
+  - Wait for page to fully load when in routines
+  - added content script to check loaded page using selectors. Fixes [#1758](https://github.com/mozilla/firefox-voice/issues/1758) [0c9a47a](https://github.com/mozilla/firefox-voice/commit/0c9a47a)
+- Organize main.js message handling. Fixes [#1804](https://github.com/mozilla/firefox-voice/issues/1804) [09c24eb](https://github.com/mozilla/firefox-voice/commit/09c24eb)
+- make "play trailer of [video]" work. (from [AbhiVaidya95](https://github.com/AbhiVaidya95)) Fixes [#1777](https://github.com/mozilla/firefox-voice/issues/1777) Fixes [#1777](https://github.com/mozilla/firefox-voice/issues/1777) [78ada31](https://github.com/mozilla/firefox-voice/commit/78ada31)
+- Add preference to disable saving history. Fixes [#1545](https://github.com/mozilla/firefox-voice/issues/1545) [3de4e26](https://github.com/mozilla/firefox-voice/commit/3de4e26)
+
 ## Version 0.22.0 (2020-07-07)
+
+Note: this version was not released publicly
 
 - Enable speech output for search card results
   ([#1786](https://github.com/mozilla/firefox-voice/issues/1786))
