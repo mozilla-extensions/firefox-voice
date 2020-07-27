@@ -268,7 +268,7 @@ const ExampleActions = () => {
         </div>
 
         <div class="see-all-actions">
-          <a href="https://mozilla.github.io/firefox-voice/lexicon.html">
+          <a href="https://mozilla-extensions.github.io/firefox-voice/lexicon.html">
             Everything you can say
           </a>
         </div>
@@ -485,7 +485,7 @@ const Faq = () => {
               <br />
               While this permission would make it <em>possible</em> to extract
               user information from a website, it does not do so. Our{" "}
-              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+              <a href="https://mozilla-extensions.github.io/firefox-voice/privacy-policy.html">
                 Privacy Policy
               </a>{" "}
               specifies what information we collect (set during installation or
@@ -725,7 +725,7 @@ const Footer = () => {
               </a>
             </div>
             <div class="mzp-c-footer-item">
-              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+              <a href="https://mozilla-extensions.github.io/firefox-voice/privacy-policy.html">
                 Privacy
               </a>
             </div>
