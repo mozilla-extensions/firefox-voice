@@ -778,7 +778,7 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      renderFollowup={listenForFollowup || requestFollowup}
+      renderFollowup={requestFollowup}
       followupText={followupText}
       showZeroVolumeError={showZeroVolumeError}
     />
