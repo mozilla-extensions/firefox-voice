@@ -543,14 +543,6 @@ export async function registerPageName(name, { url }) {
   await browser.storage.sync.set({ pageNames });
 }
 
-export async function openRegisteredPageName(name, tab) {
-  await getRegisteredPageName(name);
-  if (pageNames && pageNames[name]) {
-    const savedUrl = pageNames[name];
-    tab = await browserUtil.openOrFocusTab(savedUrl);
-  }
-}
-
 export async function unregisterPageName(name) {
   delete pageNames[name];
 

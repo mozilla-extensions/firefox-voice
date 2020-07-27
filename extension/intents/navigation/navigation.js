@@ -4,10 +4,11 @@ import * as languages from "../../background/languages.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
-import { sendMessage } from "../../communicate.js";
 import * as searching from "../../searching.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
+import { sendMessage } from "../../communicate.js";
+
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
 
@@ -34,9 +35,11 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query.toLowerCase();
+    const pageNames = await intentRunner.getRegisteredPageName();
     let tab = null;
-    if (query) {
-      await intentRunner.openRegisteredPageName(query, tab);
+    if (pageNames && pageNames[query]) {
+      const savedUrl = pageNames[query];
+      tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
       const cached = queryDatabase.get(query);
@@ -58,7 +61,6 @@ intentRunner.registerIntent({
         saveTabQueryToDatabase(query, tab, url);
       }
     }
-    // tab is undefined I am not sure I understand what the expectation here is
     await browserUtil.waitForPageToLoadUsingSelector(tab.id);
     context.done();
   },
