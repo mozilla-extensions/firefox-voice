@@ -1,4 +1,4 @@
-/* globals log */
+/* globals log, MicAudioProcessor, audioConfig, commands, SpeechResModel, inferenceEngineConfig, InferenceEngine, OfflineAudioProcessor, predictionFrequency */
 
 import * as settings from "../settings.js";
 
@@ -6,45 +6,44 @@ const LISTENING_TIMEOUT = 2000;
 let enabled = false;
 let lastInvoked = 0;
 
-let micAudioProcessor = new MicAudioProcessor(audioConfig);
-let model = new SpeechResModel("RES8", commands);
-let inferenceEngine = new InferenceEngine(inferenceEngineConfig, commands);
+const micAudioProcessor = new MicAudioProcessor(audioConfig);
+const model = new SpeechResModel("RES8", commands);
+const inferenceEngine = new InferenceEngine(inferenceEngineConfig, commands);
 
-function startWatchword(keywords, sensitivity) {
-  micAudioProcessor.getMicPermission().done(function() {
-    setInterval(function() {
-      let offlineProcessor = new OfflineAudioProcessor(audioConfig, micAudioProcessor.getData());
-      offlineProcessor.getMFCC().done(async function(mfccData) {
+function startWatchword() {
+  micAudioProcessor
+    .getMicPermission()
+    .done(function() {
+      setInterval(function() {
+        const offlineProcessor = new OfflineAudioProcessor(
+          audioConfig,
+          micAudioProcessor.getData()
+        );
+        offlineProcessor.getMFCC().done(async function(mfccData) {
+          inferenceEngine.infer(mfccData, model, commands);
 
-        let command = inferenceEngine.infer(mfccData, model, commands);
-
-        if (inferenceEngine.sequencePresent()) {
-          console.log("wtf");
-          if ((Date.now() - lastInvoked) > LISTENING_TIMEOUT) {
-            await callWakeword();
+          if (inferenceEngine.sequencePresent()) {
+            if (Date.now() - lastInvoked > LISTENING_TIMEOUT) {
+              await callWakeword();
+            }
           }
-        }
-      });
-    }, predictionFrequency);
-  }).fail(function() {
-    alert('mic permission is required, please enable the mic usage!');
-  });
+        });
+      }, predictionFrequency);
+    })
+    .fail(function() {
+      alert("mic permission is required, please enable the mic usage!");
+    });
 
-  log.info(
-    "Would listening for watchwords:",
-    keywords.join(", "),
-    "at sensitivity:",
-    sensitivity
-  );
+  log.info("Listening for watchword: Hey Firefox");
   enabled = true;
 }
 
 async function callWakeword() {
   lastInvoked = Date.now();
-  console.log("HEY FIREFOX");
+  log.info("Heard wakeword: Hey Firefox");
   await browser.runtime.sendMessage({
     type: "wakeword",
-    wakeword: "Hey Firefox"
+    wakeword: "Hey Firefox",
   });
 }
 
@@ -56,13 +55,11 @@ function stopWatchword() {
 export async function updateWakeword() {
   const userSettings = await settings.getSettings();
   if (userSettings.enableWakeword) {
-    if (enabled) {
-      stopWatchword();
+    // FIXME: if we use other settings besides enableWakeword (e.g., userSettings.wakewords,
+    // userSettings.wakewordSensitivity), we should restart the listener if those settings change
+    if (!enabled) {
+      startWatchword();
     }
-    startWatchword(
-      userSettings.wakewords,
-      userSettings.wakewordSensitivity || 0.5
-    );
   } else if (enabled) {
     stopWatchword();
   }
