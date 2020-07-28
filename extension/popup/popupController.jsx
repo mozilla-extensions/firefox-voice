@@ -244,7 +244,6 @@ export const PopupController = function() {
             setFollowupText(message.message);
           }
           setRequestFollowup(true);
-          runFollowup();
         } else {
           setRequestFollowup(false);
           setFollowupText(null);
