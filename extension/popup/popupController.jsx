@@ -313,6 +313,10 @@ export const PopupController = function() {
     utterance.onend = () => {
       closePopup(2000);
     };
+    sendMessage({
+      type: "addTelemetry",
+      properties: { outputSpoken: true },
+    });
   };
 
   const clearTimer = async ({ totalInMS, followup }) => {
