@@ -146,7 +146,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
+      {userOptions.wakewords && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}
@@ -518,30 +518,35 @@ const WakewordSettings = ({
   }
 
   const wakewords = [];
-  for (const wakeword of userOptions.wakewords) {
-    let className = "styled-checkbox";
-    if (!userSettings.enableWakeword) {
-      className += " disabled";
+
+  if (userOptions.wakewords.length > 1) {
+    for (const wakeword of userOptions.wakewords) {
+      let className = "styled-checkbox";
+      if (!userSettings.enableWakeword) {
+        className += " disabled";
+      }
+      wakewords.push(
+        <li key={`wakeword-${wakeword}`}>
+          <div className={className}>
+            <input
+              id={`wakeword-${wakeword}`}
+              type="checkbox"
+              value={wakeword}
+              checked={userSettings.wakewords.includes(wakeword)}
+              onChange={onWakewordChange}
+              disabled={!userSettings.enableWakeword}
+            />
+            <label htmlFor={`wakeword-${wakeword}`}>
+              <strong>{wakeword}</strong>
+            </label>
+          </div>
+        </li>
+      );
     }
-    wakewords.push(
-      <li key={`wakeword-${wakeword}`}>
-        <div className={className}>
-          <input
-            id={`wakeword-${wakeword}`}
-            type="checkbox"
-            value={wakeword}
-            checked={userSettings.wakewords.includes(wakeword)}
-            onChange={onWakewordChange}
-            disabled={!userSettings.enableWakeword}
-          />
-          <label htmlFor={`wakeword-${wakeword}`}>
-            <strong>{wakeword}</strong>
-          </label>
-        </div>
-      </li>
-    );
   }
 
+  // FIXME: right now wakewords don't support sensitivity or multiple wakewords, so
+  // those settings aren't applicable and are crudely hidden below:
   return (
     <fieldset id="wakeword">
       <legend>Wakeword</legend>
@@ -560,29 +565,31 @@ const WakewordSettings = ({
           </div>
           <p>
             If you turn this option on you will be able to enable Firefox Voice
-            by saying any one of the (checked) words below.
+            by saying <strong>Hey Firefox</strong>.
           </p>
         </li>
-        <li>
-          <div>
-            <input
-              id="wakeword-sensitivity"
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={userSettings.wakewordSensitivity}
-              onChange={onWakewordSensitivityChange}
-            />
-            <label htmlFor="wakeword-sensitivity">
-              {userSettings.wakewordSensitivity}
-            </label>
-          </div>
-          <p>
-            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
-            listen)
-          </p>
-        </li>
+        {false ? (
+          <li>
+            <div>
+              <input
+                id="wakeword-sensitivity"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={userSettings.wakewordSensitivity}
+                onChange={onWakewordSensitivityChange}
+              />
+              <label htmlFor="wakeword-sensitivity">
+                {userSettings.wakewordSensitivity}
+              </label>
+            </div>
+            <p>
+              Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
+              listen)
+            </p>
+          </li>
+        ) : null}
         {wakewords}
       </ul>
     </fieldset>
