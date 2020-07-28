@@ -22,6 +22,10 @@ function startWatchword() {
         offlineProcessor.getMFCC().done(async function(mfccData) {
           inferenceEngine.infer(mfccData, model, commands);
 
+          // eslint-disable-next-line no-unused-vars
+          const command = inferenceEngine.infer(mfccData, model, commands);
+          // FIXME: use command to do different things (right now it only wakes)
+
           if (inferenceEngine.sequencePresent()) {
             if (Date.now() - lastInvoked > LISTENING_TIMEOUT) {
               await callWakeword();
