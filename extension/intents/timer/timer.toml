@@ -3,10 +3,10 @@ description = "Set timer"
 match = """
     (set | open | show | start | create | make |) (a |) (timer | countdown) (for |) [time]
     (set | start | create | make |) (for |) (alarm ) [time] (from now |)
-    [time] minute{s} (timer |) (from now |) [sufixQuery=minutes]
-    [time] hour{s} (timer |) (from now |)   [sufixQuery=hour]
-    [time] second{s} (timer |) (from now |) [sufixQuery=seconds]
-    
+    [time] minute{s} (timer |) (from now |) [suffixTime=minutes]
+    [time] hour{s} (timer |) (from now |)   [suffixTime=hour]
+    [time] second{s} (timer |) (from now |) [suffixTime=seconds]
+
 """
 
 [[timer.set.example]]
