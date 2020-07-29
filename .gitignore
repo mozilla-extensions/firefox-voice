@@ -39,3 +39,4 @@ Thumbs.db
 *.bundle.js
 # This is where we check out the honkling library:
 /honkling
+package-lock.json
