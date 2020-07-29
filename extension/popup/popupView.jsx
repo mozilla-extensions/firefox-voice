@@ -1,8 +1,9 @@
-/* globals lottie, buildSettings, React, log */
+/* globals lottie, buildSettings, React */
 /* eslint-disable no-unused-vars */
 // For some reason, eslint is not detecting that <Variable /> means that Variable is used
 
 import * as browserUtil from "../browserUtil.js";
+import { getSettingsAndOptions } from "../settings.js";
 
 const { useState, useEffect, PureComponent } = React;
 
@@ -32,18 +33,20 @@ export const Popup = ({
   renderFollowup,
   followupText,
   showZeroVolumeError,
-  userOptions,
   userSettings,
   updateUserSettings,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   const [showScroll, setShowScroll] = useState(false);
+  const [userOptions, setUserOptions] = useState({});
 
   // This would lead to an infinite loop if showing the scroll effected the height, which
   // caused this to toggle showScroll back and forth infinitely. But it won't change the
   // height so it's okay.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    fetchData();
+
     const doc = document.body;
     if (doc.offsetHeight > window.innerHeight) {
       if (!showScroll) {
@@ -58,6 +61,11 @@ export const Popup = ({
       }
     }
   });
+
+  const fetchData = async () => {
+    const result = await getSettingsAndOptions();
+    setUserOptions(result.options);
+  };
 
   const scrollDown = () => {
     let footerHeight = 0;
@@ -879,10 +887,8 @@ const SearchResultsContent = ({
   };
 
   const onMusicServiceChange = event => {
-    if (event) {
-      userSettings.musicService = event.target.value;
-      updateUserSettings(userSettings);
-    }
+    userSettings.musicService = event;
+    updateUserSettings(userSettings);
   };
 
   const SearchCard = () => (
@@ -915,21 +921,23 @@ const SearchResultsContent = ({
   const MusicCard = () => (
     <div value={userSettings.musicService} className="results-set">
       {userOptions.musicServices &&
-        card.music.map(({ imgSrc, text, alt }) => (
-          <button
-            key={alt}
-            value={alt}
-            onChange={() => {
-              onMusicServiceChange(alt);
-            }}
-            className="music-list invisible-button"
-          >
-            <div>
-              <img className="music-service-image" src={imgSrc} alt={alt} />
-            </div>
-            <div className="results-medium-text">{text}</div>
-          </button>
-        ))}
+        userOptions.musicServices
+          .filter(({ name }) => name !== "auto")
+          .map(({ name, title, imgSrc }) => (
+            <button
+              key={name}
+              value={name}
+              onChange={() => {
+                onMusicServiceChange(name);
+              }}
+              className="music-list invisible-button"
+            >
+              <div>
+                <img className="music-service-image" src={imgSrc} alt={name} />
+              </div>
+              <div className="results-medium-text">{title}</div>
+            </button>
+          ))}
     </div>
   );
 

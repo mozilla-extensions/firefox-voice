@@ -24,7 +24,7 @@ export function getServiceNamesAndTitles() {
   names.sort();
   names = names.filter(name => !SERVICES[name].skipAutodetect);
   const services = names.map(name => {
-    return { name, title: SERVICES[name].title };
+    return { name, title: SERVICES[name].title, imgSrc: SERVICES[name].imgSrc };
   });
   services.unshift({ name: "auto", title: "Detect service" });
   return services;
@@ -161,23 +161,7 @@ intentRunner.registerIntent({
         eduText: `Click a music to set to default`,
       },
 
-      music: [
-        {
-          imgSrc: "../../assets/images/Spotify.svg",
-          text: "Spotify",
-          alt: "spotify",
-        },
-        {
-          imgSrc: "../../assets/images/soundcloud.svg",
-          text: "SoundCloud",
-          alt: "soundcloud",
-        },
-        {
-          imgSrc: "../../assets/images/deezer.svg",
-          text: "Deezer",
-          alt: "deezer",
-        },
-      ],
+      music: [],
     };
 
     await browser.runtime.sendMessage({

@@ -64,7 +64,6 @@ export const PopupController = function() {
   const [followupText, setFollowupText] = useState(null);
   const [showZeroVolumeError, setShowZeroVolumeError] = useState(false);
   const [userSettings, setUserSettings] = useState({});
-  const [userOptions, setUserOptions] = useState({});
 
   let executedIntent = false;
   let stream = null;
@@ -93,7 +92,7 @@ export const PopupController = function() {
   const init = async () => {
     log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
-    await initSettings();
+    // await initSettings();
 
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
@@ -171,11 +170,6 @@ export const PopupController = function() {
       url: browser.runtime.getURL("options/options.html"),
     });
     window.close();
-  };
-  const initSettings = async () => {
-    const result = await settings.getSettingsAndOptions();
-    setUserSettings(result.settings);
-    setUserOptions(result.options);
   };
   const updateUserSettings = async userSettings => {
     await settings.saveSettings(userSettings);
@@ -792,7 +786,6 @@ export const PopupController = function() {
       renderFollowup={listenForFollowup || requestFollowup}
       followupText={followupText}
       showZeroVolumeError={showZeroVolumeError}
-      userOptions={userOptions}
       userSettings={{ ...userSettings }}
       updateUserSettings={updateUserSettings}
     />

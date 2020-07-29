@@ -216,6 +216,7 @@ body,
   display: flex;
   flex-direction: row;
   margin-left: 0;
+  cursor: pointer;
 }
 
 .music-service-image {
