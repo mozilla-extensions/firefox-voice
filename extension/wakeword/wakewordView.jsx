@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-vars */
 import * as browserUtil from "../browserUtil.js";
 
-export const WakewordView = ({ userSettings }) => {
+export const WakewordView = ({ userSettings, suggestions }) => {
   if (!userSettings.enableWakeword || userSettings.wakewords.length === 0) {
     return <WakewordDisabled />;
   }
-  return <ListeningWakeword wakewords={userSettings.wakewords} />;
+  return (
+    <ListeningWakeword
+      wakewords={userSettings.wakewords}
+      suggestions={suggestions}
+    />
+  );
 };
 
 const WakewordDisabled = () => {
@@ -26,7 +31,7 @@ const WakewordDisabled = () => {
   );
 };
 
-const ListeningWakeword = ({ wakewords }) => {
+const ListeningWakeword = ({ wakewords, suggestions }) => {
   return (
     <div class="wakeword-wrapper">
       <div id="wakeword-tab-info">
@@ -67,16 +72,18 @@ const ListeningWakeword = ({ wakewords }) => {
           <div class="mic-listening-label">Microphone is listening</div>
 
           <p class="wakeword-info">
-            Until you say “Hey Firefox” or click the icon, your voice is not recorded, stored, transcribed or transmitted from your computer.
+            Until you say “Hey Firefox” or click the icon, your voice is not
+            recorded, stored, transcribed or transmitted from your computer.
           </p>
         </div>
         <div class="cta">
-          <h3 class="example-cta">
-            Try saying things like
-          </h3>
-          <div class="wakeword-example">
-            Hey Firefox, what's the weather?
-          </div>
+          <h3 class="example-cta">Try saying things like</h3>
+          {suggestions.map(suggestion => (
+            <div class="wakeword-example" key={suggestion}>
+              Hey Firefox,{" "}
+              {suggestion.charAt(0).toLowerCase() + suggestion.slice(1)}
+            </div>
+          ))}
         </div>
       </div>
     </div>
