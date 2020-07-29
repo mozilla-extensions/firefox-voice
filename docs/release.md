@@ -1,8 +1,6 @@
 # Releasing the Extension
 
-The extension should be released to **stage** when you push to the `stage` branch. Similarly it will be released to **production** when you push to the `prod` branch.
-
-The release process is handled with [CircleCI](../.circleci/config.yml), with rules that run based on these branches.
+To release...
 
 ## Production releases
 
@@ -13,11 +11,10 @@ The release process is handled with [CircleCI](../.circleci/config.yml), with ru
 - [ ] Tag the version like `git tag vX.Y.0`
 - [ ] Push the change and tags: `git push && git push --tags`
 - [ ] Run `./bin/update-static-site.sh`
-- [ ] Create a prod version of the extension with `npm run package-prod`
-- [ ] Send the extension for review/signing
+- [ ] Create a PR for master -> prod
+- [ ] Land said PR
+- [ ] Follow [some release docs](https://github.com/mozilla-extensions/xpi-manifest/blob/master/docs/releasing-a-xpi.md)
+- [ ] Specifically connect to [shipit](https://shipit.mozilla-releng.net/newxpi) via the VPN
+- [ ] "Build" [in shipit](https://shipit.mozilla-releng.net/xpi)
+- [ ] Notify some people (in `#addons-pipeline` ?)
 - [ ] Move it into place on the server and hand-update the JSON file
-
-To fix issues:
-
-- If a dev version of the add-on is built, but not a prod version, try rebuilding the CircleCI task named `build_prod`
-- If the server isn't running, run `./update_xpi.sh` _on_ the `va.allizom.org` server
