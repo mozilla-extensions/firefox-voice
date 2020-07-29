@@ -29,31 +29,56 @@ const WakewordDisabled = () => {
 const ListeningWakeword = ({ wakewords }) => {
   return (
     <div>
-      {wakewords.length === 1 ? (
-        <p>
-          Listening for <strong>{wakewords[0]}</strong>
-        </p>
-      ) : (
-        <p>
-          Listening for any of the words:{" "}
-          <strong>{wakewords.join(", ")}</strong>
-        </p>
-      )}
-      <p>
-        Note if you close this window the keyword activation will be disabled
-        until you manually open the tool.
-      </p>
-      <p>
-        If you wish to permanently disable the wakeword then{" "}
-        <a
-          href="../options/options.html"
-          target="_blank"
-          onClick={browserUtil.activateTabClickHandler}
-        >
-          update your settings
-        </a>
-        .
-      </p>
+      <div id="wakeword-tab-info">
+        <div id="tab-info">What's this tab?</div>
+        <div id="tab-info-details">
+          <div>
+            Firefox Voice uses this tab for microphone permissions. The
+            microphone is listening for you to say “Hey Firefox.” Set a new
+            wakeword or disable listening in&nbsp;
+            <a
+              href="../options/options.html"
+              target="_blank"
+              onClick={browserUtil.activateTabClickHandler}
+            >
+              Preferences
+            </a>
+            .
+          </div>
+          <div class="privacy">
+            <a
+              href="/views/privacy-policy.html"
+              target="_blank"
+              rel="noopener"
+              onClick={browserUtil.activateTabClickHandler}
+            >
+              Learn how Firefox Voice protects your privacy.
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="wakeword-content">
+        <div>
+          <img
+            alt="Active microphone icon"
+            src="./images/mic-listening.svg"
+            className="mic-listening"
+          />
+          <div class="mic-listening-label">Microphone is listening</div>
+
+          <p class="wakeword-info">
+            Until you say “Hey Firefox” or click the icon, your voice is not recorded, stored, transcribed or transmitted from your computer.
+          </p>
+        </div>
+        <div>
+          <h3 class="example-cta">
+            Try saying things like
+          </h3>
+          <div class="wakeword-example">
+            Hey Firefox, what's the weather?
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

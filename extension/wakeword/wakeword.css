@@ -1,2 +1,72 @@
 @import url("../assets/css/gui.css");
 @import url("../assets/css/inter.css");
+
+html {
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: #fafafc;
+}
+
+#wakeword-tab-info {
+  background-color: #ededf0;
+  border-radius: 5px;
+  width: 80%;
+  padding: 1em;
+  display: flex;
+}
+
+#tab-info {
+  font-weight: 700;
+  flex: 0.2;
+}
+
+#tab-info-details {
+  margin-left: 2em;
+  flex: 1;
+}
+
+#tab-info:before {
+  content: "";
+  background-image: url("./images/tab.svg");
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
+.privacy {
+  margin-top: 1em;
+}
+
+.example-cta {
+  color: rgb(15, 17, 38);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -1.83px;
+  display: inline-block;
+}
+
+.example-cta:after {
+  display: block;
+  content: "";
+  height: 5px;
+  background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
+}
+
+.wakeword-example {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 24px;
+  list-style: none;
+}
+
+.mic-listening-label {
+  color: #d70022;
+  font-size: 1.25em;
+  font-weight: 700;
+  margin-top: 0.75em;
+}
+
+.wakeword-content {
+  text-align: center;
+}
