@@ -49,7 +49,7 @@ export async function getSettingsAndOptions() {
     musicServices: music_getServiceNamesAndTitles(),
     // FIXME: this used to contain the available wakewords, but is empty until we
     // restore wakeword detection:
-    wakewords: [],
+    wakewords: ["Hey Firefox"],
   };
   return { settings, options };
 }
