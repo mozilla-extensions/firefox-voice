@@ -45,8 +45,6 @@ export const Popup = ({
   // height so it's okay.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    fetchData();
-
     const doc = document.body;
     if (doc.offsetHeight > window.innerHeight) {
       if (!showScroll) {
@@ -61,6 +59,10 @@ export const Popup = ({
       }
     }
   });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     const result = await getSettingsAndOptions();
@@ -918,32 +920,38 @@ const SearchResultsContent = ({
     </div>
   );
 
-  const MusicCard = () => (
-    <div value={userSettings.musicService} className="results-set">
-      {userOptions.musicServices &&
-        userOptions.musicServices
-          .filter(({ name }) => name !== "auto")
-          .map(({ name, title, imgSrc }) => (
-            <button
-              key={name}
-              value={name}
-              onChange={() => {
-                onMusicServiceChange(name);
-              }}
-              className="music-list invisible-button"
-            >
-              <div>
-                <img className="music-service-image" src={imgSrc} alt={name} />
-              </div>
-              <div className="results-medium-text">{title}</div>
-            </button>
-          ))}
-    </div>
-  );
+  const MusicSettingCard = () => {
+    return (
+      <div value={userSettings.musicService} className="results-set">
+        {userOptions.musicServices &&
+          userOptions.musicServices
+            .filter(({ name }) => name !== "auto")
+            .map(({ name, title, imgSrc }) => (
+              <button
+                key={name}
+                value={name}
+                onClick={() => {
+                  onMusicServiceChange(name);
+                }}
+                className="music-list invisible-button"
+              >
+                <div>
+                  <img
+                    className="music-service-image"
+                    src={imgSrc}
+                    alt={name}
+                  />
+                </div>
+                <div className="results-medium-text">{title}</div>
+              </button>
+            ))}
+      </div>
+    );
+  };
 
   const renderCard = () => {
     if (card && card.music && card.answer) {
-      return <MusicCard />;
+      return <MusicSettingCard />;
     } else if (card && card.answer) {
       return <AnswerCard />;
     } else if (card) {
