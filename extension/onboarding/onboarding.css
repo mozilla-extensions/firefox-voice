@@ -200,8 +200,7 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
-#wakeword-try-it h1:before,
-#get-started h1:before {
+.mic-icon h1:before {
   background-image: url("../popup/images/mic.svg");
   background-size: 40px auto;
 }
@@ -217,17 +216,15 @@ p {
   margin: 0.5em;
 }
 
-#try-it h1:before {
+.superhero-icon h1:before {
   background-image: url("./images/icon-superhero.svg");
 }
 
-#wakeword-try-it p,
-#try-it p {
+.try-it p {
   font-weight: 600;
 }
 
-#wakeword-try-it ul,
-#try-it ul {
+.try-it ul {
   font-style: italic;
   font-weight: 400;
   font-size: 24px;
@@ -235,8 +232,7 @@ p {
   padding: 0;
 }
 
-#wakeword-try-it li,
-#try-it ul li {
+.try-it ul li {
   margin-top: 10px;
 }
 

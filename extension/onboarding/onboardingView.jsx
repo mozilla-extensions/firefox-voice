@@ -194,7 +194,7 @@ const OptinAudioDescription = ({ wakewordActive }) => {
       </p>
       <p className="warning">
         {wakewordActive
-          ? 'The microphone is only active when triggered using "Hey Firefox", a button press or keyboard shortcut.'
+          ? "Using “Hey Firefox” the microphone is active but audio will not be collected or sent to a server until after you say “Hey Firefox” or activate using a button press or keyboard shortcut."
           : "The microphone is only active when triggered with a button press or keyboard shortcut."}
       </p>
       <p>
@@ -225,7 +225,7 @@ const OptinVoiceTranscriptsDescription = ({ wakewordActive }) => {
       </p>
       <p className="warning">
         {wakewordActive
-          ? 'The microphone is only active when triggered using "Hey Firefox", a button press or keyboard shortcut.'
+          ? "Using “Hey Firefox” the microphone is active but audio will not be collected or sent to a server until after you say “Hey Firefox” or activate using a button press or keyboard shortcut."
           : "The microphone is only active when triggered with a button press or keyboard shortcut."}
       </p>
       <p>
@@ -271,7 +271,7 @@ const OnboardingPageContent = ({ wakewordActive }) => {
 
 const WakewordGetStartedSection = () => {
   return (
-    <div id="wakeword-try-it" className="onboarding-section">
+    <div className="onboarding-section try-it mic-icon">
       <h1>Say "Hey Firefox" to get started</h1>
       <p>Ask things like</p>
       <br></br>
@@ -290,7 +290,7 @@ const GetStartedSection = () => {
   const keyboardShortcut =
     navigator.platform === "MacIntel" ? "Command ⌘" : "Ctrl";
   return (
-    <div id="get-started" className="onboarding-section">
+    <div id="get-started" className="onboarding-section mic-icon">
       <h1>Get Started</h1>
       <p>Click the mic in the toolbar above.</p>
       <p>Or, try the keyboard shortcut.</p>
@@ -303,7 +303,7 @@ const GetStartedSection = () => {
 
 const TryItSection = () => {
   return (
-    <div id="try-it" className="onboarding-section">
+    <div className="onboarding-section try-it superhero-icon">
       <h1>Try Your New Super Power</h1>
       <p>Say things like</p>
       <ul>
