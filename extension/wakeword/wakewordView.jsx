@@ -28,7 +28,7 @@ const WakewordDisabled = () => {
 
 const ListeningWakeword = ({ wakewords }) => {
   return (
-    <div>
+    <div class="wakeword-wrapper">
       <div id="wakeword-tab-info">
         <div id="tab-info">What's this tab?</div>
         <div id="tab-info-details">
@@ -58,7 +58,7 @@ const ListeningWakeword = ({ wakewords }) => {
         </div>
       </div>
       <div class="wakeword-content">
-        <div>
+        <div class="mic-info">
           <img
             alt="Active microphone icon"
             src="./images/mic-listening.svg"
@@ -70,7 +70,7 @@ const ListeningWakeword = ({ wakewords }) => {
             Until you say “Hey Firefox” or click the icon, your voice is not recorded, stored, transcribed or transmitted from your computer.
           </p>
         </div>
-        <div>
+        <div class="cta">
           <h3 class="example-cta">
             Try saying things like
           </h3>

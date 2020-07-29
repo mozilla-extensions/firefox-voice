@@ -9,17 +9,36 @@ body {
   background-color: #fafafc;
 }
 
+.wakeword-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 #wakeword-tab-info {
   background-color: #ededf0;
   border-radius: 5px;
   width: 80%;
   padding: 1em;
   display: flex;
+  margin: 3em auto;
+}
+
+.wakeword-info {
+  font-size: 21px;
+  letter-spacing: -0.87px;
+  width: 40vw;
+  margin: 1em auto;
+}
+
+.mic-listening {
+  width: 50px;
 }
 
 #tab-info {
   font-weight: 700;
   flex: 0.2;
+  display: inline;
 }
 
 #tab-info-details {
@@ -31,7 +50,11 @@ body {
   content: "";
   background-image: url("./images/tab.svg");
   background-repeat: no-repeat;
-  padding-left: 30px;
+  padding-right: 15px;
+  vertical-align: middle;
+  display: inline-block;
+  width: 16px;
+  height: 10px;
 }
 
 .privacy {
@@ -69,4 +92,20 @@ body {
 
 .wakeword-content {
   text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mic-info {
+  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta {
+  flex-grow: 1;
+  margin-bottom: 3em;
 }
