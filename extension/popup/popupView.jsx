@@ -888,8 +888,8 @@ const SearchResultsContent = ({
     onNextSearchResultClick();
   };
 
-  const onMusicServiceChange = event => {
-    userSettings.musicService = event;
+  const onMusicServiceChange = name => {
+    userSettings.musicService = name;
     updateUserSettings(userSettings);
   };
 
@@ -929,7 +929,6 @@ const SearchResultsContent = ({
             .map(({ name, title, imgSrc }) => (
               <button
                 key={name}
-                value={name}
                 onClick={() => {
                   onMusicServiceChange(name);
                 }}

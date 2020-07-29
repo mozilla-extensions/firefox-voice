@@ -169,6 +169,7 @@ intentRunner.registerIntent({
       card,
       searchResults: card,
     });
+    context.keepPopup();
   },
 });
 

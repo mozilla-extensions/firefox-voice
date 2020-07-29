@@ -92,7 +92,6 @@ export const PopupController = function() {
   const init = async () => {
     log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
-    // await initSettings();
 
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
