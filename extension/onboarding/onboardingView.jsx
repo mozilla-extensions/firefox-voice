@@ -19,7 +19,9 @@ export const Onboarding = ({
 }) => {
   return (
     <div id="onboarding-wrapper">
-      {!optinViewAlreadyShown && !optinWakewordAlreadyShown && ONBOARDING_WAKEWORD_VIEW ? (
+      {!optinViewAlreadyShown &&
+      !optinWakewordAlreadyShown &&
+      ONBOARDING_WAKEWORD_VIEW ? (
         <OptinWakeword setWakewordOptinValue={setWakewordOptinValue} />
       ) : null}
       {!optinViewAlreadyShown &&
@@ -51,7 +53,7 @@ export const Onboarding = ({
 };
 
 const OptinWakeword = ({ setWakewordOptinValue }) => {
-  const updateWakewordSetting = even => {
+  const updateWakewordSetting = event => {
     event.preventDefault();
     setWakewordOptinValue(!!event.target.value);
   };
