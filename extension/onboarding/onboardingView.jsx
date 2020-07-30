@@ -3,6 +3,8 @@
 
 import * as browserUtil from "../browserUtil.js";
 
+const ONBOARDING_WAKEWORD_VIEW = false;
+
 export const Onboarding = ({
   optinTechDataAlreadyShown,
   optinViewAlreadyShown,
@@ -17,17 +19,17 @@ export const Onboarding = ({
 }) => {
   return (
     <div id="onboarding-wrapper">
-      {!optinViewAlreadyShown && !optinWakewordAlreadyShown ? (
+      {!optinViewAlreadyShown && !optinWakewordAlreadyShown && ONBOARDING_WAKEWORD_VIEW ? (
         <OptinWakeword setWakewordOptinValue={setWakewordOptinValue} />
       ) : null}
       {!optinViewAlreadyShown &&
       !optinTechDataAlreadyShown &&
-      optinWakewordAlreadyShown ? (
+      (optinWakewordAlreadyShown || !ONBOARDING_WAKEWORD_VIEW) ? (
         <OptinTechData setCollectTechData={setCollectTechData} />
       ) : null}
       {!optinViewAlreadyShown &&
       optinTechDataAlreadyShown &&
-      optinWakewordAlreadyShown ? (
+      (optinWakewordAlreadyShown || !ONBOARDING_WAKEWORD_VIEW) ? (
         <OptinVoiceTranscripts
           setOptinValue={setOptinValue}
           setOptinViewShown={setOptinViewShown}
