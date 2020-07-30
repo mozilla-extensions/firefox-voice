@@ -900,15 +900,6 @@ const SearchResultsContent = ({
     </button>
   );
 
-  const AnswerText = () => {
-    if (card.answer.largeText) {
-      return <div className="results-largeText">{card.answer.largeText}</div>;
-    } else if (card.answer.tabCountText) {
-      return <div className="results-text">{card.answer.tabCountText}</div>;
-    }
-    return null;
-  };
-
   const AnswerCard = () => (
     <div className="results-set">
       {card.answer.imgSrc ? (
@@ -920,7 +911,9 @@ const SearchResultsContent = ({
       ) : null}
       <div className="results-text">
         <em>
-          {AnswerText()}
+          {card.answer.largeText ? (
+            <div className="results-largeText">{card.answer.largeText}</div>
+          ) : null}
           <div>{card.answer.text}</div>
         </em>
       </div>

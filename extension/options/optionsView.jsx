@@ -190,7 +190,7 @@ const MusicServiceSettings = ({
         {userOptions.musicServices &&
           userOptions.musicServices.map(musicOption => (
             <option key={musicOption.name} value={musicOption.name}>
-              {musicOption.name}
+              {musicOption.title}
             </option>
           ))}
       </select>
