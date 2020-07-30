@@ -131,3 +131,32 @@ description = "Copies the value given"
 match = """
   copy text [value]
 """
+
+[clipboard.addSelection]
+description = "Add's the selection"
+match = """
+  add (this |) (selection |) (to clipboard |)
+"""
+
+[[clipboard.addSelection.example]]
+phrase = "add selection"
+
+[clipboard.addTitle]
+description = "Add's the title of the current tab"
+match = """
+  add (the |) title of (the | this |) tab (to clipboard |)
+  add (the |) tab title (to clipboard |)
+  add title (to clipboard |)
+"""
+
+[[clipboard.addTitle.example]]
+phrase = "add tab title"
+
+[clipboard.addLink]
+description = "Add's the link of the current tab"
+match = """
+  add (the |) (this |) (tab's |) (link{s} | url) (of this tab |) (to clipboard |)
+"""
+
+[[clipboard.addLink.example]]
+phrase = "add link to clipboard"
