@@ -34,31 +34,31 @@ function saveTabQueryToDatabase(query, tab, url) {
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
-    const query = context.slots.query.toLowerCase();
+    const name = context.slots.name.toLowerCase();
     const pageNames = await intentRunner.getRegisteredPageName();
     let tab = null;
-    if (pageNames && pageNames[query]) {
-      const savedUrl = pageNames[query];
+    if (pageNames && pageNames[name]) {
+      const savedUrl = pageNames[name];
       tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
-      const cached = queryDatabase.get(query);
+      const cached = queryDatabase.get(name);
       if (where === "window") {
         if (cached) {
           const window = await browser.windows.create({ url: cached.url });
           tab = window.tabs[0];
         } else {
           await browser.windows.create({});
-          tab = await browserUtil.createTabGoogleLucky(query);
+          tab = await browserUtil.createTabGoogleLucky(name);
           const url = tab.url;
-          saveTabQueryToDatabase(query, tab, url);
+          saveTabQueryToDatabase(name, tab, url);
         }
       } else if (cached) {
         tab = await browserUtil.openOrFocusTab(cached.url);
       } else {
-        tab = await browserUtil.createTabGoogleLucky(query);
+        tab = await browserUtil.createTabGoogleLucky(name);
         const url = tab.url;
-        saveTabQueryToDatabase(query, tab, url);
+        saveTabQueryToDatabase(name, tab, url);
       }
     }
     await browserUtil.waitForPageToLoadUsingSelector(tab.id);

@@ -23,8 +23,8 @@ for (const id in metadata.music) {
 
 export const namedPages = [];
 
-for (const id in metadata.name) {
-  const item = metadata.name[id];
+for (const id in metadata.pageNames) {
+  const item = metadata.pageNames[id];
   for (const name of item.names) {
     namedPages.push(name);
   }
@@ -33,6 +33,7 @@ for (const id in metadata.name) {
 export const entityTypes = convertEntities({
   serviceName: allServiceNames,
   musicServiceName: musicServiceNames,
+  name: namedPages,
   lang: languageNames(),
   smallNumber: English.numberNames,
 });
