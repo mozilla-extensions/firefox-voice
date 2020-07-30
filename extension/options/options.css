@@ -206,7 +206,7 @@ body {
   padding: 6px;
 }
 
-.nickname-container {
+.routine-container {
   outline: 0;
 }
 
@@ -239,7 +239,7 @@ body {
   left: 80px;
 }
 
-.label-nickname {
+.label-routine {
   padding: 10px 20px;
 }
 
