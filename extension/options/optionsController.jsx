@@ -185,7 +185,6 @@ export const OptionsController = function() {
           utterance: `Combined actions named ${routineContext.routine}`,
         },
       });
-      console.log(routineContext);
       // perform the same operation on local routine
       registeredRoutines[routineContext.routine] = routineContext;
     }
