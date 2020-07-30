@@ -2,7 +2,7 @@
 import * as browserUtil from "../browserUtil.js";
 
 export const WakewordView = ({ userSettings, suggestions }) => {
-  if (!userSettings.enableWakeword || userSettings.wakewords.length === 0) {
+  if (!userSettings.enableWakeword) {
     return <WakewordDisabled />;
   }
   return (
