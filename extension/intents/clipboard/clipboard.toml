@@ -109,12 +109,12 @@ match = """
 phrase = "Copy tab title"
 
 [clipboard.copyImage]
-description = "Copies the best image in the current tab" 
-match = """ 
+description = "Copies the best image in the current tab"
+match = """
   copy (the | this |) image (to clipboard |)
-""" 
+"""
 
-[[clipboard.copyImage.example]] 
+[[clipboard.copyImage.example]]
 phrase = "Copy image"
 
 [clipboard.paste]
@@ -133,29 +133,29 @@ match = """
 """
 
 [clipboard.addSelection]
-description = "Add's the selection"
+description = "Adds the selection to the clipboard"
 match = """
-  add (this |) (selection |) (to clipboard |)
+  add (this | the |) selection (to |) clipboard
 """
 
 [[clipboard.addSelection.example]]
-phrase = "add selection"
+phrase = "add selection to clipboard"
 
 [clipboard.addTitle]
-description = "Add's the title of the current tab"
+description = "Adds the title of the current tab to the clipboard"
 match = """
-  add (the |) title of (the | this |) tab (to clipboard |)
-  add (the |) tab title (to clipboard |)
-  add title (to clipboard |)
+  add (the |) title of (the | this |) tab (to |) clipboard
+  add (the |) tab title (to |) clipboard
+  add title (to |) clipboard
 """
 
 [[clipboard.addTitle.example]]
-phrase = "add tab title"
+phrase = "Add the tab title to clipboard"
 
 [clipboard.addLink]
 description = "Add's the link of the current tab"
 match = """
-  add (the |) (this |) (tab's |) (link{s} | url) (of this tab |) (to clipboard |)
+  add (the |) (this |) (tab's |) (link{s} | url) (of this tab |) (to |) clipboard
 """
 
 [[clipboard.addLink.example]]
