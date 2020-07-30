@@ -7,6 +7,7 @@ Object.assign(Deezer, {
   id: "deezer",
   title: "Deezer",
   baseUrl: "https://www.deezer.com/",
+  imgSrc: "/assets/images/deezer.svg",
 });
 
 music.register(Deezer);
