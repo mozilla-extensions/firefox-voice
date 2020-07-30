@@ -228,10 +228,10 @@ updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
 let wakewordMaybeOpen = false;
 
 const openWakeword = util.serializeCalls(async function() {
-  const { enableWakeword, wakewords } = await settings.getSettings();
+  const { enableWakeword } = await settings.getSettings();
   const wakewordUrl = browser.runtime.getURL("/wakeword/wakeword.html");
   const tabs = await browser.tabs.query({ url: wakewordUrl });
-  if (!enableWakeword || !wakewords.length) {
+  if (!enableWakeword) {
     if (wakewordMaybeOpen) {
       wakewordMaybeOpen = false;
       if (tabs.length) {
