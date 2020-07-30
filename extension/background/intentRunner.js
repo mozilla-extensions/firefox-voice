@@ -498,7 +498,6 @@ export function registerRoutine(name, context) {
     "registeredRoutines",
     JSON.stringify(registeredRoutines)
   );
-  const res = JSON.parse(localStorage.getItem("registeredRoutines"));
 }
 
 registerHandler("registerRoutine", message => {
