@@ -3,7 +3,7 @@
   "id": "firefox-voice@mozilla.org",
   "description": "This is a WebExtension that allows the browser to be voice-controlled.",
   "private": true,
-  "version": "0.23.0",
+  "version": "0.23.1",
   "engines": {
     "node": ">=12.0.0"
   },
@@ -105,7 +105,7 @@
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
     "once": "web-ext run -s extension",
     "package": "npm-run-all build:* && web-ext build -s extension --filename firefox-voice.xpi --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' -i '**/*.toml'",
-    "package-prod": "VERSION=\"$(node -e 'process.stdout.write(require(\"./package.json\").version, {encoding: \"UTF-8\"})')\" UPDATE_BASE=https://va.allizom.org/releases/prod INSTALL_CHANNEL=prod LOG_LEVEL=info npm run package",
+    "package-prod": "VERSION=\"$(node -e 'process.stdout.write(require(\"./package.json\").version, {encoding: \"UTF-8\"})')\" INSTALL_CHANNEL=prod LOG_LEVEL=info npm run package",
     "calculate-version": "node bin/calculate-version.js",
     "enumerate-phrases": "babel-node --plugins @babel/plugin-transform-modules-commonjs bin/enumerate-phrases.js",
     "postinstall": "npm-run-all build:*"
