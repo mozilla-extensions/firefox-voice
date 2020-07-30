@@ -57,7 +57,7 @@ export async function ddgEntitySearch(query) {
 const SERVICE_BANG_ALIASES = {};
 for (const id in metadata.search) {
   for (const name of metadata.search[id].names) {
-    SERVICE_BANG_ALIASES[name] = metadata.search[id].bangSearch;
+    SERVICE_BANG_ALIASES[name] = metadata.search[id].serviceSearch;
   }
 }
 
@@ -69,7 +69,7 @@ export function ddgBangServiceName(name) {
   return bang;
 }
 
-export async function ddgBangSearchUrl(query, service) {
+export async function ddgServiceSearchUrl(query, service) {
   const bang = ddgBangServiceName(service);
   const response = await fetch(
     `https://api.duckduckgo.com/?q=!${encodeURIComponent(

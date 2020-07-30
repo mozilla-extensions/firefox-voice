@@ -10,7 +10,7 @@ intentRunner.registerIntent({
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       timerController.closeActiveTimer();
-      const imageCard = "../../assets/images/check-mark.png";
+      const imageCard = "/assets/images/check-mark.png";
       const card = {
         answer: {
           imgSrc: `${imageCard}`,
@@ -31,7 +31,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    const imageCard = "../../assets/images/lionel-richie.jpg";
+    const imageCard = "/assets/images/lionel-richie.jpg";
     const card = {
       answer: {
         imgSrc: `${imageCard}`,
@@ -78,7 +78,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.simpleTest",
   async run(context) {
-    const imageCard = "../../assets/images/check-mark.png";
+    const imageCard = "./images/check-mark.png";
     const card = {
       answer: {
         imgSrc: `${imageCard}`,

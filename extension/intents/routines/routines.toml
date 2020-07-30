@@ -1,81 +1,81 @@
-[nicknames.combined]
+[routines.combined]
 description = "An intent that is only used as a memory"
 match = """
 # Nothing to match
 """
 
-[nicknames.name]
+[routines.name]
 description = "Names an intent"
 match = """
-  (name | nickname | shortcut | call) (that | it | last) [name]
-  give (that |) (the |) (name | nickname | shortcut) [name]
-  give (the |) (name | nickname | shortcut) [name] to (that | it | last)
+  (name | routine | shortcut | call | nickname) (that | it | last) [name]
+  give (that |) (the |) (name | routine | shortcut | nickname) [name]
+  give (the |) (name | routine | shortcut | nickname) [name] to (that | it | last)
 """
 
-[[nicknames.name.example]]
+[[routines.name.example]]
 phrase = "Name that calendar"
 
-[nicknames.nameLast]
+[routines.nameLast]
 description = "Combines a few intents into a name"
 match = """
-  (name | nickname | call | shortcut) last [number:smallNumber] [name]
-  give (the |) last [number:smallNumber] (the |) (name | nickname | shortcut) [name]
-  give (the |) (name | nickname | shortcut) [name] to (the |) last [number:smallNumber]
+  (name | routine | call | shortcut | nickname) last [number:smallNumber] [name]
+  give (the |) last [number:smallNumber] (the |) (name | routine | shortcut | nickname) [name]
+  give (the |) (name | routine | shortcut | nickname) [name] to (the |) last [number:smallNumber]
 """
 
-[[nicknames.nameLast.example]]
+[[routines.nameLast.example]]
 phrase = "Name last three goodmorning"
 
-[nicknames.remove]
+[routines.remove]
 description = "Removes a named intent"
 match = """
-  (remove | delete) (the|) (name | nickname | shortcut) (called |) [name]
+  (remove | delete) (the|) (name | routine | shortcut | nickname) (called |) [name]
 """
 
-[[nicknames.remove.example]]
+[[routines.remove.example]]
 phrase = "Remove name calendar"
 
-[nicknames.namePage]
+[routines.namePage]
 description = "Name a page"
 match = """
  name (this |) (this | page | tab) [name]
  give (the |) name [name] to (this |) (page | tab)
 """
 
-[[nicknames.namePage.example]]
+[[routines.namePage.example]]
 phrase = "name this page news"
 
-[[nicknames.namePage.example]]
+[[routines.namePage.example]]
 phrase = "give the name news to this tab"
 test = true
 
-[nicknames.removePageName]
+[routines.removePageName]
 description = "Remove a page name"
 match = """
-  (remove | delete) (the |) (page | tab) (name | nickname | shortcut |) (called |) [name] 
+  (remove | delete) (the |) (page | tab) (name | routine | shortcut | nickname |) (called |) [name] 
   (remove | delete) (the | this |) (page | tab) name
 """
 
-[[nicknames.removePageName.example]]
+[[routines.removePageName.example]]
 phrase = "delete the page called news"
 
-[[nicknames.removePageName.example]]
+[[routines.removePageName.example]]
 phrase = "remove this tab name"
 
-[nicknames.pause]
+[routines.pause]
 description = "Pauses a routine"
 match = """
   pause routine (with |) (and |) (show |) (message | status | text | print) [message]
   pause routine
 """
 
-[nicknames.continue]
+[routines.continue]
 description = "Continues a routine"
 match = """
   continue routine
 """
 
-[nicknames.startForLoop]
+[routines.startForLoop]
 description = "Statement to start loop"
 match = """
   for each value in (clipboard) (as | named | as named |) [variable] [dataSource=clipboard]
@@ -97,7 +97,7 @@ match = """
   for each number from 1 to [range] (as | named | as named |) [variable] [dataSource=interval]
 """
 
-[nicknames.endForLoop]
+[routines.endForLoop]
 description = "Statement to end loop"
 match = """
   endfor

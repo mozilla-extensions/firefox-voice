@@ -1,179 +1,179 @@
 ["google slides"]
-bangSearch = "gslides"
+serviceSearch = "gslides"
 baseUrl = "https://docs.google.com/presentation/"
 names = ["slides"]
 
 ["google docs"]
-bangSearch = "gd"
+serviceSearch = "gd"
 baseUrl = "https://docs.google.com/document/"
 
 ["google scholar"]
-bangSearch = "googlescholar"
+serviceSearch = "googlescholar"
 baseUrl = "https://scholar.google.com/"
 
 ["google calendar"]
-bangSearch = "gcal"
+serviceSearch = "gcal"
 baseUrl = "https://calendar.google.com/"
 names = ["calendar"]
 
 ["google drive"]
-bangSearch = "drive"
+serviceSearch = "drive"
 baseUrl = "https://drive.google.com/"
 
 ["google sheets"]
-bangSearch = "gsheets"
+serviceSearch = "gsheets"
 baseUrl = "https://docs.google.com/spreadsheets/"
 names = ["sheets", "spreadsheets"]
 
 [goodreads]
-bangSearch = "goodreads"
+serviceSearch = "goodreads"
 baseUrl = "https://www.goodreads.com/"
 
 [mdn]
-bangSearch = "mdn"
+serviceSearch = "mdn"
 baseUrl = "https://developer.mozilla.org/en-US/"
 
 [coursera]
-bangSearch = "coursera"
+serviceSearch = "coursera"
 baseUrl = "https://www.coursera.org/"
 
 [gmail]
-bangSearch = "gmail"
+serviceSearch = "gmail"
 baseUrl = "https://mail.google.com/"
 names = ["mail", "email", "google mail"]
 
 [amazon]
-bangSearch = "az"
+serviceSearch = "az"
 baseUrl = "https://www.amazon.com/"
 
 [wikipedia]
-bangSearch = "wikipedia"
+serviceSearch = "wikipedia"
 baseUrl = "https://en.wikipedia.org/"
 names = ["wiki"]
 
 [yelp]
-bangSearch = "yelp"
+serviceSearch = "yelp"
 baseUrl = "https://www.yelp.com/"
 
 [twitter]
-bangSearch = "twitter"
+serviceSearch = "twitter"
 baseUrl = "https://wwww.twitter.com/"
 
 [reddit]
-bangSearch = "reddit"
+serviceSearch = "reddit"
 baseUrl = "https://www.reddit.com/"
 
 ["amazon music"]
-bangSearch = "amusic"
+serviceSearch = "amusic"
 baseUrl = "https://music.amazon.com"
 
 ["google music"]
-bangSearch = "gmusic"
+serviceSearch = "gmusic"
 baseUrl = "https://play.google.com/music/"
 
 ["google play music"]
-bangSearch = "gmusic"
+serviceSearch = "gmusic"
 baseUrl = "https://play.google.com/music/"
 names = ["google music"]
 
 [pandora]
-bangSearch = "pandora"
+serviceSearch = "pandora"
 baseUrl = "https://www.pandora.com/"
 
 [soundcloud]
-bangSearch = "soundcloud"
+serviceSearch = "soundcloud"
 baseUrl = "https://soundcloud.com/"
 names = ["sound cloud"]
 
 [tunein]
-bangSearch = "tunein"
+serviceSearch = "tunein"
 baseUrl = "https://tunein.com/"
 names = ["tune in", "tunein radio", "tune in radio"]
 
 [vimeo]
-bangSearch = "vimeo"
+serviceSearch = "vimeo"
 baseUrl = "https://vimeo.com/"
 
 [netflix]
-bangSearch = "netflix"
+serviceSearch = "netflix"
 baseUrl = "https://www.netflix.com/"
 
 ["apple maps"]
-bangSearch = "amaps"
+serviceSearch = "amaps"
 baseUrl = "https://maps.apple.com/"
 
 ["google maps"]
-bangSearch = "gmap"
+serviceSearch = "gmap"
 baseUrl = "https://maps.google.com/"
 names = ["maps"]
 
 ["open street maps"]
-bangSearch = "omap"
+serviceSearch = "omap"
 baseUrl = "https://www.openstreetmap.org/"
 names = ["open maps", "openstreetmap"]
 
 [stubhub]
-bangSearch = "stubhub"
+serviceSearch = "stubhub"
 baseUrl = "https://www.stubhub.com/"
 names = ["stub hub"]
 
 [ticketmaster]
-bangSearch = "ticketmaster"
+serviceSearch = "ticketmaster"
 baseUrl = "https://wwww.ticketmaster.com/"
 names = ["ticket master"]
 
 ["google translate"]
-bangSearch = "translate"
+serviceSearch = "translate"
 baseUrl = "https://translate.google.com/"
 names = ["translate"]
 
 [instagram]
-bangSearch = "instagram"
+serviceSearch = "instagram"
 baseUrl = "https://www.instagram.com/"
 names = ["insta"]
 
 [linkedin]
-bangSearch = "linkedin"
+serviceSearch = "linkedin"
 baseUrl = "https://www.linkedin.com/"
 
 [quora]
-bangSearch = "quora"
+serviceSearch = "quora"
 baseurl = "https://www.quora.com/"
 
 [pinterest]
-bangSearch = "pin"
+serviceSearch = "pin"
 baseUrl = "https://www.pinterest.com/"
 names = ["pin"]
 
 [facebook]
-bangSearch = "facebook"
+serviceSearch = "facebook"
 baseUrl = "https://www.facebook.com/"
 
 [stackexchange]
-bangSearch = "stackexchange"
+serviceSearch = "stackexchange"
 baseUrl = "https://stackexchange.com/"
 names = ["stack exchange"]
 
 [dropbox]
-bangSearch = "dropbox"
+serviceSearch = "dropbox"
 baseUrl = "https://www.dropbox.com/"
 
 [dictionary]
-bangSearch = "dcom"
+serviceSearch = "dcom"
 baseUrl = "https://www.dictionary.com/"
 names = ["dictionary.com"]
 
 [thesaurus]
-bangSearch = "thesaurus"
+serviceSearch = "thesaurus"
 baseUrl = "https://www.thesaurus.com/"
 
 [duckduckgo]
-bangSearch = "duckduckgo"
+serviceSearch = "duckduckgo"
 baseUrl = "https://duckduckgo.com/"
 names = ["duck duck go"]
 
 ["duckduckgo images"]
-bangSearch = "ddgi"
+serviceSearch = "ddgi"
 baseUrl = "https://duckduckgo.com/"
 names = ["duck duck go images"]
 ["duckduckgo images".baseUrlQueryParameters]
@@ -181,41 +181,41 @@ iax = "images"
 ia = "images"
 
 ["google"]
-bangSearch = "google"
+serviceSearch = "google"
 baseUrl = "https://www.google.com"
 
 ["google images"]
-bangSearch = "gi"
+serviceSearch = "gi"
 baseUrl = "https://www.google.com/"
 names = ["images"]
 ["google images".baseUrlQueryParameters]
 tbm = "isch"
 
 [imdb]
-bangSearch = "imdb"
+serviceSearch = "imdb"
 baseUrl = "https://www.imdb.com/"
 
 [add-ons]
-bangSearch = "mozaddon"
+serviceSearch = "mozaddon"
 baseUrl = "https://addons.mozilla.org/"
 names = ["firefox add-ons", "mozilla add-ons"]
 
 [github]
-bangSearch = "github"
+serviceSearch = "github"
 baseUrl = "https://github.com"
 
 [justwatch] 
-bangSearch = "justwatch"
+serviceSearch = "justwatch"
 baseUrl = "https://www.justwatch.com/"
 
 [reelgood]
-bangSearch = "reelgood"
+serviceSearch = "reelgood"
 baseUrl = "https://reelgood.com/"
 
 [linguee]
-bangSearch = "linguee"
+serviceSearch = "linguee"
 baseUrl = "https://www.linguee.com/"
 
 ["khan academy"]
-bangSearch = "khanacademy"
+serviceSearch = "khanacademy"
 baseUrl = "https://www.khanacademy.org/"

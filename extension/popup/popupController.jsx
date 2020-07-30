@@ -64,6 +64,7 @@ export const PopupController = function() {
   const [requestFollowup, setRequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
   const [showZeroVolumeError, setShowZeroVolumeError] = useState(false);
+  const [userSettings, setUserSettings] = useState({});
 
   let executedIntent = false;
   let stream = null;
@@ -92,6 +93,7 @@ export const PopupController = function() {
   const init = async () => {
     log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
+
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
@@ -99,7 +101,6 @@ export const PopupController = function() {
       window.close();
       return;
     }
-
     listenForFollowup = userSettings.listenForFollowup;
     if (userSettings.audioInputId !== undefined) {
       audioInputId = userSettings.audioInputId;
@@ -169,6 +170,10 @@ export const PopupController = function() {
       url: browser.runtime.getURL("options/options.html"),
     });
     window.close();
+  };
+  const updateUserSettings = async userSettings => {
+    await settings.saveSettings(userSettings);
+    setUserSettings(userSettings);
   };
 
   const playListeningChime = () => {
@@ -781,6 +786,8 @@ export const PopupController = function() {
       renderFollowup={listenForFollowup || requestFollowup}
       followupText={followupText}
       showZeroVolumeError={showZeroVolumeError}
+      userSettings={{ ...userSettings }}
+      updateUserSettings={updateUserSettings}
     />
   );
   log.timing("PopupController finished");

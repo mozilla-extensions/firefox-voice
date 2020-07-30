@@ -103,7 +103,7 @@ Note: this version was not released publicly
 - Fixed a display issue with timer when feedback card appeared (after followups were merged, there were 2 feedback cards). Added the follow-up functionality for reset and close; Now, the user can say "close timer" within 5 seconds of the input command (as long as the followup stays awake), or when the timer finished, "reset | reset timer". Fixes [#1392](https://github.com/mozilla/firefox-voice/issues/1392) Fixes [#1392](https://github.com/mozilla/firefox-voice/issues/1392) [ce63f13](https://github.com/mozilla/firefox-voice/commit/ce63f13)
 - Firefox Voice is can use different site-specific searches using the current tab as context. Fixes [#841](https://github.com/mozilla/firefox-voice/issues/841) [c460be3](https://github.com/mozilla/firefox-voice/commit/c460be3)
 - Remember search context ([#1291](https://github.com/mozilla/firefox-voice/issues/1291)) (from [farhatcode](https://github.com/farhatcode))
-  Considers 3 cases for navigation.bangSearch :
+  Considers 3 cases for navigation.serviceSearch :
   1. supported service + serviceName mentioned e.g. "search amazon for X"
   2. supported service + reference of active tab | site used (serviceName not mentioned) e.g. "search here | this tab for Y"
   3. unsupported service e.g. open bing.com, say "search for news here"
@@ -344,7 +344,7 @@ Note: this version was not released publicly
 - Add progress indicator to save page (from [JanviMahajan14](https://github.com/JanviMahajan14)) [174ba8d](https://github.com/mozilla/firefox-voice/commit/174ba8d)
 - Close selected tabs intent [6314729](https://github.com/mozilla/firefox-voice/commit/6314729)
 - Open and go new tab/new window ([#1165](https://github.com/mozilla/firefox-voice/issues/1165)) (from [JanviMahajan14](https://github.com/JanviMahajan14)). Fixes [#761](https://github.com/mozilla/firefox-voice/issues/761) [100cc68](https://github.com/mozilla/firefox-voice/commit/100cc68)
-- Add duckduckgo bangsearch (from [SaumyaSinghal](https://github.com/SaumyaSinghal)) [aabfeb5](https://github.com/mozilla/firefox-voice/commit/aabfeb5)
+- Add duckduckgo serviceSearch (from [SaumyaSinghal](https://github.com/SaumyaSinghal)) [aabfeb5](https://github.com/mozilla/firefox-voice/commit/aabfeb5)
 - Submit form intent ([#1164](https://github.com/mozilla/firefox-voice/issues/1164)) (from [Manasa2850](https://github.com/Manasa2850)). Fixes issue [#1083](https://github.com/mozilla/firefox-voice/issues/1083) [a5ba519](https://github.com/mozilla/firefox-voice/commit/a5ba519)
 - Add new examples to the rotation (from [ajinkabeer](https://github.com/ajinkabeer)) [b0bf1fc](https://github.com/mozilla/firefox-voice/commit/b0bf1fc)
 - Open downloads window intent via experiments. ([#1155](https://github.com/mozilla/firefox-voice/issues/1155)) (from [maitrella](https://github.com/maitrella)). Fixes [#1097](https://github.com/mozilla/firefox-voice/issues/1097) [536f6e1](https://github.com/mozilla/firefox-voice/commit/536f6e1)
@@ -565,7 +565,7 @@ We are starting to work on getting this working in Firefox on Android (_not_ Fir
 
 ## Version 0.12.0 (2019-11-06)
 
-- Remove hulu bang search. Fixes [#289](https://github.com/mozilla/firefox-voice/issues/289) [a52b7ae](https://github.com/mozilla/firefox-voice/commit/a52b7ae)
+- Remove hulu service search. Fixes [#289](https://github.com/mozilla/firefox-voice/issues/289) [a52b7ae](https://github.com/mozilla/firefox-voice/commit/a52b7ae)
 - Add a dev setting to open the popup in a tab, `OPEN_POPUP_ON_START=1 npm start` [6fd469d](https://github.com/mozilla/firefox-voice/commit/6fd469d)
 - Update the lexicon [b600191](https://github.com/mozilla/firefox-voice/commit/b600191) [c5a63a7](https://github.com/mozilla/firefox-voice/commit/c5a63a7)
 - Add an explicit error message if the search result tab is closed when you as for the next result [11bacf8](https://github.com/mozilla/firefox-voice/commit/11bacf8)
@@ -667,7 +667,7 @@ We are starting to work on getting this working in Firefox on Android (_not_ Fir
 - Open site-specific searches in a new tab. Also allow 'in' in addition to 'on' in site-specific searches, like 'in Gmail'. Fixes [#190](https://github.com/mozilla/firefox-voice/issues/190) [328d6d7](https://github.com/mozilla/firefox-voice/commit/328d6d7)
 - Make `go to [query] tab` do a tab find. Fixes [#265](https://github.com/mozilla/firefox-voice/issues/265) [e68b861](https://github.com/mozilla/firefox-voice/commit/e68b861)
 - Remove 'stop' alias for 'mute'. Fixes [#188](https://github.com/mozilla/firefox-voice/issues/188) [a518c02](https://github.com/mozilla/firefox-voice/commit/a518c02)
-- Remove Apple Music. The bang service was broken. Fixes [#277](https://github.com/mozilla/firefox-voice/issues/277) [08c785b](https://github.com/mozilla/firefox-voice/commit/08c785b)
+- Remove Apple Music. The search service was broken. Fixes [#277](https://github.com/mozilla/firefox-voice/issues/277) [08c785b](https://github.com/mozilla/firefox-voice/commit/08c785b)
 - Do not open changelog from options. Fixes [#252](https://github.com/mozilla/firefox-voice/issues/252) [18bb2fd](https://github.com/mozilla/firefox-voice/commit/18bb2fd)
 - Make sure `inDevelopment` always ends up exactly true or false after extension initialization [9e1f27d](https://github.com/mozilla/firefox-voice/commit/9e1f27d)
 - Reload popup so text box contents aren't preserved. Fixes [#193](https://github.com/mozilla/firefox-voice/issues/193) [c296f99](https://github.com/mozilla/firefox-voice/commit/c296f99)
