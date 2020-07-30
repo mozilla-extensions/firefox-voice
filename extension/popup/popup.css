@@ -202,6 +202,7 @@ body,
 
 .results-text {
   font-size: 1.5em;
+  white-space: pre-line;
 }
 
 .results-medium-text {
