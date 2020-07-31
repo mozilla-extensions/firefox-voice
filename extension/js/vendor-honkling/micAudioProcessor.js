@@ -42,12 +42,10 @@ class MicAudioProcessor {
       micProc.micSource = micProc.audioContext.createMediaStreamSource(micStream);
       micProc.micSource.connect(micProc.downSampleNode);
       micProc.downSampleNode.connect(micProc.audioContext.destination);
-      if (typeof(visualizer) === "function") {
-        visualizer({
-          parent: "#waveform",
-          stream: micStream
-        });
-      }
+      visualizer({
+        parent: "#waveform",
+        stream: micStream
+      });
 
       if (micProc.audioContext.state == "suspended") {
         // audio context start suspended on Chrome due to auto play policy
