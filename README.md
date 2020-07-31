@@ -153,6 +153,8 @@ To disclose any potential security vulnerability please see our [security](docs/
 
 ### Contributors
 
+Wakeword provided by the [Howl Project](https://github.com/castorini/howl/): Jaejun Lee, [Ralph Tang](http://ralphtang.com/), [Jimmy Lin](https://cs.uwaterloo.ca/~jimmylin/), University of Waterloo.
+
 <a href="https://github.com/mozilla/firefox-voice/graphs/contributors">
   <img src="https://contributors-img.firebaseapp.com/image?repo=mozilla/firefox-voice" />
 </a>
