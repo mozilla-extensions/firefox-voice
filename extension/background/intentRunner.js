@@ -7,7 +7,7 @@ import { metadata } from "../intents/metadata.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { PhraseSet } from "../language/findMatch.js";
 import * as settings from "../settings.js";
-import { entityTypes } from "./entityTypes.js";
+import { entityTypes, addPageName, pageNames } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 
@@ -523,23 +523,14 @@ export function getRegisteredNicknames() {
 
 registerHandler("getRegisteredNicknames", getRegisteredNicknames);
 
-let pageNames = {};
-
-export async function getRegisteredPageName() {
-  const result = await browser.storage.sync.get("pageNames");
-  pageNames = result.pageNames;
-
-  return pageNames;
-}
-
 export async function registerPageName(name, { url }) {
   name = name.toLowerCase();
   const creationDate = Date.now();
-  pageNames = getRegisteredPageName() || {};
 
   pageNames[name] = url;
 
   log.info("Added nickname for page", name, "->", url, creationDate);
+  addPageName(name);
   await browser.storage.sync.set({ pageNames });
 }
 

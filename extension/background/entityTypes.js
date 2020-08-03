@@ -1,6 +1,6 @@
 import { languageNames } from "./languages.js";
 import { metadata } from "../services/metadata.js";
-import { convertEntities } from "../language/compiler.js";
+import { convertEntities, makeWordMatcher } from "../language/compiler.js";
 import English from "../language/langs/english.js";
 
 export const allServiceNames = [];
@@ -21,19 +21,16 @@ for (const id in metadata.music) {
   }
 }
 
-export const namedPages = [];
+export const pageNames = [];
 
-for (const id in metadata.pageNames) {
-  const item = metadata.pageNames[id];
-  for (const name of item.names) {
-    namedPages.push(name);
-  }
+export function addPageName(name) {
+  entityTypes.pageName.alternatives.push(makeWordMatcher(name));
 }
 
 export const entityTypes = convertEntities({
   serviceName: allServiceNames,
   musicServiceName: musicServiceNames,
-  name: namedPages,
+  pageName: pageNames,
   lang: languageNames(),
   smallNumber: English.numberNames,
 });

@@ -8,6 +8,7 @@ import * as searching from "../../searching.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
 import { sendMessage } from "../../communicate.js";
+import { pageNames } from "../../background/entityTypes";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -34,31 +35,30 @@ function saveTabQueryToDatabase(query, tab, url) {
 intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
-    const name = context.slots.name.toLowerCase();
-    const pageNames = await intentRunner.getRegisteredPageName();
+    const query = context.slots.query.toLowerCase();
     let tab = null;
-    if (pageNames && pageNames[name]) {
-      const savedUrl = pageNames[name];
+    if (pageNames && pageNames[query]) {
+      const savedUrl = pageNames[query];
       tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
-      const cached = queryDatabase.get(name);
+      const cached = queryDatabase.get(query);
       if (where === "window") {
         if (cached) {
           const window = await browser.windows.create({ url: cached.url });
           tab = window.tabs[0];
         } else {
           await browser.windows.create({});
-          tab = await browserUtil.createTabGoogleLucky(name);
+          tab = await browserUtil.createTabGoogleLucky(query);
           const url = tab.url;
-          saveTabQueryToDatabase(name, tab, url);
+          saveTabQueryToDatabase(query, tab, url);
         }
       } else if (cached) {
         tab = await browserUtil.openOrFocusTab(cached.url);
       } else {
-        tab = await browserUtil.createTabGoogleLucky(name);
+        tab = await browserUtil.createTabGoogleLucky(query);
         const url = tab.url;
-        saveTabQueryToDatabase(name, tab, url);
+        saveTabQueryToDatabase(query, tab, url);
       }
     }
     await browserUtil.waitForPageToLoadUsingSelector(tab.id);

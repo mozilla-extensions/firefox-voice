@@ -46,7 +46,7 @@ export function convertEntities(entityMapping) {
   return result;
 }
 
-function makeWordMatcher(string) {
+export function makeWordMatcher(string) {
   const list = makeWordList(string);
   if (list.length === 1) {
     return list[0];
