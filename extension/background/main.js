@@ -256,6 +256,16 @@ const openWakeword = util.serializeCalls(async function() {
   wakewordMaybeOpen = true;
 });
 
+registerHandler("focusWakewordTab", async (message, sender) => {
+  const tab = await browserUtil.activeTab();
+  await browserUtil.makeTabActive(sender.tab.id);
+  return tab.id;
+});
+
+registerHandler("unfocusWakewordTab", async message => {
+  await browserUtil.makeTabActive(message.tabId);
+});
+
 // These message handlers are kept in main.js to avoid cases where the module
 // (such as telemetry) doesn't or shouldn't know about this messaging, or where
 // a module (such as settings or log) can be used from the background page or the
