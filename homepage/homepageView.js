@@ -153,7 +153,7 @@ const Hero = () => {
     href: "https://va.allizom.org/releases/prod/firefox-voice.xpi"
   }, "Install Firefox Voice"), /*#__PURE__*/React.createElement("div", {
     class: "mzp-c-availability"
-  }, "Available as an extension for Firefox on desktop / laptop. Android coming soon.", /*#__PURE__*/React.createElement("br", null), "Requires a working microphone.")))));
+  }, "Available as an extension for Firefox on desktop / laptop. Requires a working microphone.", /*#__PURE__*/React.createElement("br", null), "Currently available in English only.")))));
 };
 
 const ExampleActions = () => {
