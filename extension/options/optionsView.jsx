@@ -560,7 +560,14 @@ const WakewordSettings = ({
               onChange={onEnableWakewordChange}
             />
             <label htmlFor="wakeword-enable">
-              <strong>Enable wakeword detection</strong>
+              <strong>Enable wakeword detection</strong> powered by the{" "}
+              <a
+                href="https://github.com/castorini/howl/"
+                rel="nooopener"
+                target="_blank"
+              >
+                Howl Project
+              </a>
             </label>
           </div>
           <p>
