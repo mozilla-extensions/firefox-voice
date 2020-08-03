@@ -485,6 +485,7 @@ a#lexicon {
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 #feedback-whats-wrong {
