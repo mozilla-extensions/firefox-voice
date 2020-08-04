@@ -247,7 +247,7 @@ const VoiceInputLocalePreferences = ({
     <div id="voice-input">
       <div id="voice-input-header">Language and locale</div>
       <div>
-        Help Firefox Voice to better recognize your voice and vocabulary by specifying your accent.
+        Help Firefox Voice to better recognize your voice by specifying your accent.
       </div>
       <div id="voice-selector">
         <span>Locale </span>
