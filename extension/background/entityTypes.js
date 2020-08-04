@@ -21,7 +21,7 @@ for (const id in metadata.music) {
   }
 }
 
-export const pageNames = [];
+export const pageName = [];
 
 export function addPageName(name) {
   entityTypes.pageName.alternatives.push(makeWordMatcher(name));
@@ -30,7 +30,7 @@ export function addPageName(name) {
 export const entityTypes = convertEntities({
   serviceName: allServiceNames,
   musicServiceName: musicServiceNames,
-  pageName: pageNames,
+  pageName,
   lang: languageNames(),
   smallNumber: English.numberNames,
 });
