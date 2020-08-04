@@ -85,7 +85,14 @@ intentRunner.registerIntent({
       e.displayMessage = "You have not set a tab to write";
       throw e;
     }
-    await browserUtil.makeTabActive(writingTabId);
+    try {
+      await browserUtil.makeTabActive(writingTabId);
+    } catch (e) {
+      if (e.message.includes("Invalid tab")) {
+        e.displayMessage = "Notes tab can't be found";
+        throw e;
+      }
+    }
   },
 });
 

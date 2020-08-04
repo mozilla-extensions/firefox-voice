@@ -64,6 +64,7 @@ export const PopupController = function() {
   const [requestFollowup, setRequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
   const [showZeroVolumeError, setShowZeroVolumeError] = useState(false);
+  const [userSettings, setUserSettings] = useState({});
 
   let executedIntent = false;
   let stream = null;
@@ -92,6 +93,7 @@ export const PopupController = function() {
   const init = async () => {
     log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
+
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
@@ -99,7 +101,6 @@ export const PopupController = function() {
       window.close();
       return;
     }
-
     listenForFollowup = userSettings.listenForFollowup;
     if (userSettings.audioInputId !== undefined) {
       audioInputId = userSettings.audioInputId;
@@ -170,17 +171,21 @@ export const PopupController = function() {
     });
     window.close();
   };
+  const updateUserSettings = async userSettings => {
+    await settings.saveSettings(userSettings);
+    setUserSettings(userSettings);
+  };
 
   const playListeningChime = () => {
     const audio = new Audio(
-      "https://mozilla.github.io/firefox-voice/chime.ogg"
+      "https://mozilla-extensions.github.io/firefox-voice/chime.ogg"
     );
     audio.play();
   };
 
   const playTimerAlarm = () => {
     const audio = new Audio(
-      "https://mozilla.github.io/firefox-voice/alarm.mp3"
+      "https://mozilla-extensions.github.io/firefox-voice/alarm.mp3"
     );
     audio.play();
     setTimeout(() => {
@@ -778,9 +783,11 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      renderFollowup={listenForFollowup || requestFollowup}
+      renderFollowup={requestFollowup}
       followupText={followupText}
       showZeroVolumeError={showZeroVolumeError}
+      userSettings={{ ...userSettings }}
+      updateUserSettings={updateUserSettings}
     />
   );
   log.timing("PopupController finished");

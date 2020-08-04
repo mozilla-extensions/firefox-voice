@@ -1,4 +1,4 @@
-[navigation.bangSearch]
+[navigation.serviceSearch]
 description = "Search a specific service, using their site-specific search page"
 match = """
   google images (of | for |) [query] [service=images]
@@ -10,40 +10,40 @@ match = """
   (do a |) (search | query | find | find me | look up | lookup | look on | look for) (my | on | for | in |) (the |) [query] (on | in) [service:serviceName] (for me |)
 """
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Search my Gmail for tickets to Hamilton"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Look up The Book Thief on GoodReads"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Search CSS grid on MDN"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Look up The Book Thief on GoodReads"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Search CSS grid on MDN"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Look up Hamilton in Gmail"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Images of sparrows"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Find the nearest sushi on maps"
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "search google images of sparrows for me"
 test = true
 expectSlots = {service = "google images"}
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Find website work plan on my Google Drive"
 test = true
 
-[[navigation.bangSearch.example]]
+[[navigation.serviceSearch.example]]
 phrase = "Search ScrollAnywhere on add-ons"
 
 [navigation.clearQueryDatabase]

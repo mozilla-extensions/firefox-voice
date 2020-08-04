@@ -128,7 +128,7 @@ Most of the background messages are handled in `main.js` (which calls out to any
 │   ├── music                   Interact with music services (play, pause, search, etc)
 │   ├── muting                  Mute and unmute tabs
 │   ├── navigation              Go to sites and follow links
-│   ├── nicknames               Shortcuts and routines
+│   ├── routines               Shortcuts and routines
 │   ├── notes                   Add notes to a background tab
 │   ├── phrases.test.js         Tests that phrases match as expected
 │   ├── pocket                  Save to pocket

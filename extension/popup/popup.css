@@ -202,6 +202,29 @@ body,
 
 .results-text {
   font-size: 1.5em;
+  white-space: pre-line;
+}
+
+.results-medium-text {
+  font-size: 2em;
+  float: left;
+  font-weight: 600;
+  margin-left: 20px;
+  margin-top: 8px;
+}
+
+.music-list {
+  display: flex;
+  flex-direction: row;
+  margin-left: 0;
+  cursor: pointer;
+}
+
+.music-service-image {
+  width: 50px;
+  height: auto;
+  padding-bottom: 35px;
+  float: left;
 }
 
 #voice-input,
@@ -462,6 +485,7 @@ a#lexicon {
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 #feedback-whats-wrong {

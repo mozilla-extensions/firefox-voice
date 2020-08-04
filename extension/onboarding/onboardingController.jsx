@@ -17,6 +17,10 @@ export const OnboardingController = function() {
     true
   );
   const [permissionError, setPermissionError] = useState(null);
+  const [optinWakewordAlreadyShown, setOptinWakewordAlreadyShown] = useState(
+    true
+  );
+  const [wakewordActive, setWakewordActive] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -31,6 +35,8 @@ export const OnboardingController = function() {
     setOptinTechDataAlreadyShown(
       !!userSettings.collectTranscriptsOptinAnswered
     );
+    setOptinWakewordAlreadyShown(!!userSettings.wakewordOptinAnswered);
+    setWakewordActive(!!userSettings.enableWakeword);
     if (optinViewAlreadyShown) {
       launchPermission();
     }
@@ -61,6 +67,14 @@ export const OnboardingController = function() {
     await settings.saveSettings(userSettings);
   };
 
+  const setWakewordOptinValue = async value => {
+    userSettings.wakewordOptinAnswered = Date.now();
+    userSettings.enableWakeword = value;
+    setWakewordActive(userSettings.enableWakeword);
+    setOptinWakewordAlreadyShown(true);
+    await settings.saveSettings(userSettings);
+  };
+
   const launchPermission = async () => {
     try {
       // Waiting view has been removed because it looks too much like an error view while we're waiting for user input.
@@ -88,6 +102,9 @@ export const OnboardingController = function() {
       setOptinValue={setOptinValue}
       setOptinViewShown={setOptinViewShown}
       permissionError={permissionError}
+      setWakewordOptinValue={setWakewordOptinValue}
+      optinWakewordAlreadyShown={optinWakewordAlreadyShown}
+      wakewordActive={wakewordActive}
     />
   );
 };

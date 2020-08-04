@@ -11,3 +11,4 @@ extension/wakeword/wakewordController.js
 extension/wakeword/wakewordView.js
 extension/intents/pocket/contentScript.js
 *.bundle.js
+extension/js/vendor-honkling/

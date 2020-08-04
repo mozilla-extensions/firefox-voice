@@ -228,10 +228,10 @@ updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
 let wakewordMaybeOpen = false;
 
 const openWakeword = util.serializeCalls(async function() {
-  const { enableWakeword, wakewords } = await settings.getSettings();
+  const { enableWakeword } = await settings.getSettings();
   const wakewordUrl = browser.runtime.getURL("/wakeword/wakeword.html");
   const tabs = await browser.tabs.query({ url: wakewordUrl });
-  if (!enableWakeword || !wakewords.length) {
+  if (!enableWakeword) {
     if (wakewordMaybeOpen) {
       wakewordMaybeOpen = false;
       if (tabs.length) {
@@ -254,6 +254,16 @@ const openWakeword = util.serializeCalls(async function() {
     await sendMessage({ type: "updateWakeword" }, { tabId: tabs[0].id });
   }
   wakewordMaybeOpen = true;
+});
+
+registerHandler("focusWakewordTab", async (message, sender) => {
+  const tab = await browserUtil.activeTab();
+  await browserUtil.makeTabActive(sender.tab.id);
+  return tab.id;
+});
+
+registerHandler("unfocusWakewordTab", async message => {
+  await browserUtil.makeTabActive(message.tabId);
 });
 
 // These message handlers are kept in main.js to avoid cases where the module

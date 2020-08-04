@@ -75,7 +75,7 @@ export const OptionsController = function() {
   const [userSettings, setUserSettings] = useState({});
   const [userOptions, setUserOptions] = useState({});
   const [tabValue, setTabValue] = useState(DEFAULT_TAB);
-  const [registeredNicknames, setRegisteredNicknames] = useState({});
+  const [registeredRoutines, setRegisteredRoutines] = useState({});
 
   const [audioInputDevices, setAudioInputDevices] = useState([]);
   const [synthesizedVoices, setSynthesizedVoices] = useState([]);
@@ -93,7 +93,7 @@ export const OptionsController = function() {
   const init = async () => {
     await initVersionInfo();
     await initSettings();
-    await initRegisteredNicknames();
+    await initRegisteredRoutines();
     await initAudioDevices();
     initSynthesizedVoices();
   };
@@ -121,12 +121,11 @@ export const OptionsController = function() {
     setUserOptions(result.options);
   };
 
-  const initRegisteredNicknames = async () => {
-    const registeredNicknames = await sendMessage({
-      type: "getRegisteredNicknames",
+  const initRegisteredRoutines = async () => {
+    const registeredRoutines = await sendMessage({
+      type: "getRegisteredRoutines",
     });
-
-    setRegisteredNicknames(registeredNicknames);
+    setRegisteredRoutines(registeredRoutines);
   };
 
   const updateUserSettings = async userSettings => {
@@ -134,15 +133,15 @@ export const OptionsController = function() {
     setUserSettings(userSettings);
   };
 
-  const updateNickname = async (nicknameContext, oldNickname) => {
-    const registeredNicknames = await sendMessage({
-      type: "getRegisteredNicknames",
+  const updateRoutine = async (routineContext, oldRoutine) => {
+    const registeredRoutines = await sendMessage({
+      type: "getRegisteredRoutines",
     });
 
-    if (nicknameContext !== undefined) {
+    if (routineContext !== undefined) {
       if (
-        registeredNicknames[nicknameContext.nickname] !== undefined &&
-        (oldNickname === undefined || oldNickname !== nicknameContext.nickname)
+        registeredRoutines[routineContext.routine] !== undefined &&
+        (oldRoutine === undefined || oldRoutine !== routineContext.routine)
       ) {
         log.error("There already is a routine with this name");
         return {
@@ -151,7 +150,7 @@ export const OptionsController = function() {
         };
       }
       const contexts = [];
-      const intents = nicknameContext.intents.split("\n");
+      const intents = routineContext.intents.split("\n");
 
       for (let i = 0; i < intents.length; i++) {
         const intent = intents[i].trim();
@@ -174,37 +173,36 @@ export const OptionsController = function() {
         log.error("No actions added for this routine");
         return { allowed: false, error: "No actions added for this routine" };
       }
-      delete nicknameContext.intents;
-      nicknameContext.contexts = contexts;
+      delete routineContext.intents;
+      routineContext.contexts = contexts;
       await sendMessage({
-        type: "registerNickname",
-        name: nicknameContext.nickname,
+        type: "registerRoutine",
+        name: routineContext.routine,
         context: {
           slots: {},
           parameters: {},
-          ...nicknameContext,
-          utterance: `Combined actions named ${nicknameContext.nickname}`,
+          ...routineContext,
+          utterance: `Combined actions named ${routineContext.routine}`,
         },
       });
-      // perform the same operation on local nickname
-      registeredNicknames[nicknameContext.nickname] = nicknameContext;
+      // perform the same operation on local routine
+      registeredRoutines[routineContext.routine] = routineContext;
     }
     // delete if necessary
     if (
-      oldNickname !== undefined &&
-      (nicknameContext === undefined ||
-        oldNickname !== nicknameContext.nickname)
+      oldRoutine !== undefined &&
+      (routineContext === undefined || oldRoutine !== routineContext.routine)
     ) {
       await sendMessage({
-        type: "registerNickname",
-        name: oldNickname,
+        type: "registerRoutine",
+        name: oldRoutine,
         context: null,
       });
-      // perform the same operation on local nickname
-      delete registeredNicknames[oldNickname];
+      // perform the same operation on local routine
+      delete registeredRoutines[oldRoutine];
     }
 
-    setRegisteredNicknames(registeredNicknames);
+    setRegisteredRoutines(registeredRoutines);
     return { allowed: true };
   };
 
@@ -243,12 +241,12 @@ export const OptionsController = function() {
     });
   };
 
-  const useEditNicknameDraft = (initialIsVisible, initialContext) => {
+  const useEditRoutineDraft = (initialIsVisible, initialContext) => {
     const { ref, isVisible, setVisible } = useToggle(initialIsVisible);
-    const [tempEditableNickname, setTempEditableNickname] = useState({});
+    const [tempEditableRoutine, setTempEditableRoutine] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
-    const copyNickname = {
-      ...tempEditableNickname,
+    const copyRoutine = {
+      ...tempEditableRoutine,
     };
 
     const setDraftVisibile = visible => {
@@ -258,13 +256,13 @@ export const OptionsController = function() {
       }
       const copyInitialContext = JSON.parse(JSON.stringify(initialContext));
       let intents = "";
-      // deep copy inital context and use that as temporary nickname for edit
+      // deep copy inital context and use that as temporary routine for edit
       for (let i = 0; i < initialContext.contexts.length; i++) {
         intents += initialContext.contexts[i].utterance + "\n";
       }
       copyInitialContext.intents = intents;
 
-      setTempEditableNickname(copyInitialContext);
+      setTempEditableRoutine(copyInitialContext);
       setVisible(visible);
     };
 
@@ -272,8 +270,8 @@ export const OptionsController = function() {
       ref,
       isVisible,
       setVisible: setDraftVisibile,
-      tempEditableNickname: copyNickname,
-      setTempEditableNickname,
+      tempEditableRoutine: copyRoutine,
+      setTempEditableRoutine,
       errorMessage,
       setErrorMessage,
     };
@@ -288,10 +286,10 @@ export const OptionsController = function() {
       userSettings={{ ...userSettings }}
       updateUserSettings={updateUserSettings}
       tabValue={tabValue}
-      updateNickname={updateNickname}
-      registeredNicknames={registeredNicknames}
+      updateRoutine={updateRoutine}
+      registeredRoutines={registeredRoutines}
       useToggle={useToggle}
-      useEditNicknameDraft={useEditNicknameDraft}
+      useEditRoutineDraft={useEditRoutineDraft}
       audioInputDevices={audioInputDevices}
       synthesizedVoices={synthesizedVoices}
     />

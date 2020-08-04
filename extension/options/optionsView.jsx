@@ -19,10 +19,10 @@ export const Options = ({
   userSettings,
   updateUserSettings,
   tabValue,
-  updateNickname,
-  registeredNicknames,
+  updateRoutine,
+  registeredRoutines,
   useToggle,
-  useEditNicknameDraft,
+  useEditRoutineDraft,
   audioInputDevices,
   synthesizedVoices,
 }) => {
@@ -45,10 +45,10 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
-          updateNickname={updateNickname}
-          registeredNicknames={registeredNicknames}
+          updateRoutine={updateRoutine}
+          registeredRoutines={registeredRoutines}
           useToggle={useToggle}
-          useEditNicknameDraft={useEditNicknameDraft}
+          useEditRoutineDraft={useEditRoutineDraft}
         ></routinesView.Routines>
       ) : null}
       {tabValue === TABS.HISTORY ? (
@@ -146,7 +146,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         keyboardShortcutError={keyboardShortcutError}
       />
-      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
+      {userOptions.wakewords && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}
@@ -190,7 +190,7 @@ const MusicServiceSettings = ({
         {userOptions.musicServices &&
           userOptions.musicServices.map(musicOption => (
             <option key={musicOption.name} value={musicOption.name}>
-              {musicOption.name}
+              {musicOption.title}
             </option>
           ))}
       </select>
@@ -518,30 +518,35 @@ const WakewordSettings = ({
   }
 
   const wakewords = [];
-  for (const wakeword of userOptions.wakewords) {
-    let className = "styled-checkbox";
-    if (!userSettings.enableWakeword) {
-      className += " disabled";
+
+  if (userOptions.wakewords.length > 1) {
+    for (const wakeword of userOptions.wakewords) {
+      let className = "styled-checkbox";
+      if (!userSettings.enableWakeword) {
+        className += " disabled";
+      }
+      wakewords.push(
+        <li key={`wakeword-${wakeword}`}>
+          <div className={className}>
+            <input
+              id={`wakeword-${wakeword}`}
+              type="checkbox"
+              value={wakeword}
+              checked={userSettings.wakewords.includes(wakeword)}
+              onChange={onWakewordChange}
+              disabled={!userSettings.enableWakeword}
+            />
+            <label htmlFor={`wakeword-${wakeword}`}>
+              <strong>{wakeword}</strong>
+            </label>
+          </div>
+        </li>
+      );
     }
-    wakewords.push(
-      <li key={`wakeword-${wakeword}`}>
-        <div className={className}>
-          <input
-            id={`wakeword-${wakeword}`}
-            type="checkbox"
-            value={wakeword}
-            checked={userSettings.wakewords.includes(wakeword)}
-            onChange={onWakewordChange}
-            disabled={!userSettings.enableWakeword}
-          />
-          <label htmlFor={`wakeword-${wakeword}`}>
-            <strong>{wakeword}</strong>
-          </label>
-        </div>
-      </li>
-    );
   }
 
+  // FIXME: right now wakewords don't support sensitivity or multiple wakewords, so
+  // those settings aren't applicable and are crudely hidden below:
   return (
     <fieldset id="wakeword">
       <legend>Wakeword</legend>
@@ -555,34 +560,43 @@ const WakewordSettings = ({
               onChange={onEnableWakewordChange}
             />
             <label htmlFor="wakeword-enable">
-              <strong>Enable wakeword detection</strong>
+              <strong>Enable wakeword detection</strong> powered by the{" "}
+              <a
+                href="https://github.com/castorini/howl/"
+                rel="nooopener"
+                target="_blank"
+              >
+                Howl Project
+              </a>
             </label>
           </div>
           <p>
             If you turn this option on you will be able to enable Firefox Voice
-            by saying any one of the (checked) words below.
+            by saying <strong>Hey Firefox</strong>.
           </p>
         </li>
-        <li>
-          <div>
-            <input
-              id="wakeword-sensitivity"
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={userSettings.wakewordSensitivity}
-              onChange={onWakewordSensitivityChange}
-            />
-            <label htmlFor="wakeword-sensitivity">
-              {userSettings.wakewordSensitivity}
-            </label>
-          </div>
-          <p>
-            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
-            listen)
-          </p>
-        </li>
+        {false ? (
+          <li>
+            <div>
+              <input
+                id="wakeword-sensitivity"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={userSettings.wakewordSensitivity}
+                onChange={onWakewordSensitivityChange}
+              />
+              <label htmlFor="wakeword-sensitivity">
+                {userSettings.wakewordSensitivity}
+              </label>
+            </div>
+            <p>
+              Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
+              listen)
+            </p>
+          </li>
+        ) : null}
         {wakewords}
       </ul>
     </fieldset>

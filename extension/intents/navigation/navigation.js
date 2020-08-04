@@ -8,7 +8,6 @@ import * as searching from "../../searching.js";
 import { metadata } from "../../services/metadata.js";
 import { performSearchPage } from "../search/search.js";
 import { sendMessage } from "../../communicate.js";
-import { pageNames } from "../../background/entityTypes";
 
 const QUERY_DATABASE_EXPIRATION = 1000 * 60 * 60 * 24 * 30; // 30 days
 const queryDatabase = new Map();
@@ -36,6 +35,7 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query.toLowerCase();
+    const pageNames = await intentRunner.getRegisteredPageName(query);
     let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
@@ -76,7 +76,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "navigation.bangSearch",
+  name: "navigation.serviceSearch",
   async run(context) {
     let service = context.slots.service || context.parameters.service;
     let tab = undefined;
@@ -88,7 +88,7 @@ intentRunner.registerIntent({
     }
 
     if (service !== null) {
-      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+      myurl = await searching.ddgServiceSearchUrl(context.slots.query, service);
 
       context.addTelemetryServiceName(
         `ddg:${searching.ddgBangServiceName(service)}`

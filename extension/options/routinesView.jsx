@@ -2,13 +2,13 @@
 /* globals log */
 
 export const Routines = ({
-  updateNickname,
-  registeredNicknames,
+  updateRoutine,
+  registeredRoutines,
   useToggle,
-  useEditNicknameDraft,
+  useEditRoutineDraft,
 }) => {
-  const draft = useEditNicknameDraft(false, {
-    name: "nicknames.combined",
+  const draft = useEditRoutineDraft(false, {
+    name: "routines.combined",
     contexts: [],
   });
 
@@ -40,14 +40,14 @@ export const Routines = ({
         {draft.isVisible === true ? (
           <EditRoutineDraft
             draft={draft}
-            updateNickname={updateNickname}
+            updateRoutine={updateRoutine}
           ></EditRoutineDraft>
         ) : null}
         <RoutinesList
-          registeredNicknames={registeredNicknames}
-          updateNickname={updateNickname}
+          registeredRoutines={registeredRoutines}
+          updateRoutine={updateRoutine}
           useToggle={useToggle}
-          useEditNicknameDraft={useEditNicknameDraft}
+          useEditRoutineDraft={useEditRoutineDraft}
         ></RoutinesList>
       </fieldset>
     </div>
@@ -55,14 +55,14 @@ export const Routines = ({
 };
 
 const RoutineCard = ({
-  nicknameContext,
+  routineContext,
   useToggle,
-  updateNickname,
-  useEditNicknameDraft,
+  updateRoutine,
+  useEditRoutineDraft,
 }) => {
-  const draft = useEditNicknameDraft(false, nicknameContext);
+  const draft = useEditRoutineDraft(false, routineContext);
   const allUtterances = [];
-  const utterancesContexts = nicknameContext.contexts;
+  const utterancesContexts = routineContext.contexts;
   if (utterancesContexts !== undefined) {
     for (let i = 0; i < utterancesContexts.length - 1; i++) {
       allUtterances.push(utterancesContexts[i].utterance + ", ");
@@ -77,19 +77,19 @@ const RoutineCard = ({
     <div className="card">
       <RoutineMenu
         useToggle={useToggle}
-        nicknameContext={nicknameContext}
-        updateNickname={updateNickname}
-        useEditNicknameDraft={useEditNicknameDraft}
+        routineContext={routineContext}
+        updateRoutine={updateRoutine}
+        useEditRoutineDraft={useEditRoutineDraft}
         draft={draft}
       ></RoutineMenu>
-      <h2 className="card-name">"{nicknameContext.nickname}"</h2>
+      <h2 className="card-name">"{routineContext.routine}"</h2>
       <h3 className="card-text">{allUtterances}</h3>
       <div>
         {draft.isVisible === true ? (
           <EditRoutineDraft
             draft={draft}
-            updateNickname={updateNickname}
-            oldNicknameContext={nicknameContext}
+            updateRoutine={updateRoutine}
+            oldRoutineContext={routineContext}
           ></EditRoutineDraft>
         ) : null}
       </div>
@@ -98,32 +98,32 @@ const RoutineCard = ({
 };
 
 const RoutinesList = ({
-  registeredNicknames,
-  updateNickname,
+  registeredRoutines,
+  updateRoutine,
   useToggle,
-  useEditNicknameDraft,
+  useEditRoutineDraft,
 }) => {
-  const allNicks = [];
+  const allRoutines = [];
 
-  for (const nick in registeredNicknames) {
-    allNicks.push(
+  for (const routines in registeredRoutines) {
+    allRoutines.push(
       <RoutineCard
-        nicknameContext={registeredNicknames[nick]}
+        routineContext={registeredRoutines[routines]}
         useToggle={useToggle}
-        updateNickname={updateNickname}
-        useEditNicknameDraft={useEditNicknameDraft}
+        updateRoutine={updateRoutine}
+        useEditRoutineDraft={useEditRoutineDraft}
       ></RoutineCard>
     );
   }
 
-  return <div>{allNicks}</div>;
+  return <div>{allRoutines}</div>;
 };
 
-const RoutineMenu = ({ useToggle, nicknameContext, updateNickname, draft }) => {
+const RoutineMenu = ({ useToggle, routineContext, updateRoutine, draft }) => {
   const menu = useToggle(false);
 
-  const removeNickname = () => {
-    updateNickname(undefined, nicknameContext.nickname);
+  const removeRoutine = () => {
+    updateRoutine(undefined, routineContext.routine);
     menu.setVisible(false);
   };
 
@@ -157,7 +157,7 @@ const RoutineMenu = ({ useToggle, nicknameContext, updateNickname, draft }) => {
               </button>
               <button
                 className="no-style-button menu-button"
-                onClick={() => removeNickname()}
+                onClick={() => removeRoutine()}
               >
                 <img
                   src="./images/delete.svg"
@@ -174,33 +174,33 @@ const RoutineMenu = ({ useToggle, nicknameContext, updateNickname, draft }) => {
   );
 };
 
-const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
+const EditRoutineDraft = ({ draft, updateRoutine, oldRoutineContext }) => {
   const allFieldsCompleted = () => {
     return (
-      draft.tempEditableNickname.nickname !== undefined &&
-      draft.tempEditableNickname.nickname.length > 0 &&
-      draft.tempEditableNickname.intents !== undefined &&
-      draft.tempEditableNickname.intents.length > 0
+      draft.tempEditableRoutine.routine !== undefined &&
+      draft.tempEditableRoutine.routine.length > 0 &&
+      draft.tempEditableRoutine.intents !== undefined &&
+      draft.tempEditableRoutine.intents.length > 0
     );
   };
   const save = async () => {
     if (
-      draft.tempEditableNickname.nickname === undefined ||
-      draft.tempEditableNickname.nickname.length === 0
+      draft.tempEditableRoutine.routine === undefined ||
+      draft.tempEditableRoutine.routine.length === 0
     ) {
       draft.setErrorMessage("This Routine should have a name.");
       log.error("This routine should have a name");
       return;
     }
 
-    let oldNickname = undefined;
-    if (oldNicknameContext !== undefined) {
-      oldNickname = oldNicknameContext.nickname;
+    let oldRoutine = undefined;
+    if (oldRoutineContext !== undefined) {
+      oldRoutine = oldRoutineContext.routine;
     }
 
-    const { allowed, error } = await updateNickname(
-      draft.tempEditableNickname,
-      oldNickname
+    const { allowed, error } = await updateRoutine(
+      draft.tempEditableRoutine,
+      oldRoutine
     );
     if (allowed === true) {
       draft.setVisible(false);
@@ -209,27 +209,27 @@ const EditRoutineDraft = ({ draft, updateNickname, oldNicknameContext }) => {
     }
   };
 
-  const changeNickname = nickname => {
+  const changeRoutine = routine => {
     draft.setErrorMessage("");
-    const nicknameContext = draft.tempEditableNickname;
-    nicknameContext.nickname = nickname;
-    draft.setTempEditableNickname(nicknameContext);
+    const routineContext = draft.tempEditableRoutine;
+    routineContext.routine = routine;
+    draft.setTempEditableRoutine(routineContext);
   };
 
   return (
     <div className="draft">
       <div className="draft-content">
-        <div className="nickname-container">
-          <label htmlFor="nickname" className="label-nickname">
+        <div className="routine-container">
+          <label htmlFor="routine" className="label-routine">
             When you say this:
           </label>
           <input
-            id="nickname"
+            id="routine"
             className="styled-input"
             type="text"
             placeholder="Add name here"
-            onChange={event => changeNickname(event.target.value)}
-            value={draft.tempEditableNickname.nickname}
+            onChange={event => changeRoutine(event.target.value)}
+            value={draft.tempEditableRoutine.routine}
           />
         </div>
         <UtteranceList draft={draft}></UtteranceList>
@@ -268,14 +268,14 @@ const UtteranceList = ({ draft }) => {
     if (utteranceContext !== undefined) {
       utteranceContext.utterance = utterance;
     } else {
-      draft.tempEditableNickname.intents = utterance;
+      draft.tempEditableRoutine.intents = utterance;
     }
-    draft.setTempEditableNickname(draft.tempEditableNickname);
+    draft.setTempEditableRoutine(draft.tempEditableRoutine);
   };
 
   return (
     <div className="utterances-container">
-      <p className="label-nickname">Do this: </p>
+      <p className="label-routine">Do this: </p>
       <textarea
         id="utterances"
         className="styled-input textarea-container"
@@ -284,7 +284,7 @@ const UtteranceList = ({ draft }) => {
         onChange={event => {
           updateUtterance(event.target.value);
         }}
-        value={draft.tempEditableNickname.intents}
+        value={draft.tempEditableRoutine.intents}
       />
     </div>
   );
