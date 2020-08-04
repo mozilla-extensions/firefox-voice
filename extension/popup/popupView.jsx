@@ -35,6 +35,8 @@ export const Popup = ({
   showZeroVolumeError,
   userSettings,
   updateUserSettings,
+  showSurvey,
+  onClickSurvey,
 }) => {
   const [inputValue, setInputValue] = useState(null);
   const [showScroll, setShowScroll] = useState(false);
@@ -133,6 +135,8 @@ export const Popup = ({
       <PopupFooter
         currentView={currentView}
         showSettings={showSettings}
+        showSurvey={showSurvey}
+        onClickSurvey={onClickSurvey}
         timerInMS={timerInMS}
       />
       {timerInMS > 0 ? (
@@ -467,7 +471,12 @@ const FeedbackThanks = () => {
   );
 };
 
-const PopupFooter = ({ currentView, showSettings }) => {
+const PopupFooter = ({
+  currentView,
+  showSettings,
+  showSurvey,
+  onClickSurvey,
+}) => {
   if (
     currentView === "searchResults" ||
     currentView === "feedback" ||
@@ -492,16 +501,39 @@ const PopupFooter = ({ currentView, showSettings }) => {
         </svg>
       </button>
       <div id="moz-voice-privacy">
-        <a
-          href="https://firefox-voice-feedback.herokuapp.com/"
-          target="_blank"
-          rel="noopener"
-        >
-          Feedback?
-        </a>
+        {showSurvey ? (
+          <SurveyLink onClickSurvey={onClickSurvey} />
+        ) : (
+          <FeedbackLink />
+        )}
       </div>
       <div></div>
     </div>
+  );
+};
+
+const FeedbackLink = () => {
+  return (
+    <a
+      href="https://firefox-voice-feedback.herokuapp.com/"
+      target="_blank"
+      rel="noopener"
+    >
+      Feedback?
+    </a>
+  );
+};
+
+const SurveyLink = ({ onClickSurvey }) => {
+  return (
+    <a
+      href="https://qsurvey.mozilla.com/s3/voice-feedback"
+      target="_blank"
+      rel="noopener"
+      onClick={onClickSurvey}
+    >
+      Take a survey?
+    </a>
   );
 };
 

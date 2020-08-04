@@ -1,9 +1,10 @@
 /* globals log, MicAudioProcessor, audioConfig, commands, SpeechResModel, inferenceEngineConfig, InferenceEngine, OfflineAudioProcessor, predictionFrequency */
 
 import * as settings from "../settings.js";
+import { serializeCalls } from "../util.js";
 
 const LISTENING_TIMEOUT = 2000;
-const MIC_PERMISSION_TIMEOUT = 5000;
+const MIC_PERMISSION_TIMEOUT = 2000;
 let enabled = false;
 let lastInvoked = 0;
 
@@ -80,17 +81,18 @@ function stopWatchword() {
   enabled = false;
 }
 
-export async function updateWakeword() {
+export const updateWakeword = serializeCalls(async function() {
   const userSettings = await settings.getSettings();
   if (userSettings.enableWakeword) {
     // FIXME: if we use other settings besides enableWakeword (e.g., userSettings.wakewords,
     // userSettings.wakewordSensitivity), we should restart the listener if those settings change
     if (!enabled) {
-      startWatchword();
+      return startWatchword();
     }
   } else if (enabled) {
-    stopWatchword();
+    return stopWatchword();
   }
-}
+  return null;
+});
 
 updateWakeword();
