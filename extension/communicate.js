@@ -116,6 +116,9 @@ export async function sendMessage(message, options) {
         if (e.message.includes("Missing host permission for the tab")) {
           e.displayMessage = "That does not work on this kind of page";
         }
+        if (e.message) {
+          e.message += " In message type=" + message.type;
+        }
         throw e;
       }
     );
