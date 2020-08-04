@@ -235,7 +235,13 @@ intentRunner.registerIntent({
 
 intentRunner.registerIntent({
   name: "routines.stop",
-  async run(context) {
-    currentRoutineExecutor.stop();
+  async run() {
+    const routineExecutor = currentRoutineExecutor || pausedRoutineExecutor;
+    if (routineExecutor === null) {
+      const exc = new Error("No routine executing.");
+      exc.displayMessage = "No routine executing.";
+      throw exc;
+    }
+    routineExecutor.stop();
   },
 });

@@ -100,6 +100,7 @@ export class RoutineExecutor {
       const subcommand = this.subcommands[this.programCounter];
       const stopRoutine = await this.runSubcommand(subcommand);
       if (stopRoutine === true) {
+        currentRoutineExecutor = null;
         return true;
       }
     }
@@ -108,6 +109,7 @@ export class RoutineExecutor {
       exc.displayMessage = "'End for' is required at the end of loop.";
       throw exc;
     }
+    currentRoutineExecutor = null;
     return true;
   }
 
