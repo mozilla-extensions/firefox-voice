@@ -1,10 +1,11 @@
-/* globals log */
+/* globals log, chrono */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
 import { RoutineExecutor, pausedRoutineExecutor } from "./routineExecutor.js";
 import English from "../../language/langs/english.js";
+import { convertToMs } from "../../util.js";
 
 intentRunner.registerIntent({
   name: "routines.name",
@@ -111,13 +112,20 @@ intentRunner.registerIntent({
       exc.displayMessage = "Command not available.";
       throw exc;
     }
-    browser.runtime.sendMessage({
-      type: "presentMessage",
-      message:
-        context.slots.message ||
-        `Routine "${context.routineExecutor.routineName}" was paused.`,
-    });
-    context.routineExecutor.pauseRoutine();
+    if (context.parameters.time !== undefined) {
+      const ms = convertToMs(context.slots.time);
+
+      context.routineExecutor.pauseRoutineForTime(ms, context.slots.message);
+    } else {
+      browser.runtime.sendMessage({
+        type: "presentMessage",
+        message:
+          context.slots.message ||
+          `Routine "${context.routineExecutor.routineName}" was paused.`,
+      });
+
+      context.routineExecutor.pauseRoutine();
+    }
   },
 });
 

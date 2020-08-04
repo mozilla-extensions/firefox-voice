@@ -67,6 +67,8 @@ description = "Pauses a routine"
 match = """
   pause routine (with |) (and |) (show |) (message | status | text | print) [message]
   pause routine
+  pause routine for [time] [time=true]
+  pause routine for [time] (with |) (and |) (show |) (message | status | text | print) [message] [time=true]
 """
 
 [routines.continue]

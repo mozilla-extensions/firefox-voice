@@ -1,7 +1,8 @@
-/* globals catcher, chrono */
+/* globals catcher */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import { registerHandler, sendMessage } from "../../communicate.js";
+import { convertToMs } from "../../util.js";
 
 class TimerController {
   constructor() {
@@ -139,32 +140,21 @@ intentRunner.registerIntent({
         context.slots.time + " " + context.parameters.suffixTime;
     }
     context.keepPopup();
-    const result = chrono.parse(context.slots.time);
 
-    if (result === null || result.length === 0) {
+    if (context.slots.time === null || context.slots.time.length === 0) {
       const e = new Error("Failed to set timer");
       e.displayMessage = `Cannot set timer for ${context.slots.time}`;
       throw e;
     }
 
-    let ms = 0;
-    for (let i = 0; i < result.length; i++) {
-      const startTime = result[i].ref;
-      const endTime = result[i].start.date();
-      // skip if timer is set for 0 seconds
-      const time = parseInt(result[i].text);
-      if (time === 0) {
-        continue;
-      }
-      // round up to actual number of seconds
-      ms += Math.ceil((endTime - startTime) / 1000.0) * 1000;
-    }
+    const ms = convertToMs(context.slots.time);
 
     if (ms === 0) {
       const e = new Error("Failed to set timer");
       e.displayMessage = "Cannot set timer for 0 seconds";
       throw e;
     }
+
     timerController.setActiveTimer(ms, context);
 
     await executeAfterTimerIsSet(context);
