@@ -104,3 +104,8 @@ match = """
   end for
 """
 
+[routines.stop]
+description = "Intent to stop a routine"
+match = """
+  (stop | close | cancel) (this | active | the | current |) routine
+"""
