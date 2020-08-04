@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS = {
   speechOutput: false,
   saveAudioHistory: false,
   saveHistory: true,
+  userLocale: "en-US"
 };
 
 export function getSettings() {

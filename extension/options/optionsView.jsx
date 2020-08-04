@@ -25,6 +25,7 @@ export const Options = ({
   useEditRoutineDraft,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-page">
@@ -38,6 +39,7 @@ export const Options = ({
           updateUserSettings={updateUserSettings}
           audioInputDevices={audioInputDevices}
           synthesizedVoices={synthesizedVoices}
+          inputLocales={inputLocales}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -132,6 +134,7 @@ const General = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-content">
@@ -140,6 +143,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         audioInputDevices={audioInputDevices}
         synthesizedVoices={synthesizedVoices}
+        inputLocales={inputLocales}
       />
       <KeyboardShortcutSettings
         userSettings={userSettings}
@@ -228,6 +232,42 @@ const SelectMicPreferences = ({
   );
 };
 
+const VoiceInputLocalePreferences = ({
+  userSettings,
+  updateUserSettings,
+  inputLocales,
+}) => {
+  console.log("THE DEFAULT IS....");
+  console.log(userSettings.userLocale);
+  const onLocalePreferenceChange = event => {
+    userSettings.userLocale = event.target.value;
+    updateUserSettings(userSettings);
+  };
+  return (
+    <div id="voice-input">
+      <div id="voice-input-header">Language and locale</div>
+      <div>
+        Help Firefox Voice to better recognize your voice and vocabulary by specifying your accent.
+      </div>
+      <div id="voice-selector">
+        <span>Locale </span>
+        <select
+          value={userSettings.userLocale}
+          onChange={onLocalePreferenceChange}
+          onBlur={onLocalePreferenceChange}
+        >
+          {inputLocales &&
+            inputLocales.map(locale => (
+              <option key={locale.name} value={locale.code}>
+                {locale.name}
+              </option>
+            ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
 const VoiceOutputPreferences = ({
   userSettings,
   updateUserSettings,
@@ -308,6 +348,7 @@ const PreferenceSettings = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   const onPreferenceChange = setting => event => {
     if (event) {
@@ -351,6 +392,11 @@ const PreferenceSettings = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         synthesizedVoices={synthesizedVoices}
+      />
+      <VoiceInputLocalePreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        inputLocales={inputLocales}
       />
     </fieldset>
   );
