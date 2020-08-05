@@ -141,11 +141,6 @@ const General = ({
         audioInputDevices={audioInputDevices}
         synthesizedVoices={synthesizedVoices}
       />
-      <KeyboardShortcutSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        keyboardShortcutError={keyboardShortcutError}
-      />
       {userOptions.wakewords && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
@@ -153,6 +148,11 @@ const General = ({
           updateUserSettings={updateUserSettings}
         />
       ) : null}
+      <KeyboardShortcutSettings
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        keyboardShortcutError={keyboardShortcutError}
+      />
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
