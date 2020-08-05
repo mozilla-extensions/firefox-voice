@@ -468,7 +468,8 @@ audio {
   width: 9em;
 }
 
-#voice-output-header {
+#voice-output-header,
+#voice-input-header {
   font-size: 1.25em;
   font-weight: 300;
   margin-top: 2em;
