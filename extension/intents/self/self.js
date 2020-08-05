@@ -121,9 +121,9 @@ intentRunner.registerIntent({
   name: "self.smartSpeaker",
   async run(context) {
     const userSettings = await settings.getSettings();
-    const activate = context.parameters.activate;
-    userSettings.enableWakeword = activate === "true";
-    userSettings.speechOutput = activate === "true";
+    const activate = context.parameters.activate === "true";
+    userSettings.enableWakeword = activate;
+    userSettings.speechOutput = activate;
     await settings.saveSettings(userSettings);
   },
 });
