@@ -1,8 +1,11 @@
-## Version 0.24.0 (2020-08-04)
+## Version 0.24.0 (2020-08-05)
 
 - New wakeword available (if turned on in Firefox Voice options): **Hey Firefox**
+- New intent **enable/disable smart speaker**, which turns on/off voice output and wakeword detection. Fixes [#1857](https://github.com/mozilla/firefox-voice/issues/1857) [2418b83](https://github.com/mozilla/firefox-voice/commit/2418b83)
 - New intents: **add title/link/selection to clipboard** (from [AbhiVaidya95](https://github.com/AbhiVaidya95)). Fixes [#1829](https://github.com/mozilla/firefox-voice/issues/1829) [149094d](https://github.com/mozilla/firefox-voice/commit/149094d)
 - Move to [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/firefox-voice/)
+- Add English locale as a preference ([#1883](https://github.com/mozilla/firefox-voice/issues/1883)). Fixes [#1825](https://github.com/mozilla/firefox-voice/issues/1825) [a72f16a](https://github.com/mozilla/firefox-voice/commit/a72f16a)
+- Restore opening the lexicon for help phrases. Fixes [#1269](https://github.com/mozilla/firefox-voice/issues/1269) [4e58b0d](https://github.com/mozilla/firefox-voice/commit/4e58b0d)
 - make 'open youtube' etc work (again). Fixes [#1877](https://github.com/mozilla/firefox-voice/issues/1877) [2dda090](https://github.com/mozilla/firefox-voice/commit/2dda090)
 - Add survey link
   This shows a survey link 10% of the time, until you click it. Then for 14 days the link won't be shown. Fixes [#1878](https://github.com/mozilla/firefox-voice/issues/1878) [3582bdd](https://github.com/mozilla/firefox-voice/commit/3582bdd)
