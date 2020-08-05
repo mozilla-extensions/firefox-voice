@@ -19,7 +19,8 @@ const DEFAULT_SETTINGS = {
   speechOutput: false,
   saveAudioHistory: false,
   saveHistory: true,
-  userLocale: "en-US"
+  // Null indicates we should pick it up from navigator.language:
+  userLocale: null,
 };
 
 export function getSettings() {

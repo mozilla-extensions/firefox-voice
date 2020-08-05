@@ -237,22 +237,23 @@ const VoiceInputLocalePreferences = ({
   updateUserSettings,
   inputLocales,
 }) => {
-  console.log("THE DEFAULT IS....");
-  console.log(userSettings.userLocale);
   const onLocalePreferenceChange = event => {
     userSettings.userLocale = event.target.value;
     updateUserSettings(userSettings);
   };
+  const locale = userSettings.userLocale || navigator.language;
+  const defaultValue = locale && locale.startsWith("en-") ? locale : "en-US";
   return (
     <div id="voice-input">
       <div id="voice-input-header">Language and locale</div>
       <div>
-        Help Firefox Voice to better recognize your voice by specifying your accent.
+        Help Firefox Voice to better recognize your voice by specifying your
+        English accent
       </div>
       <div id="voice-selector">
         <span>Locale </span>
         <select
-          value={userSettings.userLocale}
+          value={defaultValue}
           onChange={onLocalePreferenceChange}
           onBlur={onLocalePreferenceChange}
         >
