@@ -117,7 +117,6 @@ intentRunner.registerIntent({
   },
 });
 
-
 intentRunner.registerIntent({
   name: "self.smartSpeaker",
   async run(context) {
@@ -126,5 +125,5 @@ intentRunner.registerIntent({
     userSettings.enableWakeword = activate === "true";
     userSettings.speechOutput = activate === "true";
     await settings.saveSettings(userSettings);
-  }
+  },
 });
