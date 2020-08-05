@@ -86,69 +86,69 @@ export const OptionsController = function() {
   const inputLocales = [
     {
       name: "English (Australia)",
-      code: "en-AU"
+      code: "en-AU",
     },
     {
       name: "English (Canada)",
-      code: "en-CA"
+      code: "en-CA",
     },
     {
       name: "English (Ghana)",
-      code: "en-GH"
+      code: "en-GH",
     },
     {
       name: "English (Hong Kong)",
-      code: "en-HK"
+      code: "en-HK",
     },
     {
       name: "English (India)",
-      code: "en-IN"
+      code: "en-IN",
     },
     {
       name: "English (Ireland)",
-      code: "en-IE"
+      code: "en-IE",
     },
     {
       name: "English (Kenya)",
-      code: "en-KE"
+      code: "en-KE",
     },
     {
       name: "English (New Zealand)",
-      code: "en-NZ"
+      code: "en-NZ",
     },
     {
       name: "English (Nigeria)",
-      code: "en-NG"
+      code: "en-NG",
     },
     {
       name: "English (Pakistan)",
-      code: "en-PK"
+      code: "en-PK",
     },
     {
       name: "English (Philippines)",
-      code: "en-PH"
+      code: "en-PH",
     },
     {
       name: "English (Singapore)",
-      code: "en-SG"
+      code: "en-SG",
     },
     {
       name: "English (South Africa)",
-      code: "en-ZA"
+      code: "en-ZA",
     },
     {
       name: "English (Tanzania)",
-      code: "en-TZ"
+      code: "en-TZ",
     },
     {
       name: "English (United Kingdom)",
-      code: "en-GB"
+      code: "en-GB",
     },
     {
       name: "English (United States)",
-      code: "en-US"
+      code: "en-US",
     },
-  ]
+  ];
 
   useEffect(() => {
     if (!isInitialized) {
