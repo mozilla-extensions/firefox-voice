@@ -11,7 +11,7 @@ To release...
 - [ ] Tag the version like `git tag vX.Y.0`
 - [ ] Push the change and tags: `git push && git push --tags`
 - [ ] Run `./bin/update-static-site.sh`
-- [ ] Create a PR for master -> prod
+- [ ] Create a [PR for master -> prod](https://github.com/mozilla-extensions/firefox-voice/compare/prod...master?expand=1)
 - [ ] Land said PR
 - [ ] Follow [some release docs](https://github.com/mozilla-extensions/xpi-manifest/blob/master/docs/releasing-a-xpi.md)
 - [ ] Specifically connect to [shipit](https://shipit.mozilla-releng.net/newxpi) via the VPN
