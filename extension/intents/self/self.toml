@@ -122,3 +122,18 @@ match = """
 
 [[self.helpIntent.example]]
 phrase = "help on search"
+
+[self.smartSpeaker]
+description = "This will enable or disable the wakeword and turn on or off audio output"
+match = """
+  (enable | turn on | activate | start) smart speaker (mode |) [activate=true]
+  smart speaker (mode |) (on | active | activate | enabled | start) [activate=true]
+  (disable | turn off | deactivate | stop) smart speaker (mode |) [activate=false]
+  smart speaker (mode |) (off | deactivate | disabled | stop) [activate=false]
+"""
+
+[[self.smartSpeaker.example]]
+phrase = "enable smart speaker mode"
+
+[[self.smartSpeaker.example]]
+phrase = "smart speaker off"
