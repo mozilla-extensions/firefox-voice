@@ -281,16 +281,16 @@ export function setLastIntent(intent) {
 
 export async function runUtterance(utterance, noPopup) {
   log.timing(`intentRunner.runUtterance(${utterance}) called`);
-  for (const name in registeredNicknames) {
+  for (const name in registeredRoutines) {
     const re = new RegExp(`\\b${name}\\b`, "i");
     if (re.test(utterance)) {
-      const repl = utterance.replace(re, "nickname");
-      const context = registeredNicknames[name].clone();
+      const repl = utterance.replace(re, "routine");
+      const context = registeredRoutines[name].clone();
       const handler = intents[context.name];
       const method =
-        handler.runNickname ||
+        handler.runRoutine ||
         async function(repl, context, utterance) {
-          if (repl === "nickname") {
+          if (repl === "routine") {
             await runIntent(context);
             return true;
           }
@@ -303,7 +303,7 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
-  log.timing("intentRunner finished nickname checking");
+  log.timing("intentRunner finished routine checking");
   let contextParams = intentParser.parse(utterance);
   log.timing("intentParser returned");
   contextParams.noPopup = !!noPopup;
@@ -483,45 +483,70 @@ export function getIntentHistory() {
   return intentHistory;
 }
 
-const registeredNicknames = {};
+const registeredRoutines = {};
 
-export function registerNickname(name, context) {
+export function registerRoutine(name, context) {
   name = name.toLowerCase();
   if (!context) {
-    delete registeredNicknames[name];
-    log.info("Removed nickname", name);
+    delete registeredRoutines[name];
+    log.info("Removed routine", name);
   } else {
-    registeredNicknames[name] = context;
-    log.info("Added nickname", name, "->", context.name, context.slots);
+    registeredRoutines[name] = context;
+    log.info("Added routine", name, "->", context.name, context.slots);
   }
-  browser.storage.sync.set({ registeredNicknames });
+  localStorage.setItem(
+    "registeredRoutines",
+    JSON.stringify(registeredRoutines)
+  );
 }
 
-registerHandler("registerNickname", message => {
+registerHandler("registerRoutine", message => {
   let context = message.context;
   if (context !== null) {
     context = new IntentContext(context);
   }
-  return registerNickname(message.name, context);
+  return registerRoutine(message.name, context);
 });
 
-async function initRegisteredNicknames() {
+async function moveNicknameToRoutine() {
   const result = await browser.storage.sync.get(["registeredNicknames"]);
   if (result.registeredNicknames) {
     for (const name in result.registeredNicknames) {
       const value = result.registeredNicknames[name];
-      const context = new IntentContext(value);
-      registeredNicknames[name] = context;
-      log.info("Loaded nickname", name, context.name, context.slots);
+      value.routine = value.nickname;
+      delete value.nickname;
+    }
+    const registeredRoutines = result.registeredNicknames;
+    localStorage.setItem(
+      "registeredRoutines",
+      JSON.stringify(registeredRoutines)
+    );
+    const checkRoutines = localStorage.getItem("registeredRoutines");
+    if (JSON.stringify(checkRoutines) === JSON.stringify(registeredRoutines)) {
+      await browser.storage.sync.remove("registeredNicknames");
     }
   }
 }
 
-export function getRegisteredNicknames() {
-  return registeredNicknames;
+// switch to local storage;
+async function initRegisteredRoutines() {
+  await moveNicknameToRoutine();
+  const routines = JSON.parse(localStorage.getItem("registeredRoutines"));
+  if (routines) {
+    for (const name in routines) {
+      const value = routines[name];
+      const context = new IntentContext(value);
+      registeredRoutines[name] = context;
+      log.info("Loaded routine", name, context.name, context.slots);
+    }
+  }
 }
 
-registerHandler("getRegisteredNicknames", getRegisteredNicknames);
+export function getRegisteredRoutines() {
+  return registeredRoutines;
+}
+
+registerHandler("getRegisteredRoutines", getRegisteredRoutines);
 
 let pageNames = {};
 
@@ -533,7 +558,7 @@ export async function registerPageName(name, { url }) {
 
   pageNames[name] = url;
 
-  log.info("Added nickname for page", name, "->", url, creationDate);
+  log.info("Added routine for page", name, "->", url, creationDate);
   await browser.storage.sync.set({ pageNames });
 }
 
@@ -551,7 +576,7 @@ export async function getRegisteredPageName(name) {
 
 export async function unregisterPageName(name) {
   delete pageNames[name];
-  log.info("Removed nickname for page", name);
+  log.info("Removed routine for page", name);
   await browser.storage.sync.set({ pageNames });
 }
 
@@ -598,5 +623,5 @@ registerHandler("parseUtterance", message => {
   );
 });
 
-initRegisteredNicknames();
+initRegisteredRoutines();
 initRegisteredPageName();

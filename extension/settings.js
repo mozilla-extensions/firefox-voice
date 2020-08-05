@@ -19,6 +19,8 @@ const DEFAULT_SETTINGS = {
   speechOutput: false,
   saveAudioHistory: false,
   saveHistory: true,
+  // Null indicates we should pick it up from navigator.language:
+  userLocale: null,
 };
 
 export function getSettings() {
@@ -49,7 +51,7 @@ export async function getSettingsAndOptions() {
     musicServices: music_getServiceNamesAndTitles(),
     // FIXME: this used to contain the available wakewords, but is empty until we
     // restore wakeword detection:
-    wakewords: [],
+    wakewords: ["Hey Firefox"],
   };
   return { settings, options };
 }

@@ -3,6 +3,7 @@ import * as content from "../../background/content.js";
 import * as browserUtil from "../../browserUtil.js";
 import { timerController } from "../timer/timer.js";
 import { sendMessage } from "../../communicate.js";
+import * as settings from "../../settings.js";
 
 intentRunner.registerIntent({
   name: "self.cancelIntent",
@@ -10,7 +11,7 @@ intentRunner.registerIntent({
     const activeTimer = timerController.getActiveTimer();
     if (activeTimer !== null) {
       timerController.closeActiveTimer();
-      const imageCard = "../../assets/images/check-mark.png";
+      const imageCard = "/assets/images/check-mark.png";
       const card = {
         answer: {
           imgSrc: `${imageCard}`,
@@ -31,7 +32,14 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
-    const imageCard = "../../assets/images/lionel-richie.jpg";
+    await browserUtil.openOrActivateTab("/views/lexicon.html");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "self.hello",
+  async run(context) {
+    const imageCard = "/assets/images/lionel-richie.jpg";
     const card = {
       answer: {
         imgSrc: `${imageCard}`,
@@ -78,7 +86,7 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.simpleTest",
   async run(context) {
-    const imageCard = "../../assets/images/check-mark.png";
+    const imageCard = "./images/check-mark.png";
     const card = {
       answer: {
         imgSrc: `${imageCard}`,
@@ -113,5 +121,16 @@ intentRunner.registerIntent({
       exc.displayMessage = `No matching Intent found for "${query}"`;
       throw exc;
     }
+  },
+});
+
+intentRunner.registerIntent({
+  name: "self.smartSpeaker",
+  async run(context) {
+    const userSettings = await settings.getSettings();
+    const activate = context.parameters.activate === "true";
+    userSettings.enableWakeword = activate;
+    userSettings.speechOutput = activate;
+    await settings.saveSettings(userSettings);
   },
 });

@@ -240,3 +240,13 @@ match = """
 
 [[music.playPlaylist.example]]
 phrase = "play discover weekly playlist on spotify"
+
+
+[music.support]
+description = "This shows the results of music services supported in a card with the ability to set a default"
+match = """
+  (what | which) (are your|) (music | streaming |) (service{s} | player{s} | radio) (do you|) (support | have |)
+"""
+
+[[music.support.example]]
+phrase = "What music player do you support"

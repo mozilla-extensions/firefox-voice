@@ -7,7 +7,7 @@ import { RoutineExecutor, pausedRoutineExecutor } from "./routineExecutor.js";
 import English from "../../language/langs/english.js";
 
 intentRunner.registerIntent({
-  name: "nicknames.name",
+  name: "routines.name",
   async run(context) {
     const intents = intentRunner.getIntentHistory();
     if (!(intents[intents.length - 1] && intents[intents.length - 2])) {
@@ -15,44 +15,44 @@ intentRunner.registerIntent({
       exc.displayMessage = "No previous intent available to name";
       throw exc;
     }
-    if (intents[intents.length - 1].name !== "nicknames.name") {
-      throw new Error("Expected previous intent to be nicknames.name");
+    if (intents[intents.length - 1].name !== "routines.name") {
+      throw new Error("Expected previous intent to be routines.name");
     }
     const intent = intents[intents.length - 2];
-    intentRunner.registerNickname(context.slots.name, intent);
+    intentRunner.registerRoutine(context.slots.name, intent);
   },
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.remove",
+  name: "routines.remove",
   async run(context) {
-    const intents = intentRunner.getRegisteredNicknames();
+    const intents = intentRunner.getRegisteredRoutines();
     const name = context.slots.name.toLowerCase();
     if (!intents[name]) {
       const exc = new Error("No named intent to remove");
-      exc.displayMessage = `No nickname "${name}" found`;
+      exc.displayMessage = `No routine "${name}" found`;
       throw exc;
     }
-    intentRunner.registerNickname(name, null);
+    intentRunner.registerRoutine(name, null);
   },
 });
 
-function makeCombinedContext(contexts, nickname) {
+function makeCombinedContext(contexts, routine) {
   return new intentRunner.IntentContext({
-    name: "nicknames.combined",
-    nickname,
+    name: "routines.combined",
+    routine,
     contexts,
     slots: {},
     parameters: {},
-    utterance: `Combined actions named ${nickname}`,
+    utterance: `Combined actions named ${routine}`,
     fallback: false,
   });
 }
 
 intentRunner.registerIntent({
-  name: "nicknames.nameLast",
+  name: "routines.nameLast",
   async run(context) {
-    // FIXME: this should not created a nicknames.combined context if the number is 1
+    // FIXME: this should not created a routines.combined context if the number is 1
     const name = context.slots.name.toLowerCase();
     const number = English.nameToNumber(context.slots.number);
     const history = intentRunner.getIntentHistory().slice(-number - 1, -1);
@@ -62,9 +62,9 @@ intentRunner.registerIntent({
       throw exc;
     }
     const newContext = makeCombinedContext(history, name);
-    intentRunner.registerNickname(name, newContext);
+    intentRunner.registerRoutine(name, newContext);
     log.info(
-      "Created combined nickname",
+      "Created combined routine",
       name,
       "->",
       history.map(c => c.name).join(", ")
@@ -73,11 +73,11 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.combined",
+  name: "routines.combined",
   async run(context) {
     log.info(`Running a named series (${context.contexts.length}) of intents`);
     const routineExecutor = new RoutineExecutor(
-      context.nickname,
+      context.routine,
       context.contexts
     );
     await routineExecutor.run();
@@ -85,7 +85,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.namePage",
+  name: "routines.namePage",
   async run(context) {
     const name = context.slots.name;
     const activeTab = await browserUtil.activeTab();
@@ -95,7 +95,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.removePageName",
+  name: "routines.removePageName",
   async run(context) {
     const name = context.slots.name;
     await intentRunner.getRegisteredPageName(name);
@@ -104,7 +104,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.pause",
+  name: "routines.pause",
   async run(context) {
     if (context.routineExecutor === undefined) {
       const exc = new Error("Command not available.");
@@ -122,7 +122,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.continue",
+  name: "routines.continue",
   async run() {
     if (pausedRoutineExecutor === null) {
       const exc = new Error(
@@ -149,7 +149,7 @@ function getAllBookmarksInFolder(bookmarkFolder) {
 }
 
 intentRunner.registerIntent({
-  name: "nicknames.startForLoop",
+  name: "routines.startForLoop",
   async run(context) {
     const objectToLoop = [];
     const variable = context.slots.variable;
@@ -217,7 +217,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "nicknames.endForLoop",
+  name: "routines.endForLoop",
   async run(context) {
     context.routineExecutor.endLoop();
   },

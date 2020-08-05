@@ -643,12 +643,20 @@ intentRunner.registerIntent({
     const tabs = await browser.tabs.query({ currentWindow: true });
     const hiddenTabs = await browser.tabs.query({ hidden: true });
     const numOfOpenTabs = tabs.length - hiddenTabs.length;
-    const tabsOpen = numOfOpenTabs <= 1 ? "Open tab" : "Open tabs";
+    const sampleTabs = await browser.windows.getAll({ populate: true });
+    let tabsCount = 0;
+    let windowsCount = 1;
+    sampleTabs.forEach((window, index) => {
+      tabsCount += window.tabs.length;
+      windowsCount += index;
+    });
 
     const card = {
       answer: {
-        largeText: `${numOfOpenTabs}`,
-        text: tabsOpen,
+        largeText: tabsCount - hiddenTabs.length,
+        text: `\
+Open Windows: ${windowsCount}
+Tabs in current window: ${numOfOpenTabs}`,
         eduText: `Click mic and say "gather all Google tabs"`,
         eduMicOn: `Say "gather all Google tabs"`,
       },

@@ -191,4 +191,4 @@ You can execute this script as:
 npm run enumerate-phrases -- someIntent.command
 ```
 
-For example, Running the command `npm run enumerate-phrases -- navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.
+For example, Running the command `npm run enumerate-phrases -- navigation.serviceSearch` lists all the matched phrases for navigation.serviceSearch intent.

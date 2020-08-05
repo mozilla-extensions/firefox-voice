@@ -274,7 +274,7 @@ async function moveResult(context, step) {
 
   if (
     (searchInfo.index >= searchInfo.searchResults.length - 1 && step > 0) ||
-    (searchInfo.index <= 0 && step < 0)
+    (searchInfo.index < 0 && step < 0)
   ) {
     const tabId = await openSearchTab();
     await browserUtil.loadUrl(tabId, searchInfo.searchUrl);
@@ -302,7 +302,9 @@ async function moveResult(context, step) {
   searchInfo.index =
     searchInfo.index === undefined ? 0 : searchInfo.index + step;
 
-  const item = searchInfo.searchResults[searchInfo.index];
+  const item = searchInfo.searchResults[searchInfo.index] || {
+    url: searchInfo.searchUrl,
+  };
   if (!tabId) {
     const tab = await browserUtil.createAndLoadTab({ url: item.url });
     // eslint-disable-next-line require-atomic-updates

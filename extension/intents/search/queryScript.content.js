@@ -2,8 +2,8 @@ import { registerHandler } from "../../communicate.js";
 import * as cardSpeech from "./cardSpeech.js";
 
 const CARD_SELECTOR = ".vk_c, .kp-blk, .EyBRub";
-const SIDEBAR_SELECTOR = "#rhs";
-const MAIN_SELECTOR = "#center_col";
+const SIDEBAR_SELECTOR = "#rhs, .results--sidebar";
+const MAIN_SELECTOR = "#center_col, results--main";
 const AD_CLASS = "commercial-unit-desktop-rhs";
 
 function findParent(child, func) {
@@ -27,6 +27,9 @@ function findCards() {
 }
 
 function findCardIn(container, maxBottom) {
+  if (!container) {
+    return undefined;
+  }
   let selected = Array.from(container.querySelectorAll(CARD_SELECTOR));
   if (maxBottom) {
     // FIXME: this is testing if the top of the card is above the top of the first search

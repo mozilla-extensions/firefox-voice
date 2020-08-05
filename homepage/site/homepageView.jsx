@@ -213,10 +213,9 @@ const Hero = () => {
               Install Firefox Voice
             </a>
             <div class="mzp-c-availability">
-              Available as an extension for Firefox on desktop / laptop. Android
-              coming soon.
+              Available as an extension for Firefox on desktop / laptop. Requires a working microphone.
               <br />
-              Requires a working microphone.
+              Currently available in English only.
             </div>
           </p>
         </div>
