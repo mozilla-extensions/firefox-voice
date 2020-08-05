@@ -31,6 +31,13 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "self.openLexicon",
   async run(context) {
+    await browserUtil.openOrActivateTab("/views/lexicon.html");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "self.hello",
+  async run(context) {
     const imageCard = "/assets/images/lionel-richie.jpg";
     const card = {
       answer: {
