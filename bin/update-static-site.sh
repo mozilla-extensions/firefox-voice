@@ -24,6 +24,9 @@ done
 
 (
   cd homepage
+  if [[ ! -e package.json ]] ; then
+    ln -s package.json.disabled package.json
+  fi
   npm run maybeinstall
   npm run build
 )

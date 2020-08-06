@@ -25,13 +25,14 @@ export function getServiceNamesAndTitles() {
   names.sort();
   names = names.filter(name => !SERVICES[name].skipAutodetect);
   const services = names.map(name => {
-    return { name, title: SERVICES[name].title };
+    return { name, title: SERVICES[name].title, imgSrc: SERVICES[name].imgSrc };
   });
   services.unshift({ name: "auto", title: "Detect service" });
   return services;
 }
 
 async function getService(context, options) {
+  options = options || {};
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
   options.defaultService = options.defaultService || "spotify";
@@ -154,6 +155,27 @@ intentRunner.registerIntent({
       card,
       searchResults: card,
     });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.support",
+  async run(context) {
+    const card = {
+      answer: {
+        eduMic: `Say a music to set to default`,
+        eduText: `Click a music to set to default`,
+      },
+
+      music: [],
+    };
+
+    await browser.runtime.sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
+    context.keepPopup();
   },
 });
 

@@ -74,6 +74,16 @@ registerHandler("copy", message => {
   }
 });
 
+registerHandler("add", message => {
+  const { copyType } = message;
+  const { prevousText } = message;
+  log.debug(prevousText);
+  const result = types[copyType]();
+  if (result) {
+    navigator.clipboard.writeText(prevousText + " " + result);
+  }
+});
+
 types.copyLink = function() {
   return getMetadata().canonical;
 };

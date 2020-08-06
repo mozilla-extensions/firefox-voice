@@ -13,6 +13,7 @@ import { sendMessage } from "../communicate.js";
 
 log.startTiming("popup opened");
 
+const SURVEY_CLICK_LIMIT = 1000 * 60 * 60 * 24 * 14; // Wait 14 days until showing survey link again
 const { useState, useEffect } = React;
 const popupContainer = document.getElementById("popup-container");
 let isInitialized = false;
@@ -45,6 +46,24 @@ const ZERO_VOLUME_LIMIT = 8000;
 // FIXME: this can be removed eventually (after 2020-08-01), we're just clearing an unused storage:
 browser.storage.local.remove("hasHadSuccessfulUtterance");
 
+function calculateShowSurvey() {
+  let lastClicked = localStorage.getItem("showSurveyClicked") || 0;
+  if (lastClicked) {
+    lastClicked = parseInt(lastClicked, 10);
+  }
+  if (Date.now() - lastClicked < SURVEY_CLICK_LIMIT) {
+    return false;
+  }
+  // 10% of the time show the survey link
+  return Math.random() < 0.1;
+}
+
+const showSurvey = calculateShowSurvey();
+
+function onClickSurvey() {
+  localStorage.setItem("showSurveyClicked", String(Date.now()));
+}
+
 export const PopupController = function() {
   log.timing("PopupController called");
   const [currentView, setCurrentView] = useState("waiting");
@@ -64,6 +83,7 @@ export const PopupController = function() {
   const [requestFollowup, setRequestFollowup] = useState(false);
   const [followupText, setFollowupText] = useState(null);
   const [showZeroVolumeError, setShowZeroVolumeError] = useState(false);
+  const [userSettings, setUserSettings] = useState({});
 
   let executedIntent = false;
   let stream = null;
@@ -92,6 +112,7 @@ export const PopupController = function() {
   const init = async () => {
     log.timing("PopupController init() called");
     const userSettings = await settings.getSettings();
+
     userSettingsPromise.resolve(userSettings);
     if (!userSettings.collectTranscriptsOptinAnswered) {
       log.info("Opening onboard to force opt-in/out to transcripts");
@@ -99,7 +120,6 @@ export const PopupController = function() {
       window.close();
       return;
     }
-
     listenForFollowup = userSettings.listenForFollowup;
     if (userSettings.audioInputId !== undefined) {
       audioInputId = userSettings.audioInputId;
@@ -169,6 +189,10 @@ export const PopupController = function() {
       url: browser.runtime.getURL("options/options.html"),
     });
     window.close();
+  };
+  const updateUserSettings = async userSettings => {
+    await settings.saveSettings(userSettings);
+    setUserSettings(userSettings);
   };
 
   const playListeningChime = () => {
@@ -502,7 +526,6 @@ export const PopupController = function() {
       if (message.card.speech) {
         speak(message.card.speech);
       }
-      log.info(message.card);
       setMinPopupSize(message.card.width);
     } else {
       setCardImage(null);
@@ -782,9 +805,13 @@ export const PopupController = function() {
       expandListeningView={expandListeningView}
       timerInMS={timerInMS}
       timerTotalInMS={timerTotalInMS}
-      renderFollowup={listenForFollowup || requestFollowup}
+      renderFollowup={requestFollowup}
       followupText={followupText}
       showZeroVolumeError={showZeroVolumeError}
+      userSettings={{ ...userSettings }}
+      updateUserSettings={updateUserSettings}
+      showSurvey={showSurvey}
+      onClickSurvey={onClickSurvey}
     />
   );
   log.timing("PopupController finished");

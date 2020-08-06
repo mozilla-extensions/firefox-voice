@@ -143,6 +143,9 @@ for message in messages:
     if should_skip:
         continue
     sub = sub.capitalize()
+    if not message.get("from"):
+        print("Bad message, no From: %s" % message)
+        continue
     username = get_username(message.get("from"), message.get("commit"))
     if username in IGNORE_USERNAMES:
         username = None
@@ -169,7 +172,7 @@ for message in messages:
         body_lines = body_lines[1:]
     if username:
         sub += " (from [%s](https://github.com/%s))" % (username, username)
-    full = ["* " + sub] + ["  " + line.strip() for line in body_lines]
+    full = ["- " + sub] + ["  " + line.strip() for line in body_lines]
     full = "\n".join(full)
     found = []
 

@@ -77,7 +77,7 @@ intentRunner.registerIntent({
 });
 
 intentRunner.registerIntent({
-  name: "navigation.bangSearch",
+  name: "navigation.serviceSearch",
   async run(context) {
     let service = context.slots.service || context.parameters.service;
     let tab = undefined;
@@ -89,7 +89,7 @@ intentRunner.registerIntent({
     }
 
     if (service !== null) {
-      myurl = await searching.ddgBangSearchUrl(context.slots.query, service);
+      myurl = await searching.ddgServiceSearchUrl(context.slots.query, service);
 
       context.addTelemetryServiceName(
         `ddg:${searching.ddgBangServiceName(service)}`
