@@ -1,5 +1,7 @@
 /* globals log */
 
+import { sendMessage } from "../communicate.js";
+
 let activeRecorder;
 let unloadEventAdded = false;
 
@@ -11,7 +13,7 @@ export class Recorder {
       throw new Error("new voiceShim.Recorder() called twice");
     }
     activeRecorder = this;
-    browser.runtime.sendMessage({
+    sendMessage({
       type: "voiceShimForward",
       method: "constructor",
     });
@@ -22,19 +24,17 @@ export class Recorder {
   }
 
   async startRecording() {
-    return browser.runtime
-      .sendMessage({
-        type: "voiceShimForward",
-        method: "startRecording",
-      })
-      .catch(e => {
-        log.error("Error starting recording:", String(e));
-        throw e;
-      });
+    sendMessage({
+      type: "voiceShimForward",
+      method: "startRecording",
+    }).catch(e => {
+      log.error("Error starting recording:", String(e));
+      throw e;
+    });
   }
 
   stop() {
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "voiceShimForward",
       method: "stop",
     });
@@ -70,11 +70,10 @@ export class Recorder {
   }
 
   getVolumeLevel() {
-    browser.runtime
-      .sendMessage({
-        type: "voiceShimForward",
-        method: "getVolumeLevel",
-      })
+    sendMessage({
+      type: "voiceShimForward",
+      method: "getVolumeLevel",
+    })
       .then(volume => {
         this._cachedVolumeLevel = volume;
       })
@@ -110,7 +109,7 @@ browser.runtime.onMessage.addListener(message => {
 });
 
 export async function openRecordingTab() {
-  return browser.runtime.sendMessage({
+  return sendMessage({
     type: "openRecordingTab",
   });
 }

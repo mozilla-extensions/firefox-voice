@@ -28,7 +28,6 @@ extension/services/metadata.js
 extension/language/langs/*.js
 node_modules
 npm-debug.log
-package-lock.json
 web-ext-artifacts
 .DS_Store
 credentials
@@ -39,3 +38,7 @@ manifest.json
 Thumbs.db
 /build
 /bin/username-cache.json
+*.bundle.js
+# This is where we check out the honkling library:
+/honkling
+package-lock.json

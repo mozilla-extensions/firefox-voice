@@ -58,7 +58,7 @@ Messages that are sent to a content script are send directly to only that tab us
 
 Messages are always JSON objects, and always have a `.type` property, such as `{type: "getExamples"}`.
 
-Most of the background messages are handled in `main.js` (which calls out to any other modules that are needed). The `*Controller.jsx` scripts typically handle their own messages.
+Most of the background messages are handled in `main.js` (which calls out to any other modules that are needed), but look for `registerHandler()` for other message handlers. The `*Controller.jsx` scripts typically handle their own messages.
 
 ## Code layout
 
@@ -128,7 +128,7 @@ Most of the background messages are handled in `main.js` (which calls out to any
 │   ├── music                   Interact with music services (play, pause, search, etc)
 │   ├── muting                  Mute and unmute tabs
 │   ├── navigation              Go to sites and follow links
-│   ├── nicknames               Shortcuts and routines
+│   ├── routines               Shortcuts and routines
 │   ├── notes                   Add notes to a background tab
 │   ├── phrases.test.js         Tests that phrases match as expected
 │   ├── pocket                  Save to pocket

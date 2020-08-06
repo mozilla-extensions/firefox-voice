@@ -4,15 +4,24 @@ import * as browserUtil from "../../browserUtil.js";
 
 async function copy(context, copyType, complete = false) {
   const activeTab = await browserUtil.activeTab();
-  await content.inject(activeTab.id, [
-    "/background/pageMetadata-contentScript.js",
-    "/intents/saving/screenshotContentScript.js",
-    "/intents/clipboard/contentScript.js",
-  ]);
+  await content.inject(activeTab.id, "/intents/clipboard/clipboard.content.js");
   if (complete) {
     await browserUtil.waitForDocumentComplete(activeTab.id);
   }
   browser.tabs.sendMessage(activeTab.id, { type: "copy", copyType });
+}
+
+async function add(context, copyType, prevousText, complete = false) {
+  const activeTab = await browserUtil.activeTab();
+  await content.inject(activeTab.id, "/intents/clipboard/clipboard.content.js");
+  if (complete) {
+    await browserUtil.waitForDocumentComplete(activeTab.id);
+  }
+  browser.tabs.sendMessage(activeTab.id, {
+    type: "add",
+    copyType,
+    prevousText,
+  });
 }
 
 intentRunner.registerIntent({
@@ -76,6 +85,54 @@ intentRunner.registerIntent({
   async run(context) {
     await copy(context, "copyImage");
     context.presentMessage("Image copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.copyValue",
+  async run(context) {
+    navigator.clipboard.writeText(context.slots.value);
+    context.presentMessage("Value copied to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addLink",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copyLink", text);
+    } else {
+      await copy(context, "copyLink");
+    }
+    context.presentMessage("Link added to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addTitle",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copyTitle", text);
+    } else {
+      await copy(context, "copyTitle");
+    }
+    context.presentMessage("Title added to clipboard");
+  },
+});
+
+intentRunner.registerIntent({
+  name: "clipboard.addSelection",
+  async run(context) {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      await add(context, "copySelection", text);
+    } else {
+      await copy(context, "copySelection");
+    }
+
+    context.presentMessage("Selected text added to clipboard");
   },
 });
 

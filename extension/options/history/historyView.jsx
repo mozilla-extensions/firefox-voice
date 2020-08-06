@@ -13,6 +13,7 @@ export const History = () => {
   const [tableRows, setTableRows] = useState([]);
   const [numRows, setNumRows] = useState(0);
   const [saveAudio, setSaveAudio] = useState(false);
+  const [saveHistory, setSaveHistory] = useState(true);
 
   useEffect(() => {
     const getRows = async () => {
@@ -22,6 +23,7 @@ export const History = () => {
     };
     const userSettings = getSettings();
     setSaveAudio(userSettings.saveAudioHistory);
+    setSaveHistory(userSettings.saveHistory);
     getRows();
   }, []);
 
@@ -32,17 +34,33 @@ export const History = () => {
     setSaveAudio(value);
   };
 
+  const onChangeSaveHistory = async value => {
+    const userSettings = await getSettings();
+    userSettings.saveHistory = value;
+    await saveSettings(userSettings);
+    setSaveHistory(value);
+  };
+
   return (
     <HistoryTable
       rows={tableRows}
       numRows={numRows}
       saveAudio={saveAudio}
       onChangeSaveAudio={onChangeSaveAudio}
+      saveHistory={saveHistory}
+      onChangeSaveHistory={onChangeSaveHistory}
     />
   );
 };
 
-const HistoryTable = ({ rows, numRows, saveAudio, onChangeSaveAudio }) => {
+const HistoryTable = ({
+  rows,
+  numRows,
+  saveAudio,
+  onChangeSaveAudio,
+  saveHistory,
+  onChangeSaveHistory,
+}) => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 50;
   const tableFields = ["You said...", "Date and time"];
@@ -120,11 +138,28 @@ const HistoryTable = ({ rows, numRows, saveAudio, onChangeSaveAudio }) => {
           </button>
         </legend>
         <div>
-          <label htmlFor="saveAudio">
+          <label htmlFor="saveHistory">
+            <input
+              type="checkbox"
+              id="saveHistory"
+              checked={saveHistory}
+              onChange={event => {
+                onChangeSaveHistory(event.target.checked);
+              }}
+            />
+            Save history
+          </label>
+        </div>
+        <div>
+          <label
+            htmlFor="saveAudio"
+            className={saveHistory ? "" : "disabled-field"}
+          >
             <input
               type="checkbox"
               id="saveAudio"
-              checked={saveAudio}
+              checked={saveHistory && saveAudio}
+              disabled={!saveHistory}
               onChange={event => {
                 onChangeSaveAudio(event.target.checked);
               }}

@@ -1,4 +1,5 @@
 import * as intentRunner from "./intentRunner.js";
+import { registerHandler } from "../communicate.js";
 
 const INTENT_ROTATION_PERIOD = 1000 * 60 * 5; // 5 minutes
 // This gets filled later:
@@ -53,6 +54,10 @@ export function getExamples(number) {
   lastExampleTime = Date.now();
   return lastExamples;
 }
+
+registerHandler("getExamples", message => {
+  return getExamples(message.number || 2);
+});
 
 function freshExamples(number) {
   const examplesByIntent = getAllExamples();

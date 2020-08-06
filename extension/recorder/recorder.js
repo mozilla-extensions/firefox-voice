@@ -3,6 +3,7 @@
 import * as util from "../util.js";
 import * as voice from "../popup/voice.js";
 import * as wakeword from "./wakeword.js";
+import { sendMessage } from "../communicate.js";
 
 // If the permission doesn't return in this amount of time, we'll request that this tab
 // come to the foreground:
@@ -36,7 +37,7 @@ let oldActiveRecorder;
 
 async function init() {
   const timeoutId = setTimeout(() => {
-    browser.runtime.sendMessage({ type: "makeRecorderActive" });
+    sendMessage({ type: "makeRecorderActive" });
   }, PERMISSION_TIMEOUT);
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -92,7 +93,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onBeginRecording called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onBeginRecording",
       });
@@ -103,7 +104,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onEnd called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onEnd",
         args: [json, audioBlob],
@@ -116,7 +117,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onError called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onError",
         args: [String(exception)],
@@ -128,7 +129,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onProcessing called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onProcessing",
         args: [],
@@ -140,7 +141,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onNoVoice called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onNoVoice",
         args: [],
@@ -152,7 +153,7 @@ class ShimRecorder extends voice.Recorder {
     if (this._destroyed) {
       log.error("onStartVoice called after ShimRecorder destroyed");
     } else {
-      browser.runtime.sendMessage({
+      sendMessage({
         type: "onVoiceShimForward",
         method: "onStartVoice",
         args: [],

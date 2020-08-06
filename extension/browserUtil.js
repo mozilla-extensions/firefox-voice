@@ -1,5 +1,6 @@
 /* globals buildSettings */
 import * as searching from "./searching.js";
+import * as content from "./background/content.js";
 
 export async function activeTab() {
   return (await browser.tabs.query({
@@ -29,10 +30,10 @@ export async function makeTabActive(tab) {
 export async function openOrFocusTab(url) {
   const tabs = await browser.tabs.query({ url, currentWindow: true });
   if (tabs.length) {
-    await makeTabActive(tabs[0]);
-  } else {
-    await createAndLoadTab({ url });
+    return makeTabActive(tabs[0]);
   }
+
+  return createAndLoadTab({ url });
 }
 
 export async function loadUrl(tabId, url) {
@@ -220,6 +221,11 @@ export function waitForDocumentComplete(tabId) {
     code: "null",
     runAt: "document_idle",
   });
+}
+
+export async function waitForPageToLoadUsingSelector(tabId, options = {}) {
+  await content.inject(tabId, "./content/pageLoadChecker.content.js");
+  return browser.tabs.sendMessage(tabId, { type: "isLoaded", options });
 }
 
 /** Wrappers for browser.tabs.onUpdated to handle Android compatibility */

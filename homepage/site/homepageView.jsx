@@ -213,10 +213,9 @@ const Hero = () => {
               Install Firefox Voice
             </a>
             <div class="mzp-c-availability">
-              Available as an extension for Firefox on desktop / laptop. Android
-              coming soon.
+              Available as an extension for Firefox on desktop / laptop. Requires a working microphone.
               <br />
-              Requires a working microphone.
+              Currently available in English only.
             </div>
           </p>
         </div>
@@ -268,7 +267,7 @@ const ExampleActions = () => {
         </div>
 
         <div class="see-all-actions">
-          <a href="https://mozilla.github.io/firefox-voice/lexicon.html">
+          <a href="https://mozilla-extensions.github.io/firefox-voice/lexicon.html">
             Everything you can say
           </a>
         </div>
@@ -485,7 +484,7 @@ const Faq = () => {
               <br />
               While this permission would make it <em>possible</em> to extract
               user information from a website, it does not do so. Our{" "}
-              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+              <a href="https://mozilla-extensions.github.io/firefox-voice/privacy-policy.html">
                 Privacy Policy
               </a>{" "}
               specifies what information we collect (set during installation or
@@ -725,7 +724,7 @@ const Footer = () => {
               </a>
             </div>
             <div class="mzp-c-footer-item">
-              <a href="https://mozilla.github.io/firefox-voice/privacy-policy.html">
+              <a href="https://mozilla-extensions.github.io/firefox-voice/privacy-policy.html">
                 Privacy
               </a>
             </div>

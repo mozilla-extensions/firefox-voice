@@ -9,6 +9,8 @@ import * as settings from "../settings.js";
 import { entityTypes } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
+import { registerHandler, sendMessage } from "../communicate.js";
+
 const FEEDBACK_INTENT_TIME_LIMIT = 1000 * 60 * 60 * 24; // 24 hours
 // Only keep this many previous intents:
 const INTENT_HISTORY_LIMIT = 20;
@@ -71,7 +73,7 @@ export class IntentContext {
   done(time = undefined) {
     this.closePopupOnFinish = false;
     if (!this.noPopup && !this.isFollowup && !this.isFollowupIntent) {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "closePopup",
         time,
       });
@@ -91,7 +93,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "error" });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "displayFailure",
       message,
     });
@@ -99,12 +101,12 @@ export class IntentContext {
 
   savingPage(message) {
     if (message === "startSavingPage") {
-      return browser.runtime.sendMessage({
+      return sendMessage({
         type: "startSavingPage",
         message,
       });
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "endSavingPage",
       message,
     });
@@ -121,7 +123,7 @@ export class IntentContext {
         subheading: message.subheading,
       };
     }
-    return browser.runtime.sendMessage({
+    return sendMessage({
       type: "handleFollowup",
       method: "enable",
       message: {
@@ -133,7 +135,7 @@ export class IntentContext {
 
   async endFollowup() {
     this.expectsFollowup = false;
-    browser.runtime.sendMessage({
+    await sendMessage({
       type: "handleFollowup",
       method: "disable",
     });
@@ -177,7 +179,7 @@ export class IntentContext {
     if (this.noPopup) {
       return this.displayInlineMessage({ message, type: "normal" });
     }
-    return browser.runtime.sendMessage({ type: "presentMessage", message });
+    return sendMessage({ type: "presentMessage", message });
   }
 
   displayInlineMessage({ message, type }) {
@@ -196,7 +198,7 @@ export class IntentContext {
       });
       return;
     }
-    await browser.runtime.sendMessage({ type: "displayAutoplayFailure" });
+    await sendMessage({ type: "displayAutoplayFailure" });
   }
 
   /** This is some ad hoc information this specific intent wants to add */
@@ -279,16 +281,16 @@ export function setLastIntent(intent) {
 
 export async function runUtterance(utterance, noPopup) {
   log.timing(`intentRunner.runUtterance(${utterance}) called`);
-  for (const name in registeredNicknames) {
+  for (const name in registeredRoutines) {
     const re = new RegExp(`\\b${name}\\b`, "i");
     if (re.test(utterance)) {
-      const repl = utterance.replace(re, "nickname");
-      const context = registeredNicknames[name].clone();
+      const repl = utterance.replace(re, "routine");
+      const context = registeredRoutines[name].clone();
       const handler = intents[context.name];
       const method =
-        handler.runNickname ||
+        handler.runRoutine ||
         async function(repl, context, utterance) {
-          if (repl === "nickname") {
+          if (repl === "routine") {
             await runIntent(context);
             return true;
           }
@@ -301,7 +303,7 @@ export async function runUtterance(utterance, noPopup) {
       }
     }
   }
-  log.timing("intentRunner finished nickname checking");
+  log.timing("intentRunner finished routine checking");
   let contextParams = intentParser.parse(utterance);
   log.timing("intentParser returned");
   contextParams.noPopup = !!noPopup;
@@ -333,6 +335,29 @@ export async function runUtterance(utterance, noPopup) {
   const result = await runIntent(contextParams);
   log.timing("Finished running intent");
   return result;
+}
+
+registerHandler("runIntent", (message, sender) => {
+  if (message.closeThisTab) {
+    closeTabSoon(sender.tab.id, sender.tab.url);
+  }
+  return runUtterance(message.text, message.noPopup);
+});
+
+function closeTabSoon(tabId, tabUrl) {
+  setTimeout(async () => {
+    try {
+      const tab = await browser.tabs.get(tabId);
+      if (tab.url !== tabUrl) {
+        // The tab has been updated, and shouldn't be closed
+        return;
+      }
+      await browser.tabs.remove(tabId);
+    } catch (e) {
+      log.error("Error closing temporary execution tab:", e);
+      catcher.capture(e);
+    }
+  }, 250);
 }
 
 export async function runIntent(contextParams) {
@@ -430,13 +455,17 @@ export function getIntentSummary() {
   });
 }
 
+registerHandler("getIntentSummary", getIntentSummary);
+
 function addIntentHistory(context) {
   intentHistory.push(context);
   intentHistory.splice(0, intentHistory.length - INTENT_HISTORY_LIMIT);
-  const saveAudio = settings.getSettings().saveAudioHistory;
-  if (saveAudio) {
-    browser.runtime
-      .sendMessage({ type: "getLastAudio", utterance: context.utterance })
+  const userSettings = settings.getSettings();
+  if (!userSettings.saveHistory) {
+    return;
+  }
+  if (userSettings.saveAudioHistory) {
+    sendMessage({ type: "getLastAudio", utterance: context.utterance })
       .then(audio => {
         const audioContext = Object.assign({}, context, { audio });
         db.add(utteranceTable, audioContext).catch(error => log.error(error));
@@ -454,35 +483,70 @@ export function getIntentHistory() {
   return intentHistory;
 }
 
-const registeredNicknames = {};
+const registeredRoutines = {};
 
-export function registerNickname(name, context) {
+export function registerRoutine(name, context) {
   name = name.toLowerCase();
   if (!context) {
-    delete registeredNicknames[name];
-    log.info("Removed nickname", name);
+    delete registeredRoutines[name];
+    log.info("Removed routine", name);
   } else {
-    registeredNicknames[name] = context;
-    log.info("Added nickname", name, "->", context.name, context.slots);
+    registeredRoutines[name] = context;
+    log.info("Added routine", name, "->", context.name, context.slots);
   }
-  browser.storage.sync.set({ registeredNicknames });
+  localStorage.setItem(
+    "registeredRoutines",
+    JSON.stringify(registeredRoutines)
+  );
 }
 
-async function initRegisteredNicknames() {
+registerHandler("registerRoutine", message => {
+  let context = message.context;
+  if (context !== null) {
+    context = new IntentContext(context);
+  }
+  return registerRoutine(message.name, context);
+});
+
+async function moveNicknameToRoutine() {
   const result = await browser.storage.sync.get(["registeredNicknames"]);
   if (result.registeredNicknames) {
     for (const name in result.registeredNicknames) {
       const value = result.registeredNicknames[name];
-      const context = new IntentContext(value);
-      registeredNicknames[name] = context;
-      log.info("Loaded nickname", name, context.name, context.slots);
+      value.routine = value.nickname;
+      delete value.nickname;
+    }
+    const registeredRoutines = result.registeredNicknames;
+    localStorage.setItem(
+      "registeredRoutines",
+      JSON.stringify(registeredRoutines)
+    );
+    const checkRoutines = localStorage.getItem("registeredRoutines");
+    if (JSON.stringify(checkRoutines) === JSON.stringify(registeredRoutines)) {
+      await browser.storage.sync.remove("registeredNicknames");
     }
   }
 }
 
-export function getRegisteredNicknames() {
-  return registeredNicknames;
+// switch to local storage;
+async function initRegisteredRoutines() {
+  await moveNicknameToRoutine();
+  const routines = JSON.parse(localStorage.getItem("registeredRoutines"));
+  if (routines) {
+    for (const name in routines) {
+      const value = routines[name];
+      const context = new IntentContext(value);
+      registeredRoutines[name] = context;
+      log.info("Loaded routine", name, context.name, context.slots);
+    }
+  }
 }
+
+export function getRegisteredRoutines() {
+  return registeredRoutines;
+}
+
+registerHandler("getRegisteredRoutines", getRegisteredRoutines);
 
 let pageNames = {};
 
@@ -494,7 +558,7 @@ export async function registerPageName(name, { url }) {
 
   pageNames[name] = url;
 
-  log.info("Added nickname for page", name, "->", url, creationDate);
+  log.info("Added routine for page", name, "->", url, creationDate);
   await browser.storage.sync.set({ pageNames });
 }
 
@@ -512,7 +576,7 @@ export async function getRegisteredPageName(name) {
 
 export async function unregisterPageName(name) {
   delete pageNames[name];
-  log.info("Removed nickname for page", name);
+  log.info("Removed routine for page", name);
   await browser.storage.sync.set({ pageNames });
 }
 
@@ -537,6 +601,10 @@ export function getLastIntentForFeedback() {
   return lastIntent;
 }
 
+registerHandler("getLastIntentForFeedback", () => {
+  return getLastIntentForFeedback();
+});
+
 export function clearFeedbackIntent() {
   lastIntent = null;
 }
@@ -547,5 +615,13 @@ export function clearFollowup() {
   }
 }
 
-initRegisteredNicknames();
+registerHandler("clearFollowup", clearFollowup);
+
+registerHandler("parseUtterance", message => {
+  return new IntentContext(
+    intentParser.parse(message.utterance, message.disableFallback)
+  );
+});
+
+initRegisteredRoutines();
 initRegisteredPageName();

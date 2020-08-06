@@ -64,7 +64,7 @@ intentRunner.registerIntent({
 
 Some things to note:
 
-- We use [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) in most of the extension (except for content scripts).
+- We use [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) in most of the extension
 - Intents often don't actually export anything, they work by calling `intentRunner.register()`. But you can [export](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export) if you want.
 - We use [eslint](https://eslint.org/) in the codebase, and it's recommended you configure your editor to show warnings.
 - You can (and usually will) have multiple intents in a single module and config file (e.g., `someIntent.otherCommand` and so on)
@@ -95,7 +95,7 @@ Patterns have words, words with alternatives, slots, typed slots, and parameters
 
 **Typed slots:** these are things like `[service:musicServiceName]`. These "types" are lists of specific strings. These types are in the `background/entityTypes.js` module. Right now this system isn't very extensible.
 
-**Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `contents.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
+**Parameters:** sometimes you care _which_ phrase is matched, not just a slot. If you include `[param=value]` then `context.parameters.param === "value"` (if that specific phrase is matched). You can see an example in [`extensions/intents/music/music.js`](https://github.com/mozilla/firefox-voice/blob/master/extension/intents/music/music.js) in `music.move`.
 
 ### Matching an utterance to an intent
 
@@ -138,38 +138,38 @@ To prepare a tab to do your custom stuff, run:
 ```js
 async run(context) {
   const activeTab = await browserUtil.activeTab();
-  await content.inject(activeTab.id, "intents/someName/contentScript.js");
+  await content.inject(activeTab.id, "intents/someName/someScript.content.js");
   // Now the script, and a bunch of helpers are available
   const resp = await browser.tabs.sendMessage(activeTab.id, {type: "doSomething"});
 }
 ```
 
-`content.inject` will make sure the script is available and fully loaded, and will not re-load the script if called multiple times on the same tab. It also loads [`content/communicate.js`](../extension/content/communicate.js) and [`content/helpers.js`](../extension/content/helpers.js).
+`content.inject` will load the built script (scripts like these are packaged up into `someScript.bundle.js`). These scripts _must_ be named with `.content.js`.
 
-You can use this pattern in your script (`contentScript.js` in this example):
+You can use this pattern in your script (`someScript.content.js` in this example):
 
 ```js
-(function() {
-  communicate.register("doSomething", message => {
-    // Do something, and return a value
-  });
-})();
+import { registerHandler } from "../../communicate.js";
+
+registerHandler("doSomething", message => {
+  // Do something, and return a value
+});
 ```
 
 Or maybe:
 
 ```js
-(function() {
-  class MyThing extends helpers.Runner {
-    async action_doSomething(message) {
-      const el = await this.waitForSelector(".some-element");
-      ...
-    }
-  };
-})();
-```
+import {Runner} from "../../content/helpers.js";
 
-Note you _cannot_ use JavaScript modules in content scripts.
+class MyThing extends Runner {
+  async action_doSomething(message) {
+    const el = await this.waitForSelector(".some-element");
+    ...
+  }
+}
+
+MyThing.register();
+```
 
 ## Logging
 
@@ -191,4 +191,4 @@ You can execute this script as:
 npm run enumerate-phrases -- someIntent.command
 ```
 
-For example, Running the command `npm run enumerate-phrases -- navigation.bangSearch` lists all the matched phrases for navigation.bangSearch intent.
+For example, Running the command `npm run enumerate-phrases -- navigation.serviceSearch` lists all the matched phrases for navigation.serviceSearch intent.

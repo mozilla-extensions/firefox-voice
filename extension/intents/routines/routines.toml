@@ -1,0 +1,106 @@
+[routines.combined]
+description = "An intent that is only used as a memory"
+match = """
+# Nothing to match
+"""
+
+[routines.name]
+description = "Names an intent"
+match = """
+  (name | routine | shortcut | call | nickname) (that | it | last) [name]
+  give (that |) (the |) (name | routine | shortcut | nickname) [name]
+  give (the |) (name | routine | shortcut | nickname) [name] to (that | it | last)
+"""
+
+[[routines.name.example]]
+phrase = "Name that calendar"
+
+[routines.nameLast]
+description = "Combines a few intents into a name"
+match = """
+  (name | routine | call | shortcut | nickname) last [number:smallNumber] [name]
+  give (the |) last [number:smallNumber] (the |) (name | routine | shortcut | nickname) [name]
+  give (the |) (name | routine | shortcut | nickname) [name] to (the |) last [number:smallNumber]
+"""
+
+[[routines.nameLast.example]]
+phrase = "Name last three goodmorning"
+
+[routines.remove]
+description = "Removes a named intent"
+match = """
+  (remove | delete) (the|) (name | routine | shortcut | nickname) (called |) [name]
+"""
+
+[[routines.remove.example]]
+phrase = "Remove name calendar"
+
+[routines.namePage]
+description = "Name a page"
+match = """
+ name (this |) (this | page | tab) [name]
+ give (the |) name [name] to (this |) (page | tab)
+"""
+
+[[routines.namePage.example]]
+phrase = "name this page news"
+
+[[routines.namePage.example]]
+phrase = "give the name news to this tab"
+test = true
+
+[routines.removePageName]
+description = "Remove a page name"
+match = """
+  (remove | delete) (the |) (page | tab) (name | routine | shortcut | nickname |) (called |) [name] 
+  (remove | delete) (the | this |) (page | tab) name
+"""
+
+[[routines.removePageName.example]]
+phrase = "delete the page called news"
+
+[[routines.removePageName.example]]
+phrase = "remove this tab name"
+
+[routines.pause]
+description = "Pauses a routine"
+match = """
+  pause routine (with |) (and |) (show |) (message | status | text | print) [message]
+  pause routine
+"""
+
+[routines.continue]
+description = "Continues a routine"
+match = """
+  continue routine
+"""
+
+[routines.startForLoop]
+description = "Statement to start loop"
+match = """
+  for each value in (clipboard) (as | named | as named |) [variable] [dataSource=clipboard]
+  for each value in (clipboard) [dataSource=clipboard]
+
+  for each tab [dataSource=tab]
+  for each tab (as | named | as named |) [variable] [dataSource=tab]
+
+  for each bookmark [dataSource=bookmark]
+  for each bookmark (as | named | as named |) [variable] [dataSource=bookmark]
+
+  for each bookmark in (folder |) [folder] [dataSource=bookmarkFolder]
+  for each bookmark in (folder |) [folder] (as | named | as named |) [variable] [dataSource=bookmarkFolder]
+
+  for each selected tab [dataSource=selectedTabs]
+  for each selected tab (as | named | as named |) [variable] [dataSource=selectedTabs]
+
+  for each number from 1 to [range] [dataSource=interval]
+  for each number from 1 to [range] (as | named | as named |) [variable] [dataSource=interval]
+"""
+
+[routines.endForLoop]
+description = "Statement to end loop"
+match = """
+  endfor
+  end for
+"""
+

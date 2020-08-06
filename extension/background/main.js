@@ -2,7 +2,6 @@
 /* globals log, buildSettings, catcher */
 
 import * as intentRunner from "./intentRunner.js";
-import * as intentExamples from "./intentExamples.js";
 import * as telemetry from "./telemetry.js";
 import * as browserUtil from "../browserUtil.js";
 import * as settings from "../settings.js";
@@ -14,119 +13,21 @@ import * as serviceImport from "./serviceImport.js";
 import { temporaryMute, temporaryUnmute } from "../intents/muting/muting.js";
 import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
-import { timerController } from "../intents/timer/timer.js";
-import * as intentParser from "./intentParser.js";
+import { registerHandler, sendMessage } from "../communicate.js";
+
+// These are used for registering message handlers:
+// eslint-disable-next-line no-unused-vars
+import * as intentExamples from "./intentExamples.js";
 
 const UNINSTALL_SURVEY =
   "https://qsurvey.mozilla.com/s3/Firefox-Voice-Exit-Survey";
-
-browser.runtime.onMessage.addListener(async (message, sender) => {
-  const properties = Object.assign({}, message);
-  delete properties.type;
-  let propString = "";
-  let senderInfo = "? ->";
-  if (Object.keys(properties).length) {
-    propString = ` ${JSON.stringify(properties)}`;
-  }
-  if (!sender.tab) {
-    senderInfo = "popup ->";
-  } else if (sender.tab.id === recorderTabId) {
-    senderInfo = "record->";
-  } else if (sender.url.endsWith("options.html")) {
-    senderInfo = "option->";
-  }
-  log.messaging(`${senderInfo} ${message.type}${propString}`);
-  if (message.type === "runIntent") {
-    if (message.closeThisTab) {
-      closeTabSoon(sender.tab.id, sender.tab.url);
-    }
-    return intentRunner.runUtterance(message.text, message.noPopup);
-  } else if (message.type === "getExamples") {
-    return intentExamples.getExamples(message.number || 2);
-  } else if (message.type === "getLastIntentForFeedback") {
-    return intentRunner.getLastIntentForFeedback();
-  } else if (message.type === "inDevelopment") {
-    return inDevelopment();
-  } else if (message.type === "getIntentSummary") {
-    return intentRunner.getIntentSummary();
-  } else if (message.type === "microphoneStarted") {
-    // FIXME: this is called when the popup is opened, but it's a bit silly
-    openWakeword().catch(e => {
-      log.error("Error enabling wakeword page:", e);
-      catcher.capture(e);
-    });
-    return temporaryMute();
-  } else if (message.type === "microphoneStopped") {
-    return temporaryUnmute();
-  } else if (message.type === "cancelledIntent") {
-    return telemetry.cancelledIntent();
-  } else if (message.type === "getSettingsAndOptions") {
-    return settings.getSettingsAndOptions();
-  } else if (message.type === "saveSettings") {
-    return settings.saveSettings(message.settings);
-  } else if (message.type === "addTelemetry") {
-    return telemetry.add(message.properties);
-  } else if (message.type === "sendFeedback") {
-    intentRunner.clearFeedbackIntent();
-    return telemetry.sendFeedback(message);
-  } else if (message.type === "launchOnboarding") {
-    return launchOnboarding();
-  } else if (message.type === "openRecordingTab") {
-    return openRecordingTab();
-  } else if (message.type === "zeroVolumeError") {
-    return zeroVolumeError();
-  } else if (message.type === "onVoiceShimForward") {
-    message.type = "onVoiceShim";
-    return browser.runtime.sendMessage(message);
-  } else if (message.type === "focusSearchResults") {
-    return focusSearchResults(message);
-  } else if (message.type === "copyImage") {
-    return copyImage(message.url);
-  } else if (message.type === "wakeword") {
-    return wakewordPopup(message.wakeword);
-  } else if (message.type === "createSurveyUrl") {
-    return telemetry.createSurveyUrl(message.url);
-  } else if (message.type === "voiceShimForward") {
-    message.type = "voiceShim";
-    if (!recorderTabId) {
-      throw new Error("Recorder tab has not been created");
-    }
-    return browser.tabs.sendMessage(recorderTabId, message);
-  } else if (message.type === "makeRecorderActive") {
-    // FIXME: consider focusing the window too
-    browserUtil.makeTabActive(recorderTabId || sender.tab.id);
-    return null;
-  } else if (message.type === "timerAction") {
-    return timerController[message.method](...(message.args || []));
-  } else if (message.type === "getRegisteredNicknames") {
-    return intentRunner.getRegisteredNicknames();
-  } else if (message.type === "registerNickname") {
-    let context = message.context;
-    if (context !== null) {
-      context = new intentRunner.IntentContext(context);
-    }
-    return intentRunner.registerNickname(message.name, context);
-  } else if (message.type === "parseUtterance") {
-    return new intentRunner.IntentContext(
-      intentParser.parse(message.utterance, message.disableFallback)
-    );
-  } else if (message.type === "clearFollowup") {
-    return intentRunner.clearFollowup();
-  } else if (message.type === "addTimings") {
-    return Promise.resolve(log.addTimings(message.timings));
-  } else if (message.type === "getTimings") {
-    return Promise.resolve(log.getTimings());
-  }
-  log.error(
-    `Received message with unexpected type (${message.type}): ${message}`
-  );
-  return null;
-});
 
 let _inDevelopment;
 export function inDevelopment() {
   return _inDevelopment || false;
 }
+
+registerHandler("inDevelopment", inDevelopment);
 
 let _extensionTemporaryInstall = buildSettings.inDevelopment;
 export function extensionTemporaryInstall() {
@@ -162,10 +63,13 @@ const RECORDER_URL = browser.runtime.getURL("/recorder/recorder.html");
 async function openRecordingTab() {
   if (recorderTabId) {
     try {
-      await browser.tabs.sendMessage(recorderTabId, {
-        type: "voiceShim",
-        method: "ping",
-      });
+      await sendMessage(
+        {
+          type: "voiceShim",
+          method: "ping",
+        },
+        { tabId: recorderTabId }
+      );
       return;
     } catch (e) {
       log.info("Error ending message to recorder tab:", String(e));
@@ -195,31 +99,18 @@ async function openRecordingTab() {
   recorderTabId = tab.id;
   for (let i = 0; i < 5; i++) {
     try {
-      await browser.tabs.sendMessage(recorderTabId, {
-        type: "voiceShim",
-        method: "ping",
-      });
+      await sendMessage(
+        {
+          type: "voiceShim",
+          method: "ping",
+        },
+        { tabId: recorderTabId }
+      );
       break;
     } catch (e) {}
     await util.sleep(100);
   }
   await browserUtil.makeTabActive(activeTab);
-}
-
-function closeTabSoon(tabId, tabUrl) {
-  setTimeout(async () => {
-    try {
-      const tab = await browser.tabs.get(tabId);
-      if (tab.url !== tabUrl) {
-        // The tab has been updated, and shouldn't be closed
-        return;
-      }
-      await browser.tabs.remove(tabId);
-    } catch (e) {
-      log.error("Error closing temporary execution tab:", e);
-      catcher.capture(e);
-    }
-  }, 250);
 }
 
 async function zeroVolumeError() {
@@ -228,7 +119,7 @@ async function zeroVolumeError() {
   catcher.capture(exc);
   if (recorderTabId) {
     await browserUtil.makeTabActive(recorderTabId);
-    await browser.tabs.sendMessage(recorderTabId, { type: "zeroVolumeError" });
+    await sendMessage({ type: "zeroVolumeError" }, { tabId: recorderTabId });
   }
 }
 
@@ -262,7 +153,7 @@ async function wakewordPopup(wakeword) {
   telemetry.add({ wakewordUsed: wakeword });
   log.info("Received wakeword", wakeword);
   try {
-    const result = await browser.runtime.sendMessage({
+    const result = await sendMessage({
       type: "wakewordReceivedRestartPopup",
     });
     if (result) {
@@ -292,7 +183,7 @@ async function updateKeyboardShortcut(shortcut) {
       let error = String(e);
       error = error.replace(/^.*Error: Value/, "");
       try {
-        await browser.runtime.sendMessage({
+        await sendMessage({
           type: "keyboardShortcutError",
           error,
         });
@@ -312,7 +203,7 @@ async function updateKeyboardShortcut(shortcut) {
     }
     if (success) {
       try {
-        await browser.runtime.sendMessage({
+        await sendMessage({
           type: "keyboardShortcutError",
           error: "",
         });
@@ -337,10 +228,10 @@ updateKeyboardShortcut(settings.getSettings().keyboardShortcut);
 let wakewordMaybeOpen = false;
 
 const openWakeword = util.serializeCalls(async function() {
-  const { enableWakeword, wakewords } = await settings.getSettings();
+  const { enableWakeword } = await settings.getSettings();
   const wakewordUrl = browser.runtime.getURL("/wakeword/wakeword.html");
   const tabs = await browser.tabs.query({ url: wakewordUrl });
-  if (!enableWakeword || !wakewords.length) {
+  if (!enableWakeword) {
     if (wakewordMaybeOpen) {
       wakewordMaybeOpen = false;
       if (tabs.length) {
@@ -357,19 +248,110 @@ const openWakeword = util.serializeCalls(async function() {
       pinned: true,
     });
     await browserUtil.waitForDocumentComplete(tab.id);
-    await browser.tabs.sendMessage(tab.id, { type: "updateWakeword" });
+    await sendMessage({ type: "updateWakeword" }, { tabId: tab.id });
     await browserUtil.makeTabActive(activeTab.id);
   } else {
-    await browser.tabs.sendMessage(tabs[0].id, { type: "updateWakeword" });
+    try {
+      await sendMessage({ type: "updateWakeword" }, { tabId: tabs[0].id });
+    } catch (e) {
+      if (e.message.includes("Could not establish connection")) {
+        await browser.tabs.reload(tabs[0].id);
+      }
+      throw e;
+    }
   }
   wakewordMaybeOpen = true;
+});
+
+registerHandler("focusWakewordTab", async (message, sender) => {
+  const tab = await browserUtil.activeTab();
+  // For some reason this takes a long time to return, too long, and
+  // doesn't return in time, so we let it run in the background and return
+  // the tab.id fast:
+  browserUtil.makeTabActive(sender.tab.id);
+  return tab.id;
+});
+
+registerHandler("unfocusWakewordTab", async message => {
+  await browserUtil.makeTabActive(message.tabId);
+});
+
+// These message handlers are kept in main.js to avoid cases where the module
+// (such as telemetry) doesn't or shouldn't know about this messaging, or where
+// a module (such as settings or log) can be used from the background page or the
+// popup or content script:
+registerHandler("microphoneStarted", () => {
+  // FIXME: this is called when the popup is opened, but it's a bit silly
+  openWakeword().catch(e => {
+    log.error("Error enabling wakeword page:", e);
+    catcher.capture(e);
+  });
+  return temporaryMute();
+});
+registerHandler("microphoneStopped", temporaryUnmute);
+
+registerHandler("cancelledIntent", telemetry.cancelledIntent);
+registerHandler("addTelemetry", message => {
+  return telemetry.add(message.properties);
+});
+registerHandler("sendFeedback", message => {
+  intentRunner.clearFeedbackIntent();
+  return telemetry.sendFeedback(message);
+});
+registerHandler("createSurveyUrl", message => {
+  return telemetry.createSurveyUrl(message.url);
+});
+
+registerHandler("getSettingsAndOptions", settings.getSettingsAndOptions);
+registerHandler("saveSettings", message => {
+  return settings.saveSettings(message.settings);
+});
+registerHandler("addTimings", message => {
+  return log.addTimings(message.timings);
+});
+registerHandler("getTimings", log.getTimings);
+
+registerHandler("launchOnboarding", launchOnboarding);
+registerHandler("openRecordingTab", openRecordingTab);
+registerHandler("zeroVolumeError", zeroVolumeError);
+registerHandler("focusSearchResults", message => {
+  return focusSearchResults(message);
+});
+registerHandler("copyImage", message => {
+  return copyImage(message.url);
+});
+registerHandler("wakeword", message => {
+  return wakewordPopup(message.wakeword);
+});
+
+// These help when using a recorder that is not in the popup, but is controlled by the
+// popup; all these methods are forwarded between these two contexts:
+registerHandler("onVoiceShimForward", message => {
+  message.type = "onVoiceShim";
+  return sendMessage(message);
+});
+registerHandler("voiceShimForward", message => {
+  message.type = "voiceShim";
+  if (!recorderTabId) {
+    throw new Error("Recorder tab has not been created");
+  }
+  return sendMessage(message, { tabId: recorderTabId });
+});
+registerHandler("makeRecorderActive", (message, sender) => {
+  // FIXME: consider focusing the window too
+  browserUtil.makeTabActive(recorderTabId || sender.tab.id);
+  return null;
 });
 
 settings.watch("enableWakeword", openWakeword);
 settings.watch("wakewords", openWakeword);
 settings.watch("wakewordSensitivity", openWakeword);
 
-openWakeword();
+// If the wakeword is opened too soon, there can be a permission-related race condition
+// where the wakeword page won't load:
+setTimeout(() => {
+  openWakeword();
+}, 500);
 
 function setUninstallURL() {
   const url = telemetry.createSurveyUrl(UNINSTALL_SURVEY);

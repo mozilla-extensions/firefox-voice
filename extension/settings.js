@@ -1,5 +1,7 @@
 /* globals log, music_getServiceNamesAndTitles, isBackgroundPage */
 
+import { sendMessage } from "./communicate.js";
+
 const watchers = {};
 
 const DEFAULT_SETTINGS = {
@@ -16,6 +18,9 @@ const DEFAULT_SETTINGS = {
   listenForFollowup: false,
   speechOutput: false,
   saveAudioHistory: false,
+  saveHistory: true,
+  // Null indicates we should pick it up from navigator.language:
+  userLocale: null,
 };
 
 export function getSettings() {
@@ -33,7 +38,7 @@ export function getSettings() {
 
 export async function getSettingsAndOptions() {
   if (typeof isBackgroundPage === "undefined" || !isBackgroundPage) {
-    const result = await browser.runtime.sendMessage({
+    const result = await sendMessage({
       type: "getSettingsAndOptions",
     });
     if (!result) {
@@ -46,7 +51,7 @@ export async function getSettingsAndOptions() {
     musicServices: music_getServiceNamesAndTitles(),
     // FIXME: this used to contain the available wakewords, but is empty until we
     // restore wakeword detection:
-    wakewords: [],
+    wakewords: ["Hey Firefox"],
   };
   return { settings, options };
 }
@@ -57,7 +62,7 @@ export async function saveSettings(settings) {
     // We're not running in the background
     // Remove any inherited/default properties:
     settings = JSON.parse(JSON.stringify(settings));
-    await browser.runtime.sendMessage({ type: "saveSettings", settings });
+    await sendMessage({ type: "saveSettings", settings });
   }
   localStorage.setItem("settings", JSON.stringify(settings));
   if (Object.keys(watchers).length !== 0) {

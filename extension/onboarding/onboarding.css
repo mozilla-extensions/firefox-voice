@@ -12,6 +12,8 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
   font-family: "Inter" !important;
+  min-height: 100vh;
+  position: relative;
 }
 
 #onboarding-logo {
@@ -84,6 +86,7 @@ p {
   padding: 3px;
 }
 
+#optinWakeword h1:before,
 #optinTechData h1:before,
 #optinVoiceTranscripts h1:before {
   content: "";
@@ -93,6 +96,7 @@ p {
   padding-left: 60px;
 }
 
+#optinWakeword h1:after,
 #optinTechData h1:after,
 #optinVoiceTranscripts h1:after {
   display: block;
@@ -101,11 +105,14 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
+#optinWakeword .modal a,
 #optinTechData .modal a,
 #optinVoiceTranscripts .modal a {
   color: #0060df;
 }
 
+#optinWakeword .modal a:hover,
+#optinWakeword .modal a:active,
 #optinTechData .modal a:hover,
 #optinTechData .modal a:active,
 #optinVoiceTranscripts .modal a:hover,
@@ -151,6 +158,7 @@ p {
   flex-direction: column;
   align-content: center;
   padding: 40px 100px;
+  padding-bottom: 15rem;
 }
 
 #toolbar-arrow-wrapper {
@@ -192,7 +200,7 @@ p {
   background-image: linear-gradient(to right, #6173ff, #f10366, #ff9100);
 }
 
-#get-started h1:before {
+.mic-icon h1:before {
   background-image: url("../popup/images/mic.svg");
   background-size: 40px auto;
 }
@@ -208,15 +216,15 @@ p {
   margin: 0.5em;
 }
 
-#try-it h1:before {
+.superhero-icon h1:before {
   background-image: url("./images/icon-superhero.svg");
 }
 
-#try-it p {
+.try-it p {
   font-weight: 600;
 }
 
-#try-it ul {
+.try-it ul {
   font-style: italic;
   font-weight: 400;
   font-size: 24px;
@@ -224,7 +232,7 @@ p {
   padding: 0;
 }
 
-#try-it ul li {
+.try-it ul li {
   margin-top: 10px;
 }
 
@@ -250,6 +258,9 @@ p {
   font-weight: normal;
   letter-spacing: -0.58px;
   padding: 40px 0;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
 }
 
 #footer ul {

@@ -19,12 +19,13 @@ export const Options = ({
   userSettings,
   updateUserSettings,
   tabValue,
-  updateNickname,
-  registeredNicknames,
+  updateRoutine,
+  registeredRoutines,
   useToggle,
-  useEditNicknameDraft,
+  useEditRoutineDraft,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-page">
@@ -38,6 +39,7 @@ export const Options = ({
           updateUserSettings={updateUserSettings}
           audioInputDevices={audioInputDevices}
           synthesizedVoices={synthesizedVoices}
+          inputLocales={inputLocales}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -45,10 +47,10 @@ export const Options = ({
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
-          updateNickname={updateNickname}
-          registeredNicknames={registeredNicknames}
+          updateRoutine={updateRoutine}
+          registeredRoutines={registeredRoutines}
           useToggle={useToggle}
-          useEditNicknameDraft={useEditNicknameDraft}
+          useEditRoutineDraft={useEditRoutineDraft}
         ></routinesView.Routines>
       ) : null}
       {tabValue === TABS.HISTORY ? (
@@ -132,6 +134,7 @@ const General = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-content">
@@ -140,19 +143,20 @@ const General = ({
         updateUserSettings={updateUserSettings}
         audioInputDevices={audioInputDevices}
         synthesizedVoices={synthesizedVoices}
+        inputLocales={inputLocales}
       />
-      <KeyboardShortcutSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        keyboardShortcutError={keyboardShortcutError}
-      />
-      {inDevelopment && userOptions.wakeword && userOptions.wakewords.length ? (
+      {userOptions.wakewords && userOptions.wakewords.length ? (
         <WakewordSettings
           userOptions={userOptions}
           userSettings={userSettings}
           updateUserSettings={updateUserSettings}
         />
       ) : null}
+      <KeyboardShortcutSettings
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        keyboardShortcutError={keyboardShortcutError}
+      />
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
@@ -190,7 +194,7 @@ const MusicServiceSettings = ({
         {userOptions.musicServices &&
           userOptions.musicServices.map(musicOption => (
             <option key={musicOption.name} value={musicOption.name}>
-              {musicOption.name}
+              {musicOption.title}
             </option>
           ))}
       </select>
@@ -224,6 +228,43 @@ const SelectMicPreferences = ({
             </option>
           ))}
       </select>
+    </div>
+  );
+};
+
+const VoiceInputLocalePreferences = ({
+  userSettings,
+  updateUserSettings,
+  inputLocales,
+}) => {
+  const onLocalePreferenceChange = event => {
+    userSettings.userLocale = event.target.value;
+    updateUserSettings(userSettings);
+  };
+  const locale = userSettings.userLocale || navigator.language;
+  const defaultValue = locale && locale.startsWith("en-") ? locale : "en-US";
+  return (
+    <div id="voice-input">
+      <div id="voice-input-header">Language and locale</div>
+      <div>
+        Help Firefox Voice to better recognize your voice by specifying your
+        English accent
+      </div>
+      <div id="voice-selector">
+        <span>Locale </span>
+        <select
+          value={defaultValue}
+          onChange={onLocalePreferenceChange}
+          onBlur={onLocalePreferenceChange}
+        >
+          {inputLocales &&
+            inputLocales.map(locale => (
+              <option key={locale.name} value={locale.code}>
+                {locale.name}
+              </option>
+            ))}
+        </select>
+      </div>
     </div>
   );
 };
@@ -308,6 +349,7 @@ const PreferenceSettings = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   const onPreferenceChange = setting => event => {
     if (event) {
@@ -351,6 +393,11 @@ const PreferenceSettings = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         synthesizedVoices={synthesizedVoices}
+      />
+      <VoiceInputLocalePreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        inputLocales={inputLocales}
       />
     </fieldset>
   );
@@ -518,30 +565,35 @@ const WakewordSettings = ({
   }
 
   const wakewords = [];
-  for (const wakeword of userOptions.wakewords) {
-    let className = "styled-checkbox";
-    if (!userSettings.enableWakeword) {
-      className += " disabled";
+
+  if (userOptions.wakewords.length > 1) {
+    for (const wakeword of userOptions.wakewords) {
+      let className = "styled-checkbox";
+      if (!userSettings.enableWakeword) {
+        className += " disabled";
+      }
+      wakewords.push(
+        <li key={`wakeword-${wakeword}`}>
+          <div className={className}>
+            <input
+              id={`wakeword-${wakeword}`}
+              type="checkbox"
+              value={wakeword}
+              checked={userSettings.wakewords.includes(wakeword)}
+              onChange={onWakewordChange}
+              disabled={!userSettings.enableWakeword}
+            />
+            <label htmlFor={`wakeword-${wakeword}`}>
+              <strong>{wakeword}</strong>
+            </label>
+          </div>
+        </li>
+      );
     }
-    wakewords.push(
-      <li key={`wakeword-${wakeword}`}>
-        <div className={className}>
-          <input
-            id={`wakeword-${wakeword}`}
-            type="checkbox"
-            value={wakeword}
-            checked={userSettings.wakewords.includes(wakeword)}
-            onChange={onWakewordChange}
-            disabled={!userSettings.enableWakeword}
-          />
-          <label htmlFor={`wakeword-${wakeword}`}>
-            <strong>{wakeword}</strong>
-          </label>
-        </div>
-      </li>
-    );
   }
 
+  // FIXME: right now wakewords don't support sensitivity or multiple wakewords, so
+  // those settings aren't applicable and are crudely hidden below:
   return (
     <fieldset id="wakeword">
       <legend>Wakeword</legend>
@@ -555,34 +607,43 @@ const WakewordSettings = ({
               onChange={onEnableWakewordChange}
             />
             <label htmlFor="wakeword-enable">
-              <strong>Enable wakeword detection</strong>
+              <strong>Enable wakeword detection</strong> powered by the{" "}
+              <a
+                href="https://github.com/castorini/howl/"
+                rel="nooopener"
+                target="_blank"
+              >
+                Howl Project
+              </a>
             </label>
           </div>
           <p>
             If you turn this option on you will be able to enable Firefox Voice
-            by saying any one of the (checked) words below.
+            by saying <strong>Hey Firefox</strong>.
           </p>
         </li>
-        <li>
-          <div>
-            <input
-              id="wakeword-sensitivity"
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={userSettings.wakewordSensitivity}
-              onChange={onWakewordSensitivityChange}
-            />
-            <label htmlFor="wakeword-sensitivity">
-              {userSettings.wakewordSensitivity}
-            </label>
-          </div>
-          <p>
-            Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
-            listen)
-          </p>
-        </li>
+        {false ? (
+          <li>
+            <div>
+              <input
+                id="wakeword-sensitivity"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={userSettings.wakewordSensitivity}
+                onChange={onWakewordSensitivityChange}
+              />
+              <label htmlFor="wakeword-sensitivity">
+                {userSettings.wakewordSensitivity}
+              </label>
+            </div>
+            <p>
+              Sensitivity to listen for wakeword (1.0=very sensitive, 0.0=don't
+              listen)
+            </p>
+          </li>
+        ) : null}
         {wakewords}
       </ul>
     </fieldset>

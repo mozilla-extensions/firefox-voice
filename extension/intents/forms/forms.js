@@ -9,7 +9,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/forms/formsContentScript.js",
+      "/intents/forms/forms.content.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, {
       type: "enterText",
@@ -24,7 +24,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/forms/formsContentScript.js",
+      "/intents/forms/forms.content.js",
     ]);
     const label = context.slots.label;
     const result = await browser.tabs.sendMessage(activeTab.id, {
@@ -45,7 +45,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/forms/formsContentScript.js",
+      "/intents/forms/forms.content.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, { type: "focusNext" });
   },
@@ -57,7 +57,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/forms/formsContentScript.js",
+      "/intents/forms/forms.content.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, { type: "formSubmit" });
   },
@@ -69,7 +69,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     await content.inject(activeTab.id, [
       "/js/vendor/fuse.js",
-      "/intents/forms/formsContentScript.js",
+      "/intents/forms/forms.content.js",
     ]);
     await browser.tabs.sendMessage(activeTab.id, { type: "focusPrevious" });
   },
@@ -81,7 +81,7 @@ intentRunner.registerIntent({
     const activeTab = await browserUtil.activeTab();
     const isGoogleDoc = new RegExp(/^https:\/\/docs.google.com\/document\/d\//);
     if (isGoogleDoc.test(activeTab.url)) {
-      await content.inject(activeTab.id, "/background/googleContentScript.js");
+      await content.inject(activeTab.id, "/background/googleDocs.content.js");
       const selection = await browser.tabs.sendMessage(activeTab.id, {
         type: "getGoogleDocsSelection",
       });
@@ -108,7 +108,7 @@ intentRunner.registerIntent({
       await browser.tabs.remove(newTab.id);
       await content.inject(activeTab.id, [
         "/js/vendor/fuse.js",
-        "/intents/forms/formsContentScript.js",
+        "/intents/forms/forms.content.js",
       ]);
       await browser.tabs.sendMessage(activeTab.id, {
         type: "turnSelectionIntoLink",

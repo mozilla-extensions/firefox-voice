@@ -3,6 +3,7 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as serviceList from "../../background/serviceList.js";
 import * as browserUtil from "../../browserUtil.js";
+import { sendMessage } from "../../communicate.js";
 
 const SERVICES = {};
 
@@ -24,13 +25,14 @@ export function getServiceNamesAndTitles() {
   names.sort();
   names = names.filter(name => !SERVICES[name].skipAutodetect);
   const services = names.map(name => {
-    return { name, title: SERVICES[name].title };
+    return { name, title: SERVICES[name].title, imgSrc: SERVICES[name].imgSrc };
   });
   services.unshift({ name: "auto", title: "Detect service" });
   return services;
 }
 
 async function getService(context, options) {
+  options = options || {};
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
   options.defaultService = options.defaultService || "spotify";
@@ -71,6 +73,10 @@ async function pauseAnyButTab(context, tabId) {
 intentRunner.registerIntent({
   name: "music.play",
   async run(context) {
+    if (context.parameters.prefixQuery !== undefined) {
+      context.slots.query =
+        context.parameters.prefixQuery + " " + context.slots.query;
+    }
     const service = await getService(context, { lookAtCurrentTab: true });
     await service.playQuery(context.slots.query);
     // FIXME: this won't pause other YouTube tabs when you play a new YouTube tab,
@@ -144,11 +150,32 @@ intentRunner.registerIntent({
         eduText: `Click mic and say ‘pause’, ‘next’ or ‘stop’`,
       },
     };
+    await sendMessage({
+      type: "showSearchResults",
+      card,
+      searchResults: card,
+    });
+  },
+});
+
+intentRunner.registerIntent({
+  name: "music.support",
+  async run(context) {
+    const card = {
+      answer: {
+        eduMic: `Say a music to set to default`,
+        eduText: `Click a music to set to default`,
+      },
+
+      music: [],
+    };
+
     await browser.runtime.sendMessage({
       type: "showSearchResults",
       card,
       searchResults: card,
     });
+    context.keepPopup();
   },
 });
 

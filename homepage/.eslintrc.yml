@@ -1,0 +1,43 @@
+env:
+  browser: true
+  es6: true
+  node: true
+  webextensions: true
+
+parser: babel-eslint
+
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+
+extends:
+  - eslint:recommended
+  - plugin:mozilla/recommended
+  - plugin:jsx-a11y/recommended
+  - plugin:prettier/recommended
+
+plugins:
+  - mozilla
+  - react
+  - class-property
+  - jsx-a11y
+  - react-hooks
+  - prettier
+
+rules:
+  eqeqeq: error
+  no-console: "warn" # TODO: Set back to "warn"
+  no-unused-vars: [error, { vars: all, args: none, ignoreRestSiblings: false }]
+  no-var: error
+  no-warning-comments: off
+  prefer-const: error
+  mozilla/no-import-into-var-and-global: off
+  comma-dangle: off
+  react-hooks/rules-of-hooks: error
+  react-hooks/exhaustive-deps: warn
+  prettier/prettier:
+   - error
+   - {}
+   - fileInfoOptions:
+      ignorePath: '.gitignore'
+  jsx-a11y/no-onchange: off

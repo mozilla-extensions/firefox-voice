@@ -206,7 +206,7 @@ body {
   padding: 6px;
 }
 
-.nickname-container {
+.routine-container {
   outline: 0;
 }
 
@@ -239,7 +239,7 @@ body {
   left: 80px;
 }
 
-.label-nickname {
+.label-routine {
   padding: 10px 20px;
 }
 
@@ -468,7 +468,8 @@ audio {
   width: 9em;
 }
 
-#voice-output-header {
+#voice-output-header,
+#voice-input-header {
   font-size: 1.25em;
   font-weight: 300;
   margin-top: 2em;
@@ -485,4 +486,8 @@ audio {
 
 #voice-output-unavailable {
   font-style: italic;
+}
+
+label.disabled-field {
+  opacity: 0.5;
 }
