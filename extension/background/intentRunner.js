@@ -6,7 +6,7 @@ import { metadata } from "../intents/metadata.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { PhraseSet } from "../language/findMatch.js";
 import * as settings from "../settings.js";
-import { entityTypes } from "./entityTypes.js";
+import { entityTypes, addPageName } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import { registerHandler, sendMessage } from "../communicate.js";
@@ -548,33 +548,27 @@ export function getRegisteredRoutines() {
 
 registerHandler("getRegisteredRoutines", getRegisteredRoutines);
 
-let pageNames = {};
+export async function getRegisteredPageName() {
+  const result = await browser.storage.sync.get("pageNames");
+  const pageNames = result.pageNames;
+
+  return pageNames;
+}
 
 export async function registerPageName(name, { url }) {
   name = name.toLowerCase();
   const creationDate = Date.now();
-  const result = await browser.storage.sync.get("pageNames");
-  pageNames = result.pageNames || {};
+  const pageNames = (await getRegisteredPageName()) || {};
 
   pageNames[name] = url;
 
-  log.info("Added routine for page", name, "->", url, creationDate);
+  addPageName(name);
   await browser.storage.sync.set({ pageNames });
-}
-
-export async function getRegisteredPageName(name) {
-  const result = await browser.storage.sync.get("pageNames");
-  pageNames = result.pageNames;
-
-  if (!pageNames[name] || !name) {
-    const exc = new Error("No page name to remove");
-    exc.displayMessage = `The page name "${name}" not found`;
-    throw exc;
-  }
-  return pageNames;
+  log.info("Added routine for page", name, "->", url, creationDate);
 }
 
 export async function unregisterPageName(name) {
+  const pageNames = await getRegisteredPageName();
   delete pageNames[name];
   log.info("Removed routine for page", name);
   await browser.storage.sync.set({ pageNames });

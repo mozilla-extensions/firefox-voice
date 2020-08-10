@@ -3,8 +3,8 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
-import { RoutineExecutor, pausedRoutineExecutor } from "./routineExecutor.js";
 import English from "../../language/langs/english.js";
+import { pausedRoutineExecutor, RoutineExecutor } from "./routineExecutor.js";
 
 intentRunner.registerIntent({
   name: "routines.name",
@@ -98,7 +98,13 @@ intentRunner.registerIntent({
   name: "routines.removePageName",
   async run(context) {
     const name = context.slots.name;
-    await intentRunner.getRegisteredPageName(name);
+    const pageNames = await intentRunner.getRegisteredPageName(name);
+    if (!pageNames[name] || !name) {
+      const exc = new Error(`No page name with name ${name}`);
+      exc.displayMessage = `The page name "${name}" not found`;
+      throw exc;
+    }
+
     intentRunner.unregisterPageName(name);
   },
 });

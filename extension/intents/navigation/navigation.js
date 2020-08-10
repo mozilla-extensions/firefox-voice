@@ -35,15 +35,14 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query.toLowerCase();
-    const result = await browser.storage.sync.get("pageNames");
-    const pageNames = result.pageNames;
+    const pageNames = await intentRunner.getRegisteredPageName(query);
     let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];
       tab = await browserUtil.openOrFocusTab(savedUrl);
     } else {
       const where = context.slots.where;
-      const cached = queryDatabase.get(query.toLowerCase());
+      const cached = queryDatabase.get(query);
       if (where === "window") {
         if (cached) {
           const window = await browser.windows.create({ url: cached.url });
