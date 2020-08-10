@@ -42,5 +42,7 @@ for file in $files ; do
   cp $file $dest
 done
 
+git describe --all --long --always > $dest/revision.txt
+
 cd ..
 echo "Honkling files copied"
