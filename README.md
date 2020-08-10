@@ -110,7 +110,7 @@ We are using these builds for internal testing with more-than-normal data collec
 
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
   (note: Use **Save As** and install it via about:debugging **Load Temporary Add-on**. Also open `about:config` and set `extensions.experiments.enabled` to true)
-- [Install release version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
+- [Install release version](https://addons.mozilla.org/en-US/firefox/addon/firefox-voice/)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
 
@@ -152,6 +152,8 @@ This project is governed by a [Code Of Conduct](docs/code_of_conduct.md).
 To disclose any potential security vulnerability please see our [security](docs/security.md) documentation.
 
 ### Contributors
+
+Wakeword provided by the [Howl Project](https://github.com/castorini/howl/): [Jaejun Lee](https://www.linkedin.com/in/ljj7975/), [Ralph Tang](http://ralphtang.com/), [Jimmy Lin](https://cs.uwaterloo.ca/~jimmylin/), University of Waterloo.
 
 <a href="https://github.com/mozilla/firefox-voice/graphs/contributors">
   <img src="https://contributors-img.firebaseapp.com/image?repo=mozilla/firefox-voice" />

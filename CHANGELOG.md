@@ -1,3 +1,23 @@
+## Version 0.24.0 (2020-08-05)
+
+- New wakeword available (if turned on in Firefox Voice options): **Hey Firefox**
+- New intent **enable/disable smart speaker**, which turns on/off voice output and wakeword detection. Fixes [#1857](https://github.com/mozilla/firefox-voice/issues/1857) [2418b83](https://github.com/mozilla/firefox-voice/commit/2418b83)
+- New intents: **add title/link/selection to clipboard** (from [AbhiVaidya95](https://github.com/AbhiVaidya95)). Fixes [#1829](https://github.com/mozilla/firefox-voice/issues/1829) [149094d](https://github.com/mozilla/firefox-voice/commit/149094d)
+- Move to [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/firefox-voice/)
+- Add English locale as a preference ([#1883](https://github.com/mozilla/firefox-voice/issues/1883)). Fixes [#1825](https://github.com/mozilla/firefox-voice/issues/1825) [a72f16a](https://github.com/mozilla/firefox-voice/commit/a72f16a)
+- Restore opening the lexicon for help phrases. Fixes [#1269](https://github.com/mozilla/firefox-voice/issues/1269) [4e58b0d](https://github.com/mozilla/firefox-voice/commit/4e58b0d)
+- make 'open youtube' etc work (again). Fixes [#1877](https://github.com/mozilla/firefox-voice/issues/1877) [2dda090](https://github.com/mozilla/firefox-voice/commit/2dda090)
+- Add survey link
+  This shows a survey link 10% of the time, until you click it. Then for 14 days the link won't be shown. Fixes [#1878](https://github.com/mozilla/firefox-voice/issues/1878) [3582bdd](https://github.com/mozilla/firefox-voice/commit/3582bdd)
+- Make search on duckduckgo work. Fixes [#1851](https://github.com/mozilla/firefox-voice/issues/1851) [be30bab](https://github.com/mozilla/firefox-voice/commit/be30bab)
+- Update honkling models [173e212](https://github.com/mozilla/firefox-voice/commit/173e212)
+- Add text-align on command transcriptions (from [Gwe-n](https://github.com/Gwe-n)). Fixes [#1538](https://github.com/mozilla/firefox-voice/issues/1538) [cbb0a42](https://github.com/mozilla/firefox-voice/commit/cbb0a42)
+- Count all tabs in all active browser windows ([#1795](https://github.com/mozilla/firefox-voice/issues/1795)) (from [PascalUlor](https://github.com/PascalUlor)). Fixes [#1776](https://github.com/mozilla/firefox-voice/issues/1776) [847ce03](https://github.com/mozilla/firefox-voice/commit/847ce03)
+- Added (pref'd off) onboarding views for wakeword ([#1846](https://github.com/mozilla/firefox-voice/issues/1846)). Fixes [#1820](https://github.com/mozilla/firefox-voice/issues/1820) Fixes [#1820](https://github.com/mozilla/firefox-voice/issues/1820) [155bf34](https://github.com/mozilla/firefox-voice/commit/155bf34)
+- New design for the pinned wakeword tab ([#1855](https://github.com/mozilla/firefox-voice/issues/1855))
+  - Display randomized suggestions on the wakeword tab. Fixes [#1854](https://github.com/mozilla/firefox-voice/issues/1854) [2c468fe](https://github.com/mozilla/firefox-voice/commit/2c468fe)
+- Display the feedback card only when the search is done (from [Gwe-n](https://github.com/Gwe-n)) ([#1849](https://github.com/mozilla/firefox-voice/issues/1849)). Fixes [#1509](https://github.com/mozilla/firefox-voice/issues/1509) [075e366](https://github.com/mozilla/firefox-voice/commit/075e366)
+
 ## Version 0.23.0 (2020-07-27)
 
 - Moved repository from https://github.com/mozilla/firefox-voice to https://github.com/mozilla-extensions/firefox-voice

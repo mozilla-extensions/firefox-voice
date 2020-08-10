@@ -32,6 +32,7 @@ export function getServiceNamesAndTitles() {
 }
 
 async function getService(context, options) {
+  options = options || {};
   let ServiceClass;
   const explicitService = context.slots.service || context.parameters.service;
   options.defaultService = options.defaultService || "spotify";

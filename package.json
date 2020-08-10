@@ -3,7 +3,7 @@
   "id": "firefox-voice@mozilla.org",
   "description": "This is a WebExtension that allows the browser to be voice-controlled.",
   "private": true,
-  "version": "0.23.0",
+  "version": "0.24.0",
   "engines": {
     "node": ">=12.0.0"
   },
@@ -89,7 +89,7 @@
     "jest": "npm run build:intent-metadata && jest",
     "build": "npm-run-all build:* package-prod",
     "build:templates": "mkdir -p extension/views && node bin/fill-templates.js",
-    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in @tensorflow/tfjs/dist/tf.min.js lottie-web/build/player/lottie.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js chrono-node/dist/chrono.min.js jquery/dist/jquery.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
+    "build:deps": "mkdir -p extension/js/vendor/ extension/css/vendor/ ; for file in @tensorflow/tfjs/dist/tf.es2017.js lottie-web/build/player/lottie.min.js fuse.js/dist/fuse.js react/umd/react.production.min.js react-dom/umd/react-dom.production.min.js chrono-node/dist/chrono.min.js jquery/dist/jquery.min.js; do cp node_modules/$file extension/js/vendor/ ; done ; cp \"node_modules/@sentry/browser/build/bundle.es6.min.js\" extension/js/vendor/sentry.js",
     "build:manifest": "node bin/substitute-manifest.js",
     "build:intent-metadata": "node bin/parse-intent-toml.js",
     "build:jsx": "babel --relative --out-dir ../build --only '**/*.jsx' extension/ && node bin/move-changed-build-files.js",
@@ -107,7 +107,7 @@
     "lint:js": "eslint --rule '{\"no-console\": \"error\"}' --ext 'js,jsx' extension/ bin/",
     "once": "web-ext run -s extension",
     "package": "npm-run-all build:* && web-ext build -s extension --filename firefox-voice.xpi --overwrite-dest -i '**/*.ejs' -i '**/*.jsx' -i '**/*.toml'",
-    "package-prod": "VERSION=\"$(node -e 'process.stdout.write(require(\"./package.json\").version, {encoding: \"UTF-8\"})')\" UPDATE_BASE=https://va.allizom.org/releases/prod INSTALL_CHANNEL=prod LOG_LEVEL=info npm run package",
+    "package-prod": "VERSION=\"$(node -e 'process.stdout.write(require(\"./package.json\").version, {encoding: \"UTF-8\"})')\" INSTALL_CHANNEL=prod LOG_LEVEL=info npm run package",
     "calculate-version": "node bin/calculate-version.js",
     "enumerate-phrases": "babel-node --plugins @babel/plugin-transform-modules-commonjs bin/enumerate-phrases.js",
     "postinstall": "npm-run-all build:*"

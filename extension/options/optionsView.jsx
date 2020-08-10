@@ -25,6 +25,7 @@ export const Options = ({
   useEditRoutineDraft,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-page">
@@ -38,6 +39,7 @@ export const Options = ({
           updateUserSettings={updateUserSettings}
           audioInputDevices={audioInputDevices}
           synthesizedVoices={synthesizedVoices}
+          inputLocales={inputLocales}
         ></General>
       ) : null}
       {tabValue === TABS.ROUTINES ? (
@@ -132,6 +134,7 @@ const General = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   return (
     <div className="settings-content">
@@ -140,11 +143,7 @@ const General = ({
         updateUserSettings={updateUserSettings}
         audioInputDevices={audioInputDevices}
         synthesizedVoices={synthesizedVoices}
-      />
-      <KeyboardShortcutSettings
-        userSettings={userSettings}
-        updateUserSettings={updateUserSettings}
-        keyboardShortcutError={keyboardShortcutError}
+        inputLocales={inputLocales}
       />
       {userOptions.wakewords && userOptions.wakewords.length ? (
         <WakewordSettings
@@ -153,6 +152,11 @@ const General = ({
           updateUserSettings={updateUserSettings}
         />
       ) : null}
+      <KeyboardShortcutSettings
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        keyboardShortcutError={keyboardShortcutError}
+      />
       <MusicServiceSettings
         userOptions={userOptions}
         userSettings={userSettings}
@@ -224,6 +228,43 @@ const SelectMicPreferences = ({
             </option>
           ))}
       </select>
+    </div>
+  );
+};
+
+const VoiceInputLocalePreferences = ({
+  userSettings,
+  updateUserSettings,
+  inputLocales,
+}) => {
+  const onLocalePreferenceChange = event => {
+    userSettings.userLocale = event.target.value;
+    updateUserSettings(userSettings);
+  };
+  const locale = userSettings.userLocale || navigator.language;
+  const defaultValue = locale && locale.startsWith("en-") ? locale : "en-US";
+  return (
+    <div id="voice-input">
+      <div id="voice-input-header">Language and locale</div>
+      <div>
+        Help Firefox Voice to better recognize your voice by specifying your
+        English accent
+      </div>
+      <div id="voice-selector">
+        <span>Locale </span>
+        <select
+          value={defaultValue}
+          onChange={onLocalePreferenceChange}
+          onBlur={onLocalePreferenceChange}
+        >
+          {inputLocales &&
+            inputLocales.map(locale => (
+              <option key={locale.name} value={locale.code}>
+                {locale.name}
+              </option>
+            ))}
+        </select>
+      </div>
     </div>
   );
 };
@@ -308,6 +349,7 @@ const PreferenceSettings = ({
   updateUserSettings,
   audioInputDevices,
   synthesizedVoices,
+  inputLocales,
 }) => {
   const onPreferenceChange = setting => event => {
     if (event) {
@@ -351,6 +393,11 @@ const PreferenceSettings = ({
         userSettings={userSettings}
         updateUserSettings={updateUserSettings}
         synthesizedVoices={synthesizedVoices}
+      />
+      <VoiceInputLocalePreferences
+        userSettings={userSettings}
+        updateUserSettings={updateUserSettings}
+        inputLocales={inputLocales}
       />
     </fieldset>
   );
@@ -560,7 +607,14 @@ const WakewordSettings = ({
               onChange={onEnableWakewordChange}
             />
             <label htmlFor="wakeword-enable">
-              <strong>Enable wakeword detection</strong>
+              <strong>Enable wakeword detection</strong> powered by the{" "}
+              <a
+                href="https://github.com/castorini/howl/"
+                rel="nooopener"
+                target="_blank"
+              >
+                Howl Project
+              </a>
             </label>
           </div>
           <p>
