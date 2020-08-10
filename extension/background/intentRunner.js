@@ -6,7 +6,7 @@ import { metadata } from "../intents/metadata.js";
 import { compile, splitPhraseLines } from "../language/compiler.js";
 import { PhraseSet } from "../language/findMatch.js";
 import * as settings from "../settings.js";
-import { entityTypes, pageName, addPageName } from "./entityTypes.js";
+import { entityTypes, addPageName } from "./entityTypes.js";
 import * as intentParser from "./intentParser.js";
 import * as telemetry from "./telemetry.js";
 import { registerHandler, sendMessage } from "../communicate.js";
@@ -550,8 +550,7 @@ registerHandler("getRegisteredRoutines", getRegisteredRoutines);
 
 export async function getRegisteredPageName() {
   const result = await browser.storage.sync.get("pageNames");
-  let pageNames = result.pageNames;
-  pageNames = pageName;
+  const pageNames = result.pageNames;
 
   return pageNames;
 }
@@ -563,9 +562,9 @@ export async function registerPageName(name, { url }) {
 
   pageNames[name] = url;
 
-  log.info("Added routine for page", name, "->", url, creationDate);
   addPageName(name);
   await browser.storage.sync.set({ pageNames });
+  log.info("Added routine for page", name, "->", url, creationDate);
 }
 
 export async function unregisterPageName(name) {
