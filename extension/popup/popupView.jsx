@@ -177,7 +177,7 @@ const PopupHeader = ({ currentView, transcript, lastIntent }) => {
         return (
           <React.Fragment>
             <p>{lastIntentTime(lastIntent)} ago you said</p>
-            <p className="utterance">{lastIntent?.utterance}</p>
+            <p className="utterance">{lastIntent && lastIntent.utterance}</p>
           </React.Fragment>
         );
       case "feedbackThanks":
