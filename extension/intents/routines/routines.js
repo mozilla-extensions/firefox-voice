@@ -3,7 +3,11 @@
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
 import * as browserUtil from "../../browserUtil.js";
-import { RoutineExecutor, pausedRoutineExecutor } from "./routineExecutor.js";
+import {
+  RoutineExecutor,
+  pausedRoutineExecutor,
+  currentRoutineExecutor,
+} from "./routineExecutor.js";
 import English from "../../language/langs/english.js";
 
 intentRunner.registerIntent({
@@ -219,6 +223,25 @@ intentRunner.registerIntent({
 intentRunner.registerIntent({
   name: "routines.endForLoop",
   async run(context) {
+    if (context.routineExecutor === undefined) {
+      const exc = new Error("Command not available.");
+      exc.displayMessage = "Command not available.";
+      throw exc;
+    }
+
     context.routineExecutor.endLoop();
+  },
+});
+
+intentRunner.registerIntent({
+  name: "routines.stop",
+  async run() {
+    const routineExecutor = currentRoutineExecutor || pausedRoutineExecutor;
+    if (routineExecutor === null) {
+      const exc = new Error("No routine executing.");
+      exc.displayMessage = "No routine executing.";
+      throw exc;
+    }
+    routineExecutor.stop();
   },
 });
