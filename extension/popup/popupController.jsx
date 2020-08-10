@@ -268,6 +268,7 @@ export const PopupController = function() {
             setFollowupText(message.message);
           }
           setRequestFollowup(true);
+          runFollowup();
         } else {
           setRequestFollowup(false);
           setFollowupText(null);
@@ -569,6 +570,11 @@ export const PopupController = function() {
     }, ms);
   };
 
+  const cancelClosePopup = () => {
+    clearTimeout(closePopupId);
+    closePopupId = undefined;
+  };
+
   const addListeners = () => {
     // Listen for messages from the background scripts
     browser.runtime.onMessage.addListener(handleMessage);
@@ -766,6 +772,7 @@ export const PopupController = function() {
       sendFeedback(feedback);
     } else if (feedback.rating === -1 && feedback.feedback === null) {
       // Negative feedback makes us ask for more info
+      cancelClosePopup();
       setPopupView("feedback");
     } else if (feedback.rating === -1) {
       setPopupView("feedbackThanks");
