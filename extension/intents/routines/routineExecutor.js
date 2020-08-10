@@ -1,6 +1,7 @@
-/* globals log */
+/* globals log, catcher */
 
 import * as intentRunner from "../../background/intentRunner.js";
+import { sendMessage } from "../../communicate.js";
 
 export let pausedRoutineExecutor = null;
 export let currentRoutineExecutor = null;
@@ -123,6 +124,32 @@ export class RoutineExecutor {
   pauseRoutine() {
     this._stop = true;
     pausedRoutineExecutor = this;
+  }
+
+  pauseRoutineForTime(ms, message) {
+    this.pauseRoutine();
+    setTimeout(async () => {
+      try {
+        const result = await sendMessage({
+          type: "triggerPopupWithMessage",
+          message: message || "Routine break finished.",
+        });
+        if (result) {
+          this.continue();
+        }
+      } catch (e) {
+        catcher.capture(e);
+      }
+
+      await browser.experiments.voice.openPopup();
+      setTimeout(async () => {
+        await sendMessage({
+          type: "triggerPopupWithMessage",
+          message: message || "Routine break finished.",
+        });
+      }, 1000);
+      await this.continue();
+    }, ms);
   }
 
   stop() {

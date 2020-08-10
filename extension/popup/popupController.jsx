@@ -319,6 +319,11 @@ export const PopupController = function() {
         }
         return Promise.resolve(lastAudio);
       }
+      case "triggerPopupWithMessage": {
+        setPopupView("success");
+        setTranscript(message.message);
+        return Promise.resolve(true);
+      }
       default:
         break;
     }
