@@ -1,4 +1,4 @@
-/* globals log, chrono */
+/* globals log */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import * as pageMetadata from "../../background/pageMetadata.js";
@@ -116,9 +116,8 @@ intentRunner.registerIntent({
       exc.displayMessage = "Command not available.";
       throw exc;
     }
-    if (context.parameters.time !== undefined) {
+    if (context.slots.time) {
       const ms = convertToMs(context.slots.time);
-
       context.routineExecutor.pauseRoutineForTime(ms, context.slots.message);
     } else {
       browser.runtime.sendMessage({

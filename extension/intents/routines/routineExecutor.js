@@ -1,4 +1,4 @@
-/* globals log */
+/* globals log, catcher */
 
 import * as intentRunner from "../../background/intentRunner.js";
 import { sendMessage } from "../../communicate.js";
@@ -135,7 +135,7 @@ export class RoutineExecutor {
           message: message || "Routine break finished.",
         });
         if (result) {
-          return this.continue();
+          this.continue();
         }
       } catch (e) {
         catcher.capture(e);

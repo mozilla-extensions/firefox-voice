@@ -52,7 +52,7 @@ test = true
 [routines.removePageName]
 description = "Remove a page name"
 match = """
-  (remove | delete) (the |) (page | tab) (name | routine | shortcut | nickname |) (called |) [name] 
+  (remove | delete) (the |) (page | tab) (name | routine | shortcut | nickname |) (called |) [name]
   (remove | delete) (the | this |) (page | tab) name
 """
 
@@ -67,8 +67,8 @@ description = "Pauses a routine"
 match = """
   pause routine (with |) (and |) (show |) (message | status | text | print) [message]
   pause routine
-  pause routine for [time] [time=true]
-  pause routine for [time] (with |) (and |) (show |) (message | status | text | print) [message] [time=true]
+  pause routine for [time]
+  pause routine for [time] (with |) (and |) (show |) (message | status | text | print) [message]
 """
 
 [routines.continue]
