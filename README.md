@@ -110,7 +110,7 @@ We are using these builds for internal testing with more-than-normal data collec
 
 - [Install dev version](https://va.allizom.org/releases/dev/firefox-voice.xpi?src=github)
   (note: Use **Save As** and install it via about:debugging **Load Temporary Add-on**. Also open `about:config` and set `extensions.experiments.enabled` to true)
-- [Install release version](https://va.allizom.org/releases/prod/firefox-voice.xpi?src=github)
+- [Install release version](https://addons.mozilla.org/en-US/firefox/addon/firefox-voice/)
 
 The version numbers are increased for each release and each commit, but are _not_ sequential.
 
