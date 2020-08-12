@@ -35,7 +35,7 @@ intentRunner.registerIntent({
   name: "navigation.navigate",
   async run(context) {
     const query = context.slots.query.toLowerCase();
-    const pageNames = await intentRunner.getRegisteredPageName(query);
+    const pageNames = await intentRunner.getRegisteredPageName();
     let tab = null;
     if (pageNames && pageNames[query]) {
       const savedUrl = pageNames[query];

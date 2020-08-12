@@ -98,7 +98,7 @@ intentRunner.registerIntent({
   name: "routines.removePageName",
   async run(context) {
     const name = context.slots.name;
-    const pageNames = await intentRunner.getRegisteredPageName(name);
+    const pageNames = await intentRunner.getRegisteredPageName();
     if (!pageNames[name] || !name) {
       const exc = new Error(`No page name with name ${name}`);
       exc.displayMessage = `The page name "${name}" not found`;
