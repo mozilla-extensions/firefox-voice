@@ -1,5 +1,15 @@
 # Firefox Voice
 
+## What does it do?
+
+Check out these videos:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bF9UYIv-9oI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pg7Wtjn2bIE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## About
+
 Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://research.mozilla.org/).
 
 Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "What is the weather?" or "Find the gmail tab". Initially, the goal is to provide _any_ useful interactions. Ultimately, the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions.
