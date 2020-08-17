@@ -6,7 +6,7 @@ Check out these videos:
 
 [![Speech-based Firefox Voice demonstration](https://img.youtube.com/vi/bF9UYIv-9oI/0.jpg)](https://www.youtube.com/watch?v=bF9UYIv-9oI)
 
-[![No-speech Firefox Voice demonstration](https://img.youtube.com/vi/bF9UYIv-9oI/0.jpg)](https://www.youtube.com/watch?v=bF9UYIv-9oI)
+[![No-speech Firefox Voice demonstration](https://img.youtube.com/vi/pg7Wtjn2bIE/0.jpg)](https://www.youtube.com/watch?v=pg7Wtjn2bIE)
 
 ## About
 
