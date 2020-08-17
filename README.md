@@ -4,9 +4,9 @@
 
 Check out these videos:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bF9UYIv-9oI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Speech-based Firefox Voice demonstration](https://img.youtube.com/vi/bF9UYIv-9oI/0.jpg)](https://www.youtube.com/watch?v=bF9UYIv-9oI)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/pg7Wtjn2bIE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![No-speech Firefox Voice demonstration](https://img.youtube.com/vi/bF9UYIv-9oI/0.jpg)](https://www.youtube.com/watch?v=bF9UYIv-9oI)
 
 ## About
 
