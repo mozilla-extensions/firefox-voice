@@ -1,5 +1,19 @@
 # Firefox Voice
 
+## Status
+
+Mozilla has [realigned its priorities](https://blog.mozilla.org/blog/2020/08/11/changing-world-changing-mozilla/), and Firefox Voice will no longer be supported by Mozilla. The Firefox Voice team will be going to new things, no longer with Mozilla. This has been a fun and exciting project and we appreciate all the contributions and ideas we’ve received from the community.
+
+The repository will remain here, but archived. We believe the extension will be available for a few months but expect it will be removed from addons.mozilla.org eventually.
+
+Thanks from the team – [Ian Bicking](https://www.ianbicking.org/), [Julia Cambre](https://juliacambre.com/), [Jofish Kaye](http://jofish.com/), [Daniela Mormocea](https://github.com/danielamormocea), [Chioma Onyekpere](https://github.com/Simpcyclassy), [Afsaneh Razi](Afsaneh Razi), [Janice Tsai](http://www.harraton.com/), [Abraham Wallin](https://abewallin.com/).
+
+## About
+
+Firefox Voice was an experiment from [Mozilla Emerging Technologies](https://research.mozilla.org/).
+
+Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "What is the weather?" or "Find the gmail tab". Initially, the goal is to provide _any_ useful interactions. Ultimately, the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions.
+
 ## What does it do?
 
 Check out these videos:
@@ -9,10 +23,6 @@ Check out these videos:
 [![No-speech Firefox Voice demonstration](https://img.youtube.com/vi/pg7Wtjn2bIE/0.jpg)](https://www.youtube.com/watch?v=pg7Wtjn2bIE)
 
 ## About
-
-Firefox Voice is an experiment from [Mozilla Emerging Technologies](https://research.mozilla.org/).
-
-Firefox Voice is a browser extension that allows you to give voice commands to your browser, such as "What is the weather?" or "Find the gmail tab". Initially, the goal is to provide _any_ useful interactions. Ultimately, the goal is to see if we can facilitate meaningful user interactions with the web using just voice-based interactions.
 
 ## Launcher Usage
 
