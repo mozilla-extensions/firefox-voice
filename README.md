@@ -6,7 +6,7 @@ Mozilla has [realigned its priorities](https://blog.mozilla.org/blog/2020/08/11/
 
 The repository will remain here, but archived. We believe the extension will be available for a few months but expect it will be removed from addons.mozilla.org eventually.
 
-Thanks from the team – [Ian Bicking](https://www.ianbicking.org/), [Julia Cambre](https://juliacambre.com/), [Jofish Kaye](http://jofish.com/), [Daniela Mormocea](https://github.com/danielamormocea), [Chioma Onyekpere](https://github.com/Simpcyclassy), [Afsaneh Razi](Afsaneh Razi), [Janice Tsai](http://www.harraton.com/), [Abraham Wallin](https://abewallin.com/).
+Thanks from the team – [Ian Bicking](https://www.ianbicking.org/), [Julia Cambre](https://juliacambre.com/), [Jofish Kaye](http://jofish.com/), [Daniela Mormocea](https://github.com/danielamormocea), [Chioma Onyekpere](https://github.com/Simpcyclassy), [Afsaneh Razi](http://www.afsanehrazi.com/), [Janice Tsai](http://www.harraton.com/), [Abraham Wallin](https://abewallin.com/).
 
 ## About
 
