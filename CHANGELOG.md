@@ -1,3 +1,6 @@
+## Version 0.25.0 (2021-01-28)
+- EOL for Firefox Voice. Thanks to all users!
+
 ## Version 0.24.0 (2020-08-05)
 
 - New wakeword available (if turned on in Firefox Voice options): **Hey Firefox**
