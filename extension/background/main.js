@@ -15,16 +15,16 @@ import { focusSearchResults } from "../intents/search/search.js";
 import { copyImage } from "../intents/clipboard/clipboard.js";
 import { registerHandler, sendMessage } from "../communicate.js";
 
-
 // self-uninstall
-let today = new Date();
-let uninstall_date = new Date(2021, 1, 19);
+const today = new Date();
+const uninstall_date = new Date(2021, 1, 19);
 
 const openDiscourse = () => {
   browser.tabs.create({
-    url: "https://discourse.mozilla.org/t/retiring-the-voice-fill-and-firefox-voice-beta-extensions/74581"
+    url:
+      "https://discourse.mozilla.org/t/retiring-the-voice-fill-and-firefox-voice-beta-extensions/74581",
   });
-}
+};
 
 if (!localStorage.getItem("openDiscourse")) {
   openDiscourse();
@@ -35,7 +35,7 @@ if (!localStorage.getItem("openDiscourse")) {
 if (today >= uninstall_date) {
   openDiscourse();
   browser.management.uninstallSelf({
-    showConfirmDialog: false
+    showConfirmDialog: false,
   });
 }
 
