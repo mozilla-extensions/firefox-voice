@@ -125,6 +125,7 @@ export function send() {
       }
     }
     ping.wakewordEnabled = s.enableWakeword;
+    ping.speechOutputEnabled = s.speechOutput;
     ping.optInAudio = s.collectAudio;
     ping.optInAcceptanceTime = s.collectTranscriptsOptinAnswered;
     browser.telemetry

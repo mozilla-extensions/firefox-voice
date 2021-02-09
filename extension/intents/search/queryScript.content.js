@@ -156,9 +156,10 @@ registerHandler("cardContent", message => {
   ctx.drawWindow(window, rect.x, rect.y, rect.width, rect.height, "#fff");
 
   let speech;
+  let cardType = cardSpeech.getCardType(card);
 
   if (message.speechOutput && !message.polling) {
-    speech = cardSpeech.getSpeechForCard(card);
+    speech = cardSpeech.getSpeechForCard(card, cardType);
   }
 
   return {
@@ -167,6 +168,7 @@ registerHandler("cardContent", message => {
     src: canvas.toDataURL(),
     alt: card.innerText,
     hasWidget,
+    cardType,
     speech,
   };
 });

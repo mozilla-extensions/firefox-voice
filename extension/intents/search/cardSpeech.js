@@ -313,7 +313,7 @@ function humanReadableDate(rawDate) {
   return eventStringParts;
 }
 
-export function getSpeechForCard(card) {
+export function getCardType(card) {
   const CARD_TYPE_SELECTORS = {
     WEATHER: "#wob_wc",
     DIRECTIONS: ".BbbuR",
@@ -329,14 +329,12 @@ export function getSpeechForCard(card) {
   };
 
   const parentCard = card.parentNode;
-  let text;
-  let language;
   let cardType;
 
   const BANNER_CARD_SELECTOR = "#botabar";
   const bannerCardContainer = document.querySelector(BANNER_CARD_SELECTOR);
   if (bannerCardContainer) {
-    return handleBannerCards(bannerCardContainer); // We don't currently show banner-type cards within the popup, and there may be searches that yield both banner cards and sidebar cards.
+    return "BANNER";
   }
 
   for (const [type, tag] of Object.entries(CARD_TYPE_SELECTORS)) {
@@ -345,6 +343,16 @@ export function getSpeechForCard(card) {
       break;
     }
   }
+  return cardType;
+}
+
+export function getSpeechForCard(card, cardType) {
+  if (cardType === "BANNER") {
+    return handleBannerCards(bannerCardContainer); // We don't currently show banner-type cards within the popup, and there may be searches that yield both banner cards and sidebar cards.
+  }
+
+  let text;
+  let language;
 
   switch (cardType) {
     case "WEATHER":

@@ -407,7 +407,10 @@ intentRunner.registerIntent({
         searchUrl: searchInfo.searchUrl,
         index: -1,
       });
-      telemetry.add({ hasCard: true });
+      telemetry.add({ 
+        hasCard: true,
+        cardType: card.cardType,
+      });
       if (card.hasWidget) {
         pollForCard();
       } else {
