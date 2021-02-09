@@ -1,0 +1,65 @@
+[numbers.ordinals]
+pierwszy = 1
+drugi = 2
+trzeci = 3
+czwarty = 4
+piąty = 5
+szósty = 6
+siódmy = 7
+ósmy = 8
+dziewiąty = 9
+dziesiąty = 10
+jedenasty = 11
+dwunasty = 12
+trzynasty = 13
+czternasty = 14
+piętnasty = 15
+szesnasty = 16
+siedemnasty = 17
+osiemnasty = 18
+dziewiętnasty = 19
+dwudziesty = 20
+
+[numbers.plain]
+jeden = 1
+dwa = 2
+trzy = 3
+cztery = 4
+pięć = 5
+sześć = 6
+siedem = 7
+osiem = 8
+dziewięć = 9
+dziesięć = 10
+jedenaście = 11
+dwanaście = 12
+trzynaście = 13
+czternaście = 14
+piętnaście = 15
+szesnaście = 16
+siedemnaście = 17
+osiemnaście = 18
+dziewiętnaście = 19
+dwadzieścia = 20
+
+[numbers.literals]
+1 = 1
+2 = 2
+3 = 3
+4 = 4
+5 = 5
+6 = 6
+7 = 7
+8 = 8
+9 = 9
+10 = 10
+11 = 11
+12 = 12
+13 = 13
+14 = 14
+15 = 15
+16 = 16
+17 = 17
+18 = 18
+19 = 19
+20 = 20
